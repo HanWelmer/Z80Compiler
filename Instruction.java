@@ -7,7 +7,6 @@ public class Instruction {
   //TODO refactor opType and word into operand.
   public CallType callValue;  /* for call functions */
   public OperandType opType; /* for load, store and arithmetic functions */
-  public SpecialOperand specialOperand; /* ditto with opType == special  */
   public int word;            /* value for branch and accu related functions */
 
   public Instruction(FunctionType fn) {
@@ -20,12 +19,7 @@ public class Instruction {
     }
     function = fn;
     opType = operand.opType;
-    if (operand.opType == OperandType.special) {
-      //TODO moet dit stack of unstack zijn?
-      specialOperand = SpecialOperand.stack;
-    } else {
-      word = operand.opValue;
-    }
+    word = operand.opValue;
   }
   
   public Instruction(FunctionType fn, int value) {
@@ -46,6 +40,7 @@ public class Instruction {
     if (operandType == OperandType.label) {
       throw new RuntimeException("new accu related Instruction with OperandType label");
     }
+
     if (fn != FunctionType.accLoad
      && fn != FunctionType.accStore
      && fn != FunctionType.stackAccLoad
@@ -59,24 +54,13 @@ public class Instruction {
      ) {
       throw new RuntimeException("new non accu related Instruction with OperandType");
     }
+
     function = fn;
     opType = operandType;
-    if ((fn == FunctionType.stackAccLoad) && (operandType == OperandType.special)) {
-      throw new RuntimeException("new stackAccLoad Instruction with OperandType special");
-    } else if (fn == FunctionType.accStore) {
-      specialOperand = SpecialOperand.stack;
-    } else {
-      /* fn == FunctionType.accLoad
-      || fn == FunctionType.stackAccLoad
-      || fn == FunctionType.accPlus
-      || fn == FunctionType.accMinus
-      || fn == FunctionType.minusAcc
-      || fn == FunctionType.accTimes
-      || fn == FunctionType.accDiv
-      || fn == FunctionType.divAcc
-      || fn == FunctionType.accCompare
-      */
-      specialOperand = SpecialOperand.unstack;
+    if ((fn == FunctionType.stackAccLoad) && (operandType == OperandType.stack)) {
+      throw new RuntimeException("new stackAccLoad Instruction with OperandType stack");
+    //} else if (fn == FunctionType.accStore) {
+    //  opType = OperandType.stack;
     }
   }
   
@@ -122,8 +106,14 @@ public class Instruction {
   public String toString() {
     String result = function.getValue();
     switch (function) {
-      case accLoad:
       case accStore:
+        switch(opType) {
+          case var: result += " variable " + word; break;
+          case stack: stack: result += " stack"; break;
+          default: throw new RuntimeException("accStore with unsupported operandType");
+        };
+        break;
+      case accLoad:
       case stackAccLoad:
       case accPlus:
       case accMinus:
@@ -136,18 +126,13 @@ public class Instruction {
           public FunctionType function;
           public CallType callValue;              // for call functions
           public OperandType opType;              // for load, store and arithmetic functions
-          public SpecialOperand specialOperand;   // ditto with opType == special
           public int word;                        // value for branch and accu related functions
         */
         switch(opType) {
           case var: result += " variable " + word; break;
           case constant: result += " constant " + word; break;
-          case special:
-            switch(specialOperand) {
-              case stack: result += " stack"; break;
-              case unstack: result += " unstack"; break;
-            }
-            break;
+          case stack: stack: result += " unstack"; break;
+          default: throw new RuntimeException("accu related instruction with unsupported operandType");
         };
         break;
       case br:
@@ -169,6 +154,7 @@ public class Instruction {
         }
         break;
       case stop: /* */ break;
+      default: throw new RuntimeException("unsupported instruction");
     }
     return result;
   }

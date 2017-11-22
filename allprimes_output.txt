@@ -1,0 +1,113 @@
+{Print prime numbers less than 100}
+VAR T, {test result; 1 if prime, 0 if not}
+    P, {prime to be tested}
+    D, {divisor}
+    M; {max prime to be tested}
+BEGIN
+  M := (9+1)*(9+1); {max = 100}
+  WRITE(1);
+  WRITE(2);
+  P := 3;
+  WHILE P<M DO
+  BEGIN
+    D := 2;
+    T := 1;
+    WHILE D + D <= P DO
+    BEGIN
+      IF P / D * D = P
+      THEN T := 0;
+      D := D + 1;
+    END;
+    IF T = 1
+    THEN WRITE(P);
+    P := P + 1;
+  END
+END.
+
+  ^unknown keyword
+
+  ^unexpected symbol
+
+  ^lexeme skipped after error
+
+   ^unexpected symbol
+
+   ^unexpected symbol
+
+Assembly listing of compiled code:
+----------------------------------
+  0 :acc= constant 9
+  1 :acc+ constant 1
+  2 :<acc= constant 9
+  3 :acc+ constant 1
+  4 :acc* unstack
+  5 :acc=> variable 3
+  6 :acc= constant 1
+  7 :acc=> stack
+  8 :call write
+  9 :acc= constant 2
+ 10 :acc=> stack
+ 11 :call write
+ 12 :acc= constant 3
+ 13 :acc=> variable 1
+ 14 :acc= variable 1
+ 15 :accom variable 3
+ 16 :brge 46
+ 17 :acc= constant 2
+ 18 :acc=> variable 2
+ 19 :acc= constant 1
+ 20 :acc=> variable 0
+ 21 :acc= variable 2
+ 22 :acc+ variable 2
+ 23 :accom variable 1
+ 24 :brgt 36
+ 25 :acc= variable 1
+ 26 :acc/ variable 2
+ 27 :acc* variable 2
+ 28 :accom variable 1
+ 29 :brne 32
+ 30 :acc= constant 0
+ 31 :acc=> variable 0
+ 32 :acc= variable 2
+ 33 :acc+ constant 1
+ 34 :acc=> variable 2
+ 35 :br 21
+ 36 :acc= variable 0
+ 37 :accom constant 1
+ 38 :brne 42
+ 39 :acc= variable 1
+ 40 :acc=> stack
+ 41 :call write
+ 42 :acc= variable 1
+ 43 :acc+ constant 1
+ 44 :acc=> variable 1
+ 45 :br 14
+ 46 :stop
+
+Running compiled code...
+1
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97

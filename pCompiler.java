@@ -36,7 +36,7 @@ import java.util.HashMap;
 public class pCompiler {
 
   private static String fileName;
-  private static boolean debug = true;
+  private static boolean debug = false;
   private static String inputString = "";
   private static String[] inputParts;
   private static int inputIndex = 0;
@@ -456,13 +456,13 @@ public class pCompiler {
       for (LexemeType aLexeme: EnumSet.allOf(LexemeType.class).range(firstLexeme.type, lastLexeme.type)) {
         if (okSet.contains(aLexeme)) {
           if (orFlag) {
-            System.out.print(" or ");
+            debug(" or ");
           }
           orFlag = true;
-          System.out.print(aLexeme.getValue());
+          debug(aLexeme.getValue());
         }
       }
-      System.out.println(" expected.");
+      debug(" expected.");
       if (stopSet.size() > 0) {
         while (!stopSet.contains(lexeme.type)) {
           error(7); /* lexeme skipped after error */
@@ -510,7 +510,7 @@ public class pCompiler {
   }
   
   private Operand factor(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
-    operand.opType = OperandType.special;
+    operand.opType = OperandType.stack;
     if (checkOrSkip(startExp, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
         /* part of semantic analysis */
@@ -538,11 +538,10 @@ public class pCompiler {
         getLexeme();
         /* part of code generation */
         if (accInUse) {
-          plant(new Instruction(FunctionType.accStore, OperandType.special));
+          plant(new Instruction(FunctionType.accStore, OperandType.stack));
         }
         plant(new Instruction(FunctionType.call, CallType.read));
         accInUse = true;
-        operand.opType = OperandType.special;
       }
     }
     return operand;
@@ -560,14 +559,14 @@ public class pCompiler {
     while (lexeme.type == LexemeType.mulop) {
       /* part of code generation */
       plantAccLoad(operand);
-      operand.opType = OperandType.special;
+      operand.opType = OperandType.stack;
       operator = lexeme.mulVal;
       /* part of lexical analysis */
       getLexeme();
       rOperand = factor(followSet, rOperand);
       /* part of code generation */
-      if (rOperand.opType == OperandType.special) {
-        plant(new Instruction(reverseMul.get(operator), OperandType.special));
+      if (rOperand.opType == OperandType.stack) {
+        plant(new Instruction(reverseMul.get(operator), OperandType.stack));
       } else {
         plant(new Instruction(forwardMul.get(operator), rOperand.opType, rOperand.opValue));
       }
@@ -586,14 +585,14 @@ public class pCompiler {
     while (lexeme.type == LexemeType.addop) {
       /* part of code generation */
       plantAccLoad(operand);
-      operand.opType = OperandType.special;
+      operand.opType = OperandType.stack;
       operator = lexeme.addVal;
       /* part of lexical analysis */
       getLexeme();
       rOperand = term(followSet, rOperand);
       /* part of code generation */
-      if (rOperand.opType == OperandType.special) {
-        plant(new Instruction(reverseAdd.get(operator), OperandType.special));
+      if (rOperand.opType == OperandType.stack) {
+        plant(new Instruction(reverseAdd.get(operator), OperandType.stack));
       } else {
         plant(new Instruction(forwardAdd.get(operator), rOperand.opType, rOperand.opValue));
       }
@@ -636,12 +635,12 @@ public class pCompiler {
     operand = expression(localSet, operand);
 
     /* part of code generation */
-    if (operand.opType != OperandType.special) {
+    if (operand.opType != OperandType.stack) {
       plant(new Instruction(FunctionType.accCompare, operand.opType, operand.opValue));
       ifLabel = saveForwardLabel();
       plant(new Instruction(normalSkip.get(compareOp), 0));
     } else {
-      plant(new Instruction(FunctionType.accCompare, OperandType.special));
+      plant(new Instruction(FunctionType.accCompare, OperandType.stack));
       ifLabel = saveForwardLabel();
       plant(new Instruction(reverseSkip.get(compareOp), 0));
     }
@@ -742,7 +741,7 @@ public class pCompiler {
         }
 
         /* part of code generation */
-        plant(new Instruction(FunctionType.accStore, OperandType.special));
+        plant(new Instruction(FunctionType.accStore, OperandType.stack));
         plant(new Instruction(FunctionType.call, CallType.write));
       }
     }
@@ -821,7 +820,7 @@ public class pCompiler {
 
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
-    if (operand.opType != OperandType.special) {
+    if (operand.opType != OperandType.stack) {
       if (accInUse) {
           plant(new Instruction(FunctionType.stackAccLoad, operand.opType, operand.opValue));
         } else {
@@ -910,7 +909,7 @@ public class pCompiler {
         case constant: 
           storeString[z80PosLine++] = "LD   HL," + word;
           break;
-        case special:
+        case stack:
           storeString[z80PosLine++] = "POP HL";
           break;
       };
@@ -919,7 +918,7 @@ public class pCompiler {
         case var: 
           storeString[z80PosLine++] = "LD   (" + memAddress + "),HL";
           break;
-        case special:
+        case stack:
           storeString[z80PosLine++] = "PUSH HL";
           break;
       };
@@ -941,7 +940,7 @@ public class pCompiler {
         case constant: 
           storeString[z80PosLine++] = "LD   DE," + word;
           break;
-        case special:
+        case stack:
           storeString[z80PosLine++] = "POP DE";
           break;
       };
@@ -954,7 +953,7 @@ public class pCompiler {
         case constant: 
           storeString[z80PosLine++] = "LD   DE," + word;
           break;
-        case special:
+        case stack:
           storeString[z80PosLine++] = "POP DE";
           break;
       };
@@ -978,7 +977,7 @@ public class pCompiler {
         case constant: 
           storeString[z80PosLine++] = "LD   DE," + word;
           break;
-        case special:
+        case stack:
           storeString[z80PosLine++] = "POP DE";
           break;
       };
@@ -991,7 +990,7 @@ public class pCompiler {
         case constant: 
           storeString[z80PosLine++] = "LD   DE," + word;
           break;
-        case special:
+        case stack:
           storeString[z80PosLine++] = "POP DE";
           break;
       };
@@ -1153,7 +1152,7 @@ DivLoop:
           storeBytes[z80PosByte++] = word % 256;
           storeBytes[z80PosByte++] = word / 256;
           break;
-        case special:
+        case stack:
           storeBytes[z80PosByte++] = 0xE1; /* POP HL */
           break;
       };
@@ -1164,7 +1163,7 @@ DivLoop:
           storeBytes[z80PosByte++] = memAddress % 256;
           storeBytes[z80PosByte++] = memAddress / 256;
           break;
-        case special:
+        case stack:
           storeBytes[z80PosByte++] = 0xE5; /* PUSH HL */
           break;
       };
@@ -1195,7 +1194,7 @@ DivLoop:
           storeBytes[z80PosByte++] = word % 256;
           storeBytes[z80PosByte++] = word / 256;
           break;
-        case special:
+        case stack:
           storeBytes[z80PosByte++] = 0xD1; /* POP DE */
           break;
       };
@@ -1213,7 +1212,7 @@ DivLoop:
           storeBytes[z80PosByte++] = word % 256;
           storeBytes[z80PosByte++] = word / 256;
           break;
-        case special:
+        case stack:
           storeBytes[z80PosByte++] = 0xD1; /* POP DE */
           break;
       };
@@ -1243,7 +1242,7 @@ DivLoop:
           storeBytes[z80PosByte++] = word % 256;
           storeBytes[z80PosByte++] = word / 256;
           break;
-        case special:
+        case stack:
           storeBytes[z80PosByte++] = 0xD1; /* POP DE */
           break;
       };
@@ -1307,7 +1306,7 @@ Mul_Loop_2:
           storeBytes[z80PosByte++] = word % 256;
           storeBytes[z80PosByte++] = word / 256;
           break;
-        case special:
+        case stack:
           storeBytes[z80PosByte++] = 0xD1; /* POP DE */
           break;
       };
@@ -1392,12 +1391,12 @@ DivLoop:
       storeInstruction[pos].word = codePos;
     }
     /* for debugging purposes */
-    System.out.println("\nlabel: used from " + pos);
+    debug("\nlabel: used from " + pos);
   }
 
   private int saveForwardLabel() {
     /* for debugging purposes */
-    System.out.println("\nlabel used");
+    debug("\nlabel used");
 
     int result = 0;
     if (z80CodeGeneration && !binaryCodeGeneration) {
@@ -1415,7 +1414,7 @@ DivLoop:
 
   private int saveLabel() {
     /* for debugging purposes */
-    System.out.println("\nlabel:");
+    debug("\nlabel:");
 
     int result = 0;
     if (z80CodeGeneration && !binaryCodeGeneration) {
@@ -1515,12 +1514,8 @@ DivLoop:
     Instruction instr = storeInstruction[pc];
     int result = 0;
     switch(instr.opType) {
-      case special:
-        if (instr.specialOperand == SpecialOperand.unstack) {
-          result = pop();
-        } else {
-          runError("illegal special operand in getOp()");
-        }
+      case stack:
+        result = pop();
         break;
       case constant: result = instr.word; break;
       case var:
@@ -1575,12 +1570,8 @@ DivLoop:
             }
             vars[instr.word] = acc;
             break;
-          case special:
-            if (instr.specialOperand == SpecialOperand.stack) {
-              push(acc);
-            } else {
-              runError("illegal special operand in interpret()");
-            }
+          case stack:
+            push(acc);
             break;
           default:
             runError("unknown operand type");

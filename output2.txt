@@ -125,7 +125,7 @@ checkOrSkip end
 lexeme=;
   4 :acc* unstack
 accInUse = true
-operand.opType = special
+operand.opType = stack
 operand.opValue = 9
   5 :acc=> variable 3
 block end
@@ -463,7 +463,7 @@ checkOrSkip end
 lexeme=;
  33 :acc+ constant 1
 accInUse = true
-operand.opType = special
+operand.opType = stack
 operand.opValue = 2
  34 :acc=> variable 2
 block end
@@ -584,7 +584,7 @@ checkOrSkip end
 lexeme=;
  43 :acc+ constant 1
 accInUse = true
-operand.opType = special
+operand.opType = stack
 operand.opValue = 1
  44 :acc=> variable 1
 block end

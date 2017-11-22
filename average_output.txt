@@ -1,0 +1,73 @@
+{A small program in the P-language}
+VAR S, N, T;
+BEGIN
+  S := 0; {sum}
+  N := 0; {number of items}
+  T := READ; {read a digit}
+  WHILE T <> 0 {not end of file} DO
+  BEGIN
+    S := S + T; {sum of numbers read}
+    N := N + 1; {number of numbers read}
+    T := READ;
+  END;
+  WRITE (N);
+  WRITE (S);
+  IF N <> 0 THEN
+    WRITE (S / N); {average}
+END.
+
+Assembly listing of compiled code:
+----------------------------------
+  0 :acc= constant 0
+  1 :acc=> variable 0
+  2 :acc= constant 0
+  3 :acc=> variable 1
+  4 :call read
+  5 :acc=> variable 2
+  6 :acc= variable 2
+  7 :accom constant 0
+  8 :breq 18
+  9 :acc= variable 0
+ 10 :acc+ variable 2
+ 11 :acc=> variable 0
+ 12 :acc= variable 1
+ 13 :acc+ constant 1
+ 14 :acc=> variable 1
+ 15 :call read
+ 16 :acc=> variable 2
+ 17 :br 6
+ 18 :acc= variable 1
+ 19 :acc=> stack
+ 20 :call write
+ 21 :acc= variable 0
+ 22 :acc=> stack
+ 23 :call write
+ 24 :acc= variable 1
+ 25 :accom constant 0
+ 26 :breq 31
+ 27 :acc= variable 0
+ 28 :acc/ variable 1
+ 29 :acc=> stack
+ 30 :call write
+ 31 :stop
+
+Running compiled code...
+
+read:2
+
+read:3
+
+read:4
+
+read:5
+
+read:6
+
+read:7
+
+read:8
+
+read:0
+7
+35
+5
