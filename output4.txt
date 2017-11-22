@@ -1,0 +1,136 @@
+dot ::= 0='.'
+constant ::= 1='digit'
+identifier ::= 2='name'
+comma ::= 3=','
+assign ::= 4=':='
+semicolon ::= 5=';'
+lbracket ::= 6='('
+rbracket ::= 7=')'
+addop ::= 8='+ or -'
+mulop ::= 9='* or /'
+relop ::= 10='<=>'
+beginlexeme ::= 11='BEGIN'
+readlexeme ::= 12='READ'
+writelexeme ::= 13='WRITE'
+iflexeme ::= 14='IF'
+thenlexeme ::= 15='THEN'
+whilelexeme ::= 16='WHILE'
+dolexeme ::= 17='DO'
+varlexeme ::= 18='VAR'
+endlexeme ::= 19='END'
+unknown ::= 20='?'
+20
+12
+2B
+8add
+9divd
+10gt
+
+{A small program in the P-language}
+
+VAR S, N, T;
+18
+2S
+3
+2N
+3
+2T
+5
+
+BEGIN
+
+  S := 0; {sum}
+11
+2S
+4
+10eq
+10
+5
+
+  N := 0; {number of items}
+2N
+4
+10eq
+10
+5
+
+  T := READ; {read a digit}
+2T
+4
+10eq
+12
+5
+
+  WHILE T <> 0 {not end of file} DO
+16
+2T
+10ne
+10
+
+  BEGIN
+17
+
+    S := S + T; {sum of numbers read}
+11
+2S
+4
+10eq
+2S
+8add
+2T
+5
+
+    N := N + 1; {number of numbers read}
+2N
+4
+10eq
+2N
+8add
+11
+5
+
+    T := READ;
+2T
+4
+10eq
+12
+5
+
+  END;
+19
+5
+
+  WRITE (N);
+13
+6
+2N
+7
+5
+
+  WRITE (S);
+13
+6
+2S
+7
+5
+
+  IF N <> 0 THEN
+14
+2N
+10ne
+10
+
+    WRITE (S / N); {average}
+15
+13
+6
+2S
+9divd
+2N
+7
+5
+
+END.
+19
+0
+   ^end of input encountered
