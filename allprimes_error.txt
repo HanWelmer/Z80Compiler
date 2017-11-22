@@ -433,17 +433,25 @@ lexeme=;
 statement: end
 block: end
 checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
-  END;
+  END
 
-lexeme=END
+END.
+
+  ^unknown keyword : ENDEND
+
+lexeme=?
 block: start
-checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+  ^unexpected symbol
+. or name or ; or BEGIN or WRITE or IF or WHILE or END expected.
+  ^lexeme skipped after error
+
+lexeme=.
 statement: start
-checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: lexeme "dot" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
 statement: end
 block: end
-checkOrSkip: lexeme "endlexeme" in okSet [semicolon, endlexeme]
-lexeme=;
+   ^unexpected symbol
+; or END expected.
 block: end
 ->plant (accInUse=false):
  45 :br 14
@@ -451,18 +459,8 @@ label: used from 16
 statement: end of while loop
 statement: end
 block: end
-checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
-END.
-
-lexeme=END
-block: start
-checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
-statement: start
-checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
-statement: end
-block: end
-checkOrSkip: lexeme "endlexeme" in okSet [semicolon, endlexeme]
-lexeme=.
+   ^unexpected symbol
+; or END expected.
 block: end
 checkOrSkip: lexeme "dot" in okSet [dot]
 prog end
