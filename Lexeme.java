@@ -36,4 +36,4 @@ public class Lexeme {
     }
     return result;
   }
-};
+}

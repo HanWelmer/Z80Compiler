@@ -439,10 +439,6 @@ public class pCompiler {
     return result;
   }
   
-  private boolean eoln(){
-    return linePos >= lineSize;
-  }
-  
   /*Class member methods for syntax analysis phase */
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\ncheckOrSkip start");
@@ -537,11 +533,15 @@ public class pCompiler {
       } else if (lexeme.type == LexemeType.readlexeme) {
         getLexeme();
         /* part of code generation */
+        /* */
         if (accInUse) {
           plant(new Instruction(FunctionType.accStore, OperandType.stack));
+          System.out.println("\nAccu saved");
         }
         plant(new Instruction(FunctionType.call, CallType.read));
         accInUse = true;
+        /* */
+        //plant(new Instruction(FunctionType.call, CallType.read));
       }
     }
     return operand;
@@ -831,6 +831,14 @@ public class pCompiler {
   }
 
   private void plant(Instruction instruction) {
+    /* if accu already in use and call instruction returns value in accu, first save current accu contents
+    if (accInUse && (instruction.function == FunctionType.call) && (instruction.callValue == CallType.read)) {
+      plant(new Instruction(FunctionType.accStore, OperandType.stack));
+      System.out.println("\nAccu saved");
+    }
+    */
+    
+    /* actually plant the instruction */
     if (z80CodeGeneration && !binaryCodeGeneration) {
       /* Z80 code generation */
       plantZ80(instruction);
@@ -841,6 +849,12 @@ public class pCompiler {
       /* M (virtual machine) code generation */
       plantM(instruction);
     }
+    
+    /* register accumulator usage
+    if ((instruction.function == FunctionType.call) && (instruction.callValue == CallType.read)) {
+      accInUse = true;
+    }
+    */
   }
 
   private void plantM(Instruction instruction) {
