@@ -219,7 +219,7 @@ public class Compiler {
   private void getLexeme() throws IOException, FatalError {
     char ch;
     //ignore spaces and comments
-    while (nextChar() == ' ' || nextChar() == '\t' || nextChar() == '{') {
+    while (nextChar() == ' ' || nextChar() == '\t' || nextChar() == '\n' || nextChar() == '{') {
       ch = getChar();
       if (ch == '{') {
         while (getChar() != '}') {/*nothing*/}
@@ -233,13 +233,13 @@ public class Compiler {
     } else if (ch >= 'A' && ch <= 'Z') {
       /* try to recognise an identifier or a keyword */
       if (nextChar() < 'A' || nextChar() > 'Z') {
-      lexeme.type = LexemeType.identifier;
-      lexeme.idVal = String.valueOf(ch);
+        lexeme.type = LexemeType.identifier;
+        lexeme.idVal = String.valueOf(ch);
       } else {
         /* try to recognise keywords read, write,if,then,var,begin or end */
         String name = String.valueOf(ch);
         int charno = 1;
-        while (nextChar() >= 'A' && nextChar() <= 'Z') {
+        while (nextChar() >= 'A' && nextChar() <= 'Z' && charno <= NAME_CHARS) {
           if (charno <= NAME_CHARS) {
             name += String.valueOf(getChar());
             charno++;
@@ -247,6 +247,7 @@ public class Compiler {
             ch = getChar();
           }
         }
+        debug("\nlexeme: name=" + name);
         lexeme.type = LexemeType.beginlexeme;
         while (lexeme.type.ordinal() <= LexemeType.endlexeme.ordinal() && !lexeme.type.getValue().equals(name)) {
           lexeme.type = lexeme.type.next();
@@ -338,12 +339,11 @@ public class Compiler {
       if (eof) {
         throw new FatalError(1); //end of file encountered
       };
-      lineSize = line.length();
       debug("\n"); //when in debug mode, make sure the echoed source code starts on a new line.
       System.out.println(line);
-      if (lineSize == 0) {
-        line = " ";
-      } else if (lineSize > LINE_WIDTH) {
+      line += "\n";
+      lineSize = line.length();
+      if (lineSize > LINE_WIDTH) {
         throw new FatalError(2); //line too long
       }
       linePos = 0;
