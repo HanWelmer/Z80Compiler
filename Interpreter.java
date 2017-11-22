@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 /**
@@ -5,20 +6,24 @@ import java.util.EnumSet;
  */
 public class Interpreter {
   
-  private Instruction[] instructions;
-  private int[] vars;
+  /* global variables set by the constructor */
+  private ArrayList<Instruction> instructions;
   private String[] inputParts;
-  private boolean debug = false;
 
+  /* constants */
   private static final int MAX_STACK = 128;
   private static final int MAX_VARS = 26;
+  
+  /* global variables */
   private EnumSet<FunctionType> branchSet = EnumSet.noneOf(FunctionType.class);
+  private boolean debugMode = false;
   private int inputIndex = 0;
   private int[] machineStack;
+  private int[] vars;
   private int pc, acc, sf;
 
   //constructor
-  public Interpreter(Instruction[] instructions, String[] inputParts) {
+  public Interpreter(ArrayList<Instruction> instructions, String[] inputParts) {
     this.instructions = instructions;
     this.inputParts = inputParts;
     
@@ -30,20 +35,14 @@ public class Interpreter {
     sf = 0;
     acc = 0;
   }
-  
-  private void debug(String message) {
-    if (debug) {
-      System.out.print(message);
-    }
-  }
 
-  /* execute a single instruction */
+  /* interface method: execute a single instruction */
   public boolean step(boolean debugMode) {
-    this.debug = debugMode;
+    this.debugMode = debugMode;
     boolean stopRun = false;
 
     //get next instruction
-    Instruction instr = instructions[pc];
+    Instruction instr = instructions.get(pc);
     debug("\npc=" + pc + " : " + instr.toString());
     //execute instruction
     int operand;
@@ -77,7 +76,7 @@ public class Interpreter {
             break;
           case var:
             if ((instr.word < 0) || (instr.word >= vars.length)) {
-              runError("division by zero");
+              runError("too many variables");
             }
             vars[instr.word] = acc;
             break;
@@ -123,7 +122,7 @@ public class Interpreter {
         break;
       case call:
         if (instr.callValue == CallType.read) {
-          System.out.print("read:");
+          System.out.print("\nread:");
           boolean consoleInput = true;
           if (consoleInput) {
             try {
@@ -160,23 +159,34 @@ public class Interpreter {
     return stopRun;
   } // interpret()
 
-  /*Class member methods for interpreter */
+  private void debug(String message) {
+    if (debugMode) {
+      System.out.print(message);
+    }
+  }
+
   private void runError(String message) {
     System.out.println();
     System.out.println("*** runtime error: " + message);
-    System.out.println("pc=" + pc + " : " + instructions[pc].toString());
+    System.out.println("pc=" + pc + " : " + instructions.get(pc).toString());
+    System.out.println(String.format("accumulator = " + acc));
+    System.out.println(String.format("stackpointer= " + sf));
     System.out.println();
+
+    /* dump variables */
     for (int i = 0; i < vars.length; i++) {
-      System.out.println("variable " + i + " = " + vars[i]);
+      System.out.println("variable " + String.format("%2d", i) + " = " + vars[i]);
     }
     System.out.println();
-    System.out.println("accumulator = " + acc);
-    System.out.println("stackpointer= " + sf);
-    System.out.println();
+
+    /* dump stack */
+    int sfDigits = (int)(java.lang.Math.log(sf) / java.lang.Math.log(10)) + 1;
+    String sfFormat = "%" + sfDigits + "d";
     for (int i = 0; i<sf; i++) {
-      System.out.println("stack item " + i + " = " + machineStack[i]);
+      System.out.println("stack item " + String.format(sfFormat, i) + " = " + machineStack[i]);
     }
     System.out.println();
+
     System.exit(1);
   }
   
@@ -197,7 +207,7 @@ public class Interpreter {
   }
   
   private int getOp() {
-    Instruction instr = instructions[pc];
+    Instruction instr = instructions.get(pc);
     int result = 0;
     switch(instr.opType) {
       case stack:
@@ -206,7 +216,7 @@ public class Interpreter {
       case constant: result = instr.word; break;
       case var:
         if (instr.word < vars.length) {
-          debug("\npc=" + pc + " vars[" + instr.word + "]");
+          debug("\npc=" + pc + " vars[" + instr.word + "] = " + vars[instr.word]);
           result = vars[instr.word];
         } else {
           runError("undefined variable");

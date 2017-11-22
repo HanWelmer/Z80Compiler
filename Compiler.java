@@ -1,8 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Compiler for the P programming language, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
@@ -27,10 +28,13 @@ import java.util.HashMap;
  */
 public class Compiler {
 
-  private static String fileName;
+  /* global variables used by the constructor or the interface functions */
   private static boolean debug;
   private static boolean z80CodeGeneration;
   private static boolean binaryCodeGeneration;
+  private static String fileName;
+  private BufferedReader input;
+  private ArrayList<Instruction> storeInstruction = new ArrayList<Instruction>();
 
   //constructor
   public Compiler(boolean debug, boolean z80, boolean binary) {
@@ -39,8 +43,8 @@ public class Compiler {
     this.binaryCodeGeneration = binary;
   }
   
-  /*Class member methods for lexical analysis phase */
-  public Instruction[] compile(String fileName, BufferedReader input) throws IOException {
+  /* Class member methods for lexical analysis phase */
+  public ArrayList<Instruction> compile(String fileName, BufferedReader input) throws IOException {
     System.out.println("debug = " + debug);
     System.out.println("z80CodeGeneration = " + z80CodeGeneration);
     System.out.println("binaryCodeGeneration = " + binaryCodeGeneration);
@@ -57,7 +61,8 @@ public class Compiler {
     }
     
     if (errors) { 
-      storeInstruction = null;
+      storeInstruction.clear();
+      codePos = 0;
     }
     return storeInstruction;
   }
@@ -86,7 +91,6 @@ public class Compiler {
   private static final int LINE_WIDTH = 128;
   private static final int NAME_CHARS = 6;
 
-  private BufferedReader input;
   private boolean eof;
   private int lineSize;
   private int linePos;
@@ -122,7 +126,6 @@ public class Compiler {
   private int codePos; /* position to plant next instruction */
   private int z80PosLine;
   private int z80PosByte;
-  private Instruction[] storeInstruction;
   private String[] storeString;
   private int[] storeBytes;
 
@@ -163,7 +166,7 @@ public class Compiler {
     reverseMul.clear();
     normalSkip.clear();
     reverseSkip.clear();
-    storeInstruction = new Instruction[MAX_M_CODE];
+    storeInstruction.clear();
     storeString = new String[MAX_ASM_CODE];
     storeBytes = new int[MAX_BIN];
     z80PosLine = 0;
@@ -756,11 +759,11 @@ public class Compiler {
 
   private void plantM(Instruction instruction) {
     /* insert code into memory */
-    if (codePos >= MAX_M_CODE) {
+    if (storeInstruction.size() >= MAX_M_CODE) {
       error (10);
-      codePos = 0;
+      storeInstruction.clear();
     }
-    storeInstruction[codePos] = instruction;
+    storeInstruction.add(instruction);
 
     /* for debugging purposes */
     debug("\n" + String.format("%3d :", codePos) + instruction.toString());
@@ -1299,7 +1302,9 @@ DivLoop:
       storeBytes[pos+2] = z80PosByte / 256;
     } else {
       /* M (virtual machine) code generation */
-      storeInstruction[pos].word = codePos;
+      //TODO remove commented line
+      //storeInstruction[pos].word = codePos;
+      storeInstruction.get(pos).word = storeInstruction.size();
     }
     /* for debugging purposes */
     debug("\nlabel: used from " + pos);

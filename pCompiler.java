@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Command line fascade for the P programming language Compiler, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
@@ -21,14 +22,17 @@ public class pCompiler {
     boolean z80 = false;
     boolean binary = false;
     boolean debugMode = false;
+    boolean runMode = false;
     if (args.length > 1) {
       for (int i=0; i<args.length-1; i++) {
-        if ("-Z80".equals(args[i])) {
-          z80 = true;
-        } else if ("-b".equals(args[i])) {
+        if ("-b".equals(args[i])) {
           binary = true;
         } else if ("-d".equals(args[i])) {
           debugMode = true;
+        } else if ("-r".equals(args[i])) {
+          runMode = true;
+        } else if ("-z".equals(args[i])) {
+          z80 = true;
         } else {
           usage();
         }
@@ -45,7 +49,7 @@ public class pCompiler {
     * Compile the file with p source code.
     * Generated intermediate code goes to default system output.
     */
-    Instruction[] instructions = null;
+    ArrayList<Instruction> instructions = null;
     try (FileReader fr = new FileReader(fileName); BufferedReader bufr = new BufferedReader(fr);) { 
       Compiler compiler = new Compiler(debugMode, z80, binary);
       instructions = compiler.compile(fileName, bufr);
@@ -54,20 +58,24 @@ public class pCompiler {
       System.exit(1);
     }
     
-    /* Generate output */
     if (instructions != null) { 
+      /* List compiled code for the M machine */
+      listing(instructions);
       if (z80) {
-        String[] storeString = null;
-        int[] storeBytes = null;
-        listZ80(fileName, binary, storeString, storeBytes);
-      } else {
-        listing(instructions);
+        /* transcode M-code to Z80S180 assembler code */
+        ArrayList<AssemblyInstruction> z80Instructions = transcodeZ80(fileName, instructions, binary);
+        if (binary) {
+          /* write binary Z80S180 code to Intel hex file */
+          writeZ80toIntelHex(fileName, z80Instructions);
+        }
+      }
+      
+      /* start interpreter */
+      if (runMode) {
         /* input for the interpreter*/
         String inputString = "2 3 4 5 6 7 8 0";
         String[] inputParts = inputString.split(" ");
-
-        /* start interpreter */
-        System.out.println("Running compiled code...");
+        System.out.println("Running compiled code ...");
         Interpreter interpreter = new Interpreter(instructions, inputParts);
         boolean stop = false;
         do {
@@ -79,54 +87,67 @@ public class pCompiler {
   
   private static void usage() {
     System.out.println("Usage: pCompiler [-Z80] [-b] [-d] source.p");
-    System.out.println(" where -Z80 generate Z80 assembler output");
-    System.out.println("       -b generate binary output (M-code or Z80 assembler");
+    System.out.println(" where -b generate binary output (M-code or Z80 assembler");
     System.out.println("       -d issue debug messages during compilation");
+    System.out.println("       -r run the compiled code using the built-in interpreter");
+    System.out.println("       -z generate Z80 assembler output");
     System.out.println("       source.p input sourcecode file in P programming language.");
     System.exit(1);
   }
 
-  private static void listing(Instruction[] instructions) {
+  private static void listing(ArrayList<Instruction> instructions) {
     System.out.println();
     System.out.println("Assembly listing of compiled code:");
     System.out.println("----------------------------------");
     int pos=0;
-    while (pos < instructions.length && instructions[pos] != null) {
-      System.out.println(String.format("%3d :", pos) + instructions[pos].toString());
-      pos++;
+    for (Instruction instruction: instructions) {
+      //TODO : add pos as lineNr to Instruction
+      System.out.println(String.format("%3d :", pos++) + instruction.toString());
     }
     System.out.println();
   }
   
-  private static void listZ80(String fileName, boolean binary, String[] storeString, int[] storeBytes) {
-    if (binary) {
-      /* write assembled Z80 bytes */
-      String outputFilename = fileName.replace(".p", ".obj");
-      try {
-          BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
-          for (int pos=0; pos < storeBytes.length;pos++) {
-            //out.write(storeBytes[pos] + "\n");
-            out.write(String.format("%02X\n", storeBytes[pos]));
-          }
-          out.close();
-      } catch (IOException e)
-      {
-          System.out.println("\nException " + e.getMessage());
-      }
-    } else {
-      /* write Z80 assembly code */
-      String outputFilename = fileName.replace(".p", ".asm");
-      try {
-          BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
-          for (int pos=0; pos < storeString.length;pos++) {
-            out.write(storeString[pos] + "\n");
-          }
-          out.close();
-      } catch (IOException e)
-      {
-          System.out.println("\nException " + e.getMessage());
-      }
+  /* transcode M-code to Z80S180 assembler code */
+  private static ArrayList<AssemblyInstruction> transcodeZ80(String fileName, ArrayList<Instruction> instructions, boolean binary) {
+    System.out.println("Generating Z80 assembler code ...");
+    Transcoder transcoder = new Transcoder(binary);
+    ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
+
+    /* write Z80 assembly code */
+    String outputFilename = fileName.replace(".p", ".asm");
+    System.out.println("Writing Z80 assembler code to " + outputFilename);
+    try {
+        BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
+        for (AssemblyInstruction instruction : z80Instructions) {
+          out.write(instruction.getAssemblyCode());
+          out.write("\n");
+        }
+        out.close();
+    } catch (IOException e) {
+        System.out.println("\nException " + e.getMessage());
     }
-  } //listZ80
+    return z80Instructions;
+  }
+  
+  private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {
+    /* write binary Z80S180 code to Intel hex file */
+    String outputFilename = fileName.replace(".p", ".hex");
+    System.out.println("Writing Z80 code to Intel hex file " + outputFilename);
+    try {
+        BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
+        for (AssemblyInstruction instruction : z80Instructions) {
+          //TODO : implement the actual Intel hex format.
+          out.write(String.format("%04X", instruction.getAddress()));
+          for (byte oneByte : instruction.getBytes()) {
+            out.write(String.format(" %02X\n", oneByte));
+          }
+          out.write("\n");
+        }
+        out.close();
+    } catch (IOException e)
+    {
+        System.out.println("\nException " + e.getMessage());
+    }
+  }
 
 }
