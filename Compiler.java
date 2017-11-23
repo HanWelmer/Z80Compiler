@@ -85,10 +85,10 @@ public class Compiler {
   private static final int LINE_WIDTH = 128;
   private static final int NAME_CHARS = 6;
 
-  private boolean eof;
   private int lineSize;
   private int linePos;
   private String line;
+  private ArrayList<String> sourceCode;
   private Lexeme lexeme, firstLexeme, lastLexeme;
   private boolean errors;
 
@@ -118,9 +118,9 @@ public class Compiler {
   /*Class member methods for all phases */
   private void init() {
     /* initialisation of lexical analysis variables */
-    eof = false;
     lineSize = 0;
     linePos = 0;
+    sourceCode = new ArrayList<String>();
     errors = false;
     firstLexeme = new Lexeme(LexemeType.dot);
     lexeme = new Lexeme(LexemeType.unknown);
@@ -320,17 +320,24 @@ public class Compiler {
   private char nextChar() throws IOException, FatalError {
     if (linePos >= lineSize) {
       line = input.readLine();
-      eof = (line == null);
-      if (eof) {
+      
+      if (line == null) {
         throw new FatalError(1); //end of file encountered
       };
-      debug("\n"); //when in debug mode, make sure the echoed source code starts on a new line.
+      
+      //when in debug mode, make sure the echoed source code starts on a new line.
+      debug("\n");
       System.out.println(line);
-      line += "\n";
+      sourceCode.add(line);
+      
       lineSize = line.length();
-      if (lineSize > LINE_WIDTH) {
+      if (lineSize == 0) {
+        line += "\n";
+        lineSize++;
+      } else if (lineSize > LINE_WIDTH) {
         throw new FatalError(2); //line too long
       }
+      
       linePos = 0;
     }
     return line.charAt(linePos);
@@ -726,6 +733,12 @@ public class Compiler {
   private void plant(Instruction instruction) {
     /* for debugging purposes */
     debug("\n->plant (accInUse=" + accInUse + "):");
+    
+    /* add original source code */
+    if (!sourceCode.isEmpty()) {
+      instruction.linesOfCode.addAll(sourceCode);
+      sourceCode.clear();
+    }
 
     /* insert M (virtual machine) code into memory */
     if (storeInstruction.size() >= MAX_M_CODE) {
