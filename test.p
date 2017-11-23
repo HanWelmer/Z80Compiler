@@ -1,8 +1,9 @@
 {Program to test some compiler constructs}
 VAR A, B, C, D;
 BEGIN
+{
   A := 1;
-{  A := READ;
+  A := READ;
   B := A;
   B := 2 + 1;
   B := 1 + A;
@@ -20,7 +21,6 @@ BEGIN
   B := A - A;
   B := A - READ;
   B := READ - 1;
-}
   WRITE(A);
   B := READ - A;
   WRITE(B);
@@ -28,4 +28,5 @@ BEGIN
   WRITE(B);
   C := A * READ * (B + 2 * (B + 3 * (B + 4 * (B + 5 * (B + 6 * (B + 7 * (B + 8 * (B + 9 * (B + 0 * (B + READ))))))))));
   WRITE(C);
+}
 END.

@@ -23,7 +23,9 @@ public class pCompiler {
     boolean binary = false;
     boolean debugMode = false;
     boolean runMode = false;
-    if (args.length > 1) {
+    if (args.length == 0) {
+      usage();
+    } else if (args.length > 1) {
       for (int i=0; i<args.length-1; i++) {
         if ("-b".equals(args[i])) {
           binary = true;
@@ -51,7 +53,7 @@ public class pCompiler {
     */
     ArrayList<Instruction> instructions = null;
     try (FileReader fr = new FileReader(fileName); BufferedReader bufr = new BufferedReader(fr);) { 
-      Compiler compiler = new Compiler(debugMode, z80, binary);
+      Compiler compiler = new Compiler(debugMode);
       instructions = compiler.compile(fileName, bufr);
     } catch (IOException e) {
       e.printStackTrace();
@@ -119,7 +121,7 @@ public class pCompiler {
     try {
         BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
         for (AssemblyInstruction instruction : z80Instructions) {
-          out.write(instruction.getAssemblyCode());
+          out.write(instruction.getCode());
           out.write("\n");
         }
         out.close();
