@@ -49,6 +49,18 @@ public class Transcoder {
     // TODO : implement transcoder.
     debug("\ntranscoding to Z80: " + instruction.toString());
     
+    //add original source code as assembler comment
+    if (instruction.linesOfCode != null) {
+      for (String sourceCode : instruction.linesOfCode) {
+        result.add(new AssemblyInstruction(byteAddress, "     ;" + sourceCode));
+      }
+    }
+    
+    //add original M-code instruction as assembler comment
+    if (debug) {
+      result.add(new AssemblyInstruction(byteAddress, ";" + instruction.toString()));
+    }
+    
     FunctionType function = instruction.function;
     OperandType opType = instruction.opType;
     CallType callValue = instruction.callValue;
@@ -57,164 +69,181 @@ public class Transcoder {
     AssemblyInstruction asm = null;
     debug("\n..function:" + function);
 
+    String asmCode = null;
     if (function == FunctionType.stop) {
-      asm = new AssemblyInstruction(byteAddress, "JP 0x0171", 0xC3, 0x71, 0x01);
+      asm = new AssemblyInstruction(byteAddress, "JP   0x0171", 0xC3, 0x71, 0x01);
       debug("\n.." + asm.getCode());
-/*
     } else if (function == FunctionType.call) {
       if (callValue == CallType.read) {
-        storeString[z80PosLine++] = "CALL read";
+        asm = new AssemblyInstruction(byteAddress, "CALL read", 0xCD, 0x03, 0x00);
       } else if (callValue == CallType.write) {
-        storeString[z80PosLine++] = "CALL write";
+        asm = new AssemblyInstruction(byteAddress, "CALL write", 0xCD, 0x06, 0x00);
       } else {
-        storeString[z80PosLine++] = String.format("CALL 0x%04X", word);
+        asm = new AssemblyInstruction(byteAddress, String.format("CALL 0x%04X", word), 0xCD, word % 256, word / 256);
+        throw new RuntimeException("untested CALL nnnn");
       }
-    } else if (brFunctions.contains(function)) {
-      if (function == FunctionType.br) {
-        storeString[z80PosLine++] = String.format("JP L" + word);
-      } else if (function == FunctionType.brEq) {
-        storeString[z80PosLine++] = String.format("JP Z,L" + word);
-      } else if (function == FunctionType.brNe) {
-        storeString[z80PosLine++] = String.format("JP NZ,L" + word);
-      } else if (function == FunctionType.brLt) {
-        storeString[z80PosLine++] = String.format("JP NC,L" + word);
-      } else if (function == FunctionType.brLe) {
-        storeString[z80PosLine++] = String.format("JP NC,L" + word);
-        storeString[z80PosLine++] = String.format("JP Z,L" + word);
-      } else if (function == FunctionType.brGt) {
-        storeString[z80PosLine++] = "JR   Z,$+5";
-        storeString[z80PosLine++] = String.format("JP C,L" + word);
-      } else if (function == FunctionType.brGe) {
-        storeString[z80PosLine++] = String.format("JP C,L" + word);
-      }
-    } else if (function == FunctionType.accLoad) {
-      switch(opType) {
-        case var: 
-          storeString[z80PosLine++] = "LD   HL,(" + memAddress + ")";
-          break;
-        case constant: 
-          storeString[z80PosLine++] = "LD   HL," + word;
-          break;
-        case stack:
-          storeString[z80PosLine++] = "POP HL";
-          break;
-      };
     } else if (function == FunctionType.accStore) {
       switch(opType) {
         case var: 
-          storeString[z80PosLine++] = "LD   (" + memAddress + "),HL";
+          asmCode = "LD   (" + memAddress + "),HL";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
           break;
         case stack:
-          storeString[z80PosLine++] = "PUSH HL";
+          asm = new AssemblyInstruction(byteAddress, "PUSH HL", 0xE5);
           break;
-      };
-    } else if (function == FunctionType.stackAccLoad) {
-      storeString[z80PosLine++] = "PUSH HL";
+      }
+    } else if (function == FunctionType.accLoad || function == FunctionType.stackAccLoad) {
+      if (function == FunctionType.stackAccLoad) {
+        result.add(new AssemblyInstruction(byteAddress++, "PUSH HL", 0xE5));
+      }
       switch(opType) {
         case var: 
-          storeString[z80PosLine++] = "LD   HL,(" + memAddress + ")";
+          asmCode = "LD   HL,(" + memAddress + ")";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
           break;
         case constant: 
-          storeString[z80PosLine++] = "LD   HL," + word;
+          asmCode = "LD   HL," + word;
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, word % 256, word / 256);
           break;
-      };
+        case stack:
+          if (function == FunctionType.stackAccLoad) {
+            throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
+          }
+          asmCode = "POP  HL";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xE1);
+          throw new RuntimeException("untested accLoad unstack");
+          //break;
+      }
     } else if (function == FunctionType.accPlus) {
       switch(opType) {
         case var: 
-          storeString[z80PosLine++] = "LD   DE,(" + memAddress + ")";
+          asmCode = "LD   DE,(" + memAddress + ")";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
           break;
         case constant: 
-          storeString[z80PosLine++] = "LD   DE," + word;
+          asmCode = "LD   DE," + word;
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256);
           break;
         case stack:
-          storeString[z80PosLine++] = "POP DE";
+          asmCode = "POP  DE";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
           break;
-      };
-      storeString[z80PosLine++] = "ADD   HL,DE";
+      }
+      result.add(asm);
+      byteAddress += asm.getBytes().size();
+      asmCode = "ADD  HL,DE";
+      asm = new AssemblyInstruction(byteAddress, asmCode, 0x19);
     } else if ((function == FunctionType.accMinus) || (function == FunctionType.minusAcc) || (function == FunctionType.accCompare)) {
       switch(opType) {
         case var: 
-          storeString[z80PosLine++] = "LD   DE,(" + memAddress + ")";
+          asmCode = "LD   DE,(" + memAddress + ")";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
           break;
         case constant: 
-          storeString[z80PosLine++] = "LD   DE," + word;
+          asmCode = "LD   DE," + word;
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256);
           break;
         case stack:
-          storeString[z80PosLine++] = "POP DE";
+          asmCode = "POP  DE";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
           break;
       };
+      result.add(asm);
+      byteAddress += asm.getBytes().size();
+      
       if (function == FunctionType.accCompare) {
-        storeString[z80PosLine++] = "PUSH  HL";
+        result.add(new AssemblyInstruction(byteAddress++, "PUSH  HL", 0xE5));
+        throw new RuntimeException("untested accCompare");
       }
+      
       if (function == FunctionType.minusAcc) {
-        storeString[z80PosLine++] = "EX    DE,HL";
+        result.add(new AssemblyInstruction(byteAddress++, "EX   DE,HL", 0xEB));
       }
-      storeString[z80PosLine++] = "SCF";
-      storeString[z80PosLine++] = "CCF";
-      storeString[z80PosLine++] = "SBC   HL,DE";
+
+      result.add(new AssemblyInstruction(byteAddress++, "OR   A", 0xB7));
+      asm = new AssemblyInstruction(byteAddress, "SBC  HL,DE", 0xED, 0x52);
+      
       if (function == FunctionType.accCompare) {
-        storeString[z80PosLine++] = "POP   HL";
+        result.add(asm);
+        byteAddress += 4;
+        asm = new AssemblyInstruction(byteAddress, "POP  HL", 0xE1);
+        throw new RuntimeException("untested accCompare");
       }
     } else if (function == FunctionType.accTimes) {
       switch(opType) {
         case var: 
-          storeString[z80PosLine++] = "LD   DE,(" + memAddress + ")";
+          asmCode = "LD   DE,(" + memAddress + ")";
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256));
           break;
         case constant: 
-          storeString[z80PosLine++] = "LD   DE," + word;
+          asmCode = "LD   DE," + word;
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256));
           break;
         case stack:
-          storeString[z80PosLine++] = "POP DE";
+          asmCode = "POP  DE";
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xD1));
           break;
       };
-      storeString[z80PosLine++] = "CALL mul16";
+      asm = new AssemblyInstruction(byteAddress, "CALL mul16", 0xCD, 0x06, 0x00);
     } else if ((function == FunctionType.accDiv) || (function == FunctionType.divAcc)) {
       switch(opType) {
         case var: 
-          storeString[z80PosLine++] = "LD   DE,(" + memAddress + ")";
+          asmCode = "LD   DE,(" + memAddress + ")";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
           break;
         case constant: 
-          storeString[z80PosLine++] = "LD   DE," + word;
+          asmCode = "LD   DE," + word;
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256);
           break;
         case stack:
-          storeString[z80PosLine++] = "POP DE";
+          asmCode = "POP DE";
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
           break;
       };
+      result.add(asm);
+      byteAddress += asm.getBytes().size();
+
       if (function == FunctionType.divAcc) {
-        storeString[z80PosLine++] = "EX    DE,HL";
+        result.add(new AssemblyInstruction(byteAddress++, "EX   DE,HL", 0xEB));
       }
-      storeString[z80PosLine++] = "CALL div16";
+      asm = new AssemblyInstruction(byteAddress, "CALL div16", 0xCD, 0x09, 0x00);
+/*
+    } else if (brFunctions.contains(function)) {
+      if (function == FunctionType.br) {
+        asmCode = String.format("JP L" + word);
+      } else if (function == FunctionType.brEq) {
+        asmCode = String.format("JP Z,L" + word);
+      } else if (function == FunctionType.brNe) {
+        asmCode = String.format("JP NZ,L" + word);
+      } else if (function == FunctionType.brLt) {
+        asmCode = String.format("JP NC,L" + word);
+      } else if (function == FunctionType.brLe) {
+        asmCode = String.format("JP NC,L" + word);
+        asmCode = String.format("JP Z,L" + word);
+      } else if (function == FunctionType.brGt) {
+        asmCode = "JR   Z,$+5";
+        asmCode = String.format("JP C,L" + word);
+      } else if (function == FunctionType.brGe) {
+        asmCode = String.format("JP C,L" + word);
+      }
 */
     }
 
     /* add assembly code to output and update byte address */
     result.add(asm);
-    byteAddress += asm.getBytes().size();
+    if (asm == null) {
+      throw new RuntimeException("asm is null transcoding instruction " + instruction.toString());
+    }
+    if (asm.getBytes() != null) {
+      byteAddress += asm.getBytes().size();
+    }
 
     return result;
   }
 
   private void plantZ80Bin(Instruction instruction) {
   /*
-    FunctionType function = instruction.function;
-    OperandType opType = instruction.opType;
-    CallType callValue = instruction.callValue;
-    int word = instruction.word;
-    int memAddress = MEM_START + word * 2;
-
-    if (function == FunctionType.call) {
-      storeBytes[z80PosByte++] = 0xCD; // CALL
-      if (callValue == CallType.read) {
-        storeBytes[z80PosByte++] = 0x03;
-        storeBytes[z80PosByte++] = 0x00;
-      } else if (callValue == CallType.write) {
-        storeBytes[z80PosByte++] = 0x06;
-        storeBytes[z80PosByte++] = 0x00;
-      } else {
-        storeBytes[z80PosByte++] = word % 256;
-        storeBytes[z80PosByte++] = word / 256;
-      }
-    } else if (brFunctions.contains(function)) {
+    if (brFunctions.contains(function)) {
       if (function == FunctionType.br) {
         storeBytes[z80PosByte++] = 0xC3; // JP nnnn
       } else if (function == FunctionType.brEq) {
@@ -237,112 +266,6 @@ public class Transcoder {
       }
       storeBytes[z80PosByte++] = word / 256;
       storeBytes[z80PosByte++] = word % 256;
-    } else if (function == FunctionType.accLoad) {
-      switch(opType) {
-        case var: 
-          storeBytes[z80PosByte++] = 0x2A; // LD   HL,(memAddress)
-          storeBytes[z80PosByte++] = memAddress % 256;
-          storeBytes[z80PosByte++] = memAddress / 256;
-          break;
-        case constant: 
-          storeBytes[z80PosByte++] = 0x21; // LD   HL,word
-          storeBytes[z80PosByte++] = word % 256;
-          storeBytes[z80PosByte++] = word / 256;
-          break;
-        case stack:
-          storeBytes[z80PosByte++] = 0xE1; // POP HL
-          break;
-      };
-    } else if (function == FunctionType.accStore) {
-      switch(opType) {
-        case var: 
-          storeBytes[z80PosByte++] = 0x22; // LD   (memAddress),HL
-          storeBytes[z80PosByte++] = memAddress % 256;
-          storeBytes[z80PosByte++] = memAddress / 256;
-          break;
-        case stack:
-          storeBytes[z80PosByte++] = 0xE5; // PUSH HL
-          break;
-      };
-    } else if (function == FunctionType.stackAccLoad) {
-      storeBytes[z80PosByte++] = 0xE5; // PUSH HL
-      switch(opType) {
-        case var: 
-          storeBytes[z80PosByte++] = 0x2A; // LD   HL,(" + memAddress + ")
-          storeBytes[z80PosByte++] = memAddress % 256;
-          storeBytes[z80PosByte++] = memAddress / 256;
-          break;
-        case constant: 
-          storeBytes[z80PosByte++] = 0x21; // LD   HL,word;
-          storeBytes[z80PosByte++] = word % 256;
-          storeBytes[z80PosByte++] = word / 256;
-          break;
-      };
-    } else if (function == FunctionType.accPlus) {
-      switch(opType) {
-        case var: 
-          storeBytes[z80PosByte++] = 0xED; // LD   DE,(memAddress)
-          storeBytes[z80PosByte++] = 0x5B;
-          storeBytes[z80PosByte++] = memAddress % 256;
-          storeBytes[z80PosByte++] = memAddress / 256;
-          break;
-        case constant: 
-          storeBytes[z80PosByte++] = 0x11; // LD   DE,word
-          storeBytes[z80PosByte++] = word % 256;
-          storeBytes[z80PosByte++] = word / 256;
-          break;
-        case stack:
-          storeBytes[z80PosByte++] = 0xD1; // POP DE
-          break;
-      };
-      storeBytes[z80PosByte++] = 0x19; // ADD   HL,DE
-    } else if ((function == FunctionType.accMinus) || (function == FunctionType.minusAcc) || (function == FunctionType.accCompare)) {
-      switch(opType) {
-        case var: 
-          storeBytes[z80PosByte++] = 0xED; // LD   DE,(memAddress)
-          storeBytes[z80PosByte++] = 0x5B;
-          storeBytes[z80PosByte++] = memAddress % 256;
-          storeBytes[z80PosByte++] = memAddress / 256;
-          break;
-        case constant: 
-          storeBytes[z80PosByte++] = 0x11; // LD   DE,word
-          storeBytes[z80PosByte++] = word % 256;
-          storeBytes[z80PosByte++] = word / 256;
-          break;
-        case stack:
-          storeBytes[z80PosByte++] = 0xD1; // POP DE
-          break;
-      };
-      if (function == FunctionType.accCompare) {
-        storeBytes[z80PosByte++] = 0xE5; // PUSH  HL
-      }
-      if (function == FunctionType.minusAcc) {
-        storeBytes[z80PosByte++] = 0xEB; // EX    DE,HL
-      }
-      storeBytes[z80PosByte++] = 0x37; // SCF
-      storeBytes[z80PosByte++] = 0x3F; // CCF
-      storeBytes[z80PosByte++] = 0xED; // SBC   HL,DE
-      storeBytes[z80PosByte++] = 0x52;
-      if (function == FunctionType.accCompare) {
-        storeBytes[z80PosByte++] = 0xE1; // POP   HL
-      }
-    } else if (function == FunctionType.accTimes) {
-      switch(opType) {
-        case var: 
-          storeBytes[z80PosByte++] = 0xED; // LD   DE,(memAddress)
-          storeBytes[z80PosByte++] = 0x5B;
-          storeBytes[z80PosByte++] = memAddress % 256;
-          storeBytes[z80PosByte++] = memAddress / 256;
-          break;
-        case constant: 
-          storeBytes[z80PosByte++] = 0x11; // LD   DE,word
-          storeBytes[z80PosByte++] = word % 256;
-          storeBytes[z80PosByte++] = word / 256;
-          break;
-        case stack:
-          storeBytes[z80PosByte++] = 0xD1; // POP DE
-          break;
-      };
       //HL := HL * DE
       //       H  L
       //       D  E
@@ -389,25 +312,6 @@ public class Transcoder {
 //  pop bc
 //  ret
     } else if ((function == FunctionType.accDiv) || (function == FunctionType.divAcc)) {
-      switch(opType) {
-        case var: 
-          storeBytes[z80PosByte++] = 0xED; // LD   DE,(memAddress)
-          storeBytes[z80PosByte++] = 0x5B;
-          storeBytes[z80PosByte++] = memAddress % 256;
-          storeBytes[z80PosByte++] = memAddress / 256;
-          break;
-        case constant: 
-          storeBytes[z80PosByte++] = 0x11;  // LD   DE,word
-          storeBytes[z80PosByte++] = word % 256;
-          storeBytes[z80PosByte++] = word / 256;
-          break;
-        case stack:
-          storeBytes[z80PosByte++] = 0xD1; // POP DE
-          break;
-      };
-      if (function == FunctionType.divAcc) {
-        storeBytes[z80PosByte++] = 0xEB; // EX    DE,HL
-      }
       // teller in HL; deler in DE -> quotient in HL; restant in DE
       // LD   A,D */ /* als DE=0, error div by zero
       // OR   E
@@ -473,70 +377,70 @@ public class Transcoder {
   
   private void plantZ80Runtime() {
     /*
-    storeString[z80PosLine++] = "JP main";
+    asmCode = "JP main";
 
-    storeString[z80PosLine++] = "mul16:";
+    asmCode = "mul16:";
     // DEHL = HL * DE
-    storeString[z80PosLine++] = "push bc";
-    storeString[z80PosLine++] = "ld b,h";
-    storeString[z80PosLine++] = "ld c,l";
-    storeString[z80PosLine++] = "ld hl,0";
-    storeString[z80PosLine++] = "ld a,16";
-    storeString[z80PosLine++] = "mul16_1:";
-    storeString[z80PosLine++] = "add hl,hl";
-    storeString[z80PosLine++] = "rl e";
-    storeString[z80PosLine++] = "rl d";
-    storeString[z80PosLine++] = "jr nc,mul16_2";
-    storeString[z80PosLine++] = "add hl,bc";
-    storeString[z80PosLine++] = "jr nc, mul16_2";
-    storeString[z80PosLine++] = "inc de";
-    storeString[z80PosLine++] = "mul16_2:";
-    storeString[z80PosLine++] = "dec a";
-    storeString[z80PosLine++] = "jr nz, mul16_1";
-    storeString[z80PosLine++] = "pop bc";
-    storeString[z80PosLine++] = "ret";
+    asmCode = "push bc";
+    asmCode = "ld b,h";
+    asmCode = "ld c,l";
+    asmCode = "ld hl,0";
+    asmCode = "ld a,16";
+    asmCode = "mul16_1:";
+    asmCode = "add hl,hl";
+    asmCode = "rl e";
+    asmCode = "rl d";
+    asmCode = "jr nc,mul16_2";
+    asmCode = "add hl,bc";
+    asmCode = "jr nc, mul16_2";
+    asmCode = "inc de";
+    asmCode = "mul16_2:";
+    asmCode = "dec a";
+    asmCode = "jr nz, mul16_1";
+    asmCode = "pop bc";
+    asmCode = "ret";
 
-    storeString[z80PosLine++] = "div16:";
+    asmCode = "div16:";
     // teller in HL; deler in DE -> quotient in HL; restant in DE
-    storeString[z80PosLine++] = "LD   A,D"; // als DE=0, error div by zero
-    storeString[z80PosLine++] = "OR   E";
-    storeString[z80PosLine++] = "JR   Z,ERROR";
-    storeString[z80PosLine++] = "LD   B,H"; // kopie teller in BC
-    storeString[z80PosLine++] = "LD   C,L";
-    storeString[z80PosLine++] = "LD   HL,0"; // result = 0
-    storeString[z80PosLine++] = "LD   A,B"; // deler High
-    storeString[z80PosLine++] = "LD   B,16D";
-    storeString[z80PosLine++] = "TRIALSB:";
-    storeString[z80PosLine++] = "RL   C"; // roteer links result + ACC
-    storeString[z80PosLine++] = "RLA";
-    storeString[z80PosLine++] = "ADC  HL,HL"; // schuif links; carry wordt niet beïnvloed
-    storeString[z80PosLine++] = "SBC  HL,DE"; // teller eraftrekken
-    storeString[z80PosLine++] = "NULL:";
-    storeString[z80PosLine++] = "CCF"; // result bit
-    storeString[z80PosLine++] = "JR   NC,NGV"; // Acc negatief?
-    storeString[z80PosLine++] = "PTV:";
-    storeString[z80PosLine++] = "DJNZ TRIALSB";
-    storeString[z80PosLine++] = "JP   DONE";
-    storeString[z80PosLine++] = "RESTOR:";
-    storeString[z80PosLine++] = "RL   C"; // roteer links result + acc
-    storeString[z80PosLine++] = "RLA";
-    storeString[z80PosLine++] = "ADC  HL,HL"; // schuif links; carry wordt niet beïnvloed
-    storeString[z80PosLine++] = "AND  A"; // carry op nul zetten
-    storeString[z80PosLine++] = "ADC  HL,DE"; // herstel door deler erbij te tellen
-    storeString[z80PosLine++] = "JR   C,PTV"; // resultaat positief
-    storeString[z80PosLine++] = "JR   Z,NULL"; // resultaat nul
-    storeString[z80PosLine++] = "NGV:";
-    storeString[z80PosLine++] = "DJNZ RESTOR";
-    storeString[z80PosLine++] = "DONE:";
-    storeString[z80PosLine++] = "RL   C"; // resultaat bit inschuiven
-    storeString[z80PosLine++] = "RLA";
-    storeString[z80PosLine++] = "LD   B,A"; // quotient in BC
-    storeString[z80PosLine++] = "LD   A,H"; // restant High negatief?
-    storeString[z80PosLine++] = "OR   A";
-    storeString[z80PosLine++] = "JP   P,PREM";
-    storeString[z80PosLine++] = "ADD  HL,DE"; // corrigeer negatief restant
-    storeString[z80PosLine++] = "PREM:";
-    storeString[z80PosLine++] = "RET";
+    asmCode = "LD   A,D"; // als DE=0, error div by zero
+    asmCode = "OR   E";
+    asmCode = "JR   Z,ERROR";
+    asmCode = "LD   B,H"; // kopie teller in BC
+    asmCode = "LD   C,L";
+    asmCode = "LD   HL,0"; // result = 0
+    asmCode = "LD   A,B"; // deler High
+    asmCode = "LD   B,16D";
+    asmCode = "TRIALSB:";
+    asmCode = "RL   C"; // roteer links result + ACC
+    asmCode = "RLA";
+    asmCode = "ADC  HL,HL"; // schuif links; carry wordt niet beïnvloed
+    asmCode = "SBC  HL,DE"; // teller eraftrekken
+    asmCode = "NULL:";
+    asmCode = "CCF"; // result bit
+    asmCode = "JR   NC,NGV"; // Acc negatief?
+    asmCode = "PTV:";
+    asmCode = "DJNZ TRIALSB";
+    asmCode = "JP   DONE";
+    asmCode = "RESTOR:";
+    asmCode = "RL   C"; // roteer links result + acc
+    asmCode = "RLA";
+    asmCode = "ADC  HL,HL"; // schuif links; carry wordt niet beïnvloed
+    asmCode = "AND  A"; // carry op nul zetten
+    asmCode = "ADC  HL,DE"; // herstel door deler erbij te tellen
+    asmCode = "JR   C,PTV"; // resultaat positief
+    asmCode = "JR   Z,NULL"; // resultaat nul
+    asmCode = "NGV:";
+    asmCode = "DJNZ RESTOR";
+    asmCode = "DONE:";
+    asmCode = "RL   C"; // resultaat bit inschuiven
+    asmCode = "RLA";
+    asmCode = "LD   B,A"; // quotient in BC
+    asmCode = "LD   A,H"; // restant High negatief?
+    asmCode = "OR   A";
+    asmCode = "JP   P,PREM";
+    asmCode = "ADD  HL,DE"; // corrigeer negatief restant
+    asmCode = "PREM:";
+    asmCode = "RET";
 //
 //This divides DE by BC, storing the result in DE, remainder in HL
 //
@@ -556,7 +460,7 @@ public class Transcoder {
 //       inc e        ;--
 //       jp DivLoop+1
 //
-     storeString[z80PosLine++] = "main:";
+     asmCode = "main:";
     */
   }
 }
