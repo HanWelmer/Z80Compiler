@@ -154,7 +154,10 @@ public class Interpreter {
     
     //proceed to next instruction
     pc++;
-    
+
+    //log stackpointer value
+    debug("\nsf = " + sf);
+
     //return true if Stop instruction has been executed or if a fatal error occurred.
     return stopRun;
   } // interpret()

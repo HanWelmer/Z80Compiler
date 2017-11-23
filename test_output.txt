@@ -1,0 +1,627 @@
+debug = true
+z80CodeGeneration = false
+binaryCodeGeneration = false
+
+prog start
+{Program to test some compiler constructs}
+
+VAR A, B, C, D;
+
+lexeme: name=VAR
+lexeme=VAR
+lexeme=name A
+idlist start
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+name A@0
+lexeme=,
+idlist var declared
+checkOrSkip: lexeme "comma" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist , skipped
+lexeme=name B
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+name B@1
+lexeme=,
+idlist var declared
+checkOrSkip: lexeme "comma" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist , skipped
+lexeme=name C
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+name C@2
+lexeme=,
+idlist var declared
+checkOrSkip: lexeme "comma" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist , skipped
+lexeme=name D
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+name D@3
+lexeme=;
+idlist var declared
+checkOrSkip: lexeme "semicolon" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist end of id list reached
+idlist ; skipped
+BEGIN
+
+lexeme: name=BEGIN
+lexeme=BEGIN
+idlist end
+block: start
+checkOrSkip: lexeme "beginlexeme" in okSet [dot, identifier, beginlexeme, writelexeme, iflexeme, whilelexeme]
+  A := 1;
+
+lexeme=name A@0
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme=:=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme=digit 1
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=;
+->plant (accInUse=false):
+  0 :acc= constant 1
+->plant (accInUse=true):
+  1 :acc=> variable 0
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+{  A := READ;
+
+  B := A;
+
+  B := 2 + 1;
+
+  B := 1 + A;
+
+  B := 1 + READ;
+
+  B := A + 1;
+
+  B := A + A;
+
+  B := A + READ;
+
+  B := READ + 1;
+
+  B := READ + A;
+
+  B := READ + READ;
+
+  B := 9 - 1;
+
+  B := 9 - A;
+
+  B := 9 - READ;
+
+  B := A - 1;
+
+  B := A - A;
+
+  B := A - READ;
+
+  B := READ - 1;
+
+}
+
+  WRITE(A);
+
+lexeme: name=WRITE
+lexeme=WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme=name A@0
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=)
+->plant (accInUse=false):
+  2 :acc= variable 0
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=;
+->plant (accInUse=true):
+  3 :acc=> stack
+->plant (accInUse=true):
+  4 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  B := READ - A;
+
+lexeme=name B@1
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme=:=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme: name=READ
+lexeme=READ
+checkOrSkip: lexeme "readlexeme" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - sub
+->plant (accInUse=false):
+  5 :call read
+lexeme=name A@0
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=;
+->plant (accInUse=true):
+  6 :acc- variable 0
+->plant (accInUse=true):
+  7 :acc=> variable 1
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  WRITE(B);
+
+lexeme: name=WRITE
+lexeme=WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=)
+->plant (accInUse=false):
+  8 :acc= variable 1
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=;
+->plant (accInUse=true):
+  9 :acc=> stack
+->plant (accInUse=true):
+ 10 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  B := READ - READ;
+
+lexeme=name B@1
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme=:=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme: name=READ
+lexeme=READ
+checkOrSkip: lexeme "readlexeme" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - sub
+->plant (accInUse=false):
+ 11 :call read
+lexeme: name=READ
+lexeme=READ
+checkOrSkip: lexeme "readlexeme" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=;
+->plant (accInUse=true):
+ 12 :acc=> stack
+->plant (accInUse=true):
+ 13 :call read
+->plant (accInUse=true):
+ 14 :-acc unstack
+->plant (accInUse=true):
+ 15 :acc=> variable 1
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  WRITE(B);
+
+lexeme: name=WRITE
+lexeme=WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=)
+->plant (accInUse=false):
+ 16 :acc= variable 1
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=;
+->plant (accInUse=true):
+ 17 :acc=> stack
+->plant (accInUse=true):
+ 18 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  C := A * READ * (B + 2 * (B + 3 * (B + 4 * (B + 5 * (B + 6 * (B + 7 * (B + 8 * (B + 9 * (B + 0 * (B + 1 * (B + 2 * (B + READ))))))))))));
+
+lexeme=name C@2
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme=:=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme=name A@0
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=false):
+ 19 :acc= variable 0
+lexeme: name=READ
+lexeme=READ
+checkOrSkip: lexeme "readlexeme" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 20 :acc=> stack
+->plant (accInUse=true):
+ 21 :call read
+->plant (accInUse=true):
+ 22 :acc* unstack
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 23 :<acc= variable 1
+lexeme=digit 2
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 24 :<acc= constant 2
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 25 :<acc= variable 1
+lexeme=digit 3
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 26 :<acc= constant 3
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 27 :<acc= variable 1
+lexeme=digit 4
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 28 :<acc= constant 4
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 29 :<acc= variable 1
+lexeme=digit 5
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 30 :<acc= constant 5
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 31 :<acc= variable 1
+lexeme=digit 6
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 32 :<acc= constant 6
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 33 :<acc= variable 1
+lexeme=digit 7
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 34 :<acc= constant 7
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 35 :<acc= variable 1
+lexeme=digit 8
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 36 :<acc= constant 8
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 37 :<acc= variable 1
+lexeme=digit 9
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 38 :<acc= constant 9
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 39 :<acc= variable 1
+lexeme=digit 0
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 40 :<acc= constant 0
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 41 :<acc= variable 1
+lexeme=digit 1
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 42 :<acc= constant 1
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 43 :<acc= variable 1
+lexeme=digit 2
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=* or / muld
+->plant (accInUse=true):
+ 44 :<acc= constant 2
+lexeme=(
+checkOrSkip: lexeme "lbracket" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=name B@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=+ or - add
+->plant (accInUse=true):
+ 45 :<acc= variable 1
+lexeme: name=READ
+lexeme=READ
+checkOrSkip: lexeme "readlexeme" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme=)
+->plant (accInUse=true):
+ 46 :acc=> stack
+->plant (accInUse=true):
+ 47 :call read
+->plant (accInUse=true):
+ 48 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 49 :acc* unstack
+->plant (accInUse=true):
+ 50 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 51 :acc* unstack
+->plant (accInUse=true):
+ 52 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 53 :acc* unstack
+->plant (accInUse=true):
+ 54 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 55 :acc* unstack
+->plant (accInUse=true):
+ 56 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 57 :acc* unstack
+->plant (accInUse=true):
+ 58 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 59 :acc* unstack
+->plant (accInUse=true):
+ 60 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 61 :acc* unstack
+->plant (accInUse=true):
+ 62 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 63 :acc* unstack
+->plant (accInUse=true):
+ 64 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 65 :acc* unstack
+->plant (accInUse=true):
+ 66 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 67 :acc* unstack
+->plant (accInUse=true):
+ 68 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=)
+->plant (accInUse=true):
+ 69 :acc* unstack
+->plant (accInUse=true):
+ 70 :acc+ unstack
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme=;
+->plant (accInUse=true):
+ 71 :acc* unstack
+->plant (accInUse=true):
+ 72 :acc=> variable 2
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+END.
+
+lexeme: name=END
+lexeme=END
+block: start
+checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: end
+block: end
+checkOrSkip: lexeme "endlexeme" in okSet [semicolon, endlexeme]
+lexeme=.
+block: end
+checkOrSkip: lexeme "dot" in okSet [dot]
+prog end
+->plant (accInUse=false):
+ 73 :stop
+Assembly listing of compiled code:
+----------------------------------
+  0 :acc= constant 1
+  1 :acc=> variable 0
+  2 :acc= variable 0
+  3 :acc=> stack
+  4 :call write
+  5 :call read
+  6 :acc- variable 0
+  7 :acc=> variable 1
+  8 :acc= variable 1
+  9 :acc=> stack
+ 10 :call write
+ 11 :call read
+ 12 :acc=> stack
+ 13 :call read
+ 14 :-acc unstack
+ 15 :acc=> variable 1
+ 16 :acc= variable 1
+ 17 :acc=> stack
+ 18 :call write
+ 19 :acc= variable 0
+ 20 :acc=> stack
+ 21 :call read
+ 22 :acc* unstack
+ 23 :<acc= variable 1
+ 24 :<acc= constant 2
+ 25 :<acc= variable 1
+ 26 :<acc= constant 3
+ 27 :<acc= variable 1
+ 28 :<acc= constant 4
+ 29 :<acc= variable 1
+ 30 :<acc= constant 5
+ 31 :<acc= variable 1
+ 32 :<acc= constant 6
+ 33 :<acc= variable 1
+ 34 :<acc= constant 7
+ 35 :<acc= variable 1
+ 36 :<acc= constant 8
+ 37 :<acc= variable 1
+ 38 :<acc= constant 9
+ 39 :<acc= variable 1
+ 40 :<acc= constant 0
+ 41 :<acc= variable 1
+ 42 :<acc= constant 1
+ 43 :<acc= variable 1
+ 44 :<acc= constant 2
+ 45 :<acc= variable 1
+ 46 :acc=> stack
+ 47 :call read
+ 48 :acc+ unstack
+ 49 :acc* unstack
+ 50 :acc+ unstack
+ 51 :acc* unstack
+ 52 :acc+ unstack
+ 53 :acc* unstack
+ 54 :acc+ unstack
+ 55 :acc* unstack
+ 56 :acc+ unstack
+ 57 :acc* unstack
+ 58 :acc+ unstack
+ 59 :acc* unstack
+ 60 :acc+ unstack
+ 61 :acc* unstack
+ 62 :acc+ unstack
+ 63 :acc* unstack
+ 64 :acc+ unstack
+ 65 :acc* unstack
+ 66 :acc+ unstack
+ 67 :acc* unstack
+ 68 :acc+ unstack
+ 69 :acc* unstack
+ 70 :acc+ unstack
+ 71 :acc* unstack
+ 72 :acc=> variable 2
+ 73 :stop
+
+Running compiled code ...
+
+pc=0 : acc= constant 1
+sf = 0
+pc=1 : acc=> variable 0
+sf = 0
+pc=2 : acc= variable 0
+pc=2 vars[0] = 1
+sf = 0
+pc=3 : acc=> stack
+sf = 1
+pc=4 : call write1
+
+sf = 0
+pc=5 : call read
+read:
+*** runtime error: read exception:null
+pc=5 : call read
+accumulator = 1
+stackpointer= 0
+
+variable  0 = 1
+variable  1 = 0
+variable  2 = 0
+variable  3 = 0
+variable  4 = 0
+variable  5 = 0
+variable  6 = 0
+variable  7 = 0
+variable  8 = 0
+variable  9 = 0
+variable 10 = 0
+variable 11 = 0
+variable 12 = 0
+variable 13 = 0
+variable 14 = 0
+variable 15 = 0
+variable 16 = 0
+variable 17 = 0
+variable 18 = 0
+variable 19 = 0
+variable 20 = 0
+variable 21 = 0
+variable 22 = 0
+variable 23 = 0
+variable 24 = 0
+variable 25 = 0
+
+
