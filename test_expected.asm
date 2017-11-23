@@ -94,7 +94,6 @@ LD   HL,(4000)
 LD   DE,(4002)
 ADD  HL,DE
 LD   (4004),HL
-     ;  
      ;
      ;  B := READ - READ;
 CALL read
@@ -299,5 +298,62 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4006),HL
+     ;
+     ;  B := READ / READ;
+CALL read
+PUSH HL
+CALL read
+POP  DE
+EX   DE,HL
+CALL div16
+LD   (4002),HL
+     ;  B := READ / 5;
+CALL read
+LD   DE,5
+CALL div16
+LD   (4002),HL
+     ;  B := READ / A;
+CALL read
+LD   DE,(4000)
+CALL div16
+LD   (4002),HL
+     ;  B := 3 / READ;
+LD   HL,3
+PUSH HL
+CALL read
+POP  DE
+EX   DE,HL
+CALL div16
+LD   (4002),HL
+     ;  B := 3 / 5;
+LD   HL,3
+LD   DE,5
+CALL div16
+LD   (4002),HL
+     ;  B := 3 / A;
+LD   HL,3
+LD   DE,(4000)
+CALL div16
+LD   (4002),HL
+     ;  B := A / READ;
+LD   HL,(4000)
+PUSH HL
+CALL read
+POP  DE
+EX   DE,HL
+CALL div16
+LD   (4002),HL
+     ;  B := A / 5;
+LD   HL,(4000)
+LD   DE,5
+CALL div16
+LD   (4002),HL
+     ;  C := A / B;
+LD   HL,(4000)
+LD   DE,(4002)
+CALL div16
+LD   (4004),HL
+     ;{
+     ;}
      ;END.
 JP   0x0171

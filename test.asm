@@ -1,48 +1,48 @@
-     ;{Program to test some compiler constructs}
+L000:;{Program to test some compiler constructs}
      ;VAR A, B, C, D;
      ;BEGIN
      ;  WRITE(READ);
 CALL read
 PUSH HL
 CALL write
-     ;
+L003:;
      ;  A := READ;
 CALL read
 LD   (4000),HL
-     ;  A := 2;
+L005:;  A := 2;
 LD   HL,2
 LD   (4000),HL
-     ;  B := 3;
+L007:;  B := 3;
 LD   HL,3
 LD   (4002),HL
-     ;  C := 4;
+L009:;  C := 4;
 LD   HL,4
 LD   (4004),HL
-     ;  D := 5;
+L011:;  D := 5;
 LD   HL,5
 LD   (4006),HL
-     ;  B := A;
+L013:;  B := A;
 LD   HL,(4000)
 LD   (4002),HL
-     ;  B := B;
+L015:;  B := B;
 LD   HL,(4002)
 LD   (4002),HL
-     ;  B := C;
+L017:;  B := C;
 LD   HL,(4004)
 LD   (4002),HL
-     ;  B := D;
+L019:;  B := D;
 LD   HL,(4006)
 LD   (4002),HL
-     ; 
+L021:; 
      ;  WRITE(1);
 LD   HL,1
 PUSH HL
 CALL write
-     ;  WRITE(A);
+L024:;  WRITE(A);
 LD   HL,(4000)
 PUSH HL
 CALL write
-     ;  
+L027:;  
      ;  B := READ + READ;
 CALL read
 PUSH HL
@@ -50,52 +50,51 @@ CALL read
 POP  DE
 ADD  HL,DE
 LD   (4002),HL
-     ;  B := READ + 1;
+L032:;  B := READ + 1;
 CALL read
 LD   DE,1
 ADD  HL,DE
 LD   (4002),HL
-     ;  B := READ + A;
+L035:;  B := READ + A;
 CALL read
 LD   DE,(4000)
 ADD  HL,DE
 LD   (4002),HL
-     ;  B := 1 + READ;
+L038:;  B := 1 + READ;
 LD   HL,1
 PUSH HL
 CALL read
 POP  DE
 ADD  HL,DE
 LD   (4002),HL
-     ;  B := 2 + 1;
+L043:;  B := 2 + 1;
 LD   HL,2
 LD   DE,1
 ADD  HL,DE
 LD   (4002),HL
-     ;  B := 1 + A;
+L046:;  B := 1 + A;
 LD   HL,1
 LD   DE,(4000)
 ADD  HL,DE
 LD   (4002),HL
-     ;  B := A + READ;
+L049:;  B := A + READ;
 LD   HL,(4000)
 PUSH HL
 CALL read
 POP  DE
 ADD  HL,DE
 LD   (4002),HL
-     ;  B := A + 1;
+L054:;  B := A + 1;
 LD   HL,(4000)
 LD   DE,1
 ADD  HL,DE
 LD   (4002),HL
-     ;  C := A + B;
+L057:;  C := A + B;
 LD   HL,(4000)
 LD   DE,(4002)
 ADD  HL,DE
 LD   (4004),HL
-     ;  
-     ;
+L060:;
      ;  B := READ - READ;
 CALL read
 PUSH HL
@@ -105,19 +104,19 @@ EX   DE,HL
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  B := READ - 1;
+L065:;  B := READ - 1;
 CALL read
 LD   DE,1
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  B := READ - A;
+L068:;  B := READ - A;
 CALL read
 LD   DE,(4000)
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  B := 1 - READ;
+L071:;  B := 1 - READ;
 LD   HL,1
 PUSH HL
 CALL read
@@ -126,19 +125,19 @@ EX   DE,HL
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  B := 1 - 1;
+L076:;  B := 1 - 1;
 LD   HL,1
 LD   DE,1
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  B := 3 - A;
+L079:;  B := 3 - A;
 LD   HL,3
 LD   DE,(4000)
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  B := A - READ;
+L082:;  B := A - READ;
 LD   HL,(4000)
 PUSH HL
 CALL read
@@ -147,19 +146,19 @@ EX   DE,HL
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  B := A - 2;
+L087:;  B := A - 2;
 LD   HL,(4000)
 LD   DE,2
 OR   A
 SBC  HL,DE
 LD   (4002),HL
-     ;  C := A - B;
+L090:;  C := A - B;
 LD   HL,(4000)
 LD   DE,(4002)
 OR   A
 SBC  HL,DE
 LD   (4004),HL
-     ;
+L093:;
      ;  B := READ * READ;
 CALL read
 PUSH HL
@@ -167,51 +166,51 @@ CALL read
 POP  DE
 CALL mul16
 LD   (4002),HL
-     ;  B := READ * 5;
+L098:;  B := READ * 5;
 CALL read
 LD   DE,5
 CALL mul16
 LD   (4002),HL
-     ;  B := READ * A;
+L101:;  B := READ * A;
 CALL read
 LD   DE,(4000)
 CALL mul16
 LD   (4002),HL
-     ;  B := 3 * READ;
+L104:;  B := 3 * READ;
 LD   HL,3
 PUSH HL
 CALL read
 POP  DE
 CALL mul16
 LD   (4002),HL
-     ;  B := 3 * 5;
+L109:;  B := 3 * 5;
 LD   HL,3
 LD   DE,5
 CALL mul16
 LD   (4002),HL
-     ;  B := 3 * A;
+L112:;  B := 3 * A;
 LD   HL,3
 LD   DE,(4000)
 CALL mul16
 LD   (4002),HL
-     ;  B := A * READ;
+L115:;  B := A * READ;
 LD   HL,(4000)
 PUSH HL
 CALL read
 POP  DE
 CALL mul16
 LD   (4002),HL
-     ;  B := A * 5;
+L120:;  B := A * 5;
 LD   HL,(4000)
 LD   DE,5
 CALL mul16
 LD   (4002),HL
-     ;  C := A * B;
+L123:;  C := A * B;
 LD   HL,(4000)
 LD   DE,(4002)
 CALL mul16
 LD   (4004),HL
-     ;  
+L126:;  
      ;  C := A * (READ + READ);
 LD   HL,(4000)
 PUSH HL
@@ -223,7 +222,7 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  C := A * (READ + 1);
+L134:;  C := A * (READ + 1);
 LD   HL,(4000)
 PUSH HL
 CALL read
@@ -232,7 +231,7 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  C := A * (READ + B);
+L140:;  C := A * (READ + B);
 LD   HL,(4000)
 PUSH HL
 CALL read
@@ -241,7 +240,7 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  C := A * (1 + READ);
+L146:;  C := A * (1 + READ);
 LD   HL,(4000)
 PUSH HL
 LD   HL,1
@@ -252,7 +251,7 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  C := A * (1 + 2);
+L153:;  C := A * (1 + 2);
 LD   HL,(4000)
 PUSH HL
 LD   HL,1
@@ -261,7 +260,7 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  C := A * (1 + B);
+L158:;  C := A * (1 + B);
 LD   HL,(4000)
 PUSH HL
 LD   HL,1
@@ -270,7 +269,7 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  C := A * (B + READ);
+L163:;  C := A * (B + READ);
 LD   HL,(4000)
 PUSH HL
 LD   HL,(4002)
@@ -281,7 +280,7 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  C := A * (B + 2);
+L170:;  C := A * (B + 2);
 LD   HL,(4000)
 PUSH HL
 LD   HL,(4002)
@@ -290,71 +289,239 @@ ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4004),HL
-     ;  D := A * (A + C);
+L175:;  D := A * (B + C);
 LD   HL,(4000)
 PUSH HL
-LD   HL,(4000)
+LD   HL,(4002)
 LD   DE,(4004)
 ADD  HL,DE
 POP  DE
 CALL mul16
 LD   (4006),HL
-     ;
+L180:;  D := (A + B) * C;
+LD   HL,(4000)
+LD   DE,(4002)
+ADD  HL,DE
+LD   DE,(4004)
+CALL mul16
+LD   (4006),HL
+L184:;
      ;  B := READ / READ;
 CALL read
 PUSH HL
 CALL read
-POP DE
+POP  DE
 EX   DE,HL
 CALL div16
 LD   (4002),HL
-     ;  B := READ / 5;
+L189:;  B := READ / 5;
 CALL read
 LD   DE,5
 CALL div16
 LD   (4002),HL
-     ;  B := READ / A;
+L192:;  B := READ / A;
 CALL read
 LD   DE,(4000)
 CALL div16
 LD   (4002),HL
-     ;  B := 3 / READ;
+L195:;  B := 3 / READ;
 LD   HL,3
 PUSH HL
 CALL read
-POP DE
+POP  DE
 EX   DE,HL
 CALL div16
 LD   (4002),HL
-     ;  B := 3 / 5;
+L200:;  B := 3 / 5;
 LD   HL,3
 LD   DE,5
 CALL div16
 LD   (4002),HL
-     ;  B := 3 / A;
+L203:;  B := 3 / A;
 LD   HL,3
 LD   DE,(4000)
 CALL div16
 LD   (4002),HL
-     ;  B := A / READ;
+L206:;  B := A / READ;
 LD   HL,(4000)
 PUSH HL
 CALL read
-POP DE
+POP  DE
 EX   DE,HL
 CALL div16
 LD   (4002),HL
-     ;  B := A / 5;
+L211:;  B := A / 5;
 LD   HL,(4000)
 LD   DE,5
 CALL div16
 LD   (4002),HL
-     ;  C := A / B;
+L214:;  C := A / B;
 LD   HL,(4000)
 LD   DE,(4002)
 CALL div16
 LD   (4004),HL
-     ;{
-     ;}
-     ;END.
+L217:;
+     ;  WHILE A < 0 DO A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   C,L223
+LD   HL,1
+LD   (4000),HL
+JP   L217
+L223:;  WHILE A <= 0 DO A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   Z,$+5
+JP   C,L229
+LD   HL,1
+LD   (4000),HL
+JP   L223
+L229:;  WHILE A = 0 DO A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NZ,L235
+LD   HL,1
+LD   (4000),HL
+JP   L229
+L235:;  WHILE A >= 0 DO A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NC,L241
+LD   HL,1
+LD   (4000),HL
+JP   L235
+L241:;  WHILE A > 0 DO A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NC,L247
+JP   Z,L247
+LD   HL,1
+LD   (4000),HL
+JP   L241
+L247:;  WHILE A <> 0 DO A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   Z,L253
+LD   HL,1
+LD   (4000),HL
+JP   L247
+L253:;  IF A < 0 THEN A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   C,L258
+LD   HL,1
+LD   (4000),HL
+L258:;  IF A <= 0 THEN A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   Z,$+5
+JP   C,L263
+LD   HL,1
+LD   (4000),HL
+L263:;  IF A = 0 THEN A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NZ,L268
+LD   HL,1
+LD   (4000),HL
+L268:;  IF A >= 0 THEN A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NC,L273
+LD   HL,1
+LD   (4000),HL
+L273:;  IF A > 0 THEN A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NC,L278
+JP   Z,L278
+LD   HL,1
+LD   (4000),HL
+L278:;  IF A <> 0 THEN A = 1;
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   Z,L283
+LD   HL,1
+LD   (4000),HL
+L283:;
+     ;  WHILE A = 0 DO BEGIN
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NZ,L289
+L286:;    A = 1;
+LD   HL,1
+LD   (4000),HL
+L288:;  END;
+JP   L283
+L289:;
+     ;  WHILE A = 0 DO BEGIN
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NZ,L300
+L292:;    A = 1;
+LD   HL,1
+LD   (4000),HL
+L294:;    IF A=1 THEN BEGIN
+LD   HL,(4000)
+LD   DE,1
+OR   A
+SBC  HL,DE
+JP   NZ,L299
+L297:;      A = 2;
+LD   HL,2
+LD   (4000),HL
+L299:;    END;
+     ;  END;
+JP   L289
+L300:;
+     ;  WHILE A = 0 DO BEGIN
+LD   HL,(4000)
+LD   DE,0
+OR   A
+SBC  HL,DE
+JP   NZ,L311
+L303:;    IF A=1 THEN BEGIN
+LD   HL,(4000)
+LD   DE,1
+OR   A
+SBC  HL,DE
+JP   NZ,L308
+L306:;      A = 2;
+LD   HL,2
+LD   (4000),HL
+L308:;    END;
+     ;    A = 1;
+LD   HL,1
+LD   (4000),HL
+L310:;  END;
+JP   L300
+L311:;END.
 JP   0x0171

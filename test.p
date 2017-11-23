@@ -25,7 +25,6 @@ BEGIN
   B := A + READ;
   B := A + 1;
   C := A + B;
-  
 
   B := READ - READ;
   B := READ - 1;
@@ -55,7 +54,8 @@ BEGIN
   C := A * (1 + B);
   C := A * (B + READ);
   C := A * (B + 2);
-  D := A * (A + C);
+  D := A * (B + C);
+  D := (A + B) * C;
 
   B := READ / READ;
   B := READ / 5;
@@ -66,6 +66,35 @@ BEGIN
   B := A / READ;
   B := A / 5;
   C := A / B;
-{
-}
+
+  WHILE A < 0 DO A = 1;
+  WHILE A <= 0 DO A = 1;
+  WHILE A = 0 DO A = 1;
+  WHILE A >= 0 DO A = 1;
+  WHILE A > 0 DO A = 1;
+  WHILE A <> 0 DO A = 1;
+  IF A < 0 THEN A = 1;
+  IF A <= 0 THEN A = 1;
+  IF A = 0 THEN A = 1;
+  IF A >= 0 THEN A = 1;
+  IF A > 0 THEN A = 1;
+  IF A <> 0 THEN A = 1;
+
+  WHILE A = 0 DO BEGIN
+    A = 1;
+  END;
+
+  WHILE A = 0 DO BEGIN
+    A = 1;
+    IF A=1 THEN BEGIN
+      A = 2;
+    END;
+  END;
+
+  WHILE A = 0 DO BEGIN
+    IF A=1 THEN BEGIN
+      A = 2;
+    END;
+    A = 1;
+  END;
 END.
