@@ -13,7 +13,9 @@ public class AssemblyInstruction {
   public AssemblyInstruction(long address, String code, int... bytes) {
     this.address = address;
     this.code = code;
-    this.bytes = new ArrayList<Byte>(bytes.length);
+    if (bytes != null && bytes.length > 0) {
+      this.bytes = new ArrayList<Byte>(bytes.length);
+    }
     for (int newByte: bytes) {
       this.bytes.add((byte)newByte);
     }
