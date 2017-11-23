@@ -34,7 +34,23 @@ public class Transcoder {
     plantZ80Runtime();
 
     for (Instruction instruction: instructions) {
+      //add line nr as a label and original source code as assembler comment
+      //String prefix = "L" + instructions.indexOf(instruction) + ":;";
+      String prefix = String.format("L%03d:;", instructions.indexOf(instruction));
+      if (instruction.linesOfCode != null) {
+        for (String sourceCode : instruction.linesOfCode) {
+          z80Instructions.add(new AssemblyInstruction(byteAddress, prefix + sourceCode));
+          prefix = "     ;";
+        }
+      }
+      
+      //add original M-code instruction as assembler comment
+      if (debug) {
+        z80Instructions.add(new AssemblyInstruction(byteAddress, ";" + instruction.toString()));
+      }
+
       z80Instructions.addAll(transcode(instruction));
+
       if (z80Instructions.size() > MAX_ASM_CODE) {
         throw new RuntimeException("code overflow while generating Z80 assembler code");
       }
@@ -48,18 +64,6 @@ public class Transcoder {
 
     // TODO : implement transcoder.
     debug("\ntranscoding to Z80: " + instruction.toString());
-    
-    //add original source code as assembler comment
-    if (instruction.linesOfCode != null) {
-      for (String sourceCode : instruction.linesOfCode) {
-        result.add(new AssemblyInstruction(byteAddress, "     ;" + sourceCode));
-      }
-    }
-    
-    //add original M-code instruction as assembler comment
-    if (debug) {
-      result.add(new AssemblyInstruction(byteAddress, ";" + instruction.toString()));
-    }
     
     FunctionType function = instruction.function;
     OperandType opType = instruction.opType;
@@ -96,65 +100,21 @@ public class Transcoder {
       if (function == FunctionType.stackAccLoad) {
         result.add(new AssemblyInstruction(byteAddress++, "PUSH HL", 0xE5));
       }
-      switch(opType) {
-        case var: 
-          asmCode = "LD   HL,(" + memAddress + ")";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
-          break;
-        case constant: 
-          asmCode = "LD   HL," + word;
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, word % 256, word / 256);
-          break;
-        case stack:
-          if (function == FunctionType.stackAccLoad) {
-            throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
-          }
-          asmCode = "POP  HL";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xE1);
-          throw new RuntimeException("untested accLoad unstack");
-          //break;
+      if (opType == OperandType.stack && function == FunctionType.stackAccLoad) {
+        throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
       }
+      asm = operandToHL(instruction);
     } else if (function == FunctionType.accPlus) {
-      switch(opType) {
-        case var: 
-          asmCode = "LD   DE,(" + memAddress + ")";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
-          break;
-        case constant: 
-          asmCode = "LD   DE," + word;
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256);
-          break;
-        case stack:
-          asmCode = "POP  DE";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
-          break;
-      }
+      asm = operandToDE(instruction);
       result.add(asm);
       byteAddress += asm.getBytes().size();
+
       asmCode = "ADD  HL,DE";
       asm = new AssemblyInstruction(byteAddress, asmCode, 0x19);
     } else if ((function == FunctionType.accMinus) || (function == FunctionType.minusAcc) || (function == FunctionType.accCompare)) {
-      switch(opType) {
-        case var: 
-          asmCode = "LD   DE,(" + memAddress + ")";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
-          break;
-        case constant: 
-          asmCode = "LD   DE," + word;
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256);
-          break;
-        case stack:
-          asmCode = "POP  DE";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
-          break;
-      };
+      asm = operandToDE(instruction);
       result.add(asm);
       byteAddress += asm.getBytes().size();
-      
-      if (function == FunctionType.accCompare) {
-        result.add(new AssemblyInstruction(byteAddress++, "PUSH  HL", 0xE5));
-        throw new RuntimeException("untested accCompare");
-      }
       
       if (function == FunctionType.minusAcc) {
         result.add(new AssemblyInstruction(byteAddress++, "EX   DE,HL", 0xEB));
@@ -162,44 +122,14 @@ public class Transcoder {
 
       result.add(new AssemblyInstruction(byteAddress++, "OR   A", 0xB7));
       asm = new AssemblyInstruction(byteAddress, "SBC  HL,DE", 0xED, 0x52);
-      
-      if (function == FunctionType.accCompare) {
-        result.add(asm);
-        byteAddress += 4;
-        asm = new AssemblyInstruction(byteAddress, "POP  HL", 0xE1);
-        throw new RuntimeException("untested accCompare");
-      }
     } else if (function == FunctionType.accTimes) {
-      switch(opType) {
-        case var: 
-          asmCode = "LD   DE,(" + memAddress + ")";
-          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256));
-          break;
-        case constant: 
-          asmCode = "LD   DE," + word;
-          result.add(new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256));
-          break;
-        case stack:
-          asmCode = "POP  DE";
-          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xD1));
-          break;
-      };
+      asm = operandToDE(instruction);
+      result.add(asm);
+      byteAddress += asm.getBytes().size();
+
       asm = new AssemblyInstruction(byteAddress, "CALL mul16", 0xCD, 0x06, 0x00);
     } else if ((function == FunctionType.accDiv) || (function == FunctionType.divAcc)) {
-      switch(opType) {
-        case var: 
-          asmCode = "LD   DE,(" + memAddress + ")";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
-          break;
-        case constant: 
-          asmCode = "LD   DE," + word;
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, word % 256, word / 256);
-          break;
-        case stack:
-          asmCode = "POP DE";
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
-          break;
-      };
+      asm = operandToDE(instruction);
       result.add(asm);
       byteAddress += asm.getBytes().size();
 
@@ -207,26 +137,26 @@ public class Transcoder {
         result.add(new AssemblyInstruction(byteAddress++, "EX   DE,HL", 0xEB));
       }
       asm = new AssemblyInstruction(byteAddress, "CALL div16", 0xCD, 0x09, 0x00);
-/*
-    } else if (brFunctions.contains(function)) {
-      if (function == FunctionType.br) {
-        asmCode = String.format("JP L" + word);
-      } else if (function == FunctionType.brEq) {
-        asmCode = String.format("JP Z,L" + word);
-      } else if (function == FunctionType.brNe) {
-        asmCode = String.format("JP NZ,L" + word);
-      } else if (function == FunctionType.brLt) {
-        asmCode = String.format("JP NC,L" + word);
-      } else if (function == FunctionType.brLe) {
-        asmCode = String.format("JP NC,L" + word);
-        asmCode = String.format("JP Z,L" + word);
-      } else if (function == FunctionType.brGt) {
-        asmCode = "JR   Z,$+5";
-        asmCode = String.format("JP C,L" + word);
-      } else if (function == FunctionType.brGe) {
-        asmCode = String.format("JP C,L" + word);
-      }
-*/
+    } else if (function == FunctionType.br) {
+      asm = new AssemblyInstruction(byteAddress, "JP   L" + word, 0xC3, word % 256, word / 256);
+    } else if (function == FunctionType.brEq) {
+      asm = new AssemblyInstruction(byteAddress, "JP   Z,L" + word, 0xCA, word % 256, word / 256);
+    } else if (function == FunctionType.brNe) {
+      asm = new AssemblyInstruction(byteAddress, "JP   NZ,L" + word, 0xC2, word % 256, word / 256);
+    } else if (function == FunctionType.brLt) {
+      asm = new AssemblyInstruction(byteAddress, "JP   NC,L" + word, 0xD2, word % 256, word / 256);
+    } else if (function == FunctionType.brLe) {
+      asm = new AssemblyInstruction(byteAddress, "JP   NC,L" + word, 0xD2, word % 256, word / 256);
+      result.add(asm);
+      byteAddress += asm.getBytes().size();
+      asm = new AssemblyInstruction(byteAddress, "JP   Z,L" + word, 0xCA, word % 256, word / 256);
+    } else if (function == FunctionType.brGt) {
+      asm = new AssemblyInstruction(byteAddress, "JP   Z,$+5", 0x28, 3);
+      result.add(asm);
+      byteAddress += asm.getBytes().size();
+      asm = new AssemblyInstruction(byteAddress, "JP   C,L" + word, 0xDA, word % 256, word / 256);
+    } else if (function == FunctionType.brGe) {
+      asm = new AssemblyInstruction(byteAddress, "JP   C,L" + word, 0xDA, word % 256, word / 256);
     }
 
     /* add assembly code to output and update byte address */
@@ -240,32 +170,51 @@ public class Transcoder {
 
     return result;
   }
+  
+  private AssemblyInstruction operandToHL(Instruction instruction) {
+    String asmCode = null;
+    AssemblyInstruction asm = null;
+    switch(instruction.opType) {
+      case var: 
+        int memAddress = MEM_START + instruction.word * 2;
+        asmCode = "LD   HL,(" + memAddress + ")";
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
+        break;
+      case constant: 
+        asmCode = "LD   HL," + instruction.word;
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, instruction.word % 256, instruction.word / 256);
+        break;
+      case stack:
+        asmCode = "POP  HL";
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xE1);
+        break;
+    };
+    return asm;
+  }
+
+  private AssemblyInstruction operandToDE(Instruction instruction) {
+    String asmCode = null;
+    AssemblyInstruction asm = null;
+    switch(instruction.opType) {
+      case var: 
+        int memAddress = MEM_START + instruction.word * 2;
+        asmCode = "LD   DE,(" + memAddress + ")";
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
+        break;
+      case constant: 
+        asmCode = "LD   DE," + instruction.word;
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, instruction.word % 256, instruction.word / 256);
+        break;
+      case stack:
+        asmCode = "POP  DE";
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
+        break;
+    };
+    return asm;
+  }
 
   private void plantZ80Bin(Instruction instruction) {
   /*
-    if (brFunctions.contains(function)) {
-      if (function == FunctionType.br) {
-        storeBytes[z80PosByte++] = 0xC3; // JP nnnn
-      } else if (function == FunctionType.brEq) {
-        storeBytes[z80PosByte++] = 0xCA; // JP   Z,nnnn
-      } else if (function == FunctionType.brNe) {
-        storeBytes[z80PosByte++] = 0xC2; // JP   NZ,nnnn
-      } else if (function == FunctionType.brLt) {
-        storeBytes[z80PosByte++] = 0xD2; // JP   NC,nnnn
-      } else if (function == FunctionType.brLe) {
-        storeBytes[z80PosByte++] = 0xD2; // JP   NC,nnnn
-        storeBytes[z80PosByte++] = word % 256;
-        storeBytes[z80PosByte++] = word / 256;
-        storeBytes[z80PosByte++] = 0xCA; // JP   Z,nnnn
-      } else if (function == FunctionType.brGt) {
-        storeBytes[z80PosByte++] = 0x28; // JR   Z,$+5
-        storeBytes[z80PosByte++] = 3;
-        storeBytes[z80PosByte++] = 0xDA; // JP   C,nnnn
-      } else if (function == FunctionType.brGe) {
-        storeBytes[z80PosByte++] = 0xDA; // JP   C,nnnn
-      }
-      storeBytes[z80PosByte++] = word / 256;
-      storeBytes[z80PosByte++] = word % 256;
       //HL := HL * DE
       //       H  L
       //       D  E
