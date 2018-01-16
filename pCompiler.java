@@ -139,11 +139,13 @@ public class pCompiler {
         BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
         for (AssemblyInstruction instruction : z80Instructions) {
           //TODO : implement the actual Intel hex format.
-          out.write(String.format("%04X", instruction.getAddress()));
-          for (byte oneByte : instruction.getBytes()) {
-            out.write(String.format(" %02X\n", oneByte));
+          if (instruction.getBytes() != null) {
+            out.write(String.format("%04X", instruction.getAddress()));
+            for (byte oneByte : instruction.getBytes()) {
+              out.write(String.format(" %02X", oneByte));
+            }
+            out.write("\n");
           }
-          out.write("\n");
         }
         out.close();
     } catch (IOException e)
