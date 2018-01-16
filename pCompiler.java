@@ -134,23 +134,23 @@ public class pCompiler {
   private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {
     /* write binary Z80S180 code to Intel hex file */
     String outputFilename = fileName.replace(".p", ".hex");
-    System.out.println("Writing Z80 code to Intel hex file " + outputFilename);
+    System.out.println("Writing Z80 binary code to Intel hex file " + outputFilename);
+    IntelHexWriter writer = null;
     try {
-        BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
-        for (AssemblyInstruction instruction : z80Instructions) {
-          //TODO : implement the actual Intel hex format.
-          if (instruction.getBytes() != null) {
-            out.write(String.format("%04X", instruction.getAddress()));
-            for (byte oneByte : instruction.getBytes()) {
-              out.write(String.format(" %02X", oneByte));
-            }
-            out.write("\n");
-          }
+      writer = new IntelHexWriter(outputFilename);
+      for (AssemblyInstruction instruction : z80Instructions) {
+        writer.write(instruction.getAddress(), instruction.getBytes());
+      }
+    } catch (IOException e) {
+        System.out.println("\nException: " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
         }
-        out.close();
-    } catch (IOException e)
-    {
-        System.out.println("\nException " + e.getMessage());
+      }
     }
   }
 

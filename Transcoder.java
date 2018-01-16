@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Transcoder {
   
   /* constants */
-  private static final int MAX_ASM_CODE = 2000; /* max Z80 assembler lines of code */
-  private static final int MEM_START = 4000;    /* lowest address for global variables */
-  private static final int MIN_BIN = 2000; /* Z80 assembled bytes start at 2000 */
-  private static final int MAX_BIN = 4000; /* max Z80 assembled bytes */
+  private static final int MAX_ASM_CODE = 0x2000; /* max Z80 assembler lines of code */
+  private static final int MEM_START = 0x4000;    /* lowest address for global variables */
+  private static final int MIN_BIN = 0x2000; /* Z80 assembled bytes start at 2000 */
+  private static final int MAX_BIN = 0x4000; /* max Z80 assembled bytes */
 
   /* global variables */
   private boolean debug = false;
