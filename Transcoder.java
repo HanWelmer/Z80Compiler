@@ -35,8 +35,7 @@ public class Transcoder {
 
     for (Instruction instruction: instructions) {
       //add line nr as a label and original source code as assembler comment
-      //String prefix = "L" + instructions.indexOf(instruction) + ":;";
-      String prefix = String.format("L%03d:;", instructions.indexOf(instruction));
+      String prefix = "L" + instructions.indexOf(instruction) + ":;";
       if (instruction.linesOfCode != null) {
         for (String sourceCode : instruction.linesOfCode) {
           z80Instructions.add(new AssemblyInstruction(byteAddress, prefix + sourceCode));
@@ -62,7 +61,6 @@ public class Transcoder {
   public ArrayList<AssemblyInstruction> transcode(Instruction instruction){
     ArrayList<AssemblyInstruction> result = new ArrayList<AssemblyInstruction>();
 
-    // TODO : implement transcoder.
     debug("\ntranscoding to Z80: " + instruction.toString());
     
     FunctionType function = instruction.function;
