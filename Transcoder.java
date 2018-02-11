@@ -89,7 +89,7 @@ public class Transcoder {
     } else if (function == FunctionType.accStore) {
       switch(opType) {
         case var: 
-          asmCode = "LD   (" + memAddress + "),HL";
+          asmCode = String.format("LD   (0x%04X),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
           break;
         case stack:
@@ -177,7 +177,7 @@ public class Transcoder {
     switch(instruction.opType) {
       case var: 
         int memAddress = MEM_START + instruction.word * 2;
-        asmCode = "LD   HL,(" + memAddress + ")";
+        asmCode = String.format("LD   HL,(0x%04X)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
         break;
       case constant: 
@@ -198,7 +198,7 @@ public class Transcoder {
     switch(instruction.opType) {
       case var: 
         int memAddress = MEM_START + instruction.word * 2;
-        asmCode = "LD   DE,(" + memAddress + ")";
+        asmCode = String.format("LD   DE,(0x%04X)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
         break;
       case constant: 
