@@ -1,7 +1,11 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /*
-* This class realises a transcoder. 
-* It translates an array with M-code instruction to an array with Z80S180 assembler instructions.
+* This class realizes a transcoder. 
+* It translates an array with M-code instruction
+* to an array with Z80S180 assembler instructions.
 */
 public class Transcoder {
   
@@ -15,6 +19,8 @@ public class Transcoder {
   private boolean debug = false;
   private boolean generateBinary = false;
   private long byteAddress = MIN_BIN;
+  public Map<String, Long> labels = new HashMap<String, Long>();
+  public Map<String, ArrayList<Long>> labelReferences = new HashMap<String, ArrayList<Long>>();
   
   /* constructor */
   public Transcoder(boolean binary) {
@@ -29,13 +35,23 @@ public class Transcoder {
 
   /* transcode the array with M-code instruction to an array with Z80S180 assembler instructions. */
   public ArrayList<AssemblyInstruction> transcode(ArrayList<Instruction> instructions){
+    //initialisation
     ArrayList<AssemblyInstruction> z80Instructions = new ArrayList<AssemblyInstruction>();
+    labels.clear();
+    for (String key : labelReferences.keySet()) {
+      labelReferences.get(key).clear();
+    }
+    labelReferences.clear();
 
     plantZ80Runtime();
 
     for (Instruction instruction: instructions) {
+      //add label and address to map with labels.
+      String label = "L" + instructions.indexOf(instruction);
+      labels.put(label, byteAddress);
+
       //add line nr as a label and original source code as assembler comment
-      String prefix = "L" + instructions.indexOf(instruction) + ":;";
+      String prefix = label + ":;";
       if (instruction.linesOfCode != null) {
         for (String sourceCode : instruction.linesOfCode) {
           z80Instructions.add(new AssemblyInstruction(byteAddress, prefix + sourceCode));
@@ -54,11 +70,50 @@ public class Transcoder {
         throw new RuntimeException("code overflow while generating Z80 assembler code");
       }
     }
+    
+    
+    return resolveLabelReferences(z80Instructions);
+  }
+  
+  private ArrayList<AssemblyInstruction> resolveLabelReferences(ArrayList<AssemblyInstruction> z80Instructions) {
+    for (String key : labelReferences.keySet()) {
+      long address = labels.get(key);
+      for (long reference : labelReferences.get(key)) {
+        updateLabelReference(z80Instructions, (int)reference, (int)address);
+      }
+    }
     return z80Instructions;
   }
   
+  private void updateLabelReference(ArrayList<AssemblyInstruction> instructions, int reference, int address) {
+    if (instructions.size() == 0) {
+      return;
+    }
+    
+    int index = 0;
+    while (index < instructions.size() && (
+      instructions.get(index).getBytes() == null
+      || instructions.get(index).getBytes() != null
+      && (instructions.get(index).getAddress() -2 + instructions.get(index).getBytes().size()) < reference)) {
+      index++;
+    }
+    
+    if (index == instructions.size()) {
+      return;
+    }
+    
+    AssemblyInstruction instruction = instructions.get(index);
+    //System.out.println(String.format("updateLabelReference (reference = 0x%04X, address = 0x%04X)", reference, address));
+    //System.out.println(" index = " + index);
+    //System.out.println(" instruction = " + instruction);
+    //System.out.println(String.format("  address = 0x%04X", instruction.getAddress()));
+    //System.out.println("  bytes = " + instruction.getBytes());
+    instruction.getBytes().set((int)(reference - instruction.getAddress()), (byte)(address % 256));
+    instruction.getBytes().set((int)(reference - instruction.getAddress() + 1), (byte)((address / 256) % 256));
+  }
+  
   /* transcode a single M-code instruction to one or more Z80S180 assembler instruction */
-  public ArrayList<AssemblyInstruction> transcode(Instruction instruction){
+  private ArrayList<AssemblyInstruction> transcode(Instruction instruction){
     ArrayList<AssemblyInstruction> result = new ArrayList<AssemblyInstruction>();
 
     debug("\ntranscoding to Z80: " + instruction.toString());
@@ -81,6 +136,7 @@ public class Transcoder {
       } else if (callValue == CallType.write) {
         asm = new AssemblyInstruction(byteAddress, "CALL write", 0xCD, 0x06, 0x00);
       } else {
+        putLabelReference(word, byteAddress + 1);
         asm = new AssemblyInstruction(byteAddress, String.format("CALL 0x%04X", word), 0xCD, word % 256, word / 256);
         throw new RuntimeException("untested CALL nnnn");
       }
@@ -136,24 +192,32 @@ public class Transcoder {
       }
       asm = new AssemblyInstruction(byteAddress, "CALL div16", 0xCD, 0x09, 0x00);
     } else if (function == FunctionType.br) {
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   L" + word, 0xC3, word % 256, word / 256);
     } else if (function == FunctionType.brEq) {
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   Z,L" + word, 0xCA, word % 256, word / 256);
     } else if (function == FunctionType.brNe) {
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   NZ,L" + word, 0xC2, word % 256, word / 256);
     } else if (function == FunctionType.brLt) {
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   NC,L" + word, 0xD2, word % 256, word / 256);
     } else if (function == FunctionType.brLe) {
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   NC,L" + word, 0xD2, word % 256, word / 256);
       result.add(asm);
       byteAddress += asm.getBytes().size();
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   Z,L" + word, 0xCA, word % 256, word / 256);
     } else if (function == FunctionType.brGt) {
       asm = new AssemblyInstruction(byteAddress, "JP   Z,$+5", 0x28, 3);
       result.add(asm);
       byteAddress += asm.getBytes().size();
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   C,L" + word, 0xDA, word % 256, word / 256);
     } else if (function == FunctionType.brGe) {
+      putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, "JP   C,L" + word, 0xDA, word % 256, word / 256);
     }
 
@@ -167,6 +231,14 @@ public class Transcoder {
     }
 
     return result;
+  }
+  
+  private void putLabelReference(int value, long reference) {
+    String label = "L" + value;
+    if (labelReferences.get(label) == null) {
+      labelReferences.put(label, new ArrayList<Long>());
+    }
+    labelReferences.get(label).add(reference);
   }
   
   private AssemblyInstruction operandToHL(Instruction instruction) {

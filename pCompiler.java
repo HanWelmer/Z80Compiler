@@ -124,6 +124,22 @@ public class pCompiler {
           out.write(instruction.getCode());
           out.write("\n");
         }
+        //dump label list
+        out.write("\n");
+        out.write("Labels:\n");
+        for (String key : transcoder.labels.keySet()) {
+          out.write(String.format("%04X : %s\n", transcoder.labels.get(key), key));
+        }
+        //dump label cross reference list
+        out.write("\n");
+        out.write("Cross references:\n");
+        for (String key : transcoder.labelReferences.keySet()) {
+          out.write(String.format("%5s = %04X :", key, transcoder.labels.get(key)));
+          for (Long address : transcoder.labelReferences.get(key)) {
+            out.write(String.format(" %04X", address));
+          }
+          out.write("\n");
+        }
         out.close();
     } catch (IOException e) {
         System.out.println("\nException " + e.getMessage());
