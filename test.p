@@ -1,6 +1,31 @@
 {Program to test some compiler constructs}
 VAR A, B, C, D;
 BEGIN
+  WHILE A < 0 DO A = 1;
+  WHILE A <= 0 DO A = 1;
+  WHILE A = 0 DO A = 1;
+  WHILE A >= 0 DO A = 1;
+  WHILE A > 0 DO A = 1;
+  WHILE A <> 0 DO A = 1;
+
+  WHILE A = 0 DO BEGIN
+    A = 1;
+  END;
+
+  WHILE A = 0 DO BEGIN
+    A = 1;
+    IF A=1 THEN BEGIN
+      A = 2;
+    END;
+  END;
+
+  WHILE A = 0 DO BEGIN
+    IF A=1 THEN BEGIN
+      A = 2;
+    END;
+    A = 1;
+  END;
+
   WRITE(READ);
 
   A := READ;
@@ -66,35 +91,4 @@ BEGIN
   B := A / READ;
   B := A / 5;
   C := A / B;
-
-  WHILE A < 0 DO A = 1;
-  WHILE A <= 0 DO A = 1;
-  WHILE A = 0 DO A = 1;
-  WHILE A >= 0 DO A = 1;
-  WHILE A > 0 DO A = 1;
-  WHILE A <> 0 DO A = 1;
-  IF A < 0 THEN A = 1;
-  IF A <= 0 THEN A = 1;
-  IF A = 0 THEN A = 1;
-  IF A >= 0 THEN A = 1;
-  IF A > 0 THEN A = 1;
-  IF A <> 0 THEN A = 1;
-
-  WHILE A = 0 DO BEGIN
-    A = 1;
-  END;
-
-  WHILE A = 0 DO BEGIN
-    A = 1;
-    IF A=1 THEN BEGIN
-      A = 2;
-    END;
-  END;
-
-  WHILE A = 0 DO BEGIN
-    IF A=1 THEN BEGIN
-      A = 2;
-    END;
-    A = 1;
-  END;
 END.

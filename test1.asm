@@ -86,7 +86,6 @@ L3:;  BEGIN
         LD   DE,9
         OR   A
         SBC  HL,DE
-        JP   Z,$+5
         JP   NC,L12
 L5:;    WRITE(A);
         LD   HL,(0x4000)
@@ -114,15 +113,15 @@ Labels:
 202C : putHexA2
 204D : L4
 2021 : putHexA1
-2052 : L5
+2050 : L5
 203E : main
-2055 : L6
-2060 : L10
-2056 : L7
-2059 : L8
-2066 : L12
-205C : L9
-2063 : L11
+2053 : L6
+205E : L10
+2054 : L7
+2057 : L8
+2064 : L12
+205A : L9
+2061 : L11
 2018 : putHexA
 2003 : write
 
@@ -130,8 +129,8 @@ Cross references:
  putHexA = 2018 : 2015
 putHexHL = 2013 : 2006
  putChar = 2031 : 200B 2010 202D
-      L2 = 2044 : 2064
+      L2 = 2044 : 2062
 putHexA1 = 2021 : 201E
     main = 203E : 2001
-     L12 = 2066 : 2050
-   write = 2003 : 2057
+     L12 = 2064 : 204E
+   write = 2003 : 2055

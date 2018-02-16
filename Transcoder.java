@@ -208,13 +208,12 @@ public class Transcoder {
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NZ,L" + word, 0xC2, word % 256, word / 256);
     } else if (function == FunctionType.brLt) {
       putLabelReference(word, byteAddress + 1);
-      //asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NC,L" + word, 0xD2, word % 256, word / 256);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   C,L" + word, 0xDA, word % 256, word / 256);
     } else if (function == FunctionType.brLe) {
-      putLabelReference(word, byteAddress + 1);
-      asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NC,L" + word, 0xD2, word % 256, word / 256);
-      result.add(asm);
-      byteAddress += asm.getBytes().size();
+      //putLabelReference(word, byteAddress + 1);
+      //asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NC,L" + word, 0xD2, word % 256, word / 256);
+      //result.add(asm);
+      //byteAddress += asm.getBytes().size();
       putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   Z,L" + word, 0xCA, word % 256, word / 256);
     } else if (function == FunctionType.brGt) {
@@ -224,11 +223,6 @@ public class Transcoder {
       putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   C,L" + word, 0xDA, word % 256, word / 256);
     } else if (function == FunctionType.brGe) {
-      //putLabelReference(word, byteAddress + 1);
-      //asm = new AssemblyInstruction(byteAddress, INDENT + "JP   C,L" + word, 0xDA, word % 256, word / 256);
-      asm = new AssemblyInstruction(byteAddress, INDENT + "JP   Z,$+5", 0x28, 3);
-      result.add(asm);
-      byteAddress += asm.getBytes().size();
       putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NC,L" + word, 0xD2, word % 256, word / 256);
     }

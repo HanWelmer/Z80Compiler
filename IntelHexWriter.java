@@ -37,6 +37,9 @@ public class IntelHexWriter extends BufferedWriter {
    * hex value 0A) character to terminate lines, whereas Windows programs use a CR (carriage return, 
    * hex value 0D) followed by a LF.
    *
+   * The Zilog Z80183 Monitor Version 2.8 accepts a single LF character at the end of each data record,
+   * but requires a pair of CR and LF characters at the end of a End Of File record.
+   *
    * This class supports the I8HEX subset, which uses record types:
    * 00 Data	      Contains data and a 16-bit starting address for the data. The byte count 
                     specifies number of data bytes in the record. The example shown to the right 
@@ -77,7 +80,7 @@ public class IntelHexWriter extends BufferedWriter {
   
   public void close() throws IOException {
     flushLine();
-    write(":00000001FF\n");
+    write(":00000001FF\r\n");
     super.close();
   }
   
