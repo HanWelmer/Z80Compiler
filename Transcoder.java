@@ -186,8 +186,8 @@ public class Transcoder {
       asm = operandToDE(instruction);
       result.add(asm);
       byteAddress += asm.getBytes().size();
-
-      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL mul16", 0xCD, 0x06, 0x00);
+      putLabelReference("mul16", byteAddress + 1);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL mul16", 0xCD, 0x00, 0x00);
     } else if ((function == FunctionType.accDiv) || (function == FunctionType.divAcc)) {
       asm = operandToDE(instruction);
       result.add(asm);
@@ -196,7 +196,7 @@ public class Transcoder {
       if (function == FunctionType.divAcc) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX   DE,HL", 0xEB));
       }
-      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL div16", 0xCD, 0x09, 0x00);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL div16", 0xCD, 0x00, 0x00);
     } else if (function == FunctionType.br) {
       putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   L" + word, 0xC3, word % 256, word / 256);
@@ -210,10 +210,6 @@ public class Transcoder {
       putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   C,L" + word, 0xDA, word % 256, word / 256);
     } else if (function == FunctionType.brLe) {
-      //putLabelReference(word, byteAddress + 1);
-      //asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NC,L" + word, 0xD2, word % 256, word / 256);
-      //result.add(asm);
-      //byteAddress += asm.getBytes().size();
       putLabelReference(word, byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   Z,L" + word, 0xCA, word % 256, word / 256);
     } else if (function == FunctionType.brGt) {
@@ -314,32 +310,6 @@ public class Transcoder {
       storeBytes[z80PosByte++] = 0xED; // MLT  HL
       storeBytes[z80PosByte++] = 0x6C;
       //
-//DE_Times_BC:
-//;Inputs:
-//;     DE and HL are factors
-//;Outputs:
-//;     A is 0
-//;     BC is not changed
-//;     DEHL is the product
-//;
-//  push bc
-//  ld b,h
-//  ld c,l
-//  ld hl,0
-//  ld a,16
-//Mul_Loop_1:
-//  add hl,hl
-//  rl e
-//  rl d
-//  jr nc,Mul_Loop_2
-//    add hl,bc
-//    jr nc,Mul_Loop_2
-//    inc de
-//Mul_Loop_2:
-//  dec a
-//  jr nz,Mul_Loop_1
-//  pop bc
-//  ret
     } else if ((function == FunctionType.accDiv) || (function == FunctionType.divAcc)) {
       // teller in HL; deler in DE -> quotient in HL; restant in DE
       // LD   A,D */ /* als DE=0, error div by zero
@@ -506,28 +476,101 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "OUT0  (TDR0),A          ;write character to ASCI0", 0xED, 0x39, 0x06));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
 
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";mul16"));
+    result.add(new AssemblyInstruction(byteAddress, ";16 bit unsigned multiplication"));
+    result.add(new AssemblyInstruction(byteAddress, ";Input: HL"));
+    result.add(new AssemblyInstruction(byteAddress, ";       DE"));
+    result.add(new AssemblyInstruction(byteAddress, ";Output HL = HL * DE low part"));
+    result.add(new AssemblyInstruction(byteAddress, ";       DE = HL * DE high part"));
+    result.add(new AssemblyInstruction(byteAddress, ";Uses   -"));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("mul16", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "mul16:"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";HL = HL * DE"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";        H  L"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";        D  E"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";    --------*"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";          EL"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";       EH  0"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";       DL  0"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";    DH  0  0"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + "; -----------+"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";  P  Q  R  S"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";S = ELlow"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";R = ELhigh+EHlow+DLlow"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";Q = DHlow+EHhigh+DLhigh"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";P = DHhigh"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    BC      ;save BC", 0xC5));
+    result.add(plantAssemblyInstruction(INDENT + "LD      B,H", 0x44));
+    result.add(plantAssemblyInstruction(INDENT + "LD      C,L", 0x4D));
+    result.add(plantAssemblyInstruction(INDENT + "LD      H,D     ;DH aka DB", 0x62));
+    result.add(plantAssemblyInstruction(INDENT + "LD      L,B", 0x68));
+    result.add(plantAssemblyInstruction(INDENT + "MLT     HL", 0xED,0x6C));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    HL", 0xE5));
+    result.add(plantAssemblyInstruction(INDENT + "LD      H,D     ;DL aka DC", 0x62));
+    result.add(plantAssemblyInstruction(INDENT + "LD      L,C", 0x69));
+    result.add(plantAssemblyInstruction(INDENT + "MLT     HL", 0xED, 0x6C));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    HL", 0xE5));
+    result.add(plantAssemblyInstruction(INDENT + "LD      H,E     ;EH aka EB", 0x63));
+    result.add(plantAssemblyInstruction(INDENT + "LD      L,B", 0x68));
+    result.add(plantAssemblyInstruction(INDENT + "MLT     HL", 0xED, 0x6C));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    HL", 0xE5));
+    result.add(plantAssemblyInstruction(INDENT + "LD      H,E     ;EL aka EC", 0x63));
+    result.add(plantAssemblyInstruction(INDENT + "LD      L,C", 0x69));
+    result.add(plantAssemblyInstruction(INDENT + "MLT     HL", 0xED, 0x6C));
+    result.add(plantAssemblyInstruction(INDENT + "POP     DE      ;RS=EL+EH0", 0xD1));
+    result.add(plantAssemblyInstruction(INDENT + "LD      B,0", 0x06, 0x00));
+    result.add(plantAssemblyInstruction(INDENT + "LD      C,D     ;..C=EHhigh", 0x4A));
+    result.add(plantAssemblyInstruction(INDENT + "LD      D,E     ;..D=EHlow", 0x53));
+    result.add(plantAssemblyInstruction(INDENT + "LD      E,0", 0x1E, 0x00));
+    result.add(plantAssemblyInstruction(INDENT + "ADD     HL,DE", 0x19));
+    result.add(plantAssemblyInstruction(INDENT + "JR      NC,$+3  ;add carry to PQ", 0x30, 0x01));
+    result.add(plantAssemblyInstruction(INDENT + "INC     BC", 0x03));
+    result.add(plantAssemblyInstruction(INDENT + "POP     DE      ;RS=EL+EH0+DL0", 0xD1));
+    result.add(plantAssemblyInstruction(INDENT + "LD      A,D     ;..A=DLhigh", 0x7A));
+    result.add(plantAssemblyInstruction(INDENT + "LD      D,E     ;..D=DLlow", 0x53));
+    result.add(plantAssemblyInstruction(INDENT + "ADD     HL,DE", 0x19));
+    result.add(plantAssemblyInstruction(INDENT + "JR      NC,$+3  ;add carry to PQ", 0x30, 0x01));
+    result.add(plantAssemblyInstruction(INDENT + "INC     BC", 0x03));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";HL=RS=EL+EH0+DL0"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";C=EHhigh"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";A=DLhigh"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";E=0"));
+    result.add(plantAssemblyInstruction(INDENT + "EX      DE,HL", 0xEB));
+    result.add(plantAssemblyInstruction(INDENT + "LD      H,L     ;..E was 0, so H=L=0", 0x65));
+    result.add(plantAssemblyInstruction(INDENT + "LD      L,A     ;..HL=DLhigh", 0x6F));
+    result.add(plantAssemblyInstruction(INDENT + "ADD     HL,BC   ;PQ=EHhigh+DLhigh+DH", 0x09));
+    result.add(plantAssemblyInstruction(INDENT + "POP     BC", 0xC1));
+    result.add(plantAssemblyInstruction(INDENT + "ADD     HL,BC", 0x09));
+    result.add(plantAssemblyInstruction(INDENT + "EX      DE,HL", 0xEB));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";D=P=DHhigh"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";E=Q=DHlow+EHhigh+DLhigh"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";H=R=ELhigh+EHlow+DLlow"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";L=S=ELlow"));
+    result.add(plantAssemblyInstruction(INDENT + "POP     BC      ;restore BC", 0xC1));
+    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
+    /* the following code (which doesn't use the MLT instruction) takes appr. 980 cycles i.s.o. appr. 280 cycles
+     * C5                    PUSH    BC
+     * 44                    LD      B,H
+     * 4D                    LD      C,L
+     * 21 00 00              LD      HL,0
+     * 3E 10                 LD      A,16
+     *             mul16_1:
+     * 29                    ADD     HL,HL
+     * CB 13                 RL      E
+     * CB 12                 RL      D
+     * 30 04                 JR      NC,mul16_2
+     * 09                    ADD     HL,BC
+     * 30 01                 JR      NC, mul16_2
+     * 13                    INC     DE
+     *             mul16_2:
+     * 3D                    DEC     A
+     * 20 F2                 JR      NZ, mul16_1
+     * C1                    POP     BC
+     * C9                    RET
+     */
     /*
-    asmCode = "mul16:";
-    // DEHL = HL * DE
-    asmCode = "push bc";
-    asmCode = "ld b,h";
-    asmCode = "ld c,l";
-    asmCode = "ld hl,0";
-    asmCode = "ld a,16";
-    asmCode = "mul16_1:";
-    asmCode = "add hl,hl";
-    asmCode = "rl e";
-    asmCode = "rl d";
-    asmCode = "jr nc,mul16_2";
-    asmCode = "add hl,bc";
-    asmCode = "jr nc, mul16_2";
-    asmCode = "inc de";
-    asmCode = "mul16_2:";
-    asmCode = "dec a";
-    asmCode = "jr nz, mul16_1";
-    asmCode = "pop bc";
-    asmCode = "ret";
-
     asmCode = "div16:";
     // teller in HL; deler in DE -> quotient in HL; restant in DE
     asmCode = "LD   A,D"; // als DE=0, error div by zero
