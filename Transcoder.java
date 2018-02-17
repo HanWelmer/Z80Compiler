@@ -91,10 +91,12 @@ public class Transcoder {
   }
   
   private void updateLabelReference(ArrayList<AssemblyInstruction> instructions, int reference, int address) {
+    //no code, so nothing to do
     if (instructions.size() == 0) {
       return;
     }
     
+    //look up instruction that references the label
     int index = 0;
     while (index < instructions.size() && (
       instructions.get(index).getBytes() == null
@@ -103,16 +105,19 @@ public class Transcoder {
       index++;
     }
     
+    //refering instruction not found
     if (index == instructions.size()) {
       return;
     }
     
+    //check instruction is jump or call
     AssemblyInstruction instruction = instructions.get(index);
-    //System.out.println(String.format("updateLabelReference (reference = 0x%04X, address = 0x%04X)", reference, address));
-    //System.out.println(" index = " + index);
-    //System.out.println(" instruction = " + instruction);
-    //System.out.println(String.format("  address = 0x%04X", instruction.getAddress()));
-    //System.out.println("  bytes = " + instruction.getBytes());
+    if (instruction.getBytes().size() != 3) {
+      throw new RuntimeException(String.format("illegal reference to label %04X from address %04X (index %d) by instruction %s"
+        , address, reference, index, instruction.getCode()));
+    }
+    
+    //update address part of the instruction
     instruction.getBytes().set((int)(reference - instruction.getAddress()), (byte)(address % 256));
     instruction.getBytes().set((int)(reference - instruction.getAddress() + 1), (byte)((address / 256) % 256));
   }
@@ -196,6 +201,7 @@ public class Transcoder {
       if (function == FunctionType.divAcc) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX   DE,HL", 0xEB));
       }
+      putLabelReference("div16", byteAddress + 1);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL div16", 0xCD, 0x00, 0x00);
     } else if (function == FunctionType.br) {
       putLabelReference(word, byteAddress + 1);
@@ -289,91 +295,6 @@ public class Transcoder {
     labelReferences.get(label).add(reference);
   }
   
-  private void plantZ80Bin(Instruction instruction) {
-  /*
-      //HL := HL * DE
-      //       H  L
-      //       D  E
-      //   --------*
-      //         EL
-      //      EH  0
-      //      DL  0
-      //   DH  0  0
-      //-----------+
-      // P  Q  R  S
-      //S=ELlow
-      //R=ELhigh+EHlow+DLlow
-      //Q=DHlow+EHhigh+DLhigh
-      //P=DHhigh
-      //
-      storeBytes[z80PosByte++] = 0x63; // LD   H,E
-      storeBytes[z80PosByte++] = 0xED; // MLT  HL
-      storeBytes[z80PosByte++] = 0x6C;
-      //
-    } else if ((function == FunctionType.accDiv) || (function == FunctionType.divAcc)) {
-      // teller in HL; deler in DE -> quotient in HL; restant in DE
-      // LD   A,D */ /* als DE=0, error div by zero
-      // OR   E
-      // JR   Z,ERROR
-      // LD   B,H // kopie teller in BC
-      // LD   C,L
-      // LD   HL,0 // result = 0
-      // LD   A,B // deler High
-      // LD   B,16D
-      // TRIALSB:
-      // RL   C // roteer links result + ACC
-      // RLA
-      // ADC  HL,HL // schuif links; carry wordt niet beïnvloed
-      // SBC  HL,DE // teller eraftrekken
-      // NULL:
-      // CCF // result bit
-      // JR   NC,NGV // Acc negatief?
-      // PTV:
-      // DJNZ TRIALSB
-      // JP   DONE
-      // RESTOR:
-      // RL   C // roteer links result + acc
-      // RLA
-      // ADC  HL,HL // schuif links; carry wordt niet beïnvloed
-      // AND  A // carry op nul zetten
-      // ADC  HL,DE // herstel door deler erbij te tellen
-      // JR   C,PTV // resultaat positief
-      // JR   Z,NULL // resultaat nul
-      // NGV:
-      // DJNZ RESTOR
-      // DONE:
-      // RL   C // resultaat bit inschuiven
-      // RLA
-      // LD   B,A // quotient in BC
-      // LD   A,H // restant High negatief?
-      // OR   A
-      // JP   P,PREM
-      // ADD  HL,DE // corrigeer negatief restant
-      // PREM:
-      // RET
-      storeBytes[z80PosByte++] = 0x00;
-//
-//This divides DE by BC, storing the result in DE, remainder in HL
-//
-//DE_Div_BC:          ;1281-2x, x is at most 16
-//     ld a,16        ;7
-//     ld hl,0        ;10
-//     jp $+5         ;10
-//DivLoop:
-//       add hl,bc    ;--
-//       dec a        ;64
-//       ret z        ;86
-//       sla e        ;128
-//       rl d         ;128
-//       adc hl,hl    ;240
-//       sbc hl,bc    ;240
-//       jr nc,DivLoop ;23|21
-//       inc e        ;--
-//       jp DivLoop+1
-//       */
-//    }
-  }
-  
   private AssemblyInstruction plantAssemblyInstruction(String code, int... bytes) {
     AssemblyInstruction asm = new AssemblyInstruction(byteAddress, code, bytes);
     byteAddress += asm.getBytes().size();
@@ -402,12 +323,8 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "EX   (SP),HL", 0xE3));//uint in HL; return address on stack
     putLabelReference("putHexHL", byteAddress + 1);
     result.add(plantAssemblyInstruction(INDENT + "CALL putHexHL", 0xCD, 0, 0));
-    result.add(plantAssemblyInstruction(INDENT + "LD    A,'\r'", 0x3E, 0x0D));
-    putLabelReference("putChar", byteAddress + 1);
-    result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
-    result.add(plantAssemblyInstruction(INDENT + "LD    A,'\n'", 0x3E, 0x0A));
-    putLabelReference("putChar", byteAddress + 1);
-    result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
+    putLabelReference("putCRLF", byteAddress + 1);
+    result.add(plantAssemblyInstruction(INDENT + "CALL  putCRLF", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
 
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
@@ -448,15 +365,70 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "AND   A,0x0F", 0xE6, 0x0F));
     result.add(plantAssemblyInstruction(INDENT + "ADD   A,'0'", 0xC6, 0x30));
     result.add(plantAssemblyInstruction(INDENT + "CP    A,'9'+1", 0xFE, 0x3A));
-    result.add(plantAssemblyInstruction(INDENT + "JR    C,putHexA2", 0x38, 0x02));
+    result.add(plantAssemblyInstruction(INDENT + "JR    C,$+4", 0x38, 0x02));
     result.add(plantAssemblyInstruction(INDENT + "ADD   A,07", 0xC6, 0x07));
-    labels.put("putHexA2", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "putHexA2:"));
+    putLabelReference("putChar", byteAddress + 1);
+    result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
+    result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
+    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
+    
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";putMsg"));
+    result.add(new AssemblyInstruction(byteAddress, ";Print a string, following the return address and zero terminated, via ASCI0."));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  none."));
+    result.add(new AssemblyInstruction(byteAddress, ";  OUT: none."));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES:none."));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("putMsg", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "putMsg:"));
+    result.add(plantAssemblyInstruction(INDENT + "EX      (SP),HL     ;save HL and load return address into HL.", 0xE3));
+    putLabelReference("putStr", byteAddress + 1);
+    result.add(plantAssemblyInstruction(INDENT + "CALL    putStr", 0xCD, 0x1B, 0x21));
+    result.add(plantAssemblyInstruction(INDENT + "EX      (SP),HL     ;put return address onto stack and restore HL.", 0xE3));
+    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
+
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";putCRLF"));
+    result.add(new AssemblyInstruction(byteAddress, ";Send CR and LF to ASCI0"));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  none."));
+    result.add(new AssemblyInstruction(byteAddress, ";  OUT: none."));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES:none."));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("putCRLF", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "putCRLF:"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH  AF", 0xF5));
+    result.add(plantAssemblyInstruction(INDENT + "LD    A,'\r'", 0x3E, 0x0D));
+    putLabelReference("putChar", byteAddress + 1);
+    result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
+    result.add(plantAssemblyInstruction(INDENT + "LD    A,'\n'", 0x3E, 0x0A));
     putLabelReference("putChar", byteAddress + 1);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
 
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";putStr"));
+    result.add(new AssemblyInstruction(byteAddress, ";Print a string, pointed to by HL and zero terminated, via ASCI0."));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  HL:address of zero terminated string to be printed."));
+    result.add(new AssemblyInstruction(byteAddress, ";  OUT: none."));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES:HL:points to byte after zero terminated string."));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("putStr", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "putStr:"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH  AF            ;save registers", 0xF5));
+    result.add(plantAssemblyInstruction(INDENT + "JR    $+5", 0x18, 0x03));
+    labels.put("putStr0", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "putStr0:"));
+    putLabelReference("putChar", byteAddress + 1);
+    result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0x2A, 0x21));
+    result.add(plantAssemblyInstruction(INDENT + "LD    A,(HL)        ;get next character", 0x7E));
+    result.add(plantAssemblyInstruction(INDENT + "INC   HL", 0x23));
+    result.add(plantAssemblyInstruction(INDENT + "OR    A,A           ;is it zer0?", 0xB7));
+    //TODO putLabelReference("putStr0", byteAddress + 1);
+    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,putStr0    ;no ->put it to ASCI0", 0x20, 0xF8));
+    result.add(plantAssemblyInstruction(INDENT + "POP   AF            ;yes->return", 0xF1));
+    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
+    
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
     result.add(new AssemblyInstruction(byteAddress, ";putChar"));
     result.add(new AssemblyInstruction(byteAddress, ";Send one character to ASCI0."));
@@ -570,8 +542,92 @@ public class Transcoder {
      * C1                    POP     BC
      * C9                    RET
      */
-    /*
-    asmCode = "div16:";
+
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";div16"));
+    result.add(new AssemblyInstruction(byteAddress, ";16 bit unsigned division"));
+    result.add(new AssemblyInstruction(byteAddress, ";Input: HL = dividend"));
+    result.add(new AssemblyInstruction(byteAddress, ";       DE = divisor"));
+    result.add(new AssemblyInstruction(byteAddress, ";Output HL = quotient"));
+    result.add(new AssemblyInstruction(byteAddress, ";       DE = remainder"));
+    result.add(new AssemblyInstruction(byteAddress, ";Uses   -"));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";pseudo code:"));
+    result.add(new AssemblyInstruction(byteAddress, ";T = dividend"));
+    result.add(new AssemblyInstruction(byteAddress, ";D = divisor"));
+    result.add(new AssemblyInstruction(byteAddress, ";Q = quotient = 0"));
+    result.add(new AssemblyInstruction(byteAddress, ";R = remainder = 0"));
+    result.add(new AssemblyInstruction(byteAddress, ";invariante betrekking:"));
+    result.add(new AssemblyInstruction(byteAddress, "; D/T\\Q     "));
+    result.add(new AssemblyInstruction(byteAddress, ";   R       "));
+    result.add(new AssemblyInstruction(byteAddress, "; T = QD + R"));
+    result.add(new AssemblyInstruction(byteAddress, "; T <= 2^N  "));
+    result.add(new AssemblyInstruction(byteAddress, ";"));
+    result.add(new AssemblyInstruction(byteAddress, "; D/T'.RT\\Q'        "));
+    result.add(new AssemblyInstruction(byteAddress, ";   R'              "));
+    result.add(new AssemblyInstruction(byteAddress, "; RT <= 2^N         "));
+    result.add(new AssemblyInstruction(byteAddress, "; 0<=k<=N           "));
+    result.add(new AssemblyInstruction(byteAddress, "; RT = T % 10^k     "));
+    result.add(new AssemblyInstruction(byteAddress, "; T' = (T-RT) / 10^k"));
+    result.add(new AssemblyInstruction(byteAddress, "; Q' = T' / D       "));
+    result.add(new AssemblyInstruction(byteAddress, "; R' = T' % D       "));
+    result.add(new AssemblyInstruction(byteAddress, ";"));
+    result.add(new AssemblyInstruction(byteAddress, ";for (i=8; i>0; i--) {"));
+    result.add(new AssemblyInstruction(byteAddress, ";  T = T * 2 (remember MSB in carry)"));
+    result.add(new AssemblyInstruction(byteAddress, ";  R = R * 2 + carry"));
+    result.add(new AssemblyInstruction(byteAddress, ";  Q = Q * 2"));
+    result.add(new AssemblyInstruction(byteAddress, ";  if (R >= D) {"));
+    result.add(new AssemblyInstruction(byteAddress, ";    R = R - D;"));
+    result.add(new AssemblyInstruction(byteAddress, ";    Q++;"));
+    result.add(new AssemblyInstruction(byteAddress, ";  }"));
+    result.add(new AssemblyInstruction(byteAddress, ";}"));
+    result.add(new AssemblyInstruction(byteAddress, ";return Q,R (in HL,DE)"));
+    labels.put("div16", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "div16:"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    AF", 0xF5));
+    result.add(plantAssemblyInstruction(INDENT + "LD      A,D", 0x7A));
+    result.add(plantAssemblyInstruction(INDENT + "OR      E", 0xB3));
+    result.add(plantAssemblyInstruction(INDENT + "JR      NZ,div16_1", 0x20, 0x1F));
+    result.add(plantAssemblyInstruction(INDENT + "POP     AF", 0xF1));
+    putLabelReference("putMsg", byteAddress + 1);
+    result.add(plantAssemblyInstruction(INDENT + "CALL    putMsg", 0xCD, 0, 0));
+    result.add(plantAssemblyInstruction(INDENT + ".ASCIZ  \"\b\r\nDivide by zero error.\r\n\"", 0x08, 0x0D, 0x0A, 0x44, 0x69, 0x76, 0x69, 0x64, 0x65, 0x20, 0x62, 0x79, 0x20, 0x7A, 0x65, 0x72, 0x6F, 0x20, 0x65, 0x72, 0x72, 0x6F, 0x72, 0x2E, 0x0D, 0x0A, 0x00));
+    labels.put("div16_1", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "div16_1:"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    BC", 0xC5));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    IY", 0xFD, 0xE5));
+    result.add(plantAssemblyInstruction(INDENT + "LD      C,L     ;T(AC) = teller from input (HL)", 0x4D));
+    result.add(plantAssemblyInstruction(INDENT + "LD      A,H     ;D(DE) = deler from input  (DE)", 0x7C));
+    result.add(plantAssemblyInstruction(INDENT + "LD      IY,0    ;Q(IY) = quotient", 0xFD, 0x21, 0x00, 0x00));
+    result.add(plantAssemblyInstruction(INDENT + "LD      HL,0    ;R(HL) = restant", 0x21, 0x00, 0x00));
+    result.add(plantAssemblyInstruction(INDENT + "LD      B,16    ;for (i=8; i>0; i--)", 0x06, 0x10));
+    labels.put("div16_2", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "div16_2:"));
+    result.add(plantAssemblyInstruction(INDENT + "SLA     C       ;  T = T * 2 (remember MSB in carry)", 0xCB, 0x21));
+    result.add(plantAssemblyInstruction(INDENT + "RL      A", 0xCB, 0x17));
+    result.add(plantAssemblyInstruction(INDENT + "RL      L       ;  R = R * 2 + carry", 0xCB, 0x15));
+    result.add(plantAssemblyInstruction(INDENT + "RL      H", 0xCB, 0x14));
+    result.add(plantAssemblyInstruction(INDENT + "ADD     IY,IY   ;  Q = Q * 2", 0xFD, 0x29));
+    result.add(plantAssemblyInstruction(INDENT + "OR      A       ;  if (R >= D) {", 0xB7));
+    result.add(plantAssemblyInstruction(INDENT + "SBC     HL,DE", 0xED, 0x52));
+    result.add(plantAssemblyInstruction(INDENT + "JR      C,div16_3 ;    R = R - D", 0x38, 0x06));
+    result.add(plantAssemblyInstruction(INDENT + "INC     IY      ;    Q++", 0xFD, 0x23));
+    result.add(plantAssemblyInstruction(INDENT + "DJNZ    div16_2 ;  }", 0x10, 0xED));
+    result.add(plantAssemblyInstruction(INDENT + "JR      div16_4", 0x18, 0x03));
+    labels.put("div16_3", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "div16_3:"));
+    result.add(plantAssemblyInstruction(INDENT + "ADD     HL,DE   ;compensate comparison", 0x19));
+    result.add(plantAssemblyInstruction(INDENT + "DJNZ    div16_2 ;}", 0x10, 0xE8));
+    labels.put("div16_4", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "div16_4:"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH    IY      ;copy IY (quotient) into DE", 0xFD, 0xE5));
+    result.add(plantAssemblyInstruction(INDENT + "POP     DE", 0xD1));
+    result.add(plantAssemblyInstruction(INDENT + "EX      DE,HL   ;swap DE and HL; HL = quotient; DE = rest", 0xEB));
+    result.add(plantAssemblyInstruction(INDENT + "POP     IY", 0xFD, 0xE1));
+    result.add(plantAssemblyInstruction(INDENT + "POP     BC", 0xC1));
+    result.add(plantAssemblyInstruction(INDENT + "POP     AF", 0xF1));
+    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
+     /*
     // teller in HL; deler in DE -> quotient in HL; restant in DE
     asmCode = "LD   A,D"; // als DE=0, error div by zero
     asmCode = "OR   E";
@@ -612,25 +668,25 @@ public class Transcoder {
     asmCode = "ADD  HL,DE"; // corrigeer negatief restant
     asmCode = "PREM:";
     asmCode = "RET";
-//
-//This divides DE by BC, storing the result in DE, remainder in HL
-//
-//DE_Div_BC:         ;1281-2x, x is at most 16
-//     ld a,16       ;7
-//     ld hl,0       ;10
-//     jp $+5        ;10
-//DivLoop:
-//     add hl,bc     ;--
-//     dec a         ;64
-//     ret z         ;86
-//     sla e         ;128
-//     rl d          ;128
-//     adc hl,hl     ;240
-//     sbc hl,bc     ;240
-//     jr nc,DivLoop ;23|21
-//     inc e         ;--
-//     jp DivLoop+1
-//
+    //
+    //This divides DE by BC, storing the result in DE, remainder in HL
+    //
+    //DE_Div_BC:         ;1281-2x, x is at most 16
+    //     ld a,16       ;7
+    //     ld hl,0       ;10
+    //     jp $+5        ;10
+    //DivLoop:
+    //     add hl,bc     ;--
+    //     dec a         ;64
+    //     ret z         ;86
+    //     sla e         ;128
+    //     rl d          ;128
+    //     adc hl,hl     ;240
+    //     sbc hl,bc     ;240
+    //     jr nc,DivLoop ;23|21
+    //     inc e         ;--
+    //     jp DivLoop+1
+    //
     */
     return result;
   }

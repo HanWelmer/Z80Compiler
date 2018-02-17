@@ -125,7 +125,7 @@ public class pCompiler {
           out.write("\n");
         }
 
-        //assembler errors
+        //assembler error: undefined label
         boolean spacerNeeded = true;
         for (String key : transcoder.labelReferences.keySet()) {
           if (transcoder.labels.get(key) == null) {
@@ -134,6 +134,7 @@ public class pCompiler {
               spacerNeeded = false;
             }
             out.write("Error: undefined label: " + key + "\n");
+            System.out.println("Error: undefined label: " + key);
           }
         }
         
