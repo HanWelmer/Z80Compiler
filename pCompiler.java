@@ -55,12 +55,7 @@ public class pCompiler {
     try (FileReader fr = new FileReader(fileName); BufferedReader bufr = new BufferedReader(fr);) { 
       Compiler compiler = new Compiler(debugMode);
       instructions = compiler.compile(fileName, bufr);
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.exit(1);
-    }
-    
-    if (instructions != null) { 
+      
       /* List compiled code for the M machine */
       listing(instructions);
       if (z80) {
@@ -84,6 +79,14 @@ public class pCompiler {
           stop = interpreter.step(debugMode);
         } while (!stop);
       }
+    } catch (RuntimeException e) {
+      System.out.println(e.getMessage());
+      System.out.println();
+      e.printStackTrace();
+      System.exit(1);
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.exit(1);
     }
   }
   

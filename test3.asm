@@ -13,11 +13,7 @@ write:
         POP  HL
         EX   (SP),HL
         CALL putHexHL
-        LD    A,''
-        CALL  putChar
-        LD    A,'
-'
-        CALL  putChar
+        CALL  putCRLF
         RET
 ;****************
 ;putHexHL
@@ -51,11 +47,56 @@ putHexA1:
         AND   A,0x0F
         ADD   A,'0'
         CP    A,'9'+1
-        JR    C,putHexA2
+        JR    C,$+4
         ADD   A,07
-putHexA2:
         CALL  putChar
         POP   AF
+        RET
+;****************
+;putMsg
+;Print a string, following the return address and zero terminated, via ASCI0.
+;  IN:  none.
+;  OUT: none.
+;  USES:none.
+;****************
+putMsg:
+        EX      (SP),HL     ;save HL and load return address into HL.
+        CALL    putStr
+        EX      (SP),HL     ;put return address onto stack and restore HL.
+        RET
+;****************
+;putCRLF
+;Send CR and LF to ASCI0
+;  IN:  none.
+;  OUT: none.
+;  USES:none.
+;****************
+putCRLF:
+        PUSH  AF
+        LD    A,''
+        CALL  putChar
+        LD    A,'
+'
+        CALL  putChar
+        POP   AF
+        RET
+;****************
+;putStr
+;Print a string, pointed to by HL and zero terminated, via ASCI0.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL:points to byte after zero terminated string.
+;****************
+putStr:
+        PUSH  AF            ;save registers
+        JR    $+5
+putStr0:
+        CALL  putChar
+        LD    A,(HL)        ;get next character
+        INC   HL
+        OR    A,A           ;is it zer0?
+        JR    NZ,putStr0    ;no ->put it to ASCI0
+        POP   AF            ;yes->return
         RET
 ;****************
 ;putChar
@@ -145,6 +186,86 @@ mul16:
         ;H=R=ELhigh+EHlow+DLlow
         ;L=S=ELlow
         POP     BC      ;restore BC
+        RET
+;****************
+;div16
+;16 bit unsigned division
+;Input: HL = dividend
+;       DE = divisor
+;Output HL = quotient
+;       DE = remainder
+;Uses   -
+;****************
+;pseudo code:
+;T = dividend
+;D = divisor
+;Q = quotient = 0
+;R = remainder = 0
+;invariante betrekking:
+; D/T\Q     
+;   R       
+; T = QD + R
+; T <= 2^N  
+;
+; D/T'.RT\Q'        
+;   R'              
+; RT <= 2^N         
+; 0<=k<=N           
+; RT = T % 10^k     
+; T' = (T-RT) / 10^k
+; Q' = T' / D       
+; R' = T' % D       
+;
+;for (i=8; i>0; i--) {
+;  T = T * 2 (remember MSB in carry)
+;  R = R * 2 + carry
+;  Q = Q * 2
+;  if (R >= D) {
+;    R = R - D;
+;    Q++;
+;  }
+;}
+;return Q,R (in HL,DE)
+div16:
+        PUSH    AF
+        LD      A,D
+        OR      E
+        JR      NZ,div16_1
+        POP     AF
+        CALL    putMsg
+        .ASCIZ  "
+Divide by zero error.
+"
+div16_1:
+        PUSH    BC
+        PUSH    IY
+        LD      C,L     ;T(AC) = teller from input (HL)
+        LD      A,H     ;D(DE) = deler from input  (DE)
+        LD      IY,0    ;Q(IY) = quotient
+        LD      HL,0    ;R(HL) = restant
+        LD      B,16    ;for (i=8; i>0; i--)
+div16_2:
+        SLA     C       ;  T = T * 2 (remember MSB in carry)
+        RL      A
+        RL      L       ;  R = R * 2 + carry
+        RL      H
+        ADD     IY,IY   ;  Q = Q * 2
+        OR      A       ;  if (R >= D) {
+        SBC     HL,DE
+        JR      C,div16_3 ;    R = R - D
+        INC     IY      ;    Q++
+        DJNZ    div16_2 ;  }
+        JR      div16_4
+div16_3:
+        ADD     HL,DE   ;compensate comparison
+        DJNZ    div16_2 ;}
+div16_4:
+        PUSH    IY      ;copy IY (quotient) into DE
+        POP     DE
+        EX      DE,HL   ;swap DE and HL; HL = quotient; DE = rest
+        POP     IY
+        POP     BC
+        POP     AF
         RET
 main:
 L0:;{Program to test multiplication}
@@ -243,80 +364,91 @@ L57:;END.
         JP   0x0171
 
 Labels:
-206F : main
-20B3 : L21
-20B2 : L20
-20B9 : L23
-20B6 : L22
-20BF : L25
-20BC : L24
-20C6 : L27
-20C5 : L26
-20CC : L29
-20C9 : L28
+20DB : main
+211F : L21
+211E : L20
+2125 : L23
+2122 : L22
+212B : L25
+2128 : L24
+2132 : L27
+2131 : L26
+2138 : L29
+2135 : L28
+20BA : div16_2
+20AC : div16_1
+20D2 : div16_4
+20CF : div16_3
 2003 : write
-20CF : L30
-20D9 : L32
-20D2 : L31
-20DD : L34
-20DA : L33
-20E6 : L36
-20E0 : L35
-20ED : L38
-20EC : L37
-20F0 : L39
-2032 : putChar1
-2013 : putHexHL
-202C : putHexA2
-20F9 : L41
-2021 : putHexA1
-20F3 : L40
-2100 : L43
-20FF : L42
-2106 : L45
-2103 : L44
-2112 : L47
-210C : L46
-2018 : putHexA
-2119 : L49
-2118 : L48
-203E : mul16
-206F : L0
-2072 : L1
-2031 : putChar
-2078 : L2
-211C : L50
-2079 : L3
+2040 : putStr0
+213B : L30
+2145 : L32
+213E : L31
+2149 : L34
+2146 : L33
+2152 : L36
+214C : L35
+2159 : L38
+2158 : L37
+215C : L39
+202A : putMsg
+204B : putChar1
+2088 : div16
+200C : putHexHL
+2165 : L41
+201A : putHexA1
+215F : L40
+216C : L43
+216B : L42
+2172 : L45
+216F : L44
+217E : L47
+2178 : L46
+2011 : putHexA
+2185 : L49
+2184 : L48
+2030 : putCRLF
+2057 : mul16
+20DB : L0
+20DE : L1
+204A : putChar
+20E4 : L2
+2188 : L50
+203D : putStr
+20E5 : L3
 2000 : start
-207C : L4
-2125 : L52
-207F : L5
-211F : L51
-2085 : L6
-2092 : L10
-2131 : L54
-2086 : L7
-212B : L53
-2089 : L8
-2096 : L12
-2138 : L56
-208C : L9
-2093 : L11
-2137 : L55
-209F : L14
-2099 : L13
-213B : L57
-20A3 : L16
-20A0 : L15
-20AC : L18
-20A6 : L17
-20AF : L19
+20E8 : L4
+2191 : L52
+20EB : L5
+218B : L51
+20F1 : L6
+20FE : L10
+219D : L54
+20F2 : L7
+2197 : L53
+20F5 : L8
+2102 : L12
+21A4 : L56
+20F8 : L9
+20FF : L11
+21A3 : L55
+210B : L14
+2105 : L13
+21A7 : L57
+210F : L16
+210C : L15
+2118 : L18
+2112 : L17
+211B : L19
 
 Cross references:
- putHexA = 2018 : 2015
-putHexHL = 2013 : 2006
- putChar = 2031 : 200B 2010 202D
-putHexA1 = 2021 : 201E
-    main = 206F : 2001
-   write = 2003 : 207A 2087 2094 20A1 20B4 20C7 20DB 20EE 2101 211A 2139
-   mul16 = 203E : 2076 2083 2090 209D 20AA 20C3 20D7 20E4 20EA 20F7 20FD 210A 2110 2116 2123 2129 212F 2135
+ putHexA = 2011 : 200D
+putHexHL = 200C : 2005
+ putChar = 204A : 2025 2033 2038 2040
+  putStr = 203D : 202B
+  putMsg = 202A : 208E
+putHexA1 = 201A : 2016
+    main = 20DB : 2000
+ putCRLF = 2030 : 2008
+   write = 2003 : 20E5 20F2 20FF 210C 211F 2132 2146 2159 216C 2185 21A4
+   mul16 = 2057 : 20E1 20EE 20FB 2108 2115 212E 2142 214F 2155 2162 2168 2175 217B 2181 218E 2194 219A 21A0

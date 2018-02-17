@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 /*
 * This class realizes a transcoder. 
 * It translates an array with M-code instruction
@@ -15,7 +17,31 @@ public class Transcoder {
   private static final int MIN_BIN = 0x2000; /* Z80 assembled bytes start at 2000 */
   private static final int MAX_BIN = 0x4000; /* max Z80 assembled bytes */
   private static final String INDENT = "        ";
+  private static final Set<Byte> JUMP_INSTRUCTIONS = new HashSet<Byte>(18) {{
+    add((byte)0xC2); //JP NZ
+    add((byte)0xD2); //JP NC
+    add((byte)0xE2); //JP PO
+    add((byte)0xF2); //JP P
 
+    add((byte)0xC3); //JP
+
+    add((byte)0xC4); //CALL NZ
+    add((byte)0xD4); //CALL NC
+    add((byte)0xE4); //CALL PO
+    add((byte)0xF4); //CALL P
+
+    add((byte)0xCA); //JP Z
+    add((byte)0xDA); //JP C
+    add((byte)0xEA); //JP PE
+    add((byte)0xFA); //JP M
+
+    add((byte)0xCC); //CALL Z
+    add((byte)0xDC); //CALL C
+    add((byte)0xEC); //CALL PE
+    add((byte)0xFC); //CALL M
+
+    add((byte)0xCD); //CALL
+  }};
 
   /* global variables */
   private boolean debug = false;
@@ -84,13 +110,13 @@ public class Transcoder {
       Long address = labels.get(key);
       if (address != null) {
         for (long reference : labelReferences.get(key)) {
-          updateLabelReference(z80Instructions, (int)reference, (int)((long)address));
+          updateLabelReference(z80Instructions, (int)reference, key, (int)((long)address));
         }
       }
     }
   }
   
-  private void updateLabelReference(ArrayList<AssemblyInstruction> instructions, int reference, int address) {
+  private void updateLabelReference(ArrayList<AssemblyInstruction> instructions, int reference, String key, int address) {
     //no code, so nothing to do
     if (instructions.size() == 0) {
       return;
@@ -98,28 +124,27 @@ public class Transcoder {
     
     //look up instruction that references the label
     int index = 0;
-    while (index < instructions.size() && (
-      instructions.get(index).getBytes() == null
-      || instructions.get(index).getBytes() != null
-      && (instructions.get(index).getAddress() -2 + instructions.get(index).getBytes().size()) < reference)) {
+    AssemblyInstruction instruction = instructions.get(index);
+    while (index < instructions.size() && !(instruction.getAddress() == reference && instruction.getBytes() != null)
+      ) {
       index++;
+      instruction = instructions.get(index);
     }
     
-    //refering instruction not found
+    //referring instruction not found
     if (index == instructions.size()) {
       return;
     }
     
     //check instruction is jump or call
-    AssemblyInstruction instruction = instructions.get(index);
-    if (instruction.getBytes().size() != 3) {
-      throw new RuntimeException(String.format("illegal reference to label %04X from address %04X (index %d) by instruction %s"
-        , address, reference, index, instruction.getCode()));
+    if (instruction.getBytes().size() != 3 && !JUMP_INSTRUCTIONS.contains(instruction.getBytes().get(0))) {
+      throw new RuntimeException(String.format("illegal reference to label %s from address %04X (index %d) by instruction %s"
+        , key, reference, index, instruction.getCode()));
     }
     
     //update address part of the instruction
-    instruction.getBytes().set((int)(reference - instruction.getAddress()), (byte)(address % 256));
-    instruction.getBytes().set((int)(reference - instruction.getAddress() + 1), (byte)((address / 256) % 256));
+    instruction.getBytes().set((int)(reference - instruction.getAddress() + 1), (byte)(address % 256));
+    instruction.getBytes().set((int)(reference - instruction.getAddress() + 2), (byte)((address / 256) % 256));
   }
   
   /* transcode a single M-code instruction to one or more Z80S180 assembler instruction */
@@ -144,10 +169,10 @@ public class Transcoder {
       if (callValue == CallType.read) {
         asm = new AssemblyInstruction(byteAddress, INDENT + "CALL read", 0xCD, 0x03, 0x00);
       } else if (callValue == CallType.write) {
-        putLabelReference("write", byteAddress + 1);
+        putLabelReference("write", byteAddress);
         asm = new AssemblyInstruction(byteAddress, INDENT + "CALL write", 0xCD, 0, 0);
       } else {
-        putLabelReference(word, byteAddress + 1);
+        putLabelReference(word, byteAddress);
         asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "CALL 0x%04X", word), 0xCD, word % 256, word / 256);
         throw new RuntimeException("untested CALL nnnn");
       }
@@ -191,7 +216,7 @@ public class Transcoder {
       asm = operandToDE(instruction);
       result.add(asm);
       byteAddress += asm.getBytes().size();
-      putLabelReference("mul16", byteAddress + 1);
+      putLabelReference("mul16", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL mul16", 0xCD, 0x00, 0x00);
     } else if ((function == FunctionType.accDiv) || (function == FunctionType.divAcc)) {
       asm = operandToDE(instruction);
@@ -201,31 +226,31 @@ public class Transcoder {
       if (function == FunctionType.divAcc) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX   DE,HL", 0xEB));
       }
-      putLabelReference("div16", byteAddress + 1);
+      putLabelReference("div16", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL div16", 0xCD, 0x00, 0x00);
     } else if (function == FunctionType.br) {
-      putLabelReference(word, byteAddress + 1);
+      putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   L" + word, 0xC3, word % 256, word / 256);
     } else if (function == FunctionType.brEq) {
-      putLabelReference(word, byteAddress + 1);
+      putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   Z,L" + word, 0xCA, word % 256, word / 256);
     } else if (function == FunctionType.brNe) {
-      putLabelReference(word, byteAddress + 1);
+      putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NZ,L" + word, 0xC2, word % 256, word / 256);
     } else if (function == FunctionType.brLt) {
-      putLabelReference(word, byteAddress + 1);
+      putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   C,L" + word, 0xDA, word % 256, word / 256);
     } else if (function == FunctionType.brLe) {
-      putLabelReference(word, byteAddress + 1);
+      putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   Z,L" + word, 0xCA, word % 256, word / 256);
     } else if (function == FunctionType.brGt) {
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   Z,$+5", 0x28, 3);
       result.add(asm);
       byteAddress += asm.getBytes().size();
-      putLabelReference(word, byteAddress + 1);
+      putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   C,L" + word, 0xDA, word % 256, word / 256);
     } else if (function == FunctionType.brGe) {
-      putLabelReference(word, byteAddress + 1);
+      putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP   NC,L" + word, 0xD2, word % 256, word / 256);
     }
 
@@ -305,7 +330,7 @@ public class Transcoder {
     ArrayList<AssemblyInstruction> result = new ArrayList<AssemblyInstruction>();
     labels.put("start", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "start:"));
-    putLabelReference("main", byteAddress + 1);
+    putLabelReference("main", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JP   main", 0xC3, 0, 0));
     
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
@@ -321,9 +346,9 @@ public class Transcoder {
     result.add(new AssemblyInstruction(byteAddress, "write:"));
     result.add(plantAssemblyInstruction(INDENT + "POP  HL", 0xE1));     //return address into HL
     result.add(plantAssemblyInstruction(INDENT + "EX   (SP),HL", 0xE3));//uint in HL; return address on stack
-    putLabelReference("putHexHL", byteAddress + 1);
+    putLabelReference("putHexHL", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL putHexHL", 0xCD, 0, 0));
-    putLabelReference("putCRLF", byteAddress + 1);
+    putLabelReference("putCRLF", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putCRLF", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
 
@@ -337,7 +362,7 @@ public class Transcoder {
     labels.put("putHexHL", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "putHexHL:"));
     result.add(plantAssemblyInstruction(INDENT + "LD   A,H", 0x7C));
-    putLabelReference("putHexA", byteAddress + 1);
+    putLabelReference("putHexA", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL putHexA", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "LD   A,L", 0x7D));
     result.add(new AssemblyInstruction(byteAddress, INDENT + ";fall through to routine putHexA"));
@@ -356,7 +381,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "RRA", 0x1F));
     result.add(plantAssemblyInstruction(INDENT + "RRA", 0x1F));
     result.add(plantAssemblyInstruction(INDENT + "RRA", 0x1F));
-    putLabelReference("putHexA1", byteAddress + 1);
+    putLabelReference("putHexA1", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putHexA1", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
     labels.put("putHexA1", byteAddress);
@@ -367,7 +392,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "CP    A,'9'+1", 0xFE, 0x3A));
     result.add(plantAssemblyInstruction(INDENT + "JR    C,$+4", 0x38, 0x02));
     result.add(plantAssemblyInstruction(INDENT + "ADD   A,07", 0xC6, 0x07));
-    putLabelReference("putChar", byteAddress + 1);
+    putLabelReference("putChar", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
@@ -382,7 +407,7 @@ public class Transcoder {
     labels.put("putMsg", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "putMsg:"));
     result.add(plantAssemblyInstruction(INDENT + "EX      (SP),HL     ;save HL and load return address into HL.", 0xE3));
-    putLabelReference("putStr", byteAddress + 1);
+    putLabelReference("putStr", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL    putStr", 0xCD, 0x1B, 0x21));
     result.add(plantAssemblyInstruction(INDENT + "EX      (SP),HL     ;put return address onto stack and restore HL.", 0xE3));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
@@ -398,10 +423,10 @@ public class Transcoder {
     result.add(new AssemblyInstruction(byteAddress, "putCRLF:"));
     result.add(plantAssemblyInstruction(INDENT + "PUSH  AF", 0xF5));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,'\r'", 0x3E, 0x0D));
-    putLabelReference("putChar", byteAddress + 1);
+    putLabelReference("putChar", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,'\n'", 0x3E, 0x0A));
-    putLabelReference("putChar", byteAddress + 1);
+    putLabelReference("putChar", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
@@ -419,12 +444,11 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "JR    $+5", 0x18, 0x03));
     labels.put("putStr0", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "putStr0:"));
-    putLabelReference("putChar", byteAddress + 1);
+    putLabelReference("putChar", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0x2A, 0x21));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,(HL)        ;get next character", 0x7E));
     result.add(plantAssemblyInstruction(INDENT + "INC   HL", 0x23));
     result.add(plantAssemblyInstruction(INDENT + "OR    A,A           ;is it zer0?", 0xB7));
-    //TODO putLabelReference("putStr0", byteAddress + 1);
     result.add(plantAssemblyInstruction(INDENT + "JR    NZ,putStr0    ;no ->put it to ASCI0", 0x20, 0xF8));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF            ;yes->return", 0xF1));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
@@ -589,7 +613,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "OR      E", 0xB3));
     result.add(plantAssemblyInstruction(INDENT + "JR      NZ,div16_1", 0x20, 0x1F));
     result.add(plantAssemblyInstruction(INDENT + "POP     AF", 0xF1));
-    putLabelReference("putMsg", byteAddress + 1);
+    putLabelReference("putMsg", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL    putMsg", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + ".ASCIZ  \"\b\r\nDivide by zero error.\r\n\"", 0x08, 0x0D, 0x0A, 0x44, 0x69, 0x76, 0x69, 0x64, 0x65, 0x20, 0x62, 0x79, 0x20, 0x7A, 0x65, 0x72, 0x6F, 0x20, 0x65, 0x72, 0x72, 0x6F, 0x72, 0x2E, 0x0D, 0x0A, 0x00));
     labels.put("div16_1", byteAddress);
