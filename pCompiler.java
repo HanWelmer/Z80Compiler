@@ -42,16 +42,18 @@ public class pCompiler {
       }
     }
     
-    /* get filename of source code file from arg list */
+    /* Get filename of source code file from arg list */
     String fileName = args[args.length-1];
     if (fileName.startsWith("-")) {
       usage();
     }
 
     /*
+    * Force file extension to lower case p.
     * Compile the file with p source code.
     * Generated intermediate code goes to default system output.
     */
+    fileName = fileName.replace(".P", ".p");
     ArrayList<Instruction> instructions = null;
     try (FileReader fr = new FileReader(fileName); BufferedReader bufr = new BufferedReader(fr);) { 
       Compiler compiler = new Compiler(debugMode);
@@ -68,8 +70,8 @@ public class pCompiler {
         writeZ80Assembler(fileName, z80Instructions);
 
         if (binary) {
-          writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
           writeZ80toIntelHex(fileName, z80Instructions);
+          writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
         }
       }
       
@@ -147,7 +149,7 @@ public class pCompiler {
       , Map<String, ArrayList<Long>> labelReferences) {
     /* write Z80S180 assembly and binary code to a Listing file */
     String outputFilename = fileName.replace(".p", ".lst");
-    System.out.println("Writing Z80 assembly and binary code to listing file " + outputFilename);
+    System.out.println("Writing Z80 assembler and binary code to listing file " + outputFilename);
     BufferedWriter writer = null;
     try {
         writer = new BufferedWriter(new FileWriter(outputFilename));
