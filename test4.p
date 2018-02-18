@@ -11,4 +11,5 @@ BEGIN
   WRITE((4 * 5 * 2) / 5);
   WRITE((7 * 7 + 5) / 6);
   WRITE((4 * 5) / 2);
+  WRITE(1/0);
 END.

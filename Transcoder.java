@@ -611,11 +611,12 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "PUSH    AF", 0xF5));
     result.add(plantAssemblyInstruction(INDENT + "LD      A,D", 0x7A));
     result.add(plantAssemblyInstruction(INDENT + "OR      E", 0xB3));
-    result.add(plantAssemblyInstruction(INDENT + "JR      NZ,div16_1", 0x20, 0x1F));
+    result.add(plantAssemblyInstruction(INDENT + "JR      NZ,div16_1", 0x20, 0x22));
     result.add(plantAssemblyInstruction(INDENT + "POP     AF", 0xF1));
     putLabelReference("putMsg", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL    putMsg", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + ".ASCIZ  \"\b\r\nDivide by zero error.\r\n\"", 0x08, 0x0D, 0x0A, 0x44, 0x69, 0x76, 0x69, 0x64, 0x65, 0x20, 0x62, 0x79, 0x20, 0x7A, 0x65, 0x72, 0x6F, 0x20, 0x65, 0x72, 0x72, 0x6F, 0x72, 0x2E, 0x0D, 0x0A, 0x00));
+    result.add(plantAssemblyInstruction(INDENT + "JP      0", 0xC3, 0x00, 0x00));
     labels.put("div16_1", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "div16_1:"));
     result.add(plantAssemblyInstruction(INDENT + "PUSH    BC", 0xC5));
