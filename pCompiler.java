@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Command line fascade for the P programming language Compiler, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
@@ -119,50 +120,108 @@ public class pCompiler {
     ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
 
     /* write Z80 assembly code */
+    writeZ80Assembler(fileName, z80Instructions);
+    
+    /* write Z80S180 assembly listing */
+    writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
+
+    return z80Instructions;
+  }
+  
+  private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {
+    /* write Z80S180 assembly code to an asm file */
     String outputFilename = fileName.replace(".p", ".asm");
     System.out.println("Writing Z80 assembler code to " + outputFilename);
+    BufferedWriter writer = null;
     try {
-        BufferedWriter out = new BufferedWriter(new FileWriter(outputFilename));
+        writer = new BufferedWriter(new FileWriter(outputFilename));
         for (AssemblyInstruction instruction : z80Instructions) {
-          out.write(instruction.getCode());
-          out.write("\n");
+          writer.write(instruction.getCode());
+          writer.write("\n");
+        }
+    } catch (IOException e) {
+        System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
+      }
+    }
+  }
+  
+  private static void writeZ80toListing(String fileName, ArrayList<AssemblyInstruction> z80Instructions
+      , Map<String, Long> labels
+      , Map<String, ArrayList<Long>> labelReferences) {
+    /* write Z80S180 assembly and binary code to a Listing file */
+    String outputFilename = fileName.replace(".p", ".lst");
+    System.out.println("Writing Z80 assembly and binary code to listing file " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+        writer = new BufferedWriter(new FileWriter(outputFilename));
+        for (AssemblyInstruction instruction : z80Instructions) {
+          writer.write(String.format("%04X", instruction.getAddress()));
+          int nr = 0;
+          if (instruction.getBytes() != null) {
+            for (Byte oneByte : instruction.getBytes()) {
+              if (nr == 4) {
+                writer.write("\n    ");
+                nr = 0;
+              }
+              writer.write(String.format(" %02X", oneByte));
+              nr++;
+            }
+          }
+          while (nr < 4) {
+            writer.write("   ");
+            nr++;
+          }
+          writer.write(String.format(" %s\n", instruction.getCode()));
         }
 
         //assembler error: undefined label
         boolean spacerNeeded = true;
-        for (String key : transcoder.labelReferences.keySet()) {
-          if (transcoder.labels.get(key) == null) {
+        for (String key : labelReferences.keySet()) {
+          if (labels.get(key) == null) {
             if (spacerNeeded) {
-              out.write("\n");
+              writer.write("\n");
               spacerNeeded = false;
             }
-            out.write("Error: undefined label: " + key + "\n");
+            writer.write("Error: undefined label: " + key + "\n");
             System.out.println("Error: undefined label: " + key);
           }
         }
         
         //dump label list
-        out.write("\n");
-        out.write("Labels:\n");
-        for (String key : transcoder.labels.keySet()) {
-          out.write(String.format("%04X : %s\n", transcoder.labels.get(key), key));
+        writer.write("\n");
+        writer.write("Labels:\n");
+        for (String key : labels.keySet()) {
+          writer.write(String.format("%04X : %s\n", labels.get(key), key));
         }
 
         //dump label cross reference list
-        out.write("\n");
-        out.write("Cross references:\n");
-        for (String key : transcoder.labelReferences.keySet()) {
-          out.write(String.format("%8s = %04X :", key, transcoder.labels.get(key)));
-          for (Long address : transcoder.labelReferences.get(key)) {
-            out.write(String.format(" %04X", address));
+        writer.write("\n");
+        writer.write("Cross references:\n");
+        for (String key : labelReferences.keySet()) {
+          writer.write(String.format("%8s = %04X :", key, labels.get(key)));
+          for (Long address : labelReferences.get(key)) {
+            writer.write(String.format(" %04X", address));
           }
-          out.write("\n");
+          writer.write("\n");
         }
-        out.close();
     } catch (IOException e) {
         System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
+      }
     }
-    return z80Instructions;
   }
   
   private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {

@@ -1,0 +1,346 @@
+2000             start:
+2000 C3 DE 20            JP    main
+2003             ;****************
+2003             ;write
+2003             ;write a 16 bit unsigned number to the output
+2003             ;Input: TOS   = return address
+2003             ;       TOS+2 = 16 bit unsigned number
+2003             ;Output:none
+2003             ;Uses:  HL, AF
+2003             ;voorlopige code: schrijft getal als 4 hex digits.
+2003             ;****************
+2003             write:
+2003 E1                  POP   HL
+2004 E3                  EX    (SP),HL
+2005 CD 0C 20            CALL  putHexHL
+2008 CD 30 20            CALL  putCRLF
+200B C9                  RET
+200C             ;****************
+200C             ;putHexHL
+200C             ;Print HL register pair as 4 hex digits
+200C             ;  IN:  HL = word to be printed.
+200C             ;  OUT: none.
+200C             ;  USES:AF
+200C             ;****************
+200C             putHexHL:
+200C 7C                  LD    A,H
+200D CD 11 20            CALL  putHexA
+2010 7D                  LD    A,L
+2011                     ;fall through to routine putHexA
+2011             ;****************
+2011             ;putHexA
+2011             ;Print A register as 2 hex digits
+2011             ;  IN:  A = byte to be printed
+2011             ;  OUT: none.
+2011             ;  USES:none.
+2011             ;****************
+2011             putHexA:
+2011 F5                  PUSH  AF
+2012 1F                  RRA
+2013 1F                  RRA
+2014 1F                  RRA
+2015 1F                  RRA
+2016 CD 1A 20            CALL  putHexA1
+2019 F1                  POP   AF
+201A             putHexA1:
+201A F5                  PUSH  AF
+201B E6 0F               AND   A,0x0F
+201D C6 30               ADD   A,'0'
+201F FE 3A               CP    A,'9'+1
+2021 38 02               JR    C,$+4
+2023 C6 07               ADD   A,07
+2025 CD 4A 20            CALL  putChar
+2028 F1                  POP   AF
+2029 C9                  RET
+202A             ;****************
+202A             ;putMsg
+202A             ;Print a string, following the return address and zero terminated, via ASCI0.
+202A             ;  IN:  none.
+202A             ;  OUT: none.
+202A             ;  USES:none.
+202A             ;****************
+202A             putMsg:
+202A E3                  EX    (SP),HL     ;save HL and load return address into HL.
+202B CD 3D 20            CALL  putStr
+202E E3                  EX    (SP),HL     ;put return address onto stack and restore HL.
+202F C9                  RET
+2030             ;****************
+2030             ;putCRLF
+2030             ;Send CR and LF to ASCI0
+2030             ;  IN:  none.
+2030             ;  OUT: none.
+2030             ;  USES:none.
+2030             ;****************
+2030             putCRLF:
+2030 F5                  PUSH  AF
+2031 3E 0D               LD    A,'\r'
+2033 CD 4A 20            CALL  putChar
+2036 3E 0A               LD    A,'\n'
+2038 CD 4A 20            CALL  putChar
+203B F1                  POP   AF
+203C C9                  RET
+203D             ;****************
+203D             ;putStr
+203D             ;Print a string, pointed to by HL and zero terminated, via ASCI0.
+203D             ;  IN:  HL:address of zero terminated string to be printed.
+203D             ;  OUT: none.
+203D             ;  USES:HL:points to byte after zero terminated string.
+203D             ;****************
+203D             putStr:
+203D F5                  PUSH  AF          ;save registers
+203E 18 03               JR    $+5
+2040             putStr0:
+2040 CD 4A 20            CALL  putChar
+2043 7E                  LD    A,(HL)      ;get next character
+2044 23                  INC   HL
+2045 B7                  OR    A,A         ;is it zer0?
+2046 20 F8               JR    NZ,putStr0  ;no ->put it to ASCI0
+2048 F1                  POP   AF          ;yes->return
+2049 C9                  RET
+204A             ;****************
+204A             ;putChar
+204A             ;Send one character to ASCI0.
+204A             ;  IN:  A = character
+204A             ;  OUT: none.
+204A             ;  USES:AF
+204A             ;****************
+204A             putChar:
+204A F5                  PUSH  AF          ;save the character to be send
+204B             putChar1:
+204B ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status register
+204E CB 4F               BIT   TDRE,A      ;wait until TDRE <> 0
+2050 28 F9               JR    Z,putChar1
+2052 F1                  POP   AF          ;restore character to be send
+2053 ED 39 06            OUT0  (TDR0),A    ;write character to ASCI0
+2056 C9                  RET
+2057             ;****************
+2057             ;mul16
+2057             ;16 bit unsigned multiplication
+2057             ;Input: HL
+2057             ;       DE
+2057             ;Output HL = HL * DE low part
+2057             ;       DE = HL * DE high part
+2057             ;Uses   -
+2057             ;****************
+2057             mul16:
+2057                     ;HL = HL * DE
+2057                     ;        H  L
+2057                     ;        D  E
+2057                     ;    --------*
+2057                     ;          EL
+2057                     ;       EH  0
+2057                     ;       DL  0
+2057                     ;    DH  0  0
+2057                     ; -----------+
+2057                     ;  P  Q  R  S
+2057                     ;S = ELlow
+2057                     ;R = ELhigh+EHlow+DLlow
+2057                     ;Q = DHlow+EHhigh+DLhigh
+2057                     ;P = DHhigh
+2057 C5                  PUSH  BC          ;save BC
+2058 44                  LD    B,H
+2059 4D                  LD    C,L
+205A 62                  LD    H,D         ;DH aka DB
+205B 68                  LD    L,B
+205C ED 6C               MLT   HL
+205E E5                  PUSH  HL
+205F 62                  LD    H,D         ;DL aka DC
+2060 69                  LD    L,C
+2061 ED 6C               MLT   HL
+2063 E5                  PUSH  HL
+2064 63                  LD    H,E         ;EH aka EB
+2065 68                  LD    L,B
+2066 ED 6C               MLT   HL
+2068 E5                  PUSH  HL
+2069 63                  LD    H,E         ;EL aka EC
+206A 69                  LD    L,C
+206B ED 6C               MLT   HL
+206D D1                  POP   DE          ;RS=EL+EH0
+206E 06 00               LD    B,0
+2070 4A                  LD    C,D         ;..C=EHhigh
+2071 53                  LD    D,E         ;..D=EHlow
+2072 1E 00               LD    E,0
+2074 19                  ADD   HL,DE
+2075 30 01               JR    NC,$+3      ;add carry to PQ
+2077 03                  INC   BC
+2078 D1                  POP   DE          ;RS=EL+EH0+DL0
+2079 7A                  LD    A,D         ;..A=DLhigh
+207A 53                  LD    D,E         ;..D=DLlow
+207B 19                  ADD   HL,DE
+207C 30 01               JR    NC,$+3      ;add carry to PQ
+207E 03                  INC   BC
+207F                     ;HL=RS=EL+EH0+DL0
+207F                     ;C=EHhigh
+207F                     ;A=DLhigh
+207F                     ;E=0
+207F EB                  EX    DE,HL
+2080 65                  LD    H,L         ;..E was 0, so H=L=0
+2081 6F                  LD    L,A         ;..HL=DLhigh
+2082 09                  ADD   HL,BC       ;PQ=EHhigh+DLhigh+DH
+2083 C1                  POP   BC
+2084 09                  ADD   HL,BC
+2085 EB                  EX    DE,HL
+2086                     ;D=P=DHhigh
+2086                     ;E=Q=DHlow+EHhigh+DLhigh
+2086                     ;H=R=ELhigh+EHlow+DLlow
+2086                     ;L=S=ELlow
+2086 C1                  POP   BC          ;restore BC
+2087 C9                  RET
+2088             ;****************
+2088             ;div16
+2088             ;16 bit unsigned division
+2088             ;Input: HL = dividend
+2088             ;       DE = divisor
+2088             ;Output HL = quotient
+2088             ;       DE = remainder
+2088             ;Uses   -
+2088             ;****************
+2088             ;pseudo code:
+2088             ;T = dividend
+2088             ;D = divisor
+2088             ;Q = quotient = 0
+2088             ;R = remainder = 0
+2088             ;invariante betrekking:
+2088             ; D/T\Q     
+2088             ;   R       
+2088             ; T = QD + R
+2088             ; T <= 2^N  
+2088             ;
+2088             ; D/T'.RT\Q'        
+2088             ;   R'              
+2088             ; RT <= 2^N         
+2088             ; 0<=k<=N           
+2088             ; RT = T % 10^k     
+2088             ; T' = (T-RT) / 10^k
+2088             ; Q' = T' / D       
+2088             ; R' = T' % D       
+2088             ;
+2088             ;for (i=8; i>0; i--) {
+2088             ;  T = T * 2 (remember MSB in carry)
+2088             ;  R = R * 2 + carry
+2088             ;  Q = Q * 2
+2088             ;  if (R >= D) {
+2088             ;    R = R - D;
+2088             ;    Q++;
+2088             ;  }
+2088             ;}
+2088             ;return Q,R (in HL,DE)
+2088             div16:
+2088 F5                  PUSH  AF
+2089 7A                  LD    A,D
+208A B3                  OR    E
+208B 20 22               JR    NZ,div16_1
+208D F1                  POP   AF
+208E CD 2A 20            CALL  putMsg
+2091 08 0D 0A 44
+     69 76 69 64
+     65 20 62 79
+     20 7A 65 72
+     6F 20 65 72
+     72 6F 72 2E
+     0D 0A 00            .ASCIZ  "\b\r\nDivide by zero error.\r\n"
+20AC C3 00 00            JP    0           ;Jump to Zilog Z80183 Monitor and show register status.
+20AF             div16_1:
+20AF C5                  PUSH  BC
+20B0 FD E5               PUSH  IY
+20B2 4D                  LD    C,L         ;T(AC) = teller from input (HL)
+20B3 7C                  LD    A,H         ;D(DE) = deler from input  (DE)
+20B4 FD 21 00 00         LD    IY,0        ;Q(IY) = quotient
+20B8 21 00 00            LD    HL,0        ;R(HL) = restant
+20BB 06 10               LD    B,16        ;for (i=8; i>0; i--)
+20BD             div16_2:
+20BD CB 21               SLA   C           ;  T = T * 2 (remember MSB in carry)
+20BF CB 17               RL    A
+20C1 CB 15               RL    L           ;  R = R * 2 + carry
+20C3 CB 14               RL    H
+20C5 FD 29               ADD   IY,IY       ;  Q = Q * 2
+20C7 B7                  OR    A           ;  if (R >= D) {
+20C8 ED 52               SBC   HL,DE
+20CA 38 06               JR    C,div16_3   ;    R = R - D
+20CC FD 23               INC   IY          ;    Q++
+20CE 10 ED               DJNZ  div16_2     ;  }
+20D0 18 03               JR    div16_4
+20D2             div16_3:
+20D2 19                  ADD   HL,DE       ;compensate comparison
+20D3 10 E8               DJNZ  div16_2     ;}
+20D5             div16_4:
+20D5 FD E5               PUSH  IY          ;copy IY (quotient) into DE
+20D7 D1                  POP   DE
+20D8 EB                  EX    DE,HL       ;swap DE and HL; HL = quotient; DE = rest
+20D9 FD E1               POP   IY
+20DB C1                  POP   BC
+20DC F1                  POP   AF
+20DD C9                  RET
+20DE             main:
+20DE             L0:     ;{Program to test generated Z80 assembler code}
+20DE                     ;VAR A;
+20DE                     ;BEGIN
+20DE                     ;  A := 1;
+20DE 21 01 00            LD    HL,1
+20E1 22 00 40            LD    (0x4000),HL
+20E4             L2:     ;  WHILE A < 9 DO
+20E4 2A 00 40            LD    HL,(0x4000)
+20E7             L3:     ;  BEGIN
+20E7 11 09 00            LD    DE,9
+20EA B7                  OR    A
+20EB ED 52               SBC   HL,DE
+20ED D2 04 21            JP    NC,L12
+20F0             L5:     ;    WRITE(A);
+20F0 2A 00 40            LD    HL,(0x4000)
+20F3 E5                  PUSH  HL
+20F4 CD 03 20            CALL  write
+20F7             L8:     ;    A := A + 1;
+20F7 2A 00 40            LD    HL,(0x4000)
+20FA 11 01 00            LD    DE,1
+20FD 19                  ADD   HL,DE
+20FE 22 00 40            LD    (0x4000),HL
+2101             L11:    ;  END;
+2101 C3 E4 20            JP    L2
+2104             L12:    ;END.
+2104 C3 71 01            JP    0x0171      ;Jump to Zilog Z80183 Monitor.
+
+Labels:
+204B : putChar1
+2088 : div16
+200C : putHexHL
+201A : putHexA1
+20DE : main
+2011 : putHexA
+20BD : div16_2
+20AF : div16_1
+20D5 : div16_4
+2030 : putCRLF
+20D2 : div16_3
+2003 : write
+2057 : mul16
+20DE : L0
+2040 : putStr0
+20E1 : L1
+204A : putChar
+20E4 : L2
+203D : putStr
+20E7 : L3
+2000 : start
+20ED : L4
+20F0 : L5
+20F3 : L6
+20FE : L10
+20F4 : L7
+20F7 : L8
+2104 : L12
+20FA : L9
+2101 : L11
+202A : putMsg
+
+Cross references:
+ putHexA = 2011 : 200D
+putHexHL = 200C : 2005
+ putChar = 204A : 2025 2033 2038 2040
+      L2 = 20E4 : 2101
+  putStr = 203D : 202B
+  putMsg = 202A : 208E
+putHexA1 = 201A : 2016
+    main = 20DE : 2000
+ putCRLF = 2030 : 2008
+     L12 = 2104 : 20ED
+   write = 2003 : 20F4
