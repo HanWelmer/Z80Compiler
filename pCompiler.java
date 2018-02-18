@@ -61,9 +61,14 @@ public class pCompiler {
       listing(instructions);
       if (z80) {
         /* transcode M-code to Z80S180 assembler code */
-        ArrayList<AssemblyInstruction> z80Instructions = transcodeZ80(fileName, instructions, binary);
+        System.out.println("Generating Z80 assembler code ...");
+        Transcoder transcoder = new Transcoder(binary);
+        ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
+
+        writeZ80Assembler(fileName, z80Instructions);
+
         if (binary) {
-          /* write binary Z80S180 code to Intel hex file */
+          writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
           writeZ80toIntelHex(fileName, z80Instructions);
         }
       }
@@ -111,21 +116,6 @@ public class pCompiler {
       System.out.println(String.format("%3d :", pos++) + instruction.toString());
     }
     System.out.println();
-  }
-  
-  /* transcode M-code to Z80S180 assembler code */
-  private static ArrayList<AssemblyInstruction> transcodeZ80(String fileName, ArrayList<Instruction> instructions, boolean binary) {
-    System.out.println("Generating Z80 assembler code ...");
-    Transcoder transcoder = new Transcoder(binary);
-    ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
-
-    /* write Z80 assembly code */
-    writeZ80Assembler(fileName, z80Instructions);
-    
-    /* write Z80S180 assembly listing */
-    writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
-
-    return z80Instructions;
   }
   
   private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {
