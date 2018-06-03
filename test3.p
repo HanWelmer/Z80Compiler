@@ -1,6 +1,7 @@
 {Program to test multiplication}
 VAR A;
 BEGIN
+  WRITE(7 * 5);
   WRITE(1 * 0);
   WRITE(1 * 1);
   WRITE(2 * 1);
