@@ -284,6 +284,25 @@ mul16:
         POP   BC          ; 9 151 restore BC
         RET               ; 9 160
 ;****************
+;mul16_10
+;multiply a 16 bit unsigned number by 10 with a 16 bit result.
+;  IN:  HL = operand
+;  OUT: HL = HL * 10; low part
+;  USES:Flags
+;  Size   9 bytes
+;  Time   65 cycles
+;****************
+mul16_10:
+        PUSH  DE          ;11 11
+        LD    D,H         ; 4 15
+        LD    E,L         ; 4 19
+        ADD   HL,HL       ; 7 26 times 2
+        ADD   HL,HL       ; 7 33 times 4
+        ADD   HL,DE       ; 7 40 times 5
+        ADD   HL,HL       ; 7 47 times 10
+        POP   DE          ; 9 56
+        RET               ; 9 65
+;****************
 ;mul1632
 ;16 by 16 bit unsigned multiplication with 32 bit result.
 ;  IN:  HL = operand 1
@@ -497,15 +516,13 @@ div16_83:
 ;****************
 read:
         PUSH  AF
-        PUSH  DE
         LD    HL,0        ;result = 0;
 read1:
         CALL  getChar     ;check if a character is available.
         JR    Z,read1     ;-no: wait for it.
         CP    '\r'        ;return if char == Carriage Return
         JR    Z,read2
-        LD    DE,10
-        CALL  mul16       ;result *= 10;
+        CALL  mul16_10    ;result *= 10;
         SUB   A,'0'       ;digit = char - '0';
         ADD   A,L         ;result += digit;
         LD    L,A
@@ -513,7 +530,6 @@ read1:
         INC   H
         JR    read1        ;get next character
 read2:
-        POP   DE
         POP   AF
         RET
 ;****************

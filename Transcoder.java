@@ -697,6 +697,26 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "POP   BC          ; 9 151 restore BC", 0xC1));
     result.add(plantAssemblyInstruction(INDENT + "RET               ; 9 160", 0xC9));
 
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";mul16_10"));
+    result.add(new AssemblyInstruction(byteAddress, ";multiply a 16 bit unsigned number by 10 with a 16 bit result."));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  HL = operand"));
+    result.add(new AssemblyInstruction(byteAddress, ";  OUT: HL = HL * 10; low part"));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES:Flags"));
+    result.add(new AssemblyInstruction(byteAddress, ";  Size   9 bytes"));
+    result.add(new AssemblyInstruction(byteAddress, ";  Time   65 cycles"));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("mul16_10", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "mul16_10:"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH  DE          ;11 11", 0xD5));
+    result.add(plantAssemblyInstruction(INDENT + "LD    D,H         ; 4 15", 0x54));
+    result.add(plantAssemblyInstruction(INDENT + "LD    E,L         ; 4 19", 0x5D));
+    result.add(plantAssemblyInstruction(INDENT + "ADD   HL,HL       ; 7 26 times 2", 0x29));
+    result.add(plantAssemblyInstruction(INDENT + "ADD   HL,HL       ; 7 33 times 4", 0x29));
+    result.add(plantAssemblyInstruction(INDENT + "ADD   HL,DE       ; 7 40 times 5", 0x19));
+    result.add(plantAssemblyInstruction(INDENT + "ADD   HL,HL       ; 7 47 times 10", 0x29));
+    result.add(plantAssemblyInstruction(INDENT + "POP   DE          ; 9 56", 0xD1));
+    result.add(plantAssemblyInstruction(INDENT + "RET               ; 9 65", 0xC9));
 
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
     result.add(new AssemblyInstruction(byteAddress, ";mul1632"));
@@ -943,7 +963,6 @@ public class Transcoder {
     labels.put("read", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "read:"));
     result.add(plantAssemblyInstruction(INDENT + "PUSH  AF", 0xF5));
-    result.add(plantAssemblyInstruction(INDENT + "PUSH  DE", 0xD5));
     result.add(plantAssemblyInstruction(INDENT + "LD    HL,0        ;result = 0;", 0x21, 0, 0));
     labels.put("read1", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "read1:"));
@@ -954,9 +973,8 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "CP    '\\r'        ;return if char == Carriage Return", 0xFE, 0x0D));
     putLabelReference("read2", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    Z,read2", 0x28, 0x0F));
-    result.add(plantAssemblyInstruction(INDENT + "LD    DE,10", 0x11, 0x0A, 0x00));
-    putLabelReference("mul16", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "CALL  mul16       ;result *= 10;", 0xCD, 0, 0));
+    putLabelReference("mul16_10", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "CALL  mul16_10    ;result *= 10;", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "SUB   A,'0'       ;digit = char - '0';", 0xD6, 0x30));
     result.add(plantAssemblyInstruction(INDENT + "ADD   A,L         ;result += digit;", 0x85));
     result.add(plantAssemblyInstruction(INDENT + "LD    L,A", 0x6F));
@@ -967,7 +985,6 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "JR    read1        ;get next character", 0x18, 0xE8));
     labels.put("read2", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "read2:"));
-    result.add(plantAssemblyInstruction(INDENT + "POP   DE", 0xD1));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
     
