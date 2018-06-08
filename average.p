@@ -1,19 +1,19 @@
 {A small program in the P-language}
-VAR S, N, T;
+VAR sum, count, number;
 BEGIN
-  S := 0; {sum}
-  N := 0; {number of items}
-  T := READ; {read a digit}
-  WRITE (T);
-  WHILE T <> 0 {not end of file} DO
+  sum := 0; {sum}
+  count := 0; {number of items}
+  number := READ; {read a new number}
+  WRITE (number;
+  WHILE number <> 0 {not end of file} DO
   BEGIN
-    S := S + T; {sum of numbers read}
-    N := N + 1; {number of numbers read}
-    T := READ;
-    WRITE (T);
+    sum := sum + number; {sum of numbers read}
+    count := count + 1; {number of numbers read}
+    number := READ;
+    WRITE (number);
   END;
-  WRITE (N);
-  WRITE (S);
-  IF N <> 0 THEN
-    WRITE (S / N); {average}
+  WRITE (count);
+  WRITE (sum);
+  IF count <> 0 THEN
+    WRITE (sum / count); {average}
 END.

@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * program        = ["VAR" idlist] block ".".
  * idlist         = identifier {"," identifier} ";".
- * identifier     = "A-Z".
+ * identifier     = "(A-Za-z)(A-Za-z0-9)*".
  * block          = statement | "BEGIN" block {";" block} "END".
  * statement      = assignment | writeStatement | ifStatement | whileStatement.
  * assignment     = identifier ":=" expression.
@@ -83,6 +83,7 @@ public class Compiler {
 
   /* Constants and class member variables for lexical analysis phase */
   private static final int LINE_WIDTH = 128;
+  private static final int MAX_IDENTIFIER_LENGTH = 80;
   private static final int NAME_CHARS = 6;
 
   private int lineSize;
@@ -95,12 +96,10 @@ public class Compiler {
   /* Constants and class member variables for syntax analysis phase */
   EnumSet<LexemeType> startExp = EnumSet.noneOf(LexemeType.class);
   EnumSet<LexemeType> startBlock = EnumSet.noneOf(LexemeType.class);
- 
-  /* Constants and class member variables for semantic analysis phase */
-  /* variables: -1: not declared, >=0: memory address allocated */
-  private Map<String, Integer> variables = new HashMap<String, Integer>();
-  private int nextVariable;
 
+  /* Constants and class member variables for semantic analysis phase */
+  private Identifiers identifiers = new Identifiers();
+ 
   /* Constants and class member variables for code generation phase */
   private static final int NULL_OP = 0;
   private static final int MAX_M_CODE = 512;
@@ -140,9 +139,8 @@ public class Compiler {
     startBlock.add(LexemeType.writelexeme);
 
     /* initialisation of semantic analysis variables */
-    nextVariable = 0;
-    variables.clear();
-    
+    identifiers.init();
+
     /* initialisation of code generation variables */
     accInUse = false;
     codePos = 0;
@@ -215,34 +213,30 @@ public class Compiler {
       /* try to recognise a constant */
       lexeme.type = LexemeType.constant;
       lexeme.constVal = (int)ch - (int)'0';
-    } else if (ch >= 'A' && ch <= 'Z') {
+    } else if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')){
       /* try to recognise an identifier or a keyword */
-      if (nextChar() < 'A' || nextChar() > 'Z') {
+      String name = String.valueOf(ch);
+      int charno = 0;
+      while ( ((nextChar() >= 'A' && nextChar() <= 'Z') || (nextChar() >= 'a' && nextChar() <= 'z') || (nextChar() >= '0' && nextChar() <= '9')) 
+            && charno <= MAX_IDENTIFIER_LENGTH) {
+        if (charno <= MAX_IDENTIFIER_LENGTH) {
+          name += String.valueOf(getChar());
+          charno++;
+        } else {
+          ch = getChar();
+        }
+      }
+      /* separate keywords (read, write,if,then,var,begin or end) from identifiers */
+      debug("\nlexeme: name=" + name);
+      lexeme.type = LexemeType.beginlexeme;
+      //TODO refactor this for better performance
+      while (lexeme.type.ordinal() <= LexemeType.endlexeme.ordinal() && !lexeme.type.getValue().equals(name)) {
+        lexeme.type = lexeme.type.next();
+      }
+      if (!lexeme.type.getValue().equals(name)) {
         lexeme.type = LexemeType.identifier;
-        lexeme.idVal = String.valueOf(ch);
-      } else {
-        /* try to recognise keywords read, write,if,then,var,begin or end */
-        String name = String.valueOf(ch);
-        int charno = 1;
-        while (nextChar() >= 'A' && nextChar() <= 'Z' && charno <= NAME_CHARS) {
-          if (charno <= NAME_CHARS) {
-            name += String.valueOf(getChar());
-            charno++;
-          } else {
-            ch = getChar();
-          }
-        }
-        debug("\nlexeme: name=" + name);
-        lexeme.type = LexemeType.beginlexeme;
-        while (lexeme.type.ordinal() <= LexemeType.endlexeme.ordinal() && !lexeme.type.getValue().equals(name)) {
-          lexeme.type = lexeme.type.next();
-        }
-        //if (lexeme.type.ordinal() > LexemeType.endlexeme.ordinal()) {
-        if (!lexeme.type.getValue().equals(name)) {
-          lexeme.type = LexemeType.unknown;
-          error(6); /* unknown name */
-          System.out.println(name);
-        }
+        lexeme.idVal = name;
+        debug("\nlexeme is identifier: " + name);
       }
     } else {
       /* try to recognise keywords  - , ; := ( ) + - * / <=> */
@@ -308,7 +302,7 @@ public class Compiler {
           error(4); /* unknown characters */
       }
     }
-    debug("\nlexeme=" + lexeme.makeString(variables));
+    debug("\nlexeme=" + lexeme.makeString(identifiers.getId(lexeme.idVal)));
   }
 
   private char getChar() throws IOException, FatalError {
@@ -386,7 +380,9 @@ public class Compiler {
     
     do {
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), followSet1)) {
-        declareId(); /* part of semantic analysis */
+        /* next line + debug message is part of semantic analysis */
+        if (!identifiers.declareId(lexeme.idVal)) error(8);
+        debug("\n" + lexeme.makeString(identifiers.getId(lexeme.idVal)));
         getLexeme();
       }
       debug("\nidlist var declared");
@@ -414,10 +410,10 @@ public class Compiler {
     if (checkOrSkip(startExp, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
         /* part of semantic analysis */
-        checkId();
+        if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
         /* part of code generation */
         operand.opType = OperandType.var;
-        operand.opValue = variables.get(lexeme.idVal);
+        operand.opValue = identifiers.getId(lexeme.idVal);
         /* part of lexical analysis */
         getLexeme();
       } else if (lexeme.type == LexemeType.constant) {
@@ -559,9 +555,10 @@ public class Compiler {
     if (checkOrSkip(localSet, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
         /* part of semantic analysis */
-        checkId(); 
+        if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
+ 
         /* part of code generation */
-        int assignTo = variables.get(lexeme.idVal);
+        int assignTo = identifiers.getId(lexeme.idVal);
         /* part of lexical analysis */
         getLexeme();
         
@@ -699,25 +696,6 @@ public class Compiler {
     debug("\nprog end");
   }
   
-  /*Class member methods for semantic analysis phase */
-  private void declareId() {
-    if (variables.get(lexeme.idVal) != null) {
-      error(8); /* variable already declared */
-    } else {
-      variables.put(lexeme.idVal, nextVariable);
-      nextVariable++;
-      debug("\n" + lexeme.makeString(variables));
-    }
-  }
-  
-  private void checkId() {
-    Integer varAddress = variables.get(lexeme.idVal);
-    if ((varAddress != null) && (varAddress == -1)) {
-      error(9); /* variable not declared */
-      variables.put(lexeme.idVal, -1); /* prevent further error messages */
-    }
-  }
-
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
     if (operand.opType != OperandType.stack) {

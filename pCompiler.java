@@ -100,7 +100,7 @@ public class pCompiler {
   
   private static void usage() {
     System.out.println("Usage: pCompiler [-Z80] [-b] [-d] source.p");
-    System.out.println(" where -b generate binary output (M-code or Z80 assembler");
+    System.out.println(" where -b generate binary output (M-code or Z80 assembler)");
     System.out.println("       -d issue debug messages during compilation");
     System.out.println("       -r run the compiled code using the built-in interpreter");
     System.out.println("       -z generate Z80 assembler output");
