@@ -325,13 +325,11 @@ public class Compiler {
       sourceCode.add(line);
       
       lineSize = line.length();
-      if (lineSize == 0) {
-        line += "\n";
-        lineSize++;
-      } else if (lineSize > LINE_WIDTH) {
+      if (lineSize > LINE_WIDTH) {
         throw new FatalError(2); //line too long
       }
-      
+      line += "\n";
+      lineSize++;
       linePos = 0;
     }
     return line.charAt(linePos);

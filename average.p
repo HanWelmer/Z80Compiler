@@ -18,5 +18,5 @@ BEGIN
   BEGIN
     _Average := sum / NUMBER_OF_NUMBERS; {average}
     WRITE (_Average);
-  END;
+  END
 END.
