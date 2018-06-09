@@ -7,7 +7,9 @@ import java.util.Map;
 
 /**
  * Compiler for the P programming language, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
- * Language extended by H.J. Welmer to support multiple character identifiers.
+ * Language extended by H.J. Welmer with the following features:
+ * - support multiple character identifiers.
+ * - support multiple digit constants.
  *
  * program        = ["VAR" idlist] block ".".
  * idlist         = identifier {"," identifier} ";".
@@ -25,7 +27,7 @@ import java.util.Map;
  * addop          = "+" | "-".
  * mulop          = "*" | "/".
  * relop          = "<" | "<=" | "<>" | "=" | ">=" | ">".
- * constant       = "0-9".
+ * constant       = "(0-9)*".
  */
 public class Compiler {
 
@@ -58,6 +60,7 @@ public class Compiler {
     if (errors) { 
       storeInstruction.clear();
       codePos = 0;
+      System.out.println("\n\nErrors.");
     }
     return storeInstruction;
   }
@@ -83,9 +86,9 @@ public class Compiler {
     );
 
   /* Constants and class member variables for lexical analysis phase */
-  private static final int LINE_WIDTH = 128;
-  private static final int MAX_IDENTIFIER_LENGTH = LINE_WIDTH;
-  private static final int NAME_CHARS = 6;
+  private static final int MAX_LINE_WIDTH = 128;
+  private static final int MAX_IDENTIFIER_LENGTH = MAX_LINE_WIDTH;
+  private static final int MAX_CONSTANT = 65535; //16 bit constant
   private static final String VALID_IDENTIFIER_CHARACTERS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
   private int lineSize;
   private int linePos;
@@ -178,6 +181,7 @@ public class Compiler {
   }
   
   private void error(int n) {
+    errors = true;
     System.out.print("\n");
     for (int i=0; i<linePos-1; i++) {
       System.out.print(' ');
@@ -186,7 +190,7 @@ public class Compiler {
     switch (n) {
       case 0 : System.out.println("error opening file " + fileName);break;
       case 1 : System.out.println("end of input encountered");break;
-      case 2 : System.out.println("line too long; max width=" + LINE_WIDTH);break;
+      case 2 : System.out.println("line too long; max width=" + MAX_LINE_WIDTH);break;
       case 3 : System.out.println("unexpected symbol");break;
       case 4 : System.out.println("unknown character");break;
       case 5 : System.out.println("'=' expected after ':' ");break;
@@ -197,6 +201,7 @@ public class Compiler {
       case 10 : System.out.println("code overflow");break;
       case 11 : System.out.println("lexemetype is null");break;
       case 12 : System.out.println("internal compiler error during code generation");break;
+      case 13 : System.out.println("constant too big"); break;
     }
   }
   
@@ -214,6 +219,23 @@ public class Compiler {
       /* try to recognise a constant */
       lexeme.type = LexemeType.constant;
       lexeme.constVal = (int)ch - (int)'0';
+      boolean noError = true;
+      while (nextChar() >= '0' && nextChar() <= '9' && noError) {
+        ch = getChar();
+        lexeme.constVal = lexeme.constVal * 10 + ((int)ch - (int)'0');
+        //assumption: lexeme.constVal can be larger than MAX_CONSTANT.
+        if (lexeme.constVal > MAX_CONSTANT) {
+          noError = false;
+        }
+      }
+      if (!noError) {
+        /* constant too big */
+        error(13);
+        /* eat up remainder of constant */
+        while (ch >= '0' && ch <= '9') {
+          ch = getChar();
+        }
+      }
     } else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
       /* try to recognise an identifier or a keyword */
       String name = String.valueOf(ch);
@@ -227,7 +249,6 @@ public class Compiler {
         }
       }
       /* separate identifiers from keywords */
-      debug("\nlexeme: name=" + name);
       lexeme.type = LexemeType.beginlexeme;
       //TODO refactor this for better performance
       while (lexeme.type.ordinal() <= LexemeType.endlexeme.ordinal() && !lexeme.type.getValue().equals(name)) {
@@ -236,7 +257,6 @@ public class Compiler {
       if (!lexeme.type.getValue().equals(name)) {
         lexeme.type = LexemeType.identifier;
         lexeme.idVal = name;
-        debug("\nlexeme is identifier: " + name);
       }
     } else {
       /* try to recognise keywords  - , ; := ( ) + - * / <=> */
@@ -302,7 +322,7 @@ public class Compiler {
           error(4); /* unknown characters */
       }
     }
-    debug("\nlexeme=" + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+    debug("\nlexeme = " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
   }
 
   private char getChar() throws IOException, FatalError {
@@ -325,7 +345,7 @@ public class Compiler {
       sourceCode.add(line);
       
       lineSize = line.length();
-      if (lineSize > LINE_WIDTH) {
+      if (lineSize > MAX_LINE_WIDTH) {
         throw new FatalError(2); //line too long
       }
       line += "\n";
@@ -345,16 +365,7 @@ public class Compiler {
       result = true;
     } else {
       error(3); /* okset expected */
-      for (LexemeType aLexeme: EnumSet.allOf(LexemeType.class).range(firstLexeme.type, lastLexeme.type)) {
-        if (okSet.contains(aLexeme)) {
-          if (orFlag) {
-            debug(" or ");
-          }
-          orFlag = true;
-          debug(aLexeme.getValue());
-        }
-      }
-      debug(" expected.");
+      System.out.println(" found " + lexeme.type + ", expected " + okSet);
       if (stopSet.size() > 0) {
         while (!stopSet.contains(lexeme.type)) {
           error(7); /* lexeme skipped after error */

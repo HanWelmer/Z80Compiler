@@ -3,6 +3,8 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -55,37 +57,41 @@ public class pCompiler {
     */
     fileName = fileName.replace(".P", ".p");
     ArrayList<Instruction> instructions = null;
-    try (FileReader fr = new FileReader(fileName); BufferedReader bufr = new BufferedReader(fr);) { 
+    try (FileReader fr = new FileReader(fileName); BufferedReader bufr = new BufferedReader(fr);) {
+      deleteOldOutput(fileName);
+    
       Compiler compiler = new Compiler(debugMode);
       instructions = compiler.compile(fileName, bufr);
-      
-      /* List compiled code for the M machine */
-      listing(instructions);
-      if (z80) {
-        /* transcode M-code to Z80S180 assembler code */
-        System.out.println("Generating Z80 assembler code ...");
-        Transcoder transcoder = new Transcoder(binary);
-        ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
 
-        writeZ80Assembler(fileName, z80Instructions);
+      if (!instructions.isEmpty()) {
+        /* List compiled code for the M machine */
+        writeListing(fileName, instructions);
+        if (z80) {
+          /* transcode M-code to Z80S180 assembler code */
+          System.out.println("Generating Z80 assembler code ...");
+          Transcoder transcoder = new Transcoder(binary);
+          ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
 
-        if (binary) {
-          writeZ80toIntelHex(fileName, z80Instructions);
-          writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
+          writeZ80Assembler(fileName, z80Instructions);
+
+          if (binary) {
+            writeZ80toIntelHex(fileName, z80Instructions);
+            writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
+          }
         }
-      }
-      
-      /* start interpreter */
-      if (runMode) {
-        /* input for the interpreter*/
-        String inputString = "2 3 4 5 6 7 8 0";
-        String[] inputParts = inputString.split(" ");
-        System.out.println("Running compiled code ...");
-        Interpreter interpreter = new Interpreter(instructions, inputParts);
-        boolean stop = false;
-        do {
-          stop = interpreter.step(debugMode);
-        } while (!stop);
+        
+        /* start interpreter */
+        if (runMode) {
+          /* input for the interpreter*/
+          String inputString = "2 3 4 5 6 7 8 0";
+          String[] inputParts = inputString.split(" ");
+          System.out.println("Running compiled code ...");
+          Interpreter interpreter = new Interpreter(instructions, inputParts);
+          boolean stop = false;
+          do {
+            stop = interpreter.step(debugMode);
+          } while (!stop);
+        }
       }
     } catch (RuntimeException e) {
       System.out.println(e.getMessage());
@@ -108,16 +114,45 @@ public class pCompiler {
     System.exit(1);
   }
 
-  private static void listing(ArrayList<Instruction> instructions) {
-    System.out.println();
-    System.out.println("Assembly listing of compiled code:");
-    System.out.println("----------------------------------");
-    int pos=0;
-    for (Instruction instruction: instructions) {
-      //TODO : add pos as lineNr to Instruction
-      System.out.println(String.format("%3d :", pos++) + instruction.toString());
+  private static void deleteOldOutput(String fileName) {
+    String outputFilename = fileName.replace(".p", ".m");
+    try {
+      Files.deleteIfExists(Paths.get(outputFilename));
+      outputFilename = fileName.replace(".p", ".asm");
+      Files.deleteIfExists(Paths.get(outputFilename));
+      outputFilename = fileName.replace(".p", ".lst");
+      Files.deleteIfExists(Paths.get(outputFilename));
+      outputFilename = fileName.replace(".p", ".hex");
+      Files.deleteIfExists(Paths.get(outputFilename));
+    } catch (IOException x) {
+        // File permission problems are caught here.
+        System.err.println("Failed to delete " + outputFilename);
+        System.exit(1);
     }
-    System.out.println();
+  }
+  
+  private static void writeListing(String fileName, ArrayList<Instruction> instructions) {
+    /* write M assembly code to an *.m file */
+    String outputFilename = fileName.replace(".p", ".m");
+    System.out.println("Writing M code to " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+        writer = new BufferedWriter(new FileWriter(outputFilename));
+        int pos=0;
+        for (Instruction instruction: instructions) {
+          writer.write(String.format("%3d :%s\n", pos++, instruction.toString()));
+        }
+    } catch (IOException e) {
+        System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
+      }
+    }
   }
   
   private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {

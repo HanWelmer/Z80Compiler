@@ -571,69 +571,76 @@
 217B C9                  RET
 217C             main:
 217C             L0:     ;{A small program in the P-language}
-217C                     ;VAR S, N, T;
+217C                     ;VAR number, Sum, NUMBER_OF_NUMBERS, _Average;
 217C                     ;BEGIN
-217C                     ;  S := 0; {sum}
+217C                     ;  Sum := 0;
 217C 21 00 00            LD    HL,0
-217F 22 00 40            LD    (04000H),HL
-2182             L2:     ;  N := 0; {number of items}
+217F 22 02 40            LD    (04002H),HL
+2182             L2:     ;  NUMBER_OF_NUMBERS := 0;
 2182 21 00 00            LD    HL,0
-2185 22 02 40            LD    (04002H),HL
-2188             L4:     ;  T := READ; {read a digit}
+2185 22 04 40            LD    (04004H),HL
+2188             L4:     ;  {read a new number and echo number to output}
+2188                     ;  number := READ; 
 2188 CD 3B 21            CALL  read
-218B 22 04 40            LD    (04004H),HL
-218E             L6:     ;  WRITE (T);
-218E 2A 04 40            LD    HL,(04004H)
+218B 22 00 40            LD    (04000H),HL
+218E             L6:     ;  WRITE (number);
+218E 2A 00 40            LD    HL,(04000H)
 2191 E5                  PUSH  HL
 2192 CD 56 21            CALL  write
-2195             L9:     ;  WHILE T <> 0 {not end of file} DO
-2195 2A 04 40            LD    HL,(04004H)
-2198             L10:    ;  BEGIN
+2195             L9:     ;  WHILE number <> 0 {not end of file} DO
+2195 2A 00 40            LD    HL,(04000H)
 2198 11 00 00            LD    DE,0
 219B B7                  OR    A
 219C ED 52               SBC   HL,DE
 219E CA C6 21            JP    Z,L24
-21A1             L12:    ;    S := S + T; {sum of numbers read}
-21A1 2A 00 40            LD    HL,(04000H)
-21A4 ED 5B 04 40         LD    DE,(04004H)
+21A1             L12:    ;  BEGIN
+21A1                     ;    Sum := Sum + number;
+21A1 2A 02 40            LD    HL,(04002H)
+21A4 ED 5B 00 40         LD    DE,(04000H)
 21A8 19                  ADD   HL,DE
-21A9 22 00 40            LD    (04000H),HL
-21AC             L15:    ;    N := N + 1; {number of numbers read}
-21AC 2A 02 40            LD    HL,(04002H)
+21A9 22 02 40            LD    (04002H),HL
+21AC             L15:    ;    NUMBER_OF_NUMBERS := NUMBER_OF_NUMBERS + 1;
+21AC 2A 04 40            LD    HL,(04004H)
 21AF 11 01 00            LD    DE,1
 21B2 19                  ADD   HL,DE
-21B3 22 02 40            LD    (04002H),HL
-21B6             L18:    ;    T := READ;
+21B3 22 04 40            LD    (04004H),HL
+21B6             L18:    ;    {read a new number and echo number to output}
+21B6                     ;    number := READ;
 21B6 CD 3B 21            CALL  read
-21B9 22 04 40            LD    (04004H),HL
-21BC             L20:    ;    WRITE (T);
-21BC 2A 04 40            LD    HL,(04004H)
+21B9 22 00 40            LD    (04000H),HL
+21BC             L20:    ;    WRITE (number);
+21BC 2A 00 40            LD    HL,(04000H)
 21BF E5                  PUSH  HL
 21C0 CD 56 21            CALL  write
 21C3             L23:    ;  END;
 21C3 C3 95 21            JP    L9
-21C6             L24:    ;  WRITE (N);
-21C6 2A 02 40            LD    HL,(04002H)
+21C6             L24:    ;  WRITE (NUMBER_OF_NUMBERS);
+21C6 2A 04 40            LD    HL,(04004H)
 21C9 E5                  PUSH  HL
 21CA CD 56 21            CALL  write
-21CD             L27:    ;  WRITE (S);
-21CD 2A 00 40            LD    HL,(04000H)
+21CD             L27:    ;  WRITE (Sum);
+21CD 2A 02 40            LD    HL,(04002H)
 21D0 E5                  PUSH  HL
 21D1 CD 56 21            CALL  write
-21D4             L30:    ;  IF N <> 0 THEN
-21D4 2A 02 40            LD    HL,(04002H)
-21D7             L31:    ;    WRITE (S / N); {average}
+21D4             L30:    ;  IF NUMBER_OF_NUMBERS <> 0 THEN
+21D4 2A 04 40            LD    HL,(04004H)
 21D7 11 00 00            LD    DE,0
 21DA B7                  OR    A
 21DB ED 52               SBC   HL,DE
-21DD CA EE 21            JP    Z,L37
-21E0 2A 00 40            LD    HL,(04000H)
-21E3 ED 5B 02 40         LD    DE,(04002H)
+21DD CA F4 21            JP    Z,L39
+21E0             L33:    ;  BEGIN
+21E0                     ;    _Average := Sum / NUMBER_OF_NUMBERS;
+21E0 2A 02 40            LD    HL,(04002H)
+21E3 ED 5B 04 40         LD    DE,(04004H)
 21E7 CD 0A 21            CALL  div16
-21EA E5                  PUSH  HL
-21EB CD 56 21            CALL  write
-21EE             L37:    ;END.
-21EE C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
+21EA 22 06 40            LD    (04006H),HL
+21ED             L36:    ;    WRITE (_Average);
+21ED 2A 06 40            LD    HL,(04006H)
+21F0 E5                  PUSH  HL
+21F1 CD 56 21            CALL  write
+21F4             L39:    ;  END
+21F4                     ;END.
+21F4 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
 
 Labels:
 20B4 : mul16_10
@@ -666,10 +673,12 @@ Labels:
 21E3 : L34
 21E0 : L33
 213F : read1
-21EB : L36
+21ED : L36
 21EA : L35
+21F1 : L38
 2020 : getChar
-21EE : L37
+21F0 : L37
+21F4 : L39
 2008 : WAIT1
 2018 : WAIT1M2
 2038 : putMsg
@@ -737,7 +746,7 @@ mul16322 = 20E6 : 20E3
  div16_3 = 2122 : 211F
  putCRLF = 205A : 2178
   WAIT1M = 2013 : 2008
-   write = 2156 : 2192 21C0 21CA 21D1 21EB
+   write = 2156 : 2192 21C0 21CA 21D1 21F1
  div16_8 = 212A : 2165
  mul16S2 = 2104 : 20FE 2101
     read = 213B : 2188 21B6
@@ -751,7 +760,7 @@ div16_83 = 2137 : 2133
    read1 = 213F : 2142 214F 2152
 div16_82 = 212F : 2137
  getChar = 2020 : 213F
-     L37 = 21EE : 21DD
+     L39 = 21F4 : 21DD
    WAIT1 = 2008 : 200E
  WAIT1M2 = 2018 : 201B
   write1 = 2163 : 215E 216C

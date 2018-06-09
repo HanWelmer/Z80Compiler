@@ -5,8 +5,8 @@
  */
 public enum LexemeType {
   dot("."),
-  constant("digit"),
-  identifier("name"),
+  constant("constant"),
+  identifier("identifier"),
   comma(","),
   assign(":="),
   semicolon(";"),

@@ -1,0 +1,457 @@
+debug = true
+
+prog start
+{A small program in the P-language}
+
+VAR number, Sum, NUMBER_OF_NUMBERS, _Average;
+
+lexeme = VAR
+lexeme = identifier number
+idlist start
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+identifier number@0
+lexeme = ,
+idlist var declared
+checkOrSkip: lexeme "comma" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist , skipped
+lexeme = identifier Sum
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+identifier Sum@1
+lexeme = ,
+idlist var declared
+checkOrSkip: lexeme "comma" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist , skipped
+lexeme = identifier NUMBER_OF_NUMBERS
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+identifier NUMBER_OF_NUMBERS@2
+lexeme = ,
+idlist var declared
+checkOrSkip: lexeme "comma" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist , skipped
+lexeme = identifier _Average
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+identifier _Average@3
+lexeme = ;
+idlist var declared
+checkOrSkip: lexeme "semicolon" in okSet [comma, semicolon]
+idlist ; or , ignored
+idlist end of id list reached
+idlist ; skipped
+BEGIN
+
+lexeme = BEGIN
+idlist end
+block: start
+checkOrSkip: lexeme "beginlexeme" in okSet [dot, identifier, beginlexeme, writelexeme, iflexeme, whilelexeme]
+  Sum := 0;
+
+lexeme = identifier Sum@1
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = :=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme = constant 0
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = ;
+->plant (accInUse=false):
+  0 :acc= constant 0
+->plant (accInUse=true):
+  1 :acc=> variable 1
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  NUMBER_OF_NUMBERS := 0;
+
+lexeme = identifier NUMBER_OF_NUMBERS@2
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = :=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme = constant 0
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = ;
+->plant (accInUse=false):
+  2 :acc= constant 0
+->plant (accInUse=true):
+  3 :acc=> variable 2
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  {read a new number and echo number to output}
+
+  number := READ; 
+
+lexeme = identifier number@0
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = :=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme = READ
+checkOrSkip: lexeme "readlexeme" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = ;
+->plant (accInUse=false):
+  4 :call read
+->plant (accInUse=true):
+  5 :acc=> variable 0
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  WRITE (number);
+
+lexeme = WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = (
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme = identifier number@0
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = )
+->plant (accInUse=false):
+  6 :acc= variable 0
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme = ;
+->plant (accInUse=true):
+  7 :acc=> stack
+->plant (accInUse=true):
+  8 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  WHILE number <> 0 {not end of file} DO
+
+lexeme = WHILE
+block: start
+checkOrSkip: lexeme "whilelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "whilelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start while loop
+lexeme = identifier number@0
+label:
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = <=> ne
+->plant (accInUse=false):
+  9 :acc= variable 0
+checkOrSkip: lexeme "relop" in okSet [relop]
+lexeme = constant 0
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = DO
+->plant (accInUse=true):
+ 10 :accom constant 0
+label used
+->plant (accInUse=true):
+ 11 :breq 0
+checkOrSkip: lexeme "dolexeme" in okSet [dolexeme]
+  BEGIN
+
+lexeme = BEGIN
+block: start
+checkOrSkip: lexeme "beginlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+    Sum := Sum + number;
+
+lexeme = identifier Sum@1
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = :=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme = identifier Sum@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = + or - add
+->plant (accInUse=false):
+ 12 :acc= variable 1
+lexeme = identifier number@0
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = ;
+->plant (accInUse=true):
+ 13 :acc+ variable 0
+->plant (accInUse=true):
+ 14 :acc=> variable 1
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+    NUMBER_OF_NUMBERS := NUMBER_OF_NUMBERS + 1;
+
+lexeme = identifier NUMBER_OF_NUMBERS@2
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = :=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme = identifier NUMBER_OF_NUMBERS@2
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = + or - add
+->plant (accInUse=false):
+ 15 :acc= variable 2
+lexeme = constant 1
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = ;
+->plant (accInUse=true):
+ 16 :acc+ constant 1
+->plant (accInUse=true):
+ 17 :acc=> variable 2
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+    {read a new number and echo number to output}
+
+    number := READ;
+
+lexeme = identifier number@0
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = :=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme = READ
+checkOrSkip: lexeme "readlexeme" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = ;
+->plant (accInUse=false):
+ 18 :call read
+->plant (accInUse=true):
+ 19 :acc=> variable 0
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+    WRITE (number);
+
+lexeme = WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = (
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme = identifier number@0
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = )
+->plant (accInUse=false):
+ 20 :acc= variable 0
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme = ;
+->plant (accInUse=true):
+ 21 :acc=> stack
+->plant (accInUse=true):
+ 22 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  END;
+
+lexeme = END
+block: start
+checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: end
+block: end
+checkOrSkip: lexeme "endlexeme" in okSet [semicolon, endlexeme]
+lexeme = ;
+block: end
+->plant (accInUse=false):
+ 23 :br 9
+label: used from 11
+statement: end of while loop
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  WRITE (NUMBER_OF_NUMBERS);
+
+lexeme = WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = (
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme = identifier NUMBER_OF_NUMBERS@2
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = )
+->plant (accInUse=false):
+ 24 :acc= variable 2
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme = ;
+->plant (accInUse=true):
+ 25 :acc=> stack
+->plant (accInUse=true):
+ 26 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  WRITE (Sum);
+
+lexeme = WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = (
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme = identifier Sum@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = )
+->plant (accInUse=false):
+ 27 :acc= variable 1
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme = ;
+->plant (accInUse=true):
+ 28 :acc=> stack
+->plant (accInUse=true):
+ 29 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  IF NUMBER_OF_NUMBERS <> 0 THEN
+
+lexeme = IF
+block: start
+checkOrSkip: lexeme "iflexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "iflexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = identifier NUMBER_OF_NUMBERS@2
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = <=> ne
+->plant (accInUse=false):
+ 30 :acc= variable 2
+checkOrSkip: lexeme "relop" in okSet [relop]
+lexeme = constant 0
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = THEN
+->plant (accInUse=true):
+ 31 :accom constant 0
+label used
+->plant (accInUse=true):
+ 32 :breq 0
+checkOrSkip: lexeme "thenlexeme" in okSet [thenlexeme]
+  BEGIN
+
+lexeme = BEGIN
+block: start
+checkOrSkip: lexeme "beginlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+    _Average := Sum / NUMBER_OF_NUMBERS;
+
+lexeme = identifier _Average@3
+block: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "identifier" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = :=
+checkOrSkip: lexeme "assign" in okSet [assign]
+lexeme = identifier Sum@1
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = * or / divd
+->plant (accInUse=false):
+ 33 :acc= variable 1
+lexeme = identifier NUMBER_OF_NUMBERS@2
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = ;
+->plant (accInUse=true):
+ 34 :acc/ variable 2
+->plant (accInUse=true):
+ 35 :acc=> variable 3
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+    WRITE (_Average);
+
+lexeme = WRITE
+block: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "writelexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+lexeme = (
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+lexeme = identifier _Average@3
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+lexeme = )
+->plant (accInUse=false):
+ 36 :acc= variable 3
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+lexeme = ;
+->plant (accInUse=true):
+ 37 :acc=> stack
+->plant (accInUse=true):
+ 38 :call write
+statement: end
+block: end
+checkOrSkip: lexeme "semicolon" in okSet [semicolon, endlexeme]
+  END
+
+lexeme = END
+block: start
+checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: start
+checkOrSkip: lexeme "endlexeme" in okSet [dot, identifier, semicolon, beginlexeme, writelexeme, iflexeme, whilelexeme, endlexeme]
+statement: end
+block: end
+checkOrSkip: lexeme "endlexeme" in okSet [semicolon, endlexeme]
+END.
+
+lexeme = END
+block: end
+label: used from 32
+statement: end
+block: end
+checkOrSkip: lexeme "endlexeme" in okSet [semicolon, endlexeme]
+lexeme = .
+block: end
+checkOrSkip: lexeme "dot" in okSet [dot]
+prog end
+->plant (accInUse=false):
+ 39 :stop
+Assembly listing of compiled code:
+----------------------------------
+  0 :acc= constant 0
+  1 :acc=> variable 1
+  2 :acc= constant 0
+  3 :acc=> variable 2
+  4 :call read
+  5 :acc=> variable 0
+  6 :acc= variable 0
+  7 :acc=> stack
+  8 :call write
+  9 :acc= variable 0
+ 10 :accom constant 0
+ 11 :breq 24
+ 12 :acc= variable 1
+ 13 :acc+ variable 0
+ 14 :acc=> variable 1
+ 15 :acc= variable 2
+ 16 :acc+ constant 1
+ 17 :acc=> variable 2
+ 18 :call read
+ 19 :acc=> variable 0
+ 20 :acc= variable 0
+ 21 :acc=> stack
+ 22 :call write
+ 23 :br 9
+ 24 :acc= variable 2
+ 25 :acc=> stack
+ 26 :call write
+ 27 :acc= variable 1
+ 28 :acc=> stack
+ 29 :call write
+ 30 :acc= variable 2
+ 31 :accom constant 0
+ 32 :breq 39
+ 33 :acc= variable 1
+ 34 :acc/ variable 2
+ 35 :acc=> variable 3
+ 36 :acc= variable 3
+ 37 :acc=> stack
+ 38 :call write
+ 39 :stop
+

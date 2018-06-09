@@ -571,66 +571,73 @@ write3:
         RET
 main:
 L0:     ;{A small program in the P-language}
-        ;VAR S, N, T;
+        ;VAR number, Sum, NUMBER_OF_NUMBERS, _Average;
         ;BEGIN
-        ;  S := 0; {sum}
-        LD    HL,0
-        LD    (04000H),HL
-L2:     ;  N := 0; {number of items}
+        ;  Sum := 0;
         LD    HL,0
         LD    (04002H),HL
-L4:     ;  T := READ; {read a digit}
-        CALL  read
+L2:     ;  NUMBER_OF_NUMBERS := 0;
+        LD    HL,0
         LD    (04004H),HL
-L6:     ;  WRITE (T);
-        LD    HL,(04004H)
+L4:     ;  {read a new number and echo number to output}
+        ;  number := READ; 
+        CALL  read
+        LD    (04000H),HL
+L6:     ;  WRITE (number);
+        LD    HL,(04000H)
         PUSH  HL
         CALL  write
-L9:     ;  WHILE T <> 0 {not end of file} DO
-        LD    HL,(04004H)
-L10:    ;  BEGIN
+L9:     ;  WHILE number <> 0 {not end of file} DO
+        LD    HL,(04000H)
         LD    DE,0
         OR    A
         SBC   HL,DE
         JP    Z,L24
-L12:    ;    S := S + T; {sum of numbers read}
-        LD    HL,(04000H)
-        LD    DE,(04004H)
-        ADD   HL,DE
-        LD    (04000H),HL
-L15:    ;    N := N + 1; {number of numbers read}
+L12:    ;  BEGIN
+        ;    Sum := Sum + number;
         LD    HL,(04002H)
-        LD    DE,1
+        LD    DE,(04000H)
         ADD   HL,DE
         LD    (04002H),HL
-L18:    ;    T := READ;
-        CALL  read
-        LD    (04004H),HL
-L20:    ;    WRITE (T);
+L15:    ;    NUMBER_OF_NUMBERS := NUMBER_OF_NUMBERS + 1;
         LD    HL,(04004H)
+        LD    DE,1
+        ADD   HL,DE
+        LD    (04004H),HL
+L18:    ;    {read a new number and echo number to output}
+        ;    number := READ;
+        CALL  read
+        LD    (04000H),HL
+L20:    ;    WRITE (number);
+        LD    HL,(04000H)
         PUSH  HL
         CALL  write
 L23:    ;  END;
         JP    L9
-L24:    ;  WRITE (N);
+L24:    ;  WRITE (NUMBER_OF_NUMBERS);
+        LD    HL,(04004H)
+        PUSH  HL
+        CALL  write
+L27:    ;  WRITE (Sum);
         LD    HL,(04002H)
         PUSH  HL
         CALL  write
-L27:    ;  WRITE (S);
-        LD    HL,(04000H)
-        PUSH  HL
-        CALL  write
-L30:    ;  IF N <> 0 THEN
-        LD    HL,(04002H)
-L31:    ;    WRITE (S / N); {average}
+L30:    ;  IF NUMBER_OF_NUMBERS <> 0 THEN
+        LD    HL,(04004H)
         LD    DE,0
         OR    A
         SBC   HL,DE
-        JP    Z,L37
-        LD    HL,(04000H)
-        LD    DE,(04002H)
+        JP    Z,L39
+L33:    ;  BEGIN
+        ;    _Average := Sum / NUMBER_OF_NUMBERS;
+        LD    HL,(04002H)
+        LD    DE,(04004H)
         CALL  div16
+        LD    (04006H),HL
+L36:    ;    WRITE (_Average);
+        LD    HL,(04006H)
         PUSH  HL
         CALL  write
-L37:    ;END.
+L39:    ;  END
+        ;END.
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
