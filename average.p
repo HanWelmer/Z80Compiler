@@ -1,19 +1,22 @@
 {A small program in the P-language}
-VAR sum, count, number;
+VAR sum, NUMBER_OF_NUMBERS, NUMBER, _Average;
 BEGIN
   sum := 0; {sum}
-  count := 0; {number of items}
-  number := READ; {read a new number}
-  WRITE (number;
-  WHILE number <> 0 {not end of file} DO
+  NUMBER_OF_NUMBERS := 0; {NUMBER of items}
+  NUMBER := READ; {read a new NUMBER}
+  WRITE (NUMBER;
+  WHILE NUMBER <> 0 {not end of file} DO
   BEGIN
-    sum := sum + number; {sum of numbers read}
-    count := count + 1; {number of numbers read}
-    number := READ;
-    WRITE (number);
+    sum := sum + NUMBER; {sum of NUMBERs read}
+    NUMBER_OF_NUMBERS := NUMBER_OF_NUMBERS + 1; {NUMBER of NUMBERs read}
+    NUMBER := READ;
+    WRITE (NUMBER);
   END;
-  WRITE (count);
+  WRITE (NUMBER_OF_NUMBERS);
   WRITE (sum);
-  IF count <> 0 THEN
-    WRITE (sum / count); {average}
+  IF NUMBER_OF_NUMBERS <> 0 THEN
+  BEGIN
+    _Average := sum / NUMBER_OF_NUMBERS; {average}
+    WRITE (_Average);
+  END;
 END.

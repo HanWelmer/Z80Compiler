@@ -7,10 +7,11 @@ import java.util.Map;
 
 /**
  * Compiler for the P programming language, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
+ * Language extended by H.J. Welmer to support multiple character identifiers.
  *
  * program        = ["VAR" idlist] block ".".
  * idlist         = identifier {"," identifier} ";".
- * identifier     = "(A-Za-z)(A-Za-z0-9)*".
+ * identifier     = "(A-Za-z0-9_)*".
  * block          = statement | "BEGIN" block {";" block} "END".
  * statement      = assignment | writeStatement | ifStatement | whileStatement.
  * assignment     = identifier ":=" expression.
@@ -83,9 +84,9 @@ public class Compiler {
 
   /* Constants and class member variables for lexical analysis phase */
   private static final int LINE_WIDTH = 128;
-  private static final int MAX_IDENTIFIER_LENGTH = 80;
+  private static final int MAX_IDENTIFIER_LENGTH = LINE_WIDTH;
   private static final int NAME_CHARS = 6;
-
+  private static final String VALID_IDENTIFIER_CHARACTERS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
   private int lineSize;
   private int linePos;
   private String line;
@@ -213,12 +214,11 @@ public class Compiler {
       /* try to recognise a constant */
       lexeme.type = LexemeType.constant;
       lexeme.constVal = (int)ch - (int)'0';
-    } else if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')){
+    } else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
       /* try to recognise an identifier or a keyword */
       String name = String.valueOf(ch);
       int charno = 0;
-      while ( ((nextChar() >= 'A' && nextChar() <= 'Z') || (nextChar() >= 'a' && nextChar() <= 'z') || (nextChar() >= '0' && nextChar() <= '9')) 
-            && charno <= MAX_IDENTIFIER_LENGTH) {
+      while ( VALID_IDENTIFIER_CHARACTERS.contains("" + nextChar()) && charno <= MAX_IDENTIFIER_LENGTH) {
         if (charno <= MAX_IDENTIFIER_LENGTH) {
           name += String.valueOf(getChar());
           charno++;
@@ -226,7 +226,7 @@ public class Compiler {
           ch = getChar();
         }
       }
-      /* separate keywords (read, write,if,then,var,begin or end) from identifiers */
+      /* separate identifiers from keywords */
       debug("\nlexeme: name=" + name);
       lexeme.type = LexemeType.beginlexeme;
       //TODO refactor this for better performance
