@@ -118,10 +118,10 @@ public class Interpreter {
         }
         break;
       case br:
+      case call:
         pc = instr.word - 1;
         break;
-      case call:
-        if (instr.callValue == CallType.read) {
+      case read:
           System.out.print("\nread:");
           boolean consoleInput = true;
           if (consoleInput) {
@@ -141,12 +141,10 @@ public class Interpreter {
             }
             acc = Integer.parseInt(inputParts[inputIndex++]);
           }
-        } else if (instr.callValue == CallType.write) {
+          break;
+      case write:
           System.out.println(pop());
-        } else {
-          runError("unknown call operand");
-        }
-        break;
+          break;
       case stop:
         stopRun = true;
         break;

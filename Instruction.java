@@ -5,9 +5,8 @@ import java.util.ArrayList;
  */
 public class Instruction {
   public FunctionType function;
-  public CallType callValue; /* for call functions */
-  public OperandType opType; /* for load, store and arithmetic functions */
-  public int word;           /* value for branch and accu related functions */
+  public OperandType opType;   // for load, store and arithmetic functions.
+  public int word;             // value for branch, call and accu related functions.
   
   /* original source code lines */
   public ArrayList<String> linesOfCode = new ArrayList<String>(0);
@@ -32,7 +31,8 @@ public class Instruction {
       && fn != FunctionType.brLt
       && fn != FunctionType.brLe
       && fn != FunctionType.brGt
-      && fn != FunctionType.brGe) {
+      && fn != FunctionType.brGe
+      && fn != FunctionType.call) {
       throw new RuntimeException("new Instruction without FunctionType branch");
     }
     function = fn;
@@ -67,24 +67,6 @@ public class Instruction {
     }
   }
   
-  public Instruction(FunctionType fn, CallType type) {
-    if (type == CallType.address) {
-      throw new RuntimeException("new Instruction without CallType address");
-    }
-    function = fn;
-    callValue = type;
-  }
-
-  public Instruction(FunctionType fn, CallType type, int value) {
-    if (!((fn == FunctionType.accLoad) && (type == CallType.address)
-      || (fn == FunctionType.call) && (type == CallType.address))) {
-      throw new RuntimeException("new Instruction without Functionype accLoad or call and CallType address ");
-    }
-    function = fn;
-    callValue = type;
-    word = value;
-  }
-  
   public Instruction(FunctionType fn, OperandType type, int value) {
     if (!((  (fn == FunctionType.accLoad) 
           || (fn == FunctionType.accStore) 
@@ -99,7 +81,7 @@ public class Instruction {
           ) 
         && ((type == OperandType.constant) || (type == OperandType.var))
         )) {
-      throw new RuntimeException("new Instruction without CallType accLoad and OperandType constant or var");
+      throw new RuntimeException("new Instruction without FunctionType accLoad and OperandType constant or var");
     }
     function = fn;
     opType = type;
@@ -109,9 +91,8 @@ public class Instruction {
   public String toString() {
     /*
       public FunctionType function;
-      public CallType callValue;              // for call functions
-      public OperandType opType;              // for load, store and arithmetic functions
-      public int word;                        // value for branch and accu related functions
+      public OperandType opType;    // for load, store and arithmetic functions.
+      public int word;              // value for branch, call and accu related functions.
     */
     String result = function.getValue();
     switch (function) {
@@ -145,16 +126,14 @@ public class Instruction {
       case brLe:
       case brGe:
       case brGt:
+      case call:
         result += " " + word;
         break;
-      case call:
-        if (callValue == CallType.read) {
-          result += " read";
-        } else if (callValue == CallType.write) {
-          result += " write";
-        } else {
-          result += " " + word;
-        }
+      case read:
+        result = "call read";
+        break;
+      case write:
+        result = "call write";
         break;
       case stop:
         break;

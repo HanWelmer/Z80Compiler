@@ -5,6 +5,8 @@
 public enum FunctionType {
   stop("stop"),
   call("call"),
+  read("read"),
+  write("write"),
   accLoad("acc="),
   accStore("acc=>"),
   stackAccLoad("<acc="),

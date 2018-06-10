@@ -468,7 +468,7 @@ public class Compiler {
         if (accInUse) {
           plant(new Instruction(FunctionType.accStore, OperandType.stack));
         }
-        plant(new Instruction(FunctionType.call, CallType.read));
+        plant(new Instruction(FunctionType.read));
         accInUse = true;
       }
     }
@@ -678,7 +678,7 @@ public class Compiler {
 
         /* part of code generation */
         plant(new Instruction(FunctionType.accStore, OperandType.stack));
-        plant(new Instruction(FunctionType.call, CallType.write));
+        plant(new Instruction(FunctionType.write));
       }
     }
     debug("\nstatement: end");

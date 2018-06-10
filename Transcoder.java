@@ -171,7 +171,6 @@ public class Transcoder {
     
     FunctionType function = instruction.function;
     OperandType opType = instruction.opType;
-    CallType callValue = instruction.callValue;
     int word = instruction.word;
     int memAddress = MEM_START + word * 2;
     AssemblyInstruction asm = null;
@@ -181,18 +180,15 @@ public class Transcoder {
     if (function == FunctionType.stop) {
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP    00171H      ;Jump to Zilog Z80183 Monitor.", 0xC3, 0x71, 0x01);
       debug("\n.." + asm.getCode());
+    } else if (function == FunctionType.read) {
+      putLabelReference("read", byteAddress);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  read", 0xCD, 0, 0);
+    } else if (function == FunctionType.write) {
+      putLabelReference("write", byteAddress);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  write", 0xCD, 0, 0);
     } else if (function == FunctionType.call) {
-      if (callValue == CallType.read) {
-        putLabelReference("read", byteAddress);
-        asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  read", 0xCD, 0, 0);
-      } else if (callValue == CallType.write) {
-        putLabelReference("write", byteAddress);
-        asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  write", 0xCD, 0, 0);
-      } else {
-        putLabelReference(word, byteAddress);
-        asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "CALL  0%04XH", word), 0xCD, word % 256, word / 256);
-        throw new RuntimeException("untested CALL  nnnn");
-      }
+      putLabelReference(word, byteAddress);
+      asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "CALL  0%04XH", word), 0xCD, word % 256, word / 256);
     } else if (function == FunctionType.accStore) {
       switch(opType) {
         case var: 
