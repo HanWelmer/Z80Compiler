@@ -106,6 +106,7 @@ public class Compiler {
   private int linePos;
   private ArrayList<String> sourceCode;
   private Lexeme lexeme, firstLexeme, lastLexeme;
+  private Map<String, LexemeType> keywords = new HashMap<String, LexemeType>();
   private int errors;
 
   /* Constants and class member variables for syntax analysis phase */
@@ -140,6 +141,11 @@ public class Compiler {
     firstLexeme = new Lexeme(LexemeType.dot);
     lexeme = new Lexeme(LexemeType.unknown);
     lastLexeme = new Lexeme(LexemeType.unknown);
+    keywords.clear();
+    for (LexemeType lexemeType = LexemeType.beginlexeme; lexemeType != LexemeType.unknown; lexemeType = lexemeType.next()) {
+      keywords.put(lexemeType.getValue(), lexemeType);
+    }
+
 
     /* initialisation of syntax analysis variables */
     startExp.clear();
@@ -267,15 +273,14 @@ public class Compiler {
         }
       }
       /* separate identifiers from keywords */
-      lexeme.type = LexemeType.beginlexeme;
-      //TODO refactor this for better performance
-      while (lexeme.type.ordinal() <= LexemeType.endlexeme.ordinal() && !lexeme.type.getValue().equals(name)) {
-        lexeme.type = lexeme.type.next();
-      }
-      if (!lexeme.type.getValue().equals(name)) {
+      LexemeType keyword = keywords.get(name);
+      if (keyword == null) {
         lexeme.type = LexemeType.identifier;
-        lexeme.idVal = name;
       }
+      else {
+        lexeme.type = keyword;
+      }
+      lexeme.idVal = name;
     } else {
       /* try to recognise keywords  - , ; := ( ) + - * / <=> */
       switch (ch) {
