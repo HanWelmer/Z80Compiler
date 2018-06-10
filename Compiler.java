@@ -32,19 +32,21 @@ import java.util.Map;
 public class Compiler {
 
   /* global variables used by the constructor or the interface functions */
-  private static boolean debug;
+  private static boolean debugMode;
+  private static boolean verboseMode;
   private static String fileName;
   private BufferedReader input;
   private ArrayList<Instruction> storeInstruction = new ArrayList<Instruction>();
 
   //constructor
-  public Compiler(boolean debug) {
-    this.debug = debug;
+  public Compiler(boolean debugMode, boolean verboseMode) {
+    this.debugMode = debugMode;
+    this.verboseMode = verboseMode;
   }
   
   /* Class member methods for lexical analysis phase */
   public ArrayList<Instruction> compile(String fileName, BufferedReader input) throws IOException {
-    System.out.println("debug = " + debug);
+    if (verboseMode) System.out.println("debugMode = " + debugMode);
 
     this.fileName = fileName;
     this.input = input;
@@ -57,16 +59,23 @@ public class Compiler {
       System.exit(1);
     }
     
-    if (errors) { 
+    if (errors != 0) { 
       storeInstruction.clear();
       codePos = 0;
-      System.out.println("\n\nErrors.");
+    }
+    if (verboseMode || (errors != 0) ) {
+      System.out.print("\nFound " + errors);
+      if (errors == 1) {
+        System.out.println(" error.");
+      } else {
+        System.out.println(" errors.");
+      }
     }
     return storeInstruction;
   }
   
   private void debug(String message) {
-    if (debug) {
+    if (debugMode) {
       System.out.print(message);
     }
   }
@@ -90,12 +99,14 @@ public class Compiler {
   private static final int MAX_IDENTIFIER_LENGTH = MAX_LINE_WIDTH;
   private static final int MAX_CONSTANT = 65535; //16 bit constant
   private static final String VALID_IDENTIFIER_CHARACTERS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+  private String line;
+  private int lineNumber;
+  private int lastLinePrinted;
   private int lineSize;
   private int linePos;
-  private String line;
   private ArrayList<String> sourceCode;
   private Lexeme lexeme, firstLexeme, lastLexeme;
-  private boolean errors;
+  private int errors;
 
   /* Constants and class member variables for syntax analysis phase */
   EnumSet<LexemeType> startExp = EnumSet.noneOf(LexemeType.class);
@@ -121,10 +132,11 @@ public class Compiler {
   /*Class member methods for all phases */
   private void init() {
     /* initialisation of lexical analysis variables */
+    lineNumber = 0;
     lineSize = 0;
     linePos = 0;
     sourceCode = new ArrayList<String>();
-    errors = false;
+    errors = 0;
     firstLexeme = new Lexeme(LexemeType.dot);
     lexeme = new Lexeme(LexemeType.unknown);
     lastLexeme = new Lexeme(LexemeType.unknown);
@@ -181,8 +193,14 @@ public class Compiler {
   }
   
   private void error(int n) {
-    errors = true;
-    System.out.print("\n");
+    errors++;
+    if (lastLinePrinted != lineNumber) {
+      //when in debug mode, make sure error message starts at a new line
+      if (debugMode) System.out.println();
+      System.out.println(fileName + ":" + lineNumber);
+      System.out.print(line); //when line of source code was read, it was extended with a linefeed.
+      lastLinePrinted = lineNumber;
+    }
     for (int i=0; i<linePos-1; i++) {
       System.out.print(' ');
     }
@@ -191,7 +209,7 @@ public class Compiler {
       case 0 : System.out.println("error opening file " + fileName);break;
       case 1 : System.out.println("end of input encountered");break;
       case 2 : System.out.println("line too long; max width=" + MAX_LINE_WIDTH);break;
-      case 3 : System.out.println("unexpected symbol");break;
+      case 3 : System.out.print("unexpected symbol;");break;
       case 4 : System.out.println("unknown character");break;
       case 5 : System.out.println("'=' expected after ':' ");break;
       case 6 : System.out.print("unknown keyword : ");break;
@@ -322,7 +340,7 @@ public class Compiler {
           error(4); /* unknown characters */
       }
     }
-    debug("\nlexeme = " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+    debug("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
   }
 
   private char getChar() throws IOException, FatalError {
@@ -341,7 +359,7 @@ public class Compiler {
       
       //when in debug mode, make sure the echoed source code starts on a new line.
       debug("\n");
-      System.out.println(line);
+      debug(line);
       sourceCode.add(line);
       
       lineSize = line.length();
@@ -350,6 +368,7 @@ public class Compiler {
       }
       line += "\n";
       lineSize++;
+      lineNumber++;
       linePos = 0;
     }
     return line.charAt(linePos);
@@ -357,7 +376,7 @@ public class Compiler {
   
   /*Class member methods for syntax analysis phase */
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    //debug("\ncheckOrSkip: start");
+    debug("\ncheckOrSkip: start");
     boolean orFlag = false;
     boolean result = false;
     if (okSet.contains(lexeme.type)) {
@@ -373,12 +392,12 @@ public class Compiler {
         }
       }
     }
-    //debug("\ncheckOrSkip: end");
+    debug("\ncheckOrSkip: end");
     return result;
   }
   
   private void idList(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nidlist start");
+    debug("\nidlist: start");
     boolean cont;
     EnumSet<LexemeType> continueSet = EnumSet.of(LexemeType.comma, LexemeType.identifier);
     EnumSet<LexemeType> ignoreSet = EnumSet.of(LexemeType.semicolon, LexemeType.comma);
@@ -391,27 +410,26 @@ public class Compiler {
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), followSet1)) {
         /* next line + debug message is part of semantic analysis */
         if (!identifiers.declareId(lexeme.idVal)) error(8);
-        debug("\n" + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+        debug("\nidlist: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
         getLexeme();
       }
-      debug("\nidlist var declared");
       checkOrSkip(ignoreSet, followSet2);
-      debug("\nidlist ; or , ignored");
       cont = continueSet.contains(lexeme.type);
       if (lexeme.type == LexemeType.comma) {
-        debug("\nidlist , skipped");
+        debug("\nidlist: , skipped");
         getLexeme();
       }
     }
     while (cont);
-    debug("\nidlist end of id list reached");
-
+    
+    debug("\nidlist: end of id list reached");
     if (lexeme.type == LexemeType.semicolon) {
-      debug("\nidlist ; skipped");
+      debug("\nidlist: ; skipped");
+      debug("\nidlist: end");
       getLexeme();
+    } else {
+      debug("\nidlist: end");
     }
-
-    debug("\nidlist end");
   }
   
   private Operand factor(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
@@ -480,6 +498,7 @@ public class Compiler {
   }
   
   private Operand expression(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
+    debug("\nexpression: start with stopSet = " + stopSet);
     /* part of lexical analysis */
     AddValType operator;
     Operand rOperand = new Operand();
@@ -502,6 +521,7 @@ public class Compiler {
         plant(new Instruction(forwardAdd.get(operator), rOperand.opType, rOperand.opValue));
       }
     }
+    debug("\nexpression: end");
     return operand;
   }
   
@@ -553,7 +573,7 @@ public class Compiler {
   }
   
   private void statement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nstatement: start");
+    debug("\nstatement: start with stopSet = " + stopSet);
     /* part of code generation */
     Operand operand = new Operand();
     accInUse = false;
@@ -563,6 +583,7 @@ public class Compiler {
     localSet.addAll(startBlock);
     if (checkOrSkip(localSet, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
+        debug("\nstatement: start assignment statement");
         /* part of semantic analysis */
         if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
  
@@ -577,10 +598,12 @@ public class Compiler {
           getLexeme();
         }
         operand = expression(stopSet, operand);
+        debug("\nstatement: end of assignment statement");
         
         plantAccLoad(operand);
         plant(new Instruction(FunctionType.accStore, OperandType.var, assignTo));
       } else if (lexeme.type == LexemeType.iflexeme) {
+        debug("\nstatement: start if statement");
         getLexeme();
         
         localSet = stopSet.clone();
@@ -595,6 +618,7 @@ public class Compiler {
           getLexeme();
         }
         block(stopSet);
+        debug("\nstatement: end of if statement");
 
         /* part of code generation */
         plantForwardLabel(ifLabel);
@@ -618,12 +642,13 @@ public class Compiler {
           getLexeme();
         }
         block(stopSet);
+        debug("\nstatement: end of while loop");
         
         /* part of code generation */
         plant(new Instruction(FunctionType.br, whileLabel));
         plantForwardLabel(ifLabel);
-        debug("\nstatement: end of while loop");
       } else if (lexeme.type == LexemeType.writelexeme) {
+        debug("\nstatement: start write statement");
         getLexeme();
 
         localSet = stopSet.clone();
@@ -644,6 +669,7 @@ public class Compiler {
         if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
           getLexeme();
         }
+        debug("\nstatement: end of write statement");
 
         /* part of code generation */
         plant(new Instruction(FunctionType.accStore, OperandType.stack));
@@ -654,7 +680,7 @@ public class Compiler {
   }
   
   private void block(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nblock: start");
+    debug("\nblock: start with stopSet = " + stopSet);
     EnumSet<LexemeType> stopOrStartSet = stopSet.clone();
     stopOrStartSet.addAll(startBlock);
     checkOrSkip(stopOrStartSet, stopOrStartSet);
@@ -692,7 +718,7 @@ public class Compiler {
   }
   
   private void prog() throws IOException, FatalError {
-    debug("\nprog start");
+    debug("\nprog: start");
     /* recognise a program */
     getLexeme();
     if (lexeme.type == LexemeType.varlexeme) {
@@ -702,7 +728,7 @@ public class Compiler {
     do {
       block(EnumSet.of(LexemeType.dot));
     } while (!checkOrSkip(EnumSet.of(LexemeType.dot), EnumSet.noneOf(LexemeType.class)));
-    debug("\nprog end");
+    debug("\nprog: end");
   }
   
   /*Class member methods for code generation phase */

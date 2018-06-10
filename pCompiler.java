@@ -26,6 +26,7 @@ public class pCompiler {
     boolean binary = false;
     boolean debugMode = false;
     boolean runMode = false;
+    boolean verboseMode = false;
     if (args.length == 0) {
       usage();
     } else if (args.length > 1) {
@@ -36,6 +37,8 @@ public class pCompiler {
           debugMode = true;
         } else if ("-r".equals(args[i])) {
           runMode = true;
+        } else if ("-v".equals(args[i])) {
+          verboseMode = true;
         } else if ("-z".equals(args[i])) {
           z80 = true;
         } else {
@@ -60,23 +63,23 @@ public class pCompiler {
     try (FileReader fr = new FileReader(fileName); BufferedReader bufr = new BufferedReader(fr);) {
       deleteOldOutput(fileName);
     
-      Compiler compiler = new Compiler(debugMode);
+      Compiler compiler = new Compiler(debugMode, verboseMode);
       instructions = compiler.compile(fileName, bufr);
 
       if (!instructions.isEmpty()) {
         /* List compiled code for the M machine */
-        writeListing(fileName, instructions);
+        writeListing(fileName, instructions, verboseMode);
         if (z80) {
           /* transcode M-code to Z80S180 assembler code */
-          System.out.println("Generating Z80 assembler code ...");
+          if (verboseMode) System.out.println("Generating Z80 assembler code ...");
           Transcoder transcoder = new Transcoder(binary);
           ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
 
-          writeZ80Assembler(fileName, z80Instructions);
+          writeZ80Assembler(fileName, z80Instructions, verboseMode);
 
           if (binary) {
-            writeZ80toIntelHex(fileName, z80Instructions);
-            writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences);
+            writeZ80toIntelHex(fileName, z80Instructions, verboseMode);
+            writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences, verboseMode);
           }
         }
         
@@ -109,6 +112,7 @@ public class pCompiler {
     System.out.println(" where -b generate binary output (M-code or Z80 assembler)");
     System.out.println("       -d issue debug messages during compilation");
     System.out.println("       -r run the compiled code using the built-in interpreter");
+    System.out.println("       -v verbose: issue feedback messages during compilation");
     System.out.println("       -z generate Z80 assembler output");
     System.out.println("       source.p input sourcecode file in P programming language.");
     System.exit(1);
@@ -131,10 +135,10 @@ public class pCompiler {
     }
   }
   
-  private static void writeListing(String fileName, ArrayList<Instruction> instructions) {
+  private static void writeListing(String fileName, ArrayList<Instruction> instructions, boolean verboseMode) {
     /* write M assembly code to an *.m file */
     String outputFilename = fileName.replace(".p", ".m");
-    System.out.println("Writing M code to " + outputFilename);
+    if (verboseMode) System.out.println("Writing M code to " + outputFilename);
     BufferedWriter writer = null;
     try {
         writer = new BufferedWriter(new FileWriter(outputFilename));
@@ -155,10 +159,10 @@ public class pCompiler {
     }
   }
   
-  private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {
+  private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
     /* write Z80S180 assembly code to an asm file */
     String outputFilename = fileName.replace(".p", ".asm");
-    System.out.println("Writing Z80 assembler code to " + outputFilename);
+    if (verboseMode) System.out.println("Writing Z80 assembler code to " + outputFilename);
     BufferedWriter writer = null;
     try {
         writer = new BufferedWriter(new FileWriter(outputFilename));
@@ -179,12 +183,14 @@ public class pCompiler {
     }
   }
   
-  private static void writeZ80toListing(String fileName, ArrayList<AssemblyInstruction> z80Instructions
+  private static void writeZ80toListing(String fileName
+      , ArrayList<AssemblyInstruction> z80Instructions
       , Map<String, Long> labels
-      , Map<String, ArrayList<Long>> labelReferences) {
+      , Map<String, ArrayList<Long>> labelReferences
+      , boolean verboseMode) {
     /* write Z80S180 assembly and binary code to a Listing file */
     String outputFilename = fileName.replace(".p", ".lst");
-    System.out.println("Writing Z80 assembler and binary code to listing file " + outputFilename);
+    if (verboseMode) System.out.println("Writing Z80 assembler and binary code to listing file " + outputFilename);
     BufferedWriter writer = null;
     try {
         writer = new BufferedWriter(new FileWriter(outputFilename));
@@ -251,10 +257,10 @@ public class pCompiler {
     }
   }
   
-  private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions) {
+  private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
     /* write binary Z80S180 code to Intel hex file */
     String outputFilename = fileName.replace(".p", ".hex");
-    System.out.println("Writing Z80 binary code to Intel hex file " + outputFilename);
+    if (verboseMode) System.out.println("Writing Z80 binary code to Intel hex file " + outputFilename);
     IntelHexWriter writer = null;
     try {
       writer = new IntelHexWriter(outputFilename);

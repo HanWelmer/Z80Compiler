@@ -1,4 +1,5 @@
 {A small program in the P-language}
+{Boek: Rachel Kushner: Club mars.}
 VAR number, Sum, NUMBER_OF_NUMBERS, _Average;
 BEGIN
   Sum := 0;

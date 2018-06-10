@@ -40,13 +40,13 @@ public class Identifiers {
    * Returns : true if declared; false if not declared.
    */
   public boolean checkId(String identifier) {
-    boolean result = true;
     Integer varAddress = variables.get(identifier);
-    if ((varAddress != null) && (varAddress == -1)) {
-      variables.put(identifier, -1); // Prevent further error messages.
-      result = false;
+    if (varAddress == null) {
+      // Prevent further error messages.
+      variables.put(identifier, -1);
+      varAddress = -1;
     }
-    return result;
+    return varAddress != -1;
   }
 
   /**
