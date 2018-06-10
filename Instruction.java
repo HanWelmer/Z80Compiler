@@ -5,10 +5,10 @@ import java.util.ArrayList;
  */
 public class Instruction {
   public FunctionType function;
-  //TODO refactor opType and word into operand.
   public CallType callValue; /* for call functions */
   public OperandType opType; /* for load, store and arithmetic functions */
   public int word;           /* value for branch and accu related functions */
+  
   /* original source code lines */
   public ArrayList<String> linesOfCode = new ArrayList<String>(0);
 
@@ -107,6 +107,12 @@ public class Instruction {
   }
   
   public String toString() {
+    /*
+      public FunctionType function;
+      public CallType callValue;              // for call functions
+      public OperandType opType;              // for load, store and arithmetic functions
+      public int word;                        // value for branch and accu related functions
+    */
     String result = function.getValue();
     switch (function) {
       case accStore:
@@ -125,12 +131,6 @@ public class Instruction {
       case accDiv:
       case divAcc:
       case accCompare:
-        /*
-          public FunctionType function;
-          public CallType callValue;              // for call functions
-          public OperandType opType;              // for load, store and arithmetic functions
-          public int word;                        // value for branch and accu related functions
-        */
         switch(opType) {
           case var: result += " variable " + word; break;
           case constant: result += " constant " + word; break;
@@ -156,7 +156,8 @@ public class Instruction {
           result += " " + word;
         }
         break;
-      case stop: /* */ break;
+      case stop:
+        break;
       default: throw new RuntimeException("unsupported instruction");
     }
     return result;
