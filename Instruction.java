@@ -5,8 +5,7 @@ import java.util.ArrayList;
  */
 public class Instruction {
   public FunctionType function;
-  public OperandType opType;   // for load, store and arithmetic functions.
-  public int word;             // value for branch, call and accu related functions.
+  public Operand operand;
   
   /* original source code lines */
   public ArrayList<String> linesOfCode = new ArrayList<String>(0);
@@ -16,90 +15,19 @@ public class Instruction {
   }
 
   public Instruction(FunctionType fn, Operand operand) {
-    if (fn != FunctionType.accLoad) {
-      throw new RuntimeException("new Instruction with Operand without FunctionType accLoad");
-    }
+    //todo add error detection regarding function type and value of operand (in particular opType and opValue).
     function = fn;
-    opType = operand.opType;
-    word = operand.opValue;
-  }
-  
-  public Instruction(FunctionType fn, int value) {
-    if (fn != FunctionType.br
-      && fn != FunctionType.brEq 
-      && fn != FunctionType.brNe
-      && fn != FunctionType.brLt
-      && fn != FunctionType.brLe
-      && fn != FunctionType.brGt
-      && fn != FunctionType.brGe
-      && fn != FunctionType.call) {
-      throw new RuntimeException("new Instruction without FunctionType branch");
-    }
-    function = fn;
-    word = value;
-  }
-
-  public Instruction(FunctionType fn, OperandType operandType) {
-    if (operandType == OperandType.label) {
-      throw new RuntimeException("new accu related Instruction with OperandType label");
-    }
-
-    if (fn != FunctionType.accLoad
-     && fn != FunctionType.accStore
-     && fn != FunctionType.stackAccLoad
-     && fn != FunctionType.accPlus
-     && fn != FunctionType.accMinus
-     && fn != FunctionType.minusAcc
-     && fn != FunctionType.accTimes
-     && fn != FunctionType.accDiv
-     && fn != FunctionType.divAcc
-     && fn != FunctionType.accCompare
-     ) {
-      throw new RuntimeException("new non accu related Instruction with OperandType");
-    }
-
-    function = fn;
-    opType = operandType;
-    if ((fn == FunctionType.stackAccLoad) && (operandType == OperandType.stack)) {
-      throw new RuntimeException("new stackAccLoad Instruction with OperandType stack");
-    //} else if (fn == FunctionType.accStore) {
-    //  opType = OperandType.stack;
-    }
-  }
-  
-  public Instruction(FunctionType fn, OperandType type, int value) {
-    if (!((  (fn == FunctionType.accLoad) 
-          || (fn == FunctionType.accStore) 
-          || (fn == FunctionType.stackAccLoad) 
-          || (fn == FunctionType.accPlus) 
-          || (fn == FunctionType.accMinus)
-          || (fn == FunctionType.minusAcc)
-          || (fn == FunctionType.accTimes)
-          || (fn == FunctionType.accDiv)
-          || (fn == FunctionType.divAcc)
-          || (fn == FunctionType.accCompare)
-          ) 
-        && ((type == OperandType.constant) || (type == OperandType.var))
-        )) {
-      throw new RuntimeException("new Instruction without FunctionType accLoad and OperandType constant or var");
-    }
-    function = fn;
-    opType = type;
-    word = value;
+    //deep copy of operand, otherwise a reference to the mutable object operand is copied into the Instruction.
+    this.operand = new Operand(operand.opType, operand.opValue);
   }
   
   public String toString() {
-    /*
-      public FunctionType function;
-      public OperandType opType;    // for load, store and arithmetic functions.
-      public int word;              // value for branch, call and accu related functions.
-    */
     String result = function.getValue();
     switch (function) {
       case accStore:
-        switch(opType) {
-          case var: result += " variable " + word; break;
-          case stack: stack: result += " stack"; break;
+        switch(operand.opType) {
+          case var: result += " variable " + operand.opValue; break;
+          case stack: result += " stack"; break;
           default: throw new RuntimeException("accStore with unsupported operandType");
         };
         break;
@@ -112,10 +40,10 @@ public class Instruction {
       case accDiv:
       case divAcc:
       case accCompare:
-        switch(opType) {
-          case var: result += " variable " + word; break;
-          case constant: result += " constant " + word; break;
-          case stack: stack: result += " unstack"; break;
+        switch(operand.opType) {
+          case var: result += " variable " + operand.opValue; break;
+          case constant: result += " constant " + operand.opValue; break;
+          case stack: result += " unstack"; break;
           default: throw new RuntimeException("accu related instruction with unsupported operandType");
         };
         break;
@@ -127,7 +55,7 @@ public class Instruction {
       case brGe:
       case brGt:
       case call:
-        result += " " + word;
+        result += " " + operand.opValue;
         break;
       case read:
         result = "call read";

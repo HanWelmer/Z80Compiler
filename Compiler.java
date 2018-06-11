@@ -64,7 +64,8 @@ public class Compiler {
       codePos = 0;
     }
     if (verboseMode || (errors != 0) ) {
-      System.out.print("\nFound " + errors);
+      System.out.println();
+      System.out.print(errors);
       if (errors == 1) {
         System.out.println(" error.");
       } else {
@@ -466,7 +467,7 @@ public class Compiler {
         getLexeme();
         /* part of code generation */
         if (accInUse) {
-          plant(new Instruction(FunctionType.accStore, OperandType.stack));
+          plant(new Instruction(FunctionType.accStore, operand));
         }
         plant(new Instruction(FunctionType.read));
         accInUse = true;
@@ -478,7 +479,7 @@ public class Compiler {
   private Operand term(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
     /* part of code generation */
     MulValType operator;
-    Operand rOperand = new Operand();
+    Operand rOperand = new Operand(null, null);
 
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
@@ -494,9 +495,9 @@ public class Compiler {
       rOperand = factor(followSet, rOperand);
       /* part of code generation */
       if (rOperand.opType == OperandType.stack) {
-        plant(new Instruction(reverseMul.get(operator), OperandType.stack));
+        plant(new Instruction(reverseMul.get(operator), rOperand));
       } else {
-        plant(new Instruction(forwardMul.get(operator), rOperand.opType, rOperand.opValue));
+        plant(new Instruction(forwardMul.get(operator), rOperand));
       }
     }
     return operand;
@@ -506,7 +507,8 @@ public class Compiler {
     debug("\nexpression: start with stopSet = " + stopSet);
     /* part of lexical analysis */
     AddValType operator;
-    Operand rOperand = new Operand();
+    Operand rOperand = new Operand(null, null);
+    
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.addop);
@@ -516,14 +518,16 @@ public class Compiler {
       plantAccLoad(operand);
       operand.opType = OperandType.stack;
       operator = lexeme.addVal;
+      
       /* part of lexical analysis */
       getLexeme();
       rOperand = term(followSet, rOperand);
+      
       /* part of code generation */
       if (rOperand.opType == OperandType.stack) {
-        plant(new Instruction(reverseAdd.get(operator), OperandType.stack));
+        plant(new Instruction(reverseAdd.get(operator), rOperand));
       } else {
-        plant(new Instruction(forwardAdd.get(operator), rOperand.opType, rOperand.opValue));
+        plant(new Instruction(forwardAdd.get(operator), rOperand));
       }
     }
     debug("\nexpression: end");
@@ -540,10 +544,10 @@ public class Compiler {
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
-    Operand operand = expression(localSet, new Operand());
+    Operand leftOperand = expression(localSet, new Operand(null, null));
 
     /* part of code generation */
-    plantAccLoad(operand);
+    plantAccLoad(leftOperand);
 
     /* part of lexical analysis */
     localSet = stopSet.clone();
@@ -562,17 +566,16 @@ public class Compiler {
     localSet = stopSet.clone();
     localSet.addAll(startBlock);
     localSet.remove(LexemeType.identifier);
-    operand = expression(localSet, operand);
+    Operand rightOperand = expression(localSet, new Operand(null, null));
 
     /* part of code generation */
-    if (operand.opType != OperandType.stack) {
-      plant(new Instruction(FunctionType.accCompare, operand.opType, operand.opValue));
-      ifLabel = saveForwardLabel();
-      plant(new Instruction(normalSkip.get(compareOp), 0));
+    plant(new Instruction(FunctionType.accCompare, rightOperand));
+    ifLabel = saveForwardLabel();
+    Operand labelOperand = new Operand(OperandType.label, 0);
+    if (rightOperand.opType != OperandType.stack) {
+      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
     } else {
-      plant(new Instruction(FunctionType.accCompare, OperandType.stack));
-      ifLabel = saveForwardLabel();
-      plant(new Instruction(reverseSkip.get(compareOp), 0));
+      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
     }
     return ifLabel;
   }
@@ -580,7 +583,6 @@ public class Compiler {
   private void statement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     /* part of code generation */
-    Operand operand = new Operand();
     accInUse = false;
 
     /* part of lexical analysis */
@@ -602,11 +604,11 @@ public class Compiler {
         if (checkOrSkip(EnumSet.of(LexemeType.assign), localSet)) {
           getLexeme();
         }
-        operand = expression(stopSet, operand);
+        Operand operand = expression(stopSet, new Operand(null, null));
         debug("\nstatement: end of assignment statement");
         
         plantAccLoad(operand);
-        plant(new Instruction(FunctionType.accStore, OperandType.var, assignTo));
+        plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo)));
       } else if (lexeme.type == LexemeType.iflexeme) {
         debug("\nstatement: start if statement");
         getLexeme();
@@ -650,7 +652,7 @@ public class Compiler {
         debug("\nstatement: end of while loop");
         
         /* part of code generation */
-        plant(new Instruction(FunctionType.br, whileLabel));
+        plant(new Instruction(FunctionType.br, new Operand(OperandType.label, whileLabel)));
         plantForwardLabel(ifLabel);
       } else if (lexeme.type == LexemeType.writelexeme) {
         debug("\nstatement: start write statement");
@@ -665,7 +667,7 @@ public class Compiler {
         
         localSet = stopSet.clone();
         localSet.add(LexemeType.rbracket);
-        operand = expression(localSet, operand);
+        Operand operand = expression(localSet, new Operand(null, null));
         
         /* part of code generation */
         plantAccLoad(operand);
@@ -677,7 +679,7 @@ public class Compiler {
         debug("\nstatement: end of write statement");
 
         /* part of code generation */
-        plant(new Instruction(FunctionType.accStore, OperandType.stack));
+        plant(new Instruction(FunctionType.accStore, new Operand(OperandType.stack, 0)));
         plant(new Instruction(FunctionType.write));
       }
     }
@@ -740,9 +742,9 @@ public class Compiler {
   private void plantAccLoad(Operand operand) {
     if (operand.opType != OperandType.stack) {
       if (accInUse) {
-          plant(new Instruction(FunctionType.stackAccLoad, operand.opType, operand.opValue));
+          plant(new Instruction(FunctionType.stackAccLoad, operand));
         } else {
-          plant(new Instruction(FunctionType.accLoad, operand.opType, operand.opValue));
+          plant(new Instruction(FunctionType.accLoad, operand));
       }
     }
     accInUse = true;
@@ -772,7 +774,7 @@ public class Compiler {
   };
   
   private void plantForwardLabel(int pos) {
-    storeInstruction.get(pos).word = storeInstruction.size();
+    storeInstruction.get(pos).operand.opValue = storeInstruction.size();
     /* for debugging purposes */
     debug("\nlabel: used from " + pos);
   }

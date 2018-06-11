@@ -5,4 +5,9 @@
 public class Operand {
   public OperandType opType;
   public Integer opValue;
+  
+  public Operand(OperandType opType, Integer opValue) {
+    this.opType = opType;
+    this.opValue = opValue;
+  }
 }

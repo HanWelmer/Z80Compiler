@@ -170,8 +170,8 @@ public class Transcoder {
     debug("\ntranscoding to Z80: " + instruction.toString());
     
     FunctionType function = instruction.function;
-    OperandType opType = instruction.opType;
-    int word = instruction.word;
+    OperandType opType = instruction.operand.opType;
+    int word = instruction.operand.opValue;
     int memAddress = MEM_START + word * 2;
     AssemblyInstruction asm = null;
     debug("\n..function:" + function);
@@ -282,15 +282,15 @@ public class Transcoder {
   private AssemblyInstruction operandToHL(Instruction instruction) {
     String asmCode = null;
     AssemblyInstruction asm = null;
-    switch(instruction.opType) {
+    switch(instruction.operand.opType) {
       case var: 
-        int memAddress = MEM_START + instruction.word * 2;
+        int memAddress = MEM_START + instruction.operand.opValue * 2;
         asmCode = String.format(INDENT + "LD    HL,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
         break;
       case constant: 
-        asmCode = INDENT + "LD    HL," + instruction.word;
-        asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, instruction.word % 256, instruction.word / 256);
+        asmCode = INDENT + "LD    HL," + instruction.operand.opValue;
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, instruction.operand.opValue % 256, instruction.operand.opValue / 256);
         break;
       case stack:
         asmCode = INDENT + "POP   HL";
@@ -303,15 +303,15 @@ public class Transcoder {
   private AssemblyInstruction operandToDE(Instruction instruction) {
     String asmCode = null;
     AssemblyInstruction asm = null;
-    switch(instruction.opType) {
+    switch(instruction.operand.opType) {
       case var: 
-        int memAddress = MEM_START + instruction.word * 2;
+        int memAddress = MEM_START + instruction.operand.opValue * 2;
         asmCode = String.format(INDENT + "LD    DE,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
         break;
       case constant: 
-        asmCode = INDENT + "LD    DE," + instruction.word;
-        asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, instruction.word % 256, instruction.word / 256);
+        asmCode = INDENT + "LD    DE," + instruction.operand.opValue;
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, instruction.operand.opValue % 256, instruction.operand.opValue / 256);
         break;
       case stack:
         asmCode = INDENT + "POP   DE";

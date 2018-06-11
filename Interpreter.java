@@ -70,22 +70,22 @@ public class Interpreter {
         acc = getOp() / acc;
         break;
       case accStore:
-        switch(instr.opType) {
+        switch(instr.operand.opType) {
           case constant:
             runError("illegal operand");
             break;
           case var:
-            if ((instr.word < 0) || (instr.word >= vars.length)) {
+            if ((instr.operand.opValue < 0) || (instr.operand.opValue >= vars.length)) {
               runError("too many variables");
             }
-            vars[instr.word] = acc;
+            vars[instr.operand.opValue] = acc;
             break;
           case stack:
             push(acc);
             break;
           default:
             runError("unknown operand type");
-        } // switch(instr.opType)
+        } // switch(instr.operand.opType)
         break;
       case accCompare:
         operand = getOp();
@@ -114,12 +114,12 @@ public class Interpreter {
       case brGt:
       case brGe:
         if (branchSet.contains(instr.function)) {
-          pc = instr.word - 1;
+          pc = instr.operand.opValue - 1;
         }
         break;
       case br:
       case call:
-        pc = instr.word - 1;
+        pc = instr.operand.opValue - 1;
         break;
       case read:
           System.out.print("\nread:");
@@ -210,15 +210,15 @@ public class Interpreter {
   private int getOp() {
     Instruction instr = instructions.get(pc);
     int result = 0;
-    switch(instr.opType) {
+    switch(instr.operand.opType) {
       case stack:
         result = pop();
         break;
-      case constant: result = instr.word; break;
+      case constant: result = instr.operand.opValue; break;
       case var:
-        if (instr.word < vars.length) {
-          debug("\npc=" + pc + " vars[" + instr.word + "] = " + vars[instr.word]);
-          result = vars[instr.word];
+        if (instr.operand.opValue < vars.length) {
+          debug("\npc=" + pc + " vars[" + instr.operand.opValue + "] = " + vars[instr.operand.opValue]);
+          result = vars[instr.operand.opValue];
         } else {
           runError("undefined variable");
         }
