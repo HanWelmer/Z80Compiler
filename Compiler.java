@@ -10,6 +10,10 @@ import java.util.Map;
  * Language extended by H.J. Welmer with the following features:
  * - support multiple character identifiers.
  * - support multiple digit constants.
+ * - Java style multi-line comment.
+ * - Java style end of line comment.
+ * - Multi-line may contain end of line comment.
+ * - Multi-line comment may not be nested.
  *
  * program        = ["VAR" idlist] block ".".
  * idlist         = identifier {"," identifier} ";".
@@ -232,14 +236,24 @@ public class Compiler {
   
   private void getLexeme() throws IOException, FatalError {
     char ch;
-    //ignore spaces and comments
-    while (nextChar() == ' ' || nextChar() == '\t' || nextChar() == '\n' || nextChar() == '{') {
-      ch = getChar();
-      if (ch == '{') {
-        while (getChar() != '}') {/*nothing*/}
-      }
-    }
+    //ignore white space and comments
     ch = getChar();
+    while (ch == ' ' || ch == '\t' || ch == '\n' || (ch == '/' && (nextChar() == '*' || nextChar() == '/'))) {
+      if (ch == '/' && nextChar() == '*') {
+        ch = getChar();
+        ch = getChar();
+        while (ch != '*' || nextChar() != '/') {
+          ch = getChar();
+        }
+        ch = getChar();
+      } else if (ch == '/' && nextChar() == '/') {
+        ch = getChar();
+        while (nextChar() != '\n') {
+          ch = getChar();
+        }
+      }
+      ch = getChar();
+    }
     if (ch >= '0' && ch <= '9') {
       /* try to recognise a constant */
       lexeme.type = LexemeType.constant;
