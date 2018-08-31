@@ -329,11 +329,236 @@ statements: end
 checkOrSkip: start
 checkOrSkip: lexeme "endlexeme" in okSet [endlexeme]
 checkOrSkip: end
+  /* multi line comment
+   * with nested // end of line comment
+   * is allowed.
+   */
+  write(NUMBER_OF_NUMBERS);
+getLexeme: write
 block: end
 ->plant (accInUse=true):
  23 :br 9
 label: used from 11
 whileStatement: end
+statement: end
+statement: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "writelexeme" in okSet [identifier, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: end
+writeStatement: start with stopSet = [endlexeme]
+getLexeme: (
+checkOrSkip: start
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+checkOrSkip: end
+getLexeme: identifier NUMBER_OF_NUMBERS@2
+expression: start with stopSet = [semicolon, rbracket, endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: )
+expression: end
+checkOrSkip: start
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+checkOrSkip: end
+getLexeme: ;
+checkOrSkip: start
+checkOrSkip: lexeme "semicolon" in okSet [semicolon]
+checkOrSkip: end
+  write(sum);
+getLexeme: write
+->plant (accInUse=false):
+ 24 :acc= variable 2
+->plant (accInUse=true):
+ 25 :acc=> stack
+->plant (accInUse=true):
+ 26 :call write
+writeStatement: end
+statement: end
+statement: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "writelexeme" in okSet [identifier, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: end
+writeStatement: start with stopSet = [endlexeme]
+getLexeme: (
+checkOrSkip: start
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+checkOrSkip: end
+getLexeme: identifier sum@1
+expression: start with stopSet = [semicolon, rbracket, endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: )
+expression: end
+checkOrSkip: start
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+checkOrSkip: end
+getLexeme: ;
+checkOrSkip: start
+checkOrSkip: lexeme "semicolon" in okSet [semicolon]
+checkOrSkip: end
+  int _Average := 0;
+getLexeme: int
+->plant (accInUse=false):
+ 27 :acc= variable 1
+->plant (accInUse=true):
+ 28 :acc=> stack
+->plant (accInUse=true):
+ 29 :call write
+writeStatement: end
+statement: end
+statement: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "intlexeme" in okSet [identifier, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: end
+assignment: start with stopSet = [endlexeme]
+getLexeme: identifier _Average
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [identifier]
+checkOrSkip: end
+assignment: var declared: identifier _Average@4
+getLexeme: :=
+checkOrSkip: start
+checkOrSkip: lexeme "assign" in okSet [assign]
+checkOrSkip: end
+getLexeme: constant 0
+expression: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: ;
+expression: end
+checkOrSkip: start
+checkOrSkip: lexeme "semicolon" in okSet [semicolon]
+checkOrSkip: end
+  if (NUMBER_OF_NUMBERS <> 0) {
+getLexeme: if
+->plant (accInUse=false):
+ 30 :acc= constant 0
+->plant (accInUse=true):
+ 31 :acc=> variable 4
+assignment: end
+statement: end
+statement: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "iflexeme" in okSet [identifier, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: end
+ifStatement: start with stopSet = [endlexeme]
+getLexeme: (
+checkOrSkip: start
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+checkOrSkip: end
+getLexeme: identifier NUMBER_OF_NUMBERS@2
+expression: start with stopSet = [rbracket, relop, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: <=> ne
+expression: end
+->plant (accInUse=false):
+ 32 :acc= variable 2
+checkOrSkip: start
+checkOrSkip: lexeme "relop" in okSet [relop]
+checkOrSkip: end
+getLexeme: constant 0
+expression: start with stopSet = [rbracket, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "constant" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: )
+expression: end
+->plant (accInUse=true):
+ 33 :accom constant 0
+label used
+->plant (accInUse=true):
+ 34 :breq 0
+checkOrSkip: start
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+checkOrSkip: end
+getLexeme: {
+block: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "beginlexeme" in okSet [identifier, beginlexeme, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: end
+	  _Average := sum / NUMBER_OF_NUMBERS;
+getLexeme: identifier _Average@4
+statements: start with stopSet = [endlexeme]
+statement: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [identifier, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: end
+assignment: start with stopSet = [endlexeme]
+getLexeme: :=
+checkOrSkip: start
+checkOrSkip: lexeme "assign" in okSet [assign]
+checkOrSkip: end
+getLexeme: identifier sum@1
+expression: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: * or / divd
+->plant (accInUse=false):
+ 35 :acc= variable 1
+getLexeme: identifier NUMBER_OF_NUMBERS@2
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: ;
+->plant (accInUse=true):
+ 36 :acc/ variable 2
+expression: end
+checkOrSkip: start
+checkOrSkip: lexeme "semicolon" in okSet [semicolon]
+checkOrSkip: end
+  write(_Average);
+getLexeme: write
+->plant (accInUse=true):
+ 37 :acc=> variable 4
+assignment: end
+statement: end
+statement: start with stopSet = [endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "writelexeme" in okSet [identifier, writelexeme, intlexeme, iflexeme, whilelexeme, endlexeme]
+checkOrSkip: end
+writeStatement: start with stopSet = [endlexeme]
+getLexeme: (
+checkOrSkip: start
+checkOrSkip: lexeme "lbracket" in okSet [lbracket]
+checkOrSkip: end
+getLexeme: identifier _Average@4
+expression: start with stopSet = [semicolon, rbracket, endlexeme]
+checkOrSkip: start
+checkOrSkip: lexeme "identifier" in okSet [constant, identifier, lbracket, readlexeme]
+checkOrSkip: end
+getLexeme: )
+expression: end
+checkOrSkip: start
+checkOrSkip: lexeme "rbracket" in okSet [rbracket]
+checkOrSkip: end
+getLexeme: ;
+checkOrSkip: start
+checkOrSkip: lexeme "semicolon" in okSet [semicolon]
+checkOrSkip: end
+  }
+getLexeme: }
+->plant (accInUse=false):
+ 38 :acc= variable 4
+->plant (accInUse=true):
+ 39 :acc=> stack
+->plant (accInUse=true):
+ 40 :call write
+writeStatement: end
+statement: end
+statements: end
+checkOrSkip: start
+checkOrSkip: lexeme "endlexeme" in okSet [endlexeme]
+checkOrSkip: end
+}
+getLexeme: }
+block: end
+label: used from 34
+ifStatement: end
 statement: end
 statements: end
 checkOrSkip: start
@@ -341,4 +566,4 @@ checkOrSkip: lexeme "endlexeme" in okSet [endlexeme]
 checkOrSkip: end
 prog: end
 ->plant (accInUse=true):
- 24 :stop
+ 41 :stop
