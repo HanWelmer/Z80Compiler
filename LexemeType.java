@@ -19,6 +19,7 @@ public enum LexemeType {
   writelexeme("write"),
   intlexeme("int"),
   iflexeme("if"),
+  elselexeme("else"),
   whilelexeme("while"),
   classlexeme("class"),
   endlexeme("}"),

@@ -21,10 +21,10 @@ class Average {
    */
   write(NUMBER_OF_NUMBERS);
   write(sum);
-  int _Average := 0;
   if (NUMBER_OF_NUMBERS <> 0) {
-	  _Average := sum / NUMBER_OF_NUMBERS;
-  write(_Average);
+	write(sum / NUMBER_OF_NUMBERS);
+  } else {
+  write(0);
   }
 }
 //comment after final }.

@@ -22,7 +22,7 @@ import java.util.Map;
  * statement      = assignment | writeStatement | ifStatement | whileStatement.
  * assignment     = ["int"] identifier ":=" expression ";".
  * writeStatement = "write" "(" expression ")" ";".
- * ifStatement    = "if" "(" comparison ")" block.
+ * ifStatement    = "if" "(" comparison ")" block [ "else" block].
  * whileStatement = "while" "(" comparison ")" block.
  * block          = statement | "{" statements "}".
  * comparison     = expression relop expression.
@@ -608,7 +608,7 @@ public class Compiler {
     }
 
     /* part of lexical analysis */
-	/* TODO the following 2 lines are redundant. */
+    /* TODO the following 2 lines are redundant. */
     stopWhileSet = stopSet.clone();
     stopWhileSet.add(LexemeType.rbracket);
     stopWhileSet.addAll(startStatement);
@@ -628,34 +628,50 @@ public class Compiler {
     debug("\nwhileStatement: end");
   }
 
-  // ifStatement = "if" "(" comparison ")" block.
+  // ifStatement = "if" "(" comparison ")" block [ "else" block ].
   private void ifStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nifStatement: start with stopSet = " + stopSet);
 
     getLexeme();
     
-    EnumSet<LexemeType> stopIfSet = stopSet.clone();
-    stopIfSet.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopIfSet)) {
+    EnumSet<LexemeType> stopSetIf = stopSet.clone();
+    stopSetIf.add(LexemeType.rbracket);
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopSetIf)) {
       getLexeme();
     }
 
-    stopIfSet = stopSet.clone();
-    stopIfSet.add(LexemeType.rbracket);
-    stopIfSet.addAll(startStatement);
-    stopIfSet.remove(LexemeType.identifier);
-    int ifLabel = comparison(stopIfSet);
+    stopSetIf = stopSet.clone();
+    stopSetIf.add(LexemeType.rbracket);
+    stopSetIf.addAll(startStatement);
+    stopSetIf.remove(LexemeType.identifier);
+    int ifLabel = comparison(stopSetIf);
     
-    stopIfSet = stopSet.clone();
-    stopIfSet.addAll(startStatement);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopIfSet)) {
+    stopSetIf = stopSet.clone();
+    stopSetIf.addAll(startStatement);
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSetIf)) {
       getLexeme();
     }
-    block(stopSet);
+    EnumSet<LexemeType> stopSetElse = stopSet.clone();
+    stopSetElse.add(LexemeType.elselexeme);
+    block(stopSetElse);
 
-    /* part of code generation */
-    plantForwardLabel(ifLabel);
-    debug("\nifStatement: end");
+    if (checkOrSkip(EnumSet.of(LexemeType.elselexeme), stopSetIf)) {
+      /* part of code generation */
+      int elseLabel = saveLabel();
+      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0)));
+      plantForwardLabel(ifLabel);
+
+      /* part of lexical analysis */
+      getLexeme();
+      block(stopSet);
+      
+      /* part of code generation */
+      plantForwardLabel(elseLabel);
+    } else {
+      /* part of code generation */
+      plantForwardLabel(ifLabel);
+    }
+	debug("\nifStatement: end");
   }
 
  //assignment = ["int"] identifier ":=" expression ";".
