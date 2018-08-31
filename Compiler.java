@@ -6,28 +6,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Compiler for the P programming language, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
- * Language extended by H.J. Welmer with the following features:
- * - support multiple character identifiers.
- * - support multiple digit constants.
- * - Java style multi-line comment.
- * - Java style end of line comment.
- * - Multi-line may contain end of line comment.
- * - Multi-line comment may not be nested.
+ * Compiler for the miniJava programming language.
+ * Inspired by the book Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks
+ * and of course Java as developed by Sun.
  *
- * program        = ["VAR" idlist] block ".".
- * idlist         = identifier {"," identifier} ";".
- * identifier     = "(A-Za-z0-9_)*".
- * block          = statement | "BEGIN" block {";" block} "END".
+ * Java style end of line comment.
+ * Java style multi-line comment.
+ * Multi-line may contain end of line comment.
+ * Multi-line comment may not be nested.
+ * All variables are 16 bit integers.
+ *
+ * program        = "class" identifier "{" statements "}".
+ * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
+ * statements     = (statement)*.
  * statement      = assignment | writeStatement | ifStatement | whileStatement.
- * assignment     = identifier ":=" expression.
- * writeStatement = "WRITE" "(" expression ")".
- * ifStatement    = "IF" comparison "THEN" block.
- * whileStatement = "WHILE" comparison "DO" block.
+ * assignment     = ["int"] identifier ":=" expression ";".
+ * writeStatement = "write" "(" expression ")" ";".
+ * ifStatement    = "if" "(" comparison ")" block.
+ * whileStatement = "while" "(" comparison ")" block.
+ * block          = statement | "{" statements "}".
  * comparison     = expression relop expression.
  * expression     = term {addop term}.
  * term           = factor {mulop factor}.
- * factor         = identifier | constant | "READ" | "(" expression ")".
+ * factor         = identifier | constant | "read" | "(" expression ")".
  * addop          = "+" | "-".
  * mulop          = "*" | "/".
  * relop          = "<" | "<=" | "<>" | "=" | ">=" | ">".
@@ -116,7 +117,7 @@ public class Compiler {
 
   /* Constants and class member variables for syntax analysis phase */
   EnumSet<LexemeType> startExp = EnumSet.noneOf(LexemeType.class);
-  EnumSet<LexemeType> startBlock = EnumSet.noneOf(LexemeType.class);
+  EnumSet<LexemeType> startStatement = EnumSet.noneOf(LexemeType.class);
 
   /* Constants and class member variables for semantic analysis phase */
   private Identifiers identifiers = new Identifiers();
@@ -143,7 +144,7 @@ public class Compiler {
     linePos = 0;
     sourceCode = new ArrayList<String>();
     errors = 0;
-    firstLexeme = new Lexeme(LexemeType.dot);
+    firstLexeme = new Lexeme(LexemeType.constant);
     lexeme = new Lexeme(LexemeType.unknown);
     lastLexeme = new Lexeme(LexemeType.unknown);
     keywords.clear();
@@ -153,17 +154,17 @@ public class Compiler {
 
 
     /* initialisation of syntax analysis variables */
+    startStatement.clear();
+    startStatement.add(LexemeType.intlexeme);
+    startStatement.add(LexemeType.identifier);
+    startStatement.add(LexemeType.writelexeme);
+    startStatement.add(LexemeType.iflexeme);
+    startStatement.add(LexemeType.whilelexeme);
     startExp.clear();
     startExp.add(LexemeType.lbracket);
     startExp.add(LexemeType.identifier);
     startExp.add(LexemeType.constant);
     startExp.add(LexemeType.readlexeme);
-    startBlock.clear();
-    startBlock.add(LexemeType.beginlexeme);
-    startBlock.add(LexemeType.identifier);
-    startBlock.add(LexemeType.iflexeme);
-    startBlock.add(LexemeType.whilelexeme);
-    startBlock.add(LexemeType.writelexeme);
 
     /* initialisation of semantic analysis variables */
     identifiers.init();
@@ -203,7 +204,7 @@ public class Compiler {
     reverseSkip.put(RelValType.le, FunctionType.brLt);
   }
   
-  private void error(int n) {
+  private void error() {
     errors++;
     if (lastLinePrinted != lineNumber) {
       //when in debug mode, make sure error message starts at a new line
@@ -216,6 +217,10 @@ public class Compiler {
       System.out.print(' ');
     }
     System.out.print('^');
+  }
+  
+  private void error(int n) {
+    error();
     switch (n) {
       case 0 : System.out.println("error opening file " + fileName);break;
       case 1 : System.out.println("end of input encountered");break;
@@ -275,7 +280,11 @@ public class Compiler {
           ch = getChar();
         }
       }
-    } else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
+    } else if (ch == '{') {
+      lexeme.type = LexemeType.beginlexeme;
+    } else if (ch == '}') {
+      lexeme.type = LexemeType.endlexeme;
+    }else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
       /* try to recognise an identifier or a keyword */
       String name = String.valueOf(ch);
       int charno = 0;
@@ -299,7 +308,7 @@ public class Compiler {
     } else {
       /* try to recognise keywords  - , ; := ( ) + - * / <=> */
       switch (ch) {
-        case '.' : lexeme.type = LexemeType.dot; break;
+//        case '.' : lexeme.type = LexemeType.dot; break;
         case ',' : lexeme.type = LexemeType.comma; break;
         case ';' : lexeme.type = LexemeType.semicolon; break;
         case ':' :
@@ -414,42 +423,6 @@ public class Compiler {
     }
     debug("\ncheckOrSkip: end");
     return result;
-  }
-  
-  private void idList(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nidlist: start");
-    boolean cont;
-    EnumSet<LexemeType> continueSet = EnumSet.of(LexemeType.comma, LexemeType.identifier);
-    EnumSet<LexemeType> ignoreSet = EnumSet.of(LexemeType.semicolon, LexemeType.comma);
-    EnumSet<LexemeType> followSet1 = stopSet.clone();
-    followSet1.addAll(ignoreSet);
-    EnumSet<LexemeType> followSet2 = stopSet.clone();
-    followSet2.addAll(continueSet);
-    
-    do {
-      if (checkOrSkip(EnumSet.of(LexemeType.identifier), followSet1)) {
-        /* next line + debug message is part of semantic analysis */
-        if (!identifiers.declareId(lexeme.idVal)) error(8);
-        debug("\nidlist: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-        getLexeme();
-      }
-      checkOrSkip(ignoreSet, followSet2);
-      cont = continueSet.contains(lexeme.type);
-      if (lexeme.type == LexemeType.comma) {
-        debug("\nidlist: , skipped");
-        getLexeme();
-      }
-    }
-    while (cont);
-    
-    debug("\nidlist: end of id list reached");
-    if (lexeme.type == LexemeType.semicolon) {
-      debug("\nidlist: ; skipped");
-      debug("\nidlist: end");
-      getLexeme();
-    } else {
-      debug("\nidlist: end");
-    }
   }
   
   private Operand factor(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
@@ -578,7 +551,7 @@ public class Compiler {
     
     /* part of lexical analysis */
     localSet = stopSet.clone();
-    localSet.addAll(startBlock);
+    localSet.addAll(startStatement);
     localSet.remove(LexemeType.identifier);
     Operand rightOperand = expression(localSet, new Operand(null, null));
 
@@ -594,161 +567,237 @@ public class Compiler {
     return ifLabel;
   }
   
+  // block = statement | "{" statements "}".
+  private void block(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nblock: start with stopSet = " + stopSet);
+
+    EnumSet<LexemeType> startSet = stopSet.clone();
+    startSet.addAll(startStatement);
+    startSet.add(LexemeType.beginlexeme);
+
+    EnumSet<LexemeType> stopBlockSet = startSet.clone();
+    stopBlockSet.add(LexemeType.semicolon);
+    stopBlockSet.add(LexemeType.endlexeme);
+
+    checkOrSkip(startSet, stopBlockSet);
+    if (lexeme.type == LexemeType.beginlexeme) {
+      getLexeme();
+      statements(EnumSet.of(LexemeType.endlexeme));
+      if (checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class))) {
+		  getLexeme();
+	  }
+    } else {
+      statement(stopSet);
+    }
+    debug("\nblock: end");
+  }
+
+  //whileStatement = "while" "(" comparison ")" block.
+  private void whileStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nwhileStatement: start with stopSet = " + stopSet);
+    getLexeme();
+
+    /* part of code generation */
+    int whileLabel = saveLabel();
+
+    /* part of lexical analysis */
+    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
+    stopWhileSet.add(LexemeType.rbracket);
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
+      getLexeme();
+    }
+
+    /* part of lexical analysis */
+	/* TODO the following 2 lines are redundant. */
+    stopWhileSet = stopSet.clone();
+    stopWhileSet.add(LexemeType.rbracket);
+    stopWhileSet.addAll(startStatement);
+    stopWhileSet.remove(LexemeType.identifier);
+    int endLabel = comparison(stopWhileSet);
+    
+    stopWhileSet = stopSet.clone();
+    stopWhileSet.addAll(startStatement);
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopWhileSet)) {
+      getLexeme();
+    }
+    block(stopSet);
+    
+    /* part of code generation */
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, whileLabel)));
+    plantForwardLabel(endLabel);
+    debug("\nwhileStatement: end");
+  }
+
+  // ifStatement = "if" "(" comparison ")" block.
+  private void ifStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nifStatement: start with stopSet = " + stopSet);
+
+    getLexeme();
+    
+    EnumSet<LexemeType> stopIfSet = stopSet.clone();
+    stopIfSet.add(LexemeType.rbracket);
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopIfSet)) {
+      getLexeme();
+    }
+
+    stopIfSet = stopSet.clone();
+    stopIfSet.add(LexemeType.rbracket);
+    stopIfSet.addAll(startStatement);
+    stopIfSet.remove(LexemeType.identifier);
+    int ifLabel = comparison(stopIfSet);
+    
+    stopIfSet = stopSet.clone();
+    stopIfSet.addAll(startStatement);
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopIfSet)) {
+      getLexeme();
+    }
+    block(stopSet);
+
+    /* part of code generation */
+    plantForwardLabel(ifLabel);
+    debug("\nifStatement: end");
+  }
+
+ //assignment = ["int"] identifier ":=" expression ";".
+  private void assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nassignment: start with stopSet = " + stopSet);
+
+    EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
+    stopAssignmentSet.addAll(startExp);
+    stopAssignmentSet.add(LexemeType.semicolon);
+
+    if (lexeme.type == LexemeType.intlexeme) {
+      /* part of lexical analysis */
+      getLexeme();
+      if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
+
+      // next line + debug message is part of semantic analysis.
+        if (identifiers.declareId(lexeme.idVal)) {
+          debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+        } else {
+          error();
+          System.out.println("variable already declared");
+        }
+      }
+    }
+
+    /* part of semantic analysis */
+    if (!identifiers.checkId(lexeme.idVal)) {
+      error();
+      System.out.println("variable not declared: " + lexeme.idVal);
+    }
+
+    /* part of code generation */
+    int assignTo = identifiers.getId(lexeme.idVal);
+
+    /* part of lexical analysis */
+    getLexeme();
+    if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
+      getLexeme();
+    }
+    Operand operand = expression(stopSet, new Operand(null, null));
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      getLexeme();
+    }
+
+    /* part of code generation */
+    plantAccLoad(operand);
+    plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo)));
+
+    debug("\nassignment: end");
+  }
+
+  // writeStatement = "write" "(" expression ")" ";".
+  private void writeStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nwriteStatement: start with stopSet = " + stopSet);
+    getLexeme();
+
+    EnumSet<LexemeType> stopWriteSet = stopSet.clone();
+    stopWriteSet.addAll(startExp);
+    stopWriteSet.add(LexemeType.rbracket);
+    stopWriteSet.add(LexemeType.semicolon);
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWriteSet)) {
+      getLexeme();
+    }
+    
+    EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
+    stopExpressionSet.add(LexemeType.rbracket);
+    stopExpressionSet.add(LexemeType.semicolon);
+    Operand operand = expression(stopExpressionSet, new Operand(null, null));
+    
+    /* part of lexical analysis */
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
+      getLexeme();
+    }
+
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      getLexeme();
+    }
+
+    /* part of code generation */
+    plantAccLoad(operand);
+    plant(new Instruction(FunctionType.accStore, new Operand(OperandType.stack, 0)));
+    plant(new Instruction(FunctionType.write));
+    debug("\nwriteStatement: end");
+  }
+
+  //statement = assignment | writeStatement | ifStatement | whileStatement.
   private void statement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     /* part of code generation */
     accInUse = false;
 
     /* part of lexical analysis */
-    EnumSet<LexemeType> localSet = stopSet.clone();
-    localSet.addAll(startBlock);
-    if (checkOrSkip(localSet, stopSet)) {
-      if (lexeme.type == LexemeType.identifier) {
-        debug("\nstatement: start assignment statement");
-        /* part of semantic analysis */
-        if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
- 
-        /* part of code generation */
-        int assignTo = identifiers.getId(lexeme.idVal);
-        /* part of lexical analysis */
-        getLexeme();
-        
-        localSet = stopSet.clone();
-        localSet.addAll(startExp);
-        if (checkOrSkip(EnumSet.of(LexemeType.assign), localSet)) {
-          getLexeme();
-        }
-        Operand operand = expression(stopSet, new Operand(null, null));
-        debug("\nstatement: end of assignment statement");
-        
-        plantAccLoad(operand);
-        plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo)));
-      } else if (lexeme.type == LexemeType.iflexeme) {
-        debug("\nstatement: start if statement");
-        getLexeme();
-        
-        localSet = stopSet.clone();
-        localSet.add(LexemeType.thenlexeme);
-        localSet.addAll(startBlock);
-        localSet.remove(LexemeType.identifier);
-        int ifLabel = comparison(localSet);
-        
-        localSet = stopSet.clone();
-        localSet.addAll(startBlock);
-        if (checkOrSkip(EnumSet.of(LexemeType.thenlexeme), localSet)) {
-          getLexeme();
-        }
-        block(stopSet);
-        debug("\nstatement: end of if statement");
-
-        /* part of code generation */
-        plantForwardLabel(ifLabel);
-      } else if (lexeme.type == LexemeType.whilelexeme) {
-        debug("\nstatement: start while loop");
-        getLexeme();
-
-        /* part of code generation */
-        int whileLabel = saveLabel();
-
-        /* part of lexical analysis */
-        localSet = stopSet.clone();
-        localSet.add(LexemeType.dolexeme);
-        localSet.addAll(startBlock);
-        localSet.remove(LexemeType.identifier);
-        int ifLabel = comparison(localSet);
-        
-        localSet = stopSet.clone();
-        localSet.addAll(startBlock);
-        if (checkOrSkip(EnumSet.of(LexemeType.dolexeme), localSet)) {
-          getLexeme();
-        }
-        block(stopSet);
-        debug("\nstatement: end of while loop");
-        
-        /* part of code generation */
-        plant(new Instruction(FunctionType.br, new Operand(OperandType.label, whileLabel)));
-        plantForwardLabel(ifLabel);
+    EnumSet<LexemeType> startSet = stopSet.clone();
+    startSet.addAll(startStatement);
+    if (checkOrSkip(startSet, stopSet)) {
+      if (lexeme.type == LexemeType.identifier || lexeme.type == LexemeType.intlexeme) {
+        assignment(stopSet);
       } else if (lexeme.type == LexemeType.writelexeme) {
-        debug("\nstatement: start write statement");
-        getLexeme();
-
-        localSet = stopSet.clone();
-        localSet.add(LexemeType.rbracket);
-        localSet.addAll(startExp);
-        if (checkOrSkip(EnumSet.of(LexemeType.lbracket), localSet)) {
-          getLexeme();
-        }
-        
-        localSet = stopSet.clone();
-        localSet.add(LexemeType.rbracket);
-        Operand operand = expression(localSet, new Operand(null, null));
-        
-        /* part of code generation */
-        plantAccLoad(operand);
-
-        /* part of lexical analysis */
-        if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
-          getLexeme();
-        }
-        debug("\nstatement: end of write statement");
-
-        /* part of code generation */
-        plant(new Instruction(FunctionType.accStore, new Operand(OperandType.stack, 0)));
-        plant(new Instruction(FunctionType.write));
+        writeStatement(stopSet);
+      } else if (lexeme.type == LexemeType.iflexeme) {
+        ifStatement(stopSet);
+      } else if (lexeme.type == LexemeType.whilelexeme) {
+        whileStatement(stopSet);
       }
     }
     debug("\nstatement: end");
   }
   
-  private void block(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nblock: start with stopSet = " + stopSet);
-    EnumSet<LexemeType> stopOrStartSet = stopSet.clone();
-    stopOrStartSet.addAll(startBlock);
-    checkOrSkip(stopOrStartSet, stopOrStartSet);
-    if (lexeme.type == LexemeType.beginlexeme) {
-      getLexeme();
-      
-      EnumSet<LexemeType> semicolonOrEndSet = EnumSet.of(LexemeType.semicolon, LexemeType.endlexeme);
-      EnumSet<LexemeType> blockSet = stopSet.clone();
-      blockSet.addAll(semicolonOrEndSet);
-      block(blockSet);
-      
-      stopOrStartSet.add(LexemeType.semicolon);
-      checkOrSkip(semicolonOrEndSet, stopOrStartSet);
-      
-      EnumSet<LexemeType> startSet = startBlock.clone();
-      startSet.add(LexemeType.semicolon);
-      
-      EnumSet<LexemeType> endOfBlockSet = stopSet.clone();
-      endOfBlockSet.add(LexemeType.semicolon);
-      endOfBlockSet.add(LexemeType.endlexeme);
-      while (startSet.contains(lexeme.type)) {
-        if (lexeme.type == LexemeType.semicolon) {
-          getLexeme();
-        }
-        block(endOfBlockSet);
-        checkOrSkip(semicolonOrEndSet, stopOrStartSet);
-      }
-      if (lexeme.type == LexemeType.endlexeme) {
-        getLexeme();
-      }
-    } else {
+  //statements = (statement)*.
+  private void statements(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nstatements: start with stopSet = " + stopSet);
+    
+    //while (checkOrSkip(startStatement, stopSet)) {
+    while (startStatement.contains(lexeme.type)) {
       statement(stopSet);
+      //getLexeme();
     }
-    debug("\nblock: end");
+    debug("\nstatements: end");
   }
   
+  //program = "class" identifier "{" statements "}".
   private void prog() throws IOException, FatalError {
     debug("\nprog: start");
     /* recognise a program */
     getLexeme();
-    if (lexeme.type == LexemeType.varlexeme) {
+    if (checkOrSkip(EnumSet.of(LexemeType.classlexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginlexeme))) {
       getLexeme();
-      idList(EnumSet.of(LexemeType.beginlexeme, LexemeType.semicolon, LexemeType.dot));
+      if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginlexeme))) {
+        /* next line + debug message is part of semantic analysis */
+        if (!identifiers.declareId(lexeme.idVal)) {
+          error();
+          System.out.println("identifier already declared");
+        }
+        debug("\nprog: class declared: " + lexeme.idVal);
+        getLexeme();
+        checkOrSkip(EnumSet.of(LexemeType.beginlexeme), EnumSet.noneOf(LexemeType.class));
+        getLexeme();
+        statements(EnumSet.of(LexemeType.endlexeme));
+        //getLexeme();
+        checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class));
+      }
     }
-    do {
-      block(EnumSet.of(LexemeType.dot));
-    } while (!checkOrSkip(EnumSet.of(LexemeType.dot), EnumSet.noneOf(LexemeType.class)));
     debug("\nprog: end");
   }
   

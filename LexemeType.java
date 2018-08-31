@@ -4,7 +4,6 @@
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  */
 public enum LexemeType {
-  dot("."),
   constant("constant"),
   identifier("identifier"),
   comma(","),
@@ -15,15 +14,14 @@ public enum LexemeType {
   addop("+ or -"),
   mulop("* or /"),
   relop("<=>"),
-  beginlexeme("BEGIN"),
-  readlexeme("READ"),
-  writelexeme("WRITE"),
-  iflexeme("IF"),
-  thenlexeme("THEN"),
-  whilelexeme("WHILE"),
-  dolexeme("DO"),
-  varlexeme("VAR"),
-  endlexeme("END"),
+  beginlexeme("{"),
+  readlexeme("read"),
+  writelexeme("write"),
+  intlexeme("int"),
+  iflexeme("if"),
+  whilelexeme("while"),
+  classlexeme("class"),
+  endlexeme("}"),
   unknown("?");
 
   private String value;

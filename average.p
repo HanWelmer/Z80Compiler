@@ -1,32 +1,28 @@
 /*
- * A small program in the P-language.
+ * A small program in the miniJava language.
  * Boek: Rachel Kushner: Club mars.
  */
-VAR number, Sum, NUMBER_OF_NUMBERS, _Average;
-BEGIN
-  Sum := 0;
-  NUMBER_OF_NUMBERS := 0;
+class Average {
+  int sum := 0;
+  int NUMBER_OF_NUMBERS := 0;
   //read a new number and echo number to output
-  number := READ; 
-  WRITE (number);
-  WHILE number <> 0 /* not end of file */ DO
-  BEGIN
-    Sum := Sum + number;
+  int number := read; 
+  write(number);
+  while (number <> 0) /* not end of file */ {
+    sum := sum + number;
     NUMBER_OF_NUMBERS := NUMBER_OF_NUMBERS + 1;
     //read a new number and echo number to output
-    number := READ;
-    WRITE (number);
-  END;
+    number := read;
+    write(number);
+  }
   /* multi line comment
    * with nested // end of line comment
    * is allowed.
    */
-  WRITE (NUMBER_OF_NUMBERS);
-  WRITE (Sum);
-  IF NUMBER_OF_NUMBERS <> 0 THEN
-  BEGIN
-    _Average := Sum / NUMBER_OF_NUMBERS;
-    WRITE (_Average);
-  END
-END.
-//comment after final END.
+  write(NUMBER_OF_NUMBERS);
+  write(sum);
+  int _Average := 0;
+  if (NUMBER_OF_NUMBERS <> 0) _Average := sum / NUMBER_OF_NUMBERS;
+  write(_Average);
+  //comment after final }.
+}
