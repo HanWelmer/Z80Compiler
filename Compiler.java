@@ -611,9 +611,6 @@ public class Compiler {
     }
 
     /* part of lexical analysis */
-    /* TODO the following 2 lines are redundant. */
-    stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.rbracket);
     stopWhileSet.addAll(startStatement);
     stopWhileSet.remove(LexemeType.identifier);
     int endLabel = comparison(stopWhileSet);
