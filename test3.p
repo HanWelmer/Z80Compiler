@@ -1,6 +1,6 @@
 /* Program to test multiplication */
 class TestMuliply {
-int a := 0;
+int a = 0;
   write(12);
   if (9 * 9 * 9 * 9 * 9 == 59049) {
     write (11);
@@ -27,11 +27,11 @@ int a := 0;
   } else {
     write (0);
   }
-  a := 2;
+  a = 2;
   write(3 * a);
-  a := 1;
+  a = 1;
   write(a * 5);
-  a := 2 * 2;
+  a = 2 * 2;
   write(a);
   write(1 * 3);
   write(2 * 1);

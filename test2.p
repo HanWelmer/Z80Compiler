@@ -1,7 +1,7 @@
 /* Program to test branch instructions */
 class TestBranches {
   write(9);
-  int a := 1;
+  int a = 1;
   if (a == 1) write(8);
   if (a != 0) write(7);
   if (a > 0) write(6);

@@ -20,7 +20,7 @@ import java.util.Map;
  * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
  * statements     = (statement)*.
  * statement      = assignment | writeStatement | ifStatement | whileStatement.
- * assignment     = ["int"] identifier ":=" expression ";".
+ * assignment     = ["int"] identifier "=" expression ";".
  * writeStatement = "write" "(" expression ")" ";".
  * ifStatement    = "if" "(" comparison ")" block [ "else" block].
  * whileStatement = "while" "(" comparison ")" block.
@@ -306,20 +306,11 @@ public class Compiler {
       }
       lexeme.idVal = name;
     } else {
-      /* try to recognise keywords  - , ; := ( ) + - * / <=> */
+      /* try to recognise keywords  or , ; = ( ) + - * / <!=> */
       switch (ch) {
 //        case '.' : lexeme.type = LexemeType.dot; break;
         case ',' : lexeme.type = LexemeType.comma; break;
         case ';' : lexeme.type = LexemeType.semicolon; break;
-        case ':' :
-          if (nextChar() == '=') {
-            ch = getChar();
-            lexeme.type = LexemeType.assign;
-          } else {
-            lexeme.type = LexemeType.unknown;
-            error(5); /* : not followed by = */
-          }
-          break;
         case '(' : lexeme.type = LexemeType.lbracket; break;
         case ')' : lexeme.type = LexemeType.rbracket; break;
         case '+' :
@@ -344,8 +335,9 @@ public class Compiler {
             lexeme.type = LexemeType.relop;
             lexeme.relVal = RelValType.eq;
           } else {
-            lexeme.type = LexemeType.unknown;
-            error(5); /* = not followed by = */
+            //TODO positive identification of assignment using valid characters after = symbol
+            lexeme.type = LexemeType.assign;
+            //error(5); /* = not followed by = */
           }
           break;
         case '!' :
@@ -695,7 +687,7 @@ public class Compiler {
 	debug("\nifStatement: end");
   }
 
- //assignment = ["int"] identifier ":=" expression ";".
+ //assignment = ["int"] identifier "=" expression ";".
   private void assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nassignment: start with stopSet = " + stopSet);
 

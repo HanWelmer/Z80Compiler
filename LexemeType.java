@@ -7,7 +7,7 @@ public enum LexemeType {
   constant("constant"),
   identifier("identifier"),
   comma(","),
-  assign(":="),
+  assign("="),
   semicolon(";"),
   lbracket("("),
   rbracket(")"),
