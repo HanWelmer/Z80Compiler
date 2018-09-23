@@ -306,9 +306,8 @@ public class Compiler {
       }
       lexeme.idVal = name;
     } else {
-      /* try to recognise keywords  or , ; = ( ) + - * / <!=> */
+      /* try to recognise keywords or , ; = ( ) + - * / <!=> */
       switch (ch) {
-//        case '.' : lexeme.type = LexemeType.dot; break;
         case ',' : lexeme.type = LexemeType.comma; break;
         case ';' : lexeme.type = LexemeType.semicolon; break;
         case '(' : lexeme.type = LexemeType.lbracket; break;
@@ -335,7 +334,7 @@ public class Compiler {
             lexeme.type = LexemeType.relop;
             lexeme.relVal = RelValType.eq;
           } else {
-            //TODO positive identification of assignment using valid characters after = symbol
+            //TODO recognise assignment using valid characters after = symbol
             lexeme.type = LexemeType.assign;
             //error(5); /* = not followed by = */
           }
@@ -808,7 +807,7 @@ public class Compiler {
   //program = "class" identifier "{" statements "}".
   private void prog() throws IOException, FatalError {
     debug("\nprog: start");
-    /* recognise a program */
+    /* recognise a class definition */
     getLexeme();
     if (checkOrSkip(EnumSet.of(LexemeType.classlexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginlexeme))) {
       getLexeme();
