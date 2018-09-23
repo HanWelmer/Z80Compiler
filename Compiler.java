@@ -634,34 +634,43 @@ public class Compiler {
 
     getLexeme();
     
+    //expect (
     EnumSet<LexemeType> stopSetIf = stopSet.clone();
     stopSetIf.add(LexemeType.rbracket);
     if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopSetIf)) {
       getLexeme();
     }
 
+    //expect comparison
     stopSetIf = stopSet.clone();
     stopSetIf.add(LexemeType.rbracket);
     stopSetIf.addAll(startStatement);
     stopSetIf.remove(LexemeType.identifier);
     int ifLabel = comparison(stopSetIf);
     
+    //expect )
     stopSetIf = stopSet.clone();
     stopSetIf.addAll(startStatement);
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSetIf)) {
       getLexeme();
     }
+
+    //expect statement block
     EnumSet<LexemeType> stopSetElse = stopSet.clone();
     stopSetElse.add(LexemeType.elselexeme);
     block(stopSetElse);
 
-    if (checkOrSkip(EnumSet.of(LexemeType.elselexeme), stopSetIf)) {
+    if (lexeme.type == LexemeType.elselexeme) {
+      //expect else
+      checkOrSkip(EnumSet.of(LexemeType.elselexeme), stopSetElse);
+
       /* part of code generation */
       int elseLabel = saveLabel();
       plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0)));
       plantForwardLabel(ifLabel);
 
       /* part of lexical analysis */
+      //expect statement block
       getLexeme();
       block(stopSet);
       

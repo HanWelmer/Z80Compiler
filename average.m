@@ -28,15 +28,18 @@
  27 :acc= variable 1
  28 :acc=> stack
  29 :call write
- 30 :acc= variable 2
- 31 :accom constant 0
- 32 :breq 38
- 33 :acc= variable 1
- 34 :acc/ variable 2
- 35 :acc=> stack
- 36 :call write
- 37 :br 41
- 38 :acc= constant 0
- 39 :acc=> stack
- 40 :call write
- 41 :stop
+ 30 :acc= constant 99
+ 31 :acc=> variable 4
+ 32 :acc= variable 2
+ 33 :accom constant 0
+ 34 :breq 39
+ 35 :acc= variable 1
+ 36 :acc/ variable 2
+ 37 :acc=> variable 4
+ 38 :br 41
+ 39 :acc= constant 0
+ 40 :acc=> variable 4
+ 41 :acc= variable 4
+ 42 :acc=> stack
+ 43 :call write
+ 44 :stop
