@@ -31,7 +31,7 @@ import java.util.Map;
  * factor         = identifier | constant | "read" | "(" expression ")".
  * addop          = "+" | "-".
  * mulop          = "*" | "/".
- * relop          = "<" | "<=" | "<>" | "=" | ">=" | ">".
+ * relop          = "==" | "!=" | ">" | ">=" | "<" | "<=".
  * constant       = "(0-9)*".
  */
 public class Compiler {
@@ -227,7 +227,7 @@ public class Compiler {
       case 2 : System.out.println("line too long; max width=" + MAX_LINE_WIDTH);break;
       case 3 : System.out.print("unexpected symbol;");break;
       case 4 : System.out.println("unknown character");break;
-      case 5 : System.out.println("'=' expected after ':' ");break;
+      case 5 : System.out.println("'=' expected after '=' or '!' ");break;
       case 6 : System.out.print("unknown keyword : ");break;
       case 7 : System.out.println("lexeme skipped after error");break;
       case 8 : System.out.println("variable already declared");break;
@@ -338,22 +338,25 @@ public class Compiler {
           lexeme.type = LexemeType.mulop;
           lexeme.mulVal = MulValType.divd;
           break;
-        case '<' :
-          lexeme.type = LexemeType.relop;
-          ch = nextChar();
+        case '=' :
           if (nextChar() == '=') {
             ch = getChar();
-            lexeme.relVal = RelValType.le;
-          } else if (nextChar() == '>') {
-            ch = getChar();
-            lexeme.relVal = RelValType.ne;
+            lexeme.type = LexemeType.relop;
+            lexeme.relVal = RelValType.eq;
           } else {
-            lexeme.relVal = RelValType.lt;
+            lexeme.type = LexemeType.unknown;
+            error(5); /* = not followed by = */
           }
           break;
-        case '=' :
-          lexeme.type = LexemeType.relop;
-          lexeme.relVal = RelValType.eq;
+        case '!' :
+          if (nextChar() == '=') {
+            ch = getChar();
+            lexeme.type = LexemeType.relop;
+            lexeme.relVal = RelValType.ne;
+          } else {
+            lexeme.type = LexemeType.unknown;
+            error(5); /* ! not followed by = */
+          }
           break;
         case '>' :
           lexeme.type = LexemeType.relop;
@@ -362,6 +365,15 @@ public class Compiler {
             lexeme.relVal = RelValType.ge;
           } else {
             lexeme.relVal = RelValType.gt;
+          }
+          break;
+        case '<' :
+          lexeme.type = LexemeType.relop;
+          if (nextChar() == '=') {
+            ch = getChar();
+            lexeme.relVal = RelValType.le;
+          } else {
+            lexeme.relVal = RelValType.lt;
           }
           break;
         default :

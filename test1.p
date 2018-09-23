@@ -1,10 +1,8 @@
-{Program to test generated Z80 assembler code}
-VAR A;
-BEGIN
-  A := 1;
-  WHILE A < 9 DO
-  BEGIN
-    WRITE(A);
-    A := A + 1;
-  END;
-END.
+/* Program to test generated Z80 assembler code */
+class TestWhile {
+  int a := 9;
+  while (a >= 0) {
+    write(a);
+    a := a - 1;
+  }
+}

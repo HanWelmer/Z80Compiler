@@ -8,8 +8,8 @@
   7 :acc=> stack
   8 :call write
   9 :acc= variable 3
- 10 :accom constant 0
- 11 :breq 24
+ 10 :accom constant 1
+ 11 :brlt 24
  12 :acc= variable 1
  13 :acc+ variable 3
  14 :acc=> variable 1
@@ -31,13 +31,13 @@
  30 :acc= constant 99
  31 :acc=> variable 4
  32 :acc= variable 2
- 33 :accom constant 0
- 34 :breq 39
- 35 :acc= variable 1
- 36 :acc/ variable 2
- 37 :acc=> variable 4
- 38 :br 41
- 39 :acc= constant 0
+ 33 :accom constant 1
+ 34 :brge 38
+ 35 :acc= constant 0
+ 36 :acc=> variable 4
+ 37 :br 41
+ 38 :acc= variable 1
+ 39 :acc/ variable 2
  40 :acc=> variable 4
  41 :acc= variable 4
  42 :acc=> stack

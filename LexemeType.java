@@ -13,7 +13,7 @@ public enum LexemeType {
   rbracket(")"),
   addop("+ or -"),
   mulop("* or /"),
-  relop("<=>"),
+  relop("<!=>"),
   beginlexeme("{"),
   readlexeme("read"),
   writelexeme("write"),

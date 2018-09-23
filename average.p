@@ -8,7 +8,7 @@ class Average {
   //read a new number and echo number to output
   int number := read; 
   write(number);
-  while (number <> 0) /* not end of file */ {
+  while (number >= 1) /* not end of file */ {
     sum := sum + number;
     NUMBER_OF_NUMBERS := NUMBER_OF_NUMBERS + 1;
     //read a new number and echo number to output
@@ -22,10 +22,10 @@ class Average {
   write(NUMBER_OF_NUMBERS);
   write(sum);
   int average := 99;
-  if (NUMBER_OF_NUMBERS <> 0) {
-    average := sum / NUMBER_OF_NUMBERS;
-  } else {
+  if (NUMBER_OF_NUMBERS < 1) {
     average := 0;
+  } else {
+    average := sum / NUMBER_OF_NUMBERS;
   }
   write(average);
 }
