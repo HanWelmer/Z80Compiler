@@ -19,10 +19,14 @@ import java.util.Map;
  * program        = "class" identifier "{" statements "}".
  * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
  * statements     = (statement)*.
- * statement      = assignment | writeStatement | ifStatement | whileStatement.
+ * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
  * assignment     = ["int"] identifier "=" expression ";".
  * writeStatement = "write" "(" expression ")" ";".
  * ifStatement    = "if" "(" comparison ")" block [ "else" block].
+ * forStatement   = "for" "(" initialization ";" comparison ";" update ")" block.
+ * initialization = "int" identifier "=" expression.
+ * update         = identifier++ | identifier-- | identifier "=" expression
+ * doStatement    = "do" block "while" "(" comparison ")" ";".
  * whileStatement = "while" "(" comparison ")" block.
  * block          = statement | "{" statements "}".
  * comparison     = expression relop expression.
@@ -159,6 +163,8 @@ public class Compiler {
     startStatement.add(LexemeType.identifier);
     startStatement.add(LexemeType.writelexeme);
     startStatement.add(LexemeType.iflexeme);
+    startStatement.add(LexemeType.forlexeme);
+    startStatement.add(LexemeType.dolexeme);
     startStatement.add(LexemeType.whilelexeme);
     startExp.clear();
     startExp.add(LexemeType.lbracket);
@@ -524,13 +530,12 @@ public class Compiler {
     return operand;
   }
   
-  /**
-  * returns address of if label
-  **/
+  //parse a comparison, and return the address of the jump instruction to be filled with the label at the end of the control statement block.
+  //comparison = expression relop expression
   private int comparison(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     /* part of code generation */
-    RelValType compareOp;
     int ifLabel;
+    
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
@@ -542,6 +547,7 @@ public class Compiler {
     /* part of lexical analysis */
     localSet = stopSet.clone();
     localSet.addAll(startExp);
+    RelValType compareOp;
     if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
       /* part of code generation */
       compareOp = lexeme.relVal;
@@ -570,6 +576,48 @@ public class Compiler {
     return ifLabel;
   }
   
+  //parse a comparison, jump back to the label if the comparison yields true.
+  //comparison = expression relop expression
+  private void comparison(EnumSet<LexemeType> stopSet, int doLabel) throws IOException, FatalError {
+    /* part of lexical analysis */
+    EnumSet<LexemeType> localSet = stopSet.clone();
+    localSet.add(LexemeType.relop);
+    Operand leftOperand = expression(localSet, new Operand(null, null));
+
+    /* part of code generation */
+    plantAccLoad(leftOperand);
+
+    /* part of lexical analysis */
+    localSet = stopSet.clone();
+    localSet.addAll(startExp);
+    RelValType compareOp;
+    if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
+      /* part of code generation */
+      compareOp = lexeme.relVal;
+      /* part of lexical analysis */
+      getLexeme();
+    } else {
+      /* part of code generation */
+      compareOp = RelValType.eq;
+    }
+    
+    /* part of lexical analysis */
+    localSet = stopSet.clone();
+    localSet.addAll(startStatement);
+    localSet.remove(LexemeType.identifier);
+    Operand rightOperand = expression(localSet, new Operand(null, null));
+
+    /* part of code generation */
+    plant(new Instruction(FunctionType.accCompare, rightOperand));
+    Operand labelOperand = new Operand(OperandType.label, doLabel);
+    if (rightOperand.opType == OperandType.stack) {
+      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
+    } else {
+      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
+    }
+  }
+
+  
   // block = statement | "{" statements "}".
   private void block(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nblock: start with stopSet = " + stopSet);
@@ -593,6 +641,111 @@ public class Compiler {
       statement(stopSet);
     }
     debug("\nblock: end");
+  }
+  
+  //forStatement = "for" "(" initialization ";" comparison ";" update ")" block.
+  private void forStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nforStatement: start with stopSet = " + stopSet);
+    
+    /* part of lexical analysis: "for" "(" initialization */
+    getLexeme();
+    EnumSet<LexemeType> stopForSet = stopSet.clone();
+    stopForSet.add(LexemeType.rbracket);
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopForSet)) {
+      getLexeme();
+    }
+    
+    EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
+    stopInitializationSet.add(LexemeType.semicolon);
+    //in the initialization part a new variable must be declared.
+    boolean declaration = assignment(stopInitializationSet);
+    if (!declaration) {
+      error();
+      System.out.println("Loop variable must be declared in for statement; (int variable; .. ; ..) {..} expected.");
+    }
+    
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopForSet)) {
+      getLexeme();
+    }
+
+    //order of steps: comparison - block - update.
+
+    /* part of lexical analysis: comparison */
+    stopInitializationSet.addAll(startStatement);
+    stopInitializationSet.remove(LexemeType.identifier);
+    int forLabel = saveLabel();
+    int gotoEnd = comparison(stopInitializationSet);
+    
+    /* part of code generation: skip update and jump forward to block */
+    int gotoBlock = saveLabel();
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0)));
+
+    /* part of lexical analysis: update */
+    int updateLabel = saveLabel();
+    //in the initialization part a new variable may not be declared.
+    declaration = assignment(stopForSet);
+    if (declaration) {
+      error();
+      System.out.println("No variable declaration allowed in update part of a for statement.");
+    }
+
+    /* part of code generation: jump back to comparison */
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, forLabel)));
+
+    /* part of lexical analysis: ")" */
+    stopForSet = stopSet.clone();
+    stopForSet.addAll(startStatement);
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopForSet)) {
+      getLexeme();
+    }
+
+    /* part of code generation: start of block */
+    plantForwardLabel(gotoBlock);
+
+    /* part of lexical analysis: block */
+    block(stopSet);
+    
+    /* part of code generation; jump back to update */
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, updateLabel)));
+    plantForwardLabel(gotoEnd);
+    debug("\nforStatement: end");
+  }
+
+  //doStatement    = "do" block "while" "(" comparison ")" ";".
+  private void doStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\ndoStatement: start with stopSet = " + stopSet);
+    getLexeme();
+
+    /* part of code generation */
+    int doLabel = saveLabel();
+
+    /* part of lexical analysis */
+    //expect block, terminated by "while".
+    EnumSet<LexemeType> stopDoSet = stopSet.clone();
+    stopDoSet.add(LexemeType.whilelexeme);
+    block(stopSet);
+    
+    //expect "while" followed by "(".
+    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
+    stopWhileSet.add(LexemeType.rbracket);
+    if (checkOrSkip(EnumSet.of(LexemeType.whilelexeme), stopWhileSet)) {
+      getLexeme();
+    }
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
+      getLexeme();
+    }
+
+    //expect comparison, terminated by ")"
+    stopWhileSet.addAll(startStatement);
+    stopWhileSet.remove(LexemeType.identifier);
+    comparison(stopWhileSet, doLabel);
+    
+    //expect ")"
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
+      getLexeme();
+    }
+    
+    debug("\ndoStatement: end");
   }
 
   //whileStatement = "while" "(" comparison ")" block.
@@ -684,13 +837,14 @@ public class Compiler {
   }
 
  //assignment = ["int"] identifier "=" expression ";".
-  private void assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+  private boolean assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nassignment: start with stopSet = " + stopSet);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
     stopAssignmentSet.addAll(startExp);
     stopAssignmentSet.add(LexemeType.semicolon);
 
+    boolean variableDeclared = false;
     if (lexeme.type == LexemeType.intlexeme) {
       /* part of lexical analysis */
       getLexeme();
@@ -699,6 +853,7 @@ public class Compiler {
       // next line + debug message is part of semantic analysis.
         if (identifiers.declareId(lexeme.idVal)) {
           debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+          variableDeclared = true;
         } else {
           error();
           System.out.println("variable already declared");
@@ -730,6 +885,7 @@ public class Compiler {
     plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo)));
 
     debug("\nassignment: end");
+    return variableDeclared;
   }
 
   // writeStatement = "write" "(" expression ")" ";".
@@ -766,7 +922,7 @@ public class Compiler {
     debug("\nwriteStatement: end");
   }
 
-  //statement = assignment | writeStatement | ifStatement | whileStatement.
+  //statement = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
   private void statement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     /* part of code generation */
@@ -782,6 +938,10 @@ public class Compiler {
         writeStatement(stopSet);
       } else if (lexeme.type == LexemeType.iflexeme) {
         ifStatement(stopSet);
+      } else if (lexeme.type == LexemeType.forlexeme) {
+        forStatement(stopSet);
+      } else if (lexeme.type == LexemeType.dolexeme) {
+        doStatement(stopSet);
       } else if (lexeme.type == LexemeType.whilelexeme) {
         whileStatement(stopSet);
       }

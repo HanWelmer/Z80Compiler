@@ -20,6 +20,8 @@ public enum LexemeType {
   intlexeme("int"),
   iflexeme("if"),
   elselexeme("else"),
+  forlexeme("for"),
+  dolexeme("do"),
   whilelexeme("while"),
   classlexeme("class"),
   endlexeme("}"),
