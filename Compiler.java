@@ -533,6 +533,8 @@ public class Compiler {
   //parse a comparison, and return the address of the jump instruction to be filled with the label at the end of the control statement block.
   //comparison = expression relop expression
   private int comparison(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\ncomparison: start with stopSet = " + stopSet);
+
     /* part of code generation */
     int ifLabel;
     
@@ -573,12 +575,16 @@ public class Compiler {
     } else {
       plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
     }
+
+    debug("\ncomparison: end");
     return ifLabel;
   }
   
   //parse a comparison, jump back to the label if the comparison yields true.
   //comparison = expression relop expression
   private void comparison(EnumSet<LexemeType> stopSet, int doLabel) throws IOException, FatalError {
+    debug("\ncomparison: start with stopSet = " + stopSet);
+
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
@@ -615,6 +621,8 @@ public class Compiler {
     } else {
       plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
     }
+
+    debug("\ncomparison: end");
   }
 
   
@@ -647,7 +655,7 @@ public class Compiler {
   private void forStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nforStatement: start with stopSet = " + stopSet);
     
-    /* part of lexical analysis: "for" "(" initialization */
+    /* part of lexical analysis: "for" "(" initialization ";" */
     getLexeme();
     EnumSet<LexemeType> stopForSet = stopSet.clone();
     stopForSet.add(LexemeType.rbracket);
@@ -664,30 +672,25 @@ public class Compiler {
       System.out.println("Loop variable must be declared in for statement; (int variable; .. ; ..) {..} expected.");
     }
     
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopForSet)) {
-      getLexeme();
-    }
+    //order of steps during execution: comparison - block - update.
 
-    //order of steps: comparison - block - update.
-
-    /* part of lexical analysis: comparison */
+    /* part of lexical analysis: comparison ";" */
     stopInitializationSet.addAll(startStatement);
     stopInitializationSet.remove(LexemeType.identifier);
     int forLabel = saveLabel();
     int gotoEnd = comparison(stopInitializationSet);
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopInitializationSet)) {
+      getLexeme();
+    }
     
     /* part of code generation: skip update and jump forward to block */
     int gotoBlock = saveLabel();
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0)));
+    int updateLabel = saveLabel();
 
     /* part of lexical analysis: update */
-    int updateLabel = saveLabel();
-    //in the initialization part a new variable may not be declared.
-    declaration = assignment(stopForSet);
-    if (declaration) {
-      error();
-      System.out.println("No variable declaration allowed in update part of a for statement.");
-    }
+    stopForSet.add(LexemeType.beginlexeme);
+    update(stopForSet);
 
     /* part of code generation: jump back to comparison */
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, forLabel)));
@@ -740,8 +743,13 @@ public class Compiler {
     stopWhileSet.remove(LexemeType.identifier);
     comparison(stopWhileSet, doLabel);
     
-    //expect ")"
+    //expect ")" ";"
+    stopWhileSet = stopSet.clone();
+    stopWhileSet.add(LexemeType.semicolon);
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
+      getLexeme();
+    }
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
       getLexeme();
     }
     
@@ -833,11 +841,29 @@ public class Compiler {
       /* part of code generation */
       plantForwardLabel(ifLabel);
     }
-	debug("\nifStatement: end");
+    debug("\nifStatement: end");
+  }
+  
+  //update = identifier "=" expression ";".
+  private void update(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nupdate: start with stopSet = " + stopSet);
+
+    //in the update part a new variable may not be declared and it is not terminated by a semicolon.
+    boolean declaration = assignment(stopSet, false);
+    if (declaration) {
+      error();
+      System.out.println("No variable declaration allowed in update part of a for statement.");
+    }
+    debug("\nupdate: end");
   }
 
- //assignment = ["int"] identifier "=" expression ";".
+
+  //assignment = ["int"] identifier "=" expression ";".
   private boolean assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    return assignment(stopSet, true);
+  }
+
+  private boolean assignment(EnumSet<LexemeType> stopSet, boolean expectSemicolon) throws IOException, FatalError {
     debug("\nassignment: start with stopSet = " + stopSet);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
@@ -850,7 +876,7 @@ public class Compiler {
       getLexeme();
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
-      // next line + debug message is part of semantic analysis.
+        // part of semantic analysis.
         if (identifiers.declareId(lexeme.idVal)) {
           debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variableDeclared = true;
@@ -859,12 +885,15 @@ public class Compiler {
           System.out.println("variable already declared");
         }
       }
-    }
+    } else {
+      /* part of lexical analysis */
+      checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet);
 
-    /* part of semantic analysis */
-    if (!identifiers.checkId(lexeme.idVal)) {
-      error();
-      System.out.println("variable not declared: " + lexeme.idVal);
+      /* part of semantic analysis */
+      if (!identifiers.checkId(lexeme.idVal)) {
+        error();
+        System.out.println("variable not declared: " + lexeme.idVal);
+      }
     }
 
     /* part of code generation */
@@ -876,7 +905,7 @@ public class Compiler {
       getLexeme();
     }
     Operand operand = expression(stopSet, new Operand(null, null));
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+    if (expectSemicolon && checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
       getLexeme();
     }
 
