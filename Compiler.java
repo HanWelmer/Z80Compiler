@@ -20,12 +20,12 @@ import java.util.Map;
  * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
  * statements     = (statement)*.
  * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
- * assignment     = ["int"] identifier "=" expression ";".
+ * assignment     = ["int"] update ";".
+ * update         = identifier++ | identifier-- | identifier "=" expression
  * writeStatement = "write" "(" expression ")" ";".
  * ifStatement    = "if" "(" comparison ")" block [ "else" block].
  * forStatement   = "for" "(" initialization ";" comparison ";" update ")" block.
  * initialization = "int" identifier "=" expression.
- * update         = identifier++ | identifier-- | identifier "=" expression
  * doStatement    = "do" block "while" "(" comparison ")" ";".
  * whileStatement = "while" "(" comparison ")" block.
  * block          = statement | "{" statements "}".
@@ -844,26 +844,8 @@ public class Compiler {
     debug("\nifStatement: end");
   }
   
-  //update = identifier "=" expression ";".
-  private void update(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nupdate: start with stopSet = " + stopSet);
-
-    //in the update part a new variable may not be declared and it is not terminated by a semicolon.
-    boolean declaration = assignment(stopSet, false);
-    if (declaration) {
-      error();
-      System.out.println("No variable declaration allowed in update part of a for statement.");
-    }
-    debug("\nupdate: end");
-  }
-
-
-  //assignment = ["int"] identifier "=" expression ";".
+  //assignment = ["int"] update ";".
   private boolean assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    return assignment(stopSet, true);
-  }
-
-  private boolean assignment(EnumSet<LexemeType> stopSet, boolean expectSemicolon) throws IOException, FatalError {
     debug("\nassignment: start with stopSet = " + stopSet);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
@@ -895,26 +877,57 @@ public class Compiler {
         System.out.println("variable not declared: " + lexeme.idVal);
       }
     }
+    
+    update(stopSet);
+
+    /* part of lexical analysis */
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      getLexeme();
+    }
+
+    debug("\nassignment: end");
+    return variableDeclared;
+  }
+
+  //update = identifier++ | identifier-- | identifier "=" expression
+  private void update(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+    debug("\nupdate: start with stopSet = " + stopSet);
+
+    EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
+    stopAssignmentSet.addAll(startExp);
+    stopAssignmentSet.add(LexemeType.semicolon);
 
     /* part of code generation */
     int assignTo = identifiers.getId(lexeme.idVal);
 
     /* part of lexical analysis */
     getLexeme();
-    if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
+    if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.sub) {
       getLexeme();
-    }
-    Operand operand = expression(stopSet, new Operand(null, null));
-    if (expectSemicolon && checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.sub) {
+        getLexeme();
+
+        /* part of code generation */
+        plant(new Instruction(FunctionType.decrement, new Operand(OperandType.var, assignTo)));
+      }
+    } else if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.add) {
       getLexeme();
+      if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.add) {
+        getLexeme();
+
+        /* part of code generation */
+        plant(new Instruction(FunctionType.increment, new Operand(OperandType.var, assignTo)));
+      }
+    } else if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
+      getLexeme();
+      Operand operand = expression(stopSet, new Operand(null, null));
+
+      /* part of code generation */
+      plantAccLoad(operand);
+      plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo)));
     }
 
-    /* part of code generation */
-    plantAccLoad(operand);
-    plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo)));
-
-    debug("\nassignment: end");
-    return variableDeclared;
+    debug("\nupdate: end");
   }
 
   // writeStatement = "write" "(" expression ")" ";".

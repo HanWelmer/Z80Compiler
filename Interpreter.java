@@ -87,6 +87,30 @@ public class Interpreter {
             runError("unknown operand type");
         } // switch(instr.operand.opType)
         break;
+      case increment:
+        switch(instr.operand.opType) {
+          case var:
+            if ((instr.operand.opValue < 0) || (instr.operand.opValue >= vars.length)) {
+              runError("too many variables");
+            }
+            vars[instr.operand.opValue] = vars[instr.operand.opValue] + 1;
+            break;
+          default:
+            runError("invalid operand type for decrement instruction");
+        } // switch(instr.operand.opType)
+        break;
+      case decrement:
+        switch(instr.operand.opType) {
+          case var:
+            if ((instr.operand.opValue < 0) || (instr.operand.opValue >= vars.length)) {
+              runError("too many variables");
+            }
+            vars[instr.operand.opValue] = vars[instr.operand.opValue] - 1;
+            break;
+          default:
+            runError("invalid operand type for decrement instruction");
+        } // switch(instr.operand.opType)
+        break;
       case accCompare:
         operand = getOp();
         if (acc == operand) {
@@ -147,6 +171,9 @@ public class Interpreter {
           break;
       case stop:
         stopRun = true;
+        break;
+      default:
+        runError("unknown operand type");
         break;
     } // switch(instr.function)
     

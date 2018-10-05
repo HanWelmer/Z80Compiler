@@ -16,6 +16,8 @@ public enum FunctionType {
   accTimes("acc*"),
   accDiv("acc/"),
   divAcc("/acc"),
+  increment("incr"),
+  decrement("decr"),
   accCompare("accom"),
   br("br"),
   brEq("breq"),

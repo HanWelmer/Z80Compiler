@@ -47,6 +47,13 @@ public class Instruction {
           default: throw new RuntimeException("accu related instruction with unsupported operandType");
         };
         break;
+      case increment:
+      case decrement:
+        switch(operand.opType) {
+          case var: result += " variable " + operand.opValue; break;
+          default: throw new RuntimeException(result + " instruction with non-var operandType");
+        };
+        break;
       case br:
       case brNe:
       case brEq:

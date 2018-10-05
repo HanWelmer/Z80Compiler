@@ -23,17 +23,27 @@
  22 :acc=> variable 2
  23 :<acc= variable 2
  24 :accom constant 0
- 25 :breq 35
- 26 :br 31
- 27 :<acc= variable 2
- 28 :acc- constant 1
- 29 :acc=> variable 2
- 30 :br 23
- 31 :acc= variable 2
- 32 :acc=> stack
- 33 :call write
- 34 :br 27
- 35 :acc= constant 0
- 36 :acc=> stack
- 37 :call write
- 38 :stop
+ 25 :breq 33
+ 26 :br 29
+ 27 :decr variable 2
+ 28 :br 23
+ 29 :acc= variable 2
+ 30 :acc=> stack
+ 31 :call write
+ 32 :br 27
+ 33 :acc= constant 0
+ 34 :acc=> stack
+ 35 :call write
+ 36 :acc= constant 0
+ 37 :acc=> variable 3
+ 38 :<acc= variable 3
+ 39 :accom constant 9
+ 40 :brgt 48
+ 41 :br 44
+ 42 :incr variable 3
+ 43 :br 38
+ 44 :acc= variable 3
+ 45 :acc=> stack
+ 46 :call write
+ 47 :br 42
+ 48 :stop

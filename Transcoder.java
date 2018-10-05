@@ -170,8 +170,7 @@ public class Transcoder {
     debug("\ntranscoding to Z80: " + instruction.toString());
     
     FunctionType function = instruction.function;
-    OperandType opType = instruction.operand.opType;
-    int word = instruction.operand.opValue;
+    int word = instruction.operand == null ? 0 : instruction.operand.opValue;
     int memAddress = MEM_START + word * 2;
     AssemblyInstruction asm = null;
     debug("\n..function:" + function);
@@ -190,7 +189,7 @@ public class Transcoder {
       putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "CALL  0%04XH", word), 0xCD, word % 256, word / 256);
     } else if (function == FunctionType.accStore) {
-      switch(opType) {
+      switch(instruction.operand.opType) {
         case var: 
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
@@ -203,7 +202,7 @@ public class Transcoder {
       if (function == FunctionType.stackAccLoad) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  HL", 0xE5));
       }
-      if (opType == OperandType.stack && function == FunctionType.stackAccLoad) {
+      if (instruction.operand.opType == OperandType.stack && function == FunctionType.stackAccLoad) {
         throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
       }
       asm = operandToHL(instruction);
@@ -241,6 +240,16 @@ public class Transcoder {
       }
       putLabelReference("div16", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div16", 0xCD, 0x00, 0x00);
+    } else if (function == FunctionType.increment && instruction.operand.opType == OperandType.var) {
+      result.add(operandToHL(instruction));
+      result.add(new AssemblyInstruction(byteAddress++, INDENT + "INC   HL", 0x23));
+      asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
+      asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
+    } else if (function == FunctionType.decrement && instruction.operand.opType == OperandType.var) {
+      result.add(operandToHL(instruction));
+      result.add(new AssemblyInstruction(byteAddress++, INDENT + "DEC   HL", 0x2B));
+      asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
+      asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
     } else if (function == FunctionType.br) {
       putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP    L" + word, 0xC3, word % 256, word / 256);
