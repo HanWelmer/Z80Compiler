@@ -6,7 +6,7 @@ public class Identifiers {
   /* Constants and class member variables for semantic analysis phase */
   /* variables: -1: not declared, >=0: memory address allocated */
   private Map<String, Integer> variables = new HashMap<String, Integer>();
-  private int nextVariable = 0;
+  private int address = 0;
 
   /**
    * Initialize the table with identifiers.
@@ -14,7 +14,7 @@ public class Identifiers {
    */
   public void init() {
     variables.clear();
-    nextVariable = 0;
+    address = 0;
   }
 
   /**
@@ -28,9 +28,18 @@ public class Identifiers {
       return false; // Variable already declared.
     }
 
-    variables.put(identifier, nextVariable);
-    nextVariable++;
+    variables.put(identifier, address);
+    address++;
     return true; // OK.
+  }
+  
+  /**
+   * Undeclare an identifier.
+   * Param: identifier : this identifier will be removed from the list of declared identifiers.
+   */
+  public void remove(String variable) {
+    variables.remove(variable);
+    //TODO reallocate memory address.
   }
 
   /**

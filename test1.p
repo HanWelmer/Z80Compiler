@@ -8,12 +8,13 @@ class TestWhile {
   do {
     write(a);
     a = a - 1;
-  } while (a > 6);
-  for(int b = 5; b!=0; b--) {
+  } while (a > 5);
+  for(int b = 4; b!=2; b--) {
     write(b);
   }
-  write(0);
-  for(int c = 0; c<=9; c++) {
-    write(c);
+  a = 2;
+  for(int b = 0; b<=2; b++) {
+    write(a);
+    a--;
   }
 }

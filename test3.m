@@ -1,102 +1,112 @@
-  0 :acc= constant 0
-  1 :acc=> variable 1
-  2 :acc= constant 12
-  3 :acc=> stack
-  4 :call write
-  5 :acc= constant 9
-  6 :acc* constant 9
-  7 :acc* constant 9
-  8 :acc* constant 9
-  9 :acc* constant 9
- 10 :accom constant 59049
- 11 :brne 16
- 12 :acc= constant 11
+  0 :acc= constant 14
+  1 :acc=> stack
+  2 :call write
+  3 :acc= constant 14
+  4 :acc=> variable 1
+  5 :decr variable 1
+  6 :acc= variable 1
+  7 :acc=> stack
+  8 :call write
+  9 :acc= constant 11
+ 10 :acc=> variable 1
+ 11 :incr variable 1
+ 12 :acc= variable 1
  13 :acc=> stack
  14 :call write
- 15 :br 19
- 16 :acc= constant 0
- 17 :acc=> stack
- 18 :call write
- 19 :acc= constant 9
- 20 :acc* constant 9
- 21 :acc* constant 9
- 22 :acc* constant 9
- 23 :accom constant 6561
- 24 :brne 29
- 25 :acc= constant 10
- 26 :acc=> stack
- 27 :call write
- 28 :br 32
- 29 :acc= constant 0
- 30 :acc=> stack
- 31 :call write
- 32 :acc= constant 9
- 33 :acc* constant 9
- 34 :acc* constant 9
- 35 :accom constant 729
- 36 :brne 41
- 37 :acc= constant 9
- 38 :acc=> stack
- 39 :call write
- 40 :br 44
- 41 :acc= constant 0
- 42 :acc=> stack
- 43 :call write
- 44 :acc= constant 2
- 45 :acc* constant 9
- 46 :acc* constant 9
- 47 :accom constant 162
- 48 :brne 53
- 49 :acc= constant 8
- 50 :acc=> stack
- 51 :call write
- 52 :br 56
- 53 :acc= constant 0
- 54 :acc=> stack
- 55 :call write
- 56 :acc= constant 7
- 57 :acc* constant 5
- 58 :accom constant 35
- 59 :brne 64
- 60 :acc= constant 7
- 61 :acc=> stack
- 62 :call write
- 63 :br 67
- 64 :acc= constant 0
- 65 :acc=> stack
- 66 :call write
- 67 :acc= constant 2
- 68 :acc=> variable 1
- 69 :acc= constant 3
- 70 :acc* variable 1
+ 15 :acc= constant 9
+ 16 :acc* constant 9
+ 17 :acc* constant 9
+ 18 :acc* constant 9
+ 19 :acc* constant 9
+ 20 :accom constant 59049
+ 21 :brne 26
+ 22 :acc= constant 11
+ 23 :acc=> stack
+ 24 :call write
+ 25 :br 29
+ 26 :acc= constant 0
+ 27 :acc=> stack
+ 28 :call write
+ 29 :acc= constant 9
+ 30 :acc* constant 9
+ 31 :acc* constant 9
+ 32 :acc* constant 9
+ 33 :accom constant 6561
+ 34 :brne 39
+ 35 :acc= constant 10
+ 36 :acc=> stack
+ 37 :call write
+ 38 :br 42
+ 39 :acc= constant 0
+ 40 :acc=> stack
+ 41 :call write
+ 42 :acc= constant 9
+ 43 :acc* constant 9
+ 44 :acc* constant 9
+ 45 :accom constant 729
+ 46 :brne 51
+ 47 :acc= constant 9
+ 48 :acc=> stack
+ 49 :call write
+ 50 :br 54
+ 51 :acc= constant 0
+ 52 :acc=> stack
+ 53 :call write
+ 54 :acc= constant 2
+ 55 :acc* constant 9
+ 56 :acc* constant 9
+ 57 :accom constant 162
+ 58 :brne 63
+ 59 :acc= constant 8
+ 60 :acc=> stack
+ 61 :call write
+ 62 :br 66
+ 63 :acc= constant 0
+ 64 :acc=> stack
+ 65 :call write
+ 66 :acc= constant 7
+ 67 :acc* constant 5
+ 68 :accom constant 35
+ 69 :brne 74
+ 70 :acc= constant 7
  71 :acc=> stack
  72 :call write
- 73 :acc= constant 1
- 74 :acc=> variable 1
- 75 :acc= variable 1
- 76 :acc* constant 5
- 77 :acc=> stack
- 78 :call write
- 79 :acc= constant 2
- 80 :acc* constant 2
- 81 :acc=> variable 1
- 82 :acc= variable 1
- 83 :acc=> stack
- 84 :call write
- 85 :acc= constant 1
- 86 :acc* constant 3
+ 73 :br 77
+ 74 :acc= constant 0
+ 75 :acc=> stack
+ 76 :call write
+ 77 :acc= constant 2
+ 78 :acc=> variable 1
+ 79 :acc= constant 3
+ 80 :acc* variable 1
+ 81 :acc=> stack
+ 82 :call write
+ 83 :acc= constant 1
+ 84 :acc=> variable 1
+ 85 :acc= variable 1
+ 86 :acc* constant 5
  87 :acc=> stack
  88 :call write
  89 :acc= constant 2
- 90 :acc* constant 1
- 91 :acc=> stack
- 92 :call write
- 93 :acc= constant 1
- 94 :acc* constant 1
- 95 :acc=> stack
- 96 :call write
- 97 :acc= constant 1
- 98 :acc* constant 0
- 99 :acc=> stack
-100 :call write
-101 :stop
+ 90 :acc* constant 2
+ 91 :acc=> variable 1
+ 92 :acc= variable 1
+ 93 :acc=> stack
+ 94 :call write
+ 95 :acc= constant 1
+ 96 :acc* constant 3
+ 97 :acc=> stack
+ 98 :call write
+ 99 :acc= constant 2
+100 :acc* constant 1
+101 :acc=> stack
+102 :call write
+103 :acc= constant 1
+104 :acc* constant 1
+105 :acc=> stack
+106 :call write
+107 :acc= constant 1
+108 :acc* constant 0
+109 :acc=> stack
+110 :call write
+111 :stop

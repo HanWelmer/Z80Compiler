@@ -1,7 +1,12 @@
 /* Program to test multiplication */
 class TestMuliply {
-int a = 0;
-  write(12);
+  write(14);
+  int a = 14;
+  a--;
+  write(a);
+  a = 11;
+  a++;
+  write(a);
   if (9 * 9 * 9 * 9 * 9 == 59049) write (11); else write (0);
   if (9 * 9 * 9 * 9 == 6561) write (10); else write (0);
   if (9 * 9 * 9 == 729) write (9); else write (0);

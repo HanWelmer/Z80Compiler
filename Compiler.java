@@ -666,8 +666,8 @@ public class Compiler {
     EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
     stopInitializationSet.add(LexemeType.semicolon);
     //in the initialization part a new variable must be declared.
-    boolean declaration = assignment(stopInitializationSet);
-    if (!declaration) {
+    String variable = assignment(stopInitializationSet);
+    if (variable == null) {
       error();
       System.out.println("Loop variable must be declared in for statement; (int variable; .. ; ..) {..} expected.");
     }
@@ -711,6 +711,9 @@ public class Compiler {
     /* part of code generation; jump back to update */
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, updateLabel)));
     plantForwardLabel(gotoEnd);
+    
+    //undeclare variable
+    identifiers.remove(variable);
     debug("\nforStatement: end");
   }
 
@@ -845,14 +848,14 @@ public class Compiler {
   }
   
   //assignment = ["int"] update ";".
-  private boolean assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
+  private String assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nassignment: start with stopSet = " + stopSet);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
     stopAssignmentSet.addAll(startExp);
     stopAssignmentSet.add(LexemeType.semicolon);
 
-    boolean variableDeclared = false;
+    String variable = null;
     if (lexeme.type == LexemeType.intlexeme) {
       /* part of lexical analysis */
       getLexeme();
@@ -861,7 +864,7 @@ public class Compiler {
         // part of semantic analysis.
         if (identifiers.declareId(lexeme.idVal)) {
           debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-          variableDeclared = true;
+          variable = lexeme.idVal;
         } else {
           error();
           System.out.println("variable already declared");
@@ -886,7 +889,7 @@ public class Compiler {
     }
 
     debug("\nassignment: end");
-    return variableDeclared;
+    return variable;
   }
 
   //update = identifier++ | identifier-- | identifier "=" expression
