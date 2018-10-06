@@ -712,7 +712,7 @@ public class Compiler {
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, updateLabel)));
     plantForwardLabel(gotoEnd);
     
-    //undeclare variable
+    //part of semantic analysis: undeclare variable
     identifiers.remove(variable);
     debug("\nforStatement: end");
   }
