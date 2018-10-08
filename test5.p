@@ -3,6 +3,7 @@
  * Test comparisons
  */
 class TestComparison {
+  write(13);
   if (1 == 1) write(12);
   if (1 == 1) { 
     write(11);

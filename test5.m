@@ -1,92 +1,95 @@
-  0 :acc= constant 1
-  1 :accom constant 1
-  2 :brne 6
-  3 :acc= constant 12
-  4 :acc=> stack
-  5 :call write
-  6 :acc= constant 1
-  7 :accom constant 1
-  8 :brne 13
-  9 :acc= constant 11
- 10 :acc=> stack
- 11 :call write
- 12 :br 16
- 13 :acc= constant 0
- 14 :acc=> stack
- 15 :call write
- 16 :acc= constant 1
- 17 :accom constant 0
- 18 :brne 23
- 19 :acc= constant 0
- 20 :acc=> stack
- 21 :call write
- 22 :br 26
- 23 :acc= constant 10
- 24 :acc=> stack
- 25 :call write
- 26 :acc= constant 1
- 27 :accom constant 0
- 28 :breq 32
- 29 :acc= constant 9
- 30 :acc=> stack
- 31 :call write
- 32 :acc= constant 1
- 33 :accom constant 0
- 34 :breq 39
- 35 :acc= constant 8
- 36 :acc=> stack
- 37 :call write
- 38 :br 42
- 39 :acc= constant 0
- 40 :acc=> stack
- 41 :call write
- 42 :acc= constant 1
- 43 :accom constant 1
- 44 :breq 49
- 45 :acc= constant 0
- 46 :acc=> stack
- 47 :call write
- 48 :br 52
- 49 :acc= constant 7
- 50 :acc=> stack
- 51 :call write
- 52 :acc= constant 1
- 53 :accom constant 0
- 54 :brle 58
- 55 :acc= constant 6
- 56 :acc=> stack
- 57 :call write
- 58 :acc= constant 1
- 59 :accom constant 0
- 60 :brlt 64
- 61 :acc= constant 5
- 62 :acc=> stack
- 63 :call write
- 64 :acc= constant 1
- 65 :accom constant 1
- 66 :brlt 70
- 67 :acc= constant 4
- 68 :acc=> stack
- 69 :call write
- 70 :acc= constant 0
- 71 :accom constant 1
- 72 :brge 76
- 73 :acc= constant 3
- 74 :acc=> stack
- 75 :call write
- 76 :acc= constant 0
- 77 :accom constant 1
- 78 :brgt 82
- 79 :acc= constant 2
- 80 :acc=> stack
- 81 :call write
- 82 :acc= constant 1
- 83 :accom constant 1
- 84 :brgt 88
+  0 :acc= constant 13
+  1 :acc=> stack
+  2 :call write
+  3 :acc= constant 1
+  4 :accom constant 1
+  5 :brne 9
+  6 :acc= constant 12
+  7 :acc=> stack
+  8 :call write
+  9 :acc= constant 1
+ 10 :accom constant 1
+ 11 :brne 16
+ 12 :acc= constant 11
+ 13 :acc=> stack
+ 14 :call write
+ 15 :br 19
+ 16 :acc= constant 0
+ 17 :acc=> stack
+ 18 :call write
+ 19 :acc= constant 1
+ 20 :accom constant 0
+ 21 :brne 26
+ 22 :acc= constant 0
+ 23 :acc=> stack
+ 24 :call write
+ 25 :br 29
+ 26 :acc= constant 10
+ 27 :acc=> stack
+ 28 :call write
+ 29 :acc= constant 1
+ 30 :accom constant 0
+ 31 :breq 35
+ 32 :acc= constant 9
+ 33 :acc=> stack
+ 34 :call write
+ 35 :acc= constant 1
+ 36 :accom constant 0
+ 37 :breq 42
+ 38 :acc= constant 8
+ 39 :acc=> stack
+ 40 :call write
+ 41 :br 45
+ 42 :acc= constant 0
+ 43 :acc=> stack
+ 44 :call write
+ 45 :acc= constant 1
+ 46 :accom constant 1
+ 47 :breq 52
+ 48 :acc= constant 0
+ 49 :acc=> stack
+ 50 :call write
+ 51 :br 55
+ 52 :acc= constant 7
+ 53 :acc=> stack
+ 54 :call write
+ 55 :acc= constant 1
+ 56 :accom constant 0
+ 57 :brle 61
+ 58 :acc= constant 6
+ 59 :acc=> stack
+ 60 :call write
+ 61 :acc= constant 1
+ 62 :accom constant 0
+ 63 :brlt 67
+ 64 :acc= constant 5
+ 65 :acc=> stack
+ 66 :call write
+ 67 :acc= constant 1
+ 68 :accom constant 1
+ 69 :brlt 73
+ 70 :acc= constant 4
+ 71 :acc=> stack
+ 72 :call write
+ 73 :acc= constant 0
+ 74 :accom constant 1
+ 75 :brge 79
+ 76 :acc= constant 3
+ 77 :acc=> stack
+ 78 :call write
+ 79 :acc= constant 0
+ 80 :accom constant 1
+ 81 :brgt 85
+ 82 :acc= constant 2
+ 83 :acc=> stack
+ 84 :call write
  85 :acc= constant 1
- 86 :acc=> stack
- 87 :call write
- 88 :acc= constant 0
+ 86 :accom constant 1
+ 87 :brgt 91
+ 88 :acc= constant 1
  89 :acc=> stack
  90 :call write
- 91 :stop
+ 91 :acc= constant 0
+ 92 :acc=> stack
+ 93 :call write
+ 94 :stop

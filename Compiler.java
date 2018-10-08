@@ -862,7 +862,7 @@ public class Compiler {
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
         // part of semantic analysis.
-        if (identifiers.declareId(lexeme.idVal)) {
+        if (identifiers.declareId(lexeme.idVal, Datatype.integer)) {
           debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
@@ -1015,7 +1015,7 @@ public class Compiler {
       getLexeme();
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginlexeme))) {
         /* next line + debug message is part of semantic analysis */
-        if (!identifiers.declareId(lexeme.idVal)) {
+        if (!identifiers.declareId(lexeme.idVal, Datatype.integer)) {
           error();
           System.out.println("identifier already declared");
         }

@@ -1,5 +1,6 @@
 /* Program to test division */
 class TestMultiplyDivide {
+  write(11);
   write((4 * 5) / 2);
   write((7 * 7 + 5) / 6);
   write((4 * 5 * 2) / 5);

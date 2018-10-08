@@ -1,5 +1,6 @@
 /* Program to test generated Z80 assembler code */
 class TestWhile {
+  write(10);
   int a = 9;
   while (a >= 7) {
     write(a);
