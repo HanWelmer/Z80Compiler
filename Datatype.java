@@ -4,8 +4,9 @@
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  */
 public enum Datatype {
-  integer("int"),
-  unknown("?");
+  _class("?"),
+  _byte("byte"),
+  _integer("int");
 
   private String value;
   

@@ -1,52 +1,59 @@
-  0 :acc= constant 10
+  0 :acc= constant 11
   1 :acc=> stack
   2 :call write
-  3 :acc= constant 9
+  3 :acc= constant 10
   4 :acc=> variable 1
   5 :acc= variable 1
-  6 :accom constant 7
-  7 :brlt 15
-  8 :acc= variable 1
-  9 :acc=> stack
- 10 :call write
- 11 :acc= variable 1
- 12 :acc- constant 1
- 13 :acc=> variable 1
- 14 :br 5
- 15 :acc= variable 1
- 16 :acc=> stack
- 17 :call write
- 18 :acc= variable 1
- 19 :acc- constant 1
- 20 :acc=> variable 1
- 21 :<acc= variable 1
- 22 :accom constant 5
- 23 :brge 15
- 24 :acc= constant 4
+  6 :acc=> stack
+  7 :call write
+  8 :acc= constant 9
+  9 :acc=> variable 2
+ 10 :acc= variable 2
+ 11 :accom constant 7
+ 12 :brlt 20
+ 13 :acc= variable 2
+ 14 :acc=> stack
+ 15 :call write
+ 16 :acc= variable 2
+ 17 :acc- constant 1
+ 18 :acc=> variable 2
+ 19 :br 10
+ 20 :acc= variable 2
+ 21 :acc=> stack
+ 22 :call write
+ 23 :acc= variable 2
+ 24 :acc- constant 1
  25 :acc=> variable 2
  26 :<acc= variable 2
- 27 :accom constant 2
- 28 :breq 36
- 29 :br 32
- 30 :decr variable 2
- 31 :br 26
- 32 :acc= variable 2
- 33 :acc=> stack
- 34 :call write
- 35 :br 30
- 36 :acc= constant 2
- 37 :acc=> variable 1
- 38 :acc= constant 0
- 39 :acc=> variable 3
- 40 :<acc= variable 3
- 41 :accom constant 2
- 42 :brgt 51
- 43 :br 46
- 44 :incr variable 3
- 45 :br 40
- 46 :acc= variable 1
- 47 :acc=> stack
- 48 :call write
- 49 :decr variable 1
- 50 :br 44
- 51 :stop
+ 27 :accom constant 5
+ 28 :brge 20
+ 29 :acc= constant 3
+ 30 :acc=> variable 3
+ 31 :<acc= variable 3
+ 32 :accom constant 4
+ 33 :brgt 42
+ 34 :br 37
+ 35 :incr variable 3
+ 36 :br 31
+ 37 :acc= variable 2
+ 38 :acc=> stack
+ 39 :call write
+ 40 :decr variable 2
+ 41 :br 35
+ 42 :acc= constant 2
+ 43 :acc=> variable 4
+ 44 :<acc= variable 4
+ 45 :accom constant 0
+ 46 :breq 55
+ 47 :br 50
+ 48 :decr variable 4
+ 49 :br 44
+ 50 :acc= variable 4
+ 51 :acc=> stack
+ 52 :call write
+ 53 :decr variable 2
+ 54 :br 48
+ 55 :acc= variable 2
+ 56 :acc=> stack
+ 57 :call write
+ 58 :stop

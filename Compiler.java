@@ -20,6 +20,8 @@ import java.util.Map;
  * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
  * statements     = (statement)*.
  * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
+ * assignment     = [datatype] update ";".
+ * datatype       = "byte" | "int".
  * assignment     = ["int"] update ";".
  * update         = identifier++ | identifier-- | identifier "=" expression
  * writeStatement = "write" "(" expression ")" ";".
@@ -120,8 +122,27 @@ public class Compiler {
   private int errors;
 
   /* Constants and class member variables for syntax analysis phase */
-  EnumSet<LexemeType> startExp = EnumSet.noneOf(LexemeType.class);
-  EnumSet<LexemeType> startStatement = EnumSet.noneOf(LexemeType.class);
+  private EnumSet<LexemeType> startStatement = EnumSet.of(
+      LexemeType.identifier
+    , LexemeType.bytelexeme
+    , LexemeType.intlexeme
+    , LexemeType.writelexeme
+    , LexemeType.iflexeme
+    , LexemeType.forlexeme
+    , LexemeType.dolexeme
+    , LexemeType.whilelexeme
+  );
+  private EnumSet<LexemeType> startAssignment = EnumSet.of(
+      LexemeType.identifier
+    , LexemeType.bytelexeme
+    , LexemeType.intlexeme
+  );
+  private EnumSet<LexemeType> startExp = EnumSet.of(
+      LexemeType.lbracket
+    , LexemeType.identifier
+    , LexemeType.constant
+    , LexemeType.readlexeme
+  );
 
   /* Constants and class member variables for semantic analysis phase */
   private Identifiers identifiers = new Identifiers();
@@ -158,19 +179,6 @@ public class Compiler {
 
 
     /* initialisation of syntax analysis variables */
-    startStatement.clear();
-    startStatement.add(LexemeType.intlexeme);
-    startStatement.add(LexemeType.identifier);
-    startStatement.add(LexemeType.writelexeme);
-    startStatement.add(LexemeType.iflexeme);
-    startStatement.add(LexemeType.forlexeme);
-    startStatement.add(LexemeType.dolexeme);
-    startStatement.add(LexemeType.whilelexeme);
-    startExp.clear();
-    startExp.add(LexemeType.lbracket);
-    startExp.add(LexemeType.identifier);
-    startExp.add(LexemeType.constant);
-    startExp.add(LexemeType.readlexeme);
 
     /* initialisation of semantic analysis variables */
     identifiers.init();
@@ -847,7 +855,8 @@ public class Compiler {
     debug("\nifStatement: end");
   }
   
-  //assignment = ["int"] update ";".
+  //assignment = [datatype] update ";".
+  //datatype   = "byte" | "int".
   private String assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nassignment: start with stopSet = " + stopSet);
 
@@ -856,13 +865,13 @@ public class Compiler {
     stopAssignmentSet.add(LexemeType.semicolon);
 
     String variable = null;
-    if (lexeme.type == LexemeType.intlexeme) {
+    if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.intlexeme) {
       /* part of lexical analysis */
       getLexeme();
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
         // part of semantic analysis.
-        if (identifiers.declareId(lexeme.idVal, Datatype.integer)) {
+        if (identifiers.declareId(lexeme.idVal, Datatype._integer)) {
           debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
@@ -977,7 +986,7 @@ public class Compiler {
     EnumSet<LexemeType> startSet = stopSet.clone();
     startSet.addAll(startStatement);
     if (checkOrSkip(startSet, stopSet)) {
-      if (lexeme.type == LexemeType.identifier || lexeme.type == LexemeType.intlexeme) {
+      if (startAssignment.contains(lexeme.type)) {
         assignment(stopSet);
       } else if (lexeme.type == LexemeType.writelexeme) {
         writeStatement(stopSet);
@@ -1015,7 +1024,7 @@ public class Compiler {
       getLexeme();
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginlexeme))) {
         /* next line + debug message is part of semantic analysis */
-        if (!identifiers.declareId(lexeme.idVal, Datatype.integer)) {
+        if (!identifiers.declareId(lexeme.idVal, Datatype._integer)) {
           error();
           System.out.println("identifier already declared");
         }

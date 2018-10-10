@@ -1,7 +1,9 @@
 /* Program to test generated Z80 assembler code */
 class TestWhile {
-  write(10);
-  int a = 9;
+  write(11);
+  int b = 10;
+  write(b);
+  byte a = 9;
   while (a >= 7) {
     write(a);
     a = a - 1;
@@ -10,12 +12,13 @@ class TestWhile {
     write(a);
     a = a - 1;
   } while (a > 5);
-  for(int b = 4; b!=2; b--) {
-    write(b);
-  }
-  a = 2;
-  for(int b = 0; b<=2; b++) {
+  for(int i = 3; i<=4; i++) {
     write(a);
     a--;
   }
+  for(int i = 2; i!=0; i--) {
+    write(i);
+    a--;
+  }
+  write(a);
 }
