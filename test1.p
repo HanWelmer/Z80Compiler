@@ -12,7 +12,7 @@ class TestWhile {
     write(a);
     a = a - 1;
   } while (a > 5);
-  for(int i = 3; i<=4; i++) {
+  for(byte i = 3; i<=4; i++) {
     write(a);
     a--;
   }

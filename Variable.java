@@ -3,16 +3,15 @@ import java.util.Map;
 
 public class Variable {
 
-  /* variables: -1: not declared; >=0: memory address allocated */
   private String name;
   private Datatype datatype;
-  private Integer address = -1;
+  private int address;
 
   //constructor
-  public Variable(String name, Datatype datatype, Integer address) {
+  public Variable(String name) {
     this.name = name;
-    this.datatype = datatype;
-    this.address = address;
+    this.datatype = Datatype._unknown;
+    this.address = 0;
   }
   
   public void setDatatype(Datatype datatype) {
@@ -23,11 +22,11 @@ public class Variable {
     return datatype;
   }
   
-  public void setAddress(Integer address) {
+  public void setAddress(int address) {
     this.address = address;
   }
   
-  public Integer getAddress() {
+  public int getAddress() {
     return address;
   }
   

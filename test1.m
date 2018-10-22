@@ -2,8 +2,8 @@
   1 :acc=> stack
   2 :call write
   3 :acc= constant 10
-  4 :acc=> variable 1
-  5 :acc= variable 1
+  4 :acc=> variable 0
+  5 :acc= variable 0
   6 :acc=> stack
   7 :call write
   8 :acc= constant 9

@@ -16,7 +16,7 @@ public class Lexeme {
     this.type = type;
   }
 
-  public String makeString(Integer varAddress) {
+  public String makeString(Variable variable) {
     if (type == null) {
       throw new RuntimeException("lexeme type is null");
     }
@@ -25,8 +25,8 @@ public class Lexeme {
       case constant: result += " " + constVal; break;
       case identifier: 
         result += " " + idVal;
-        if ((varAddress != null) && (varAddress >=0)) {
-          result += "@" + varAddress;
+        if ((variable != null) && (variable.getAddress() >=0)) {
+          result += "@" + variable.getAddress();
         }
         break;
       case addop: result += " " + addVal; break;

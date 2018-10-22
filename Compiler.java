@@ -450,7 +450,7 @@ public class Compiler {
         if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
         /* part of code generation */
         operand.opType = OperandType.var;
-        operand.opValue = identifiers.getId(lexeme.idVal);
+        operand.opValue = identifiers.getId(lexeme.idVal).getAddress();
         /* part of lexical analysis */
         getLexeme();
       } else if (lexeme.type == LexemeType.constant) {
@@ -858,7 +858,7 @@ public class Compiler {
   //assignment = [datatype] update ";".
   //datatype   = "byte" | "int".
   private String assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nassignment: start with stopSet = " + stopSet);
+    debug("\nassignment: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
     stopAssignmentSet.addAll(startExp);
@@ -867,16 +867,26 @@ public class Compiler {
     String variable = null;
     if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.intlexeme) {
       /* part of lexical analysis */
+      LexemeType datatype = lexeme.type;
       getLexeme();
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
         // part of semantic analysis.
-        if (identifiers.declareId(lexeme.idVal, Datatype._integer)) {
-          debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-          variable = lexeme.idVal;
+        if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != Datatype._unknown) {
+         error(8); /* variable already declared */
         } else {
-          error();
-          System.out.println("variable already declared");
+          if (datatype == LexemeType.bytelexeme) {
+            identifiers.declareId(lexeme.idVal, Datatype._byte);
+            debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+            variable = lexeme.idVal;
+          } else if (datatype == LexemeType.intlexeme) {
+            identifiers.declareId(lexeme.idVal, Datatype._integer);
+            debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+            variable = lexeme.idVal;
+          } else {
+            error();
+            System.out.println("Error declaring variable " + lexeme.idVal + " of type " + lexeme.type);
+          }
         }
       }
     } else {
@@ -884,10 +894,7 @@ public class Compiler {
       checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet);
 
       /* part of semantic analysis */
-      if (!identifiers.checkId(lexeme.idVal)) {
-        error();
-        System.out.println("variable not declared: " + lexeme.idVal);
-      }
+      if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
     }
     
     update(stopSet);
@@ -910,7 +917,7 @@ public class Compiler {
     stopAssignmentSet.add(LexemeType.semicolon);
 
     /* part of code generation */
-    int assignTo = identifiers.getId(lexeme.idVal);
+    int assignTo = identifiers.getId(lexeme.idVal).getAddress();
 
     /* part of lexical analysis */
     getLexeme();
@@ -1024,15 +1031,19 @@ public class Compiler {
       getLexeme();
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginlexeme))) {
         /* next line + debug message is part of semantic analysis */
-        if (!identifiers.declareId(lexeme.idVal, Datatype._integer)) {
-          error();
-          System.out.println("identifier already declared");
+        if (identifiers.checkId(lexeme.idVal)) {
+          error(8); /* variable already declared */
+        } else {
+          identifiers.declareId(lexeme.idVal, Datatype._class);
+          debug("\nprog: class declared: " + lexeme.idVal);
         }
-        debug("\nprog: class declared: " + lexeme.idVal);
+
         getLexeme();
         checkOrSkip(EnumSet.of(LexemeType.beginlexeme), EnumSet.noneOf(LexemeType.class));
+
         getLexeme();
         statements(EnumSet.of(LexemeType.endlexeme));
+
         //getLexeme();
         checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class));
       }
