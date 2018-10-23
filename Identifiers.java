@@ -27,19 +27,29 @@ public class Identifiers {
    * Param datatype : datatype of variable.
    * Returns : true if OK; false if such an identifier already declared.
    */
-  public void declareId(String identifier, Datatype datatype) {
+  public boolean declareId(Lexeme lexeme, LexemeType datatype) {
+    boolean result = true;
     //make sure the variable is declared.
     debug("\ndeclareId() calling checkId(");
-    checkId(identifier);
+    checkId(lexeme.idVal);
 
     //If it wasn't declared yet, override default datatype and set other properties.
-    Variable var = variables.get(identifier);
+    Variable var = variables.get(lexeme.idVal);
     if (var.getDatatype() == Datatype._unknown) {
       debug(String.format("declareId() overriding default datatype and other properties."));
-      var.setDatatype(datatype);
+      if (datatype == LexemeType.bytelexeme) {
+        var.setDatatype(Datatype._byte);
+      } else if (datatype == LexemeType.intlexeme) {
+        var.setDatatype(Datatype._integer);
+      } else if (datatype == LexemeType.classlexeme) {
+        var.setDatatype(Datatype._class);
+      } else {
+        result = false;
+      }
       var.setAddress(nextAddress);
-      nextAddress += datatype.getSize();
+      nextAddress += var.getDatatype().getSize();
     }
+    return result;
   }
   
   /**
@@ -64,6 +74,7 @@ public class Identifiers {
    * Param: identifier : this identifier will be removed from the list of declared identifiers.
    */
   public void remove(String variable) {
+    nextAddress -= variables.get(variable).getDatatype().getSize();
     variables.remove(variable);
     //TODO reallocate memory address.
   }

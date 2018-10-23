@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -96,12 +97,15 @@ public class pCompiler {
           } while (!stop);
         }
       }
+    } catch (FileNotFoundException e) {
+      System.out.println(e.getMessage());
+      System.exit(1);
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.exit(1);
     } catch (RuntimeException e) {
       System.out.println(e.getMessage());
       System.out.println();
-      e.printStackTrace();
-      System.exit(1);
-    } catch (IOException e) {
       e.printStackTrace();
       System.exit(1);
     }

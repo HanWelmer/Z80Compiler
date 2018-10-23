@@ -41,14 +41,14 @@
  40 :decr variable 2
  41 :br 35
  42 :acc= constant 2
- 43 :acc=> variable 4
- 44 :<acc= variable 4
+ 43 :acc=> variable 3
+ 44 :<acc= variable 3
  45 :accom constant 0
  46 :breq 55
  47 :br 50
- 48 :decr variable 4
+ 48 :decr variable 3
  49 :br 44
- 50 :acc= variable 4
+ 50 :acc= variable 3
  51 :acc=> stack
  52 :call write
  53 :decr variable 2

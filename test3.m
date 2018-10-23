@@ -2,15 +2,15 @@
   1 :acc=> stack
   2 :call write
   3 :acc= constant 14
-  4 :acc=> variable 1
-  5 :decr variable 1
-  6 :acc= variable 1
+  4 :acc=> variable 0
+  5 :decr variable 0
+  6 :acc= variable 0
   7 :acc=> stack
   8 :call write
   9 :acc= constant 11
- 10 :acc=> variable 1
- 11 :incr variable 1
- 12 :acc= variable 1
+ 10 :acc=> variable 0
+ 11 :incr variable 0
+ 12 :acc= variable 0
  13 :acc=> stack
  14 :call write
  15 :acc= constant 9
@@ -76,21 +76,21 @@
  75 :acc=> stack
  76 :call write
  77 :acc= constant 2
- 78 :acc=> variable 1
+ 78 :acc=> variable 0
  79 :acc= constant 3
- 80 :acc* variable 1
+ 80 :acc* variable 0
  81 :acc=> stack
  82 :call write
  83 :acc= constant 1
- 84 :acc=> variable 1
- 85 :acc= variable 1
+ 84 :acc=> variable 0
+ 85 :acc= variable 0
  86 :acc* constant 5
  87 :acc=> stack
  88 :call write
  89 :acc= constant 2
  90 :acc* constant 2
- 91 :acc=> variable 1
- 92 :acc= variable 1
+ 91 :acc=> variable 0
+ 92 :acc= variable 0
  93 :acc=> stack
  94 :call write
  95 :acc= constant 1

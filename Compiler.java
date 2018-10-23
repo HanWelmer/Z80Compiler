@@ -874,19 +874,12 @@ public class Compiler {
         // part of semantic analysis.
         if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != Datatype._unknown) {
          error(8); /* variable already declared */
+        } else if (identifiers.declareId(lexeme, datatype)) {
+          debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+          variable = lexeme.idVal;
         } else {
-          if (datatype == LexemeType.bytelexeme) {
-            identifiers.declareId(lexeme.idVal, Datatype._byte);
-            debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-            variable = lexeme.idVal;
-          } else if (datatype == LexemeType.intlexeme) {
-            identifiers.declareId(lexeme.idVal, Datatype._integer);
-            debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-            variable = lexeme.idVal;
-          } else {
-            error();
-            System.out.println("Error declaring variable " + lexeme.idVal + " of type " + lexeme.type);
-          }
+          error();
+          System.out.println("Error declaring variable " + lexeme.idVal + " of type " + datatype);
         }
       }
     } else {
@@ -1033,9 +1026,11 @@ public class Compiler {
         /* next line + debug message is part of semantic analysis */
         if (identifiers.checkId(lexeme.idVal)) {
           error(8); /* variable already declared */
-        } else {
-          identifiers.declareId(lexeme.idVal, Datatype._class);
+        } else if (identifiers.declareId(lexeme, LexemeType.classlexeme)) {
           debug("\nprog: class declared: " + lexeme.idVal);
+        } else {
+          error();
+          System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
         }
 
         getLexeme();
