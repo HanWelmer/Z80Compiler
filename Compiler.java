@@ -663,6 +663,9 @@ public class Compiler {
   private void forStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nforStatement: start with stopSet = " + stopSet);
     
+    //part of semantic analysis: start a new declaration scope for the for statement.
+    identifiers.newScope();
+
     /* part of lexical analysis: "for" "(" initialization ";" */
     getLexeme();
     EnumSet<LexemeType> stopForSet = stopSet.clone();
@@ -720,8 +723,8 @@ public class Compiler {
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, updateLabel)));
     plantForwardLabel(gotoEnd);
     
-    //part of semantic analysis: undeclare variable
-    identifiers.remove(variable);
+    //part of semantic analysis: close the declaration scope of the for statement.
+    identifiers.closeScope();
     debug("\nforStatement: end");
   }
 
@@ -1022,6 +1025,10 @@ public class Compiler {
     getLexeme();
     if (checkOrSkip(EnumSet.of(LexemeType.classlexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginlexeme))) {
       getLexeme();
+      
+      //part of semantic analysis: start a new class level declaration scope.
+      identifiers.newScope();
+
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginlexeme))) {
         /* next line + debug message is part of semantic analysis */
         if (identifiers.checkId(lexeme.idVal)) {
@@ -1042,6 +1049,9 @@ public class Compiler {
         //getLexeme();
         checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class));
       }
+      
+      //part of semantic analysis: close the class level declaration scope.
+      identifiers.closeScope();
     }
     debug("\nprog: end");
   }

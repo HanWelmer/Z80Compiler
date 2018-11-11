@@ -13,10 +13,12 @@ class TestWhile {
     a = a - 1;
   } while (a > 5);
   for(byte i = 3; i<=4; i++) {
+    byte c = i;
     write(a);
     a--;
   }
   for(int i = 2; i!=0; i--) {
+    int c = i;
     write(i);
     a--;
   }
