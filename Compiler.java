@@ -637,7 +637,11 @@ public class Compiler {
   // block = statement | "{" statements "}".
   private void block(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nblock: start with stopSet = " + stopSet);
+      
+    //part of semantic analysis: start a new class level declaration scope for the statement block.
+    identifiers.newScope();
 
+    /* part of lexical analysis */
     EnumSet<LexemeType> startSet = stopSet.clone();
     startSet.addAll(startStatement);
     startSet.add(LexemeType.beginlexeme);
@@ -656,6 +660,10 @@ public class Compiler {
     } else {
       statement(stopSet);
     }
+      
+    //part of semantic analysis: close the declaration scope of the statement block.
+    identifiers.closeScope();
+
     debug("\nblock: end");
   }
   
