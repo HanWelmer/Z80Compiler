@@ -1,14 +1,12 @@
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+//import java.util.Map;
 import java.util.Stack;
 
 public class Identifiers {
 
   /* Constants and class member variables for semantic analysis phase */
-  private Stack<Map<String, Variable>> stackOfScopes = new Stack<>();
-  //TODO: memory allocation per scope (stack level).
-  private int nextAddress = 0;
+  private Stack<Scope> stackOfScopes = new Stack<>();
 
   /**
    * Initialize the table with identifiers.
@@ -16,7 +14,6 @@ public class Identifiers {
    */
   public void init() {
     stackOfScopes.clear();
-    nextAddress = 0;
   }
   
   private void debug(String message) {
@@ -25,7 +22,13 @@ public class Identifiers {
 
   //Start a new declaration scope.
   public void newScope() {
-    stackOfScopes.push(new HashMap<String, Variable>());
+    Scope newScope = new Scope();
+    if (stackOfScopes.size() == 0) {
+      newScope.setAddress(0);
+    } else {
+      newScope.setAddress(stackOfScopes.peek().getAddress());
+    }
+    stackOfScopes.push(newScope);
   }
 
   //Close the top level scope.
@@ -44,10 +47,10 @@ public class Identifiers {
    */
   public Variable getId(String name) {
     Variable variable = null;
-    Iterator<Map<String, Variable>> scopeIterator = stackOfScopes.iterator();
-    while ((variable == null) && scopeIterator.hasNext()) {
-      Map<String, Variable> variables = scopeIterator.next();
-      variable = variables.get(name);
+    Iterator<Scope> iterator = stackOfScopes.iterator();
+    while ((variable == null) && iterator.hasNext()) {
+      Scope scope = iterator.next();
+      variable = scope.getVariable(name);
     }
     return variable;
   }
@@ -62,7 +65,7 @@ public class Identifiers {
     boolean found = getId(identifier) != null;
 
     if (!found) {
-      stackOfScopes.peek().put(identifier, new Variable(identifier));
+      stackOfScopes.peek().addVariable(identifier);
     }
     debug(String.format("\ncheckId(" + identifier + ") returns " + found + "."));
 
@@ -95,8 +98,9 @@ public class Identifiers {
       } else {
         result = false;
       }
-      var.setAddress(nextAddress);
-      nextAddress += var.getDatatype().getSize();
+      //this scheme assumes that memory allocation can only occur in the current top level scope.
+      var.setAddress(stackOfScopes.peek().getAddress());
+      stackOfScopes.peek().setAddress(stackOfScopes.peek().getAddress() + var.getDatatype().getSize());
     }
     return result;
   }
