@@ -12,11 +12,101 @@ public class Instruction {
 
   public Instruction(FunctionType fn) {
     function = fn;
+    
+    //error detection (internal compiler errors):
+    if (function != FunctionType.stop && function != FunctionType.read && function != FunctionType.write) {
+      throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+    }
   }
 
   public Instruction(FunctionType fn, Operand operand) {
-    //todo add error detection regarding function type and value of operand (in particular opType and opValue).
     function = fn;
+    
+    //error detection (internal compiler errors):
+    switch (function) {
+      case stop:
+      case read:
+      case write:
+        throw new RuntimeException("Internal compiler error: functionType " + fn + " expects no operand.");
+        //break;
+      case call:
+        throw new RuntimeException("Internal compiler error: functionType " + fn + " not yet implemented.");
+        //break;
+      case accLoad:
+      case stackAccLoad:
+      case accPlus:
+      case accMinus:
+      case minusAcc:
+      case accTimes:
+      case accDiv:
+      case divAcc:
+      case accCompare:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        } else if (operand.opType == OperandType.stack) {
+          if (function == FunctionType.stackAccLoad) {
+            throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
+          } else if (operand.opValue == null) {
+            //no error
+          } else {
+            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects null as operand value.");
+          }
+        } else if (operand.opType == OperandType.constant || operand.opType == OperandType.var) {
+          if (operand.opValue == null) {
+            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand value.");
+          }
+        } else if (operand.opType == OperandType.label) {
+          throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
+        } else {
+          throw new RuntimeException("Internal compiler error: unknown operand type " + operand.opType + " for functionType " + fn);
+        }
+        break;
+      case accStore:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        } else if (operand.opType == OperandType.stack) {
+          if (operand.opValue == null) {
+            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects null as operand value.");
+          }
+        } else if (operand.opType == OperandType.var) {
+          if (operand.opValue == null) {
+            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+          }
+        } else if (operand.opType == OperandType.constant || operand.opType == OperandType.label) {
+          throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
+        } else {
+          throw new RuntimeException("Internal compiler error: unknown operand type " + operand.opType + " for functionType " + fn);
+        };
+        break;
+      case increment:
+      case decrement:
+        if (operand != null && operand.opType == OperandType.var) {
+          if (operand.opValue == null) {
+            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+          }
+        } else {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a variable as operand.");
+        };
+        break;
+      case br:
+      case brEq:
+      case brNe:
+      case brLt:
+      case brLe:
+      case brGt:
+      case brGe:
+        if (operand != null && operand.opType == OperandType.label) {
+          if (operand.opValue == null) {
+            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects the address of a label to jump to.");
+          }
+        } else {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a label to jump to.");
+        };
+        break;
+      default :
+        throw new RuntimeException("Internal compiler error: unknown functionType " + fn);
+    }
+    
     //deep copy of operand, otherwise a reference to the mutable object operand is copied into the Instruction.
     this.operand = new Operand(operand.opType, operand.opValue);
   }

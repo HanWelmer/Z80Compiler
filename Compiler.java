@@ -12,9 +12,13 @@ import java.util.Map;
  *
  * Java style end of line comment.
  * Java style multi-line comment.
- * Multi-line may contain end of line comment.
+ * Multi-line comment may contain end of line comment.
  * Multi-line comment may not be nested.
- * All variables are 16 bit integers.
+ * A variable must be declared before it is used.
+ * A declaration is valid within the scope within which it is defined (class, for statement, statement block) and it's sub-scopes.
+ * The name of a valid declaration may only be declared once within its scope (overloading is not supported).
+ * A byte takes one byte (8 bit).
+ * An int takes two bytes (16 bit).
  *
  * program        = "class" identifier "{" statements "}".
  * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
@@ -348,9 +352,7 @@ public class Compiler {
             lexeme.type = LexemeType.relop;
             lexeme.relVal = RelValType.eq;
           } else {
-            //TODO recognise assignment using valid characters after = symbol
             lexeme.type = LexemeType.assign;
-            //error(5); /* = not followed by = */
           }
           break;
         case '!' :
