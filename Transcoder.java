@@ -163,12 +163,19 @@ public class Transcoder {
     
   }
   
-  /* transcode a single M-code instruction to one or more Z80S180 assembler instruction */
+  /* Transcode a single M-code instruction to one or more Z80S180 assembler instruction.
+   * The transcoder uses the SP stackpointer and the PC program counter.
+   * The arithmetic functions (accPlus, accMinus, minusAcc, accTimes, accDiv, divAcc, accCompare) 
+   * use HL as a 16-bit accumulator, DE for the second 16-bit operand and the flags (in AF) as result indicators.
+   * The conditional branch instructions use the flags (in AF) for the conditional jumps.
+   * The runtime (see method plantZ80Runtime) uses DE, BC and AF temporarily (for the duration of an M-instruction) without preserving their current content.
+   */
   private ArrayList<AssemblyInstruction> transcode(Instruction instruction){
     ArrayList<AssemblyInstruction> result = new ArrayList<AssemblyInstruction>();
 
     debug("\ntranscoding to Z80: " + instruction.toString());
     
+    //TODO support 8-bit constant and variables in addition to the following two 16-bit operands.
     FunctionType function = instruction.function;
     int word = instruction.operand == null ? 0 : instruction.operand.opValue;
     int memAddress = MEM_START + word * 2;

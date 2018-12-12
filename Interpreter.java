@@ -20,7 +20,9 @@ public class Interpreter {
   private int inputIndex = 0;
   private int[] machineStack;
   private int[] vars;
-  private int pc, acc, sf;
+  private int pc, sf;
+  //TODO support 8-bit accumulator in addition to the following 16-bit accumulator
+  private int acc;
 
   //constructor
   public Interpreter(ArrayList<Instruction> instructions, String[] inputParts) {

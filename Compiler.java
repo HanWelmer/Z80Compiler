@@ -993,6 +993,7 @@ public class Compiler {
   private void statement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     /* part of code generation */
+    //TODO support 8-bit accumulator in addition to the following 16-bit accumulator
     accInUse = false;
 
     /* part of lexical analysis */
