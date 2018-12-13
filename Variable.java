@@ -10,7 +10,7 @@ public class Variable {
   //constructor
   public Variable(String name) {
     this.name = name;
-    this.datatype = Datatype._unknown;
+    this.datatype = Datatype.unknown;
     this.address = 0;
   }
   

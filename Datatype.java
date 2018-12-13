@@ -4,10 +4,10 @@
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  */
 public enum Datatype {
-  _unknown("?", 0),
-  _class("class", 0),
-  _byte("byte", 1),
-  _integer("int", 2);
+  unknown("?", 0),
+  clazz("class", 0),
+  byt("byte", 1),
+  integer("int", 2);
 
   private String value;
   private int size;

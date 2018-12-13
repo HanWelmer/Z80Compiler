@@ -5,9 +5,11 @@
 public class Operand {
   public OperandType opType;
   public Integer opValue;
+  public Datatype opSize;
   
-  public Operand(OperandType opType, Integer opValue) {
+  public Operand(OperandType opType, Integer opValue, Datatype opSize) {
     this.opType = opType;
     this.opValue = opValue;
+    this.opSize = opSize;
   }
 }

@@ -10,16 +10,6 @@ import java.util.Map;
  * Inspired by the book Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks
  * and of course Java as developed by Sun.
  *
- * Java style end of line comment.
- * Java style multi-line comment.
- * Multi-line comment may contain end of line comment.
- * Multi-line comment may not be nested.
- * A variable must be declared before it is used.
- * A declaration is valid within the scope within which it is defined (class, for statement, statement block) and it's sub-scopes.
- * The name of a valid declaration may only be declared once within its scope (overloading is not supported).
- * A byte takes one byte (8 bit).
- * An int takes two bytes (16 bit).
- *
  * program        = "class" identifier "{" statements "}".
  * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
  * statements     = (statement)*.
@@ -43,6 +33,22 @@ import java.util.Map;
  * mulop          = "*" | "/".
  * relop          = "==" | "!=" | ">" | ">=" | "<" | "<=".
  * constant       = "(0-9)*".
+ *
+ * Java style end of line comment.
+ * Java style multi-line comment.
+ * Multi-line comment may contain end of line comment.
+ * Multi-line comment may not be nested.
+ * A variable must be declared before it is used.
+ * A declaration is valid within the scope within which it is defined (class, for statement, statement block) and it's sub-scopes.
+ * The name of a valid declaration may only be declared once within its scope (overloading is not supported).
+ * A variable of type byte takes one byte (8 bit).
+ * A variable of type int takes two bytes (16 bit).
+ * An expression is initially evaluated in the type of the first (left most) factor.
+ * The read() function returns an int value.
+ * In an addop, mulop or relop the type of the lefthand operand and the right hand operand must be the same.
+ * In an assignment the type of the value of the expression and the type the variable must be the same.
+ * The value of the lefthand operand of an addop, mulop or relop is changed from byte to int if the type of the righthand operand is an int.
+ * The value of a byte expression can be assigned to an int variable.
  */
 public class Compiler {
 
@@ -154,7 +160,10 @@ public class Compiler {
   /* Constants and class member variables for code generation phase */
   private static final int NULL_OP = 0;
   private static final int MAX_M_CODE = 512;
-  private boolean accInUse;
+  private boolean acc16InUse;
+  //TODO distinguish 8 and 16 bit operands.
+  //TODO distinguish 8 and 16 bit accumulator usage.
+  private boolean acc8InUse;
 
   private Map<AddValType, FunctionType> forwardAdd = new HashMap<AddValType, FunctionType>();
   private Map<AddValType, FunctionType> reverseAdd = new HashMap<AddValType, FunctionType>();
@@ -188,7 +197,8 @@ public class Compiler {
     identifiers.init();
 
     /* initialisation of code generation variables */
-    accInUse = false;
+    acc16InUse = false;
+    acc8InUse = false;
     codePos = 0;
     forwardAdd.clear();
     reverseAdd.clear();
@@ -471,12 +481,15 @@ public class Compiler {
         }
       } else if (lexeme.type == LexemeType.readlexeme) {
         getLexeme();
-        /* part of code generation */
-        if (accInUse) {
+        /* 
+         * Part of code generation.
+         * The read() function always returns an int value.
+         */
+        if (acc16InUse) {
           plant(new Instruction(FunctionType.accStore, operand));
         }
         plant(new Instruction(FunctionType.read));
-        accInUse = true;
+        acc16InUse = true;
       }
     }
     return operand;
@@ -485,7 +498,7 @@ public class Compiler {
   private Operand term(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
     /* part of code generation */
     MulValType operator;
-    Operand rOperand = new Operand(null, null);
+    Operand rOperand = new Operand(null, null, Datatype.unknown);
 
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
@@ -513,7 +526,7 @@ public class Compiler {
     debug("\nexpression: start with stopSet = " + stopSet);
     /* part of lexical analysis */
     AddValType operator;
-    Operand rOperand = new Operand(null, null);
+    Operand rOperand = new Operand(null, null, Datatype.unknown);
     
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
@@ -551,7 +564,7 @@ public class Compiler {
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(localSet, new Operand(null, null));
+    Operand leftOperand = expression(localSet, new Operand(null, null, Datatype.unknown));
 
     /* part of code generation */
     plantAccLoad(leftOperand);
@@ -574,12 +587,12 @@ public class Compiler {
     localSet = stopSet.clone();
     localSet.addAll(startStatement);
     localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(localSet, new Operand(null, null));
+    Operand rightOperand = expression(localSet, new Operand(null, null, Datatype.unknown));
 
     /* part of code generation */
     plant(new Instruction(FunctionType.accCompare, rightOperand));
     ifLabel = saveForwardLabel();
-    Operand labelOperand = new Operand(OperandType.label, 0);
+    Operand labelOperand = new Operand(OperandType.label, 0, Datatype.integer);
     if (rightOperand.opType != OperandType.stack) {
       plant(new Instruction(normalSkip.get(compareOp), labelOperand));
     } else {
@@ -598,7 +611,7 @@ public class Compiler {
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(localSet, new Operand(null, null));
+    Operand leftOperand = expression(localSet, new Operand(null, null, Datatype.unknown));
 
     /* part of code generation */
     plantAccLoad(leftOperand);
@@ -621,11 +634,11 @@ public class Compiler {
     localSet = stopSet.clone();
     localSet.addAll(startStatement);
     localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(localSet, new Operand(null, null));
+    Operand rightOperand = expression(localSet, new Operand(null, null, Datatype.unknown));
 
     /* part of code generation */
     plant(new Instruction(FunctionType.accCompare, rightOperand));
-    Operand labelOperand = new Operand(OperandType.label, doLabel);
+    Operand labelOperand = new Operand(OperandType.label, doLabel, Datatype.integer);
     if (rightOperand.opType == OperandType.stack) {
       plant(new Instruction(normalSkip.get(compareOp), labelOperand));
     } else {
@@ -706,7 +719,7 @@ public class Compiler {
     
     /* part of code generation: skip update and jump forward to block */
     int gotoBlock = saveLabel();
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0, Datatype.integer)));
     int updateLabel = saveLabel();
 
     /* part of lexical analysis: update */
@@ -714,7 +727,7 @@ public class Compiler {
     update(stopForSet);
 
     /* part of code generation: jump back to comparison */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, forLabel)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, forLabel, Datatype.integer)));
 
     /* part of lexical analysis: ")" */
     stopForSet = stopSet.clone();
@@ -730,7 +743,7 @@ public class Compiler {
     block(stopSet);
     
     /* part of code generation; jump back to update */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, updateLabel)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, updateLabel, Datatype.integer)));
     plantForwardLabel(gotoEnd);
     
     //part of semantic analysis: close the declaration scope of the for statement.
@@ -808,7 +821,7 @@ public class Compiler {
     block(stopSet);
     
     /* part of code generation */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, whileLabel)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, whileLabel, Datatype.integer)));
     plantForwardLabel(endLabel);
     debug("\nwhileStatement: end");
   }
@@ -851,7 +864,7 @@ public class Compiler {
 
       /* part of code generation */
       int elseLabel = saveLabel();
-      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0)));
+      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, 0, Datatype.integer)));
       plantForwardLabel(ifLabel);
 
       /* part of lexical analysis */
@@ -885,7 +898,7 @@ public class Compiler {
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
         // part of semantic analysis.
-        if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != Datatype._unknown) {
+        if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != Datatype.unknown) {
          error(8); /* variable already declared */
         } else if (identifiers.declareId(lexeme, datatype)) {
           debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
@@ -933,7 +946,7 @@ public class Compiler {
         getLexeme();
 
         /* part of code generation */
-        plant(new Instruction(FunctionType.decrement, new Operand(OperandType.var, assignTo)));
+        plant(new Instruction(FunctionType.decrement, new Operand(OperandType.var, assignTo, Datatype.unknown)));
       }
     } else if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.add) {
       getLexeme();
@@ -941,15 +954,15 @@ public class Compiler {
         getLexeme();
 
         /* part of code generation */
-        plant(new Instruction(FunctionType.increment, new Operand(OperandType.var, assignTo)));
+        plant(new Instruction(FunctionType.increment, new Operand(OperandType.var, assignTo, Datatype.unknown)));
       }
     } else if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
       getLexeme();
-      Operand operand = expression(stopSet, new Operand(null, null));
+      Operand operand = expression(stopSet, new Operand(null, null, Datatype.unknown));
 
       /* part of code generation */
       plantAccLoad(operand);
-      plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo)));
+      plant(new Instruction(FunctionType.accStore, new Operand(OperandType.var, assignTo, Datatype.unknown)));
     }
 
     debug("\nupdate: end");
@@ -971,7 +984,7 @@ public class Compiler {
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
-    Operand operand = expression(stopExpressionSet, new Operand(null, null));
+    Operand operand = expression(stopExpressionSet, new Operand(null, null, Datatype.unknown));
     
     /* part of lexical analysis */
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
@@ -984,7 +997,7 @@ public class Compiler {
 
     /* part of code generation */
     plantAccLoad(operand);
-    plant(new Instruction(FunctionType.accStore, new Operand(OperandType.stack, 0)));
+    plant(new Instruction(FunctionType.accStore, new Operand(OperandType.stack, 0, Datatype.unknown)));
     plant(new Instruction(FunctionType.write));
     debug("\nwriteStatement: end");
   }
@@ -993,8 +1006,8 @@ public class Compiler {
   private void statement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     /* part of code generation */
-    //TODO support 8-bit accumulator in addition to the following 16-bit accumulator
-    accInUse = false;
+    acc16InUse = false;
+    acc8InUse = false;
 
     /* part of lexical analysis */
     EnumSet<LexemeType> startSet = stopSet.clone();
@@ -1070,18 +1083,18 @@ public class Compiler {
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
     if (operand.opType != OperandType.stack) {
-      if (accInUse) {
+      if (acc16InUse) {
           plant(new Instruction(FunctionType.stackAccLoad, operand));
         } else {
           plant(new Instruction(FunctionType.accLoad, operand));
       }
     }
-    accInUse = true;
+    acc16InUse = true;
   }
 
   private void plant(Instruction instruction) {
     /* for debugging purposes */
-    debug("\n->plant (accInUse=" + accInUse + "):");
+    debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + "):");
     
     /* add original source code */
     if (!sourceCode.isEmpty()) {

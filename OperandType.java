@@ -4,7 +4,6 @@
  */
 public enum OperandType {
   stack,
-  //TODO support 8-bit constant and variables in addition to the following two 16-bit operands.
   constant,
   var,
   label;

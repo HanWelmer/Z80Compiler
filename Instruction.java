@@ -108,7 +108,7 @@ public class Instruction {
     }
     
     //deep copy of operand, otherwise a reference to the mutable object operand is copied into the Instruction.
-    this.operand = new Operand(operand.opType, operand.opValue);
+    this.operand = new Operand(operand.opType, operand.opValue, operand.opSize);
   }
   
   public String toString() {
