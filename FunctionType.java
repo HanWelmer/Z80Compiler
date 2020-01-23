@@ -8,7 +8,8 @@ public enum FunctionType {
   stop("stop"),
   call("call"),
   read("read"),
-  write("write"),
+  writeAcc16("writeAcc16"),
+  writeAcc8("writeAcc8"),
   //16-bit instructions:
   acc16Store("acc16=>"),
   acc16Load("acc16="),

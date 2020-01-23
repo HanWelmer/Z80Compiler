@@ -1072,14 +1072,12 @@ public class Compiler {
     /* part of code generation */
     plantAccLoad(operand);
     if (operand.datatype == Datatype.integer) {
-      plant(new Instruction(FunctionType.acc16Store, new Operand(Datatype.unknown, OperandType.stack, 0)));
+      plant(new Instruction(FunctionType.writeAcc16));
     } else if (operand.datatype == Datatype.byt) {
-      plant(new Instruction(FunctionType.acc8ToAcc16));
-      plant(new Instruction(FunctionType.acc16Store, new Operand(Datatype.unknown, OperandType.stack, 0)));
+      plant(new Instruction(FunctionType.writeAcc8));
     } else {
       error(15);
     }
-    plant(new Instruction(FunctionType.write));
     debug("\nwriteStatement: end");
   }
 

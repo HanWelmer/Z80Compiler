@@ -175,8 +175,12 @@ public class Transcoder {
 
     debug("\ntranscoding to Z80: " + instruction.toString());
     
-    //TODO support 8-bit constant and variables in addition to the following two 16-bit operands.
     FunctionType function = instruction.function;
+    if (function == FunctionType.comment) {
+      return result;
+    }
+    
+    //TODO support 8-bit constant and variables in addition to the following two 16-bit operands.
     int word = 0;
     String str = "";
     if (instruction != null && instruction.operand != null && instruction.operand.intValue != null) {
@@ -194,9 +198,7 @@ public class Transcoder {
     /*
      * special instructions:
      */
-    if (function == FunctionType.comment) {
-      asm = new AssemblyInstruction(byteAddress, INDENT + ";" + str, 0x00);
-    } else if (function == FunctionType.stop) {
+    if (function == FunctionType.stop) {
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP    00171H      ;Jump to Zilog Z80183 Monitor.", 0xC3, 0x71, 0x01);
       debug("\n.." + asm.getCode());
     } else if (function == FunctionType.call) {
@@ -205,9 +207,12 @@ public class Transcoder {
     } else if (function == FunctionType.read) {
       putLabelReference("read", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  read", 0xCD, 0, 0);
-    } else if (function == FunctionType.write) {
-      putLabelReference("write", byteAddress);
-      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  write", 0xCD, 0, 0);
+    } else if (function == FunctionType.writeAcc8) {
+      putLabelReference("writeA", byteAddress);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  writeA", 0xCD, 0, 0);
+    } else if (function == FunctionType.writeAcc16) {
+      putLabelReference("writeHL", byteAddress);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  writeHL", 0xCD, 0, 0);
     /*
      * 16-bit instructions:
      */
@@ -1224,29 +1229,26 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
     
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    result.add(new AssemblyInstruction(byteAddress, ";write"));
+    result.add(new AssemblyInstruction(byteAddress, ";writeHL"));
     result.add(new AssemblyInstruction(byteAddress, ";write a 16 bit unsigned number to the output"));
-    result.add(new AssemblyInstruction(byteAddress, ";  IN:  TOS   = return address"));
-    result.add(new AssemblyInstruction(byteAddress, ";       TOS+2 = 16 bit unsigned number"));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  HL = 16 bit unsigned number"));
     result.add(new AssemblyInstruction(byteAddress, ";  OUT: none"));
     result.add(new AssemblyInstruction(byteAddress, ";  USES:HL"));
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    labels.put("write", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "write:"));
-    result.add(plantAssemblyInstruction(INDENT + "POP   HL          ;return address into HL", 0xE1));
-    result.add(plantAssemblyInstruction(INDENT + "EX    (SP),HL     ;uint in HL; return address on stack", 0xE3));
+    labels.put("writeHL", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "writeHL:"));
     result.add(plantAssemblyInstruction(INDENT + "PUSH  BC          ;save registers used", 0xC5));
     result.add(plantAssemblyInstruction(INDENT + "PUSH  AF", 0xF5));
     result.add(plantAssemblyInstruction(INDENT + "LD    B,0         ;number of digits on stack", 0x06, 0x00));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,H         ;is HL=0?", 0x7C));
     result.add(plantAssemblyInstruction(INDENT + "OR    L", 0xB5));
-    putLabelReference("write1", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,write1", 0x20, 0x03));
+    putLabelReference("writeHL1", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,writeHL1", 0x20, 0x03));
     result.add(plantAssemblyInstruction(INDENT + "INC   B           ;write a single digit 0", 0x04));
-    putLabelReference("write3", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JR    write3", 0x18, 0x0C));
-    labels.put("write1", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "write1:"));
+    putLabelReference("writeHL3", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "JR    writeHL3", 0x18, 0x0C));
+    labels.put("writeHL1", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "writeHL1:"));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,10        ;divide HL by 10", 0x3E, 0x0A));
     putLabelReference("div16_8", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  div16_8", 0xCD, 0, 0));
@@ -1254,24 +1256,41 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "INC   B", 0x04));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,H         ;is quotient 0?", 0x7C));
     result.add(plantAssemblyInstruction(INDENT + "OR    L", 0xB5));
-    putLabelReference("write1", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,write1", 0x20, 0xF5));
-    labels.put("write2", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "write2:"));
+    putLabelReference("writeHL1", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,writeHL1", 0x20, 0xF5));
+    labels.put("writeHL2", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "writeHL2:"));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF          ;write digit", 0xF1));
-    labels.put("write3", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "write3:"));
+    labels.put("writeHL3", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "writeHL3:"));
     result.add(plantAssemblyInstruction(INDENT + "ADD   A,'0'", 0xC6, 0x30));
     putLabelReference("putChar", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putChar", 0xCD, 0, 0));
-    putLabelReference("write2", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "DJNZ  write2", 0x10, 0xF8));
+    putLabelReference("writeHL2", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "DJNZ  writeHL2", 0x10, 0xF8));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF          ;restore registers used", 0xF1));
     result.add(plantAssemblyInstruction(INDENT + "POP   BC", 0xC1));
     putLabelReference("putCRLF", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  putCRLF", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
     
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";writeA"));
+    result.add(new AssemblyInstruction(byteAddress, ";write an 8-bit unsigned number to the output"));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  A = 8-bit unsigned number"));
+    result.add(new AssemblyInstruction(byteAddress, ";  OUT: none"));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES:none"));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("writeA", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "writeA:"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH  HL          ;save registers used", 0xE5));
+    result.add(plantAssemblyInstruction(INDENT + "LD    H,0", 0x26, 0x00));
+    result.add(plantAssemblyInstruction(INDENT + "LD    L,A", 0x6F));
+    putLabelReference("writeHL", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "CALL  writeHL", 0xCD, 0, 0));
+    result.add(plantAssemblyInstruction(INDENT + "POP   HL", 0xE1));
+    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
+
     return result;
   }
 }

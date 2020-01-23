@@ -16,7 +16,8 @@ public class Instruction {
     //error detection (internal compiler errors):
     if (function != FunctionType.stop
       && function != FunctionType.read
-      && function != FunctionType.write
+      && function != FunctionType.writeAcc8
+      && function != FunctionType.writeAcc16
       && function != FunctionType.acc8ToAcc16
       && function != FunctionType.acc16ToAcc8
       && function != FunctionType.stackAcc8ToAcc16
@@ -32,7 +33,8 @@ public class Instruction {
     switch (function) {
       case stop:
       case read:
-      case write:
+      case writeAcc8:
+      case writeAcc16:
       case acc8ToAcc16:
       case acc16ToAcc8:
       case stackAcc16ToAcc8:
@@ -201,8 +203,11 @@ public class Instruction {
       case read:
         result = "call read";
         break;
-      case write:
-        result = "call write";
+      case writeAcc8:
+        result = "call writeAcc8";
+        break;
+      case writeAcc16:
+        result = "call writeAcc16";
         break;
       case stop: break;
       default: throw new RuntimeException("unsupported instruction");

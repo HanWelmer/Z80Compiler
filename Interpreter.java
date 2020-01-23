@@ -285,8 +285,11 @@ public class Interpreter {
             acc16 = Integer.parseInt(inputParts[inputIndex++]);
           }
           break;
-      case write:
-          System.out.println(pop());
+      case writeAcc8:
+          System.out.println(acc8);
+          break;
+      case writeAcc16:
+          System.out.println(acc16);
           break;
       case stop:
         stopRun = true;
