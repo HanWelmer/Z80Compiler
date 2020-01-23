@@ -7,6 +7,7 @@ import java.util.Map;
 public class Lexeme {
   protected LexemeType type;
   protected Integer constVal;
+  protected Datatype datatype;
   protected String idVal;
   protected AddValType addVal;
   protected MulValType mulVal;
@@ -14,6 +15,7 @@ public class Lexeme {
   
   public Lexeme (LexemeType type) {
     this.type = type;
+    this.datatype = Datatype.unknown;
   }
 
   public String makeString(Variable variable) {
@@ -22,11 +24,19 @@ public class Lexeme {
     }
     String result = type.getValue();
     switch (type) {
-      case constant: result += " " + constVal; break;
+      case constant:
+        result += " ";
+        result += datatype.getValue();
+        result += " ";
+        result += constVal;
+        break;
       case identifier: 
         result += " " + idVal;
         if ((variable != null) && (variable.getAddress() >=0)) {
-          result += "@" + variable.getAddress();
+          result += "{";
+          result += variable.getDatatype().getValue();
+          result += "}@";
+          result += variable.getAddress();
         }
         break;
       case addop: result += " " + addVal; break;

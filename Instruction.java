@@ -14,7 +14,13 @@ public class Instruction {
     function = fn;
     
     //error detection (internal compiler errors):
-    if (function != FunctionType.stop && function != FunctionType.read && function != FunctionType.write) {
+    if (function != FunctionType.stop
+      && function != FunctionType.read
+      && function != FunctionType.write
+      && function != FunctionType.acc8ToAcc16
+      && function != FunctionType.acc16ToAcc8
+      && function != FunctionType.stackAcc8ToAcc16
+      && function != FunctionType.stackAcc16ToAcc8) {
       throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
     }
   }
@@ -27,32 +33,46 @@ public class Instruction {
       case stop:
       case read:
       case write:
+      case acc8ToAcc16:
+      case acc16ToAcc8:
+      case stackAcc16ToAcc8:
+      case stackAcc8ToAcc16:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " expects no operand.");
         //break;
       case call:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " not yet implemented.");
         //break;
-      case accLoad:
-      case stackAccLoad:
-      case accPlus:
-      case accMinus:
-      case minusAcc:
-      case accTimes:
-      case accDiv:
-      case divAcc:
-      case accCompare:
+      case comment:
+      case acc16Load:
+      case stackAcc16Load:
+      case acc16Plus:
+      case acc16Minus:
+      case minusAcc16:
+      case acc16Times:
+      case acc16Div:
+      case divAcc16:
+      case acc16Compare:
+      case acc8Load:
+      case stackAcc8Load:
+      case acc8Plus:
+      case acc8Minus:
+      case minusAcc8:
+      case acc8Times:
+      case acc8Div:
+      case divAcc8:
+      case acc8Compare:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         } else if (operand.opType == OperandType.stack) {
-          if (function == FunctionType.stackAccLoad) {
+          if (function == FunctionType.stackAcc16Load || function == FunctionType.stackAcc8Load) {
             throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
-          } else if (operand.opValue == null) {
+          } else if (operand.intValue == null) {
             //no error
           } else {
             throw new RuntimeException("Internal compiler error: functionType " + fn + " expects null as operand value.");
           }
         } else if (operand.opType == OperandType.constant || operand.opType == OperandType.var) {
-          if (operand.opValue == null) {
+          if (operand.intValue == null && operand.strValue == null) {
             throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand value.");
           }
         } else if (operand.opType == OperandType.label) {
@@ -61,15 +81,16 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: unknown operand type " + operand.opType + " for functionType " + fn);
         }
         break;
-      case accStore:
+      case acc16Store:
+      case acc8Store:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         } else if (operand.opType == OperandType.stack) {
-          if (operand.opValue == null) {
+          if (operand.intValue == null) {
             throw new RuntimeException("Internal compiler error: functionType " + fn + " expects null as operand value.");
           }
         } else if (operand.opType == OperandType.var) {
-          if (operand.opValue == null) {
+          if (operand.intValue == null) {
             throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
           }
         } else if (operand.opType == OperandType.constant || operand.opType == OperandType.label) {
@@ -78,10 +99,12 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: unknown operand type " + operand.opType + " for functionType " + fn);
         };
         break;
-      case increment:
-      case decrement:
+      case increment16:
+      case decrement16:
+      case increment8:
+      case decrement8:
         if (operand != null && operand.opType == OperandType.var) {
-          if (operand.opValue == null) {
+          if (operand.intValue == null) {
             throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
           }
         } else {
@@ -96,7 +119,7 @@ public class Instruction {
       case brGt:
       case brGe:
         if (operand != null && operand.opType == OperandType.label) {
-          if (operand.opValue == null) {
+          if (operand.intValue == null) {
             throw new RuntimeException("Internal compiler error: functionType " + fn + " expects the address of a label to jump to.");
           }
         } else {
@@ -108,42 +131,63 @@ public class Instruction {
     }
     
     //deep copy of operand, otherwise a reference to the mutable object operand is copied into the Instruction.
-    this.operand = new Operand(operand.opType, operand.opValue, operand.opSize);
+    if (operand.datatype == Datatype.integer || operand.datatype == Datatype.byt) {
+      this.operand = new Operand(operand.datatype, operand.opType, operand.intValue);
+    } else {
+      this.operand = new Operand(operand.datatype, operand.opType, operand.strValue);
+    }
   }
   
   public String toString() {
     String result = function.getValue();
     switch (function) {
-      case accStore:
+      case comment: result += operand.strValue; break;
+      case acc16Store:
+      case acc8Store:
         switch(operand.opType) {
-          case var: result += " variable " + operand.opValue; break;
+          case var: result += " variable " + operand.intValue; break;
           case stack: result += " stack"; break;
           default: throw new RuntimeException("accStore with unsupported operandType");
         };
         break;
-      case accLoad:
-      case stackAccLoad:
-      case accPlus:
-      case accMinus:
-      case minusAcc:
-      case accTimes:
-      case accDiv:
-      case divAcc:
-      case accCompare:
+      case acc16Load:
+      case stackAcc16Load:
+      case acc16Plus:
+      case acc16Minus:
+      case minusAcc16:
+      case acc16Times:
+      case acc16Div:
+      case divAcc16:
+      case acc16Compare:
+      case acc8Load:
+      case stackAcc8Load:
+      case acc8Plus:
+      case acc8Minus:
+      case minusAcc8:
+      case acc8Times:
+      case acc8Div:
+      case divAcc8:
+      case acc8Compare:
         switch(operand.opType) {
-          case var: result += " variable " + operand.opValue; break;
-          case constant: result += " constant " + operand.opValue; break;
+          case var: result += " variable " + operand.intValue; break;
+          case constant: result += " constant " + operand.intValue; break;
           case stack: result += " unstack"; break;
           default: throw new RuntimeException("accu related instruction with unsupported operandType");
         };
         break;
-      case increment:
-      case decrement:
+      case increment16:
+      case decrement16:
+      case increment8:
+      case decrement8:
         switch(operand.opType) {
-          case var: result += " variable " + operand.opValue; break;
+          case var: result += " variable " + operand.intValue; break;
           default: throw new RuntimeException(result + " instruction with non-var operandType");
         };
         break;
+      case acc16ToAcc8: break;
+      case acc8ToAcc16: break;
+      case stackAcc16ToAcc8: break;
+      case stackAcc8ToAcc16: break;
       case br:
       case brNe:
       case brEq:
@@ -152,7 +196,7 @@ public class Instruction {
       case brGe:
       case brGt:
       case call:
-        result += " " + operand.opValue;
+        result += " " + operand.intValue;
         break;
       case read:
         result = "call read";
@@ -160,8 +204,7 @@ public class Instruction {
       case write:
         result = "call write";
         break;
-      case stop:
-        break;
+      case stop: break;
       default: throw new RuntimeException("unsupported instruction");
     }
     return result;

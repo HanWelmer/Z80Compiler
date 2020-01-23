@@ -3,13 +3,24 @@
  * Used in the code generation phase of the compiler.
  */
 public class Operand {
+  public Datatype datatype;
   public OperandType opType;
-  public Integer opValue;
-  public Datatype opSize;
+  public Integer intValue;
+  public String strValue;
   
-  public Operand(OperandType opType, Integer opValue, Datatype opSize) {
+  public Operand(Datatype datatype) {
+    this.datatype = datatype;
+  }
+
+  public Operand(Datatype datatype, OperandType opType, Integer value) {
+    this.datatype = datatype;
     this.opType = opType;
-    this.opValue = opValue;
-    this.opSize = opSize;
+    this.intValue = value;
+  }
+
+  public Operand(Datatype datatype, OperandType opType, String value) {
+    this.datatype = datatype;
+    this.opType = opType;
+    this.strValue = value;
   }
 }
