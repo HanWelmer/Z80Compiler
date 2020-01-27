@@ -122,7 +122,8 @@ public class Compiler {
   /* Constants and class member variables for lexical analysis phase */
   private static final int MAX_LINE_WIDTH = 128;
   private static final int MAX_IDENTIFIER_LENGTH = MAX_LINE_WIDTH;
-  private static final int MAX_CONSTANT = 65535; //16 bit constant
+  private static final int MAX_BYT_CONSTANT = 255; //8 bit constant
+  private static final int MAX_INT_CONSTANT = 65535; //16 bit constant
   private static final String VALID_IDENTIFIER_CHARACTERS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
   private String line;
   private int lineNumber;
@@ -321,8 +322,8 @@ public class Compiler {
       while (nextChar() >= '0' && nextChar() <= '9' && !error) {
         ch = getChar();
         lexeme.constVal = lexeme.constVal * 10 + ((int)ch - (int)'0');
-        //assumption: lexeme.constVal can be larger than MAX_CONSTANT.
-        if (lexeme.constVal > MAX_CONSTANT) {
+        //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
+        if (lexeme.constVal > MAX_INT_CONSTANT) {
           error = true;
         }
       }
@@ -334,7 +335,7 @@ public class Compiler {
           ch = getChar();
         }
       }
-      lexeme.datatype = (lexeme.constVal <= 255) ? Datatype.byt : Datatype.integer;
+      lexeme.datatype = (lexeme.constVal <= MAX_BYT_CONSTANT) ? Datatype.byt : Datatype.integer;
     } else if (ch == '{') {
       lexeme.type = LexemeType.beginlexeme;
     } else if (ch == '}') {
@@ -426,7 +427,7 @@ public class Compiler {
       }
     }
     debug("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-  }
+  } //getLexeme()
 
   private char getChar() throws IOException, FatalError {
     char result = nextChar();
@@ -528,7 +529,7 @@ public class Compiler {
       }
     }
     return operand;
-  }
+  } //factor()
   
   private Operand term(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
     /* part of code generation */
@@ -555,7 +556,7 @@ public class Compiler {
       }
     }
     return operand;
-  }
+  } //term()
   
   private Operand expression(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
     debug("\nexpression: start with stopSet = " + stopSet);
@@ -589,7 +590,7 @@ public class Compiler {
     }
     debug("\nexpression: end");
     return operand;
-  }
+  } //expression()
   
   //parse a comparison, and return the address of the jump instruction to be filled with the label at the end of the control statement block.
   //comparison = expression relop expression
@@ -639,7 +640,7 @@ public class Compiler {
 
     debug("\ncomparison: end");
     return ifLabel;
-  }
+  } //comparison
   
   //parse a comparison, jump back to the label if the comparison yields true.
   //comparison = expression relop expression
@@ -787,7 +788,7 @@ public class Compiler {
     //part of semantic analysis: close the declaration scope of the for statement.
     identifiers.closeScope();
     debug("\nforStatement: end");
-  }
+  } //forStatement()
 
   //doStatement    = "do" block "while" "(" comparison ")" ";".
   private void doStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
@@ -829,7 +830,7 @@ public class Compiler {
     }
     
     debug("\ndoStatement: end");
-  }
+  } //doStatement()
 
   //whileStatement = "while" "(" comparison ")" block.
   private void whileStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
@@ -862,7 +863,7 @@ public class Compiler {
     plant(new Instruction(FunctionType.br, new Operand(Datatype.integer, OperandType.label, whileLabel)));
     plantForwardLabel(endLabel);
     debug("\nwhileStatement: end");
-  }
+  } //whileStatement()
 
   // ifStatement = "if" "(" comparison ")" block [ "else" block ].
   private void ifStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
@@ -917,7 +918,7 @@ public class Compiler {
       plantForwardLabel(ifLabel);
     }
     debug("\nifStatement: end");
-  }
+  } //ifStatement()
   
   //assignment = [datatype] update ";".
   //datatype   = "byte" | "int".
@@ -963,7 +964,7 @@ public class Compiler {
 
     debug("\nassignment: end");
     return variable;
-  }
+  } //assignment()
 
   //update = identifier++ | identifier-- | identifier "=" expression
   private void update(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
@@ -973,8 +974,10 @@ public class Compiler {
     stopAssignmentSet.addAll(startExp);
     stopAssignmentSet.add(LexemeType.semicolon);
 
-    /* part of code generation */
-    int assignTo = identifiers.getId(lexeme.idVal).getAddress();
+    /* part of semantic analysis. */
+    Variable var = identifiers.getId(lexeme.idVal);
+    int varAddress = var.getAddress();
+    Datatype varDatatype = var.getDatatype();
 
     /* part of lexical analysis */
     getLexeme();
@@ -985,10 +988,10 @@ public class Compiler {
         getLexeme();
 
         /* part of code generation */
-        if (lexeme.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.decrement16, new Operand(Datatype.integer, OperandType.var, assignTo)));
-        } else if (lexeme.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.decrement8, new Operand(Datatype.byt, OperandType.var, assignTo)));
+        if (varDatatype == Datatype.integer) {
+          plant(new Instruction(FunctionType.decrement16, new Operand(Datatype.integer, OperandType.var, varAddress)));
+        } else if (varDatatype == Datatype.byt) {
+          plant(new Instruction(FunctionType.decrement8, new Operand(Datatype.byt, OperandType.var, varAddress)));
         } else {
           error(12); 
         }
@@ -1000,10 +1003,10 @@ public class Compiler {
         getLexeme();
 
         /* part of code generation */
-        if (lexeme.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.increment16, new Operand(Datatype.integer, OperandType.var, assignTo)));
-        } else if (lexeme.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.increment8, new Operand(Datatype.byt, OperandType.var, assignTo)));
+        if (varDatatype == Datatype.integer) {
+          plant(new Instruction(FunctionType.increment16, new Operand(Datatype.integer, OperandType.var, varAddress)));
+        } else if (varDatatype == Datatype.byt) {
+          plant(new Instruction(FunctionType.increment8, new Operand(Datatype.byt, OperandType.var, varAddress)));
         } else {
           error(12); 
         }
@@ -1015,32 +1018,31 @@ public class Compiler {
 
       /* part of code generation */
       plantAccLoad(operand);
-      if (operand.datatype == Datatype.integer) {
-        if (lexeme.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.acc16Store, new Operand(Datatype.integer, OperandType.var, assignTo)));
-        } else if (lexeme.datatype == Datatype.byt) {
+      if (varDatatype == Datatype.byt) {
+        if (operand.datatype == Datatype.byt) {
+          plant(new Instruction(FunctionType.acc8Store, new Operand(Datatype.byt, OperandType.var, varAddress)));
+        } else if (operand.datatype == Datatype.integer) {
           plant(new Instruction(FunctionType.acc16ToAcc8));
-          plant(new Instruction(FunctionType.acc8Store, new Operand(Datatype.byt, OperandType.var, assignTo)));
+          plant(new Instruction(FunctionType.acc8Store, new Operand(Datatype.byt, OperandType.var, varAddress)));
         } else {
-          error(12); 
+          error(14);
         }
-      }
-      else if (operand.datatype == Datatype.byt) {
-        if (lexeme.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.acc8Store, new Operand(Datatype.byt, OperandType.var, assignTo)));
-        } else if(lexeme.datatype == Datatype.integer) {
+      } else if (varDatatype == Datatype.integer) {
+        if (operand.datatype == Datatype.integer) {
+          plant(new Instruction(FunctionType.acc16Store, new Operand(Datatype.integer, OperandType.var, varAddress)));
+        } else if (operand.datatype == Datatype.byt) {
           plant(new Instruction(FunctionType.acc8ToAcc16));
-          plant(new Instruction(FunctionType.acc16Store, new Operand(Datatype.integer, OperandType.var, assignTo)));
+          plant(new Instruction(FunctionType.acc16Store, new Operand(Datatype.integer, OperandType.var, varAddress)));
         } else {
-          error(12); 
+          error(14);
         }
       } else {
-        error(14); 
+        error(12);
       }
     }
 
     debug("\nupdate: end");
-  }
+  } //update()
 
   // writeStatement = "write" "(" expression ")" ";".
   private void writeStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {

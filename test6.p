@@ -63,41 +63,60 @@ class TestComparison {
 
   int j = 5;
   //LD    A,5
-  //LD    H,0
   //LD    L,A
-  //LD    (04003H),HL
-  error
+  //LD    H,0
+  //LD    (04004H),HL
+  //OK
+  
+  write(j + 1);
+  write(j + e);
+  e++;
+  write(e + j);
+
+  d = e + 6;
+  write(d);
+  d = 7 + e;
+  write(d);
+  e = d + c;
+  write(e);
 
   b = 255;
   //LD    A,255
-  //LD    (04002H),A
+  //LD    (04001H),A
+  //OK
 
   write(b);
-  //LD    A,(04002H)
+  //LD    A,(04001H)
   //CALL  writeA
+  //OK
 
   int i = 256;
   //LD    HL,256
-  //LD    (04000H),HL
+  //LD    (04006H),HL
+  //OK
 
   write(i);
-  //LD    HL,(04000H)
+  //LD    HL,(04006H)
   //CALL  writeHL
+  //OK
 
   write(257);
   //LD    HL,257
   //CALL  writeHL
+  //OK
 
   write(j + 1001);
   //LD    HL,(04004H)
   //LD    DE,1001
   //ADD   HL,DE
   //CALL  writeHL
+  //OK
 
   write(1002 + j);
   //LD    HL,1002
   //LD    DE,(04004H)
   //ADD   HL,DE
   //CALL  writeHL
+  //OK
 
 }
