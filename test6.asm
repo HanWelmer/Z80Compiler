@@ -583,162 +583,388 @@ writeA:
 main:
 L0:     ;/*
 L1:     ; * A small program in the miniJava language.
-L2:     ; * Test 8-bit and 16-bit operations
+L2:     ; * Test 8-bit and 16-bit expressions.
 L3:     ; */
-L4:     ;class TestComparison {
-L5:     ;  write(0);
+L4:     ;class Test8And16BitExpressions {
+L5:     ;  write(0);         // 0
 L6:     ;  //LD    A,0
 L7:     ;  //CALL  writeA
 L8:     ;  //OK
 L9:     ;
-L10:    ;  byte c = 1;
+L10:    ;  byte b = 1;
         LD    A,0
         CALL  writeA
         LD    A,1
         LD    (04000H),A
-L15:    ;  //LD    A,1
-L16:    ;  //LD    (04000H),A
-L17:    ;  //OK
-L18:    ;
-L19:    ;  write(c);
-L20:    ;  //LD    A,(04000H)
-L21:    ;  //CALL  writeA
-L22:    ;  //OK
-L23:    ;
-L24:    ;  byte b = 0 + 2;
+L15:    ;  byte c = 4;
+        LD    A,4
+        LD    (04001H),A
+L18:    ;  write(b);         // 1
+L19:    ;  //LD    A,1
+L20:    ;  //LD    (04000H),A
+L21:    ;  //LD    A,(04000H)
+L22:    ;  //CALL  writeA
+L23:    ;  //OK
+L24:    ;
+L25:    ;  write(0 + 2);     // 2
         LD    A,(04000H)
         CALL  writeA
         LD    A,0
         ADD   A,2
+L30:    ;  write(b + 2);     // 3
+        CALL  writeA
+        LD    A,(04000H)
+        ADD   A,2
+L34:    ;  write(3 + b);     // 4
+        CALL  writeA
+        LD    A,3
+        LD    B,A
+        LD    A,(04000H)
+        ADD   A,B
+L38:    ;  write(b + c);     // 5
+        CALL  writeA
+        LD    A,(04000H)
+        LD    B,A
+        LD    A,(04001H)
+        ADD   A,B
+L42:    ;
+L43:    ;  c = 4 + 2;
+        CALL  writeA
+        LD    A,4
+        ADD   A,2
         LD    (04001H),A
-L30:    ;  //LD    A,0
-L31:    ;  //ADD   A,2
-L32:    ;  //LD    (04001H),A
-L33:    ;  //OK
-L34:    ;
-L35:    ;  write(b);
-L36:    ;  //LD    A,(04001H)
-L37:    ;  //CALL  writeA
-L38:    ;  //OK
-L39:    ;
-L40:    ;  byte e = 2;
+L48:    ;  write(c);         // 6
+L49:    ;  c = b + 6;
         LD    A,(04001H)
         CALL  writeA
-        LD    A,2
-        LD    (04002H),A
-L45:    ;  //LD    A,2
-L46:    ;  //LD    (04002H),A
-L47:    ;  //OK
-L48:    ;
-L49:    ;  byte d = 1;
+        LD    A,(04000H)
+        ADD   A,6
+        LD    (04001H),A
+L55:    ;  write(c);         // 7
+L56:    ;  c = 7 + b;
+        LD    A,(04001H)
+        CALL  writeA
+        LD    A,7
+        LD    B,A
+        LD    A,(04000H)
+        ADD   A,B
+        LD    (04001H),A
+L62:    ;  write(c);         // 8
+L63:    ;  c = b + c;
+        LD    A,(04001H)
+        CALL  writeA
+        LD    A,(04000H)
+        LD    B,A
+        LD    A,(04001H)
+        ADD   A,B
+        LD    (04001H),A
+L69:    ;  write(c);         // 9
+L70:    ;
+L71:    ;
+L72:    ;  int i = 10;
+        LD    A,(04001H)
+        CALL  writeA
+        LD    A,10
+        LD    L,A
+        LD    H,0
+        LD    (04002H),HL
+L78:    ;  write(i);         // 10
+L79:    ;  //LD    A,10
+L80:    ;  //LD    L,A
+L81:    ;  //LD    H,0
+L82:    ;  //LD    (04004H),HL
+L83:    ;  //OK
+L84:    ;  
+L85:    ;  write(i + 1);     // 11
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,(04002H)
         LD    A,1
-        LD    (04003H),A
-L52:    ;  //LD    A,1
-L53:    ;  //LD    (04003H),A
-L54:    ;  //OK
-L55:    ;
-L56:    ;  write(d + e);
-        LD    A,(04003H)
-        LD    B,A
-        LD    A,(04002H)
-        ADD   A,B
-L59:    ;  //LD    A,(04003H)
-L60:    ;  //LD    B,A
-L61:    ;  //LD    A,(04002H)
-L62:    ;  //ADD   A,B
-L63:    ;  //CALL  writeA
-L64:    ;  //OK
-L65:    ;
-L66:    ;  write(2 + e);
-        CALL  writeA
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+L91:    ;  write(2 + i);     // 12
+        CALL  writeHL
         LD    A,2
-        LD    B,A
-        LD    A,(04002H)
-        ADD   A,B
-L70:    ;  //LD    A,2
-L71:    ;  //LD    B,A
-L72:    ;  //LD    A,(04002H)
-L73:    ;  //ADD   A,B
-L74:    ;  //CALL  writeA
-L75:    ;  //OK
-L76:    ;
-L77:    ;  write(d + 4);
-        CALL  writeA
-        LD    A,(04003H)
-        ADD   A,4
-L81:    ;  //LD    A,(04003H)
-L82:    ;  //ADD   A,4
-L83:    ;  //CALL  writeA
-L84:    ;  //OK
-L85:    ;
-L86:    ;  int j = 5;
-        CALL  writeA
+        LD    L,A
+        LD    H,0
+        LD    DE,(04002H)
+        ADD   HL,DE
+L96:    ;  b = 3;
+        CALL  writeHL
+        LD    A,3
+        LD    (04000H),A
+L100:   ;  write(i + b);     // 13
+        LD    HL,(04002H)
+        LD    A,(04000H)
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+L104:   ;  b++; //4
+        CALL  writeHL
+        LD    HL,(04000H)
+        INC   (HL)
+L107:   ;  write(b + i);     // 14
+        LD    A,(04000H)
+        LD    L,A
+        LD    H,0
+        LD    DE,(04002H)
+        ADD   HL,DE
+L111:   ;
+L112:   ;  int j = i + 5;    // 15
+        CALL  writeHL
+        LD    HL,(04002H)
         LD    A,5
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+        LD    (04004H),HL
+L118:   ;  write(j);
+L119:   ;  j = 6 + i;        // 16
+        LD    HL,(04004H)
+        CALL  writeHL
+        LD    A,6
+        LD    L,A
+        LD    H,0
+        LD    DE,(04002H)
+        ADD   HL,DE
+        LD    (04004H),HL
+L126:   ;  write(j);
+L127:   ;  j = 7;
+        LD    HL,(04004H)
+        CALL  writeHL
+        LD    A,7
         LD    L,A
         LD    H,0
         LD    (04004H),HL
-L91:    ;  //LD    A,5
-L92:    ;  //LD    L,A
-L93:    ;  //LD    H,0
-L94:    ;  //LD    (04004H),HL
-L95:    ;  //OK
-L96:    ;
-L97:    ;  b = 255;
-        LD    A,255
-        LD    (04001H),A
-L100:   ;  //LD    A,255
-L101:   ;  //LD    (04001H),A
-L102:   ;  //OK
-L103:   ;
-L104:   ;  write(b);
-L105:   ;  //LD    A,(04001H)
-L106:   ;  //CALL  writeA
-L107:   ;  //OK
-L108:   ;
-L109:   ;  int i = 256;
-        LD    A,(04001H)
-        CALL  writeA
-        LD    HL,256
-        LD    (04006H),HL
-L114:   ;  //LD    HL,256
-L115:   ;  //LD    (04006H),HL
-L116:   ;  //OK
-L117:   ;
-L118:   ;  write(i);
-L119:   ;  //LD    HL,(04006H)
-L120:   ;  //CALL  writeHL
-L121:   ;  //OK
-L122:   ;
-L123:   ;  write(257);
-        LD    HL,(04006H)
-        CALL  writeHL
-L126:   ;  //LD    HL,257
-L127:   ;  //CALL  writeHL
-L128:   ;  //OK
-L129:   ;
-L130:   ;  write(j + 1001);
-        LD    HL,257
-        CALL  writeHL
-        LD    HL,(04004H)
-        LD    DE,1001
-        ADD   HL,DE
-L135:   ;  //LD    HL,(04004H)
-L136:   ;  //LD    DE,1001
-L137:   ;  //ADD   HL,DE
-L138:   ;  //CALL  writeHL
-L139:   ;  //OK
-L140:   ;
-L141:   ;  write(1002 + j);
-        CALL  writeHL
-        LD    HL,1002
+L133:   ;  j = i + j;        // 17
+        LD    HL,(04002H)
         LD    DE,(04004H)
         ADD   HL,DE
-L145:   ;  //LD    HL,1002
-L146:   ;  //LD    DE,(04004H)
-L147:   ;  //ADD   HL,DE
-L148:   ;  //CALL  writeHL
+        LD    (04004H),HL
+L137:   ;  write(j);
+L138:   ;
+L139:   ;  b = 255;
+        LD    HL,(04004H)
+        CALL  writeHL
+        LD    A,255
+        LD    (04000H),A
+L144:   ;  write(b);         // 255
+L145:   ;  //LD    A,255
+L146:   ;  //LD    (04001H),A
+L147:   ;  //LD    A,(04001H)
+L148:   ;  //CALL  writeA
 L149:   ;  //OK
 L150:   ;
-L151:   ;}
+L151:   ;  i = 256;
+        LD    A,(04000H)
+        CALL  writeA
+        LD    HL,256
+        LD    (04002H),HL
+L156:   ;  write(i);         // 256
+L157:   ;  //LD    HL,256
+L158:   ;  //LD    (04006H),HL
+L159:   ;  //LD    HL,(04006H)
+L160:   ;  //CALL  writeHL
+L161:   ;  //OK
+L162:   ;
+L163:   ;  write(1000);      // 1000
+        LD    HL,(04002H)
+        CALL  writeHL
+L166:   ;  j = 1001;
+        LD    HL,1000
+        CALL  writeHL
+        LD    HL,1001
+        LD    (04004H),HL
+L171:   ;  write(j);         // 1001
+L172:   ;
+L173:   ;  write(1000 + 2);  // 1002
+        LD    HL,(04004H)
+        CALL  writeHL
+        LD    HL,1000
+        LD    A,2
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+L179:   ;  write(3 + 1000);  // 1003
+        CALL  writeHL
+        LD    A,3
+        LD    L,A
+        LD    H,0
+        LD    DE,1000
+        ADD   HL,DE
+L184:   ;  write(500 + 504); // 1004
+        CALL  writeHL
+        LD    HL,500
+        LD    DE,504
+        ADD   HL,DE
+L188:   ;  i = 1000 + 5;
+        CALL  writeHL
+        LD    HL,1000
+        LD    A,5
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+        LD    (04002H),HL
+L194:   ;  write(i);         // 1005
+L195:   ;  i = 6 + 1000;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    A,6
+        LD    L,A
+        LD    H,0
+        LD    DE,1000
+        ADD   HL,DE
+        LD    (04002H),HL
+L202:   ;  write(i);         // 1006
+L203:   ;  i = 500 + 507;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,500
+        LD    DE,507
+        ADD   HL,DE
+        LD    (04002H),HL
+L209:   ;  write(i);         // 1007
+L210:   ;  
+L211:   ;  j = 1000;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,1000
+        LD    (04004H),HL
+L216:   ;  b = 10;
+        LD    A,10
+        LD    (04000H),A
+L219:   ;  i = 514;
+        LD    HL,514
+        LD    (04002H),HL
+L222:   ;  write(j + 8);     // 1008
+        LD    HL,(04004H)
+        LD    A,8
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+L226:   ;  write(9 + j);     // 1009
+        CALL  writeHL
+        LD    A,9
+        LD    L,A
+        LD    H,0
+        LD    DE,(04004H)
+        ADD   HL,DE
+L231:   ;  write(j + b);     // 1010
+        CALL  writeHL
+        LD    HL,(04004H)
+        LD    A,(04000H)
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+L236:   ;  b++;
+        CALL  writeHL
+        LD    HL,(04000H)
+        INC   (HL)
+L239:   ;  write(b + j);     // 1011
+        LD    A,(04000H)
+        LD    L,A
+        LD    H,0
+        LD    DE,(04004H)
+        ADD   HL,DE
+L243:   ;  j = 500;
+        CALL  writeHL
+        LD    HL,500
+        LD    (04004H),HL
+L247:   ;  write(j + 512);   // 1012
+        LD    HL,(04004H)
+        LD    DE,512
+        ADD   HL,DE
+L250:   ;  write(513 + j);   // 1013
+        CALL  writeHL
+        LD    HL,513
+        LD    DE,(04004H)
+        ADD   HL,DE
+L254:   ;  write(i + j);     // 1014
+        CALL  writeHL
+        LD    HL,(04002H)
+        LD    DE,(04004H)
+        ADD   HL,DE
+L258:   ;  
+L259:   ;  j = 1000;
+        CALL  writeHL
+        LD    HL,1000
+        LD    (04004H),HL
+L263:   ;  b = 17;
+        LD    A,17
+        LD    (04000H),A
+L266:   ;  i = j + 15;
+        LD    HL,(04004H)
+        LD    A,15
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+        LD    (04002H),HL
+L271:   ;  write(i);         // 1015
+L272:   ;  i = 16 + j;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    A,16
+        LD    L,A
+        LD    H,0
+        LD    DE,(04004H)
+        ADD   HL,DE
+        LD    (04002H),HL
+L279:   ;  write(i);         // 1016
+L280:   ;  i = j + b;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,(04004H)
+        LD    A,(04000H)
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+        LD    (04002H),HL
+L287:   ;  write(i);         // 1017
+L288:   ;  b++;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,(04000H)
+        INC   (HL)
+L292:   ;  i = b + j;
+        LD    A,(04000H)
+        LD    L,A
+        LD    H,0
+        LD    DE,(04004H)
+        ADD   HL,DE
+        LD    (04002H),HL
+L297:   ;  write(i);         // 1018
+L298:   ;  j = 500;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,500
+        LD    (04004H),HL
+L303:   ;  i = j + 519;
+        LD    HL,(04004H)
+        LD    DE,519
+        ADD   HL,DE
+        LD    (04002H),HL
+L307:   ;  write(i);         // 1019
+L308:   ;  i = 520 + j;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,520
+        LD    DE,(04004H)
+        ADD   HL,DE
+        LD    (04002H),HL
+L314:   ;  write(i);         // 1020
+L315:   ;  i = 521;
+        LD    HL,(04002H)
+        CALL  writeHL
+        LD    HL,521
+        LD    (04002H),HL
+L320:   ;  i = i + j;
+        LD    HL,(04002H)
+        LD    DE,(04004H)
+        ADD   HL,DE
+        LD    (04002H),HL
+L324:   ;  write(i);         // 1021
+L325:   ;}
+        LD    HL,(04002H)
         CALL  writeHL
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

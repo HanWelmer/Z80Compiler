@@ -6,5 +6,6 @@ public enum OperandType {
   stack,
   constant,
   var,
-  label;
+  label,
+  acc8;
 };

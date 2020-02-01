@@ -235,12 +235,16 @@ public class Transcoder {
       }
       asm = operandToHL(instruction);
     } else if (function == FunctionType.acc16Plus) {
-      asm = operandToDE(instruction);
-      result.add(asm);
-      byteAddress += asm.getBytes().size();
-
-      asmCode = INDENT + "ADD   HL,DE";
-      asm = new AssemblyInstruction(byteAddress, asmCode, 0x19);
+      if (instruction.operand.opType == OperandType.acc8) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
+        byteAddress++;
+      } else {
+        asm = operandToDE(instruction);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+      }
+      asm = new AssemblyInstruction(byteAddress, INDENT + "ADD   HL,DE", 0x19);
     } else if ((function == FunctionType.acc16Minus) || (function == FunctionType.minusAcc16) || (function == FunctionType.acc16Compare)) {
       asm = operandToDE(instruction);
       result.add(asm);

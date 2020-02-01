@@ -568,6 +568,7 @@ public class Compiler {
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.addop);
     operand = term(followSet, operand);
+    debug("\nexpression: operand.datatype = " + operand.datatype + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse + ", rOperand.datatype = " + rOperand.datatype);
     while (lexeme.type == LexemeType.addop) {
       /* part of code generation */
       plantAccLoad(operand);
@@ -579,7 +580,24 @@ public class Compiler {
       rOperand = term(followSet, rOperand);
       
       /* part of code generation */
-      debug("\nexpression: rOperand.opType = " + rOperand.opType + ", rOperand.datatype = " + rOperand.datatype + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+      debug("\nexpression loop: operand.datatype = " + operand.datatype + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse + ", rOperand.datatype = " + rOperand.datatype + ", rOperand.opType = " + rOperand.opType);
+      if (operand.datatype == Datatype.byt) {
+        if (rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardAdd8.get(operator), rOperand));
+        } else if (rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(FunctionType.acc8ToAcc16));
+          operand.datatype = Datatype.integer;
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
+        }
+      } else if (operand.datatype == Datatype.integer) {
+        if (rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
+        } else if (rOperand.datatype == Datatype.byt) {
+          plantAccLoad(rOperand);
+          plant(new Instruction(forwardAdd16.get(operator), new Operand(Datatype.byt, OperandType.acc8)));
+        }
+      }
+      /*
       if (rOperand.opType == OperandType.stack) {
         plant(new Instruction(reverseAdd16.get(operator), rOperand));
       } else if (rOperand.datatype == Datatype.byt && acc8InUse) {
@@ -587,6 +605,7 @@ public class Compiler {
       } else {
         plant(new Instruction(forwardAdd16.get(operator), rOperand));
       }
+      */
     }
     debug("\nexpression: end");
     return operand;
@@ -685,7 +704,7 @@ public class Compiler {
     }
 
     debug("\ncomparison: end");
-  }
+  } //comparison()
 
   
   // block = statement | "{" statements "}".
@@ -1200,6 +1219,11 @@ public class Compiler {
       storeInstruction.clear();
     }
     storeInstruction.add(instruction);
+    
+    if (instruction.function == FunctionType.acc8ToAcc16) {
+      acc16InUse = true;
+      acc8InUse = false;
+    }
 
     /* for debugging purposes */
     debug("\n" + String.format("%3d :", codePos) + instruction.toString());

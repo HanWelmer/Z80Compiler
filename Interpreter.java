@@ -295,7 +295,7 @@ public class Interpreter {
         stopRun = true;
         break;
       default:
-        runError("unknown operand type");
+        runError("unknown function " + instr.function);
         break;
     } // switch(instr.function)
     
@@ -381,6 +381,9 @@ public class Interpreter {
         } else {
           runError("undefined variable");
         }
+        break;
+      case acc8:
+        result = acc8;
         break;
       default:
         runError("unknown operand type");

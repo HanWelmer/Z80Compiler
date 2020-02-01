@@ -12,6 +12,11 @@ public class Operand {
     this.datatype = datatype;
   }
 
+  public Operand(Datatype datatype, OperandType opType) {
+    this.datatype = datatype;
+    this.opType = opType;
+  }
+
   public Operand(Datatype datatype, OperandType opType, Integer value) {
     this.datatype = datatype;
     this.opType = opType;

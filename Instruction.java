@@ -79,6 +79,12 @@ public class Instruction {
           }
         } else if (operand.opType == OperandType.label) {
           throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
+        } else if (operand.opType == OperandType.acc8) {
+          if (function == FunctionType.acc16Plus) {
+            //no error
+          } else {
+            throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
+          }
         } else {
           throw new RuntimeException("Internal compiler error: unknown operand type " + operand.opType + " for functionType " + fn);
         }
@@ -174,6 +180,7 @@ public class Instruction {
           case var: result += " variable " + operand.intValue; break;
           case constant: result += " constant " + operand.intValue; break;
           case stack: result += " unstack"; break;
+          case acc8: result += " acc8"; break;
           default: throw new RuntimeException("accu related instruction with unsupported operandType");
         };
         break;
