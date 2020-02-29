@@ -31,7 +31,7 @@ public enum FunctionType {
   acc8Minus("acc8-"),
   minusAcc8("-acc8"),
   acc8Compare("accom8"),
-  acc8Times("acc8"),
+  acc8Times("acc8*"),
   acc8Div("acc8/"),
   divAcc8("/acc8"),
   increment8("incr8"),
@@ -39,8 +39,8 @@ public enum FunctionType {
   //16/8-bit conversion:
   acc8ToAcc16("acc8ToAcc16"),
   acc16ToAcc8("acc16ToAcc8"),
-  stackAcc16ToAcc8("stackAcc16ToAcc8"),
-  stackAcc8ToAcc16("stackAcc8ToAcc16"),
+  stackAcc16ToAcc8("<acc16ToAcc8"),
+  stackAcc8ToAcc16("<acc8ToAcc16"),
   //branch instructions:
   br("br"),
   brEq("breq"),

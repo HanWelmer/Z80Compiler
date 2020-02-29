@@ -163,7 +163,7 @@ public class Compiler {
  
   /* Constants and class member variables for code generation phase */
   private static final int NULL_OP = 0;
-  private static final int MAX_M_CODE = 512;
+  private static final int MAX_M_CODE = 1000;
   private boolean acc16InUse;
   private boolean acc8InUse;
 
@@ -531,6 +531,7 @@ public class Compiler {
     return operand;
   } //factor()
   
+  //term = factor {mulop factor}.
   private Operand term(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
     /* part of code generation */
     MulValType operator;
@@ -540,24 +541,51 @@ public class Compiler {
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.mulop);
     operand = factor(followSet, operand);
+    debug("\nterm: operand.datatype = " + operand.datatype + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse + ", rOperand.datatype = " + rOperand.datatype);
     while (lexeme.type == LexemeType.mulop) {
       /* part of code generation */
       plantAccLoad(operand);
       operand.opType = OperandType.stack;
       operator = lexeme.mulVal;
+      
       /* part of lexical analysis */
       getLexeme();
       rOperand = factor(followSet, rOperand);
+
       /* part of code generation */
-      if (rOperand.opType == OperandType.stack) {
-        plant(new Instruction(reverseMul16.get(operator), rOperand));
-      } else {
-        plant(new Instruction(forwardMul16.get(operator), rOperand));
+      debug("\nterm loop: operand.datatype = " + operand.datatype + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse + ", rOperand.datatype = " + rOperand.datatype + ", rOperand.opType = " + rOperand.opType);
+      //if (rOperand.opType == OperandType.stack) {
+      //  plant(new Instruction(reverseMul16.get(operator), rOperand));
+      //} else {
+      //  plant(new Instruction(forwardMul16.get(operator), rOperand));
+      //}
+      if (operand.datatype == Datatype.byt) {
+        if (rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardMul8.get(operator), rOperand));
+        } else if (rOperand.datatype == Datatype.integer) {
+          if (rOperand.opType == OperandType.stack) {
+            plant(new Instruction(FunctionType.stackAcc8ToAcc16));
+          } else {
+            plant(new Instruction(FunctionType.acc8ToAcc16));
+          }
+          operand.datatype = Datatype.integer;
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
+          acc8InUse = false;
+        }
+      } else if (operand.datatype == Datatype.integer) {
+        if (rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
+        } else if (rOperand.datatype == Datatype.byt) {
+          plantAccLoad(rOperand);
+          plant(new Instruction(forwardMul16.get(operator), new Operand(Datatype.byt, OperandType.acc8)));
+          acc8InUse = false;
+        }
       }
     }
     return operand;
   } //term()
   
+  //expression = term {addop term}.
   private Operand expression(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
     debug("\nexpression: start with stopSet = " + stopSet);
     /* part of lexical analysis */
@@ -585,7 +613,11 @@ public class Compiler {
         if (rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd8.get(operator), rOperand));
         } else if (rOperand.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.acc8ToAcc16));
+          if (rOperand.opType == OperandType.stack) {
+            plant(new Instruction(FunctionType.stackAcc8ToAcc16));
+          } else {
+            plant(new Instruction(FunctionType.acc8ToAcc16));
+          }
           operand.datatype = Datatype.integer;
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
         }
@@ -1215,7 +1247,7 @@ public class Compiler {
 
     /* insert M (virtual machine) code into memory */
     if (storeInstruction.size() >= MAX_M_CODE) {
-      error (10);
+      error(10);
       storeInstruction.clear();
     }
     storeInstruction.add(instruction);

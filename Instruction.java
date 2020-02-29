@@ -80,7 +80,7 @@ public class Instruction {
         } else if (operand.opType == OperandType.label) {
           throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
         } else if (operand.opType == OperandType.acc8) {
-          if (function == FunctionType.acc16Plus) {
+          if (function == FunctionType.acc16Plus || function == FunctionType.acc16Minus || function == FunctionType.acc16Times || function == FunctionType.acc16Div) {
             //no error
           } else {
             throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);

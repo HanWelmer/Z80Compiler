@@ -12,10 +12,10 @@ import java.util.Set;
 public class Transcoder {
   
   /* constants */
-  private static final int MAX_ASM_CODE = 0x2000; /* max Z80 assembler lines of code */
-  private static final int MEM_START = 0x4000;    /* lowest address for global variables */
+  private static final int MAX_ASM_CODE = 0x3000; /* max Z80 assembler lines of code */
+  private static final int MEM_START = 0x5000;    /* lowest address for global variables */
   private static final int MIN_BIN = 0x2000; /* Z80 assembled bytes start at 2000 */
-  private static final int MAX_BIN = 0x4000; /* max Z80 assembled bytes */
+  private static final int MAX_BIN = 0x5000; /* max Z80 assembled bytes */
   private static final String INDENT = "        ";
   private static final Set<Byte> LONG_JUMP_INSTRUCTIONS = new HashSet<Byte>(18) {{
     add((byte)0xC2); //JP NZ
@@ -105,7 +105,7 @@ public class Transcoder {
       z80Instructions.addAll(transcode(instruction));
 
       if (z80Instructions.size() > MAX_ASM_CODE) {
-        throw new RuntimeException("code overflow while generating Z80 assembler code");
+        throw new RuntimeException("Z80 code overflow while generating Z80 assembler code");
       }
     }
     
@@ -246,9 +246,15 @@ public class Transcoder {
       }
       asm = new AssemblyInstruction(byteAddress, INDENT + "ADD   HL,DE", 0x19);
     } else if ((function == FunctionType.acc16Minus) || (function == FunctionType.minusAcc16) || (function == FunctionType.acc16Compare)) {
-      asm = operandToDE(instruction);
-      result.add(asm);
-      byteAddress += asm.getBytes().size();
+      if (instruction.operand.opType == OperandType.acc8) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
+        byteAddress++;
+      } else {
+        asm = operandToDE(instruction);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+      }
       
       if (function == FunctionType.minusAcc16) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
@@ -257,21 +263,37 @@ public class Transcoder {
       result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A", 0xB7));
       asm = new AssemblyInstruction(byteAddress, INDENT + "SBC   HL,DE", 0xED, 0x52);
     } else if (function == FunctionType.acc16Times) {
-      asm = operandToDE(instruction);
-      result.add(asm);
-      byteAddress += asm.getBytes().size();
-      putLabelReference("mul16", byteAddress);
-      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  mul16", 0xCD, 0x00, 0x00);
-    } else if ((function == FunctionType.acc16Div) || (function == FunctionType.divAcc16)) {
-      asm = operandToDE(instruction);
-      result.add(asm);
-      byteAddress += asm.getBytes().size();
-
-      if (function == FunctionType.divAcc16) {
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
+      if (instruction.operand.opType == OperandType.acc8) {
+        putLabelReference("mul16_8", byteAddress);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  mul16_8", 0xCD, 0x00, 0x00);
+      } else {
+        asm = operandToDE(instruction);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+        putLabelReference("mul16", byteAddress);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  mul16", 0xCD, 0x00, 0x00);
       }
-      putLabelReference("div16", byteAddress);
-      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div16", 0xCD, 0x00, 0x00);
+    } else if ((function == FunctionType.acc16Div) || (function == FunctionType.divAcc16)) {
+      if (instruction.operand.opType == OperandType.acc8) {
+        if (function == FunctionType.divAcc16) {
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
+          putLabelReference("div8_16", byteAddress);
+          asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div8_16", 0xCD, 0x00, 0x00);
+        } else {
+          putLabelReference("div16_8", byteAddress);
+          asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div16_8", 0xCD, 0x00, 0x00);
+        }
+      } else {
+        asm = operandToDE(instruction);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+
+        if (function == FunctionType.divAcc16) {
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
+        }
+        putLabelReference("div16", byteAddress);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div16", 0xCD, 0x00, 0x00);
+      }
     } else if (function == FunctionType.increment16 && instruction.operand.opType == OperandType.var) {
       asm = operandToHL(instruction);
       result.add(asm);
@@ -961,6 +983,40 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "ADD   HL,HL       ; 7 47 times 10", 0x29));
     result.add(plantAssemblyInstruction(INDENT + "POP   DE          ; 9 56", 0xD1));
     result.add(plantAssemblyInstruction(INDENT + "RET               ; 9 65", 0xC9));
+
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";mul16_8"));
+    result.add(new AssemblyInstruction(byteAddress, ";16 by 8 bit unsigned multiplication with 16 bit result."));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  HL = operand 1"));
+    result.add(new AssemblyInstruction(byteAddress, ";        A = operand 2"));
+    result.add(new AssemblyInstruction(byteAddress, ";  OUT: HL = HL * A low part"));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES:AF"));
+    result.add(new AssemblyInstruction(byteAddress, ";  Size   .. bytes"));
+    result.add(new AssemblyInstruction(byteAddress, ";  Time  ... cycles"));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("mul16_8", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "mul16_8:"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";HL = HL * A"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";        H  L"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";           A"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";    --------*"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";          AL"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";       AH  0"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + "; -----------+"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";        R  S"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";S = ALlow"));
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ";R = ALhigh+AHlow"));
+    result.add(plantAssemblyInstruction(INDENT + "PUSH  BC          ;11  11 save BC", 0xC5));
+    result.add(plantAssemblyInstruction(INDENT + "LD    B,H         ; 4  15", 0x44));
+    result.add(plantAssemblyInstruction(INDENT + "LD    C,A         ; 4  19", 0x47));
+    result.add(plantAssemblyInstruction(INDENT + "LD    H,A         ; 4  23", 0x67));
+    result.add(plantAssemblyInstruction(INDENT + "MLT   HL          ;17  40 HL = AL", 0xED, 0x6C));
+    result.add(plantAssemblyInstruction(INDENT + "MLT   BC          ;17  57 BC = AH", 0xED, 0x4C));
+    result.add(plantAssemblyInstruction(INDENT + "LD    A,H         ; 4  61 A = S = ALhigh+AHlow", 0x7C));
+    result.add(plantAssemblyInstruction(INDENT + "ADD   A,C         ; 4  65", 0x81));
+    result.add(plantAssemblyInstruction(INDENT + "LD    H,A         ; 4  69", 0x67));
+    result.add(plantAssemblyInstruction(INDENT + "POP   BC          ; 9  78 | 289 restore BC", 0xC1));
+    result.add(plantAssemblyInstruction(INDENT + "RET               ; 9  87 | 307", 0xC9));
 
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
     result.add(new AssemblyInstruction(byteAddress, ";mul1632"));
