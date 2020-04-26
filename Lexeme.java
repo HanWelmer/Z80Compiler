@@ -15,7 +15,6 @@ public class Lexeme {
   
   public Lexeme (LexemeType type) {
     this.type = type;
-    this.datatype = Datatype.unknown;
   }
 
   public String makeString(Variable variable) {

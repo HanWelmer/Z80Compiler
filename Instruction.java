@@ -45,17 +45,88 @@ public class Instruction {
         throw new RuntimeException("Internal compiler error: functionType " + fn + " not yet implemented.");
         //break;
       case comment:
-      case acc16Load:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        };
+        if (operand.opType != OperandType.constant) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a constant operand.");
+        };
+        if (operand.datatype != Datatype.string || operand.strValue == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a string constant operand.");
+        };
+        break;
+      case acc16Store:
+      case acc8Store:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        }
+        if (operand.opType != OperandType.stack && operand.opType != OperandType.var ) {
+          throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn + ".");
+        }
+        if (operand.opType == OperandType.var && operand.intValue == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+        }
+        break;
       case stackAcc16Load:
+      case stackAcc8Load:
+        if (operand != null && operand.opType == OperandType.stack) {
+          throw new RuntimeException("Internal compiler error: illegal stack operand for functionType " + fn + ".");
+        }
+        //ga verder met controles voor non-stack load.
+      case acc16Load:
+      case acc8Load:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        }
+        if (operand.opType == OperandType.stack) {
+          // no error.
+        } else if (operand.opType == OperandType.constant && operand.intValue != null) {
+          // no error.
+        } else if (operand.opType == OperandType.var && operand.intValue != null) {
+          // no error.
+        } else if (operand.opType == OperandType.acc && (operand.datatype == Datatype.byt || operand.datatype == Datatype.integer)) {
+          // no error.
+        } else {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
+        }
+        break;
       case acc16Plus:
       case acc16Minus:
       case minusAcc16:
       case acc16Times:
       case acc16Div:
       case divAcc16:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        }
+        switch(operand.opType) {
+          case stack:
+            break;
+          case constant:
+            if (operand.datatype != Datatype.byt && operand.datatype != Datatype.integer) {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer or byte datatype for its constant operand.");
+            }
+            if (operand.intValue == null) {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer value for its constant operand.");
+            }
+            break;
+          case var:
+            if (operand.intValue == null) {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+            }
+            break;
+          case acc:
+            if (operand.datatype == Datatype.byt) {
+              // no error.
+            } else {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
+            }
+            break;
+          default:
+            new RuntimeException("unknown operand type");
+        }
+        break;
       case acc16Compare:
-      case acc8Load:
-      case stackAcc8Load:
       case acc8Plus:
       case acc8Minus:
       case minusAcc8:
@@ -65,47 +136,33 @@ public class Instruction {
       case acc8Compare:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
-        } else if (operand.opType == OperandType.stack) {
-          if (function == FunctionType.stackAcc16Load || function == FunctionType.stackAcc8Load) {
-            throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
-          } else if (operand.intValue == null) {
-            //no error
-          } else {
-            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects null as operand value.");
-          }
-        } else if (operand.opType == OperandType.constant || operand.opType == OperandType.var) {
-          if (operand.intValue == null && operand.strValue == null) {
-            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand value.");
-          }
-        } else if (operand.opType == OperandType.label) {
-          throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
-        } else if (operand.opType == OperandType.acc8) {
-          if (function == FunctionType.acc16Plus || function == FunctionType.acc16Minus || function == FunctionType.acc16Times || function == FunctionType.acc16Div) {
-            //no error
-          } else {
-            throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
-          }
-        } else {
-          throw new RuntimeException("Internal compiler error: unknown operand type " + operand.opType + " for functionType " + fn);
         }
-        break;
-      case acc16Store:
-      case acc8Store:
-        if (operand == null) {
-          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
-        } else if (operand.opType == OperandType.stack) {
-          if (operand.intValue == null) {
-            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects null as operand value.");
-          }
-        } else if (operand.opType == OperandType.var) {
-          if (operand.intValue == null) {
-            throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
-          }
-        } else if (operand.opType == OperandType.constant || operand.opType == OperandType.label) {
-          throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn);
-        } else {
-          throw new RuntimeException("Internal compiler error: unknown operand type " + operand.opType + " for functionType " + fn);
-        };
+        switch(operand.opType) {
+          case stack:
+            break;
+          case constant:
+            if (operand.datatype != Datatype.byt && operand.datatype != Datatype.integer) {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer or byte datatype for its constant operand.");
+            }
+            if (operand.intValue == null) {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer value for its constant operand.");
+            }
+            break;
+          case var:
+            if (operand.intValue == null) {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+            }
+            break;
+          case acc:
+            if (operand.datatype == Datatype.integer) {
+              // no error.
+            } else {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
+            }
+            break;
+          default:
+            new RuntimeException("unknown operand type");
+        }
         break;
       case increment16:
       case decrement16:
@@ -140,9 +197,9 @@ public class Instruction {
     
     //deep copy of operand, otherwise a reference to the mutable object operand is copied into the Instruction.
     if (operand.datatype == Datatype.integer || operand.datatype == Datatype.byt) {
-      this.operand = new Operand(operand.datatype, operand.opType, operand.intValue);
+      this.operand = new Operand(operand.opType, operand.datatype, operand.intValue);
     } else {
-      this.operand = new Operand(operand.datatype, operand.opType, operand.strValue);
+      this.operand = new Operand(operand.opType, operand.datatype, operand.strValue);
     }
   }
   
@@ -180,7 +237,13 @@ public class Instruction {
           case var: result += " variable " + operand.intValue; break;
           case constant: result += " constant " + operand.intValue; break;
           case stack: result += " unstack"; break;
-          case acc8: result += " acc8"; break;
+          case acc: 
+            if (operand.datatype == Datatype.byt) {
+              result += " acc8";
+            } else if (operand.datatype == Datatype.integer) {
+              result += " acc16";
+            }
+            break;
           default: throw new RuntimeException("accu related instruction with unsupported operandType");
         };
         break;

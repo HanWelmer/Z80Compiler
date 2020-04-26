@@ -20,7 +20,7 @@ public class Interpreter {
   private int inputIndex = 0;
   private int[] machineStack;
   private int[] vars;
-  private int pc, sf;
+  private int pc, sp;
   private int acc16;
   private int acc8;
 
@@ -34,7 +34,7 @@ public class Interpreter {
     vars = new int[MAX_VARS];
     branchSet.clear();
     pc = 0;
-    sf = 0;
+    sp = 0;
     acc16 = 0;
     acc8 = 0;
   }
@@ -311,8 +311,8 @@ public class Interpreter {
     //proceed to next instruction
     pc++;
 
-    //log stackpointer value
-    debug("\nsf = " + sf);
+    //log registers
+    debug("\nsp = " + sp + " acc16 = " + acc16 + " acc8 = " + acc8);
 
     //return true if Stop instruction has been executed or if a fatal error occurred.
     return stopRun;
@@ -330,7 +330,7 @@ public class Interpreter {
     System.out.println("pc=" + pc + " : " + instructions.get(pc).toString());
     System.out.println(String.format("accumulator 16-bit= " + acc16));
     System.out.println(String.format("accumulator  8-bit= " + acc8));
-    System.out.println(String.format("stackpointer      = " + sf));
+    System.out.println(String.format("stackpointer      = " + sp));
     System.out.println();
 
     /* dump variables */
@@ -340,10 +340,10 @@ public class Interpreter {
     System.out.println();
 
     /* dump stack */
-    int sfDigits = (int)(java.lang.Math.log(sf) / java.lang.Math.log(10)) + 1;
-    String sfFormat = "%" + sfDigits + "d";
-    for (int i = 0; i<sf; i++) {
-      System.out.println("stack item " + String.format(sfFormat, i) + " = " + machineStack[i]);
+    int spDigits = (int)(java.lang.Math.log(sp) / java.lang.Math.log(10)) + 1;
+    String spFormat = "%" + spDigits + "d";
+    for (int i = 0; i<sp; i++) {
+      System.out.println("stack item " + String.format(spFormat, i) + " = " + machineStack[i]);
     }
     System.out.println();
 
@@ -351,19 +351,19 @@ public class Interpreter {
   }
   
   private void push(int data) {
-    if (sf == MAX_STACK) {
+    if (sp == MAX_STACK) {
       runError("stack overflow");
     }
-    machineStack[sf] = data;
-    sf++;
+    machineStack[sp] = data;
+    sp++;
   }
   
   private int pop() {
-    if (sf == 0) {
+    if (sp == 0) {
       runError("stack underflow");
     }
-    sf--;
-    return machineStack[sf];
+    sp--;
+    return machineStack[sp];
   }
   
   private int getOp() {
@@ -382,8 +382,12 @@ public class Interpreter {
           runError("undefined variable");
         }
         break;
-      case acc8:
-        result = acc8;
+      case acc:
+        if (instr.operand.datatype == Datatype.byt) {
+          result = acc8;
+        } else if (instr.operand.datatype == Datatype.integer) {
+          result = acc16;
+        }
         break;
       default:
         runError("unknown operand type");

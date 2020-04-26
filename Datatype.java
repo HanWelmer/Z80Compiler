@@ -4,7 +4,6 @@
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  */
 public enum Datatype {
-  unknown("?", 0),
   clazz("class", 0),
   byt("byte", 1),
   integer("int", 2),

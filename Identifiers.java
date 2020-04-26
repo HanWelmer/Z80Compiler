@@ -75,7 +75,7 @@ public class Identifiers {
   /**
    * Declare an identifier.
    * Method is used during semantic analysis phase.
-   * Param identifier : for this an indentifier will be declared.
+   * Param lexeme : for the idVal of this lexeme an indentifier will be declared.
    * Param datatype : datatype of variable.
    * Returns : true if OK; false if such an identifier already declared.
    */
@@ -87,7 +87,7 @@ public class Identifiers {
 
     //If it wasn't declared yet, override default datatype and set other properties.
     Variable var = getId(lexeme.idVal);
-    if (var.getDatatype() == Datatype.unknown) {
+    if (var.getDatatype() == null) {
       debug(String.format("declareId() overriding default datatype and other properties."));
       if (datatype == LexemeType.bytelexeme) {
         var.setDatatype(Datatype.byt);

@@ -3,29 +3,55 @@
  * Used in the code generation phase of the compiler.
  */
 public class Operand {
-  public Datatype datatype;
   public OperandType opType;
+  public Datatype datatype;
   public Integer intValue;
   public String strValue;
+  /*
+   * opType   | datatype    | intValue | strValue |
+   *----------+-------------+----------+----------+
+   * unknown  |     X       |    X     |     X    |
+   * stack    | byt,integer |    X     |     X    |
+   * constant | byt,integer | value    |     X    |
+   * constant | string      |    X     | string   |
+   * var      | byt,integer | address  |     X    |
+   * label    | byt,integer | address  |     X    |
+   * acc      | byt,integer |    X     |     X    |
+  */
   
-  public Operand(Datatype datatype) {
-    this.datatype = datatype;
-  }
-
-  public Operand(Datatype datatype, OperandType opType) {
-    this.datatype = datatype;
+  public Operand(OperandType opType) {
     this.opType = opType;
   }
 
-  public Operand(Datatype datatype, OperandType opType, Integer value) {
-    this.datatype = datatype;
+  public Operand(OperandType opType, Datatype datatype) {
     this.opType = opType;
+    this.datatype = datatype;
+  }
+
+  public Operand(OperandType opType, Datatype datatype, Integer value) {
+    this.opType = opType;
+    this.datatype = datatype;
     this.intValue = value;
   }
 
-  public Operand(Datatype datatype, OperandType opType, String value) {
-    this.datatype = datatype;
+  public Operand(OperandType opType, Datatype datatype, String value) {
     this.opType = opType;
+    this.datatype = datatype;
     this.strValue = value;
   }
+  
+    public String toString() {
+      String result = "operand(" + opType;
+      if (datatype != null) {
+        result += ", type=" + datatype;
+      }
+      if (intValue != null) {
+        result += ", intValue=" + intValue;
+      }
+      if (strValue != null) {
+        result += ", strValue=" + strValue;
+      }
+      result += ")";
+      return result;
+    }
 }

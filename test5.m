@@ -1,95 +1,113 @@
-  0 :acc= constant 13
-  1 :acc=> stack
-  2 :call write
-  3 :acc= constant 1
-  4 :accom constant 1
-  5 :brne 9
-  6 :acc= constant 12
-  7 :acc=> stack
-  8 :call write
-  9 :acc= constant 1
- 10 :accom constant 1
- 11 :brne 16
- 12 :acc= constant 11
- 13 :acc=> stack
- 14 :call write
- 15 :br 19
- 16 :acc= constant 0
- 17 :acc=> stack
- 18 :call write
- 19 :acc= constant 1
- 20 :accom constant 0
- 21 :brne 26
- 22 :acc= constant 0
- 23 :acc=> stack
- 24 :call write
- 25 :br 29
- 26 :acc= constant 10
- 27 :acc=> stack
- 28 :call write
- 29 :acc= constant 1
- 30 :accom constant 0
- 31 :breq 35
- 32 :acc= constant 9
- 33 :acc=> stack
- 34 :call write
- 35 :acc= constant 1
- 36 :accom constant 0
- 37 :breq 42
- 38 :acc= constant 8
- 39 :acc=> stack
- 40 :call write
- 41 :br 45
- 42 :acc= constant 0
- 43 :acc=> stack
- 44 :call write
- 45 :acc= constant 1
- 46 :accom constant 1
- 47 :breq 52
- 48 :acc= constant 0
- 49 :acc=> stack
- 50 :call write
- 51 :br 55
- 52 :acc= constant 7
- 53 :acc=> stack
- 54 :call write
- 55 :acc= constant 1
- 56 :accom constant 0
- 57 :brle 61
- 58 :acc= constant 6
- 59 :acc=> stack
- 60 :call write
- 61 :acc= constant 1
- 62 :accom constant 0
- 63 :brlt 67
- 64 :acc= constant 5
- 65 :acc=> stack
- 66 :call write
- 67 :acc= constant 1
- 68 :accom constant 1
- 69 :brlt 73
- 70 :acc= constant 4
- 71 :acc=> stack
- 72 :call write
- 73 :acc= constant 0
- 74 :accom constant 1
- 75 :brge 79
- 76 :acc= constant 3
- 77 :acc=> stack
- 78 :call write
- 79 :acc= constant 0
- 80 :accom constant 1
- 81 :brgt 85
- 82 :acc= constant 2
- 83 :acc=> stack
- 84 :call write
- 85 :acc= constant 1
- 86 :accom constant 1
- 87 :brgt 91
- 88 :acc= constant 1
- 89 :acc=> stack
- 90 :call write
- 91 :acc= constant 0
- 92 :acc=> stack
- 93 :call write
- 94 :stop
+  0 :///*
+  1 :// * A small program in the miniJava language.
+  2 :// * Test comparisons
+  3 :// */
+  4 ://class TestComparison {
+  5 ://  write(13);
+  6 ://  if (1 == 1) write(12);
+  7 :acc8= constant 13
+  8 :call writeAcc8
+  9 :acc8= constant 1
+ 10 :accom16 constant 1
+ 11 :brne 15
+ 12 ://  if (1 == 1) { 
+ 13 :acc8= constant 12
+ 14 :call writeAcc8
+ 15 :acc8= constant 1
+ 16 :accom16 constant 1
+ 17 :brne 23
+ 18 ://    write(11);
+ 19 ://  } else { 
+ 20 :acc8= constant 11
+ 21 :call writeAcc8
+ 22 :br 28
+ 23 ://    write (0);
+ 24 ://  }
+ 25 :acc8= constant 0
+ 26 :call writeAcc8
+ 27 ://  if (1 == 0) { 
+ 28 :acc8= constant 1
+ 29 :accom16 constant 0
+ 30 :brne 36
+ 31 ://    write(0);
+ 32 ://  } else { 
+ 33 :acc8= constant 0
+ 34 :call writeAcc8
+ 35 :br 41
+ 36 ://    write (10);
+ 37 ://  }
+ 38 :acc8= constant 10
+ 39 :call writeAcc8
+ 40 ://  if (1 != 0) write(9);
+ 41 :acc8= constant 1
+ 42 :accom16 constant 0
+ 43 :breq 47
+ 44 ://  if (1 != 0) { 
+ 45 :acc8= constant 9
+ 46 :call writeAcc8
+ 47 :acc8= constant 1
+ 48 :accom16 constant 0
+ 49 :breq 55
+ 50 ://    write(8);
+ 51 ://  } else { 
+ 52 :acc8= constant 8
+ 53 :call writeAcc8
+ 54 :br 60
+ 55 ://    write (0);
+ 56 ://  }
+ 57 :acc8= constant 0
+ 58 :call writeAcc8
+ 59 ://  if (1 != 1) { 
+ 60 :acc8= constant 1
+ 61 :accom16 constant 1
+ 62 :breq 68
+ 63 ://    write(0);
+ 64 ://  } else { 
+ 65 :acc8= constant 0
+ 66 :call writeAcc8
+ 67 :br 73
+ 68 ://    write (7);
+ 69 ://  }
+ 70 :acc8= constant 7
+ 71 :call writeAcc8
+ 72 ://  if (1 > 0) write(6);
+ 73 :acc8= constant 1
+ 74 :accom16 constant 0
+ 75 :brle 79
+ 76 ://  if (1 >= 0) write(5);
+ 77 :acc8= constant 6
+ 78 :call writeAcc8
+ 79 :acc8= constant 1
+ 80 :accom16 constant 0
+ 81 :brlt 85
+ 82 ://  if (1 >= 1) write(4);
+ 83 :acc8= constant 5
+ 84 :call writeAcc8
+ 85 :acc8= constant 1
+ 86 :accom16 constant 1
+ 87 :brlt 91
+ 88 ://  if (0 < 1) write(3);
+ 89 :acc8= constant 4
+ 90 :call writeAcc8
+ 91 :acc8= constant 0
+ 92 :accom16 constant 1
+ 93 :brge 97
+ 94 ://  if (0 <= 1) write(2);
+ 95 :acc8= constant 3
+ 96 :call writeAcc8
+ 97 :acc8= constant 0
+ 98 :accom16 constant 1
+ 99 :brgt 103
+100 ://  if (1 <= 1) write(1);
+101 :acc8= constant 2
+102 :call writeAcc8
+103 :acc8= constant 1
+104 :accom16 constant 1
+105 :brgt 109
+106 ://  write(0);
+107 :acc8= constant 1
+108 :call writeAcc8
+109 ://}
+110 :acc8= constant 0
+111 :call writeAcc8
+112 :stop

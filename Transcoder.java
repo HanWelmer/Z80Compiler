@@ -235,7 +235,7 @@ public class Transcoder {
       }
       asm = operandToHL(instruction);
     } else if (function == FunctionType.acc16Plus) {
-      if (instruction.operand.opType == OperandType.acc8) {
+      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
         byteAddress++;
@@ -246,7 +246,7 @@ public class Transcoder {
       }
       asm = new AssemblyInstruction(byteAddress, INDENT + "ADD   HL,DE", 0x19);
     } else if ((function == FunctionType.acc16Minus) || (function == FunctionType.minusAcc16) || (function == FunctionType.acc16Compare)) {
-      if (instruction.operand.opType == OperandType.acc8) {
+      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
         byteAddress++;
@@ -263,7 +263,7 @@ public class Transcoder {
       result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A", 0xB7));
       asm = new AssemblyInstruction(byteAddress, INDENT + "SBC   HL,DE", 0xED, 0x52);
     } else if (function == FunctionType.acc16Times) {
-      if (instruction.operand.opType == OperandType.acc8) {
+      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
         putLabelReference("mul16_8", byteAddress);
         asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  mul16_8", 0xCD, 0x00, 0x00);
       } else {
@@ -274,7 +274,7 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  mul16", 0xCD, 0x00, 0x00);
       }
     } else if ((function == FunctionType.acc16Div) || (function == FunctionType.divAcc16)) {
-      if (instruction.operand.opType == OperandType.acc8) {
+      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
         if (function == FunctionType.divAcc16) {
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
           putLabelReference("div8_16", byteAddress);

@@ -3,9 +3,10 @@
  * Used in the code generation phase of the compiler.
  */
 public enum OperandType {
+  unknown,
   stack,
   constant,
   var,
   label,
-  acc8;
+  acc;
 };

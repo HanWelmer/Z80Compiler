@@ -147,25 +147,6 @@ class Test8And16BitExpressions {
   c = b / c;
   write(c);         // 48
 
-  /**********************/
-  /* Single term read   */
-  /**********************/
-  write(read);      // 49
-  b = read;
-  write(b);         // 50
-
-  /**********************/
-  /* Dual term read     */
-  /**********************/
-  write(read + 1);  // 50 + 1 = 51
-  write(2 + read);  // 2 + 50 = 52
-  write(read - 2);  // 55 - 2 = 53
-  write(109 - read);  // 109 - 55 = 54
-  write(read * 1);  // 55 * 1 = 55
-  write(2 * read);  // 2 * 55 = 110
-  write(read / 2);  // 110 / 2 = 55
-  write(12 / read);  // 12 / 3 = 4
-
   /*************************/
   /* possible loss of data */
   /*************************/
@@ -317,6 +298,7 @@ class Test8And16BitExpressions {
   i = 504;
   i = 500 * i - 54345;
   write(i);         // 1047
+  
   /************/
   /* Overflow */
   /************/
