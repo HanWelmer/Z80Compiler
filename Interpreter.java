@@ -25,7 +25,8 @@ public class Interpreter {
   private int acc8;
 
   //constructor
-  public Interpreter(ArrayList<Instruction> instructions, String[] inputParts) {
+  public Interpreter(boolean debugMode, ArrayList<Instruction> instructions, String[] inputParts) {
+    this.debugMode = debugMode;
     this.instructions = instructions;
     this.inputParts = inputParts;
     
@@ -40,13 +41,13 @@ public class Interpreter {
   }
 
   /* interface method: execute a single instruction */
-  public boolean step(boolean debugMode) {
-    this.debugMode = debugMode;
+  public boolean step() {
     boolean stopRun = false;
 
     //get next instruction
     Instruction instr = instructions.get(pc);
-    debug("\npc=" + pc + " : " + instr.toString());
+    //log registers
+    debug("pc=" + pc + " sp = " + sp + " acc16 = " + acc16 + " acc8 = " + acc8 + " : " + instr.toString());
     //execute instruction
     int operand;
     switch(instr.function){
@@ -125,6 +126,7 @@ public class Interpreter {
         break;
       case acc16Compare:
         operand = getOp();
+        branchSet.clear();
         if (acc16 == operand) {
           branchSet = EnumSet.of(FunctionType.brEq);
         } else {
@@ -216,6 +218,7 @@ public class Interpreter {
         break;
       case acc8Compare:
         operand = getOp();
+        branchSet.clear();
         if (acc8 == operand) {
           branchSet = EnumSet.of(FunctionType.brEq);
         } else {
@@ -249,13 +252,16 @@ public class Interpreter {
         acc8 = acc16 % 256;
         break;
       // branch instructions:
-      case br: break;
+      case br: 
+          pc = instr.operand.intValue - 1;
+        break;
       case brEq:
       case brNe:
       case brLt:
       case brLe:
       case brGt:
       case brGe:
+        debug(" branch=" + instr.function + " branchSet=" + branchSet);
         if (branchSet.contains(instr.function)) {
           pc = instr.operand.intValue - 1;
         }
@@ -286,10 +292,18 @@ public class Interpreter {
           }
           break;
       case writeAcc8:
-          System.out.println(acc8);
+          if (debugMode) {
+            debug("\n" + acc8);
+          } else {
+            System.out.println(acc8);
+          }
           break;
       case writeAcc16:
-          System.out.println(acc16);
+          if (debugMode) {
+            debug("\n" + acc16);
+          } else {
+            System.out.println(acc16);
+          }
           break;
       case stop:
         stopRun = true;
@@ -311,10 +325,8 @@ public class Interpreter {
     //proceed to next instruction
     pc++;
 
-    //log registers
-    debug("\nsp = " + sp + " acc16 = " + acc16 + " acc8 = " + acc8);
-
     //return true if Stop instruction has been executed or if a fatal error occurred.
+    debug("\n");
     return stopRun;
   } // interpret()
 

@@ -89,11 +89,11 @@ public class pCompiler {
           /* input for the interpreter*/
           String inputString = "2 3 4 5 6 7 8 0";
           String[] inputParts = inputString.split(" ");
-          System.out.println("Running compiled code ...");
-          Interpreter interpreter = new Interpreter(instructions, inputParts);
+          System.out.println("\nRunning compiled code ...\n");
+          Interpreter interpreter = new Interpreter(debugMode, instructions, inputParts);
           boolean stop = false;
           do {
-            stop = interpreter.step(debugMode);
+            stop = interpreter.step();
           } while (!stop);
         }
       }

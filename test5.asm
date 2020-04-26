@@ -618,24 +618,20 @@ L1:     ; * A small program in the miniJava language.
 L2:     ; * Test comparisons
 L3:     ; */
 L4:     ;class TestComparison {
-L5:     ;  write(13);
-L6:     ;  if (1 == 1) write(12);
+L5:     ;  write(13);              //13
+L6:     ;  if (1 == 1) write(12);  //12
         LD    A,13
         CALL  writeA
         LD    A,1
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    NZ,L15
 L12:    ;  if (1 == 1) { 
         LD    A,12
         CALL  writeA
         LD    A,1
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    NZ,L23
-L18:    ;    write(11);
+L18:    ;    write(11);            //11
 L19:    ;  } else { 
         LD    A,11
         CALL  writeA
@@ -646,34 +642,28 @@ L24:    ;  }
         CALL  writeA
 L27:    ;  if (1 == 0) { 
         LD    A,1
-        LD    DE,0
-        OR    A
-        SBC   HL,DE
+        SUB   A,0
         JP    NZ,L36
 L31:    ;    write(0);
 L32:    ;  } else { 
         LD    A,0
         CALL  writeA
         JP    L41
-L36:    ;    write (10);
+L36:    ;    write (10);           //10
 L37:    ;  }
         LD    A,10
         CALL  writeA
-L40:    ;  if (1 != 0) write(9);
+L40:    ;  if (1 != 0) write(9);   //9
         LD    A,1
-        LD    DE,0
-        OR    A
-        SBC   HL,DE
+        SUB   A,0
         JP    Z,L47
 L44:    ;  if (1 != 0) { 
         LD    A,9
         CALL  writeA
         LD    A,1
-        LD    DE,0
-        OR    A
-        SBC   HL,DE
+        SUB   A,0
         JP    Z,L55
-L50:    ;    write(8);
+L50:    ;    write(8);             //8
 L51:    ;  } else { 
         LD    A,8
         CALL  writeA
@@ -684,68 +674,54 @@ L56:    ;  }
         CALL  writeA
 L59:    ;  if (1 != 1) { 
         LD    A,1
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    Z,L68
 L63:    ;    write(0);
 L64:    ;  } else { 
         LD    A,0
         CALL  writeA
         JP    L73
-L68:    ;    write (7);
+L68:    ;    write (7);            //7
 L69:    ;  }
         LD    A,7
         CALL  writeA
-L72:    ;  if (1 > 0) write(6);
+L72:    ;  if (1 > 0) write(6);    //6
         LD    A,1
-        LD    DE,0
-        OR    A
-        SBC   HL,DE
+        SUB   A,0
         JP    Z,L79
-L76:    ;  if (1 >= 0) write(5);
+L76:    ;  if (1 >= 0) write(5);   //5
         LD    A,6
         CALL  writeA
         LD    A,1
-        LD    DE,0
-        OR    A
-        SBC   HL,DE
+        SUB   A,0
         JP    C,L85
-L82:    ;  if (1 >= 1) write(4);
+L82:    ;  if (1 >= 1) write(4);   //4
         LD    A,5
         CALL  writeA
         LD    A,1
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    C,L91
-L88:    ;  if (0 < 1) write(3);
+L88:    ;  if (0 < 1) write(3);    //3
         LD    A,4
         CALL  writeA
         LD    A,0
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    NC,L97
-L94:    ;  if (0 <= 1) write(2);
+L94:    ;  if (0 <= 1) write(2);   //2
         LD    A,3
         CALL  writeA
         LD    A,0
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    Z,$+5
         JP    C,L103
-L100:   ;  if (1 <= 1) write(1);
+L100:   ;  if (1 <= 1) write(1);   //1
         LD    A,2
         CALL  writeA
         LD    A,1
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    Z,$+5
         JP    C,L109
-L106:   ;  write(0);
+L106:   ;  write(0);               //0
         LD    A,1
         CALL  writeA
 L109:   ;}

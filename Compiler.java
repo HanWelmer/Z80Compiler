@@ -713,6 +713,7 @@ public class Compiler {
 
     /* part of code generation */
     plantAccLoad(leftOperand);
+    leftOperand.opType = OperandType.acc;
 
     /* part of lexical analysis */
     localSet = stopSet.clone();
@@ -735,7 +736,58 @@ public class Compiler {
     Operand rightOperand = expression(localSet, new Operand(OperandType.unknown));
 
     /* part of code generation */
-    plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+    debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+    // acc-acc
+    // ?
+    // ?
+    // ?
+    // ?
+    // not acc-acc
+    // leftOperand=operand(acc, type=byt, intValue=1), rightOperand=operand(constant, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
+    // ?
+    // ?
+    // ?
+    // ?
+    if (leftOperand.opType == OperandType.acc && rightOperand.opType == OperandType.acc) {
+      if (leftOperand.datatype == rightOperand.datatype) {
+        //left operand has been pushed onto the stack
+        leftOperand.opType = OperandType.stack;
+        if (leftOperand.datatype == Datatype.byt) {
+          //plant(new Instruction(reverseAdd8.get(operator), leftOperand));
+          throw new RuntimeException("Internal compiler error: abort.");
+        } else {
+          //plant(new Instruction(reverseAdd16.get(operator), leftOperand));
+          throw new RuntimeException("Internal compiler error: abort.");
+        }
+      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+        //plant(new Instruction(forwardAdd16.get(operator), rightOperand));
+        throw new RuntimeException("Internal compiler error: abort.");
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+        //plant(new Instruction(reverseAdd16.get(operator), leftOperand));
+        leftOperand.datatype = Datatype.integer;
+        throw new RuntimeException("Internal compiler error: abort.");
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+      plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+    } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+      plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      throw new RuntimeException("Internal compiler error: abort.");
+    } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      throw new RuntimeException("Internal compiler error: abort.");
+    } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      if (rightOperand.opType == OperandType.acc) {
+        plant(new Instruction(FunctionType.stackAcc8ToAcc16));
+      } else {
+        plant(new Instruction(FunctionType.acc8ToAcc16));
+      }
+      plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      throw new RuntimeException("Internal compiler error: abort.");
+    } else {
+      throw new RuntimeException("Internal compiler error: abort.");
+    }
     ifLabel = saveForwardLabel();
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
     if (rightOperand.opType != OperandType.stack) {
