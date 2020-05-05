@@ -1,1402 +1,284 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Compiler for the miniJava programming language.
- * Inspired by the book Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks
- * and of course Java as developed by Sun.
- *
- * program        = "class" identifier "{" statements "}".
- * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
- * statements     = (statement)*.
- * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
- * assignment     = [datatype] update ";".
- * datatype       = "byte" | "int".
- * update         = identifier++ | identifier-- | identifier "=" expression
- * writeStatement = "write" "(" expression ")" ";".
- * ifStatement    = "if" "(" comparison ")" block [ "else" block].
- * forStatement   = "for" "(" initialization ";" comparison ";" update ")" block.
- * initialization = "int" identifier "=" expression.
- * doStatement    = "do" block "while" "(" comparison ")" ";".
- * whileStatement = "while" "(" comparison ")" block.
- * block          = statement | "{" statements "}".
- * comparison     = expression relop expression.
- * expression     = term {addop term}.
- * term           = factor {mulop factor}.
- * factor         = identifier | constant | "read" | "(" expression ")".
- * addop          = "+" | "-".
- * mulop          = "*" | "/".
- * relop          = "==" | "!=" | ">" | ">=" | "<" | "<=".
- * constant       = "(0-9)*".
- *
- * Java style end of line comment.
- * Java style multi-line comment.
- * Multi-line comment may contain end of line comment.
- * Multi-line comment may not be nested.
- * A variable must be declared before it is used.
- * A declaration is valid within the scope within which it is defined (class, for statement, statement block) and it's sub-scopes.
- * The name of a valid declaration may only be declared once within its scope (overloading is not supported).
- * A variable declaration must include the datatype.
- * A variable of type byte takes one byte (8 bit).
- * A variable of type int takes two bytes (16 bit).
- * A variable of type byte has a range from 0 to 255.
- * A variable of type int has a range from -32768 to 32767.
- * An expression is initially evaluated in the type of the first (left most) factor.
- * A constant has a type byte if the value is between 0 and 255.
- * A byte expression is promoted to an int expression if a right-hand factor requires so.
- * The read() function returns an int value.
- * In an addop, mulop or relop the type of the lefthand operand and the right hand operand must be the same.
- * The value of the lefthand operand of an addop, mulop or relop is changed from byte to int if the type of the righthand operand is an int.
- * In an assignment the value of a byte expression can be assigned to an int variable.
- * In an assignment the value of a int expression assigned to a byte variable will be truncated.
+ * Command line fascade for the P programming language compiler, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
+ * See usage() for a functional description.
  */
 public class Compiler {
-  /* global variables used by the constructor or the interface functions */
-  private static boolean debugMode;
-  private static boolean verboseMode;
-  private static String fileName;
-  private BufferedReader input;
-  private ArrayList<Instruction> storeInstruction = new ArrayList<Instruction>();
 
-  //constructor
-  public Compiler(boolean debugMode, boolean verboseMode) {
-    this.debugMode = debugMode;
-    this.verboseMode = verboseMode;
-  }
-  
-  /* Class member methods for lexical analysis phase */
-  public ArrayList<Instruction> compile(String fileName, BufferedReader input) throws IOException {
-    if (verboseMode) System.out.println("debugMode = " + debugMode);
+  /**
+  * The main method for the compiler.
+  * See usage() for a functional description.
+  * @param args the argument list.
+  */
+  public static void main(String[] args) {
 
-    this.fileName = fileName;
-    this.input = input;
-    try {
-      init();
-      prog();
-      plant(new Instruction(FunctionType.stop));
-    } catch (FatalError e) {
-      error(e.getErrorNumber());
+  /* process command line options */
+    boolean z80 = false;
+    boolean binary = false;
+    boolean debugMode = false;
+    boolean runMode = false;
+    boolean verboseMode = false;
+    if (args.length == 0) {
+      usage();
+    } else if (args.length > 1) {
+      for (int i=0; i<args.length-1; i++) {
+        if ("-b".equals(args[i])) {
+          binary = true;
+        } else if ("-d".equals(args[i])) {
+          debugMode = true;
+        } else if ("-r".equals(args[i])) {
+          runMode = true;
+        } else if ("-v".equals(args[i])) {
+          verboseMode = true;
+        } else if ("-z".equals(args[i])) {
+          z80 = true;
+        } else {
+          usage();
+        }
+      }
+    }
+    
+    /* Get filename of source code file from arg list */
+    String fileName = args[args.length-1];
+    if (fileName.startsWith("-")) {
+      usage();
+    }
+
+    /*
+    * Force file extension to lower case p.
+    * Compile the file with p source code.
+    * Generated intermediate code goes to default system output.
+    */
+    LexemeReader lexemeReader = new LexemeFileReader();
+    PCompiler pCompiler = new PCompiler(debugMode, verboseMode);
+    fileName = fileName.replace(".P", ".p");
+    ArrayList<Instruction> instructions = null;
+    if (lexemeReader.init(debugMode, fileName)) {
+      try {
+        deleteOldOutput(fileName);
+        instructions = pCompiler.compile(fileName, lexemeReader);
+
+        if (!instructions.isEmpty()) {
+          /* List compiled code for the M machine */
+          writeListing(fileName, instructions, verboseMode);
+          if (z80) {
+            /* transcode M-code to Z80S180 assembler code */
+            if (verboseMode) System.out.println("Generating Z80 assembler code ...");
+            Transcoder transcoder = new Transcoder(binary);
+            ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
+
+            writeZ80Assembler(fileName, z80Instructions, verboseMode);
+
+            if (binary) {
+              writeZ80toIntelHex(fileName, z80Instructions, verboseMode);
+              writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences, verboseMode);
+            }
+          }
+          
+          /* start interpreter */
+          if (runMode) {
+            /* input for the interpreter*/
+            String inputString = "2 3 4 5 6 7 8 0";
+            String[] inputParts = inputString.split(" ");
+            System.out.println("\nRunning compiled code ...\n");
+            Interpreter interpreter = new Interpreter(debugMode, instructions, inputParts);
+            boolean stop = false;
+            do {
+              stop = interpreter.step();
+            } while (!stop);
+          }
+        }
+      } catch (RuntimeException e) {
+        System.out.println(e.getMessage());
+        System.out.println();
+        e.printStackTrace();
+        System.exit(1);
+      }
+    } else {
       System.exit(1);
     }
-    
-    if (errors != 0) { 
-      storeInstruction.clear();
-      codePos = 0;
-    }
-    if (verboseMode || (errors != 0) ) {
-      System.out.println();
-      System.out.print(errors);
-      if (errors == 1) {
-        System.out.println(" error.");
-      } else {
-        System.out.println(" errors.");
-      }
-    }
-    return storeInstruction;
   }
   
-  private void debug(String message) {
-    if (debugMode) {
-      System.out.print(message);
-    }
+  private static void usage() {
+    System.out.println("Usage: Compiler [-Z80] [-b] [-d] source.p");
+    System.out.println(" where -b generate binary output (M-code or Z80 assembler)");
+    System.out.println("       -d issue debug messages during compilation");
+    System.out.println("       -r run the compiled code using the built-in interpreter");
+    System.out.println("       -v verbose: issue feedback messages during compilation");
+    System.out.println("       -z generate Z80 assembler output");
+    System.out.println("       source.p input sourcecode file in P programming language.");
+    System.exit(1);
   }
 
-  /* 
-   * variable containing the branch instructions known by the M machine as generated by the P language.
-   * variable used during the code generation phase.
-   */
-  public EnumSet<FunctionType> brFunctions = EnumSet.of(
-    FunctionType.br
-    , FunctionType.brEq
-    , FunctionType.brNe
-    , FunctionType.brLt
-    , FunctionType.brLe
-    , FunctionType.brGt
-    , FunctionType.brGe
-    );
-
-  /* Constants and class member variables for lexical analysis phase */
-  private static final int MAX_LINE_WIDTH = 128;
-  private static final int MAX_IDENTIFIER_LENGTH = MAX_LINE_WIDTH;
-  private static final int MAX_BYT_CONSTANT = 255; //8 bit constant
-  private static final int MAX_INT_CONSTANT = 65535; //16 bit constant
-  private static final String VALID_IDENTIFIER_CHARACTERS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
-  private String line;
-  private int lineNumber;
-  private int lastLinePrinted;
-  private int lineSize;
-  private int linePos;
-  private ArrayList<String> sourceCode;
-  private Lexeme lexeme, firstLexeme, lastLexeme;
-  private Map<String, LexemeType> keywords = new HashMap<String, LexemeType>();
-  private int errors;
-
-  /* Constants and class member variables for syntax analysis phase */
-  private EnumSet<LexemeType> startStatement = EnumSet.of(
-      LexemeType.identifier
-    , LexemeType.bytelexeme
-    , LexemeType.intlexeme
-    , LexemeType.writelexeme
-    , LexemeType.iflexeme
-    , LexemeType.forlexeme
-    , LexemeType.dolexeme
-    , LexemeType.whilelexeme
-  );
-  private EnumSet<LexemeType> startAssignment = EnumSet.of(
-      LexemeType.identifier
-    , LexemeType.bytelexeme
-    , LexemeType.intlexeme
-  );
-  private EnumSet<LexemeType> startExp = EnumSet.of(
-      LexemeType.lbracket
-    , LexemeType.identifier
-    , LexemeType.constant
-    , LexemeType.readlexeme
-  );
-
-  /* Constants and class member variables for semantic analysis phase */
-  private Identifiers identifiers = new Identifiers();
- 
-  /* Constants and class member variables for code generation phase */
-  private static final int NULL_OP = 0;
-  private static final int MAX_M_CODE = 1000;
-  private boolean acc16InUse;
-  private boolean acc8InUse;
-
-  private Map<AddValType, FunctionType> forwardAdd16 = new HashMap<AddValType, FunctionType>();
-  private Map<AddValType, FunctionType> reverseAdd16 = new HashMap<AddValType, FunctionType>();
-  private Map<MulValType, FunctionType> forwardMul16 = new HashMap<MulValType, FunctionType>();
-  private Map<MulValType, FunctionType> reverseMul16 = new HashMap<MulValType, FunctionType>();
-
-  private Map<AddValType, FunctionType> forwardAdd8 = new HashMap<AddValType, FunctionType>();
-  private Map<AddValType, FunctionType> reverseAdd8 = new HashMap<AddValType, FunctionType>();
-  private Map<MulValType, FunctionType> forwardMul8 = new HashMap<MulValType, FunctionType>();
-  private Map<MulValType, FunctionType> reverseMul8 = new HashMap<MulValType, FunctionType>();
-
-  private Map<RelValType, FunctionType> normalSkip = new HashMap<RelValType, FunctionType>();
-  private Map<RelValType, FunctionType> reverseSkip = new HashMap<RelValType, FunctionType>();
-  private int codePos; /* position to plant next instruction */
-
-  /*Class member methods for all phases */
-  private void init() {
-    /* initialisation of lexical analysis variables */
-    lineNumber = 0;
-    lineSize = 0;
-    linePos = 0;
-    sourceCode = new ArrayList<String>();
-    errors = 0;
-    firstLexeme = new Lexeme(LexemeType.constant);
-    lexeme = new Lexeme(LexemeType.unknown);
-    lastLexeme = new Lexeme(LexemeType.unknown);
-    keywords.clear();
-    for (LexemeType lexemeType = LexemeType.beginlexeme; lexemeType != LexemeType.unknown; lexemeType = lexemeType.next()) {
-      keywords.put(lexemeType.getValue(), lexemeType);
-    }
-
-
-    /* initialisation of syntax analysis variables */
-
-    /* initialisation of semantic analysis variables */
-    identifiers.init();
-
-    /* initialisation of code generation variables */
-    acc16InUse = false;
-    acc8InUse = false;
-    codePos = 0;
-
-    forwardAdd16.clear();
-    reverseAdd16.clear();
-    forwardMul16.clear();
-    reverseMul16.clear();
-
-    forwardAdd8.clear();
-    reverseAdd8.clear();
-    forwardMul8.clear();
-    reverseMul8.clear();
-
-    normalSkip.clear();
-    reverseSkip.clear();
-    storeInstruction.clear();
-
-    forwardAdd16.put(AddValType.add, FunctionType.acc16Plus);
-    forwardAdd16.put(AddValType.sub, FunctionType.acc16Minus);
-    reverseAdd16.put(AddValType.add, FunctionType.acc16Plus);
-    reverseAdd16.put(AddValType.sub, FunctionType.minusAcc16);
-
-    forwardAdd8.put(AddValType.add, FunctionType.acc8Plus);
-    forwardAdd8.put(AddValType.sub, FunctionType.acc8Minus);
-    reverseAdd8.put(AddValType.add, FunctionType.acc8Plus);
-    reverseAdd8.put(AddValType.sub, FunctionType.minusAcc8);
-
-    forwardMul16.put(MulValType.muld, FunctionType.acc16Times);
-    forwardMul16.put(MulValType.divd, FunctionType.acc16Div);
-    reverseMul16.put(MulValType.muld, FunctionType.acc16Times);
-    reverseMul16.put(MulValType.divd, FunctionType.divAcc16);
-
-    forwardMul8.put(MulValType.muld, FunctionType.acc8Times);
-    forwardMul8.put(MulValType.divd, FunctionType.acc8Div);
-    reverseMul8.put(MulValType.muld, FunctionType.acc8Times);
-    reverseMul8.put(MulValType.divd, FunctionType.divAcc8);
-
-    normalSkip.put(RelValType.eq, FunctionType.brNe);
-    normalSkip.put(RelValType.ne, FunctionType.brEq);
-    normalSkip.put(RelValType.gt, FunctionType.brLe);
-    normalSkip.put(RelValType.lt, FunctionType.brGe);
-    normalSkip.put(RelValType.ge, FunctionType.brLt);
-    normalSkip.put(RelValType.le, FunctionType.brGt);
-    reverseSkip.put(RelValType.eq, FunctionType.brNe);
-    reverseSkip.put(RelValType.ne, FunctionType.brEq);
-    reverseSkip.put(RelValType.gt, FunctionType.brGe);
-    reverseSkip.put(RelValType.lt, FunctionType.brLe);
-    reverseSkip.put(RelValType.ge, FunctionType.brGt);
-    reverseSkip.put(RelValType.le, FunctionType.brLt);
-  }
-  
-  private void error() {
-    errors++;
-    if (lastLinePrinted != lineNumber) {
-      //when in debug mode, make sure error message starts at a new line
-      if (debugMode) System.out.println();
-      System.out.println(fileName + ":" + lineNumber);
-      System.out.print(line); //when line of source code was read, it was extended with a linefeed.
-      lastLinePrinted = lineNumber;
-    }
-    for (int i=0; i<linePos-1; i++) {
-      System.out.print(' ');
-    }
-    System.out.print('^');
-  }
-  
-  private void error(int n) {
-    error();
-    switch (n) {
-      case 0 : System.out.println("error opening file " + fileName);break;
-      case 1 : System.out.println("end of input encountered");break;
-      case 2 : System.out.println("line too long; max width=" + MAX_LINE_WIDTH);break;
-      case 3 : System.out.print("unexpected symbol;");break;
-      case 4 : System.out.println("unknown character");break;
-      case 5 : System.out.println("'=' expected after '=' or '!' ");break;
-      case 6 : System.out.print("unknown keyword : ");break;
-      case 7 : System.out.println("lexeme skipped after error");break;
-      case 8 : System.out.println("variable already declared");break;
-      case 9 : System.out.println("variable not declared");break;
-      case 10 : System.out.println("code overflow");break;
-      case 11 : System.out.println("lexemetype is null");break;
-      case 12 : System.out.println("internal compiler error during code generation");break;
-      case 13 : System.out.println("constant too big"); break;
-      case 14 : System.out.println("incompatible datatype between assignment variable and expression"); break;
-      case 15 : System.out.println("incompatible datatype in write statement"); break;
+  private static void deleteOldOutput(String fileName) {
+    String outputFilename = fileName.replace(".p", ".m");
+    try {
+      Files.deleteIfExists(Paths.get(outputFilename));
+      outputFilename = fileName.replace(".p", ".asm");
+      Files.deleteIfExists(Paths.get(outputFilename));
+      outputFilename = fileName.replace(".p", ".lst");
+      Files.deleteIfExists(Paths.get(outputFilename));
+      outputFilename = fileName.replace(".p", ".hex");
+      Files.deleteIfExists(Paths.get(outputFilename));
+    } catch (IOException x) {
+        // File permission problems are caught here.
+        System.err.println("Failed to delete " + outputFilename);
+        System.exit(1);
     }
   }
   
-  private void getLexeme() throws IOException, FatalError {
-    char ch;
-    //ignore white space and comments
-    ch = getChar();
-    while (ch == ' ' || ch == '\t' || ch == '\n' || (ch == '/' && (nextChar() == '*' || nextChar() == '/'))) {
-      if (ch == '/' && nextChar() == '*') {
-        ch = getChar();
-        ch = getChar();
-        while (ch != '*' || nextChar() != '/') {
-          ch = getChar();
+  private static void writeListing(String fileName, ArrayList<Instruction> instructions, boolean verboseMode) {
+    /* write M assembly code to an *.m file */
+    String outputFilename = fileName.replace(".p", ".m");
+    if (verboseMode) System.out.println("Writing M code to " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+        writer = new BufferedWriter(new FileWriter(outputFilename));
+        int pos=0;
+        for (Instruction instruction: instructions) {
+          writer.write(String.format("%3d :%s\n", pos++, instruction.toString()));
         }
-        ch = getChar();
-      } else if (ch == '/' && nextChar() == '/') {
-        ch = getChar();
-        while (nextChar() != '\n') {
-          ch = getChar();
+    } catch (IOException e) {
+        System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
         }
       }
-      ch = getChar();
     }
-
-    if (ch >= '0' && ch <= '9') {
-      /* try to recognise a constant */
-      lexeme.type = LexemeType.constant;
-      lexeme.constVal = (int)ch - (int)'0';
-      boolean error = false;
-      while (nextChar() >= '0' && nextChar() <= '9' && !error) {
-        ch = getChar();
-        lexeme.constVal = lexeme.constVal * 10 + ((int)ch - (int)'0');
-        //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
-        if (lexeme.constVal > MAX_INT_CONSTANT) {
-          error = true;
+  }
+  
+  private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
+    /* write Z80S180 assembly code to an asm file */
+    String outputFilename = fileName.replace(".p", ".asm");
+    if (verboseMode) System.out.println("Writing Z80 assembler code to " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+        writer = new BufferedWriter(new FileWriter(outputFilename));
+        for (AssemblyInstruction instruction : z80Instructions) {
+          writer.write(instruction.getCode());
+          writer.write("\n");
+        }
+    } catch (IOException e) {
+        System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
         }
       }
-      if (error) {
-        /* constant too big */
-        error(13);
-        /* eat up remainder of constant */
-        while (ch >= '0' && ch <= '9') {
-          ch = getChar();
-        }
-      }
-      lexeme.datatype = (lexeme.constVal <= MAX_BYT_CONSTANT) ? Datatype.byt : Datatype.integer;
-    } else if (ch == '{') {
-      lexeme.type = LexemeType.beginlexeme;
-    } else if (ch == '}') {
-      lexeme.type = LexemeType.endlexeme;
-    }else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
-      /* try to recognise an identifier or a keyword */
-      String name = String.valueOf(ch);
-      int charno = 0;
-      while ( VALID_IDENTIFIER_CHARACTERS.contains("" + nextChar()) && charno <= MAX_IDENTIFIER_LENGTH) {
-        if (charno <= MAX_IDENTIFIER_LENGTH) {
-          name += String.valueOf(getChar());
-          charno++;
-        } else {
-          ch = getChar();
-        }
-      }
-      /* separate identifiers from keywords */
-      LexemeType keyword = keywords.get(name);
-      if (keyword == null) {
-        lexeme.type = LexemeType.identifier;
-      }
-      else {
-        lexeme.type = keyword;
-      }
-      lexeme.idVal = name;
-    } else {
-      /* try to recognise keywords or , ; = ( ) + - * / <!=> */
-      switch (ch) {
-        case ',' : lexeme.type = LexemeType.comma; break;
-        case ';' : lexeme.type = LexemeType.semicolon; break;
-        case '(' : lexeme.type = LexemeType.lbracket; break;
-        case ')' : lexeme.type = LexemeType.rbracket; break;
-        case '+' :
-          lexeme.type = LexemeType.addop;
-          lexeme.addVal = AddValType.add;
-          break;
-        case '-' :
-          lexeme.type = LexemeType.addop;
-          lexeme.addVal = AddValType.sub;
-          break;
-        case '*' :
-          lexeme.type = LexemeType.mulop;
-          lexeme.mulVal = MulValType.muld;
-          break;
-        case '/' :
-          lexeme.type = LexemeType.mulop;
-          lexeme.mulVal = MulValType.divd;
-          break;
-        case '=' :
-          if (nextChar() == '=') {
-            ch = getChar();
-            lexeme.type = LexemeType.relop;
-            lexeme.relVal = RelValType.eq;
-          } else {
-            lexeme.type = LexemeType.assign;
+    }
+  }
+  
+  private static void writeZ80toListing(String fileName
+      , ArrayList<AssemblyInstruction> z80Instructions
+      , Map<String, Long> labels
+      , Map<String, ArrayList<Long>> labelReferences
+      , boolean verboseMode) {
+    /* write Z80S180 assembly and binary code to a Listing file */
+    String outputFilename = fileName.replace(".p", ".lst");
+    if (verboseMode) System.out.println("Writing Z80 assembler and binary code to listing file " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+        writer = new BufferedWriter(new FileWriter(outputFilename));
+        for (AssemblyInstruction instruction : z80Instructions) {
+          writer.write(String.format("%04X", instruction.getAddress()));
+          int nr = 0;
+          if (instruction.getBytes() != null) {
+            for (Byte oneByte : instruction.getBytes()) {
+              if (nr == 4) {
+                writer.write("\n    ");
+                nr = 0;
+              }
+              writer.write(String.format(" %02X", oneByte));
+              nr++;
+            }
           }
-          break;
-        case '!' :
-          if (nextChar() == '=') {
-            ch = getChar();
-            lexeme.type = LexemeType.relop;
-            lexeme.relVal = RelValType.ne;
-          } else {
-            lexeme.type = LexemeType.unknown;
-            error(5); /* ! not followed by = */
+          while (nr < 4) {
+            writer.write("   ");
+            nr++;
           }
-          break;
-        case '>' :
-          lexeme.type = LexemeType.relop;
-          if (nextChar() == '=') {
-            ch = getChar();
-            lexeme.relVal = RelValType.ge;
-          } else {
-            lexeme.relVal = RelValType.gt;
+          writer.write(String.format(" %s\n", instruction.getCode()));
+        }
+
+        //assembler error: undefined label
+        boolean spacerNeeded = true;
+        for (String key : labelReferences.keySet()) {
+          if (labels.get(key) == null) {
+            if (spacerNeeded) {
+              writer.write("\n");
+              spacerNeeded = false;
+            }
+            writer.write("Error: undefined label: " + key + "\n");
+            System.out.println("Error: undefined label: " + key);
           }
-          break;
-        case '<' :
-          lexeme.type = LexemeType.relop;
-          if (nextChar() == '=') {
-            ch = getChar();
-            lexeme.relVal = RelValType.le;
-          } else {
-            lexeme.relVal = RelValType.lt;
+        }
+        
+        //dump label list
+        writer.write("\n");
+        writer.write("Labels:\n");
+        for (String key : labels.keySet()) {
+          writer.write(String.format("%04X : %s\n", labels.get(key), key));
+        }
+
+        //dump label cross reference list
+        writer.write("\n");
+        writer.write("Cross references:\n");
+        for (String key : labelReferences.keySet()) {
+          writer.write(String.format("%8s = %04X :", key, labels.get(key)));
+          for (Long address : labelReferences.get(key)) {
+            writer.write(String.format(" %04X", address));
           }
-          break;
-        default :
-          lexeme.type = LexemeType.unknown;
-          error(4); /* unknown characters */
+          writer.write("\n");
+        }
+    } catch (IOException e) {
+        System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
       }
     }
-    debug("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-  } //getLexeme()
-
-  private char getChar() throws IOException, FatalError {
-    char result = nextChar();
-    linePos++;
-    return result;
   }
   
-  private char nextChar() throws IOException, FatalError {
-    if (linePos >= lineSize) {
-      line = input.readLine();
-      
-      if (line == null) {
-        throw new FatalError(1); //end of file encountered
-      };
-      
-      //when in debug mode, make sure the echoed source code starts on a new line.
-      debug("\n");
-      debug(line);
-      sourceCode.add(line);
-      
-      //add P source code as comment to M machine code.
-      plant(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
-
-      lineSize = line.length();
-      if (lineSize > MAX_LINE_WIDTH) {
-        throw new FatalError(2); //line too long
+  private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
+    /* write binary Z80S180 code to Intel hex file */
+    String outputFilename = fileName.replace(".p", ".hex");
+    if (verboseMode) System.out.println("Writing Z80 binary code to Intel hex file " + outputFilename);
+    IntelHexWriter writer = null;
+    try {
+      writer = new IntelHexWriter(outputFilename);
+      for (AssemblyInstruction instruction : z80Instructions) {
+        writer.write(instruction.getAddress(), instruction.getBytes());
       }
-      line += "\n";
-      lineSize++;
-      lineNumber++;
-      linePos = 0;
-    }
-    return line.charAt(linePos);
-  }
-  
-  /*Class member methods for syntax analysis phase */
-  private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\ncheckOrSkip: start");
-    boolean orFlag = false;
-    boolean result = false;
-    if (okSet.contains(lexeme.type)) {
-      debug("\ncheckOrSkip: lexeme \"" + lexeme.type + "\" in okSet " + okSet);
-      result = true;
-    } else {
-      error(3); /* okset expected */
-      System.out.println(" found " + lexeme.type + ", expected " + okSet);
-      if (stopSet.size() > 0) {
-        while (!stopSet.contains(lexeme.type)) {
-          error(7); /* lexeme skipped after error */
-          getLexeme();
+    } catch (IOException e) {
+        System.out.println("\nException: " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
         }
       }
     }
-    debug("\ncheckOrSkip: end");
-    return result;
-  }
-  
-  //factor = identifier | constant | "read" | "(" expression ")".
-  private Operand factor(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
-    operand.opType = OperandType.unknown;
-    debug("\nfactor 1: " + operand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    if (checkOrSkip(startExp, stopSet)) {
-      if (lexeme.type == LexemeType.identifier) {
-        /* part of semantic analysis */
-        if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
-        /* part of code generation */
-        operand.opType = OperandType.var;
-        Variable var = identifiers.getId(lexeme.idVal);
-        operand.intValue = var.getAddress();
-        operand.datatype = var.getDatatype();
-        /* part of lexical analysis */
-        getLexeme();
-      } else if (lexeme.type == LexemeType.constant) {
-        /* part of code generation */
-        operand.opType = OperandType.constant;
-        operand.intValue = lexeme.constVal;
-        operand.datatype = lexeme.datatype;
-        /* part of lexical analysis */
-        getLexeme();
-      } else if (lexeme.type == LexemeType.readlexeme) {
-        getLexeme();
-        /* 
-         * Part of code generation.
-         * The read() function always returns an int value.
-         */
-        if (acc16InUse) {
-          operand.opType = OperandType.stack;
-          plant(new Instruction(FunctionType.acc16Store, operand));
-        }
-        operand.opType = OperandType.acc;
-        operand.datatype = Datatype.integer;
-        plant(new Instruction(FunctionType.read));
-        acc16InUse = true;
-      } else if (lexeme.type == LexemeType.lbracket) {
-        //skip left bracket.
-        getLexeme();
-        EnumSet<LexemeType> stopSetCopy = stopSet.clone();
-        stopSetCopy.add(LexemeType.rbracket);
-        operand = expression(stopSetCopy, operand);
-        //skip right bracket.
-        if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
-          getLexeme();
-        }
-      }
-    }
-
-    //consistency check.
-    debug("\nfactor: end: " + operand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    if (operand.opType == OperandType.unknown) {
-      throw new FatalError(12);
-    }
-
-    return operand;
-  } //factor()
-  
-  //term = factor {mulop factor}.
-  private Operand term(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
-    /* part of code generation */
-    MulValType operator;
-    Operand rOperand = new Operand(OperandType.unknown);
-
-    /* part of lexical analysis */
-    EnumSet<LexemeType> followSet = stopSet.clone();
-    followSet.add(LexemeType.mulop);
-    operand = factor(followSet, operand);
-    debug("\nterm: " + operand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    while (lexeme.type == LexemeType.mulop) {
-      operator = lexeme.mulVal;
-
-      /* part of code generation */
-      if (operand.opType != OperandType.acc) {
-        plantAccLoad(operand);
-      }
-      operand.opType = OperandType.acc;
-      
-      /* part of lexical analysis */
-      getLexeme();
-      rOperand = factor(followSet, rOperand);
-
-      /* part of code generation */
-      debug("\nterm loop: lOperand=" + operand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-      // acc-acc
-      // lOperand=operand(acc, type=byt, intValue=36), rOperand=operand(acc, type=byt, intValue=4), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer, intValue=3900), rOperand=operand(acc, type=integer, intValue=300), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
-      // lOperand=operand(acc, type=byt, intValue=1), rOperand=operand(acc, type=integer), acc16InUse = true, acc8InUse = true
-      // not acc-acc
-      // lOperand=operand(acc, type=byt, intValue=3), rOperand=operand(constant, type=byt, intValue=3), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer, intValue=5), rOperand=operand(var, type=integer, intValue=7), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer, intValue=1000), rOperand=operand(constant, type=byt, intValue=1), acc16InUse = true, acc8InUse = false
-      // ?
-      // lOperand=operand(acc, type=byt, intValue=1), rOperand=operand(constant, type=integer, intValue=1037), acc16InUse = false, acc8InUse = true
-      if (operand.opType == OperandType.acc && rOperand.opType == OperandType.acc) {
-        if (operand.datatype == rOperand.datatype) {
-          //left operand has been pushed onto the stack
-          operand.opType = OperandType.stack;
-          if (operand.datatype == Datatype.byt) {
-            plant(new Instruction(reverseMul8.get(operator), operand));
-          } else {
-            plant(new Instruction(reverseMul16.get(operator), operand));
-          }
-        } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
-          plant(new Instruction(forwardMul16.get(operator), rOperand));
-        } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
-          plant(new Instruction(reverseMul16.get(operator), operand));
-          operand.datatype = Datatype.integer;
-        } else {
-          throw new RuntimeException("Internal compiler error: abort.");
-        }
-      } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardMul8.get(operator), rOperand));
-      } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
-        plant(new Instruction(forwardMul16.get(operator), rOperand));
-      } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardMul16.get(operator), rOperand));
-      } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
-        if (rOperand.opType == OperandType.acc) {
-          plant(new Instruction(FunctionType.stackAcc8ToAcc16));
-          throw new RuntimeException("Internal compiler error: abort.");
-        } else {
-          plant(new Instruction(FunctionType.acc8ToAcc16));
-        }
-        plant(new Instruction(forwardMul16.get(operator), rOperand));
-        operand.datatype = Datatype.integer;
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    }
-    debug("\nterm: end: " + operand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    return operand;
-  } //term()
-  
-  //expression = term {addop term}.
-  private Operand expression(EnumSet<LexemeType> stopSet, Operand operand) throws IOException, FatalError {
-    debug("\nexpression: start with stopSet = " + stopSet);
-    /* part of lexical analysis */
-    AddValType operator;
-    Operand rOperand = new Operand(OperandType.unknown);
-    
-    /* part of lexical analysis */
-    EnumSet<LexemeType> followSet = stopSet.clone();
-    followSet.add(LexemeType.addop);
-    operand = term(followSet, operand);
-    debug("\nexpression: " + operand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    while (lexeme.type == LexemeType.addop) {
-      operator = lexeme.addVal;
-
-      /* part of code generation */
-      if (operand.opType != OperandType.acc) {
-        plantAccLoad(operand);
-      }
-      operand.opType = OperandType.acc;
-      
-      /* part of lexical analysis */
-      getLexeme();
-      rOperand = term(followSet, rOperand);
-      
-      /* part of code generation */
-      debug("\nexpression loop: lOperand=" + operand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-      // acc-acc
-      // lOperand=operand(acc, type=byt, intValue=10), rOperand=operand(acc, type=byt, intValue=3), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer, intValue=1000), rOperand=operand(acc, type=integer), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
-      // lOperand=operand(acc, type=byt, intValue=0), rOperand=operand(acc, type=integer), acc16InUse = true, acc8InUse = true
-      // not acc-acc
-      // lOperand=operand(acc, type=byt, intValue=0), rOperand=operand(constant, type=byt, intValue=2), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer), rOperand=operand(constant, type=integer, intValue=1000), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer), rOperand=operand(constant, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
-      // ?
-      // lOperand=operand(acc, type=byt, intValue=2), rOperand=operand(var, type=integer, intValue=3), acc16InUse = false, acc8InUse = true
-      if (operand.opType == OperandType.acc && rOperand.opType == OperandType.acc) {
-        if (operand.datatype == rOperand.datatype) {
-          //left operand has been pushed onto the stack
-          operand.opType = OperandType.stack;
-          if (operand.datatype == Datatype.byt) {
-            plant(new Instruction(reverseAdd8.get(operator), operand));
-          } else {
-            plant(new Instruction(reverseAdd16.get(operator), operand));
-          }
-        } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
-          plant(new Instruction(forwardAdd16.get(operator), rOperand));
-        } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
-          plant(new Instruction(reverseAdd16.get(operator), operand));
-          operand.datatype = Datatype.integer;
-        } else {
-          throw new RuntimeException("Internal compiler error: abort.");
-        }
-      } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardAdd8.get(operator), rOperand));
-      } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
-        plant(new Instruction(forwardAdd16.get(operator), rOperand));
-      } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardAdd16.get(operator), rOperand));
-      } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
-        if (rOperand.opType == OperandType.acc) {
-          plant(new Instruction(FunctionType.stackAcc8ToAcc16));
-          throw new RuntimeException("Internal compiler error: abort.");
-        } else {
-          plant(new Instruction(FunctionType.acc8ToAcc16));
-        }
-        plant(new Instruction(forwardAdd16.get(operator), rOperand));
-        operand.datatype = Datatype.integer;
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    }
-    debug("\nexpression: end: " + operand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    return operand;
-  } //expression()
-  
-  //parse a comparison, and return the address of the jump instruction to be filled with the label at the end of the control statement block.
-  //comparison = expression relop expression
-  private int comparison(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\ncomparison: start with stopSet = " + stopSet);
-
-    /* part of code generation */
-    int ifLabel;
-    
-    /* part of lexical analysis */
-    EnumSet<LexemeType> localSet = stopSet.clone();
-    localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(localSet, new Operand(OperandType.unknown));
-
-    /* part of code generation */
-    plantAccLoad(leftOperand);
-    leftOperand.opType = OperandType.acc;
-
-    /* part of lexical analysis */
-    localSet = stopSet.clone();
-    localSet.addAll(startExp);
-    RelValType compareOp;
-    if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
-      /* part of code generation */
-      compareOp = lexeme.relVal;
-      /* part of lexical analysis */
-      getLexeme();
-    } else {
-      /* part of code generation */
-      compareOp = RelValType.eq;
-    }
-    
-    /* part of lexical analysis */
-    localSet = stopSet.clone();
-    localSet.addAll(startStatement);
-    localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(localSet, new Operand(OperandType.unknown));
-
-    /* part of code generation */
-    debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    // acc-acc
-    // ?
-    // ?
-    // ?
-    // ?
-    // not acc-acc
-    // leftOperand=operand(acc, type=byt, intValue=1), rightOperand=operand(constant, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
-    // ?
-    // ?
-    // ?
-    // ?
-    if (leftOperand.opType == OperandType.acc && rightOperand.opType == OperandType.acc) {
-      if (leftOperand.datatype == rightOperand.datatype) {
-        //left operand has been pushed onto the stack
-        leftOperand.opType = OperandType.stack;
-        if (leftOperand.datatype == Datatype.byt) {
-          //plant(new Instruction(reverseAdd8.get(operator), leftOperand));
-          throw new RuntimeException("Internal compiler error: abort.");
-        } else {
-          //plant(new Instruction(reverseAdd16.get(operator), leftOperand));
-          throw new RuntimeException("Internal compiler error: abort.");
-        }
-      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
-        //plant(new Instruction(forwardAdd16.get(operator), rightOperand));
-        throw new RuntimeException("Internal compiler error: abort.");
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
-        //plant(new Instruction(reverseAdd16.get(operator), leftOperand));
-        leftOperand.datatype = Datatype.integer;
-        throw new RuntimeException("Internal compiler error: abort.");
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-      plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-    } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
-      plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      throw new RuntimeException("Internal compiler error: abort.");
-    } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
-      plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      throw new RuntimeException("Internal compiler error: abort.");
-    } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
-      if (rightOperand.opType == OperandType.acc) {
-        plant(new Instruction(FunctionType.stackAcc8ToAcc16));
-      } else {
-        plant(new Instruction(FunctionType.acc8ToAcc16));
-      }
-      plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      throw new RuntimeException("Internal compiler error: abort.");
-    } else {
-      throw new RuntimeException("Internal compiler error: abort.");
-    }
-    ifLabel = saveForwardLabel();
-    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
-    if (rightOperand.opType != OperandType.stack) {
-      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
-    } else {
-      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
-    }
-
-    debug("\ncomparison: end");
-    return ifLabel;
-  } //comparison(stopSet)
-  
-  //parse a comparison, jump back to the label if the comparison yields true.
-  //comparison = expression relop expression
-  private void comparison(EnumSet<LexemeType> stopSet, int doLabel) throws IOException, FatalError {
-    debug("\ncomparison: start with stopSet = " + stopSet);
-
-    /* part of lexical analysis */
-    EnumSet<LexemeType> localSet = stopSet.clone();
-    localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(localSet, new Operand(OperandType.unknown));
-
-    /* part of code generation */
-    plantAccLoad(leftOperand);
-
-    /* part of lexical analysis */
-    localSet = stopSet.clone();
-    localSet.addAll(startExp);
-    RelValType compareOp;
-    if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
-      /* part of code generation */
-      compareOp = lexeme.relVal;
-      /* part of lexical analysis */
-      getLexeme();
-    } else {
-      /* part of code generation */
-      compareOp = RelValType.eq;
-    }
-    
-    /* part of lexical analysis */
-    localSet = stopSet.clone();
-    localSet.addAll(startStatement);
-    localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(localSet, new Operand(OperandType.unknown));
-
-    /* part of code generation */
-    plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, doLabel);
-    if (rightOperand.opType == OperandType.stack) {
-      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
-    } else {
-      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
-    }
-
-    debug("\ncomparison: end");
-  } //comparison(stopSet, doLabel)
-
-  
-  // block = statement | "{" statements "}".
-  private void block(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nblock: start with stopSet = " + stopSet);
-      
-    //part of semantic analysis: start a new class level declaration scope for the statement block.
-    identifiers.newScope();
-
-    /* part of lexical analysis */
-    EnumSet<LexemeType> startSet = stopSet.clone();
-    startSet.addAll(startStatement);
-    startSet.add(LexemeType.beginlexeme);
-
-    EnumSet<LexemeType> stopBlockSet = startSet.clone();
-    stopBlockSet.add(LexemeType.semicolon);
-    stopBlockSet.add(LexemeType.endlexeme);
-
-    checkOrSkip(startSet, stopBlockSet);
-    if (lexeme.type == LexemeType.beginlexeme) {
-      getLexeme();
-      statements(EnumSet.of(LexemeType.endlexeme));
-      if (checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class))) {
-		  getLexeme();
-	  }
-    } else {
-      statement(stopSet);
-    }
-      
-    //part of semantic analysis: close the declaration scope of the statement block.
-    identifiers.closeScope();
-
-    debug("\nblock: end");
-  } //block
-  
-  //forStatement = "for" "(" initialization ";" comparison ";" update ")" block.
-  private void forStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nforStatement: start with stopSet = " + stopSet);
-    
-    //part of semantic analysis: start a new declaration scope for the for statement.
-    identifiers.newScope();
-
-    /* part of lexical analysis: "for" "(" initialization ";" */
-    getLexeme();
-    EnumSet<LexemeType> stopForSet = stopSet.clone();
-    stopForSet.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopForSet)) {
-      getLexeme();
-    }
-    
-    EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
-    stopInitializationSet.add(LexemeType.semicolon);
-    //in the initialization part a new variable must be declared.
-    String variable = assignment(stopInitializationSet);
-    if (variable == null) {
-      error();
-      System.out.println("Loop variable must be declared in for statement; (int variable; .. ; ..) {..} expected.");
-    }
-    
-    //order of steps during execution: comparison - block - update.
-
-    /* part of lexical analysis: comparison ";" */
-    stopInitializationSet.addAll(startStatement);
-    stopInitializationSet.remove(LexemeType.identifier);
-    int forLabel = saveLabel();
-    int gotoEnd = comparison(stopInitializationSet);
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopInitializationSet)) {
-      getLexeme();
-    }
-    
-    /* part of code generation: skip update and jump forward to block */
-    int gotoBlock = saveLabel();
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, 0)));
-    int updateLabel = saveLabel();
-
-    /* part of lexical analysis: update */
-    stopForSet.add(LexemeType.beginlexeme);
-    update(stopForSet);
-
-    /* part of code generation: jump back to comparison */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, forLabel)));
-
-    /* part of lexical analysis: ")" */
-    stopForSet = stopSet.clone();
-    stopForSet.addAll(startStatement);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopForSet)) {
-      getLexeme();
-    }
-
-    /* part of code generation: start of block */
-    plantForwardLabel(gotoBlock);
-
-    /* part of lexical analysis: block */
-    block(stopSet);
-    
-    /* part of code generation; jump back to update */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
-    plantForwardLabel(gotoEnd);
-    
-    //part of semantic analysis: close the declaration scope of the for statement.
-    identifiers.closeScope();
-    debug("\nforStatement: end");
-  } //forStatement()
-
-  //doStatement    = "do" block "while" "(" comparison ")" ";".
-  private void doStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\ndoStatement: start with stopSet = " + stopSet);
-    getLexeme();
-
-    /* part of code generation */
-    int doLabel = saveLabel();
-
-    /* part of lexical analysis */
-    //expect block, terminated by "while".
-    EnumSet<LexemeType> stopDoSet = stopSet.clone();
-    stopDoSet.add(LexemeType.whilelexeme);
-    block(stopSet);
-    
-    //expect "while" followed by "(".
-    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.whilelexeme), stopWhileSet)) {
-      getLexeme();
-    }
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
-      getLexeme();
-    }
-
-    //expect comparison, terminated by ")"
-    stopWhileSet.addAll(startStatement);
-    stopWhileSet.remove(LexemeType.identifier);
-    comparison(stopWhileSet, doLabel);
-    
-    //expect ")" ";"
-    stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.semicolon);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
-      getLexeme();
-    }
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      getLexeme();
-    }
-    
-    debug("\ndoStatement: end");
-  } //doStatement()
-
-  //whileStatement = "while" "(" comparison ")" block.
-  private void whileStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nwhileStatement: start with stopSet = " + stopSet);
-    getLexeme();
-
-    /* part of code generation */
-    int whileLabel = saveLabel();
-
-    /* part of lexical analysis */
-    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
-      getLexeme();
-    }
-
-    /* part of lexical analysis */
-    stopWhileSet.addAll(startStatement);
-    stopWhileSet.remove(LexemeType.identifier);
-    int endLabel = comparison(stopWhileSet);
-    
-    stopWhileSet = stopSet.clone();
-    stopWhileSet.addAll(startStatement);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopWhileSet)) {
-      getLexeme();
-    }
-    block(stopSet);
-    
-    /* part of code generation */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, whileLabel)));
-    plantForwardLabel(endLabel);
-    debug("\nwhileStatement: end");
-  } //whileStatement()
-
-  // ifStatement = "if" "(" comparison ")" block [ "else" block ].
-  private void ifStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nifStatement: start with stopSet = " + stopSet);
-
-    getLexeme();
-    
-    //expect (
-    EnumSet<LexemeType> stopSetIf = stopSet.clone();
-    stopSetIf.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopSetIf)) {
-      getLexeme();
-    }
-
-    //expect comparison
-    stopSetIf = stopSet.clone();
-    stopSetIf.add(LexemeType.rbracket);
-    stopSetIf.addAll(startStatement);
-    stopSetIf.remove(LexemeType.identifier);
-    int ifLabel = comparison(stopSetIf);
-    
-    //expect )
-    stopSetIf = stopSet.clone();
-    stopSetIf.addAll(startStatement);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSetIf)) {
-      getLexeme();
-    }
-
-    //expect statement block
-    EnumSet<LexemeType> stopSetElse = stopSet.clone();
-    stopSetElse.add(LexemeType.elselexeme);
-    block(stopSetElse);
-
-    if (lexeme.type == LexemeType.elselexeme) {
-      //expect else
-      checkOrSkip(EnumSet.of(LexemeType.elselexeme), stopSetElse);
-
-      /* part of code generation */
-      int elseLabel = saveLabel();
-      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, 0)));
-      plantForwardLabel(ifLabel);
-
-      /* part of lexical analysis */
-      //expect statement block
-      getLexeme();
-      block(stopSet);
-      
-      /* part of code generation */
-      plantForwardLabel(elseLabel);
-    } else {
-      /* part of code generation */
-      plantForwardLabel(ifLabel);
-    }
-    debug("\nifStatement: end");
-  } //ifStatement()
-  
-  //assignment = [datatype] update ";".
-  //datatype   = "byte" | "int".
-  private String assignment(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nassignment: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
-
-    EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
-    stopAssignmentSet.addAll(startExp);
-    stopAssignmentSet.add(LexemeType.semicolon);
-
-    String variable = null;
-    if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.intlexeme) {
-      /* part of lexical analysis */
-      LexemeType datatype = lexeme.type;
-      getLexeme();
-      if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
-
-        // part of semantic analysis.
-        if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != null) {
-         error(8); /* variable already declared */
-        } else if (identifiers.declareId(lexeme, datatype)) {
-          debug("\nassignment: var declared: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-          variable = lexeme.idVal;
-        } else {
-          error();
-          System.out.println("Error declaring variable " + lexeme.idVal + " of type " + datatype);
-        }
-      }
-    } else {
-      /* part of lexical analysis */
-      checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet);
-
-      /* part of semantic analysis */
-      if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
-    }
-    
-    update(stopSet);
-
-    /* part of lexical analysis */
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      getLexeme();
-    }
-
-    debug("\nassignment: end");
-    return variable;
-  } //assignment()
-
-  //update = identifier++ | identifier-- | identifier "=" expression
-  private void update(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nupdate: start with stopSet = " + stopSet);
-
-    EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
-    stopAssignmentSet.addAll(startExp);
-    stopAssignmentSet.add(LexemeType.semicolon);
-
-    /* part of semantic analysis. */
-    Variable var = identifiers.getId(lexeme.idVal);
-    int varAddress = var.getAddress();
-    Datatype varDatatype = var.getDatatype();
-
-    /* part of lexical analysis */
-    getLexeme();
-    if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.sub) {
-      //identifier--
-      getLexeme();
-      if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.sub) {
-        getLexeme();
-
-        /* part of code generation */
-        if (varDatatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.decrement16, new Operand(OperandType.var, Datatype.integer, varAddress)));
-        } else if (varDatatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.decrement8, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else {
-          error(12);
-        }
-      }
-    } else if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.add) {
-      //identifier++
-      getLexeme();
-      if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.add) {
-        getLexeme();
-
-        /* part of code generation */
-        if (varDatatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.increment16, new Operand(OperandType.var, Datatype.integer, varAddress)));
-        } else if (varDatatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.increment8, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else {
-          error(12); 
-        }
-      }
-    } else if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
-      //identifier "=" expression
-      getLexeme();
-      Operand operand = expression(stopSet, new Operand(OperandType.unknown));
-      debug("\nupdate: " + operand);
-
-      /* part of code generation */
-      if (operand.opType != OperandType.acc) {
-        plantAccLoad(operand);
-      }
-      if (varDatatype == Datatype.byt) {
-        if (operand.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else if (operand.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.acc16ToAcc8));
-          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else {
-          error(14);
-        }
-      } else if (varDatatype == Datatype.integer) {
-        if (operand.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, Datatype.integer, varAddress)));
-        } else if (operand.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.acc8ToAcc16));
-          plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, Datatype.integer, varAddress)));
-        } else {
-          error(14);
-        }
-      } else {
-        error(12);
-      }
-    }
-
-    debug("\nupdate: end");
-  } //update()
-
-  // writeStatement = "write" "(" expression ")" ";".
-  private void writeStatement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nwriteStatement: start with stopSet = " + stopSet);
-    //skip write symbol.
-    getLexeme();
-
-    EnumSet<LexemeType> stopWriteSet = stopSet.clone();
-    stopWriteSet.addAll(startExp);
-    stopWriteSet.add(LexemeType.rbracket);
-    stopWriteSet.add(LexemeType.semicolon);
-    //skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWriteSet)) {
-      getLexeme();
-    }
-    
-    EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
-    stopExpressionSet.add(LexemeType.rbracket);
-    stopExpressionSet.add(LexemeType.semicolon);
-    Operand operand = expression(stopExpressionSet, new Operand(OperandType.unknown));
-    debug("\nwriteStatement: " + operand);
-    
-    /* part of lexical analysis */
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
-      getLexeme();
-    }
-
-    //skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      getLexeme();
-    }
-
-    /* part of code generation */
-    if (operand.opType != OperandType.acc) {
-      plantAccLoad(operand);
-    }
-    if (operand.datatype == Datatype.integer) {
-      plant(new Instruction(FunctionType.writeAcc16));
-    } else if (operand.datatype == Datatype.byt) {
-      plant(new Instruction(FunctionType.writeAcc8));
-    } else {
-      error(15);
-    }
-    debug("\nwriteStatement: end");
-  }
-
-  //statement = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
-  private void statement(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nstatement: start with stopSet = " + stopSet);
-    /* part of code generation */
-    acc16InUse = false;
-    acc8InUse = false;
-
-    /* part of lexical analysis */
-    EnumSet<LexemeType> startSet = stopSet.clone();
-    startSet.addAll(startStatement);
-    if (checkOrSkip(startSet, stopSet)) {
-      if (startAssignment.contains(lexeme.type)) {
-        assignment(stopSet);
-      } else if (lexeme.type == LexemeType.writelexeme) {
-        writeStatement(stopSet);
-      } else if (lexeme.type == LexemeType.iflexeme) {
-        ifStatement(stopSet);
-      } else if (lexeme.type == LexemeType.forlexeme) {
-        forStatement(stopSet);
-      } else if (lexeme.type == LexemeType.dolexeme) {
-        doStatement(stopSet);
-      } else if (lexeme.type == LexemeType.whilelexeme) {
-        whileStatement(stopSet);
-      }
-    }
-    debug("\nstatement: end");
-  }
-  
-  //statements = (statement)*.
-  private void statements(EnumSet<LexemeType> stopSet) throws IOException, FatalError {
-    debug("\nstatements: start with stopSet = " + stopSet);
-    
-    //while (checkOrSkip(startStatement, stopSet)) {
-    while (startStatement.contains(lexeme.type)) {
-      statement(stopSet);
-      //getLexeme();
-    }
-    debug("\nstatements: end");
-  }
-  
-  //program = "class" identifier "{" statements "}".
-  private void prog() throws IOException, FatalError {
-    debug("\nprog: start");
-    /* recognise a class definition */
-    getLexeme();
-    if (checkOrSkip(EnumSet.of(LexemeType.classlexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginlexeme))) {
-      getLexeme();
-      
-      //part of semantic analysis: start a new class level declaration scope.
-      identifiers.newScope();
-
-      if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginlexeme))) {
-        /* next line + debug message is part of semantic analysis */
-        if (identifiers.checkId(lexeme.idVal)) {
-          error(8); /* variable already declared */
-        } else if (identifiers.declareId(lexeme, LexemeType.classlexeme)) {
-          debug("\nprog: class declared: " + lexeme.idVal);
-        } else {
-          error();
-          System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
-        }
-
-        getLexeme();
-        checkOrSkip(EnumSet.of(LexemeType.beginlexeme), EnumSet.noneOf(LexemeType.class));
-
-        getLexeme();
-        statements(EnumSet.of(LexemeType.endlexeme));
-
-        //getLexeme();
-        checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class));
-      }
-      
-      //part of semantic analysis: close the class level declaration scope.
-      identifiers.closeScope();
-    }
-    debug("\nprog: end");
-  }
-  
-  /*Class member methods for code generation phase */
-  private void plantAccLoad(Operand operand) {
-    if (operand.datatype == Datatype.integer) {
-      if (operand.opType != OperandType.stack) {
-        if (acc16InUse) {
-            plant(new Instruction(FunctionType.stackAcc16Load, operand));
-          } else {
-            plant(new Instruction(FunctionType.acc16Load, operand));
-        }
-      }
-      acc16InUse = true;
-    } else { //operand.datatype == Datatype.byt
-      if (operand.opType != OperandType.stack) {
-        if (acc8InUse) {
-            plant(new Instruction(FunctionType.stackAcc8Load, operand));
-          } else {
-            plant(new Instruction(FunctionType.acc8Load, operand));
-        }
-      }
-      acc8InUse = true;
-    }
-  }
-
-  private void plant(Instruction instruction) {
-    /* for debugging purposes */
-    debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + "):");
-    
-    /* add original source code */
-    if (!sourceCode.isEmpty()) {
-      instruction.linesOfCode.addAll(sourceCode);
-      sourceCode.clear();
-    }
-
-    /* insert M (virtual machine) code into memory */
-    if (storeInstruction.size() >= MAX_M_CODE) {
-      error(10);
-      storeInstruction.clear();
-    }
-    storeInstruction.add(instruction);
-    
-    if (instruction.function == FunctionType.acc8ToAcc16) {
-      acc16InUse = true;
-      acc8InUse = false;
-    }
-
-    /* for debugging purposes */
-    debug("\n" + String.format("%3d :", codePos) + instruction.toString());
-
-    codePos++;
-  };
-  
-  private void plantForwardLabel(int pos) {
-    storeInstruction.get(pos).operand.intValue = storeInstruction.size();
-    /* for debugging purposes */
-    debug("\nlabel: used from " + pos);
-  }
-
-  private int saveForwardLabel() {
-    /* for debugging purposes */
-    debug("\nlabel used");
-
-    return codePos;
-  }
-
-  private int saveLabel() {
-    /* for debugging purposes */
-    debug("\nlabel:");
-
-    return codePos;
   }
 
 }
