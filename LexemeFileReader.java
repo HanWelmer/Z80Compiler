@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,26 +67,30 @@ public class LexemeFileReader implements LexemeReader {
     System.out.print('^');
   }
 
-  public Lexeme getLexeme() throws FatalError {
+  /**
+  * return the next lexeme from the lexeme reader.
+  * parm sourceCode: this list will be extended by any lines of source code that have been read while getting the next lexeme.
+  **/
+  public Lexeme getLexeme(ArrayList<String> sourceCode) throws FatalError {
     Lexeme lexeme = new Lexeme(LexemeType.unknown);
     char ch;
     //ignore white space and comments
-    ch = getChar();
-    while (ch == ' ' || ch == '\t' || ch == '\n' || (ch == '/' && (nextChar() == '*' || nextChar() == '/'))) {
-      if (ch == '/' && nextChar() == '*') {
-        ch = getChar();
-        ch = getChar();
-        while (ch != '*' || nextChar() != '/') {
-          ch = getChar();
+    ch = getChar(sourceCode);
+    while (ch == ' ' || ch == '\t' || ch == '\n' || (ch == '/' && (nextChar(sourceCode) == '*' || nextChar(sourceCode) == '/'))) {
+      if (ch == '/' && nextChar(sourceCode) == '*') {
+        ch = getChar(sourceCode);
+        ch = getChar(sourceCode);
+        while (ch != '*' || nextChar(sourceCode) != '/') {
+          ch = getChar(sourceCode);
         }
-        ch = getChar();
-      } else if (ch == '/' && nextChar() == '/') {
-        ch = getChar();
-        while (nextChar() != '\n') {
-          ch = getChar();
+        ch = getChar(sourceCode);
+      } else if (ch == '/' && nextChar(sourceCode) == '/') {
+        ch = getChar(sourceCode);
+        while (nextChar(sourceCode) != '\n') {
+          ch = getChar(sourceCode);
         }
       }
-      ch = getChar();
+      ch = getChar(sourceCode);
     }
 
     if (ch >= '0' && ch <= '9') {
@@ -93,8 +98,8 @@ public class LexemeFileReader implements LexemeReader {
       lexeme.type = LexemeType.constant;
       lexeme.constVal = (int)ch - (int)'0';
       boolean error = false;
-      while (nextChar() >= '0' && nextChar() <= '9' && !error) {
-        ch = getChar();
+      while (nextChar(sourceCode) >= '0' && nextChar(sourceCode) <= '9' && !error) {
+        ch = getChar(sourceCode);
         lexeme.constVal = lexeme.constVal * 10 + ((int)ch - (int)'0');
         //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
         if (lexeme.constVal > MAX_INT_CONSTANT) {
@@ -106,7 +111,7 @@ public class LexemeFileReader implements LexemeReader {
         System.out.println("constant too big");
         /* eat up remainder of constant */
         while (ch >= '0' && ch <= '9') {
-          ch = getChar();
+          ch = getChar(sourceCode);
         }
       }
       lexeme.datatype = (lexeme.constVal <= MAX_BYT_CONSTANT) ? Datatype.byt : Datatype.integer;
@@ -118,12 +123,12 @@ public class LexemeFileReader implements LexemeReader {
       /* try to recognise an identifier or a keyword */
       String name = String.valueOf(ch);
       int charno = 0;
-      while ( VALID_IDENTIFIER_CHARACTERS.contains("" + nextChar()) && charno <= MAX_IDENTIFIER_LENGTH) {
+      while ( VALID_IDENTIFIER_CHARACTERS.contains("" + nextChar(sourceCode)) && charno <= MAX_IDENTIFIER_LENGTH) {
         if (charno <= MAX_IDENTIFIER_LENGTH) {
-          name += String.valueOf(getChar());
+          name += String.valueOf(getChar(sourceCode));
           charno++;
         } else {
-          ch = getChar();
+          ch = getChar(sourceCode);
         }
       }
       /* separate identifiers from keywords */
@@ -159,8 +164,8 @@ public class LexemeFileReader implements LexemeReader {
           lexeme.mulVal = MulValType.divd;
           break;
         case '=' :
-          if (nextChar() == '=') {
-            ch = getChar();
+          if (nextChar(sourceCode) == '=') {
+            ch = getChar(sourceCode);
             lexeme.type = LexemeType.relop;
             lexeme.relVal = RelValType.eq;
           } else {
@@ -168,8 +173,8 @@ public class LexemeFileReader implements LexemeReader {
           }
           break;
         case '!' :
-          if (nextChar() == '=') {
-            ch = getChar();
+          if (nextChar(sourceCode) == '=') {
+            ch = getChar(sourceCode);
             lexeme.type = LexemeType.relop;
             lexeme.relVal = RelValType.ne;
           } else {
@@ -180,8 +185,8 @@ public class LexemeFileReader implements LexemeReader {
           break;
         case '>' :
           lexeme.type = LexemeType.relop;
-          if (nextChar() == '=') {
-            ch = getChar();
+          if (nextChar(sourceCode) == '=') {
+            ch = getChar(sourceCode);
             lexeme.relVal = RelValType.ge;
           } else {
             lexeme.relVal = RelValType.gt;
@@ -189,8 +194,8 @@ public class LexemeFileReader implements LexemeReader {
           break;
         case '<' :
           lexeme.type = LexemeType.relop;
-          if (nextChar() == '=') {
-            ch = getChar();
+          if (nextChar(sourceCode) == '=') {
+            ch = getChar(sourceCode);
             lexeme.relVal = RelValType.le;
           } else {
             lexeme.relVal = RelValType.lt;
@@ -209,13 +214,13 @@ public class LexemeFileReader implements LexemeReader {
     return lexeme;
   } //getLexeme()
 
-  private char getChar() throws FatalError {
-    char result = nextChar();
+  private char getChar(ArrayList<String> sourceCode) throws FatalError {
+    char result = nextChar(sourceCode);
     linePos++;
     return result;
   } //getChar()
   
-  private char nextChar() throws FatalError {
+  private char nextChar(ArrayList<String> sourceCode) throws FatalError {
     if (linePos >= lineSize) {
       try {
         line = input.readLine();
@@ -236,13 +241,8 @@ public class LexemeFileReader implements LexemeReader {
         System.out.println();
         System.out.print(line);
       }
-      //TODO
-      //sourceCode.add(line);
-      //
-      ////add P source code as comment to M machine code.
-      //plant(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
-      //ODOT
-
+      sourceCode.add(line);
+ 
       lineSize = line.length();
       if (lineSize > MAX_LINE_WIDTH) {
         throw new FatalError(2); //line too long

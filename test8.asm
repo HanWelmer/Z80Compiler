@@ -613,15 +613,15 @@ writeA:
         POP   HL
         RET
 main:
-L0:     ;/*
-L1:     ; * A small program in the miniJava language.
-L2:     ; * Test 8-bit and 16-bit expressions.
-L3:     ; */
-L4:     ;class Test8And16BitExpressions {
-L5:     ;  /*************************/
-L6:     ;  /* reverse subtract byte */
-L7:     ;  /*************************/
-L8:     ;  write(10 - 3*3);         // 1
+        ;///*
+        ;// * A small program in the miniJava language.
+        ;// * Test 8-bit and 16-bit expressions.
+        ;// */
+        ;//class Test8And16BitExpressions {
+        ;//  /*************************/
+        ;//  /* reverse subtract byte */
+        ;//  /*************************/
+        ;//  write(10 - 3*3);         // 1
         LD    A,10
         PUSH  AF
         LD    A,3
@@ -632,11 +632,11 @@ L8:     ;  write(10 - 3*3);         // 1
         POP   BC
         SUB   A,B
         NEG
-L13:    ;  byte b = 11;
+        ;//  byte b = 11;
         CALL  writeA
         LD    A,11
         LD    (05000H),A
-L17:    ;  write(b - 3*3);          // 2
+        ;//  write(b - 3*3);          // 2
         LD    A,(05000H)
         PUSH  AF
         LD    A,3
@@ -647,14 +647,14 @@ L17:    ;  write(b - 3*3);          // 2
         POP   BC
         SUB   A,B
         NEG
-L22:    ;  byte c = 3;
+        ;//  byte c = 3;
         CALL  writeA
         LD    A,3
         LD    (05001H),A
-L26:    ;  byte d = 3;
+        ;//  byte d = 3;
         LD    A,3
         LD    (05002H),A
-L29:    ;  write(12 - c*d);         // 3
+        ;//  write(12 - c*d);         // 3
         LD    A,12
         PUSH  AF
         LD    A,(05001H)
@@ -666,11 +666,11 @@ L29:    ;  write(12 - c*d);         // 3
         POP   BC
         SUB   A,B
         NEG
-L34:    ;  b = 13;
+        ;//  b = 13;
         CALL  writeA
         LD    A,13
         LD    (05000H),A
-L38:    ;  write(b - c*d);          // 4
+        ;//  write(b - c*d);          // 4
         LD    A,(05000H)
         PUSH  AF
         LD    A,(05001H)
@@ -682,11 +682,11 @@ L38:    ;  write(b - c*d);          // 4
         POP   BC
         SUB   A,B
         NEG
-L43:    ;
-L44:    ;  /*************************/
-L45:    ;  /* reverse subtract int  */
-L46:    ;  /*************************/
-L47:    ;  write(1005 - 1000*1);    // 5
+        ;//
+        ;//  /*************************/
+        ;//  /* reverse subtract int  */
+        ;//  /*************************/
+        ;//  write(1005 - 1000*1);    // 5
         CALL  writeA
         LD    HL,1005
         PUSH  HL
@@ -697,11 +697,11 @@ L47:    ;  write(1005 - 1000*1);    // 5
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L53:    ;  int i = 1006;
+        ;//  int i = 1006;
         CALL  writeHL
         LD    HL,1006
         LD    (05003H),HL
-L57:    ;  write(i - 1000*1);       // 6
+        ;//  write(i - 1000*1);       // 6
         LD    HL,(05003H)
         PUSH  HL
         LD    HL,1000
@@ -711,16 +711,16 @@ L57:    ;  write(i - 1000*1);       // 6
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L62:    ;  int j = 1000;
+        ;//  int j = 1000;
         CALL  writeHL
         LD    HL,1000
         LD    (05005H),HL
-L66:    ;  int k = 1;
+        ;//  int k = 1;
         LD    A,1
         LD    L,A
         LD    H,0
         LD    (05007H),HL
-L70:    ;  write(1007 - j*k);       // 7
+        ;//  write(1007 - j*k);       // 7
         LD    HL,1007
         PUSH  HL
         LD    HL,(05005H)
@@ -730,11 +730,11 @@ L70:    ;  write(1007 - j*k);       // 7
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L75:    ;  i = 1008;
+        ;//  i = 1008;
         CALL  writeHL
         LD    HL,1008
         LD    (05003H),HL
-L79:    ;  write(i - j*k);          // 8
+        ;//  write(i - j*k);          // 8
         LD    HL,(05003H)
         PUSH  HL
         LD    HL,(05005H)
@@ -744,11 +744,11 @@ L79:    ;  write(i - j*k);          // 8
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L84:    ;
-L85:    ;  /***********************/
-L86:    ;  /* reverse divide byte */
-L87:    ;  /***********************/
-L88:    ;  write(36 / (4*1));     // 9
+        ;//
+        ;//  /***********************/
+        ;//  /* reverse divide byte */
+        ;//  /***********************/
+        ;//  write(36 / (4*1));     // 9
         CALL  writeHL
         LD    A,36
         PUSH  AF
@@ -764,11 +764,11 @@ L88:    ;  write(36 / (4*1));     // 9
         LD    C,A
         LD    A,B
         CALL  div8
-L94:    ;  b = 40;
+        ;//  b = 40;
         CALL  writeA
         LD    A,40
         LD    (05000H),A
-L98:    ;  write(b / (4*1));      // 10
+        ;//  write(b / (4*1));      // 10
         LD    A,(05000H)
         PUSH  AF
         LD    A,4
@@ -783,14 +783,14 @@ L98:    ;  write(b / (4*1));      // 10
         LD    C,A
         LD    A,B
         CALL  div8
-L103:   ;  c = 4;
+        ;//  c = 4;
         CALL  writeA
         LD    A,4
         LD    (05001H),A
-L107:   ;  d = 1;
+        ;//  d = 1;
         LD    A,1
         LD    (05002H),A
-L110:   ;  write(44 / (c*d));     // 11
+        ;//  write(44 / (c*d));     // 11
         LD    A,44
         PUSH  AF
         LD    A,(05001H)
@@ -806,11 +806,11 @@ L110:   ;  write(44 / (c*d));     // 11
         LD    C,A
         LD    A,B
         CALL  div8
-L115:   ;  b = 48;
+        ;//  b = 48;
         CALL  writeA
         LD    A,48
         LD    (05000H),A
-L119:   ;  write(b / (c*d));      // 12
+        ;//  write(b / (c*d));      // 12
         LD    A,(05000H)
         PUSH  AF
         LD    A,(05001H)
@@ -826,11 +826,11 @@ L119:   ;  write(b / (c*d));      // 12
         LD    C,A
         LD    A,B
         CALL  div8
-L124:   ;
-L125:   ;  /***********************/
-L126:   ;  /* reverse divide int  */
-L127:   ;  /***********************/
-L128:   ;  write(3900 / (300*1)); // 13
+        ;//
+        ;//  /***********************/
+        ;//  /* reverse divide int  */
+        ;//  /***********************/
+        ;//  write(3900 / (300*1)); // 13
         CALL  writeA
         LD    HL,3900
         PUSH  HL
@@ -840,11 +840,11 @@ L128:   ;  write(3900 / (300*1)); // 13
         POP   DE
         EX    DE,HL
         CALL  div16
-L134:   ;  i = 4200;
+        ;//  i = 4200;
         CALL  writeHL
         LD    HL,4200
         LD    (05003H),HL
-L138:   ;  write(i / (300*1));    // 14
+        ;//  write(i / (300*1));    // 14
         LD    HL,(05003H)
         PUSH  HL
         LD    HL,300
@@ -853,16 +853,16 @@ L138:   ;  write(i / (300*1));    // 14
         POP   DE
         EX    DE,HL
         CALL  div16
-L143:   ;  j = 300;
+        ;//  j = 300;
         CALL  writeHL
         LD    HL,300
         LD    (05005H),HL
-L147:   ;  k = 1;
+        ;//  k = 1;
         LD    A,1
         LD    L,A
         LD    H,0
         LD    (05007H),HL
-L151:   ;  write(4500 / (j*k));   // 15
+        ;//  write(4500 / (j*k));   // 15
         LD    HL,4500
         PUSH  HL
         LD    HL,(05005H)
@@ -871,11 +871,11 @@ L151:   ;  write(4500 / (j*k));   // 15
         POP   DE
         EX    DE,HL
         CALL  div16
-L156:   ;  i = 4800;
+        ;//  i = 4800;
         CALL  writeHL
         LD    HL,4800
         LD    (05003H),HL
-L160:   ;  write(i / (j*k));      // 16
+        ;//  write(i / (j*k));      // 16
         LD    HL,(05003H)
         PUSH  HL
         LD    HL,(05005H)
@@ -884,23 +884,23 @@ L160:   ;  write(i / (j*k));      // 16
         POP   DE
         EX    DE,HL
         CALL  div16
-L165:   ;
-L166:   ;  /**************************/
-L167:   ;  /* reverse subtract mixed */
-L168:   ;  /**************************/
-L169:   ;  i = 21;
+        ;//
+        ;//  /**************************/
+        ;//  /* reverse subtract mixed */
+        ;//  /**************************/
+        ;//  i = 21;
         CALL  writeHL
         LD    A,21
         LD    L,A
         LD    H,0
         LD    (05003H),HL
-L174:   ;  c = 4;
+        ;//  c = 4;
         LD    A,4
         LD    (05001H),A
-L177:   ;  d = 1;
+        ;//  d = 1;
         LD    A,1
         LD    (05002H),A
-L180:   ;  write(i - c*d);           // 17
+        ;//  write(i - c*d);           // 17
         LD    HL,(05003H)
         LD    A,(05001H)
         LD    B,A
@@ -912,21 +912,21 @@ L180:   ;  write(i - c*d);           // 17
         LD    D,0
         OR    A
         SBC   HL,DE
-L185:   ;  b = 22;
+        ;//  b = 22;
         CALL  writeHL
         LD    A,22
         LD    (05000H),A
-L189:   ;  j = 4;
+        ;//  j = 4;
         LD    A,4
         LD    L,A
         LD    H,0
         LD    (05005H),HL
-L193:   ;  k = 1;
+        ;//  k = 1;
         LD    A,1
         LD    L,A
         LD    H,0
         LD    (05007H),HL
-L197:   ;  write(b - j*k);           // 18
+        ;//  write(b - j*k);           // 18
         LD    A,(05000H)
         LD    HL,(05005H)
         LD    DE,(05007H)
@@ -936,38 +936,38 @@ L197:   ;  write(b - j*k);           // 18
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L202:   ;
-L203:   ;  /**************************/
-L204:   ;  /* reverse divide mixed   */
-L205:   ;  /**************************/
-L206:   ;
-L207:   ;  /**************************/
-L208:   ;  /* forward divide mixed   */
-L209:   ;  /**************************/
-L210:   ;  i = 19;
+        ;//
+        ;//  /**************************/
+        ;//  /* reverse divide mixed   */
+        ;//  /**************************/
+        ;//
+        ;//  /**************************/
+        ;//  /* forward divide mixed   */
+        ;//  /**************************/
+        ;//  i = 19;
         CALL  writeHL
         LD    A,19
         LD    L,A
         LD    H,0
         LD    (05003H),HL
-L215:   ;  write(i / (1+0));         // 19
+        ;//  write(i / (1+0));         // 19
         LD    HL,(05003H)
         LD    A,1
         ADD   A,0
         CALL  div16_8
-L220:   ;  
-L221:   ;  write(i + 1);             // 20
+        ;//  
+        ;//  write(i + 1);             // 20
         CALL  writeHL
         LD    HL,(05003H)
         LD    DE,1
         ADD   HL,DE
-L225:   ;  write(2 + i);             // 21
+        ;//  write(2 + i);             // 21
         CALL  writeHL
         LD    A,2
         LD    L,A
         LD    H,0
         LD    DE,(05003H)
         ADD   HL,DE
-L230:   ;}
+        ;//}
         CALL  writeHL
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

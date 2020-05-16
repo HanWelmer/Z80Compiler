@@ -73,7 +73,7 @@ public class Compiler {
           if (z80) {
             /* transcode M-code to Z80S180 assembler code */
             if (verboseMode) System.out.println("Generating Z80 assembler code ...");
-            Transcoder transcoder = new Transcoder(binary);
+            Transcoder transcoder = new Transcoder(debugMode, binary);
             ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
 
             writeZ80Assembler(fileName, z80Instructions, verboseMode);

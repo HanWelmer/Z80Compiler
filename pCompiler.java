@@ -274,7 +274,7 @@ public class PCompiler {
       if (stopSet.size() > 0) {
         while (!stopSet.contains(lexeme.type)) {
           error(7); /* lexeme skipped after error */
-          lexeme = lexemeReader.getLexeme();
+          lexeme = lexemeReader.getLexeme(sourceCode);
         }
       }
     }
@@ -296,16 +296,16 @@ public class PCompiler {
         operand.intValue = var.getAddress();
         operand.datatype = var.getDatatype();
         /* part of lexical analysis */
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.constant) {
         /* part of code generation */
         operand.opType = OperandType.constant;
         operand.intValue = lexeme.constVal;
         operand.datatype = lexeme.datatype;
         /* part of lexical analysis */
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.readlexeme) {
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
         /* 
          * Part of code generation.
          * The read() function always returns an int value.
@@ -320,13 +320,13 @@ public class PCompiler {
         acc16InUse = true;
       } else if (lexeme.type == LexemeType.lbracket) {
         //skip left bracket.
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
         EnumSet<LexemeType> stopSetCopy = stopSet.clone();
         stopSetCopy.add(LexemeType.rbracket);
         operand = expression(stopSetCopy, operand);
         //skip right bracket.
         if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
-          lexeme = lexemeReader.getLexeme();
+          lexeme = lexemeReader.getLexeme(sourceCode);
         }
       }
     }
@@ -361,7 +361,7 @@ public class PCompiler {
       operand.opType = OperandType.acc;
       
       /* part of lexical analysis */
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       rOperand = factor(followSet, rOperand);
 
       /* part of code generation */
@@ -439,7 +439,7 @@ public class PCompiler {
       operand.opType = OperandType.acc;
       
       /* part of lexical analysis */
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       rOperand = term(followSet, rOperand);
       
       /* part of code generation */
@@ -520,7 +520,7 @@ public class PCompiler {
       /* part of code generation */
       compareOp = lexeme.relVal;
       /* part of lexical analysis */
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
       /* part of code generation */
       compareOp = RelValType.eq;
@@ -618,7 +618,7 @@ public class PCompiler {
       /* part of code generation */
       compareOp = lexeme.relVal;
       /* part of lexical analysis */
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
       /* part of code generation */
       compareOp = RelValType.eq;
@@ -661,10 +661,10 @@ public class PCompiler {
 
     checkOrSkip(startSet, stopBlockSet);
     if (lexeme.type == LexemeType.beginlexeme) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       statements(EnumSet.of(LexemeType.endlexeme));
       if (checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class))) {
-		  lexeme = lexemeReader.getLexeme();
+		  lexeme = lexemeReader.getLexeme(sourceCode);
 	  }
     } else {
       statement(stopSet);
@@ -684,11 +684,11 @@ public class PCompiler {
     identifiers.newScope();
 
     /* part of lexical analysis: "for" "(" initialization ";" */
-    lexeme = lexemeReader.getLexeme();
+    lexeme = lexemeReader.getLexeme(sourceCode);
     EnumSet<LexemeType> stopForSet = stopSet.clone();
     stopForSet.add(LexemeType.rbracket);
     if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopForSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     
     EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
@@ -708,7 +708,7 @@ public class PCompiler {
     int forLabel = saveLabel();
     int gotoEnd = comparison(stopInitializationSet);
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopInitializationSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     
     /* part of code generation: skip update and jump forward to block */
@@ -727,7 +727,7 @@ public class PCompiler {
     stopForSet = stopSet.clone();
     stopForSet.addAll(startStatement);
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopForSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     /* part of code generation: start of block */
@@ -748,7 +748,7 @@ public class PCompiler {
   //doStatement    = "do" block "while" "(" comparison ")" ";".
   private void doStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ndoStatement: start with stopSet = " + stopSet);
-    lexeme = lexemeReader.getLexeme();
+    lexeme = lexemeReader.getLexeme(sourceCode);
 
     /* part of code generation */
     int doLabel = saveLabel();
@@ -763,10 +763,10 @@ public class PCompiler {
     EnumSet<LexemeType> stopWhileSet = stopSet.clone();
     stopWhileSet.add(LexemeType.rbracket);
     if (checkOrSkip(EnumSet.of(LexemeType.whilelexeme), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     //expect comparison, terminated by ")"
@@ -778,10 +778,10 @@ public class PCompiler {
     stopWhileSet = stopSet.clone();
     stopWhileSet.add(LexemeType.semicolon);
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     
     debug("\ndoStatement: end");
@@ -790,7 +790,7 @@ public class PCompiler {
   //whileStatement = "while" "(" comparison ")" block.
   private void whileStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwhileStatement: start with stopSet = " + stopSet);
-    lexeme = lexemeReader.getLexeme();
+    lexeme = lexemeReader.getLexeme(sourceCode);
 
     /* part of code generation */
     int whileLabel = saveLabel();
@@ -799,7 +799,7 @@ public class PCompiler {
     EnumSet<LexemeType> stopWhileSet = stopSet.clone();
     stopWhileSet.add(LexemeType.rbracket);
     if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     /* part of lexical analysis */
@@ -810,7 +810,7 @@ public class PCompiler {
     stopWhileSet = stopSet.clone();
     stopWhileSet.addAll(startStatement);
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     block(stopSet);
     
@@ -824,13 +824,13 @@ public class PCompiler {
   private void ifStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nifStatement: start with stopSet = " + stopSet);
 
-    lexeme = lexemeReader.getLexeme();
+    lexeme = lexemeReader.getLexeme(sourceCode);
     
     //expect (
     EnumSet<LexemeType> stopSetIf = stopSet.clone();
     stopSetIf.add(LexemeType.rbracket);
     if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopSetIf)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     //expect comparison
@@ -844,7 +844,7 @@ public class PCompiler {
     stopSetIf = stopSet.clone();
     stopSetIf.addAll(startStatement);
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSetIf)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     //expect statement block
@@ -863,7 +863,7 @@ public class PCompiler {
 
       /* part of lexical analysis */
       //expect statement block
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       block(stopSet);
       
       /* part of code generation */
@@ -888,7 +888,7 @@ public class PCompiler {
     if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.intlexeme) {
       /* part of lexical analysis */
       LexemeType datatype = lexeme.type;
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
         // part of semantic analysis.
@@ -914,7 +914,7 @@ public class PCompiler {
 
     /* part of lexical analysis */
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     debug("\nassignment: end");
@@ -935,12 +935,12 @@ public class PCompiler {
     Datatype varDatatype = var.getDatatype();
 
     /* part of lexical analysis */
-    lexeme = lexemeReader.getLexeme();
+    lexeme = lexemeReader.getLexeme(sourceCode);
     if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.sub) {
       //identifier--
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.sub) {
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
 
         /* part of code generation */
         if (varDatatype == Datatype.integer) {
@@ -953,9 +953,9 @@ public class PCompiler {
       }
     } else if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.add) {
       //identifier++
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       if (lexeme.type == LexemeType.addop && lexeme.addVal == AddValType.add) {
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
 
         /* part of code generation */
         if (varDatatype == Datatype.integer) {
@@ -968,7 +968,7 @@ public class PCompiler {
       }
     } else if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
       //identifier "=" expression
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       Operand operand = expression(stopSet, new Operand(OperandType.unknown));
       debug("\nupdate: " + operand);
 
@@ -1006,7 +1006,7 @@ public class PCompiler {
   private void writeStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwriteStatement: start with stopSet = " + stopSet);
     //skip write symbol.
-    lexeme = lexemeReader.getLexeme();
+    lexeme = lexemeReader.getLexeme(sourceCode);
 
     EnumSet<LexemeType> stopWriteSet = stopSet.clone();
     stopWriteSet.addAll(startExp);
@@ -1014,7 +1014,7 @@ public class PCompiler {
     stopWriteSet.add(LexemeType.semicolon);
     //skip left bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWriteSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
@@ -1025,12 +1025,12 @@ public class PCompiler {
     
     /* part of lexical analysis */
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     //skip right bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     /* part of code generation */
@@ -1082,7 +1082,7 @@ public class PCompiler {
     //while (checkOrSkip(startStatement, stopSet)) {
     while (startStatement.contains(lexeme.type)) {
       statement(stopSet);
-      //lexeme = lexemeReader.getLexeme();
+      //lexeme = lexemeReader.getLexeme(sourceCode);
     }
     debug("\nstatements: end");
   }
@@ -1091,9 +1091,9 @@ public class PCompiler {
   private void prog() throws FatalError {
     debug("\nprog: start");
     /* recognise a class definition */
-    lexeme = lexemeReader.getLexeme();
+    lexeme = lexemeReader.getLexeme(sourceCode);
     if (checkOrSkip(EnumSet.of(LexemeType.classlexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginlexeme))) {
-      lexeme = lexemeReader.getLexeme();
+      lexeme = lexemeReader.getLexeme(sourceCode);
       
       //part of semantic analysis: start a new class level declaration scope.
       identifiers.newScope();
@@ -1109,13 +1109,13 @@ public class PCompiler {
           System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
         }
 
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
         checkOrSkip(EnumSet.of(LexemeType.beginlexeme), EnumSet.noneOf(LexemeType.class));
 
-        lexeme = lexemeReader.getLexeme();
+        lexeme = lexemeReader.getLexeme(sourceCode);
         statements(EnumSet.of(LexemeType.endlexeme));
 
-        //lexeme = lexemeReader.getLexeme();
+        //lexeme = lexemeReader.getLexeme(sourceCode);
         checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class));
       }
       
@@ -1150,11 +1150,16 @@ public class PCompiler {
 
   private void plant(Instruction instruction) {
     /* for debugging purposes */
-    debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + "):");
+    debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", linesOfSourceCode=" + sourceCode.size() + "):");
     
     /* add original source code */
     if (!sourceCode.isEmpty()) {
-      instruction.linesOfCode.addAll(sourceCode);
+      //add P source code as comment to M machine code.
+      sourceCode.forEach((line) -> storeInstruction.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line))));
+      if (debugMode) {
+        sourceCode.forEach((line) -> debug("\n" + String.format("%3d ://", codePos) + line));
+      }
+
       sourceCode.clear();
     }
 
@@ -1174,7 +1179,7 @@ public class PCompiler {
     debug("\n" + String.format("%3d :", codePos) + instruction.toString());
 
     codePos++;
-  };
+  }; //plant
   
   private void plantForwardLabel(int pos) {
     storeInstruction.get(pos).operand.intValue = storeInstruction.size();

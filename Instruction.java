@@ -7,9 +7,6 @@ public class Instruction {
   public FunctionType function;
   public Operand operand;
   
-  /* original source code lines */
-  public ArrayList<String> linesOfCode = new ArrayList<String>(0);
-
   public Instruction(FunctionType fn) {
     function = fn;
     

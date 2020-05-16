@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public interface LexemeReader {
 
@@ -10,8 +11,9 @@ public interface LexemeReader {
     
     /**
     * return the next lexeme from the lexeme reader.
+    * parm sourceCode: this list will be extended by any lines of source code that have been read while getting the next lexeme.
     **/
-    public Lexeme getLexeme() throws FatalError;
+    public Lexeme getLexeme(ArrayList<String> sourceCode) throws FatalError;
     
     /**
     * ?

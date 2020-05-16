@@ -52,19 +52,20 @@ public class Transcoder {
   }};
 
   /* global variables */
-  private boolean debug = false;
+  private boolean debugMode = false;
   private boolean generateBinary = false;
   private long byteAddress = MIN_BIN;
   public Map<String, Long> labels = new HashMap<String, Long>();
   public Map<String, ArrayList<Long>> labelReferences = new HashMap<String, ArrayList<Long>>();
   
   /* constructor */
-  public Transcoder(boolean binary) {
-    generateBinary = binary;
+  public Transcoder(boolean debugMode, boolean binary) {
+    this.debugMode = debugMode;
+    this.generateBinary = binary;
   }
 
   private void debug(String message) {
-    if (debug) {
+    if (debugMode) {
       System.out.print(message);
     }
   }
@@ -87,20 +88,6 @@ public class Transcoder {
       //add label and address to map with labels.
       String label = "L" + instructions.indexOf(instruction);
       labels.put(label, byteAddress);
-
-      //add line nr as a label and original source code as assembler comment
-      String prefix = String.format("%-8s;", label + ":");
-      if (instruction.linesOfCode != null) {
-        for (String sourceCode : instruction.linesOfCode) {
-          z80Instructions.add(new AssemblyInstruction(byteAddress, prefix + sourceCode));
-          prefix = String.format("%-8s;", " ");
-        }
-      }
-      
-      //add original M-code instruction as assembler comment
-      if (debug) {
-        z80Instructions.add(new AssemblyInstruction(byteAddress, ";" + instruction.toString()));
-      }
 
       z80Instructions.addAll(transcode(instruction));
 
@@ -177,9 +164,15 @@ public class Transcoder {
     
     FunctionType function = instruction.function;
     if (function == FunctionType.comment) {
+      result.add(new AssemblyInstruction(byteAddress, INDENT + ';' + instruction));
       return result;
     }
     
+    //add original M-code instruction as assembler comment
+    if (debugMode) {
+      result.add(new AssemblyInstruction(byteAddress, INDENT + ';' + instruction));
+    }
+
     //TODO support 8-bit constant and variables in addition to the following two 16-bit operands.
     int word = 0;
     String str = "";
