@@ -27,18 +27,22 @@ public class RegressionTest {
     boolean verboseMode = false;
     boolean z80 = false;
     boolean binary = false;
-    if (args.length == 0) {
-      usage();
-    } else {
+    if (args.length > 0) {
       for (int i=0; i<args.length; i++) {
         if ("-b".equals(args[i])) {
           binary = true;
+        } else if ("-h".equals(args[i])) {
+          usage();
         } else if ("-d".equals(args[i])) {
           debugMode = true;
         } else if ("-v".equals(args[i])) {
           verboseMode = true;
         } else if ("-z".equals(args[i])) {
           z80 = true;
+        } else if ("?".equals(args[i])) {
+          usage();
+        } else if ("help".equals(args[i])) {
+          usage();
         } else {
           usage();
         }
@@ -59,11 +63,14 @@ public class RegressionTest {
   }
   
   private static void usage() {
-    System.out.println("Usage: java RegressionTest [-b] [-d] [-v] [-z]");
+    System.out.println("Usage: java RegressionTest [-b] [-d] [-h] [-v] [-z] [?] | [help]");
     System.out.println(" where -b generate binary output (M-code or Z80 assembler).");
     System.out.println("       -d issue debug messages during compilation and verification.");
+    System.out.println("       -h show this help message.");
     System.out.println("       -v verbose: issue verbode debug messages during compilation.");
     System.out.println("       -z generate and verify Z80 assembler output.");
+    System.out.println("       ? show this help message.");
+    System.out.println("       help show this help message.");
     System.exit(1);
   }
 
@@ -72,9 +79,11 @@ public class RegressionTest {
   */
   private static void test(boolean debugMode, boolean verboseMode, boolean z80, boolean binary) {
     LexemeTestReader lexemeReader = new LexemeTestReader();
+    PCompiler pCompiler = new PCompiler(debugMode, verboseMode);
     
     //P-Code to be tested.
     String testName = "Test8And16BitExpressionsReverseSubtractByte";
+
     ArrayList<String> sourceCode = new ArrayList<String>(
       Arrays.asList(
       "class Test8And16BitExpressionsReverseSubtractByte {"
@@ -82,6 +91,7 @@ public class RegressionTest {
       , "}"
       )
     );
+
     //Expected M-Code.
     ArrayList<String> expectedMachineCode = new ArrayList<String>(
       Arrays.asList(
@@ -93,45 +103,60 @@ public class RegressionTest {
       , "  5 :-acc8 unstack"
       , "  6 ://}"
       , "  7 :call writeAcc8"
-      , "  8 :stop"
+      //, "  8 :stop"
       )
     );
     //Expected Z80-Code.
     //TODO
 
+    System.out.println(singleTest(debugMode, lexemeReader, pCompiler, testName, sourceCode, expectedMachineCode));
+  }
+
+  /*
+  * Run a single test in the regression test suite.
+  */
+  private static String singleTest(boolean debugMode, LexemeTestReader lexemeReader, PCompiler pCompiler, String testName, ArrayList<String> sourceCode, ArrayList<String> expectedMachineCode) {
     lexemeReader.init(debugMode, testName, sourceCode);
-    PCompiler pCompiler = new PCompiler(debugMode, verboseMode);
     ArrayList<Instruction> instructions = pCompiler.compile(testName, lexemeReader);
 
     String result = null;
-    if (instructions.isEmpty() && expectedMachineCode.isEmpty()) {
-      result = "OK";
-    } else {
-      // Compare M-code from compiler against expected M-code.
-      int pos=0;
-      while (result == null) {
-        if (pos == instructions.size()) {
-          result = String.format("Received %d lines, which is less than %d; first missing line: %s", pos, expectedMachineCode.size(), expectedMachineCode.get(pos));
-        } else if (pos == expectedMachineCode.size()) {
-          result = String.format("Received %d lines, which is more than %d; first superfluous line: %s", instructions.size(), pos, instructions.get(pos).toString());
-        } else if (expectedMachineCode.get(pos).equals(String.format("%3d :%s", pos, instructions.get(pos).toString()))) {
+    // Compare M-code from compiler against expected M-code.
+    int pos=0;
+    boolean comparing = true;
+    while (comparing) {
+      if (pos < expectedMachineCode.size() && pos < instructions.size()) {
+        if (expectedMachineCode.get(pos).equals(String.format("%3d :%s", pos, instructions.get(pos).toString()))) {
           pos++;
-          result = "OK";
         } else {
-          result = String.format("Error in line %d\n  received: %s\n  expected: %s", pos, instructions.get(pos).toString(), expectedMachineCode.get(pos));
+          comparing = false;
         }
+      } else {
+        comparing = false;
       }
-      // if (z80) {
-        // Transcode M-code to Z80S180 assembler code.
-        // if (verboseMode) System.out.println("Generating Z80 assembler code ...");
-        // Transcoder transcoder = new Transcoder(debugMode, binary);
-        // ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
-
-        // Compare Z80-code from transcoder against expected Z80-code.
-        // writeZ80Assembler(fileName, z80Instructions, verboseMode);
-      // }
     }
-    System.out.println(result);
+
+    if (pos < expectedMachineCode.size() && pos == instructions.size()) {
+      result = String.format("Error : %s(%d) received %d lines, which is less than %d; first missing line: %s", testName, pos, pos, expectedMachineCode.size(), expectedMachineCode.get(pos));
+    } else if (pos < instructions.size() && pos == expectedMachineCode.size()) {
+      result = String.format("Error : %s(%d) received %d lines, which is more than %d; first superfluous line: %3d :%s", testName, pos, instructions.size(), pos, pos, instructions.get(pos).toString());
+    } else if (pos < expectedMachineCode.size() && pos < instructions.size()) {
+      result = String.format("Error : %s(%d)\n  received: %s\n  expected: %s", testName, pos, String.format("%3d :%s", pos, instructions.get(pos).toString()), expectedMachineCode.get(pos));
+    }
+
+    // if (z80) {
+      // Transcode M-code to Z80S180 assembler code.
+      // if (verboseMode) System.out.println("Generating Z80 assembler code ...");
+      // Transcoder transcoder = new Transcoder(debugMode, binary);
+      // ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
+
+      // Compare Z80-code from transcoder against expected Z80-code.
+      // writeZ80Assembler(fileName, z80Instructions, verboseMode);
+    // }
+
+    if (result == null) {
+      result = "OK : " + testName;
+    }
+    return result;
   }
   
   // private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
