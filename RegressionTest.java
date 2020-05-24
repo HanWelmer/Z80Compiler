@@ -83,17 +83,17 @@ public class RegressionTest {
       )
     );
     //Expected M-Code.
-    ArrayList<String> machineCode = new ArrayList<String>(
+    ArrayList<String> expectedMachineCode = new ArrayList<String>(
       Arrays.asList(
       "  0 ://class Test8And16BitExpressionsReverseSubtractByte {"
-      , "1 ://  write(10 - 3*3);"
-      , "2 :acc8= constant 10"
-      , "3 :<acc8= constant 3"
-      , "4 :acc8* constant 3"
-      , "5 :-acc8 unstack"
-      , "6 ://}"
-      , "7 :call writeAcc8"
-      , "8 :stop"
+      , "  1 ://  write(10 - 3*3);"
+      , "  2 :acc8= constant 10"
+      , "  3 :<acc8= constant 3"
+      , "  4 :acc8* constant 3"
+      , "  5 :-acc8 unstack"
+      , "  6 ://}"
+      , "  7 :call writeAcc8"
+      , "  8 :stop"
       )
     );
     //Expected Z80-Code.
@@ -103,11 +103,23 @@ public class RegressionTest {
     PCompiler pCompiler = new PCompiler(debugMode, verboseMode);
     ArrayList<Instruction> instructions = pCompiler.compile(testName, lexemeReader);
 
-    if (!instructions.isEmpty()) {
+    String result = null;
+    if (instructions.isEmpty() && expectedMachineCode.isEmpty()) {
+      result = "OK";
+    } else {
       // Compare M-code from compiler against expected M-code.
       int pos=0;
-      for (Instruction instruction: instructions) {
-        System.out.println(String.format("%3d :%s", pos++, instruction.toString()));
+      while (result == null) {
+        if (pos == instructions.size()) {
+          result = String.format("Received %d lines, which is less than %d; first missing line: %s", pos, expectedMachineCode.size(), expectedMachineCode.get(pos));
+        } else if (pos == expectedMachineCode.size()) {
+          result = String.format("Received %d lines, which is more than %d; first superfluous line: %s", instructions.size(), pos, instructions.get(pos).toString());
+        } else if (expectedMachineCode.get(pos).equals(String.format("%3d :%s", pos, instructions.get(pos).toString()))) {
+          pos++;
+          result = "OK";
+        } else {
+          result = String.format("Error in line %d\n  received: %s\n  expected: %s", pos, instructions.get(pos).toString(), expectedMachineCode.get(pos));
+        }
       }
       // if (z80) {
         // Transcode M-code to Z80S180 assembler code.
@@ -119,7 +131,7 @@ public class RegressionTest {
         // writeZ80Assembler(fileName, z80Instructions, verboseMode);
       // }
     }
-    System.out.println("OK");
+    System.out.println(result);
   }
   
   // private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
