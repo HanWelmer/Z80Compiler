@@ -3,7 +3,9 @@
  * Test comparisons
  */
 class TestComparison {
+  write(1300);            //13
   write(13);              //13
+  if (1000 == 1000) write(1200);  //12
   if (1 == 1) write(12);  //12
   if (1 == 1) { 
     write(11);            //11

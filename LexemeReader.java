@@ -56,6 +56,7 @@ public abstract class LexemeReader {
       //when in debug mode, make sure the echoed source code starts on a new line.
       if (debugMode) {
         System.out.println();
+        System.out.print("<-");
         System.out.print(line);
       }
       sourceCode.add(line);
@@ -232,10 +233,10 @@ public abstract class LexemeReader {
           System.out.println("unknown character");
       }
     }
-    if (debugMode) {
-      //System.out.println("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-      System.out.println("\ngetLexeme: " + lexeme.makeString(null));
-    }
+    //if (debugMode) {
+    //  //System.out.println("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+    //  System.out.println("\ngetLexeme: " + lexeme.makeString(null));
+    //}
     return lexeme;
   } //getLexeme()
 }

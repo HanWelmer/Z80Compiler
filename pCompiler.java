@@ -83,7 +83,6 @@ public class PCompiler {
     
     if (errors != 0) { 
       storeInstruction.clear();
-      codePos = 0;
     }
     if (verboseMode || (errors != 0) ) {
       System.out.println();
@@ -166,7 +165,6 @@ public class PCompiler {
 
   private Map<RelValType, FunctionType> normalSkip = new HashMap<RelValType, FunctionType>();
   private Map<RelValType, FunctionType> reverseSkip = new HashMap<RelValType, FunctionType>();
-  private int codePos; /* position to plant next instruction */
 
   /*Class member methods for all phases */
   private void init() {
@@ -183,7 +181,6 @@ public class PCompiler {
     /* initialisation of code generation variables */
     acc16InUse = false;
     acc8InUse = false;
-    codePos = 0;
 
     forwardAdd16.clear();
     reverseAdd16.clear();
@@ -262,11 +259,11 @@ public class PCompiler {
   
   /*Class member methods for syntax analysis phase */
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\ncheckOrSkip: start");
+    //debug("\ncheckOrSkip: start");
     boolean orFlag = false;
     boolean result = false;
     if (okSet.contains(lexeme.type)) {
-      debug("\ncheckOrSkip: lexeme \"" + lexeme.type + "\" in okSet " + okSet);
+      //debug("\ncheckOrSkip: lexeme \"" + lexeme.type + "\" in okSet " + okSet);
       result = true;
     } else {
       error(3); /* okset expected */
@@ -278,7 +275,7 @@ public class PCompiler {
         }
       }
     }
-    debug("\ncheckOrSkip: end");
+    //debug("\ncheckOrSkip: end");
     return result;
   }
   
@@ -570,7 +567,6 @@ public class PCompiler {
       plant(new Instruction(FunctionType.acc8Compare, rightOperand));
     } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
       plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      throw new RuntimeException("Internal compiler error: abort.");
     } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
       plant(new Instruction(FunctionType.acc16Compare, rightOperand));
       throw new RuntimeException("Internal compiler error: abort.");
@@ -839,6 +835,7 @@ public class PCompiler {
     stopSetIf.addAll(startStatement);
     stopSetIf.remove(LexemeType.identifier);
     int ifLabel = comparison(stopSetIf);
+    debug("\nifStatement: ifLabel = " + ifLabel);
     
     //expect )
     stopSetIf = stopSet.clone();
@@ -870,6 +867,7 @@ public class PCompiler {
       plantForwardLabel(elseLabel);
     } else {
       /* part of code generation */
+      debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
       plantForwardLabel(ifLabel);
     }
     debug("\nifStatement: end");
@@ -1154,12 +1152,12 @@ public class PCompiler {
     
     /* add original source code */
     if (!sourceCode.isEmpty()) {
-      //add P source code as comment to M machine code.
-      sourceCode.forEach((line) -> storeInstruction.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line))));
-      if (debugMode) {
-        sourceCode.forEach((line) -> debug("\n" + String.format("%3d ://", codePos) + line));
+      for(String line : sourceCode) {
+        if (debugMode) {
+          debug("\n" + String.format("%3d ://", storeInstruction.size()) + line);
+        }
+        storeInstruction.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
       }
-
       sourceCode.clear();
     }
 
@@ -1168,37 +1166,43 @@ public class PCompiler {
       error(10);
       storeInstruction.clear();
     }
+
+    /* for debugging purposes */
+    debug("\n" + String.format("%3d :", storeInstruction.size()) + instruction.toString());
+
     storeInstruction.add(instruction);
-    
     if (instruction.function == FunctionType.acc8ToAcc16) {
       acc16InUse = true;
       acc8InUse = false;
     }
-
-    /* for debugging purposes */
-    debug("\n" + String.format("%3d :", codePos) + instruction.toString());
-
-    codePos++;
   }; //plant
   
   private void plantForwardLabel(int pos) {
+    debug("\nplantForwardLabel " + storeInstruction.size() + " at position: " + pos);
+    /*
+    debug("\ninstruction(pos)=" + storeInstruction.get(pos));
+    debug("\ninstruction(pos).operand=" + storeInstruction.get(pos).operand);
+    debug("\ninstruction(pos).operand.intValue=" + storeInstruction.get(pos).operand.intValue);
+    debug(".");
+    debug(".");
+    */
     storeInstruction.get(pos).operand.intValue = storeInstruction.size();
     /* for debugging purposes */
-    debug("\nlabel: used from " + pos);
+    debug("\nplantForwardLabel instruction(" + pos + ")=" + storeInstruction.get(pos));
   }
 
   private int saveForwardLabel() {
     /* for debugging purposes */
     debug("\nlabel used");
 
-    return codePos;
+    return storeInstruction.size();
   }
 
   private int saveLabel() {
     /* for debugging purposes */
     debug("\nlabel:");
 
-    return codePos;
+    return storeInstruction.size();
   }
 
 }
