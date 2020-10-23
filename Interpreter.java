@@ -125,25 +125,11 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case acc16Compare:
-        operand = getOp();
-        branchSet.clear();
-        if (acc16 == operand) {
-          branchSet = EnumSet.of(FunctionType.brEq);
-        } else {
-          branchSet = EnumSet.of(FunctionType.brNe);
-        }
-
-        if (acc16 < operand) {
-          branchSet.add(FunctionType.brLt);
-        } else {
-          branchSet.add(FunctionType.brGe);
-        }
-
-        if (acc16 <= operand) {
-          branchSet.add(FunctionType.brLe);
-        } else {
-          branchSet.add(FunctionType.brGt);
-        }
+        branchSet = compare(acc16, getOp());
+        break;
+      case acc16CompareAcc8:
+        debug(" acc16=" + acc16 + ", acc8=" + acc8);
+        branchSet = compare(acc8, acc16);
         break;
       // 8-bit arithmetic:
       case acc8Load: acc8 = getOp(); break;
@@ -403,6 +389,28 @@ public class Interpreter {
         break;
       default:
         runError("unknown operand type");
+    }
+    return result;
+  }
+  
+  private EnumSet<FunctionType> compare(int accu, int operand) {
+    EnumSet<FunctionType> result = EnumSet.noneOf(FunctionType.class);
+    if (accu == operand) {
+      result = EnumSet.of(FunctionType.brEq);
+    } else {
+      result = EnumSet.of(FunctionType.brNe);
+    }
+
+    if (accu < operand) {
+      result.add(FunctionType.brLt);
+    } else {
+      result.add(FunctionType.brGe);
+    }
+
+    if (accu <= operand) {
+      result.add(FunctionType.brLe);
+    } else {
+      result.add(FunctionType.brGt);
     }
     return result;
   }

@@ -238,8 +238,11 @@ public class Transcoder {
         byteAddress += asm.getBytes().size();
       }
       asm = new AssemblyInstruction(byteAddress, INDENT + "ADD   HL,DE", 0x19);
-    } else if ((function == FunctionType.acc16Minus) || (function == FunctionType.minusAcc16) || (function == FunctionType.acc16Compare)) {
-      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
+    } else if ((function == FunctionType.acc16Minus)
+      || (function == FunctionType.minusAcc16)
+      || (function == FunctionType.acc16Compare)
+      || (function == FunctionType.acc16CompareAcc8)) {
+      if ((function == FunctionType.acc16CompareAcc8) || (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt)) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
         byteAddress++;
@@ -249,7 +252,7 @@ public class Transcoder {
         byteAddress += asm.getBytes().size();
       }
       
-      if (function == FunctionType.minusAcc16) {
+      if ((function == FunctionType.minusAcc16) || (function == FunctionType.acc16CompareAcc8)) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
       }
 

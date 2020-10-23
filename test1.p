@@ -31,7 +31,7 @@ class TestWhile {
     write(a);
     a--;
   }
-  for(int i = 2; i!=0; i--) {
+  for(int i = 3; i!=0; i--) {
     int test = 1;
     write(i);
     a--;

@@ -15,6 +15,7 @@ public class Instruction {
       && function != FunctionType.read
       && function != FunctionType.writeAcc8
       && function != FunctionType.writeAcc16
+      && function != FunctionType.acc16CompareAcc8
       && function != FunctionType.acc8ToAcc16
       && function != FunctionType.acc16ToAcc8
       && function != FunctionType.stackAcc8ToAcc16
@@ -93,6 +94,7 @@ public class Instruction {
       case acc16Times:
       case acc16Div:
       case divAcc16:
+      case acc16Compare:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
@@ -123,7 +125,6 @@ public class Instruction {
             new RuntimeException("unknown operand type");
         }
         break;
-      case acc16Compare:
       case acc8Plus:
       case acc8Minus:
       case minusAcc8:
@@ -276,7 +277,9 @@ public class Instruction {
       case writeAcc16:
         result = "call writeAcc16";
         break;
-      case stop: break;
+      case acc16CompareAcc8:
+      case stop: 
+        break;
       default: throw new RuntimeException("unsupported instruction");
     }
     return result;
