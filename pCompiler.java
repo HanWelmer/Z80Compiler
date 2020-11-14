@@ -1187,17 +1187,10 @@ public class PCompiler {
     while (storeInstruction.get(pos).function == FunctionType.comment) {
       pos++;
     }
-    debug("\nplantForwardLabel " + storeInstruction.size() + " at position: " + pos);
-    /*
-    debug("\ninstruction(pos)=" + storeInstruction.get(pos));
-    debug("\ninstruction(pos).operand=" + storeInstruction.get(pos).operand);
-    debug("\ninstruction(pos).operand.intValue=" + storeInstruction.get(pos).operand.intValue);
-    debug(".");
-    debug(".");
-    */
+
     storeInstruction.get(pos).operand.intValue = storeInstruction.size();
     /* for debugging purposes */
-    debug("\nplantForwardLabel instruction(" + pos + ")=" + storeInstruction.get(pos));
+    debug("\nplantForwardLabel instruction[" + pos + "]=" + storeInstruction.get(pos));
   }
 
   private int saveForwardLabel() {
