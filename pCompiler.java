@@ -3,6 +3,22 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO merge LexemeReader en LexemeFileReader.
+//TODO check test1.m 86 :<acc8= variable 4
+//TODO check test1.m 80 :<acc8= variable 3.
+//TODO check test2.m brne 15.
+//TODO check test3.m 26 :<acc16= acc16. vergelijk test9.m regel 57.
+//TODO check test9.m 11 :<acc16= acc16. vergelijk test9.m regel 57.
+//TODO check test9.m 24 :<acc8= acc8. vergelijk test9.m regel 57.
+//TODO check test1.m 122://  } \n123 ://  write(a);\n124 :br 111 aan het einde van een for loop.
+//TODO check test1.m 34 :br 16 aan het einde van een while loop.
+//TODO test5.p uitbreiden met patroon n / (x + y) etc.
+//TODO test1.p opslitsen: while, do, for.
+//TODO make test for doStatement (see test1.p).
+//TODO check stack usage/clear irt <acc8= en <acc16= etc.
+//TODO check memory usage in scope hierarchy (root, for, while, if blocks).
+
+
 /**
  * Compiler for the miniJava programming language.
  * Inspired by the book Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks
@@ -118,6 +134,7 @@ public class PCompiler {
 
   /* Constants and class member variables for lexical analysis phase */
   private ArrayList<String> sourceCode;
+  private int lastSourceLineNr = 0;
   private Lexeme lexeme;
   private int errors;
 
@@ -170,6 +187,7 @@ public class PCompiler {
   private void init() {
     /* initialisation of lexical analysis variables */
     sourceCode = new ArrayList<String>();
+    lastSourceLineNr = 0;
     errors = 0;
     lexeme = new Lexeme(LexemeType.unknown);
 
@@ -718,6 +736,8 @@ public class PCompiler {
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
     plantForwardLabel(gotoEnd);
     
+    //todo: getLexeme na bovenstaande code generatie.
+    
     //part of semantic analysis: close the declaration scope of the for statement.
     identifiers.closeScope();
     debug("\nforStatement: end");
@@ -838,6 +858,8 @@ public class PCompiler {
       /* part of code generation */
       int elseLabel = saveLabel();
       plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, 0)));
+      debug("\nifStatement: elselabel=" + elseLabel);
+      debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
       plantForwardLabel(ifLabel);
 
       /* part of lexical analysis */
@@ -1003,16 +1025,6 @@ public class PCompiler {
     Operand operand = expression(stopExpressionSet, new Operand(OperandType.unknown));
     debug("\nwriteStatement: " + operand);
     
-    /* part of lexical analysis */
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    //skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
     /* part of code generation */
     if (operand.opType != OperandType.acc) {
       plantAccLoad(operand);
@@ -1024,6 +1036,17 @@ public class PCompiler {
     } else {
       error(15);
     }
+
+    /* part of lexical analysis */
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    //skip right bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
     debug("\nwriteStatement: end");
   }
 
@@ -1130,7 +1153,7 @@ public class PCompiler {
 
   private void plant(Instruction instruction) {
     /* for debugging purposes */
-    debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", linesOfSourceCode=" + sourceCode.size() + "):");
+    debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
     
     /* add original source code */
     if (!sourceCode.isEmpty()) {
@@ -1160,6 +1183,10 @@ public class PCompiler {
   }; //plant
   
   private void plantForwardLabel(int pos) {
+    //skip original source code that has been added as comment before the branch instruction.
+    while (storeInstruction.get(pos).function == FunctionType.comment) {
+      pos++;
+    }
     debug("\nplantForwardLabel " + storeInstruction.size() + " at position: " + pos);
     /*
     debug("\ninstruction(pos)=" + storeInstruction.get(pos));

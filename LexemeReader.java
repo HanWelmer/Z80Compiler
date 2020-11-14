@@ -233,10 +233,11 @@ public abstract class LexemeReader {
           System.out.println("unknown character");
       }
     }
-    //if (debugMode) {
-    //  //System.out.println("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
-    //  System.out.println("\ngetLexeme: " + lexeme.makeString(null));
-    //}
+    if (debugMode) {
+      //System.out.println("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+      System.out.println("\ngetLexeme=" + lexeme.makeString(null) + ", sourceLineNr=" + lineNumber);
+    }
+    lexeme.sourceLineNr = lineNumber;
     return lexeme;
   } //getLexeme()
 }

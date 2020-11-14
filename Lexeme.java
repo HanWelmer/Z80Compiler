@@ -12,6 +12,8 @@ public class Lexeme {
   protected AddValType addVal;
   protected MulValType mulVal;
   protected RelValType relVal;
+  //Line number of source code leading up to and including this lexeme.
+  public int sourceLineNr = 0;
   
   public Lexeme (LexemeType type) {
     this.type = type;

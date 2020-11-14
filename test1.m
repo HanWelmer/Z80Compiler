@@ -1,17 +1,17 @@
   0 :///* Program to test generated Z80 assembler code */
   1 ://class TestWhile {
   2 ://  write(14);
-  3 ://  int b = 13;
-  4 :acc8= constant 14
-  5 :call writeAcc8
+  3 :acc8= constant 14
+  4 :call writeAcc8
+  5 ://  int b = 13;
   6 :acc8= constant 13
   7 :acc8ToAcc16
   8 :acc16=> variable 0
   9 ://  write(b);
- 10 ://  //start a new scope
- 11 ://  byte p = 12;
- 12 :acc16= variable 0
- 13 :call writeAcc16
+ 10 :acc16= variable 0
+ 11 :call writeAcc16
+ 12 ://  //start a new scope
+ 13 ://  byte p = 12;
  14 :acc8= constant 12
  15 :acc8=> variable 2
  16 ://  while (p > 11) {
@@ -23,9 +23,9 @@
  22 :acc8ToAcc16
  23 :acc16=> variable 3
  24 ://    write(p);
- 25 ://    p = p - 1;
- 26 :acc8= variable 2
- 27 :call writeAcc8
+ 25 :acc8= variable 2
+ 26 :call writeAcc8
+ 27 ://    p = p - 1;
  28 :acc8= variable 2
  29 :acc8- constant 1
  30 :acc8=> variable 2
@@ -41,9 +41,9 @@
  40 :acc8ToAcc16
  41 :acc16=> variable 3
  42 ://    write(p);
- 43 ://    p = p - 1;
- 44 :acc8= variable 2
- 45 :call writeAcc8
+ 43 :acc8= variable 2
+ 44 :call writeAcc8
+ 45 ://    p = p - 1;
  46 :acc8= variable 2
  47 :acc8- constant 1
  48 :acc8=> variable 2
@@ -57,9 +57,9 @@
  56 :accom8 constant 7
  57 :brlt 68
  58 ://    write(a);
- 59 ://    a = a - 1;
- 60 :acc8= variable 3
- 61 :call writeAcc8
+ 59 :acc8= variable 3
+ 60 :call writeAcc8
+ 61 ://    a = a - 1;
  62 :acc8= variable 3
  63 :acc8- constant 1
  64 :acc8=> variable 3
@@ -71,9 +71,9 @@
  70 :acc8ToAcc16
  71 :acc16=> variable 4
  72 ://    write(a);
- 73 ://    a = a - 1;
- 74 :acc8= variable 3
- 75 :call writeAcc8
+ 73 :acc8= variable 3
+ 74 :call writeAcc8
+ 75 ://    a = a - 1;
  76 :acc8= variable 3
  77 :acc8- constant 1
  78 :acc8=> variable 3
@@ -95,9 +95,9 @@
  94 :acc8ToAcc16
  95 :acc16=> variable 5
  96 ://    write(a);
- 97 ://    a--;
- 98 :acc8= variable 3
- 99 :call writeAcc8
+ 97 :acc8= variable 3
+ 98 :call writeAcc8
+ 99 ://    a--;
 100 :decr8 variable 3
 101 ://  }
 102 ://  for(int i = 3; i!=0; i--) {
@@ -116,14 +116,14 @@
 115 :acc8ToAcc16
 116 :acc16=> variable 6
 117 ://    write(i);
-118 ://    a--;
-119 :acc16= variable 4
-120 :call writeAcc16
+118 :acc16= variable 4
+119 :call writeAcc16
+120 ://    a--;
 121 :decr8 variable 3
 122 ://  }
 123 ://  write(a);
 124 :br 111
-125 ://}
-126 :acc8= variable 3
-127 :call writeAcc8
+125 :acc8= variable 3
+126 :call writeAcc8
+127 ://}
 128 :stop
