@@ -1159,7 +1159,7 @@ public class PCompiler {
     if (!sourceCode.isEmpty()) {
       for(String line : sourceCode) {
         if (debugMode) {
-          debug("\n" + String.format("%3d ://", storeInstruction.size()) + line);
+          debug("\n" + String.format("%3d ", storeInstruction.size()) + FunctionType.comment + line);
         }
         storeInstruction.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
       }
@@ -1173,7 +1173,7 @@ public class PCompiler {
     }
 
     /* for debugging purposes */
-    debug("\n" + String.format("%3d :", storeInstruction.size()) + instruction.toString());
+    debug("\n" + String.format("%3d ", storeInstruction.size()) + instruction.toString());
 
     storeInstruction.add(instruction);
     if (instruction.function == FunctionType.acc8ToAcc16) {

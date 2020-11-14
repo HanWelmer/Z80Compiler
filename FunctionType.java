@@ -4,7 +4,7 @@
  */
 public enum FunctionType {
   //special instructions:
-  comment("//"),
+  comment(";"),
   stop("stop"),
   call("call"),
   read("read"),

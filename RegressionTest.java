@@ -125,7 +125,7 @@ public class RegressionTest {
       String expected = "";
       while (br.ready() && pos < instructions.size()) {
         //actual M-Code.
-        actual = String.format("%3d :%s", pos, instructions.get(pos).toString());
+        actual = String.format("%3d %s", pos, instructions.get(pos).toString());
 
         //expected M-Code.expected
         expected = br.readLine();

@@ -59,7 +59,7 @@ public abstract class LexemeReader {
         System.out.print("<-");
         System.out.print(line);
       }
-      sourceCode.add(line);
+      sourceCode.add(String.format("%s(%d) %s", fileName, lineNumber, line));
  
       lineSize = line.length();
       if (lineSize > MAX_LINE_WIDTH) {

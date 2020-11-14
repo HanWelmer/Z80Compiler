@@ -145,7 +145,7 @@ public class Compiler {
         writer = new BufferedWriter(new FileWriter(outputFilename));
         int pos=0;
         for (Instruction instruction: instructions) {
-          writer.write(String.format("%3d :%s\n", pos++, instruction.toString()));
+          writer.write(String.format("%3d %s\n", pos++, instruction.toString()));
         }
     } catch (IOException e) {
         System.out.println("\nException " + e.getMessage());
