@@ -3,7 +3,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO check test1.m 86 :<acc8= variable 4
 //TODO check test1.m 80 :<acc8= variable 3.
 //TODO check test2.m brne 15.
 //TODO check test3.m 26 :<acc16= acc16. vergelijk test9.m regel 57.
@@ -692,8 +691,12 @@ public class PCompiler {
     String variable = assignment(stopInitializationSet);
     if (variable == null) {
       error();
-      System.out.println("Loop variable must be declared in for statement; (int variable; .. ; ..) {..} expected.");
+      System.out.println("Loop variable must be declared in for statement; for (int variable; .. ; ..) {..} expected.");
     }
+    
+    //release acc after initialization part.
+    acc8InUse = false;
+    acc16InUse = false;
     
     //order of steps during execution: comparison - block - update.
 

@@ -84,7 +84,7 @@
  83 ;test1.p(28)   for(byte i = 3; i<=4; i++) {
  84 acc8= constant 3
  85 acc8=> variable 4
- 86 <acc8= variable 4
+ 86 acc8= variable 4
  87 accom8 constant 4
  88 brgt 104
  89 br 92
@@ -105,7 +105,7 @@
 104 acc8= constant 3
 105 acc8ToAcc16
 106 acc16=> variable 4
-107 <acc16= variable 4
+107 acc16= variable 4
 108 accom16 constant 0
 109 breq 125
 110 br 113
