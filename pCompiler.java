@@ -3,7 +3,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO merge LexemeReader en LexemeFileReader.
 //TODO check test1.m 86 :<acc8= variable 4
 //TODO check test1.m 80 :<acc8= variable 3.
 //TODO check test2.m brne 15.

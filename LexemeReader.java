@@ -1,13 +1,17 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class LexemeReader {
+public class LexemeReader {
 
   /* Class member variables for lexical analysis phase */
   private String fileName;
+  private FileReader fr; 
+  private BufferedReader input;
   protected boolean debugMode = false;
   private int lastLinePrinted;
   protected int lineNumber;
@@ -40,11 +44,31 @@ public abstract class LexemeReader {
       keywords.put(lexemeType.getValue(), lexemeType);
     }
 
-    return true;
+    boolean result = false;
+    try {
+      this.fr = new FileReader(fileName); 
+      this.input = new BufferedReader(fr);
+      result = true;
+    } catch (FileNotFoundException e) {
+      System.out.println(e.getMessage());
+    }
+
+    return result;
   }
   
-  /* please provide an implementation for this function. */
-  protected abstract String getLine() throws FatalError;
+  protected String getLine() throws FatalError {
+    String line;
+    try {
+      line = input.readLine();
+    } catch (IOException e) {
+      System.out.println();
+      System.out.println(e.getMessage());
+      System.out.println();
+      e.printStackTrace();
+      throw new FatalError(4); //unknown character
+    }
+    return line;
+  }
   
   protected char nextChar(ArrayList<String> sourceCode) throws FatalError {
     if (linePos >= lineSize) {
@@ -240,4 +264,5 @@ public abstract class LexemeReader {
     lexeme.sourceLineNr = lineNumber;
     return lexeme;
   } //getLexeme()
+
 }

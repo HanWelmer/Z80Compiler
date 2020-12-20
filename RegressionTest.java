@@ -77,7 +77,7 @@ public class RegressionTest {
   * Run the regression tests.
   */
   private static void test(boolean debugMode, boolean verboseMode, boolean z80, boolean binary, String testSuite) {
-    LexemeFileReader lexemeReader = new LexemeFileReader();
+    LexemeReader lexemeReader = new LexemeReader();
     PCompiler pCompiler = new PCompiler(debugMode, verboseMode);
     
     //Open de test suite file.
@@ -107,7 +107,7 @@ public class RegressionTest {
   /*
   * Run a single test in the regression test suite.
   */
-  private static String singleTest(boolean debugMode, LexemeFileReader lexemeReader, PCompiler pCompiler, String fileName) {
+  private static String singleTest(boolean debugMode, LexemeReader lexemeReader, PCompiler pCompiler, String fileName) {
     // Compile P-code to M-code instructions.
     fileName.replace(".P", ".p");
     lexemeReader.init(debugMode, fileName);

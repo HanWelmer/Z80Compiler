@@ -58,7 +58,7 @@ public class Compiler {
     * Compile the file with p source code.
     * Generated intermediate code goes to default system output.
     */
-    LexemeReader lexemeReader = new LexemeFileReader();
+    LexemeReader lexemeReader = new LexemeReader();
     PCompiler pCompiler = new PCompiler(debugMode, verboseMode);
     fileName = fileName.replace(".P", ".p");
     ArrayList<Instruction> instructions = null;
