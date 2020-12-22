@@ -48,7 +48,7 @@
  47 ;test1.p(14)   }
  48 ;test1.p(15)   //start a new scope
  49 ;test1.p(16)   while (p > 9) {
- 50 br 32
+ 50 br 33
  51 acc8= variable 2
  52 accom8 constant 9
  53 brle 68
@@ -81,7 +81,7 @@
  80 acc8=> variable 3
  81 ;test1.p(25)   }
  82 ;test1.p(26)   do {
- 83 br 70
+ 83 br 71
  84 ;test1.p(27)     int test = 1;
  85 acc8= constant 1
  86 acc8ToAcc16

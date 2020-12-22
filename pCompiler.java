@@ -734,14 +734,14 @@ public class PCompiler {
     }
 
     /* part of code generation: start of block */
-    plantForwardLabel(gotoBlock);
+    plantForwardLabel(gotoBlock, saveLabel());
 
     /* part of lexical analysis: block */
     block(stopSet);
     
     /* part of code generation; jump back to update */
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
-    plantForwardLabel(gotoEnd);
+    plantForwardLabel(gotoEnd, saveLabel());
     
     //todo: getLexeme na bovenstaande code generatie.
     
@@ -825,7 +825,7 @@ public class PCompiler {
     
     /* part of code generation */
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, whileLabel)));
-    plantForwardLabel(endLabel);
+    plantForwardLabel(endLabel, saveLabel());
     debug("\nwhileStatement: end");
   } //whileStatement()
 
@@ -878,11 +878,11 @@ public class PCompiler {
       plantForwardLabel(ifLabel, block(stopSet));
       
       /* part of code generation */
-      plantForwardLabel(elseLabel);
+      plantForwardLabel(elseLabel, saveLabel());
     } else {
       /* part of code generation */
       debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
-      plantForwardLabel(ifLabel);
+      plantForwardLabel(ifLabel, saveLabel());
     }
     debug("\nifStatement: end");
   } //ifStatement()
@@ -1073,8 +1073,7 @@ public class PCompiler {
     EnumSet<LexemeType> startSet = stopSet.clone();
     startSet.addAll(startStatement);
     if (checkOrSkip(startSet, stopSet)) {
-      //compensate address of first object code with original source code that will be added as comment before the first instruction.
-      firstAddress = saveLabel() + sourceCode.size();
+      firstAddress = saveLabel();
       if (startAssignment.contains(lexeme.type)) {
         assignment(stopSet);
       } else if (lexeme.type == LexemeType.writelexeme) {
@@ -1201,19 +1200,6 @@ public class PCompiler {
     }
   }; //plant
   
-  private void plantForwardLabel(int pos) {
-    //skip original source code that has been added as comment before the branch instruction.
-    while (storeInstruction.get(pos).function == FunctionType.comment) {
-      pos++;
-    }
-
-    //skip original source code that will be added as comment before the target instruction.
-    storeInstruction.get(pos).operand.intValue = storeInstruction.size() + sourceCode.size();
-
-    /* for debugging purposes */
-    debug("\nplantForwardLabel instruction[" + pos + "]=" + storeInstruction.get(pos) + ", linesOfSourceCode=" + sourceCode.size());
-  } //plantForwardLabel(pos)
-
   private void plantForwardLabel(int pos, int address) {
     //skip original source code that has been added as comment before the branch instruction.
     while (storeInstruction.get(pos).function == FunctionType.comment) {
@@ -1227,10 +1213,16 @@ public class PCompiler {
   } //plantForwardLabel(pos, address)
 
   private int saveLabel() {
-    /* for debugging purposes */
-    debug("\nlabel:");
+    //address of next object code.
+    int address = storeInstruction.size();
+    
+    //compensate address for original source code that will be added as comment before the next instruction.
+    int compensatedAddress = address + sourceCode.size();
 
-    return storeInstruction.size();
+    /* for debugging purposes */
+    debug("\nlabel: address = " + address + ", compensated for comments = " + compensatedAddress);
+
+    return compensatedAddress;
   }
 
 }
