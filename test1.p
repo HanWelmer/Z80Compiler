@@ -1,6 +1,9 @@
 /* Program to test generated Z80 assembler code */
 class TestWhile {
-  write(14);
+  write(15);
+  for(byte i = 0; i<1; i = i + 1) {
+    write(14);
+  }
   int b = 13;
   write(b);
   //start a new scope

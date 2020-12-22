@@ -3,13 +3,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO check test1.m 80 :<acc8= variable 3.
 //TODO check test2.m brne 15.
 //TODO check test3.m 26 :<acc16= acc16. vergelijk test9.m regel 57.
 //TODO check test9.m 11 :<acc16= acc16. vergelijk test9.m regel 57.
 //TODO check test9.m 24 :<acc8= acc8. vergelijk test9.m regel 57.
-//TODO check test1.m 122://  } \n123 ://  write(a);\n124 :br 111 aan het einde van een for loop.
 //TODO check test1.m 34 :br 16 aan het einde van een while loop.
+//TODO check test1.m :br 12 aan het einde van for loop
+//TODO check test1.m 122://  } \n123 ://  write(a);\n124 :br 111 aan het einde van een for loop.
 //TODO test5.p uitbreiden met patroon n / (x + y) etc.
 //TODO test1.p opslitsen: while, do, for.
 //TODO make test for doStatement (see test1.p).
@@ -698,8 +698,6 @@ public class PCompiler {
     acc8InUse = false;
     acc16InUse = false;
     
-    //order of steps during execution: comparison - block - update.
-
     /* part of lexical analysis: comparison ";" */
     stopInitializationSet.addAll(startStatement);
     stopInitializationSet.remove(LexemeType.identifier);
@@ -709,11 +707,18 @@ public class PCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
     
+    //order of steps in p-sourcecode:  comparison - update - block.
+    //order of steps during execution: comparison - block - update.
+
     /* part of code generation: skip update and jump forward to block */
     int gotoBlock = saveLabel();
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, 0)));
     int updateLabel = saveLabel();
 
+    //release acc after comparison part.
+    acc8InUse = false;
+    acc16InUse = false;
+    
     /* part of lexical analysis: update */
     stopForSet.add(LexemeType.beginlexeme);
     update(stopForSet);
@@ -769,6 +774,10 @@ public class PCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
+    //release acc after block part.
+    acc8InUse = false;
+    acc16InUse = false;
+    
     //expect comparison, terminated by ")"
     stopWhileSet.addAll(startStatement);
     stopWhileSet.remove(LexemeType.identifier);
