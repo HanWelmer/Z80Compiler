@@ -16,7 +16,7 @@
  15 brle 19
  16 acc8= constant 21
  17 call writeAcc8
- 18 br 21
+ 18 br 22
  19 acc8= constant 0
  20 call writeAcc8
  21 ;test9.p(5)   if (b * 1 < i * 1) write (20); else write (0);
@@ -29,7 +29,7 @@
  28 brge 32
  29 acc8= constant 20
  30 call writeAcc8
- 31 br 34
+ 31 br 35
  32 acc8= constant 0
  33 call writeAcc8
  34 ;test9.p(6)   if (i * 1 > b) write (19); else write (0);
@@ -40,7 +40,7 @@
  39 brle 43
  40 acc8= constant 19
  41 call writeAcc8
- 42 br 45
+ 42 br 46
  43 acc8= constant 0
  44 call writeAcc8
  45 ;test9.p(7)   if (b * 1 < i) write (18); else write (0);
@@ -52,7 +52,7 @@
  51 brge 55
  52 acc8= constant 18
  53 call writeAcc8
- 54 br 57
+ 54 br 58
  55 acc8= constant 0
  56 call writeAcc8
  57 ;test9.p(8)   if (i > b * 1) write (17); else write (0);
@@ -63,7 +63,7 @@
  62 brle 66
  63 acc8= constant 17
  64 call writeAcc8
- 65 br 68
+ 65 br 69
  66 acc8= constant 0
  67 call writeAcc8
  68 ;test9.p(9)   if (b < i * 1) write (16); else write (0);
@@ -74,7 +74,7 @@
  73 brge 77
  74 acc8= constant 16
  75 call writeAcc8
- 76 br 79
+ 76 br 80
  77 acc8= constant 0
  78 call writeAcc8
  79 ;test9.p(10)   if (3 * 3 < i) write (15); else write (0);
@@ -86,7 +86,7 @@
  85 brge 89
  86 acc8= constant 15
  87 call writeAcc8
- 88 br 91
+ 88 br 92
  89 acc8= constant 0
  90 call writeAcc8
  91 ;test9.p(11)   if (6561 * 1 > b) write (14); else write (0);
@@ -97,7 +97,7 @@
  96 brle 100
  97 acc8= constant 14
  98 call writeAcc8
- 99 br 102
+ 99 br 103
 100 acc8= constant 0
 101 call writeAcc8
 102 ;test9.p(12)   if (i > 3 * 3) write (13); else write (0);
@@ -108,7 +108,7 @@
 107 brle 111
 108 acc8= constant 13
 109 call writeAcc8
-110 br 113
+110 br 114
 111 acc8= constant 0
 112 call writeAcc8
 113 ;test9.p(13)   if (b < 6561 * 1) write (12); else write (0);
@@ -119,7 +119,7 @@
 118 brge 122
 119 acc8= constant 12
 120 call writeAcc8
-121 br 124
+121 br 125
 122 acc8= constant 0
 123 call writeAcc8
 124 ;test9.p(14)   if (i > b) write (11); else write (0);
@@ -128,7 +128,7 @@
 127 brle 131
 128 acc8= constant 11
 129 call writeAcc8
-130 br 133
+130 br 134
 131 acc8= constant 0
 132 call writeAcc8
 133 ;test9.p(15)   if (b < i) write (10); else write (0);
@@ -138,7 +138,7 @@
 137 brge 141
 138 acc8= constant 10
 139 call writeAcc8
-140 br 143
+140 br 145
 141 acc8= constant 0
 142 call writeAcc8
 143 ;test9.p(16) 
@@ -152,7 +152,7 @@
 151 brge 155
 152 acc8= constant 9
 153 call writeAcc8
-154 br 157
+154 br 158
 155 acc8= constant 0
 156 call writeAcc8
 157 ;test9.p(18)   if (6561 * 1 > 3 * 3) write (8); else write (0);
@@ -165,7 +165,7 @@
 164 brle 168
 165 acc8= constant 8
 166 call writeAcc8
-167 br 170
+167 br 171
 168 acc8= constant 0
 169 call writeAcc8
 170 ;test9.p(19)   if (9 < 6561 * 1) write (7); else write (0);
@@ -176,7 +176,7 @@
 175 brge 179
 176 acc8= constant 7
 177 call writeAcc8
-178 br 181
+178 br 182
 179 acc8= constant 0
 180 call writeAcc8
 181 ;test9.p(20)   if (6561 * 1 > 9) write (6); else write (0);
@@ -187,7 +187,7 @@
 186 brle 190
 187 acc8= constant 6
 188 call writeAcc8
-189 br 192
+189 br 193
 190 acc8= constant 0
 191 call writeAcc8
 192 ;test9.p(21)   if (6561 > 3 * 3) write (5); else write (0);
@@ -198,7 +198,7 @@
 197 brle 201
 198 acc8= constant 5
 199 call writeAcc8
-200 br 203
+200 br 204
 201 acc8= constant 0
 202 call writeAcc8
 203 ;test9.p(22)   if (3 * 3 < 6561) write (4); else write (0);
@@ -210,7 +210,7 @@
 209 brge 213
 210 acc8= constant 4
 211 call writeAcc8
-212 br 215
+212 br 216
 213 acc8= constant 0
 214 call writeAcc8
 215 ;test9.p(23)   if (9 < 6561) write (3); else write (0);
@@ -220,7 +220,7 @@
 219 brge 223
 220 acc8= constant 3
 221 call writeAcc8
-222 br 225
+222 br 226
 223 acc8= constant 0
 224 call writeAcc8
 225 ;test9.p(24)   if (6561 > 9) write (2); else write (0);
@@ -229,7 +229,7 @@
 228 brle 232
 229 acc8= constant 2
 230 call writeAcc8
-231 br 234
+231 br 235
 232 acc8= constant 0
 233 call writeAcc8
 234 ;test9.p(25)   write(1);

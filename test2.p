@@ -3,6 +3,7 @@ class TestBranches {
   write(9);
   int a = 1;
   if (a == 1) write(8);
+  //commentaar.
   if (a != 0) write(7);
   if (a > 0) write(6);
   if (a >= 0) write(5);

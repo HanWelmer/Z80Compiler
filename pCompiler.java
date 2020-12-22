@@ -3,7 +3,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO check test2.m brne 15.
+//TODO check test5.m 26 brne 32
 //TODO check test3.m 26 :<acc16= acc16. vergelijk test9.m regel 57.
 //TODO check test9.m 11 :<acc16= acc16. vergelijk test9.m regel 57.
 //TODO check test9.m 24 :<acc8= acc8. vergelijk test9.m regel 57.
@@ -1199,17 +1199,19 @@ public class PCompiler {
       pos++;
     }
 
-    storeInstruction.get(pos).operand.intValue = storeInstruction.size();
+    //skip original source code that will be added as comment before the target instruction.
+    storeInstruction.get(pos).operand.intValue = storeInstruction.size() + sourceCode.size();
+
     /* for debugging purposes */
-    debug("\nplantForwardLabel instruction[" + pos + "]=" + storeInstruction.get(pos));
-  }
+    debug("\nplantForwardLabel instruction[" + pos + "]=" + storeInstruction.get(pos) + ", linesOfSourceCode=" + sourceCode.size());
+  } //plantForwardLabel
 
   private int saveForwardLabel() {
     /* for debugging purposes */
     debug("\nlabel used");
 
     return storeInstruction.size();
-  }
+  } //saveForwardLabel
 
   private int saveLabel() {
     /* for debugging purposes */
