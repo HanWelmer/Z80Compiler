@@ -513,9 +513,6 @@ public class PCompiler {
   private int comparison(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ncomparison: start with stopSet = " + stopSet);
 
-    /* part of code generation */
-    int ifLabel;
-    
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
@@ -579,7 +576,7 @@ public class PCompiler {
     } else {
       throw new RuntimeException("Internal compiler error: abort.");
     }
-    ifLabel = saveForwardLabel();
+    int ifLabel = saveLabel();
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
     if (rightOperand.opType != OperandType.stack) {
       plant(new Instruction(normalSkip.get(compareOp), labelOperand));
@@ -637,8 +634,10 @@ public class PCompiler {
   } //comparison(stopSet, doLabel)
 
   
-  // block = statement | "{" statements "}".
-  private void block(EnumSet<LexemeType> stopSet) throws FatalError {
+  //parse a block of statements, and return the address of the first object code in the block of statements.
+  //block = statement | "{" statements "}".
+  private int block(EnumSet<LexemeType> stopSet) throws FatalError {
+    int firstAddress = 0;
     debug("\nblock: start with stopSet = " + stopSet);
       
     //part of semantic analysis: start a new class level declaration scope for the statement block.
@@ -656,18 +655,19 @@ public class PCompiler {
     checkOrSkip(startSet, stopBlockSet);
     if (lexeme.type == LexemeType.beginlexeme) {
       lexeme = lexemeReader.getLexeme(sourceCode);
-      statements(EnumSet.of(LexemeType.endlexeme));
+      firstAddress = statements(EnumSet.of(LexemeType.endlexeme));
       if (checkOrSkip(EnumSet.of(LexemeType.endlexeme), EnumSet.noneOf(LexemeType.class))) {
 		  lexeme = lexemeReader.getLexeme(sourceCode);
 	  }
     } else {
-      statement(stopSet);
+      firstAddress = statement(stopSet);
     }
       
     //part of semantic analysis: close the declaration scope of the statement block.
     identifiers.closeScope();
 
-    debug("\nblock: end");
+    debug("\nblock: end, firstAddress = " + firstAddress);
+    return firstAddress;
   } //block
   
   //forStatement = "for" "(" initialization ";" comparison ";" update ")" block.
@@ -871,12 +871,11 @@ public class PCompiler {
       plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, 0)));
       debug("\nifStatement: elselabel=" + elseLabel);
       debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
-      plantForwardLabel(ifLabel);
 
       /* part of lexical analysis */
       //expect statement block
       lexeme = lexemeReader.getLexeme(sourceCode);
-      block(stopSet);
+      plantForwardLabel(ifLabel, block(stopSet));
       
       /* part of code generation */
       plantForwardLabel(elseLabel);
@@ -1061,9 +1060,11 @@ public class PCompiler {
     debug("\nwriteStatement: end");
   }
 
+  //parse a statement, and return the address of the first object code in the statement.
   //statement = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
-  private void statement(EnumSet<LexemeType> stopSet) throws FatalError {
+  private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
+    int firstAddress = 0;
     /* part of code generation */
     acc16InUse = false;
     acc8InUse = false;
@@ -1072,6 +1073,8 @@ public class PCompiler {
     EnumSet<LexemeType> startSet = stopSet.clone();
     startSet.addAll(startStatement);
     if (checkOrSkip(startSet, stopSet)) {
+      //compensate address of first object code with original source code that will be added as comment before the first instruction.
+      firstAddress = saveLabel() + sourceCode.size();
       if (startAssignment.contains(lexeme.type)) {
         assignment(stopSet);
       } else if (lexeme.type == LexemeType.writelexeme) {
@@ -1086,19 +1089,24 @@ public class PCompiler {
         whileStatement(stopSet);
       }
     }
-    debug("\nstatement: end");
-  }
+    debug("\nstatement: end, firstAddress = " + firstAddress);
+    return firstAddress;
+  } //statement
   
+  //parse a sequence of statements, and return the address of the first object code in the sequence of statements.
   //statements = (statement)*.
-  private void statements(EnumSet<LexemeType> stopSet) throws FatalError {
+  private int statements(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatements: start with stopSet = " + stopSet);
+    int firstAddress = 0;
     
     //while (checkOrSkip(startStatement, stopSet)) {
     while (startStatement.contains(lexeme.type)) {
-      statement(stopSet);
+      int nextAddress = statement(stopSet);
+      if (firstAddress == 0) firstAddress = nextAddress;
       //lexeme = lexemeReader.getLexeme(sourceCode);
     }
-    debug("\nstatements: end");
+    debug("\nstatements: end, firstAddress = " + firstAddress);
+    return firstAddress;
   }
   
   //program = "class" identifier "{" statements "}".
@@ -1204,14 +1212,19 @@ public class PCompiler {
 
     /* for debugging purposes */
     debug("\nplantForwardLabel instruction[" + pos + "]=" + storeInstruction.get(pos) + ", linesOfSourceCode=" + sourceCode.size());
-  } //plantForwardLabel
+  } //plantForwardLabel(pos)
 
-  private int saveForwardLabel() {
+  private void plantForwardLabel(int pos, int address) {
+    //skip original source code that has been added as comment before the branch instruction.
+    while (storeInstruction.get(pos).function == FunctionType.comment) {
+      pos++;
+    }
+
+    storeInstruction.get(pos).operand.intValue = address;
+
     /* for debugging purposes */
-    debug("\nlabel used");
-
-    return storeInstruction.size();
-  } //saveForwardLabel
+    debug("\nplantForwardLabel instruction[" + pos + "]=" + address);
+  } //plantForwardLabel(pos, address)
 
   private int saveLabel() {
     /* for debugging purposes */

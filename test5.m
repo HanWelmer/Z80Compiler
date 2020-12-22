@@ -24,7 +24,7 @@
  23 ;test5.p(9)   if (1 == 1) { 
  24 acc8= constant 1
  25 accom8 constant 1
- 26 brne 32
+ 26 brne 33
  27 ;test5.p(10)     write(11);            //11
  28 acc8= constant 11
  29 call writeAcc8
@@ -37,7 +37,7 @@
  36 ;test5.p(14)   if (1 == 0) { 
  37 acc8= constant 1
  38 accom8 constant 0
- 39 brne 45
+ 39 brne 46
  40 ;test5.p(15)     write(0);
  41 acc8= constant 0
  42 call writeAcc8
@@ -56,7 +56,7 @@
  55 ;test5.p(20)   if (1 != 0) { 
  56 acc8= constant 1
  57 accom8 constant 0
- 58 breq 64
+ 58 breq 65
  59 ;test5.p(21)     write(8);             //8
  60 acc8= constant 8
  61 call writeAcc8
@@ -69,7 +69,7 @@
  68 ;test5.p(25)   if (1 != 1) { 
  69 acc8= constant 1
  70 accom8 constant 1
- 71 breq 77
+ 71 breq 78
  72 ;test5.p(26)     write(0);
  73 acc8= constant 0
  74 call writeAcc8
