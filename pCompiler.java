@@ -3,10 +3,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO check test5.m 26 brne 32
-//TODO check test3.m 26 :<acc16= acc16. vergelijk test9.m regel 57.
-//TODO check test9.m 11 :<acc16= acc16. vergelijk test9.m regel 57.
-//TODO check test9.m 24 :<acc8= acc8. vergelijk test9.m regel 57.
 //TODO check test1.m 34 :br 16 aan het einde van een while loop.
 //TODO check test1.m :br 12 aan het einde van for loop
 //TODO check test1.m 122://  } \n123 ://  write(a);\n124 :br 111 aan het einde van een for loop.
@@ -517,10 +513,14 @@ public class PCompiler {
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
     Operand leftOperand = expression(localSet, new Operand(OperandType.unknown));
+    debug("\ncomparison: leftOperand=" + leftOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
 
     /* part of code generation */
-    plantAccLoad(leftOperand);
-    leftOperand.opType = OperandType.acc;
+    if (leftOperand.opType != OperandType.acc) {
+      plantAccLoad(leftOperand);
+      debug("\ncomparison: plantAccLoad(leftOperand), acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+      leftOperand.opType = OperandType.acc;
+    }
 
     /* part of lexical analysis */
     localSet = stopSet.clone();
