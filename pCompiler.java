@@ -3,9 +3,9 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO check test1.m 34 :br 16 aan het einde van een while loop.
-//TODO check test1.m :br 12 aan het einde van for loop
-//TODO check test1.m 122://  } \n123 ://  write(a);\n124 :br 111 aan het einde van een for loop.
+//TODO check test1.m 50 :br 33 aan het einde van een while loop.
+//TODO check test1.m 21 :br 12 aan het einde van for loop
+//TODO check test1.m 138:;test1.p(40)   }\n139 :;test1.p(41)   write(a);\n140 br 127 aan het einde van een for loop.
 //TODO test5.p uitbreiden met patroon n / (x + y) etc.
 //TODO test1.p opslitsen: while, do, for.
 //TODO make test for doStatement (see test1.p).
