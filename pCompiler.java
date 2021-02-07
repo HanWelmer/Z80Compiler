@@ -3,7 +3,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO check test1.m 50 :br 33 aan het einde van een while loop.
 //TODO check test1.m 138:;test1.p(40)   }\n139 :;test1.p(41)   write(a);\n140 br 127 aan het einde van een for loop.
 //TODO test5.p uitbreiden met patroon n / (x + y) etc.
 //TODO test1.p opslitsen: while, do, for.
@@ -738,7 +737,7 @@ public class PCompiler {
     block(stopSet);
     
     /* part of code generation; jump back to update */
-    plantPlusSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
     plantForwardLabel(gotoEnd, saveLabel());
     
     //todo: getLexeme na bovenstaande code generatie.
@@ -822,7 +821,7 @@ public class PCompiler {
     block(stopSet);
     
     /* part of code generation */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, whileLabel)));
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, whileLabel)));
     plantForwardLabel(endLabel, saveLabel());
     debug("\nwhileStatement: end");
   } //whileStatement()
@@ -1180,13 +1179,13 @@ public class PCompiler {
     plantCode(instruction);
   } //plant
   
-  private void plantPlusSource(Instruction instruction) {
+  private void plantThenSource(Instruction instruction) {
     /* for debugging purposes */
-    debug("\n->plantPlusSource (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
+    debug("\n->plantThenSource (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
     
     plantCode(instruction);
     plantSource();
-  } //plantPlusSource
+  } //plantThenSource
   
   private void plantSource() {
     for(String line : sourceCode) {

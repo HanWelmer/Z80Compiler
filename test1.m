@@ -46,9 +46,9 @@
  45 acc8- constant 1
  46 acc8=> variable 2
  47 ;test1.p(14)   }
- 48 ;test1.p(15)   //start a new scope
- 49 ;test1.p(16)   while (p > 9) {
- 50 br 33
+ 48 br 33
+ 49 ;test1.p(15)   //start a new scope
+ 50 ;test1.p(16)   while (p > 9) {
  51 acc8= variable 2
  52 accom8 constant 9
  53 brle 68
@@ -64,8 +64,8 @@
  63 acc8- constant 1
  64 acc8=> variable 2
  65 ;test1.p(20)   }
- 66 ;test1.p(21)   byte a = 9;
- 67 br 51
+ 66 br 51
+ 67 ;test1.p(21)   byte a = 9;
  68 acc8= constant 9
  69 acc8=> variable 3
  70 ;test1.p(22)   while (a >= 7) {
@@ -80,8 +80,8 @@
  79 acc8- constant 1
  80 acc8=> variable 3
  81 ;test1.p(25)   }
- 82 ;test1.p(26)   do {
- 83 br 71
+ 82 br 71
+ 83 ;test1.p(26)   do {
  84 ;test1.p(27)     int test = 1;
  85 acc8= constant 1
  86 acc8ToAcc16
