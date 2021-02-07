@@ -3,8 +3,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO check test1.m 138:;test1.p(40)   }\n139 :;test1.p(41)   write(a);\n140 br 127 aan het einde van een for loop.
-//TODO test5.p uitbreiden met patroon n / (x + y) etc.
 //TODO test1.p opslitsen: while, do, for.
 //TODO make test for doStatement (see test1.p).
 //TODO check stack usage/clear irt <acc8= en <acc16= etc.
