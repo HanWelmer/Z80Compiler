@@ -1103,11 +1103,13 @@ public class PCompiler {
       //lexeme = lexemeReader.getLexeme(sourceCode);
     }
     debug("\nstatements: end, firstAddress = " + firstAddress);
+    
+    //first source } as comment, then branch, then next source as comment.
     if (lexeme.type == LexemeType.endlexeme) {
       plantSource();
     }
     return firstAddress;
-  }
+  } //statements
   
   //program = "class" identifier "{" statements "}".
   private void prog() throws FatalError {
