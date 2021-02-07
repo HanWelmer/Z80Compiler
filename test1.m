@@ -18,8 +18,8 @@
  17 acc8= constant 14
  18 call writeAcc8
  19 ;test1.p(5)   }
- 20 ;test1.p(6)   int b = 13;
- 21 br 12
+ 20 br 12
+ 21 ;test1.p(6)   int b = 13;
  22 acc8= constant 13
  23 acc8ToAcc16
  24 acc16=> variable 0
@@ -116,8 +116,8 @@
 115 ;test1.p(34)     a--;
 116 decr8 variable 3
 117 ;test1.p(35)   }
-118 ;test1.p(36)   for(int i = 3; i!=0; i--) {
-119 br 106
+118 br 106
+119 ;test1.p(36)   for(int i = 3; i!=0; i--) {
 120 acc8= constant 3
 121 acc8ToAcc16
 122 acc16=> variable 4
@@ -137,8 +137,8 @@
 136 ;test1.p(39)     a--;
 137 decr8 variable 3
 138 ;test1.p(40)   }
-139 ;test1.p(41)   write(a);
-140 br 127
+139 br 127
+140 ;test1.p(41)   write(a);
 141 acc8= variable 3
 142 call writeAcc8
 143 ;test1.p(42) }

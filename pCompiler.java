@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO check test1.m 50 :br 33 aan het einde van een while loop.
-//TODO check test1.m 21 :br 12 aan het einde van for loop
 //TODO check test1.m 138:;test1.p(40)   }\n139 :;test1.p(41)   write(a);\n140 br 127 aan het einde van een for loop.
 //TODO test5.p uitbreiden met patroon n / (x + y) etc.
 //TODO test1.p opslitsen: while, do, for.
 //TODO make test for doStatement (see test1.p).
 //TODO check stack usage/clear irt <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
-
 
 /**
  * Compiler for the miniJava programming language.
@@ -740,7 +738,7 @@ public class PCompiler {
     block(stopSet);
     
     /* part of code generation; jump back to update */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
+    plantPlusSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
     plantForwardLabel(gotoEnd, saveLabel());
     
     //todo: getLexeme na bovenstaande code generatie.
@@ -1105,6 +1103,9 @@ public class PCompiler {
       //lexeme = lexemeReader.getLexeme(sourceCode);
     }
     debug("\nstatements: end, firstAddress = " + firstAddress);
+    if (lexeme.type == LexemeType.endlexeme) {
+      plantSource();
+    }
     return firstAddress;
   }
   
@@ -1173,17 +1174,29 @@ public class PCompiler {
     /* for debugging purposes */
     debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
     
-    /* add original source code */
-    if (!sourceCode.isEmpty()) {
-      for(String line : sourceCode) {
-        if (debugMode) {
-          debug("\n" + String.format("%3d ", storeInstruction.size()) + FunctionType.comment + line);
-        }
-        storeInstruction.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
+    plantSource();
+    plantCode(instruction);
+  } //plant
+  
+  private void plantPlusSource(Instruction instruction) {
+    /* for debugging purposes */
+    debug("\n->plantPlusSource (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
+    
+    plantCode(instruction);
+    plantSource();
+  } //plantPlusSource
+  
+  private void plantSource() {
+    for(String line : sourceCode) {
+      if (debugMode) {
+        debug("\n" + String.format("%3d ", storeInstruction.size()) + FunctionType.comment.getValue() + line);
       }
-      sourceCode.clear();
+      storeInstruction.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
     }
+    sourceCode.clear();
+  } //plantSource
 
+  private void plantCode(Instruction instruction) {
     /* insert M (virtual machine) code into memory */
     if (storeInstruction.size() >= MAX_M_CODE) {
       error(10);
@@ -1198,8 +1211,8 @@ public class PCompiler {
       acc16InUse = true;
       acc8InUse = false;
     }
-  }; //plant
-  
+  } //plantCode
+
   private void plantForwardLabel(int pos, int address) {
     //skip original source code that has been added as comment before the branch instruction.
     while (storeInstruction.get(pos).function == FunctionType.comment) {
