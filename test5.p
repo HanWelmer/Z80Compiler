@@ -3,18 +3,27 @@
  * Test comparisons
  */
 class TestComparison {
+  if (12/(1+2) > 3) write(25);   //25
+  if (12/(1+2) >= 4) write(24);  //24
+  if (12/(1+2) != 1) write(23);  //23
+  if (12/(1+2) == 4) write(22);  //22
+  if (12/(1+2) <= 4) write(21);  //21
+  if (12/(1+2) < 5) write(20);   //20
+
   if (5 > 12/(1+2)) write(19);   //19
   if (4 >= 12/(1+2)) write(18);  //18
   if (1 != 12/(1+2)) write(17);  //17
-  if (4 == 12/(1+2)) write(16);   //16
+  if (4 == 12/(1+2)) write(16);  //16
   if (4 <= 12/(1+2)) write(15);  //15
   if (1 < 12/(1+2)) write(14);   //14
+
   if (1 <= 1) write(13);  //13
   if (0 <= 1) write(12);  //12
   if (0 < 1) write(11);   //11
   if (1 >= 1) write(10);  //10
   if (1 >= 0) write(9);   //9
   if (1 > 0) write(8);    //8
+
   if (1 != 1) { 
     write(0);
   } else { 
@@ -26,6 +35,7 @@ class TestComparison {
     write (0);
   }
   if (1 != 0) write(5);   //5
+
   if (1 == 0) { 
     write(0);
   } else { 
