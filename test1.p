@@ -1,43 +1,22 @@
 /* Program to test generated Z80 assembler code */
 class TestWhile {
-  write(15);
-  for(byte i = 0; i<1; i = i + 1) {
-    write(14);
-  }
-  int b = 13;
-  write(b);
-  //start a new scope
-  byte p = 12;
-  while (p > 11) {
+  byte b = 6;
+  int p = 1;
+  while (b > 4) {
     int test = 1;
-    write(p);
-    p = p - 1;
+    write(b);
+    b = b - p;
   }
-  //start a new scope
-  while (p > 9) {
+  p = 4;
+  while (p > 2) {
     int test = 2;
     write(p);
     p = p - 1;
   }
-  byte a = 9;
-  while (a >= 7) {
+  byte a = 2;
+  while (a >= 1) {
     write(a);
     a = a - 1;
   }
-  do {
-    int test = 1;
-    write(a);
-    a = a - 1;
-  } while (a > 5);
-  for(byte i = 3; i<=4; i++) {
-    int test = 1;
-    write(a);
-    a--;
-  }
-  for(int i = 3; i!=0; i--) {
-    int test = 1;
-    write(i);
-    a--;
-  }
-  write(a);
+  write(0);
 }
