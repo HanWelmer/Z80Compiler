@@ -3,8 +3,10 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO test1.p opslitsen: while, do, for.
-//TODO make test for doStatement (see test1.p).
+//TODO add test cases for ifStatement (see test2.p and test5.p).
+//TODO add test cases for whileStatement (see test1.p).
+//TODO add test cases for doStatement (see test10.p).
+//TODO add test cases for forStatement (see test11.p).
 //TODO check stack usage/clear irt <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
 

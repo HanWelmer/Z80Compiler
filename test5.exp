@@ -2,7 +2,7 @@
   1 ;test5.p(1)  * A small program in the miniJava language.
   2 ;test5.p(2)  * Test comparisons
   3 ;test5.p(3)  */
-  4 ;test5.p(4) class TestComparison {
+  4 ;test5.p(4) class TestIf {
   5 ;test5.p(5)   if (12/(1+2) > 3) write(25);   //25
   6 acc8= constant 12
   7 <acc8= constant 1

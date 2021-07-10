@@ -1,5 +1,5 @@
   0 ;test3.p(0) /* Program to test multiplication */
-  1 ;test3.p(1) class TestMuliply {
+  1 ;test3.p(1) class TestMultiply {
   2 ;test3.p(2)   write(14);
   3 acc8= constant 14
   4 call writeAcc8

@@ -2,7 +2,7 @@
  * A small program in the miniJava language.
  * Test comparisons
  */
-class TestComparison {
+class TestIf {
   if (12/(1+2) > 3) write(25);   //25
   if (12/(1+2) >= 4) write(24);  //24
   if (12/(1+2) != 1) write(23);  //23

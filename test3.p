@@ -1,5 +1,5 @@
 /* Program to test multiplication */
-class TestMuliply {
+class TestMultiply {
   write(14);
   int a = 14;
   a--;
