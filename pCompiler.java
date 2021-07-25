@@ -559,13 +559,6 @@ public class PCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-      //TODO remove
-      //plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-      /*
-      comparison: leftOperand=operand(acc, type=byt, intValue=3), rightOperand=operand(stack, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
-      ->plant (acc8InUse=true, acc16InUse=false, lastSourceLineNr=0, sourceLineNr=10, linesOfSourceCode=0):
-       35 accom8 unstack
-      */
       if (rightOperand.opType == OperandType.stack) {
         plant(new Instruction(FunctionType.compareAcc8, rightOperand));
       } else {
@@ -588,12 +581,6 @@ public class PCompiler {
     }
     int ifLabel = saveLabel();
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
-    //TODO remove
-    //if (rightOperand.opType != OperandType.stack) {
-    //  plant(new Instruction(normalSkip.get(compareOp), labelOperand));
-    //} else {
-    //  plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
-    //}
     plant(new Instruction(normalSkip.get(compareOp), labelOperand));
 
     debug("\ncomparison: end");
