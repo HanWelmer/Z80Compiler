@@ -3,154 +3,263 @@
   2 ;test5.p(2)  * Test comparisons
   3 ;test5.p(3)  */
   4 ;test5.p(4) class TestIf {
-  5 ;test5.p(5)   //integer
-  6 ;test5.p(6)   /*
-  7 ;test5.p(7)   write(32);
-  8 ;test5.p(8)   if (400 >= 400) write(31);
-  9 ;test5.p(9)   if (400 >= (1200/(1+2))) write(30);
- 10 ;test5.p(10)   if (500 >= 400) write(29);
- 11 ;test5.p(11)   if (500 >= (1200/(1+2))) write(28);
- 12 ;test5.p(12)   if (400 <= 400) write(27);
- 13 ;test5.p(13)   if (400 <= (1200/(1+2))) write(26);
- 14 ;test5.p(14)   if (300 <= 400) write(25);
- 15 ;test5.p(15)   if (300 <= (1200/(1+2))) write(24);
- 16 ;test5.p(16)   if (500 > 400) write(23);
- 17 ;test5.p(17)   if (500 > (1200/(1+2))) write(22);
- 18 ;test5.p(18)   if (300 < 400) write(21);
- 19 ;test5.p(19)   if (300 < (1200/(1+2))) write(20);
- 20 ;test5.p(20)   if (300 != 400) write(19);
- 21 ;test5.p(21)   if (300 != (1200/(1+2))) write(18);
- 22 ;test5.p(22)   if (400 == 400) write(17);
- 23 ;test5.p(23)   if (400 == (1200/(1+2))) write(16);
- 24 ;test5.p(24)   */
- 25 ;test5.p(25)   //byte
- 26 ;test5.p(26)   if (4 >= 4) write(15);
- 27 acc8= constant 4
- 28 accom8 constant 4
- 29 brlt 33
- 30 acc8= constant 15
- 31 call writeAcc8
- 32 ;test5.p(27)   if (4 >= (12/(1+2))) write(14);
- 33 acc8= constant 4
- 34 <acc8= constant 12
- 35 <acc8= constant 1
- 36 acc8+ constant 2
- 37 /acc8 unstack
- 38 comacc8 unstack
- 39 brlt 43
- 40 acc8= constant 14
- 41 call writeAcc8
- 42 ;test5.p(28)   if (5 >= 4) write(13);
- 43 acc8= constant 5
- 44 accom8 constant 4
- 45 brlt 49
- 46 acc8= constant 13
- 47 call writeAcc8
- 48 ;test5.p(29)   if (5 >= (12/(1+2))) write(12);
- 49 acc8= constant 5
- 50 <acc8= constant 12
- 51 <acc8= constant 1
- 52 acc8+ constant 2
- 53 /acc8 unstack
- 54 comacc8 unstack
- 55 brlt 59
- 56 acc8= constant 12
- 57 call writeAcc8
- 58 ;test5.p(30)   if (4 <= 4) write(11);
- 59 acc8= constant 4
- 60 accom8 constant 4
- 61 brgt 65
- 62 acc8= constant 11
- 63 call writeAcc8
- 64 ;test5.p(31)   if (4 <= (12/(1+2))) write(10);
- 65 acc8= constant 4
- 66 <acc8= constant 12
- 67 <acc8= constant 1
- 68 acc8+ constant 2
- 69 /acc8 unstack
- 70 comacc8 unstack
- 71 brgt 75
- 72 acc8= constant 10
- 73 call writeAcc8
- 74 ;test5.p(32)   if (3 <= 4) write(9);
- 75 acc8= constant 3
- 76 accom8 constant 4
- 77 brgt 81
- 78 acc8= constant 9
- 79 call writeAcc8
- 80 ;test5.p(33)   if (3 <= (12/(1+2))) write(8);
- 81 acc8= constant 3
- 82 <acc8= constant 12
- 83 <acc8= constant 1
- 84 acc8+ constant 2
- 85 /acc8 unstack
- 86 comacc8 unstack
- 87 brgt 91
- 88 acc8= constant 8
- 89 call writeAcc8
- 90 ;test5.p(34)   if (5 > 4) write(7);
- 91 acc8= constant 5
- 92 accom8 constant 4
- 93 brle 97
- 94 acc8= constant 7
- 95 call writeAcc8
- 96 ;test5.p(35)   if (5 > (12/(1+2))) write(6);
- 97 acc8= constant 5
- 98 <acc8= constant 12
- 99 <acc8= constant 1
-100 acc8+ constant 2
-101 /acc8 unstack
-102 comacc8 unstack
-103 brle 107
-104 acc8= constant 6
-105 call writeAcc8
-106 ;test5.p(36)   if (3 < 4) write(5);
-107 acc8= constant 3
-108 accom8 constant 4
-109 brge 113
-110 acc8= constant 5
-111 call writeAcc8
-112 ;test5.p(37)   if (3 < (12/(1+2))) write(4);
-113 acc8= constant 3
-114 <acc8= constant 12
-115 <acc8= constant 1
-116 acc8+ constant 2
-117 /acc8 unstack
-118 comacc8 unstack
-119 brge 123
-120 acc8= constant 4
-121 call writeAcc8
-122 ;test5.p(38)   if (3 != 4) write(3);
-123 acc8= constant 3
-124 accom8 constant 4
-125 breq 129
-126 acc8= constant 3
-127 call writeAcc8
-128 ;test5.p(39)   if (3 != (12/(1+2))) write(2);
-129 acc8= constant 3
-130 <acc8= constant 12
-131 <acc8= constant 1
-132 acc8+ constant 2
-133 /acc8 unstack
-134 comacc8 unstack
-135 breq 139
-136 acc8= constant 2
-137 call writeAcc8
-138 ;test5.p(40)   if (4 == 4) write(1);
-139 acc8= constant 4
-140 accom8 constant 4
-141 brne 145
-142 acc8= constant 1
-143 call writeAcc8
-144 ;test5.p(41)   if (4 == (12/(1+2))) write(0);
-145 acc8= constant 4
-146 <acc8= constant 12
-147 <acc8= constant 1
-148 acc8+ constant 2
-149 /acc8 unstack
-150 comacc8 unstack
-151 brne 155
-152 acc8= constant 0
-153 call writeAcc8
-154 ;test5.p(42) }
-155 stop
+  5 ;test5.p(5)   //integer-integer
+  6 ;test5.p(6)   if (400 >= 400) write(31);
+  7 acc16= constant 400
+  8 accom16 constant 400
+  9 brlt 13
+ 10 acc8= constant 31
+ 11 call writeAcc8
+ 12 ;test5.p(7)   if (400 >= (1200/(1+2))) write(30);
+ 13 acc16= constant 400
+ 14 <acc16= constant 1200
+ 15 acc8= constant 1
+ 16 acc8+ constant 2
+ 17 acc16/ acc8
+ 18 comacc16 unstack
+ 19 brlt 23
+ 20 acc8= constant 30
+ 21 call writeAcc8
+ 22 ;test5.p(8)   if (500 >= 400) write(29);
+ 23 acc16= constant 500
+ 24 accom16 constant 400
+ 25 brlt 29
+ 26 acc8= constant 29
+ 27 call writeAcc8
+ 28 ;test5.p(9)   if (500 >= (1200/(1+2))) write(28);
+ 29 acc16= constant 500
+ 30 <acc16= constant 1200
+ 31 acc8= constant 1
+ 32 acc8+ constant 2
+ 33 acc16/ acc8
+ 34 comacc16 unstack
+ 35 brlt 39
+ 36 acc8= constant 28
+ 37 call writeAcc8
+ 38 ;test5.p(10)   if (400 <= 400) write(27);
+ 39 acc16= constant 400
+ 40 accom16 constant 400
+ 41 brgt 45
+ 42 acc8= constant 27
+ 43 call writeAcc8
+ 44 ;test5.p(11)   if (400 <= (1200/(1+2))) write(26);
+ 45 acc16= constant 400
+ 46 <acc16= constant 1200
+ 47 acc8= constant 1
+ 48 acc8+ constant 2
+ 49 acc16/ acc8
+ 50 comacc16 unstack
+ 51 brgt 55
+ 52 acc8= constant 26
+ 53 call writeAcc8
+ 54 ;test5.p(12)   if (300 <= 400) write(25);
+ 55 acc16= constant 300
+ 56 accom16 constant 400
+ 57 brgt 61
+ 58 acc8= constant 25
+ 59 call writeAcc8
+ 60 ;test5.p(13)   if (300 <= (1200/(1+2))) write(24);
+ 61 acc16= constant 300
+ 62 <acc16= constant 1200
+ 63 acc8= constant 1
+ 64 acc8+ constant 2
+ 65 acc16/ acc8
+ 66 comacc16 unstack
+ 67 brgt 71
+ 68 acc8= constant 24
+ 69 call writeAcc8
+ 70 ;test5.p(14)   if (500 > 400) write(23);
+ 71 acc16= constant 500
+ 72 accom16 constant 400
+ 73 brle 77
+ 74 acc8= constant 23
+ 75 call writeAcc8
+ 76 ;test5.p(15)   if (500 > (1200/(1+2))) write(22);
+ 77 acc16= constant 500
+ 78 <acc16= constant 1200
+ 79 acc8= constant 1
+ 80 acc8+ constant 2
+ 81 acc16/ acc8
+ 82 comacc16 unstack
+ 83 brle 87
+ 84 acc8= constant 22
+ 85 call writeAcc8
+ 86 ;test5.p(16)   if (300 < 400) write(21);
+ 87 acc16= constant 300
+ 88 accom16 constant 400
+ 89 brge 93
+ 90 acc8= constant 21
+ 91 call writeAcc8
+ 92 ;test5.p(17)   if (300 < (1200/(1+2))) write(20);
+ 93 acc16= constant 300
+ 94 <acc16= constant 1200
+ 95 acc8= constant 1
+ 96 acc8+ constant 2
+ 97 acc16/ acc8
+ 98 comacc16 unstack
+ 99 brge 103
+100 acc8= constant 20
+101 call writeAcc8
+102 ;test5.p(18)   if (300 != 400) write(19);
+103 acc16= constant 300
+104 accom16 constant 400
+105 breq 109
+106 acc8= constant 19
+107 call writeAcc8
+108 ;test5.p(19)   if (300 != (1200/(1+2))) write(18);
+109 acc16= constant 300
+110 <acc16= constant 1200
+111 acc8= constant 1
+112 acc8+ constant 2
+113 acc16/ acc8
+114 comacc16 unstack
+115 breq 119
+116 acc8= constant 18
+117 call writeAcc8
+118 ;test5.p(20)   if (400 == 400) write(17);
+119 acc16= constant 400
+120 accom16 constant 400
+121 brne 125
+122 acc8= constant 17
+123 call writeAcc8
+124 ;test5.p(21)   if (400 == (1200/(1+2))) write(16);
+125 acc16= constant 400
+126 <acc16= constant 1200
+127 acc8= constant 1
+128 acc8+ constant 2
+129 acc16/ acc8
+130 comacc16 unstack
+131 brne 136
+132 acc8= constant 16
+133 call writeAcc8
+134 ;test5.p(22)   //byte-byte
+135 ;test5.p(23)   if (4 >= 4) write(15);
+136 acc8= constant 4
+137 accom8 constant 4
+138 brlt 142
+139 acc8= constant 15
+140 call writeAcc8
+141 ;test5.p(24)   if (4 >= (12/(1+2))) write(14);
+142 acc8= constant 4
+143 <acc8= constant 12
+144 <acc8= constant 1
+145 acc8+ constant 2
+146 /acc8 unstack
+147 comacc8 unstack
+148 brlt 152
+149 acc8= constant 14
+150 call writeAcc8
+151 ;test5.p(25)   if (5 >= 4) write(13);
+152 acc8= constant 5
+153 accom8 constant 4
+154 brlt 158
+155 acc8= constant 13
+156 call writeAcc8
+157 ;test5.p(26)   if (5 >= (12/(1+2))) write(12);
+158 acc8= constant 5
+159 <acc8= constant 12
+160 <acc8= constant 1
+161 acc8+ constant 2
+162 /acc8 unstack
+163 comacc8 unstack
+164 brlt 168
+165 acc8= constant 12
+166 call writeAcc8
+167 ;test5.p(27)   if (4 <= 4) write(11);
+168 acc8= constant 4
+169 accom8 constant 4
+170 brgt 174
+171 acc8= constant 11
+172 call writeAcc8
+173 ;test5.p(28)   if (4 <= (12/(1+2))) write(10);
+174 acc8= constant 4
+175 <acc8= constant 12
+176 <acc8= constant 1
+177 acc8+ constant 2
+178 /acc8 unstack
+179 comacc8 unstack
+180 brgt 184
+181 acc8= constant 10
+182 call writeAcc8
+183 ;test5.p(29)   if (3 <= 4) write(9);
+184 acc8= constant 3
+185 accom8 constant 4
+186 brgt 190
+187 acc8= constant 9
+188 call writeAcc8
+189 ;test5.p(30)   if (3 <= (12/(1+2))) write(8);
+190 acc8= constant 3
+191 <acc8= constant 12
+192 <acc8= constant 1
+193 acc8+ constant 2
+194 /acc8 unstack
+195 comacc8 unstack
+196 brgt 200
+197 acc8= constant 8
+198 call writeAcc8
+199 ;test5.p(31)   if (5 > 4) write(7);
+200 acc8= constant 5
+201 accom8 constant 4
+202 brle 206
+203 acc8= constant 7
+204 call writeAcc8
+205 ;test5.p(32)   if (5 > (12/(1+2))) write(6);
+206 acc8= constant 5
+207 <acc8= constant 12
+208 <acc8= constant 1
+209 acc8+ constant 2
+210 /acc8 unstack
+211 comacc8 unstack
+212 brle 216
+213 acc8= constant 6
+214 call writeAcc8
+215 ;test5.p(33)   if (3 < 4) write(5);
+216 acc8= constant 3
+217 accom8 constant 4
+218 brge 222
+219 acc8= constant 5
+220 call writeAcc8
+221 ;test5.p(34)   if (3 < (12/(1+2))) write(4);
+222 acc8= constant 3
+223 <acc8= constant 12
+224 <acc8= constant 1
+225 acc8+ constant 2
+226 /acc8 unstack
+227 comacc8 unstack
+228 brge 232
+229 acc8= constant 4
+230 call writeAcc8
+231 ;test5.p(35)   if (3 != 4) write(3);
+232 acc8= constant 3
+233 accom8 constant 4
+234 breq 238
+235 acc8= constant 3
+236 call writeAcc8
+237 ;test5.p(36)   if (3 != (12/(1+2))) write(2);
+238 acc8= constant 3
+239 <acc8= constant 12
+240 <acc8= constant 1
+241 acc8+ constant 2
+242 /acc8 unstack
+243 comacc8 unstack
+244 breq 248
+245 acc8= constant 2
+246 call writeAcc8
+247 ;test5.p(37)   if (4 == 4) write(1);
+248 acc8= constant 4
+249 accom8 constant 4
+250 brne 254
+251 acc8= constant 1
+252 call writeAcc8
+253 ;test5.p(38)   if (4 == (12/(1+2))) write(0);
+254 acc8= constant 4
+255 <acc8= constant 12
+256 <acc8= constant 1
+257 acc8+ constant 2
+258 /acc8 unstack
+259 comacc8 unstack
+260 brne 264
+261 acc8= constant 0
+262 call writeAcc8
+263 ;test5.p(39) }
+264 stop

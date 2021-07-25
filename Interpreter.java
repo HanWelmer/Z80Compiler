@@ -124,8 +124,11 @@ public class Interpreter {
             runError("invalid operand type for decrement instruction");
         } // switch(instr.operand.opType)
         break;
-      case acc16Compare:
+      case acc16Compare: //normal compare
         branchSet = compare(acc16, getOp());
+        break;
+      case compareAcc16: //reverse compare
+        branchSet = compare(getOp(), acc16);
         break;
       case acc16CompareAcc8:
         debug(" acc16=" + acc16 + ", acc8=" + acc8);

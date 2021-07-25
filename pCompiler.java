@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO add test cases for ifStatement (see test2.p and test5.p).
-//TODO add test cases for whileStatement (see test1.p).
-//TODO add test cases for doStatement (see test10.p).
-//TODO add test cases for forStatement (see test11.p).
+//TODO test5.p lijkt overbodige haakjes te moeten hebben.
+//TODO add test cases for whileStatement (see test1.p en test5.p).
+//TODO add test cases for doStatement (see test10.p en test5.p).
+//TODO add test cases for forStatement (see test11.p en test5.p).
 //TODO check stack usage/clear irt <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
 
@@ -394,6 +395,7 @@ public class PCompiler {
           }
         } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardMul16.get(operator), rOperand));
+          acc8InUse = false;
         } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
           plant(new Instruction(reverseMul16.get(operator), operand));
           operand.datatype = Datatype.integer;
@@ -472,6 +474,7 @@ public class PCompiler {
           }
         } else if (operand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
+          acc8InUse = false;
         } else if (operand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
           plant(new Instruction(reverseAdd16.get(operator), operand));
           operand.datatype = Datatype.integer;
@@ -544,13 +547,23 @@ public class PCompiler {
     // acc-acc
     //   integer-byt
     //   byt-integer
-    //TODO restructure; first not acc-stack (integer-byt, byt-integer) then not acc-acc (byt-byt, integer-integer, integer-byt, byt-integer)
-    // not acc-acc; byt-byt
-    // not acc-acc; integer-integer
-    // not acc-acc; integer-byt
-    // not acc-acc; byt-integer
+    // not acc-stack
+    //   byt-byt
+    //   integer-integer
+    //   integer-byt
+    //   byt-integer
+    // not acc-acc (byt-byt)
+    // not acc-acc (integer-integer)
+    // not acc-acc (integer-byt)
+    // not acc-acc (byt-integer)
     if (leftOperand.opType == OperandType.acc && rightOperand.opType == OperandType.acc) {
-      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+        rightOperand.opType = OperandType.stack;
+        plant(new Instruction(FunctionType.compareAcc16, rightOperand));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        rightOperand.opType = OperandType.stack;
+        plant(new Instruction(FunctionType.compareAcc8, rightOperand));
+      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
         plant(new Instruction(FunctionType.acc16CompareAcc8));
@@ -558,12 +571,16 @@ public class PCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-      if (rightOperand.opType == OperandType.stack) {
+    } else if (rightOperand.opType == OperandType.stack) {
+      if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.compareAcc8, rightOperand));
+      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+        plant(new Instruction(FunctionType.compareAcc16, rightOperand));
       } else {
-        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+        throw new RuntimeException("Internal compiler error: abort.");
       }
+    } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+      plant(new Instruction(FunctionType.acc8Compare, rightOperand));
     } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
       plant(new Instruction(FunctionType.acc16Compare, rightOperand));
     } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {

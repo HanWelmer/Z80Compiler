@@ -3,9 +3,7 @@
  * Test comparisons
  */
 class TestIf {
-  //integer
-  /*
-  write(32);
+  //integer-integer
   if (400 >= 400) write(31);
   if (400 >= (1200/(1+2))) write(30);
   if (500 >= 400) write(29);
@@ -22,8 +20,7 @@ class TestIf {
   if (300 != (1200/(1+2))) write(18);
   if (400 == 400) write(17);
   if (400 == (1200/(1+2))) write(16);
-  */
-  //byte
+  //byte-byte
   if (4 >= 4) write(15);
   if (4 >= (12/(1+2))) write(14);
   if (5 >= 4) write(13);

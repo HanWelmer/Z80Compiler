@@ -17,7 +17,8 @@ public enum FunctionType {
   acc16Plus("acc16+"),
   acc16Minus("acc16-"),
   minusAcc16("-acc16"),
-  acc16Compare("accom16"),
+  acc16Compare("accom16"), //normal compare
+  compareAcc16 ("comacc16"), //reverse compare
   acc16CompareAcc8("acc16CompareAcc8"),
   acc16Times("acc16*"),
   acc16Div("acc16/"),

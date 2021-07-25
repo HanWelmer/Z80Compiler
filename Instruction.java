@@ -94,7 +94,8 @@ public class Instruction {
       case acc16Times:
       case acc16Div:
       case divAcc16:
-      case acc16Compare:
+      case acc16Compare: //normal compare
+      case compareAcc16: //reverse compare
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
@@ -222,7 +223,8 @@ public class Instruction {
       case acc16Times:
       case acc16Div:
       case divAcc16:
-      case acc16Compare:
+      case acc16Compare: //normal compare
+      case compareAcc16: //reverse compare
       case acc8Load:
       case stackAcc8Load:
       case acc8Plus:
@@ -231,8 +233,8 @@ public class Instruction {
       case acc8Times:
       case acc8Div:
       case divAcc8:
-      case acc8Compare:
-      case compareAcc8:
+      case acc8Compare: //normal compare
+      case compareAcc8: //reverse compare
         switch(operand.opType) {
           case var: result += " variable " + operand.intValue; break;
           case constant: result += " constant " + operand.intValue; break;
