@@ -202,26 +202,11 @@ public class Interpreter {
             runError("invalid operand type for decrement instruction");
         } // switch(instr.operand.opType)
         break;
-      case acc8Compare:
-        operand = getOp();
-        branchSet.clear();
-        if (acc8 == operand) {
-          branchSet = EnumSet.of(FunctionType.brEq);
-        } else {
-          branchSet = EnumSet.of(FunctionType.brNe);
-        }
-
-        if (acc8 < operand) {
-          branchSet.add(FunctionType.brLt);
-        } else {
-          branchSet.add(FunctionType.brGe);
-        }
-
-        if (acc8 <= operand) {
-          branchSet.add(FunctionType.brLe);
-        } else {
-          branchSet.add(FunctionType.brGt);
-        }
+      case acc8Compare: //normal compare
+        branchSet = compare(acc8, getOp());
+        break;
+      case compareAcc8: //reverse compare
+        branchSet = compare(getOp(), acc8);
         break;
       case acc8ToAcc16:
         acc16 = acc8;

@@ -3,51 +3,42 @@
  * Test comparisons
  */
 class TestIf {
-  if (12/(1+2) > 3) write(25);   //25
-  if (12/(1+2) >= 4) write(24);  //24
-  if (12/(1+2) != 1) write(23);  //23
-  if (12/(1+2) == 4) write(22);  //22
-  if (12/(1+2) <= 4) write(21);  //21
-  if (12/(1+2) < 5) write(20);   //20
-
-  if (5 > 12/(1+2)) write(19);   //19
-  if (4 >= 12/(1+2)) write(18);  //18
-  if (1 != 12/(1+2)) write(17);  //17
-  if (4 == 12/(1+2)) write(16);  //16
-  if (4 <= 12/(1+2)) write(15);  //15
-  if (1 < 12/(1+2)) write(14);   //14
-
-  if (1 <= 1) write(13);  //13
-  if (0 <= 1) write(12);  //12
-  if (0 < 1) write(11);   //11
-  if (1 >= 1) write(10);  //10
-  if (1 >= 0) write(9);   //9
-  if (1 > 0) write(8);    //8
-
-  if (1 != 1) { 
-    write(0);
-  } else { 
-    write (7);            //7
-  }
-  if (1 != 0) { 
-    write(6);             //6
-  } else { 
-    write (0);
-  }
-  if (1 != 0) write(5);   //5
-
-  if (1 == 0) { 
-    write(0);
-  } else { 
-    write (4);            //4
-  }
-  if (1 == 1) { 
-    write(3);             //3
-  } else { 
-    write (0);
-  }
-  if (1000 == 1000) write(2);  //2
-  if (1 == 1) write(1);   //1
-  write(0);               //0
+  //integer
+  /*
+  write(32);
+  if (400 >= 400) write(31);
+  if (400 >= (1200/(1+2))) write(30);
+  if (500 >= 400) write(29);
+  if (500 >= (1200/(1+2))) write(28);
+  if (400 <= 400) write(27);
+  if (400 <= (1200/(1+2))) write(26);
+  if (300 <= 400) write(25);
+  if (300 <= (1200/(1+2))) write(24);
+  if (500 > 400) write(23);
+  if (500 > (1200/(1+2))) write(22);
+  if (300 < 400) write(21);
+  if (300 < (1200/(1+2))) write(20);
+  if (300 != 400) write(19);
+  if (300 != (1200/(1+2))) write(18);
+  if (400 == 400) write(17);
+  if (400 == (1200/(1+2))) write(16);
+  */
+  //byte
+  if (4 >= 4) write(15);
+  if (4 >= (12/(1+2))) write(14);
+  if (5 >= 4) write(13);
+  if (5 >= (12/(1+2))) write(12);
+  if (4 <= 4) write(11);
+  if (4 <= (12/(1+2))) write(10);
+  if (3 <= 4) write(9);
+  if (3 <= (12/(1+2))) write(8);
+  if (5 > 4) write(7);
+  if (5 > (12/(1+2))) write(6);
+  if (3 < 4) write(5);
+  if (3 < (12/(1+2))) write(4);
+  if (3 != 4) write(3);
+  if (3 != (12/(1+2))) write(2);
+  if (4 == 4) write(1);
+  if (4 == (12/(1+2))) write(0);
 }
 //comment after final }.

@@ -541,8 +541,10 @@ public class PCompiler {
 
     /* part of code generation */
     debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    // acc-acc; integer-byt
-    // acc-acc; byt-integer
+    // acc-acc
+    //   integer-byt
+    //   byt-integer
+    //TODO restructure; first not acc-stack (integer-byt, byt-integer) then not acc-acc (byt-byt, integer-integer, integer-byt, byt-integer)
     // not acc-acc; byt-byt
     // not acc-acc; integer-integer
     // not acc-acc; integer-byt
@@ -557,7 +559,18 @@ public class PCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-      plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      //TODO remove
+      //plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      /*
+      comparison: leftOperand=operand(acc, type=byt, intValue=3), rightOperand=operand(stack, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
+      ->plant (acc8InUse=true, acc16InUse=false, lastSourceLineNr=0, sourceLineNr=10, linesOfSourceCode=0):
+       35 accom8 unstack
+      */
+      if (rightOperand.opType == OperandType.stack) {
+        plant(new Instruction(FunctionType.compareAcc8, rightOperand));
+      } else {
+        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      }
     } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
       plant(new Instruction(FunctionType.acc16Compare, rightOperand));
     } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
@@ -575,11 +588,13 @@ public class PCompiler {
     }
     int ifLabel = saveLabel();
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
-    if (rightOperand.opType != OperandType.stack) {
-      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
-    } else {
-      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
-    }
+    //TODO remove
+    //if (rightOperand.opType != OperandType.stack) {
+    //  plant(new Instruction(normalSkip.get(compareOp), labelOperand));
+    //} else {
+    //  plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
+    //}
+    plant(new Instruction(normalSkip.get(compareOp), labelOperand));
 
     debug("\ncomparison: end");
     return ifLabel;

@@ -9,3 +9,4 @@ test4.p
 test3.p
 test2.p
 test1.p
+test.p

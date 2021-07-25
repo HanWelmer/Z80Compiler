@@ -132,6 +132,7 @@ public class Instruction {
       case acc8Div:
       case divAcc8:
       case acc8Compare:
+      case compareAcc8:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
@@ -231,6 +232,7 @@ public class Instruction {
       case acc8Div:
       case divAcc8:
       case acc8Compare:
+      case compareAcc8:
         switch(operand.opType) {
           case var: result += " variable " + operand.intValue; break;
           case constant: result += " constant " + operand.intValue; break;

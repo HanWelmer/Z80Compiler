@@ -31,7 +31,8 @@ public enum FunctionType {
   acc8Plus("acc8+"),
   acc8Minus("acc8-"),
   minusAcc8("-acc8"),
-  acc8Compare("accom8"),
+  acc8Compare("accom8"),  //normal compare
+  compareAcc8("comacc8"), //reverse compare
   acc8Times("acc8*"),
   acc8Div("acc8/"),
   divAcc8("/acc8"),
