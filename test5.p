@@ -3,6 +3,46 @@
  * Test comparisons
  */
 class TestIf {
+  int three = 3;
+  int four = 4;
+  int five = 5;
+  int twelve = 12;
+  //byte-integer
+  /*
+  if (4 >= four) write(63);
+  if (4 >= (twelve/(1+2))) write(62);
+  if (5 >= four) write(61);
+  if (5 >= (twelve/(1+2))) write(60);
+  if (4 <= four) write(59);
+  if (4 <= (twelve/(1+2))) write(58);
+  if (3 <= four) write(57);
+  if (3 <= (twelve/(1+2))) write(56);
+  if (5 > four) write(55);
+  if (5 > (twelve/(1+2))) write(54);
+  if (3 < four) write(53);
+  if (3 < (twelve/(1+2))) write(52);
+  if (3 != four) write(51);
+  if (3 != (twelve/(1+2))) write(50);
+  */
+  if (4 == four) write(49);
+  if (4 == (twelve/(1+2))) write(48);
+  //integer-byte
+  if (four >= 4) write(47);
+  if (four >= (12/(1+2))) write(46);
+  if (five >= 4) write(45);
+  if (five >= (12/(1+2))) write(44);
+  if (four <= 4) write(43);
+  if (four <= (12/(1+2))) write(42);
+  if (three <= 4) write(41);
+  if (three <= (12/(1+2))) write(40);
+  if (five > 4) write(39);
+  if (five > (12/(1+2))) write(38);
+  if (three < 4) write(37);
+  if (three < (12/(1+2))) write(36);
+  if (three != 4) write(35);
+  if (three != (12/(1+2))) write(34);
+  if (four == 4) write(33);
+  if (four == (12/(1+2))) write(32);
   //integer-integer
   if (400 >= 400) write(31);
   if (400 >= (1200/(1+2))) write(30);

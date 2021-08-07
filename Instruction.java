@@ -16,6 +16,7 @@ public class Instruction {
       && function != FunctionType.writeAcc8
       && function != FunctionType.writeAcc16
       && function != FunctionType.acc16CompareAcc8
+      && function != FunctionType.acc8CompareAcc16
       && function != FunctionType.acc8ToAcc16
       && function != FunctionType.acc16ToAcc8
       && function != FunctionType.stackAcc8ToAcc16
@@ -282,6 +283,7 @@ public class Instruction {
         result = "call writeAcc16";
         break;
       case acc16CompareAcc8:
+      case acc8CompareAcc16:
       case stop: 
         break;
       default: throw new RuntimeException("unsupported instruction");

@@ -125,13 +125,18 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case acc16Compare: //normal compare
+        debug(" acc16=" + acc16 + ", operand=" + getOp());
         branchSet = compare(acc16, getOp());
         break;
       case compareAcc16: //reverse compare
         branchSet = compare(getOp(), acc16);
         break;
-      case acc16CompareAcc8:
+      case acc16CompareAcc8: //normal compare
         debug(" acc16=" + acc16 + ", acc8=" + acc8);
+        branchSet = compare(acc16, acc8);
+        break;
+      case acc8CompareAcc16: //reverse compare
+        debug(" acc8=" + acc8 + ", acc16=" + acc16);
         branchSet = compare(acc8, acc16);
         break;
       // 8-bit arithmetic:
@@ -206,6 +211,7 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case acc8Compare: //normal compare
+        debug(" acc8=" + acc8 + ", operand=" + getOp());
         branchSet = compare(acc8, getOp());
         break;
       case compareAcc8: //reverse compare
