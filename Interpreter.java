@@ -129,7 +129,12 @@ public class Interpreter {
         branchSet = compare(acc16, getOp());
         break;
       case compareAcc16: //reverse compare
-        branchSet = compare(getOp(), acc16);
+        if (getOpType() == OperandType.stack) {
+          debug(" acc16=" + acc16 + ", operand=" + peek());
+        } else {
+          debug(" acc16=" + acc16 + ", operand=" + getOp());
+        }
+        branchSet = compare(acc16, getOp());
         break;
       case acc16CompareAcc8: //normal compare
         debug(" acc16=" + acc16 + ", acc8=" + acc8);
@@ -215,7 +220,12 @@ public class Interpreter {
         branchSet = compare(acc8, getOp());
         break;
       case compareAcc8: //reverse compare
-        branchSet = compare(getOp(), acc8);
+        if (getOpType() == OperandType.stack) {
+          debug(" acc8=" + acc8 + ", operand=" + peek());
+        } else {
+          debug(" acc8=" + acc8 + ", operand=" + getOp());
+        }
+        branchSet = compare(acc8, getOp());
         break;
       case acc8ToAcc16:
         acc16 = acc8;
@@ -356,6 +366,17 @@ public class Interpreter {
     }
     sp--;
     return machineStack[sp];
+  }
+  
+  private int peek() {
+    if (sp == 0) {
+      runError("stack underflow");
+    }
+    return machineStack[sp - 1];
+  }
+  
+  private OperandType getOpType() {
+    return instructions.get(pc).operand.opType;
   }
   
   private int getOp() {

@@ -19,18 +19,19 @@
  18 acc8ToAcc16
  19 acc16=> variable 0
  20 acc16= variable 0
- 21 accom16 constant 0
- 22 brle 32
- 23 br 26
- 24 decr16 variable 0
- 25 br 20
- 26 ;test11.p(6)     write(i);
- 27 acc16= variable 0
- 28 call writeAcc16
- 29 ;test11.p(7)   }
- 30 br 24
- 31 ;test11.p(8)   write(0);
- 32 acc8= constant 0
- 33 call writeAcc8
- 34 ;test11.p(9) }
- 35 stop
+ 21 acc8= constant 0
+ 22 acc16CompareAcc8
+ 23 brle 33
+ 24 br 27
+ 25 decr16 variable 0
+ 26 br 20
+ 27 ;test11.p(6)     write(i);
+ 28 acc16= variable 0
+ 29 call writeAcc16
+ 30 ;test11.p(7)   }
+ 31 br 25
+ 32 ;test11.p(8)   write(0);
+ 33 acc8= constant 0
+ 34 call writeAcc8
+ 35 ;test11.p(9) }
+ 36 stop

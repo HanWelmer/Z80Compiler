@@ -3,8 +3,10 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO regel 564 en test5.p
-//TODO add test cases for ifStatement (see test2.p and test5.p).
+//TODO naamgeving compare functies (normal en reverse; acc8Compare, acc16Compare, revAcc8Compare, revAcc16Compare)
+//TODO add test cases for whileStatement (see test2.p and test5.p).
+//TODO add test cases for doStatement (see test2.p and test5.p).
+//TODO add test cases for forStatement (see test2.p and test5.p).
 //TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test1.p en test5.p).
 //TODO add test cases for doStatement (see test10.p en test5.p).
@@ -564,20 +566,31 @@ public class PCompiler {
     // comparison: leftOperand=operand(acc, type=integer, intValue=2), rightOperand=operand(constant, type=byt, intValue=4), acc16InUse = true, acc8InUse = false
     // comparison: leftOperand=operand(acc, type=integer, intValue=400), rightOperand=operand(constant, type=integer, intValue=400), acc16InUse = true, acc8InUse = false
     // comparison: leftOperand=operand(acc, type=byt, intValue=4), rightOperand=operand(constant, type=byt, intValue=4), acc16InUse = false, acc8InUse = true
+    // comparison: leftOperand=operand(acc, type=byt, intValue=4), rightOperand=operand(var, type=integer, intValue=2), acc16InUse = false, acc8InUse = true
+    //
     // comparison: leftOperand=operand(stack, type=integer, intValue=400), rightOperand=operand(acc, type=integer, intValue=1200), acc16InUse = true, acc8InUse = false
     // comparison: leftOperand=operand(stack, type=byt, intValue=4), rightOperand=operand(acc, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
-    // acc-?
+    // comparison: leftOperand=operand(stack, type=byt, intValue=4), rightOperand=operand(acc, type=integer, intValue=6), acc16InUse = true, acc8InUse = false
+    //acc-?
     //   byt-byt
     //   integer-integer
     //   integer-byt
     // ?-acc
     //   byt-byt
     //   integer-integer
+    boolean reverseCompare = false;
     if (leftOperand.opType == OperandType.acc) {
       if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.acc8Compare, rightOperand));
       } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+        if (rightOperand.opType != OperandType.acc) {
+          plantAccLoad(rightOperand);
+          debug("\ncomparison: plantAccLoad(rightOperand), acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+          rightOperand.opType = OperandType.acc;
+        }
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
         if (rightOperand.opType != OperandType.acc) {
           plantAccLoad(rightOperand);
@@ -589,20 +602,29 @@ public class PCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if (rightOperand.opType == OperandType.acc) {
+      //do a reverse compare
+      reverseCompare = true;
       if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.compareAcc8, leftOperand));
       } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
         plant(new Instruction(FunctionType.compareAcc16, leftOperand));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+        plant(new Instruction(FunctionType.compareAcc16, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
+      debug(", reverseCompare");
     } else {
         throw new RuntimeException("Internal compiler error: abort.");
     }
       
     int ifLabel = saveLabel();
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
-    plant(new Instruction(normalSkip.get(compareOp), labelOperand));
+    if (reverseCompare) {
+      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
+    } else {
+      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
+    }
 
     debug("\ncomparison: end");
     return ifLabel;

@@ -19,7 +19,7 @@
  18 acc8+ constant 2
  19 /acc8 unstack
  20 comacc8 unstack
- 21 brlt 25
+ 21 brgt 25
  22 acc8= constant 14
  23 call writeAcc8
  24 ;test.p(8)   if (5 >= 4) write(13);
@@ -35,7 +35,7 @@
  34 acc8+ constant 2
  35 /acc8 unstack
  36 comacc8 unstack
- 37 brlt 41
+ 37 brgt 41
  38 acc8= constant 12
  39 call writeAcc8
  40 ;test.p(10)   if (4 <= 4) write(11);
@@ -51,7 +51,7 @@
  50 acc8+ constant 2
  51 /acc8 unstack
  52 comacc8 unstack
- 53 brgt 57
+ 53 brlt 57
  54 acc8= constant 10
  55 call writeAcc8
  56 ;test.p(12)   if (3 <= 4) write(9);
@@ -67,7 +67,7 @@
  66 acc8+ constant 2
  67 /acc8 unstack
  68 comacc8 unstack
- 69 brgt 73
+ 69 brlt 73
  70 acc8= constant 8
  71 call writeAcc8
  72 ;test.p(14)   if (5 > 4) write(7);
@@ -83,7 +83,7 @@
  82 acc8+ constant 2
  83 /acc8 unstack
  84 comacc8 unstack
- 85 brle 89
+ 85 brge 89
  86 acc8= constant 6
  87 call writeAcc8
  88 ;test.p(16)   if (3 < 4) write(5);
@@ -99,7 +99,7 @@
  98 acc8+ constant 2
  99 /acc8 unstack
 100 comacc8 unstack
-101 brge 105
+101 brle 105
 102 acc8= constant 4
 103 call writeAcc8
 104 ;test.p(18)   if (3 != 4) write(3);

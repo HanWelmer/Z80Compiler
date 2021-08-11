@@ -32,39 +32,40 @@
  31 acc16=> variable 1
  32 ;test1.p(10)   while (p > 2) {
  33 acc16= variable 1
- 34 accom16 constant 2
- 35 brle 50
- 36 ;test1.p(11)     int test = 2;
- 37 acc8= constant 2
- 38 acc8ToAcc16
- 39 acc16=> variable 3
- 40 ;test1.p(12)     write(p);
- 41 acc16= variable 1
- 42 call writeAcc16
- 43 ;test1.p(13)     p = p - 1;
- 44 acc16= variable 1
- 45 acc16- constant 1
- 46 acc16=> variable 1
- 47 ;test1.p(14)   }
- 48 br 33
- 49 ;test1.p(15)   byte a = 2;
- 50 acc8= constant 2
- 51 acc8=> variable 3
- 52 ;test1.p(16)   while (a >= 1) {
- 53 acc8= variable 3
- 54 accom8 constant 1
- 55 brlt 66
- 56 ;test1.p(17)     write(a);
- 57 acc8= variable 3
- 58 call writeAcc8
- 59 ;test1.p(18)     a = a - 1;
- 60 acc8= variable 3
- 61 acc8- constant 1
- 62 acc8=> variable 3
- 63 ;test1.p(19)   }
- 64 br 53
- 65 ;test1.p(20)   write(0);
- 66 acc8= constant 0
- 67 call writeAcc8
- 68 ;test1.p(21) }
- 69 stop
+ 34 acc8= constant 2
+ 35 acc16CompareAcc8
+ 36 brle 51
+ 37 ;test1.p(11)     int test = 2;
+ 38 acc8= constant 2
+ 39 acc8ToAcc16
+ 40 acc16=> variable 3
+ 41 ;test1.p(12)     write(p);
+ 42 acc16= variable 1
+ 43 call writeAcc16
+ 44 ;test1.p(13)     p = p - 1;
+ 45 acc16= variable 1
+ 46 acc16- constant 1
+ 47 acc16=> variable 1
+ 48 ;test1.p(14)   }
+ 49 br 33
+ 50 ;test1.p(15)   byte a = 2;
+ 51 acc8= constant 2
+ 52 acc8=> variable 3
+ 53 ;test1.p(16)   while (a >= 1) {
+ 54 acc8= variable 3
+ 55 accom8 constant 1
+ 56 brlt 67
+ 57 ;test1.p(17)     write(a);
+ 58 acc8= variable 3
+ 59 call writeAcc8
+ 60 ;test1.p(18)     a = a - 1;
+ 61 acc8= variable 3
+ 62 acc8- constant 1
+ 63 acc8=> variable 3
+ 64 ;test1.p(19)   }
+ 65 br 54
+ 66 ;test1.p(20)   write(0);
+ 67 acc8= constant 0
+ 68 call writeAcc8
+ 69 ;test1.p(21) }
+ 70 stop
