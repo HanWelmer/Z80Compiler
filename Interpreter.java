@@ -128,7 +128,7 @@ public class Interpreter {
         debug(" acc16=" + acc16 + ", operand=" + getOp());
         branchSet = compare(acc16, getOp());
         break;
-      case compareAcc16: //reverse compare
+      case revAcc16Compare: //reverse compare
         if (getOpType() == OperandType.stack) {
           debug(" acc16=" + acc16 + ", operand=" + peek());
         } else {
@@ -219,7 +219,7 @@ public class Interpreter {
         debug(" acc8=" + acc8 + ", operand=" + getOp());
         branchSet = compare(acc8, getOp());
         break;
-      case compareAcc8: //reverse compare
+      case revAcc8Compare: //reverse compare
         if (getOpType() == OperandType.stack) {
           debug(" acc8=" + acc8 + ", operand=" + peek());
         } else {

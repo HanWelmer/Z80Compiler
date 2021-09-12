@@ -19,7 +19,7 @@
  18 acc8=> variable 0
  19 ;test10.p(7)   } while (a > 1);
  20 acc8= variable 0
- 21 accom16 constant 1
+ 21 acc16Comp constant 1
  22 brge 6
  23 ;test10.p(8)   write(0);
  24 acc8= constant 0

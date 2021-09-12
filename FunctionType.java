@@ -17,10 +17,9 @@ public enum FunctionType {
   acc16Plus("acc16+"),
   acc16Minus("acc16-"),
   minusAcc16("-acc16"),
-  acc16Compare("accom16"), //normal compare
-  compareAcc16 ("comacc16"), //reverse compare
+  acc16Compare("acc16Comp"), //normal compare
+  revAcc16Compare ("revAcc16Comp"), //reverse compare
   acc16CompareAcc8("acc16CompareAcc8"), //normal compare
-  acc8CompareAcc16("acc8CompareAcc16"), //reverse compare
   acc16Times("acc16*"),
   acc16Div("acc16/"),
   divAcc16("/acc16"),
@@ -33,8 +32,9 @@ public enum FunctionType {
   acc8Plus("acc8+"),
   acc8Minus("acc8-"),
   minusAcc8("-acc8"),
-  acc8Compare("accom8"),  //normal compare
-  compareAcc8("comacc8"), //reverse compare
+  acc8Compare("acc8Comp"),  //normal compare
+  revAcc8Compare("revAcc8Comp"), //reverse compare
+  acc8CompareAcc16("acc8CompareAcc16"), //reverse compare
   acc8Times("acc8*"),
   acc8Div("acc8/"),
   divAcc8("/acc8"),

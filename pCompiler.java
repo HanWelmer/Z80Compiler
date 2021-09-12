@@ -3,7 +3,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO naamgeving compare functies (normal en reverse; acc8Compare, acc16Compare, revAcc8Compare, revAcc16Compare)
+//TODO distinguish stack/unstack byt vs integer (see test5.p).
 //TODO add test cases for whileStatement (see test2.p and test5.p).
 //TODO add test cases for doStatement (see test2.p and test5.p).
 //TODO add test cases for forStatement (see test2.p and test5.p).
@@ -605,11 +605,11 @@ public class PCompiler {
       //do a reverse compare
       reverseCompare = true;
       if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.compareAcc8, leftOperand));
+        plant(new Instruction(FunctionType.revAcc8Compare, leftOperand));
       } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
-        plant(new Instruction(FunctionType.compareAcc16, leftOperand));
+        plant(new Instruction(FunctionType.revAcc16Compare, leftOperand));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
-        plant(new Instruction(FunctionType.compareAcc16, leftOperand));
+        plant(new Instruction(FunctionType.revAcc16Compare, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }

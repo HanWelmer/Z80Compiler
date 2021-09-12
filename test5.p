@@ -8,7 +8,6 @@ class TestIf {
   int five = 5;
   int twelve = 12;
   //byte-integer
-  /*
   if (4 >= four) write(63);
   if (4 >= (twelve/(1+2))) write(62);
   if (5 >= four) write(61);
@@ -23,7 +22,6 @@ class TestIf {
   if (3 < (twelve/(1+2))) write(52);
   if (3 != four) write(51);
   if (3 != (twelve/(1+2))) write(50);
-  */
   if (4 == four) write(49);
   if (4 == (twelve/(1+2))) write(48);
   //integer-byte

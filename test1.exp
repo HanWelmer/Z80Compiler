@@ -9,7 +9,7 @@
   8 acc16=> variable 1
   9 ;test1.p(4)   while (b > 4) {
  10 acc8= variable 0
- 11 accom8 constant 4
+ 11 acc8Comp constant 4
  12 brle 29
  13 ;test1.p(5)     int test = 1;
  14 acc8= constant 1
@@ -53,7 +53,7 @@
  52 acc8=> variable 3
  53 ;test1.p(16)   while (a >= 1) {
  54 acc8= variable 3
- 55 accom8 constant 1
+ 55 acc8Comp constant 1
  56 brlt 67
  57 ;test1.p(17)     write(a);
  58 acc8= variable 3

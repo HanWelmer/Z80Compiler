@@ -4,7 +4,7 @@
   3 acc8= constant 4
   4 acc8=> variable 0
   5 acc8= variable 0
-  6 accom8 constant 2
+  6 acc8Comp constant 2
   7 brle 17
   8 br 11
   9 decr8 variable 0

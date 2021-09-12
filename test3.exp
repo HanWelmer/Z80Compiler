@@ -35,7 +35,7 @@
  34 ;test3.p(10)   if (729 * 9 == 6561) write (10); else write (0);
  35 acc16= constant 729
  36 acc16* constant 9
- 37 accom16 constant 6561
+ 37 acc16Comp constant 6561
  38 brne 42
  39 acc8= constant 10
  40 call writeAcc8
@@ -44,7 +44,7 @@
  43 call writeAcc8
  44 ;test3.p(11)   if (729 == 729) write (9); else write (0);
  45 acc16= constant 729
- 46 accom16 constant 729
+ 46 acc16Comp constant 729
  47 brne 51
  48 acc8= constant 9
  49 call writeAcc8
@@ -55,7 +55,7 @@
  54 acc8= constant 2
  55 acc8* constant 9
  56 acc8* constant 9
- 57 accom8 constant 162
+ 57 acc8Comp constant 162
  58 brne 62
  59 acc8= constant 8
  60 call writeAcc8
@@ -65,7 +65,7 @@
  64 ;test3.p(13)   if (7 * 5 == 35) write (7); else write (0);
  65 acc8= constant 7
  66 acc8* constant 5
- 67 accom8 constant 35
+ 67 acc8Comp constant 35
  68 brne 72
  69 acc8= constant 7
  70 call writeAcc8
