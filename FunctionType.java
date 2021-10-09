@@ -41,10 +41,13 @@ public enum FunctionType {
   increment8("incr8"),
   decrement8("decr8"),
   //16/8-bit conversion:
-  acc8ToAcc16("acc8ToAcc16"),
   acc16ToAcc8("acc16ToAcc8"),
+  acc8ToAcc16("acc8ToAcc16"),
   stackAcc16ToAcc8("<acc16ToAcc8"),
   stackAcc8ToAcc16("<acc8ToAcc16"),
+  //stack instructions:
+  stackAcc16("<acc16"),
+  stackAcc8("<acc8"),
   //branch instructions:
   br("br"),
   brEq("breq"),

@@ -243,6 +243,12 @@ public class Interpreter {
         push(acc8);
         acc8 = acc16 % 256;
         break;
+      case stackAcc16:
+        push(acc16);
+        break;
+      case stackAcc8:
+        push(acc8);
+        break;
       // branch instructions:
       case br: 
           pc = instr.operand.intValue - 1;

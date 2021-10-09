@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO distinguish stack/unstack byt vs integer (see test5.p).
+//TODO test.m: 45 acc16+ acc8 moet zijn 45 acc16+ unstack8.
 //TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test2.p and test5.p).
 //TODO add test cases for doStatement (see test2.p and test5.p).
@@ -165,8 +165,8 @@ public class PCompiler {
   private static final int MAX_M_CODE = 1000;
   private boolean acc16InUse;
   private boolean acc8InUse;
-  private boolean acc16Stacked;
-  private boolean acc8Stacked;
+  private boolean leftOperandInAcc;
+  private boolean leftOperandStacked;
   private Stack<Datatype> stackedDatatypes = new Stack<Datatype>();
 
   private Map<AddValType, FunctionType> forwardAdd16 = new HashMap<AddValType, FunctionType>();
@@ -198,8 +198,8 @@ public class PCompiler {
     /* initialisation of code generation variables */
     acc16InUse = false;
     acc8InUse = false;
-    acc16Stacked = false;
-    acc8Stacked = false;
+    leftOperandInAcc = false;
+    leftOperandStacked = false;
     stackedDatatypes.clear();
 
     forwardAdd16.clear();
@@ -554,19 +554,15 @@ public class PCompiler {
     localSet.addAll(startStatement);
     localSet.remove(LexemeType.identifier);
     /* part of code generation */
-    acc16Stacked = false;
-    acc8Stacked = false;
+    leftOperandInAcc = (leftOperand.opType == OperandType.acc);
+    leftOperandStacked = false;
 
     /* part of lexical analysis */
     Operand rightOperand = expression(localSet, new Operand(OperandType.unknown));
 
     /* part of code generation */
-    if (leftOperand.opType == OperandType.acc) {
-      if ((leftOperand.datatype == Datatype.integer) && acc16Stacked) {
+    if (leftOperandStacked) {
         leftOperand.opType = popStackedDatatype();
-      } else if ((leftOperand.datatype == Datatype.byt) && acc8Stacked) {
-        leftOperand.opType = popStackedDatatype();
-      }
     }
     debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
     // comparison: leftOperand=operand(acc, type=integer, intValue=2), rightOperand=operand(constant, type=byt, intValue=4), acc16InUse = true, acc8InUse = false
@@ -1201,11 +1197,17 @@ public class PCompiler {
   
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
+    //load acc with operand.
     if (operand.datatype == Datatype.integer) {
       if (operand.opType != OperandType.stack16) {
         if (acc16InUse) {
+            //avoid stack inversion if left operand of comparison will be stacked (e.g. acc8) after part of right operand (e.g. acc16) has been stacked.
+            if (leftOperandInAcc && acc8InUse) {
+              plant(new Instruction(FunctionType.stackAcc8));
+              leftOperandStacked = true;
+              leftOperandInAcc = false;
+            }
             plant(new Instruction(FunctionType.stackAcc16Load, operand));
-            acc16Stacked = true;
           } else {
             plant(new Instruction(FunctionType.acc16Load, operand));
         }
@@ -1214,8 +1216,13 @@ public class PCompiler {
     } else { //operand.datatype == Datatype.byt
       if (operand.opType != OperandType.stack8) {
         if (acc8InUse) {
+            //avoid stack inversion if left operand of comparison will be stacked (e.g. acc8) after part of right operand (e.g. acc16) has been stacked.
+            if (leftOperandInAcc && acc16InUse) {
+              plant(new Instruction(FunctionType.stackAcc16));
+              leftOperandStacked = true;
+              leftOperandInAcc = false;
+            }
             plant(new Instruction(FunctionType.stackAcc8Load, operand));
-            acc8Stacked = true;
           } else {
             plant(new Instruction(FunctionType.acc8Load, operand));
         }
@@ -1265,6 +1272,12 @@ public class PCompiler {
     if (instruction.function == FunctionType.acc8ToAcc16) {
       acc16InUse = true;
       acc8InUse = false;
+    } else if (instruction.function == FunctionType.stackAcc8) {
+      stackedDatatypes.push(Datatype.byt);
+      acc8InUse = false;
+    } else if (instruction.function == FunctionType.stackAcc16) {
+      stackedDatatypes.push(Datatype.integer);
+      acc16InUse = false;
     } else if (instruction.function == FunctionType.stackAcc8Load) {
       stackedDatatypes.push(Datatype.byt);
     } else if (instruction.function == FunctionType.stackAcc16Load) {

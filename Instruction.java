@@ -20,7 +20,9 @@ public class Instruction {
       && function != FunctionType.acc8ToAcc16
       && function != FunctionType.acc16ToAcc8
       && function != FunctionType.stackAcc8ToAcc16
-      && function != FunctionType.stackAcc16ToAcc8) {
+      && function != FunctionType.stackAcc16ToAcc8
+      && function != FunctionType.stackAcc8
+      && function != FunctionType.stackAcc16) {
       throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
     }
   }
@@ -276,10 +278,6 @@ public class Instruction {
           default: throw new RuntimeException(result + " instruction with non-var operandType");
         };
         break;
-      case acc16ToAcc8: break;
-      case acc8ToAcc16: break;
-      case stackAcc16ToAcc8: break;
-      case stackAcc8ToAcc16: break;
       case br:
       case brNe:
       case brEq:
@@ -299,9 +297,15 @@ public class Instruction {
       case writeAcc16:
         result = "call writeAcc16";
         break;
+      case stop:
       case acc16CompareAcc8:
       case acc8CompareAcc16:
-      case stop: 
+      case acc16ToAcc8:
+      case acc8ToAcc16:
+      case stackAcc16ToAcc8:
+      case stackAcc8ToAcc16:
+      case stackAcc16:
+      case stackAcc8:
         break;
       default: throw new RuntimeException("unsupported instruction");
     }
