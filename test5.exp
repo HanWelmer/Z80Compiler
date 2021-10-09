@@ -33,7 +33,7 @@
  32 <acc8= constant 1
  33 acc8+ constant 2
  34 acc16/ acc8
- 35 revAcc16Comp unstack
+ 35 revAcc16Comp unstack8
  36 brgt 40
  37 acc8= constant 62
  38 call writeAcc8
@@ -50,7 +50,7 @@
  49 <acc8= constant 1
  50 acc8+ constant 2
  51 acc16/ acc8
- 52 revAcc16Comp unstack
+ 52 revAcc16Comp unstack8
  53 brgt 57
  54 acc8= constant 60
  55 call writeAcc8
@@ -67,7 +67,7 @@
  66 <acc8= constant 1
  67 acc8+ constant 2
  68 acc16/ acc8
- 69 revAcc16Comp unstack
+ 69 revAcc16Comp unstack8
  70 brlt 74
  71 acc8= constant 58
  72 call writeAcc8
@@ -84,7 +84,7 @@
  83 <acc8= constant 1
  84 acc8+ constant 2
  85 acc16/ acc8
- 86 revAcc16Comp unstack
+ 86 revAcc16Comp unstack8
  87 brlt 91
  88 acc8= constant 56
  89 call writeAcc8
@@ -101,7 +101,7 @@
 100 <acc8= constant 1
 101 acc8+ constant 2
 102 acc16/ acc8
-103 revAcc16Comp unstack
+103 revAcc16Comp unstack8
 104 brge 108
 105 acc8= constant 54
 106 call writeAcc8
@@ -118,7 +118,7 @@
 117 <acc8= constant 1
 118 acc8+ constant 2
 119 acc16/ acc8
-120 revAcc16Comp unstack
+120 revAcc16Comp unstack8
 121 brle 125
 122 acc8= constant 52
 123 call writeAcc8
@@ -135,7 +135,7 @@
 134 <acc8= constant 1
 135 acc8+ constant 2
 136 acc16/ acc8
-137 revAcc16Comp unstack
+137 revAcc16Comp unstack8
 138 breq 142
 139 acc8= constant 50
 140 call writeAcc8
@@ -152,7 +152,7 @@
 151 <acc8= constant 1
 152 acc8+ constant 2
 153 acc16/ acc8
-154 revAcc16Comp unstack
+154 revAcc16Comp unstack8
 155 brne 160
 156 acc8= constant 48
 157 call writeAcc8
@@ -169,7 +169,7 @@
 168 acc8= constant 12
 169 <acc8= constant 1
 170 acc8+ constant 2
-171 /acc8 unstack
+171 /acc8 unstack8
 172 acc16CompareAcc8
 173 brlt 177
 174 acc8= constant 46
@@ -186,7 +186,7 @@
 185 acc8= constant 12
 186 <acc8= constant 1
 187 acc8+ constant 2
-188 /acc8 unstack
+188 /acc8 unstack8
 189 acc16CompareAcc8
 190 brlt 194
 191 acc8= constant 44
@@ -203,7 +203,7 @@
 202 acc8= constant 12
 203 <acc8= constant 1
 204 acc8+ constant 2
-205 /acc8 unstack
+205 /acc8 unstack8
 206 acc16CompareAcc8
 207 brgt 211
 208 acc8= constant 42
@@ -220,7 +220,7 @@
 219 acc8= constant 12
 220 <acc8= constant 1
 221 acc8+ constant 2
-222 /acc8 unstack
+222 /acc8 unstack8
 223 acc16CompareAcc8
 224 brgt 228
 225 acc8= constant 40
@@ -237,7 +237,7 @@
 236 acc8= constant 12
 237 <acc8= constant 1
 238 acc8+ constant 2
-239 /acc8 unstack
+239 /acc8 unstack8
 240 acc16CompareAcc8
 241 brle 245
 242 acc8= constant 38
@@ -254,7 +254,7 @@
 253 acc8= constant 12
 254 <acc8= constant 1
 255 acc8+ constant 2
-256 /acc8 unstack
+256 /acc8 unstack8
 257 acc16CompareAcc8
 258 brge 262
 259 acc8= constant 36
@@ -271,7 +271,7 @@
 270 acc8= constant 12
 271 <acc8= constant 1
 272 acc8+ constant 2
-273 /acc8 unstack
+273 /acc8 unstack8
 274 acc16CompareAcc8
 275 breq 279
 276 acc8= constant 34
@@ -288,7 +288,7 @@
 287 acc8= constant 12
 288 <acc8= constant 1
 289 acc8+ constant 2
-290 /acc8 unstack
+290 /acc8 unstack8
 291 acc16CompareAcc8
 292 brne 297
 293 acc8= constant 32
@@ -306,7 +306,7 @@
 305 acc8= constant 1
 306 acc8+ constant 2
 307 acc16/ acc8
-308 revAcc16Comp unstack
+308 revAcc16Comp unstack16
 309 brgt 313
 310 acc8= constant 30
 311 call writeAcc8
@@ -322,7 +322,7 @@
 321 acc8= constant 1
 322 acc8+ constant 2
 323 acc16/ acc8
-324 revAcc16Comp unstack
+324 revAcc16Comp unstack16
 325 brgt 329
 326 acc8= constant 28
 327 call writeAcc8
@@ -338,7 +338,7 @@
 337 acc8= constant 1
 338 acc8+ constant 2
 339 acc16/ acc8
-340 revAcc16Comp unstack
+340 revAcc16Comp unstack16
 341 brlt 345
 342 acc8= constant 26
 343 call writeAcc8
@@ -354,7 +354,7 @@
 353 acc8= constant 1
 354 acc8+ constant 2
 355 acc16/ acc8
-356 revAcc16Comp unstack
+356 revAcc16Comp unstack16
 357 brlt 361
 358 acc8= constant 24
 359 call writeAcc8
@@ -370,7 +370,7 @@
 369 acc8= constant 1
 370 acc8+ constant 2
 371 acc16/ acc8
-372 revAcc16Comp unstack
+372 revAcc16Comp unstack16
 373 brge 377
 374 acc8= constant 22
 375 call writeAcc8
@@ -386,7 +386,7 @@
 385 acc8= constant 1
 386 acc8+ constant 2
 387 acc16/ acc8
-388 revAcc16Comp unstack
+388 revAcc16Comp unstack16
 389 brle 393
 390 acc8= constant 20
 391 call writeAcc8
@@ -402,7 +402,7 @@
 401 acc8= constant 1
 402 acc8+ constant 2
 403 acc16/ acc8
-404 revAcc16Comp unstack
+404 revAcc16Comp unstack16
 405 breq 409
 406 acc8= constant 18
 407 call writeAcc8
@@ -418,7 +418,7 @@
 417 acc8= constant 1
 418 acc8+ constant 2
 419 acc16/ acc8
-420 revAcc16Comp unstack
+420 revAcc16Comp unstack16
 421 brne 426
 422 acc8= constant 16
 423 call writeAcc8
@@ -434,8 +434,8 @@
 433 <acc8= constant 12
 434 <acc8= constant 1
 435 acc8+ constant 2
-436 /acc8 unstack
-437 revAcc8Comp unstack
+436 /acc8 unstack8
+437 revAcc8Comp unstack8
 438 brgt 442
 439 acc8= constant 14
 440 call writeAcc8
@@ -450,8 +450,8 @@
 449 <acc8= constant 12
 450 <acc8= constant 1
 451 acc8+ constant 2
-452 /acc8 unstack
-453 revAcc8Comp unstack
+452 /acc8 unstack8
+453 revAcc8Comp unstack8
 454 brgt 458
 455 acc8= constant 12
 456 call writeAcc8
@@ -466,8 +466,8 @@
 465 <acc8= constant 12
 466 <acc8= constant 1
 467 acc8+ constant 2
-468 /acc8 unstack
-469 revAcc8Comp unstack
+468 /acc8 unstack8
+469 revAcc8Comp unstack8
 470 brlt 474
 471 acc8= constant 10
 472 call writeAcc8
@@ -482,8 +482,8 @@
 481 <acc8= constant 12
 482 <acc8= constant 1
 483 acc8+ constant 2
-484 /acc8 unstack
-485 revAcc8Comp unstack
+484 /acc8 unstack8
+485 revAcc8Comp unstack8
 486 brlt 490
 487 acc8= constant 8
 488 call writeAcc8
@@ -498,8 +498,8 @@
 497 <acc8= constant 12
 498 <acc8= constant 1
 499 acc8+ constant 2
-500 /acc8 unstack
-501 revAcc8Comp unstack
+500 /acc8 unstack8
+501 revAcc8Comp unstack8
 502 brge 506
 503 acc8= constant 6
 504 call writeAcc8
@@ -514,8 +514,8 @@
 513 <acc8= constant 12
 514 <acc8= constant 1
 515 acc8+ constant 2
-516 /acc8 unstack
-517 revAcc8Comp unstack
+516 /acc8 unstack8
+517 revAcc8Comp unstack8
 518 brle 522
 519 acc8= constant 4
 520 call writeAcc8
@@ -530,8 +530,8 @@
 529 <acc8= constant 12
 530 <acc8= constant 1
 531 acc8+ constant 2
-532 /acc8 unstack
-533 revAcc8Comp unstack
+532 /acc8 unstack8
+533 revAcc8Comp unstack8
 534 breq 538
 535 acc8= constant 2
 536 call writeAcc8
@@ -546,8 +546,8 @@
 545 <acc8= constant 12
 546 <acc8= constant 1
 547 acc8+ constant 2
-548 /acc8 unstack
-549 revAcc8Comp unstack
+548 /acc8 unstack8
+549 revAcc8Comp unstack8
 550 brne 554
 551 acc8= constant 0
 552 call writeAcc8

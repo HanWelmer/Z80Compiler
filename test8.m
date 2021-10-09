@@ -10,7 +10,7 @@
   9 acc8= constant 10
  10 <acc8= constant 3
  11 acc8* constant 3
- 12 -acc8 unstack
+ 12 -acc8 unstack8
  13 call writeAcc8
  14 ;test8.p(9)   byte b = 11;
  15 acc8= constant 11
@@ -19,7 +19,7 @@
  18 acc8= variable 0
  19 <acc8= constant 3
  20 acc8* constant 3
- 21 -acc8 unstack
+ 21 -acc8 unstack8
  22 call writeAcc8
  23 ;test8.p(11)   byte c = 3;
  24 acc8= constant 3
@@ -31,7 +31,7 @@
  30 acc8= constant 12
  31 <acc8= variable 1
  32 acc8* variable 2
- 33 -acc8 unstack
+ 33 -acc8 unstack8
  34 call writeAcc8
  35 ;test8.p(14)   b = 13;
  36 acc8= constant 13
@@ -40,7 +40,7 @@
  39 acc8= variable 0
  40 <acc8= variable 1
  41 acc8* variable 2
- 42 -acc8 unstack
+ 42 -acc8 unstack8
  43 call writeAcc8
  44 ;test8.p(16) 
  45 ;test8.p(17)   /*************************/
@@ -50,7 +50,7 @@
  49 acc16= constant 1005
  50 <acc16= constant 1000
  51 acc16* constant 1
- 52 -acc16 unstack
+ 52 -acc16 unstack16
  53 call writeAcc16
  54 ;test8.p(21)   int i = 1006;
  55 acc16= constant 1006
@@ -59,7 +59,7 @@
  58 acc16= variable 3
  59 <acc16= constant 1000
  60 acc16* constant 1
- 61 -acc16 unstack
+ 61 -acc16 unstack16
  62 call writeAcc16
  63 ;test8.p(23)   int j = 1000;
  64 acc16= constant 1000
@@ -72,7 +72,7 @@
  71 acc16= constant 1007
  72 <acc16= variable 5
  73 acc16* variable 7
- 74 -acc16 unstack
+ 74 -acc16 unstack16
  75 call writeAcc16
  76 ;test8.p(26)   i = 1008;
  77 acc16= constant 1008
@@ -81,7 +81,7 @@
  80 acc16= variable 3
  81 <acc16= variable 5
  82 acc16* variable 7
- 83 -acc16 unstack
+ 83 -acc16 unstack16
  84 call writeAcc16
  85 ;test8.p(28) 
  86 ;test8.p(29)   /***********************/
@@ -91,7 +91,7 @@
  90 acc8= constant 36
  91 <acc8= constant 4
  92 acc8* constant 1
- 93 /acc8 unstack
+ 93 /acc8 unstack8
  94 call writeAcc8
  95 ;test8.p(33)   b = 40;
  96 acc8= constant 40
@@ -100,7 +100,7 @@
  99 acc8= variable 0
 100 <acc8= constant 4
 101 acc8* constant 1
-102 /acc8 unstack
+102 /acc8 unstack8
 103 call writeAcc8
 104 ;test8.p(35)   c = 4;
 105 acc8= constant 4
@@ -112,7 +112,7 @@
 111 acc8= constant 44
 112 <acc8= variable 1
 113 acc8* variable 2
-114 /acc8 unstack
+114 /acc8 unstack8
 115 call writeAcc8
 116 ;test8.p(38)   b = 48;
 117 acc8= constant 48
@@ -121,7 +121,7 @@
 120 acc8= variable 0
 121 <acc8= variable 1
 122 acc8* variable 2
-123 /acc8 unstack
+123 /acc8 unstack8
 124 call writeAcc8
 125 ;test8.p(40) 
 126 ;test8.p(41)   /***********************/
@@ -131,7 +131,7 @@
 130 acc16= constant 3900
 131 <acc16= constant 300
 132 acc16* constant 1
-133 /acc16 unstack
+133 /acc16 unstack16
 134 call writeAcc16
 135 ;test8.p(45)   i = 4200;
 136 acc16= constant 4200
@@ -140,7 +140,7 @@
 139 acc16= variable 3
 140 <acc16= constant 300
 141 acc16* constant 1
-142 /acc16 unstack
+142 /acc16 unstack16
 143 call writeAcc16
 144 ;test8.p(47)   j = 300;
 145 acc16= constant 300
@@ -153,7 +153,7 @@
 152 acc16= constant 4500
 153 <acc16= variable 5
 154 acc16* variable 7
-155 /acc16 unstack
+155 /acc16 unstack16
 156 call writeAcc16
 157 ;test8.p(50)   i = 4800;
 158 acc16= constant 4800
@@ -162,7 +162,7 @@
 161 acc16= variable 3
 162 <acc16= variable 5
 163 acc16* variable 7
-164 /acc16 unstack
+164 /acc16 unstack16
 165 call writeAcc16
 166 ;test8.p(52) 
 167 ;test8.p(53)   /**************************/

@@ -3,10 +3,14 @@
  * Test comparisons
  */
 class TestIf {
+  int one = 1;
   int three = 3;
   int four = 4;
   int five = 5;
   int twelve = 12;
+  //stack level 2
+  if (4 == (twelve/(1+2))) write(65);
+  if (four == (12/(one+2))) write(64);
   //byte-integer
   if (4 >= four) write(63);
   if (4 >= (twelve/(1+2))) write(62);

@@ -55,11 +55,21 @@ public class Instruction {
         };
         break;
       case acc16Store:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        }
+        if (operand.opType != OperandType.stack16 && operand.opType != OperandType.var ) {
+          throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn + ".");
+        }
+        if (operand.opType == OperandType.var && operand.intValue == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+        }
+        break;
       case acc8Store:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
-        if (operand.opType != OperandType.stack && operand.opType != OperandType.var ) {
+        if (operand.opType != OperandType.stack8 && operand.opType != OperandType.var ) {
           throw new RuntimeException("Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn + ".");
         }
         if (operand.opType == OperandType.var && operand.intValue == null) {
@@ -67,23 +77,42 @@ public class Instruction {
         }
         break;
       case stackAcc16Load:
-      case stackAcc8Load:
-        if (operand != null && operand.opType == OperandType.stack) {
+        if (operand != null && operand.opType == OperandType.stack16) {
           throw new RuntimeException("Internal compiler error: illegal stack operand for functionType " + fn + ".");
         }
         //ga verder met controles voor non-stack load.
       case acc16Load:
-      case acc8Load:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
-        if (operand.opType == OperandType.stack) {
+        if (operand.opType == OperandType.stack16) {
           // no error.
         } else if (operand.opType == OperandType.constant && operand.intValue != null) {
           // no error.
         } else if (operand.opType == OperandType.var && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.acc && (operand.datatype == Datatype.byt || operand.datatype == Datatype.integer)) {
+        } else if (operand.opType == OperandType.acc && operand.datatype == Datatype.integer) {
+          // no error.
+        } else {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
+        }
+        break;
+      case stackAcc8Load:
+        if (operand != null && operand.opType == OperandType.stack8) {
+          throw new RuntimeException("Internal compiler error: illegal stack operand for functionType " + fn + ".");
+        }
+        //ga verder met controles voor non-stack load.
+      case acc8Load:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        }
+        if (operand.opType == OperandType.stack8) {
+          // no error.
+        } else if (operand.opType == OperandType.constant && operand.intValue != null) {
+          // no error.
+        } else if (operand.opType == OperandType.var && operand.intValue != null) {
+          // no error.
+        } else if (operand.opType == OperandType.acc && operand.datatype == Datatype.byt) {
           // no error.
         } else {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -97,36 +126,6 @@ public class Instruction {
       case divAcc16:
       case acc16Compare: //normal compare
       case revAcc16Compare: //reverse compare
-        if (operand == null) {
-          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
-        }
-        switch(operand.opType) {
-          case stack:
-            break;
-          case constant:
-            if (operand.datatype != Datatype.byt && operand.datatype != Datatype.integer) {
-              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer or byte datatype for its constant operand.");
-            }
-            if (operand.intValue == null) {
-              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer value for its constant operand.");
-            }
-            break;
-          case var:
-            if (operand.intValue == null) {
-              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
-            }
-            break;
-          case acc:
-            if (operand.datatype == Datatype.byt) {
-              // no error.
-            } else {
-              throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
-            }
-            break;
-          default:
-            new RuntimeException("unknown operand type");
-        }
-        break;
       case acc8Plus:
       case acc8Minus:
       case minusAcc8:
@@ -139,8 +138,8 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
         switch(operand.opType) {
-          case stack:
-            break;
+          case stack8: break;
+          case stack16: break;
           case constant:
             if (operand.datatype != Datatype.byt && operand.datatype != Datatype.integer) {
               throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer or byte datatype for its constant operand.");
@@ -155,7 +154,7 @@ public class Instruction {
             }
             break;
           case acc:
-            if (operand.datatype == Datatype.integer) {
+            if (operand.datatype == Datatype.byt || operand.datatype == Datatype.integer) {
               // no error.
             } else {
               throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -211,9 +210,15 @@ public class Instruction {
       case acc16Store:
       case acc8Store:
         switch(operand.opType) {
-          case var: result += " variable " + operand.intValue; break;
-          case stack: result += " stack"; break;
-          default: throw new RuntimeException("accStore with unsupported operandType");
+          case var:
+            result += " variable " + operand.intValue;
+            break;
+          case stack16:
+          case stack8:
+            result += " " + operand.opType; 
+            break;
+          default:
+            throw new RuntimeException("accStore with unsupported operandType");
         };
         break;
       case acc16Load:
@@ -237,9 +242,20 @@ public class Instruction {
       case acc8Compare: //normal compare
       case revAcc8Compare: //reverse compare
         switch(operand.opType) {
-          case var: result += " variable " + operand.intValue; break;
-          case constant: result += " constant " + operand.intValue; break;
-          case stack: result += " unstack"; break;
+          case var:
+            result += " variable " + operand.intValue;
+            break;
+          case constant:
+            result += " constant " + operand.intValue;
+            break;
+          case stack16:
+          case stack8:
+            if (operand.datatype == Datatype.byt) {
+              result += " unstack8";
+            } else if (operand.datatype == Datatype.integer) {
+              result += " unstack16";
+            }
+            break;
           case acc: 
             if (operand.datatype == Datatype.byt) {
               result += " acc8";
@@ -247,7 +263,8 @@ public class Instruction {
               result += " acc16";
             }
             break;
-          default: throw new RuntimeException("accu related instruction with unsupported operandType");
+          default:
+            throw new RuntimeException("accu related instruction with unsupported operandType");
         };
         break;
       case increment16:

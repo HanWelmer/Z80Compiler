@@ -87,7 +87,7 @@ public class Interpreter {
             }
             vars[instr.operand.intValue] = acc16;
             break;
-          case stack:
+          case stack16:
             push(acc16);
             break;
           default:
@@ -129,10 +129,11 @@ public class Interpreter {
         branchSet = compare(acc16, getOp());
         break;
       case revAcc16Compare: //reverse compare
-        if (getOpType() == OperandType.stack) {
-          debug(" acc16=" + acc16 + ", operand=" + peek());
+        debug(" acc16=" + acc16 + ", operand=");
+        if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
+          debug("" + peek());
         } else {
-          debug(" acc16=" + acc16 + ", operand=" + getOp());
+          debug("" + getOp());
         }
         branchSet = compare(acc16, getOp());
         break;
@@ -178,7 +179,7 @@ public class Interpreter {
             }
             vars[instr.operand.intValue] = acc8;
             break;
-          case stack:
+          case stack8:
             push(acc8);
             break;
           default:
@@ -220,10 +221,11 @@ public class Interpreter {
         branchSet = compare(acc8, getOp());
         break;
       case revAcc8Compare: //reverse compare
-        if (getOpType() == OperandType.stack) {
-          debug(" acc8=" + acc8 + ", operand=" + peek());
+        debug(" acc8=" + acc8 + ", operand=");
+        if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
+          debug("" + peek());
         } else {
-          debug(" acc8=" + acc8 + ", operand=" + getOp());
+          debug("" + getOp());
         }
         branchSet = compare(acc8, getOp());
         break;
@@ -383,7 +385,8 @@ public class Interpreter {
     Instruction instr = instructions.get(pc);
     int result = 0;
     switch(instr.operand.opType) {
-      case stack:
+      case stack8:
+      case stack16:
         result = pop();
         break;
       case constant: result = instr.operand.intValue; break;

@@ -2,12 +2,13 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 //TODO distinguish stack/unstack byt vs integer (see test5.p).
+//TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test2.p and test5.p).
 //TODO add test cases for doStatement (see test2.p and test5.p).
 //TODO add test cases for forStatement (see test2.p and test5.p).
-//TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test1.p en test5.p).
 //TODO add test cases for doStatement (see test10.p en test5.p).
 //TODO add test cases for forStatement (see test11.p en test5.p).
@@ -166,6 +167,7 @@ public class PCompiler {
   private boolean acc8InUse;
   private boolean acc16Stacked;
   private boolean acc8Stacked;
+  private Stack<Datatype> stackedDatatypes = new Stack<Datatype>();
 
   private Map<AddValType, FunctionType> forwardAdd16 = new HashMap<AddValType, FunctionType>();
   private Map<AddValType, FunctionType> reverseAdd16 = new HashMap<AddValType, FunctionType>();
@@ -196,6 +198,9 @@ public class PCompiler {
     /* initialisation of code generation variables */
     acc16InUse = false;
     acc8InUse = false;
+    acc16Stacked = false;
+    acc8Stacked = false;
+    stackedDatatypes.clear();
 
     forwardAdd16.clear();
     reverseAdd16.clear();
@@ -323,12 +328,13 @@ public class PCompiler {
          * The read() function always returns an int value.
          */
         if (acc16InUse) {
-          operand.opType = OperandType.stack;
+          operand.opType = OperandType.stack16;
+          operand.datatype = Datatype.integer;
           plant(new Instruction(FunctionType.acc16Store, operand));
         }
+        plant(new Instruction(FunctionType.read));
         operand.opType = OperandType.acc;
         operand.datatype = Datatype.integer;
-        plant(new Instruction(FunctionType.read));
         acc16InUse = true;
       } else if (lexeme.type == LexemeType.lbracket) {
         //skip left bracket.
@@ -392,7 +398,7 @@ public class PCompiler {
       if (operand.opType == OperandType.acc && rOperand.opType == OperandType.acc) {
         if (operand.datatype == rOperand.datatype) {
           //left operand has been pushed onto the stack
-          operand.opType = OperandType.stack;
+          operand.opType = popStackedDatatype();
           if (operand.datatype == Datatype.byt) {
             plant(new Instruction(reverseMul8.get(operator), operand));
           } else {
@@ -472,7 +478,7 @@ public class PCompiler {
       if (operand.opType == OperandType.acc && rOperand.opType == OperandType.acc) {
         if (operand.datatype == rOperand.datatype) {
           //left operand has been pushed onto the stack
-          operand.opType = OperandType.stack;
+          operand.opType = popStackedDatatype();
           if (operand.datatype == Datatype.byt) {
             plant(new Instruction(reverseAdd8.get(operator), operand));
           } else {
@@ -557,9 +563,9 @@ public class PCompiler {
     /* part of code generation */
     if (leftOperand.opType == OperandType.acc) {
       if ((leftOperand.datatype == Datatype.integer) && acc16Stacked) {
-        leftOperand.opType = OperandType.stack;
+        leftOperand.opType = popStackedDatatype();
       } else if ((leftOperand.datatype == Datatype.byt) && acc8Stacked) {
-        leftOperand.opType = OperandType.stack;
+        leftOperand.opType = popStackedDatatype();
       }
     }
     debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
@@ -666,7 +672,7 @@ public class PCompiler {
     /* part of code generation */
     plant(new Instruction(FunctionType.acc16Compare, rightOperand));
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, doLabel);
-    if (rightOperand.opType == OperandType.stack) {
+    if (rightOperand.opType == OperandType.stack16) {
       plant(new Instruction(normalSkip.get(compareOp), labelOperand));
     } else {
       plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
@@ -1196,7 +1202,7 @@ public class PCompiler {
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
     if (operand.datatype == Datatype.integer) {
-      if (operand.opType != OperandType.stack) {
+      if (operand.opType != OperandType.stack16) {
         if (acc16InUse) {
             plant(new Instruction(FunctionType.stackAcc16Load, operand));
             acc16Stacked = true;
@@ -1206,7 +1212,7 @@ public class PCompiler {
       }
       acc16InUse = true;
     } else { //operand.datatype == Datatype.byt
-      if (operand.opType != OperandType.stack) {
+      if (operand.opType != OperandType.stack8) {
         if (acc8InUse) {
             plant(new Instruction(FunctionType.stackAcc8Load, operand));
             acc8Stacked = true;
@@ -1253,12 +1259,28 @@ public class PCompiler {
 
     /* for debugging purposes */
     debug("\n" + String.format("%3d ", storeInstruction.size()) + instruction.toString());
+    debug(" ;" + instruction.function + " " + instruction.operand);
 
     storeInstruction.add(instruction);
     if (instruction.function == FunctionType.acc8ToAcc16) {
       acc16InUse = true;
       acc8InUse = false;
+    } else if (instruction.function == FunctionType.stackAcc8Load) {
+      stackedDatatypes.push(Datatype.byt);
+    } else if (instruction.function == FunctionType.stackAcc16Load) {
+      stackedDatatypes.push(Datatype.integer);
+    } else if (instruction.function == FunctionType.stackAcc16ToAcc8) {
+      stackedDatatypes.push(Datatype.byt);
+      acc16InUse = false;
+    } else if (instruction.function == FunctionType.stackAcc8ToAcc16) {
+      stackedDatatypes.push(Datatype.integer);
+      acc8InUse = false;
+    } else if (instruction.function == FunctionType.acc8Store && instruction.operand.opType == OperandType.stack8) {
+      stackedDatatypes.push(Datatype.byt);
+    } else if (instruction.function == FunctionType.acc16Store && instruction.operand.opType == OperandType.stack16) {
+      stackedDatatypes.push(Datatype.integer);
     }
+    debug(" ;" + " stackedDatatypes=" + stackedDatatypes);
   } //plantCode
 
   private void plantForwardLabel(int pos, int address) {
@@ -1286,4 +1308,14 @@ public class PCompiler {
     return compensatedAddress;
   }
 
+  private OperandType popStackedDatatype() {
+    Datatype datatype = stackedDatatypes.pop();
+    if (datatype == Datatype.byt) {
+      return OperandType.stack8;
+    } else if (datatype == Datatype.integer) {
+      return OperandType.stack16;
+    } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+    }
+  } //popStackedDatatype()
 }

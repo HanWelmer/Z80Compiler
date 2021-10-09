@@ -4,7 +4,8 @@
  */
 public enum OperandType {
   unknown,
-  stack,
+  stack8,
+  stack16,
   constant,
   var,
   label,

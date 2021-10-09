@@ -85,9 +85,9 @@
  84 call writeAcc16
  85 ;test7.p(37)   write(1000 + read);   // 1000 + 1051 = 2051
  86 acc16= constant 1000
- 87 acc16=> stack
+ 87 acc16=> stack16
  88 call read
- 89 acc16+ unstack
+ 89 acc16+ unstack16
  90 call writeAcc16
  91 ;test7.p(38)   write(read - 1000);   // 1052 - 1000 =   52
  92 call read
@@ -95,9 +95,9 @@
  94 call writeAcc16
  95 ;test7.p(39)   write(2106 - read);   // 2106 - 1053 = 1053
  96 acc16= constant 2106
- 97 acc16=> stack
+ 97 acc16=> stack16
  98 call read
- 99 -acc16 unstack
+ 99 -acc16 unstack16
 100 call writeAcc16
 101 ;test7.p(40)   write(read * 1000);   // 1054 * 1000 = 5254
 102 call read
@@ -105,9 +105,9 @@
 104 call writeAcc16
 105 ;test7.p(41)   write(1000 * read);   // 1000 * 1055 = 1.055.000 = 6424
 106 acc16= constant 1000
-107 acc16=> stack
+107 acc16=> stack16
 108 call read
-109 acc16* unstack
+109 acc16* unstack16
 110 call writeAcc16
 111 ;test7.p(42)   write(read / 1000);   // 1056 / 1000 = 1
 112 call read
@@ -115,9 +115,9 @@
 114 call writeAcc16
 115 ;test7.p(43)   write(2114 / read);   // 2114 / 1057 = 2
 116 acc16= constant 2114
-117 acc16=> stack
+117 acc16=> stack16
 118 call read
-119 /acc16 unstack
+119 /acc16 unstack16
 120 call writeAcc16
 121 ;test7.p(44)   
 122 ;test7.p(45)   /***************************************/
@@ -188,9 +188,9 @@
 187 call writeAcc16
 188 ;test7.p(67)   write(i + read);   // 1067 + 5 = 1067
 189 acc16= variable 1
-190 acc16=> stack
+190 acc16=> stack16
 191 call read
-192 acc16+ unstack
+192 acc16+ unstack16
 193 call writeAcc16
 194 ;test7.p(68)   write(read - i);   // 1068 - 0 = 1068
 195 call read
@@ -198,9 +198,9 @@
 197 call writeAcc16
 198 ;test7.p(69)   write(i - read);   // 0 - 1069 = -1069
 199 acc16= variable 1
-200 acc16=> stack
+200 acc16=> stack16
 201 call read
-202 -acc16 unstack
+202 -acc16 unstack16
 203 call writeAcc16
 204 ;test7.p(70)   i = 1;
 205 acc8= constant 1
@@ -212,9 +212,9 @@
 211 call writeAcc16
 212 ;test7.p(72)   write(i * read);   // 1 * 1071 = 1071
 213 acc16= variable 1
-214 acc16=> stack
+214 acc16=> stack16
 215 call read
-216 acc16* unstack
+216 acc16* unstack16
 217 call writeAcc16
 218 ;test7.p(73)   write(read / i);   // 1072 / 1 = 1072
 219 call read
@@ -228,9 +228,9 @@
 227 call writeAcc8
 228 ;test7.p(76)   write(i / read);   // 3219 / 3 = 1073  
 229 acc16= variable 1
-230 acc16=> stack
+230 acc16=> stack16
 231 call read
-232 /acc16 unstack
+232 /acc16 unstack16
 233 call writeAcc16
 234 ;test7.p(77) }
 235 stop

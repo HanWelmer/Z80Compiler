@@ -215,7 +215,7 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
           break;
-        case stack:
+        case stack16:
           asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH  HL", 0xE5);
           break;
       }
@@ -223,7 +223,7 @@ public class Transcoder {
       asm = operandToHL(instruction);
     } else if (function == FunctionType.stackAcc16Load) {
       result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  HL", 0xE5));
-      if (instruction.operand.opType == OperandType.stack) {
+      if (instruction.operand.opType == OperandType.stack16) {
         throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
       }
       asm = operandToHL(instruction);
@@ -327,7 +327,7 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),A", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x32, memAddress % 256, memAddress / 256);
           break;
-        case stack:
+        case stack8:
           asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH  AF", 0xF5);
           break;
       }
@@ -335,7 +335,7 @@ public class Transcoder {
       asm = operandToA(instruction);
     } else if (function == FunctionType.stackAcc8Load) {
       result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  AF", 0xF5));
-      if (instruction.operand.opType == OperandType.stack) {
+      if (instruction.operand.opType == OperandType.stack8) {
         throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
       }
       asm = operandToA(instruction);
@@ -357,7 +357,7 @@ public class Transcoder {
           asmCode = INDENT + "ADD   A," + instruction.operand.intValue;
           asm = new AssemblyInstruction(byteAddress, asmCode, 0xC6, instruction.operand.intValue % 256);
           break;
-        case stack:
+        case stack8:
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   BC", 0xC1));
           asmCode = INDENT + "ADD   A,B";
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x80);
@@ -381,7 +381,7 @@ public class Transcoder {
           asmCode = INDENT + "SUB   A," + instruction.operand.intValue;
           asm = new AssemblyInstruction(byteAddress, asmCode, 0xD6, instruction.operand.intValue % 256);
           break;
-        case stack:
+        case stack8:
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   BC", 0xC1));
           asmCode = INDENT + "SUB   A,B";
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x90);
@@ -413,7 +413,7 @@ public class Transcoder {
           result.add(asm);
           byteAddress += asm.getBytes().size();
           break;
-        case stack:
+        case stack8:
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   BC", 0xC1));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47));
           break;
@@ -442,7 +442,7 @@ public class Transcoder {
           result.add(asm);
           byteAddress += asm.getBytes().size();
           break;
-        case stack:
+        case stack8:
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   BC", 0xC1));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,C", 0x41));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    C,A", 0x4F));
@@ -537,7 +537,7 @@ public class Transcoder {
         asmCode = INDENT + "LD    A," + instruction.operand.intValue;
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x3E, instruction.operand.intValue % 256);
         break;
-      case stack:
+      case stack8:
         asmCode = INDENT + "POP   AF";
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xF1);
         break;
@@ -558,7 +558,7 @@ public class Transcoder {
         asmCode = INDENT + "LD    HL," + instruction.operand.intValue;
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, instruction.operand.intValue % 256, instruction.operand.intValue / 256);
         break;
-      case stack:
+      case stack16:
         asmCode = INDENT + "POP   HL";
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xE1);
         break;
@@ -579,7 +579,7 @@ public class Transcoder {
         asmCode = INDENT + "LD    DE," + instruction.operand.intValue;
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x11, instruction.operand.intValue % 256, instruction.operand.intValue / 256);
         break;
-      case stack:
+      case stack16:
         asmCode = INDENT + "POP   DE";
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xD1);
         break;
