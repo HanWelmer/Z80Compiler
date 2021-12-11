@@ -36,15 +36,19 @@
  35 acc8= constant 2        var0=0  var2=1  var4=4  var6=12 acc8=2  acc16=4
  36 call writeAcc8          write(2)
  37 ;test.p(11)   if (four == (0 + 12/(one+2))) write(1);
- 38 acc16= variable 4       var0=0  var2=1  var4=4  var6=12 acc8=2  acc16=4
- 39 acc8= constant 0        var0=0  var2=1  var4=4  var6=12 acc8=0  acc16=4
- 40 <acc16                  var0=0  var2=1  var4=4  var6=12 acc8=0  acc16=4   stack=[int4]
- 41 <acc8= constant 12      var0=0  var2=1  var4=4  var6=12 acc8=12 acc16=4   stack=[int4, byte0]
- 42 acc16= variable 2       var0=0  var2=1  var4=4  var6=12 acc8=12 acc16=1   stack=[int4, byte0]
- 43 acc16+ constant 2       var0=0  var2=1  var4=4  var6=12 acc8=12 acc16=3   stack=[int4, byte0]
- 44 /acc16 acc8             var0=0  var2=1  var4=4  var6=12 acc8=12 acc16=4   stack=[int4, byte0]
- 45 acc16+ acc8             var0=0  var2=1  var4=4  var6=12 acc8=12 acc16=4   stack=[int4, byte0] -> fout 45 acc16+ acc8 moet zijn 45 acc16+ unstack8
- 46 revAcc16Comp unstack16
+                            acc8  acc16 F   stack
+ 38 acc16= variable 4       -     4         -
+ 39 acc8= constant 0        0     4         -
+ 40 <acc16                  0     4         int4
+ 41 <acc8= constant 12      12    4         b0  int4
+ 42 acc16= variable 2       12    1         b0  int4
+ 43 acc16+ constant 2       12    3         b0  int4
+ 44 /acc16 acc8             12    4         b0  int4
+ 45 acc16+ acc8             12    16        b0  int4
+-> fout 45 acc16+ acc8 moet zijn 45 acc16+ unstack8   12    4         int4
+                            => oplossing: bij acc8/acc16 opslaan van welke operand dit de waarde bevat, zodat stacken van een acc door kan werken op de juiste operand.
+                            => oplossing: expression etc recursief maken, zodat stacken van een acc door kan werken op de juiste operand.
+ 46 revAcc16Comp unstack16  12    4     Z
  47 brne 51
  48 acc8= constant 1
  49 call writeAcc8

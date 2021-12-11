@@ -36,16 +36,31 @@
  35 acc8= constant 2
  36 call writeAcc8
  37 ;test.p(11)   if (four == (0 + 12/(one+2))) write(1);
- 38 acc16= variable 4
- 39 acc8= constant 0
- 40 <acc16
- 41 <acc8= constant 12
- 42 acc16= variable 2
- 43 acc16+ constant 2
- 44 /acc16 acc8
- 45 acc16+ acc8
- 46 revAcc16Comp unstack16
+                            acc8  acc16 stack
+ 38 acc16= variable 4       -     4     -
+ 39 acc8= constant 0        0     4     -
+ 40 <acc16                  0     4     int4
+ 41 <acc8= constant 12      12    4     b0  int4
+ 42 acc16= variable 2       12    1     b0  int4
+ 43 acc16+ constant 2       12    3     b0  int4
+ 44 /acc16 acc8             12    4     b0  int4
+ 45 acc16+ acc8             12    16    b0  int4
+ 46 revAcc16Comp unstack16  
  47 brne 51
+gewenste code:
+ 37 ;test.p(11)   if (four == (0 + 12/(one+2))) write(1);
+                            acc8  acc16 F   stack
+ 38 acc16= variable 4       -     4         -
+ 39 acc8= constant 0        0     4         -
+ 40 <acc16                  0     4         int4
+ 41 <acc8= constant 12      12    4         b0  int4
+ 42 acc16= variable 2       12    1         b0  int4
+ 43 acc16+ constant 2       12    3         b0  int4
+ 44 /acc16 acc8             12    4         b0  int4
+ 45 acc16+ unstack8         12    4         int4
+ 46 revAcc16Comp unstack16  12    4     Z
+ 47 brne 51
+
  48 acc8= constant 1
  49 call writeAcc8
  50 ;test.p(12)   write(0);
