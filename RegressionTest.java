@@ -125,7 +125,7 @@ public class RegressionTest {
       String expected = "";
       while (br.ready() && pos < instructions.size()) {
         //actual M-Code.
-        actual = String.format("%3d %s", pos, instructions.get(pos).toString());
+        actual = String.format("%4d %s", pos, instructions.get(pos).toString());
 
         //expected M-Code.expected
         expected = br.readLine();
@@ -137,7 +137,7 @@ public class RegressionTest {
           return String.format("Error : %s(%d)\n  received: %s\n  expected: %s", fileName, pos, actual, expected);
         }
       }
-     String error = "Error : %s(%d) received %d lines, which is %s than expected; first %s line: %3d :%s";
+     String error = "Error : %s(%d) received %d lines, which is %s than expected; first %s line: %4d :%s";
      if (!br.ready() && pos == instructions.size()) {
         result = "OK : " + fileName;
      } else if (pos == instructions.size()) {

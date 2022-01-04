@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Stack;
 
 /**
  * Interpreter for the M machine, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
@@ -18,9 +19,9 @@ public class Interpreter {
   private EnumSet<FunctionType> branchSet = EnumSet.noneOf(FunctionType.class);
   private boolean debugMode = false;
   private int inputIndex = 0;
-  private int[] machineStack;
+  private Stack<Integer> machineStack;
   private int[] vars;
-  private int pc, sp;
+  private int pc;
   private int acc16;
   private int acc8;
 
@@ -31,11 +32,11 @@ public class Interpreter {
     this.inputParts = inputParts;
     
     /* initialize interpreter*/
-    machineStack = new int[MAX_STACK];
+    machineStack = new Stack<Integer>();
+
     vars = new int[MAX_VARS];
     branchSet.clear();
     pc = 0;
-    sp = 0;
     acc16 = 0;
     acc8 = 0;
   }
@@ -47,7 +48,10 @@ public class Interpreter {
     //get next instruction
     Instruction instr = instructions.get(pc);
     //log registers
-    debug("pc=" + pc + " sp = " + sp + " acc16 = " + acc16 + " acc8 = " + acc8 + " : " + instr.toString());
+    //debug("pc=" + pc + " : " + instr.toString() + " sp = " + machineStack.size() + " acc16 = " + acc16 + " acc8 = " + acc8 + " stack = " + machineStack);
+    debug(String.format("pc= %4d %-80s sp=%4d acc16=%5d acc8=%3d stack=%s", 
+      pc, instr.toString().substring(0, Math.min(instr.toString().length(), 80)), 
+      machineStack.size(), acc16, acc8, machineStack));
     //execute instruction
     int operand;
     switch(instr.function){
@@ -249,6 +253,12 @@ public class Interpreter {
       case stackAcc8:
         push(acc8);
         break;
+      case unstackAcc16:
+        acc16 = pop();
+        break;
+      case unstackAcc8:
+        acc8 = pop();
+        break;
       // branch instructions:
       case br: 
           pc = instr.operand.intValue - 1;
@@ -340,7 +350,7 @@ public class Interpreter {
     System.out.println("pc=" + pc + " : " + instructions.get(pc).toString());
     System.out.println(String.format("accumulator 16-bit= " + acc16));
     System.out.println(String.format("accumulator  8-bit= " + acc8));
-    System.out.println(String.format("stackpointer      = " + sp));
+    System.out.println(String.format("stackpointer      = " + machineStack.size()));
     System.out.println();
 
     /* dump variables */
@@ -350,10 +360,10 @@ public class Interpreter {
     System.out.println();
 
     /* dump stack */
-    int spDigits = (int)(java.lang.Math.log(sp) / java.lang.Math.log(10)) + 1;
+    int spDigits = (int)(java.lang.Math.log(machineStack.size()) / java.lang.Math.log(10)) + 1;
     String spFormat = "%" + spDigits + "d";
-    for (int i = 0; i<sp; i++) {
-      System.out.println("stack item " + String.format(spFormat, i) + " = " + machineStack[i]);
+    for (int i = 0; i<machineStack.size(); i++) {
+      System.out.println("stack item " + String.format(spFormat, i) + " = " + machineStack.get(i));
     }
     System.out.println();
 
@@ -361,26 +371,24 @@ public class Interpreter {
   }
   
   private void push(int data) {
-    if (sp == MAX_STACK) {
+    if (machineStack.size() == MAX_STACK) {
       runError("stack overflow");
     }
-    machineStack[sp] = data;
-    sp++;
+    machineStack.push(data);
   }
   
   private int pop() {
-    if (sp == 0) {
+    if (machineStack.size() == 0) {
       runError("stack underflow");
     }
-    sp--;
-    return machineStack[sp];
+    return machineStack.pop();
   }
   
   private int peek() {
-    if (sp == 0) {
+    if (machineStack.size() == 0) {
       runError("stack underflow");
     }
-    return machineStack[sp - 1];
+    return machineStack.get(machineStack.size() - 1);
   }
   
   private OperandType getOpType() {

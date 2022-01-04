@@ -22,7 +22,9 @@ public class Instruction {
       && function != FunctionType.stackAcc8ToAcc16
       && function != FunctionType.stackAcc16ToAcc8
       && function != FunctionType.stackAcc8
-      && function != FunctionType.stackAcc16) {
+      && function != FunctionType.stackAcc16
+      && function != FunctionType.unstackAcc8
+      && function != FunctionType.unstackAcc16) {
       throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
     }
   }
@@ -306,6 +308,8 @@ public class Instruction {
       case stackAcc8ToAcc16:
       case stackAcc16:
       case stackAcc8:
+      case unstackAcc16:
+      case unstackAcc8:
         break;
       default: throw new RuntimeException("unsupported instruction");
     }

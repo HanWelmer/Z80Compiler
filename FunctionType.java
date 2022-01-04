@@ -48,6 +48,8 @@ public enum FunctionType {
   //stack instructions:
   stackAcc16("<acc16"),
   stackAcc8("<acc8"),
+  unstackAcc16("acc16= unstack16"),
+  unstackAcc8("acc8= unstack8"),
   //branch instructions:
   br("br"),
   brEq("breq"),
