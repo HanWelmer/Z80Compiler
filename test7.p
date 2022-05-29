@@ -48,7 +48,7 @@ class Test8And16BitExpressions {
   /***************************************/
   b = 0;
   write(read + b);   // 1058 + 0 = 1058
-  write(b + read);   // 1059 + 5 = 1059
+  write(b + read);   // 0 + 1059 = 1059
   write(read - b);   // 1060 - 0 = 1060
   write(b - read);   // 0 - 1061 = -1061
   b = 1;
@@ -65,7 +65,7 @@ class Test8And16BitExpressions {
   i = 0;
   write(1066);
   write(read + i);   // 1066 + 0 = 1066
-  write(i + read);   // 1067 + 5 = 1067
+  write(i + read);   // 0 + 1067 = 1067
   write(read - i);   // 1068 - 0 = 1068
   write(i - read);   // 0 - 1069 = -1069
   i = 1;

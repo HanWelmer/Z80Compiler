@@ -130,7 +130,7 @@
  129 call read
  130 acc16+ variable 0
  131 call writeAcc16
- 132 ;test7.p(50)   write(b + read);   // 1059 + 5 = 1059
+ 132 ;test7.p(50)   write(b + read);   // 0 + 1059 = 1059
  133 acc8= variable 0
  134 call read
  135 acc16+ acc8
@@ -186,7 +186,7 @@
  185 call read
  186 acc16+ variable 1
  187 call writeAcc16
- 188 ;test7.p(67)   write(i + read);   // 1067 + 5 = 1067
+ 188 ;test7.p(67)   write(i + read);   // 0 + 1067 = 1067
  189 acc16= variable 1
  190 <acc16
  191 call read

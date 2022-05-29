@@ -47,11 +47,6 @@ public class Interpreter {
 
     //get next instruction
     Instruction instr = instructions.get(pc);
-    //log registers
-    //debug("pc=" + pc + " : " + instr.toString() + " sp = " + machineStack.size() + " acc16 = " + acc16 + " acc8 = " + acc8 + " stack = " + machineStack);
-    debug(String.format("pc= %4d %-80s sp=%4d acc16=%5d acc8=%3d stack=%s", 
-      pc, instr.toString().substring(0, Math.min(instr.toString().length(), 80)), 
-      machineStack.size(), acc16, acc8, machineStack));
     //execute instruction
     int operand;
     switch(instr.function){
@@ -329,6 +324,11 @@ public class Interpreter {
     while (acc16 < -32768) {
       acc16 += 65536;
     }
+
+    //log pc, instruction and registers (latter after executing the instruction).
+    debug(String.format("pc= %4d %-80s sp=%4d acc16=%5d acc8=%3d stack=%s", 
+      pc, instr.toString().substring(0, Math.min(instr.toString().length(), 80)), 
+      machineStack.size(), acc16, acc8, machineStack));
 
     //proceed to next instruction
     pc++;

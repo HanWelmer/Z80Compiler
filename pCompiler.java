@@ -7,7 +7,9 @@ import java.util.Stack;
 //TODO variabele m.b.t. analyse lokaal maken in factor()
 //TODO variabele m.b.t. analyse lokaal maken in term()
 //TODO variabele m.b.t. analyse lokaal maken in expression()
-//TODO test.m: 45 acc16+ acc8 moet zijn 45 acc16+ unstack8.
+//TODO test.m: 47 acc16+ acc8 moet zijn: acc16+ unstack8.
+//TODO compiler optimalisatie,  zie test3.p: <acc16; acc16= unstack16
+//TODO compiler optimalisatie,  zie test3.p: <acc8; acc8= unstack8
 //TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test2.p and test5.p).
 //TODO add test cases for doStatement (see test2.p and test5.p).
@@ -15,10 +17,11 @@ import java.util.Stack;
 //TODO add test cases for whileStatement (see test1.p en test5.p).
 //TODO add test cases for doStatement (see test10.p en test5.p).
 //TODO add test cases for forStatement (see test11.p en test5.p).
-//TODO check stack usage/clear irt <acc8= en <acc16= etc.
+//TODO new instruction acc16Store8; see update(): plant(new Instruction(FunctionType.acc16ToAcc8)); plant(new Instruction(FunctionType.acc8Store, ...));
+//TODO new instruction acc8Store16; see update(): plant(new Instruction(FunctionType.acc8ToAcc16)); plant(new Instruction(FunctionType.acc16Store, ...));
+
+//TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
-//compiler optimalisatie,  zie test3.p: <acc16; acc16= unstack16
-//compiler optimalisatie,  zie test3.p: <acc8; acc8= unstack8
 
 /**
  * Compiler for the miniJava programming language.
@@ -169,8 +172,8 @@ public class PCompiler {
   private static final int NULL_OP = 0;
   private static final int MAX_M_CODE = 10000;
   private static final String LINE_NR_FORMAT = "%4d ";
-  private boolean acc16InUse;
-  private boolean acc8InUse;
+  private Accumulator acc16 = new Accumulator();
+  private Accumulator acc8 = new Accumulator();
   private Stack<Datatype> stackedDatatypes = new Stack<Datatype>();
 
   private Map<AddValType, FunctionType> forwardAdd16 = new HashMap<AddValType, FunctionType>();
@@ -186,7 +189,7 @@ public class PCompiler {
   private Map<RelValType, FunctionType> normalSkip = new HashMap<RelValType, FunctionType>();
   private Map<RelValType, FunctionType> reverseSkip = new HashMap<RelValType, FunctionType>();
 
-  /*Class member methods for all phases */
+  /* Class member methods for all phases */
   private void init() {
     /* initialisation of lexical analysis variables */
     sourceCode = new ArrayList<String>();
@@ -200,8 +203,8 @@ public class PCompiler {
     identifiers.init();
 
     /* initialisation of code generation variables */
-    acc16InUse = false;
-    acc8InUse = false;
+    acc16.clear();
+    acc8.clear();
     stackedDatatypes.clear();
 
     forwardAdd16.clear();
@@ -304,7 +307,7 @@ public class PCompiler {
   //factor = identifier | constant | "read" | "(" expression ")".
   private Operand factor(EnumSet<LexemeType> stopSet) throws FatalError {
     Operand operand = new Operand(OperandType.unknown);
-    debug("\nfactor 1: acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+    debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     if (checkOrSkip(startExp, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
         /* part of semantic analysis */
@@ -329,19 +332,19 @@ public class PCompiler {
          * Part of code generation.
          * The read() function always returns an int value.
          */
-        if (acc16InUse) {
+        if (acc16.inUse()) {
           plant(new Instruction(FunctionType.stackAcc16));
         }
         plant(new Instruction(FunctionType.read));
         operand.opType = OperandType.acc;
         operand.datatype = Datatype.integer;
-        acc16InUse = true;
+        acc16.setOperand(operand);
       } else if (lexeme.type == LexemeType.lbracket) {
         //skip left bracket.
         lexeme = lexemeReader.getLexeme(sourceCode);
         EnumSet<LexemeType> stopSetCopy = stopSet.clone();
         stopSetCopy.add(LexemeType.rbracket);
-        operand = expression(stopSetCopy, operand);
+        operand = expression(stopSetCopy);
         //skip right bracket.
         if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
           lexeme = lexemeReader.getLexeme(sourceCode);
@@ -350,7 +353,7 @@ public class PCompiler {
     }
 
     //consistency check.
-    debug("\nfactor: end: " + operand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+    debug("\nfactor: end: " + operand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     if (operand.opType == OperandType.unknown) {
       throw new FatalError(12);
     }
@@ -359,18 +362,17 @@ public class PCompiler {
   } //factor()
   
   //term = factor {mulop factor}.
-  private Operand term(EnumSet<LexemeType> stopSet, Operand leftOperand) throws FatalError {
+  private Operand term(EnumSet<LexemeType> stopSet) throws FatalError {
     /* part of code generation */
     MulValType operator;
 
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.mulop);
-    leftOperand = factor(followSet);
+    Operand leftOperand = factor(followSet);
     boolean leftOperandNotLoaded = true;
 
-    debug("\nterm: " + leftOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    Operand rOperand = new Operand(OperandType.unknown);
+    debug("\nterm: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     while (lexeme.type == LexemeType.mulop) {
 
       /* part of code generation */
@@ -380,72 +382,102 @@ public class PCompiler {
           debug("\nterm: calling plantAccLoad");
           plantAccLoad(leftOperand);
         }
-        leftOperand.opType = OperandType.acc;
         leftOperandNotLoaded = false;
       }
       
       /* part of lexical analysis */
       lexeme = lexemeReader.getLexeme(sourceCode);
-      rOperand = factor(followSet);
+      Operand rOperand = factor(followSet);
 
       /* part of code generation */
-      debug("\nterm loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-      // acc-acc
-      // lOperand=operand(acc, type=byt, intValue=36), rOperand=operand(acc, type=byt, intValue=4), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer, intValue=3900), rOperand=operand(acc, type=integer, intValue=300), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
-      // lOperand=operand(acc, type=byt, intValue=1), rOperand=operand(acc, type=integer), acc16InUse = true, acc8InUse = true
-      // not acc-acc
-      // lOperand=operand(acc, type=byt, intValue=3), rOperand=operand(constant, type=byt, intValue=3), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer, intValue=5), rOperand=operand(var, type=integer, intValue=7), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer, intValue=1000), rOperand=operand(constant, type=byt, intValue=1), acc16InUse = true, acc8InUse = false
-      // ?
-      // lOperand=operand(acc, type=byt, intValue=1), rOperand=operand(constant, type=integer, intValue=1037), acc16InUse = false, acc8InUse = true
-      if (leftOperand.opType == OperandType.acc && rOperand.opType == OperandType.acc) {
-        if (leftOperand.datatype == rOperand.datatype) {
-          //left operand has been pushed onto the stack
-          debug("\nterm loop: left operand has been pushed onto the stack");
-          leftOperand.opType = popStackedDatatype();
-          if (leftOperand.datatype == Datatype.byt) {
-            plant(new Instruction(reverseMul8.get(operator), leftOperand));
-          } else {
-            plant(new Instruction(reverseMul16.get(operator), leftOperand));
-          }
-          leftOperand.opType = OperandType.acc;
+      debug("\nterm loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+      /* leftOperand:  constant, acc, var, stack16, stack8
+       * rOperand:     constant, acc, var, stack16, stack8
+       *
+       * term loop: lOperand=operand(acc, type=integer),             rOperand=operand(constant, type=integer, ...), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=integer, intValue=1), rOperand=operand(constant, type=byt, intValue=1), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=byt, intValue=12),    rOperand=operand(constant, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=byt, intValue=1),     rOperand=operand(constant, type=integer, ...), acc16InUse = false, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=byt, intValue=12),    rOperand=operand(acc, type=integer, intValue=2), acc16InUse = true, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=integer, intValue=5), rOperand=operand(var, type=integer, intValue=7), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=integer),             rOperand=operand(var, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=byt, intValue=1),     rOperand=operand(var, type=byt, intValue=2), acc16InUse = false, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=byt, intValue=2),     rOperand=operand(var, type=integer, intValue=2), acc16InUse = false, acc8InUse = true
+       * term loop: lOperand=operand(stack16, type=integer, ...),    rOperand=operand(acc, type=integer, ...), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(stack8, type=byt, intValue=12), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
+       */
+      if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.constant)) {
+        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardMul16.get(operator), rOperand));
-          acc8InUse = false;
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardMul8.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(FunctionType.acc8ToAcc16));
+          leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+          acc8.clear();
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
+        }
+      } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.acc)) {
+        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
+          acc8.clear();
         } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
           plant(new Instruction(reverseMul16.get(operator), leftOperand));
           leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+          acc8.clear();
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
-      } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardMul8.get(operator), rOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
-        plant(new Instruction(forwardMul16.get(operator), rOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardMul16.get(operator), rOperand));
-      } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
-        if (rOperand.opType == OperandType.acc) {
-          plant(new Instruction(FunctionType.stackAcc8ToAcc16));
-          throw new RuntimeException("Internal compiler error: abort.");
-        } else {
+      } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.var)) {
+        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardMul8.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
           plant(new Instruction(FunctionType.acc8ToAcc16));
+          leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+          acc8.clear();
+          plant(new Instruction(forwardMul16.get(operator), rOperand));
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
         }
-        plant(new Instruction(forwardMul16.get(operator), rOperand));
-        leftOperand.datatype = Datatype.integer;
+      } else if ((leftOperand.opType == OperandType.stack16) && (rOperand.opType == OperandType.acc)) {
+        if (rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(reverseMul16.get(operator), leftOperand));
+          leftOperand.opType = OperandType.acc;
+          leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
+        }
+      } else if ((leftOperand.opType == OperandType.stack8) && (rOperand.opType == OperandType.acc)) {
+        if (rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(reverseMul8.get(operator), leftOperand));
+          leftOperand.opType = OperandType.acc;
+          acc8.setOperand(leftOperand);
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
+        }
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     }
-    debug("\nterm: end: " + leftOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+    debug("\nterm: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     return leftOperand;
   } //term()
   
   //expression = term {addop term}.
-  private Operand expression(EnumSet<LexemeType> stopSet, Operand leftOperand) throws FatalError {
+  private Operand expression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nexpression: start with stopSet = " + stopSet);
     /* part of lexical analysis */
     AddValType operator;
@@ -453,11 +485,10 @@ public class PCompiler {
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.addop);
-    leftOperand = term(followSet, leftOperand);
+    Operand leftOperand = term(followSet);
     boolean leftOperandNotLoaded = true;
     
-    debug("\nexpression: " + leftOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    Operand rOperand = new Operand(OperandType.unknown);
+    debug("\nexpression: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     while (lexeme.type == LexemeType.addop) {
       operator = lexeme.addVal;
 
@@ -466,68 +497,103 @@ public class PCompiler {
         if (leftOperand.opType != OperandType.acc) {
           plantAccLoad(leftOperand);
         }
-        leftOperand.opType = OperandType.acc;
         leftOperandNotLoaded = false;
       }
       
       /* part of lexical analysis */
       lexeme = lexemeReader.getLexeme(sourceCode);
-      rOperand = term(followSet, rOperand);
+      Operand rOperand = term(followSet);
       
       /* part of code generation */
-      //Verwacht:
-      //       expression loop: lOperand=operand(stack8, type=byt, intValue=0), rOperand=operand(acc, type=integer, intValue=12), acc16InUse = true, acc8InUse = true
-      debug("\nexpression loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-      // acc-acc
-      // lOperand=operand(acc, type=byt, intValue=10), rOperand=operand(acc, type=byt, intValue=3), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer, intValue=1000), rOperand=operand(acc, type=integer), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
-      // lOperand=operand(acc, type=byt, intValue=0), rOperand=operand(acc, type=integer), acc16InUse = true, acc8InUse = true
-      // not acc-acc
-      // lOperand=operand(acc, type=byt, intValue=0), rOperand=operand(constant, type=byt, intValue=2), acc16InUse = false, acc8InUse = true
-      // lOperand=operand(acc, type=integer), rOperand=operand(constant, type=integer, intValue=1000), acc16InUse = true, acc8InUse = false
-      // lOperand=operand(acc, type=integer), rOperand=operand(constant, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
-      // ?
-      // lOperand=operand(acc, type=byt, intValue=2), rOperand=operand(var, type=integer, intValue=3), acc16InUse = false, acc8InUse = true
-      if (leftOperand.opType == OperandType.acc && rOperand.opType == OperandType.acc) {
-        if (leftOperand.datatype == rOperand.datatype) {
-          //left operand has been pushed onto the stack
-          leftOperand.opType = popStackedDatatype();
-          if (leftOperand.datatype == Datatype.byt) {
-            plant(new Instruction(reverseAdd8.get(operator), leftOperand));
-          } else {
-            plant(new Instruction(reverseAdd16.get(operator), leftOperand));
-          }
-          leftOperand.opType = OperandType.acc;
+      debug("\nexpression loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+      /* leftOperand:  constant, acc, var, stack16, stack8
+       * rOperand:     constant, acc, var, stack16, stack8
+       *
+       * expression loop: lOperand=operand(acc, type=integer),             rOperand=operand(constant, type=integer, ...), acc16InUse = true, acc8InUse = false
+       * expression loop: lOperand=operand(acc, type=integer, intValue=2), rOperand=operand(constant, type=byt, intValue=2), acc16InUse = true, acc8InUse = true
+       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(constant, type=byt, intValue=4), acc16InUse = false, acc8InUse = true
+       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(constant, type=integer, ...), acc16InUse = false, acc8InUse = true
+       * expression loop: lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
+       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(acc, type=integer, intValue=5), acc16InUse = true, acc8InUse = true
+       * expression loop: lOperand=operand(acc, type=integer),             rOperand=operand(var, type=integer, intValue=1), acc16InUse = true, acc8InUse = false
+       * expression loop: lOperand=operand(acc, type=integer),             rOperand=operand(var, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
+       * expression loop: lOperand=operand(acc, type=byt, intValue=3),     rOperand=operand(var, type=byt, intValue=0), acc16InUse = false, acc8InUse = true
+       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(var, type=integer, intValue=1), acc16InUse = false, acc8InUse = true
+       * expression loop: lOperand=operand(stack16, type=integer, ...),    rOperand=operand(acc, type=integer, intValue=..), acc16InUse = true, acc8InUse = false
+       * expression loop: lOperand=operand(stack8, type=byt, intValue=0),  rOperand=operand(acc, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
+       * expression loop: lOperand=operand(stack8, type=byt, intValue=0),  Operand=operand(acc, type=integer, intValue=12), acc16InUse = true, acc8InUse = false
+       */
+      if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.constant)) {
+        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
-          acc8InUse = false;
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardAdd8.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(FunctionType.acc8ToAcc16));
+          leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+          acc8.clear();
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
+        }
+      } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.acc)) {
+        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
+          acc8.clear();
         } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
           plant(new Instruction(reverseAdd16.get(operator), leftOperand));
           leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+          acc8.clear();
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
-      } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardAdd8.get(operator), rOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
-        plant(new Instruction(forwardAdd16.get(operator), rOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
-        plant(new Instruction(forwardAdd16.get(operator), rOperand));
-      } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
-        if (rOperand.opType == OperandType.acc) {
-          plant(new Instruction(FunctionType.stackAcc8ToAcc16));
-          throw new RuntimeException("Internal compiler error: abort.");
-        } else {
+      } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.var)) {
+        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(forwardAdd8.get(operator), rOperand));
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
           plant(new Instruction(FunctionType.acc8ToAcc16));
+          leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+          acc8.clear();
+          plant(new Instruction(forwardAdd16.get(operator), rOperand));
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
         }
-        plant(new Instruction(forwardAdd16.get(operator), rOperand));
-        leftOperand.datatype = Datatype.integer;
+      } else if ((leftOperand.opType == OperandType.stack16) && (rOperand.opType == OperandType.acc)) {
+        if (rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(reverseAdd16.get(operator), leftOperand));
+          leftOperand.opType = OperandType.acc;
+          leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
+        }
+      } else if ((leftOperand.opType == OperandType.stack8) && (rOperand.opType == OperandType.acc)) {
+        if (rOperand.datatype == Datatype.byt) {
+          plant(new Instruction(reverseAdd8.get(operator), leftOperand));
+          leftOperand.opType = OperandType.acc;
+          acc8.setOperand(leftOperand);
+        } else if (rOperand.datatype == Datatype.integer) {
+          plant(new Instruction(reverseAdd16.get(operator), leftOperand));
+          leftOperand.opType = OperandType.acc;
+          leftOperand.datatype = Datatype.integer;
+          acc16.setOperand(leftOperand);
+        } else {
+          throw new RuntimeException("Internal compiler error: abort.");
+        }
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     }
-    debug("\nexpression: end: " + leftOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+    debug("\nexpression: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     return leftOperand;
   } //expression()
   
@@ -539,27 +605,22 @@ public class PCompiler {
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(localSet, new Operand(OperandType.unknown));
-    debug("\ncomparison: leftOperand=" + leftOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
-    //comparison: leftOperand=operand(constant, type=byt, intValue=4), acc16InUse = false, acc8InUse = false
+    Operand leftOperand = expression(localSet);
+    debug("\ncomparison: leftOperand=" + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
     /* part of code generation */
     if (leftOperand.opType == OperandType.var) {
       plantAccLoad(leftOperand);
-      debug("\ncomparison: plantAccLoad(leftOperand), acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+      debug("\ncomparison: plantAccLoad(leftOperand), acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
       leftOperand.opType = OperandType.acc;
     }
     /* part of code generation */
     if (leftOperand.opType == OperandType.acc) {
       debug("\ncomparison: push leftOperand to the stack; " + leftOperand );
-      if (leftOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.stackAcc8));
-        leftOperand.opType = OperandType.stack8;
-        acc8InUse = false;
-      } else if (leftOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.integer) {
         plant(new Instruction(FunctionType.stackAcc16));
-        leftOperand.opType = OperandType.stack16;
-        acc16InUse = false;
+      } else if (leftOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.stackAcc8));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
@@ -585,10 +646,10 @@ public class PCompiler {
     localSet.remove(LexemeType.identifier);
 
     /* part of lexical analysis */
-    Operand rightOperand = expression(localSet, new Operand(OperandType.unknown));
+    Operand rightOperand = expression(localSet);
 
     /* part of code generation */
-    debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16InUse + ", acc8InUse = " + acc8InUse);
+    debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     /*Possible operand types: 
      * leftOperand:  constant, acc, var, stack16, stack8
      * rightOperand: constant, acc, var, stack16, stack8
@@ -616,11 +677,8 @@ public class PCompiler {
      * comparison: leftOperand=operand(stack8, type=byt, intValue=1),          rightOperand=operand(acc, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
      * comparison: leftOperand=operand(stack8, type=byt, intValue=0),          rightOperand=operand(var, type=integer, intValue=1), acc16InUse = false, acc8InUse = false
      * todo
+     * comparison: leftOperand=operand(constant, type=byt, intValue=12),       rightOperand=operand(stack8, type=byt, intValue=0), acc16InUse = false, acc8InUse = true
     */
-    //leftOperand-rightOperand
-    //const-const
-    //const-acc
-    //const-var
     boolean reverseCompare = false;
     if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.constant)) {
       plantAccLoad(leftOperand);
@@ -658,6 +716,13 @@ public class PCompiler {
       if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.stack8)) {
+      if (leftOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
@@ -753,7 +818,7 @@ public class PCompiler {
     /* part of lexical analysis */
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(localSet, new Operand(OperandType.unknown));
+    Operand leftOperand = expression(localSet);
 
     /* part of code generation */
     plantAccLoad(leftOperand);
@@ -776,7 +841,7 @@ public class PCompiler {
     localSet = stopSet.clone();
     localSet.addAll(startStatement);
     localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(localSet, new Operand(OperandType.unknown));
+    Operand rightOperand = expression(localSet);
 
     /* part of code generation */
     plant(new Instruction(FunctionType.acc16Compare, rightOperand));
@@ -852,8 +917,8 @@ public class PCompiler {
     }
     
     //release acc after initialization part.
-    acc8InUse = false;
-    acc16InUse = false;
+    acc16.clear();
+    acc8.clear();
     
     /* part of lexical analysis: comparison ";" */
     stopInitializationSet.addAll(startStatement);
@@ -873,8 +938,8 @@ public class PCompiler {
     int updateLabel = saveLabel();
 
     //release acc after comparison part.
-    acc8InUse = false;
-    acc16InUse = false;
+    acc16.clear();
+    acc8.clear();
     
     /* part of lexical analysis: update */
     stopForSet.add(LexemeType.beginlexeme);
@@ -932,8 +997,8 @@ public class PCompiler {
     }
 
     //release acc after block part.
-    acc8InUse = false;
-    acc16InUse = false;
+    acc16.clear();
+    acc8.clear();
     
     //expect comparison, terminated by ")"
     stopWhileSet.addAll(startStatement);
@@ -1138,7 +1203,7 @@ public class PCompiler {
     } else if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
       //identifier "=" expression
       lexeme = lexemeReader.getLexeme(sourceCode);
-      Operand operand = expression(stopSet, new Operand(OperandType.unknown));
+      Operand operand = expression(stopSet);
       debug("\nupdate: " + operand);
 
       /* part of code generation */
@@ -1146,6 +1211,15 @@ public class PCompiler {
         plantAccLoad(operand);
       }
       if (varDatatype == Datatype.byt) {
+        if (acc16.inUse()) {
+          plant(new Instruction(FunctionType.acc16ToAcc8));
+          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
+        } else if (acc8.inUse()) {
+          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
+        } else {
+          error(14);
+        }
+        /*
         if (operand.datatype == Datatype.byt) {
           plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
         } else if (operand.datatype == Datatype.integer) {
@@ -1154,6 +1228,7 @@ public class PCompiler {
         } else {
           error(14);
         }
+        */
       } else if (varDatatype == Datatype.integer) {
         if (operand.datatype == Datatype.integer) {
           plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, Datatype.integer, varAddress)));
@@ -1189,7 +1264,7 @@ public class PCompiler {
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
-    Operand operand = expression(stopExpressionSet, new Operand(OperandType.unknown));
+    Operand operand = expression(stopExpressionSet);
     debug("\nwriteStatement: " + operand);
     
     /* part of code generation */
@@ -1223,8 +1298,8 @@ public class PCompiler {
     debug("\nstatement: start with stopSet = " + stopSet);
     int firstAddress = 0;
     /* part of code generation */
-    acc16InUse = false;
-    acc8InUse = false;
+    acc16.clear();
+    acc8.clear();
 
     /* part of lexical analysis */
     EnumSet<LexemeType> startSet = stopSet.clone();
@@ -1313,28 +1388,30 @@ public class PCompiler {
     //load acc with operand.
     if (operand.datatype == Datatype.integer) {
       if (operand.opType != OperandType.stack16) {
-        if (acc16InUse) {
+        if (acc16.inUse()) {
             plant(new Instruction(FunctionType.stackAcc16Load, operand));
           } else {
             plant(new Instruction(FunctionType.acc16Load, operand));
         }
+        operand.opType = OperandType.acc;
+        acc16.setOperand(operand);
       }
-      acc16InUse = true;
     } else { //operand.datatype == Datatype.byt
       if (operand.opType != OperandType.stack8) {
-        if (acc8InUse) {
+        if (acc8.inUse()) {
             plant(new Instruction(FunctionType.stackAcc8Load, operand));
           } else {
             plant(new Instruction(FunctionType.acc8Load, operand));
         }
+        operand.opType = OperandType.acc;
+        acc8.setOperand(operand);
       }
-      acc8InUse = true;
     }
   }
 
   private void plant(Instruction instruction) {
     /* for debugging purposes */
-    debug("\n->plant (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
+    debug("\n->plant (acc8InUse=" + acc8.inUse() + ", acc16InUse=" + acc16.inUse() + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
     
     plantSource();
     plantCode(instruction);
@@ -1342,7 +1419,7 @@ public class PCompiler {
   
   private void plantThenSource(Instruction instruction) {
     /* for debugging purposes */
-    debug("\n->plantThenSource (acc8InUse=" + acc8InUse + ", acc16InUse=" + acc16InUse + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
+    debug("\n->plantThenSource (acc8InUse=" + acc8.inUse() + ", acc16InUse=" + acc16.inUse() + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
     
     plantCode(instruction);
     plantSource();
@@ -1371,24 +1448,30 @@ public class PCompiler {
 
     storeInstruction.add(instruction);
     if (instruction.function == FunctionType.acc8ToAcc16) {
-      acc16InUse = true;
-      acc8InUse = false;
+      acc16.setOperand(acc8.operand());
+      acc8.clear();
     } else if (instruction.function == FunctionType.stackAcc8) {
       stackedDatatypes.push(Datatype.byt);
-      acc8InUse = false;
+      acc8.operand().opType = OperandType.stack8;
+      acc8.clear();
     } else if (instruction.function == FunctionType.stackAcc16) {
       stackedDatatypes.push(Datatype.integer);
-      acc16InUse = false;
+      acc16.operand().opType = OperandType.stack16;
+      acc16.clear();
     } else if (instruction.function == FunctionType.stackAcc8Load) {
       stackedDatatypes.push(Datatype.byt);
+      acc8.operand().opType = OperandType.stack8;
     } else if (instruction.function == FunctionType.stackAcc16Load) {
       stackedDatatypes.push(Datatype.integer);
+      acc16.operand().opType = OperandType.stack16;
     } else if (instruction.function == FunctionType.stackAcc16ToAcc8) {
       stackedDatatypes.push(Datatype.byt);
-      acc16InUse = false;
+      acc8.operand().opType = OperandType.stack8;
+      acc16.clear();
     } else if (instruction.function == FunctionType.stackAcc8ToAcc16) {
       stackedDatatypes.push(Datatype.integer);
-      acc8InUse = false;
+      acc16.operand().opType = OperandType.stack16;
+      acc8.clear();
     }
     debug(" ;" + " stackedDatatypes=" + stackedDatatypes);
   } //plantCode
