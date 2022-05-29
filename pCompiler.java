@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO variabele m.b.t. analyse lokaal maken in factor()
-//TODO variabele m.b.t. analyse lokaal maken in term()
-//TODO variabele m.b.t. analyse lokaal maken in expression()
-//TODO test.m: 47 acc16+ acc8 moet zijn: acc16+ unstack8.
-//TODO compiler optimalisatie,  zie test3.p: <acc16; acc16= unstack16
-//TODO compiler optimalisatie,  zie test3.p: <acc8; acc8= unstack8
+//TODO compiler optimalisatie, new instruction acc16Store8; see update(): plant(new Instruction(FunctionType.acc16ToAcc8)); plant(new Instruction(FunctionType.acc8Store, ...));
+//TODO compiler optimalisatie, new instruction acc8Store16; see update(): plant(new Instruction(FunctionType.acc8ToAcc16)); plant(new Instruction(FunctionType.acc16Store, ...));
+//TODO check of test cases in test.p voorkomen in test*.p
+//TODO compiler optimalisatie, zie test3.p: <acc16; acc16= unstack16
+//TODO compiler optimalisatie, zie test3.p: <acc8; acc8= unstack8
 //TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test2.p and test5.p).
 //TODO add test cases for doStatement (see test2.p and test5.p).
@@ -17,8 +16,6 @@ import java.util.Stack;
 //TODO add test cases for whileStatement (see test1.p en test5.p).
 //TODO add test cases for doStatement (see test10.p en test5.p).
 //TODO add test cases for forStatement (see test11.p en test5.p).
-//TODO new instruction acc16Store8; see update(): plant(new Instruction(FunctionType.acc16ToAcc8)); plant(new Instruction(FunctionType.acc8Store, ...));
-//TODO new instruction acc8Store16; see update(): plant(new Instruction(FunctionType.acc8ToAcc16)); plant(new Instruction(FunctionType.acc16Store, ...));
 
 //TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
