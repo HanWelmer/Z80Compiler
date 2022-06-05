@@ -8,7 +8,9 @@ class TestIf {
   int four = 4;
   int twelve = 12;
   byte byteOne = 1;
-  write(6);
+  byte byteSix = 262;
+  write(7);
+  write(byteSix);
   /*
   if (4 == (zero + twelve/(1+2))) write(2);
   //gewenste code voor regel 26: if (four == (0 + 12/(one+2))) write(1);
@@ -29,6 +31,6 @@ class TestIf {
   if (four == (0 + 12/(byteOne + 2))) write(4);
   if (four == (0 + 12/(1 + 2))) write(3);
   if (four == 0 + 12/(1 + 2)) write(2);
-  write(one);
+  write(byteOne);
   write(zero);
 }

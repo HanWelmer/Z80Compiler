@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO compiler optimalisatie, new instruction acc16Store8; see update(): plant(new Instruction(FunctionType.acc16ToAcc8)); plant(new Instruction(FunctionType.acc8Store, ...));
-//TODO compiler optimalisatie, new instruction acc8Store16; see update(): plant(new Instruction(FunctionType.acc8ToAcc16)); plant(new Instruction(FunctionType.acc16Store, ...));
 //TODO check of test cases in test.p voorkomen in test*.p
 //TODO compiler optimalisatie, zie test3.p: <acc16; acc16= unstack16
 //TODO compiler optimalisatie, zie test3.p: <acc8; acc8= unstack8
@@ -505,20 +503,6 @@ public class PCompiler {
       debug("\nexpression loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
       /* leftOperand:  constant, acc, var, stack16, stack8
        * rOperand:     constant, acc, var, stack16, stack8
-       *
-       * expression loop: lOperand=operand(acc, type=integer),             rOperand=operand(constant, type=integer, ...), acc16InUse = true, acc8InUse = false
-       * expression loop: lOperand=operand(acc, type=integer, intValue=2), rOperand=operand(constant, type=byt, intValue=2), acc16InUse = true, acc8InUse = true
-       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(constant, type=byt, intValue=4), acc16InUse = false, acc8InUse = true
-       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(constant, type=integer, ...), acc16InUse = false, acc8InUse = true
-       * expression loop: lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
-       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(acc, type=integer, intValue=5), acc16InUse = true, acc8InUse = true
-       * expression loop: lOperand=operand(acc, type=integer),             rOperand=operand(var, type=integer, intValue=1), acc16InUse = true, acc8InUse = false
-       * expression loop: lOperand=operand(acc, type=integer),             rOperand=operand(var, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
-       * expression loop: lOperand=operand(acc, type=byt, intValue=3),     rOperand=operand(var, type=byt, intValue=0), acc16InUse = false, acc8InUse = true
-       * expression loop: lOperand=operand(acc, type=byt, intValue=0),     rOperand=operand(var, type=integer, intValue=1), acc16InUse = false, acc8InUse = true
-       * expression loop: lOperand=operand(stack16, type=integer, ...),    rOperand=operand(acc, type=integer, intValue=..), acc16InUse = true, acc8InUse = false
-       * expression loop: lOperand=operand(stack8, type=byt, intValue=0),  rOperand=operand(acc, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
-       * expression loop: lOperand=operand(stack8, type=byt, intValue=0),  Operand=operand(acc, type=integer, intValue=12), acc16InUse = true, acc8InUse = false
        */
       if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.constant)) {
         if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
@@ -650,31 +634,6 @@ public class PCompiler {
     /*Possible operand types: 
      * leftOperand:  constant, acc, var, stack16, stack8
      * rightOperand: constant, acc, var, stack16, stack8
-     *
-     * comparison: leftOperand=operand(constant, type=integer, intValue=400),  rightOperand=operand(constant, type=integer, intValue=400), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(constant, type=integer, intValue=6561), rightOperand=operand(constant, type=byt, intValue=9), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(constant, type=byt, intValue=9),        rightOperand=operand(constant, type=integer, intValue=6561), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(constant, type=byt, intValue=4),        rightOperand=operand(constant, type=byt, intValue=4), acc16InUse = false, acc8InUse = false
-     *
-     * comparison: leftOperand=operand(constant, type=integer, intValue=400),  rightOperand=operand(acc, type=integer, intValue=1200), acc16InUse = true, acc8InUse = false
-     * comparison: leftOperand=operand(constant, type=integer, intValue=6561), rightOperand=operand(acc, type=byt, intValue=3), acc16InUse = false, acc8InUse = true
-     * comparison: leftOperand=operand(constant, type=byt, intValue=4),        rightOperand=operand(acc, type=integer, intValue=8), acc16InUse = true, acc8InUse = false
-     * comparison: leftOperand=operand(constant, type=byt, intValue=4),        rightOperand=operand(acc, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
-     *
-     * comparison: leftOperand=operand(constant, type=byt, intValue=4),        rightOperand=operand(var, type=integer, intValue=4), acc16InUse = false, acc8InUse = false
-     *
-     * comparison: leftOperand=operand(stack16, type=integer, intValue=729),   rightOperand=operand(constant, type=integer, intValue=6561), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(stack16, type=integer, intValue=4),     rightOperand=operand(constant, type=byt, intValue=4), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(stack16, type=integer, intValue=4),     rightOperand=operand(acc, type=integer, intValue=8), acc16InUse = true, acc8InUse = false
-     * comparison: leftOperand=operand(stack16, type=integer, intValue=4),     rightOperand=operand(acc, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
-     * comparison: leftOperand=operand(stack16, type=integer, intValue=1),     rightOperand=operand(var, type=byt, intValue=0), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(stack8, type=byt, intValue=3),          rightOperand=operand(constant, type=integer, intValue=6561), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(stack8, type=byt, intValue=0),          rightOperand=operand(constant, type=byt, intValue=2), acc16InUse = false, acc8InUse = false
-     * comparison: leftOperand=operand(stack8, type=byt, intValue=1),          rightOperand=operand(acc, type=integer, intValue=8), acc16InUse = true, acc8InUse = false
-     * comparison: leftOperand=operand(stack8, type=byt, intValue=1),          rightOperand=operand(acc, type=byt, intValue=12), acc16InUse = false, acc8InUse = true
-     * comparison: leftOperand=operand(stack8, type=byt, intValue=0),          rightOperand=operand(var, type=integer, intValue=1), acc16InUse = false, acc8InUse = false
-     * todo
-     * comparison: leftOperand=operand(constant, type=byt, intValue=12),       rightOperand=operand(stack8, type=byt, intValue=0), acc16InUse = false, acc8InUse = true
     */
     boolean reverseCompare = false;
     if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.constant)) {
@@ -784,15 +743,6 @@ public class PCompiler {
     } else {
       throw new RuntimeException("Internal compiler error: abort.");
     }
-    /*
-        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-        plantAccLoad(rightOperand);
-        rightOperand.opType = OperandType.acc;
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-        plant(new Instruction(FunctionType.revAcc8Compare, leftOperand));
-        plant(new Instruction(FunctionType.revAcc16Compare, leftOperand));
-    */
       
     int ifLabel = saveLabel();
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
@@ -1204,37 +1154,15 @@ public class PCompiler {
       debug("\nupdate: " + operand);
 
       /* part of code generation */
+      //assignment via accu.
       if (operand.opType != OperandType.acc) {
         plantAccLoad(operand);
       }
-      if (varDatatype == Datatype.byt) {
-        if (acc16.inUse()) {
-          plant(new Instruction(FunctionType.acc16ToAcc8));
-          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else if (acc8.inUse()) {
-          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else {
-          error(14);
-        }
-        /*
-        if (operand.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else if (operand.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.acc16ToAcc8));
-          plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, Datatype.byt, varAddress)));
-        } else {
-          error(14);
-        }
-        */
-      } else if (varDatatype == Datatype.integer) {
-        if (operand.datatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, Datatype.integer, varAddress)));
-        } else if (operand.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.acc8ToAcc16));
-          plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, Datatype.integer, varAddress)));
-        } else {
-          error(14);
-        }
+      //actual assignment.
+      if (operand.datatype == Datatype.integer) {
+        plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, varDatatype, varAddress)));
+      } else if (operand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, varDatatype, varAddress)));
       } else {
         error(12);
       }

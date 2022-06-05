@@ -84,7 +84,13 @@ public class Interpreter {
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
             }
-            vars[instr.operand.intValue] = acc16;
+            if (instr.operand.datatype == Datatype.integer) {
+              vars[instr.operand.intValue] = acc16;
+            } else if (instr.operand.datatype == Datatype.byt) {
+              vars[instr.operand.intValue] = acc16 % 256;
+            } else {
+              runError("incompatible datatype between assignment variable and expression");
+            }
             break;
           case stack16:
             push(acc16);

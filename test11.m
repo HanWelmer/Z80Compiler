@@ -18,24 +18,23 @@
   17 br 11
   18 ;test11.p(5)   for(int i = 2; i>0; i--) {
   19 acc8= constant 2
-  20 acc8ToAcc16
-  21 acc16=> variable 0
-  22 acc16= variable 0
-  23 <acc16
-  24 acc16= unstack16
-  25 acc8= constant 0
-  26 acc16CompareAcc8
-  27 brle 37
-  28 br 31
-  29 decr16 variable 0
-  30 br 22
-  31 ;test11.p(6)     write(i);
-  32 acc16= variable 0
-  33 call writeAcc16
-  34 ;test11.p(7)   }
-  35 br 29
-  36 ;test11.p(8)   write(0);
-  37 acc8= constant 0
-  38 call writeAcc8
-  39 ;test11.p(9) }
-  40 stop
+  20 acc8=> variable 0
+  21 acc16= variable 0
+  22 <acc16
+  23 acc16= unstack16
+  24 acc8= constant 0
+  25 acc16CompareAcc8
+  26 brle 36
+  27 br 30
+  28 decr16 variable 0
+  29 br 21
+  30 ;test11.p(6)     write(i);
+  31 acc16= variable 0
+  32 call writeAcc16
+  33 ;test11.p(7)   }
+  34 br 28
+  35 ;test11.p(8)   write(0);
+  36 acc8= constant 0
+  37 call writeAcc8
+  38 ;test11.p(9) }
+  39 stop
