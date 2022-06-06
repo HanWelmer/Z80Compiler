@@ -3,12 +3,20 @@
  * Test comparisons
  */
 class TestIf {
+  int zero = 0;
   int one = 1;
   int three = 3;
   int four = 4;
   int five = 5;
   int twelve = 12;
-  write(128);
+  byte byteOne = 1;
+  byte byteSix = 262;
+  write(133);
+  if (4 == (zero + twelve/(1+2))) write(132);
+  if (four == (0 + 12/(one + 2))) write(131);
+  if (four == (0 + 12/(byteOne + 2))) write(130);
+  if (four == (0 + 12/(1 + 2))) write(129);
+  if (four == 0 + 12/(1 + 2)) write(128);
   //stack level 2
   if (5 >= (twelve/(one+2))) write(127);
   if (4 >= (twelve/(one+2))) write(126);

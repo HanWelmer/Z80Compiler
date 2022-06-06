@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO check of test cases in test.p voorkomen in test*.p
 //TODO compiler optimalisatie, zie test3.p: <acc16; acc16= unstack16
 //TODO compiler optimalisatie, zie test3.p: <acc8; acc8= unstack8
 //TODO test5.p lijkt overbodige haakjes te moeten hebben.

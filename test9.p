@@ -1,5 +1,5 @@
 /* Program to test multiplication */
-class TestMuliply {
+class TestMultiply {
   byte b = 9;
   int i = 6561;
   if (i * 1 > b * 1) write (21); else write (0);
