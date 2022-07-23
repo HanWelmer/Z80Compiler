@@ -72,7 +72,7 @@ public class pCompiler {
   private static boolean verboseMode;
   private static String fileName;
   private static LexemeReader lexemeReader;
-  private ArrayList<Instruction> storeInstruction = new ArrayList<Instruction>();
+  private ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 
   //constructor
   public pCompiler(boolean debugMode, boolean verboseMode) {
@@ -96,7 +96,7 @@ public class pCompiler {
     }
     
     if (errors != 0) { 
-      storeInstruction.clear();
+      instructions.clear();
     }
     if (verboseMode || (errors != 0) ) {
       System.out.println();
@@ -107,7 +107,7 @@ public class pCompiler {
         System.out.println(" errors.");
       }
     }
-    return storeInstruction;
+    return instructions;
   }
   
   private void debug(String message) {
@@ -213,7 +213,7 @@ public class pCompiler {
 
     normalSkip.clear();
     reverseSkip.clear();
-    storeInstruction.clear();
+    instructions.clear();
 
     forwardAdd16.put(AddValType.add, FunctionType.acc16Plus);
     forwardAdd16.put(AddValType.sub, FunctionType.acc16Minus);
@@ -1352,25 +1352,25 @@ public class pCompiler {
   private void plantSource() {
     for(String line : sourceCode) {
       if (debugMode) {
-        debug("\n" + String.format(LINE_NR_FORMAT, storeInstruction.size()) + FunctionType.comment.getValue() + line);
+        debug("\n" + String.format(LINE_NR_FORMAT, instructions.size()) + FunctionType.comment.getValue() + line);
       }
-      storeInstruction.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
+      instructions.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
     }
     sourceCode.clear();
   } //plantSource
 
   private void plantCode(Instruction instruction) {
     /* insert M (virtual machine) code into memory */
-    if (storeInstruction.size() >= MAX_M_CODE) {
+    if (instructions.size() >= MAX_M_CODE) {
       error(10);
-      storeInstruction.clear();
+      instructions.clear();
     }
 
     /* for debugging purposes */
-    debug("\n" + String.format(LINE_NR_FORMAT, storeInstruction.size()) + instruction.toString());
+    debug("\n" + String.format(LINE_NR_FORMAT, instructions.size()) + instruction.toString());
     debug(" ;" + instruction.function + " " + instruction.operand);
 
-    storeInstruction.add(instruction);
+    instructions.add(instruction);
     if (instruction.function == FunctionType.acc8ToAcc16) {
       acc16.setOperand(acc8.operand());
       acc8.clear();
@@ -1402,11 +1402,11 @@ public class pCompiler {
 
   private void plantForwardLabel(int pos, int address) {
     //skip original source code that has been added as comment before the branch instruction.
-    while (storeInstruction.get(pos).function == FunctionType.comment) {
+    while (instructions.get(pos).function == FunctionType.comment) {
       pos++;
     }
 
-    storeInstruction.get(pos).operand.intValue = address;
+    instructions.get(pos).operand.intValue = address;
 
     /* for debugging purposes */
     debug("\nplantForwardLabel instruction[" + pos + "]=" + address);
@@ -1414,7 +1414,7 @@ public class pCompiler {
 
   private int saveLabel() {
     //address of next object code.
-    int address = storeInstruction.size();
+    int address = instructions.size();
     
     //compensate address for original source code that will be added as comment before the next instruction.
     int compensatedAddress = address + sourceCode.size();
