@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO compiler optimalisatie, zie test3.p: <acc16; acc16= unstack16
 //TODO compiler optimalisatie, zie test3.p: <acc8; acc8= unstack8
 //TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test2.p and test5.p).
@@ -90,6 +89,7 @@ public class pCompiler {
       init();
       prog();
       plant(new Instruction(FunctionType.stop));
+      optimize();
     } catch (FatalError e) {
       error(e.getErrorNumber());
       System.exit(1);
@@ -1307,6 +1307,20 @@ public class pCompiler {
     debug("\nprog: end");
   }
   
+  private void optimize() {
+    debug("\noptimize: start m-code optimization.");
+    int pos = 0;
+    while (pos < instructions.size()-2) {
+      //remove tuple { <acc16; acc16= unstack16 }
+      if ((instructions.get(pos).function == FunctionType.stackAcc16) && (instructions.get(pos+1).function == FunctionType.unstackAcc16)) {
+        debug(String.format("\noptimize: removing tuple { <acc16; acc16= unstack16 } at %d-%d", pos, pos+1));
+        relocate(pos, 2);
+      }
+      pos++;
+    }
+    debug("\noptimize: end.");
+  } //optimize
+  
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
     //load acc with operand.
@@ -1435,4 +1449,21 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
     }
   } //popStackedDatatype()
+  
+  private void relocate(int pos, int number) {
+    //remove #number instructions.
+    for (int i = 0; i<number; i++) {
+      instructions.remove(pos);
+    }
+
+    //adjust branch instructions.
+    int start = pos;
+    while (pos < instructions.size()-1) {
+      if (brFunctions.contains(instructions.get(pos).function) && (instructions.get(pos).operand.intValue > start)) {
+        instructions.get(pos).operand.intValue -= number;
+      }
+      pos++;
+    }
+  } //relocate
+
 }

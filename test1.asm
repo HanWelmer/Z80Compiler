@@ -620,8 +620,8 @@ main:
         LD    (05000H),A
         ;;test1.p(3)   int p = 1;
         LD    A,1
-        LD    H,0
         LD    L,A
+        LD    H,0
         LD    (05001H),HL
         ;;test1.p(4)   while (b > 4) {
         LD    A,(05000H)
@@ -631,8 +631,8 @@ main:
         JP    Z,L28
         ;;test1.p(5)     int test = 1;
         LD    A,1
-        LD    H,0
         LD    L,A
+        LD    H,0
         LD    (05003H),HL
         ;;test1.p(6)     write(b);
         LD    A,(05000H)
@@ -650,24 +650,22 @@ main:
         JP    L9
         ;;test1.p(9)   p = 4;
         LD    A,4
-        LD    H,0
         LD    L,A
+        LD    H,0
         LD    (05001H),HL
         ;;test1.p(10)   while (p > 2) {
         LD    HL,(05001H)
-        PUSH HL
-        POP  HL
         LD    A,2
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L50
+        JP    Z,L48
         ;;test1.p(11)     int test = 2;
         LD    A,2
-        LD    H,0
         LD    L,A
+        LD    H,0
         LD    (05003H),HL
         ;;test1.p(12)     write(p);
         LD    HL,(05001H)
@@ -688,7 +686,7 @@ main:
         PUSH AF
         POP  AF
         SUB   A,1
-        JP    C,L68
+        JP    C,L66
         ;;test1.p(17)     write(a);
         LD    A,(05003H)
         CALL  writeA
@@ -697,7 +695,7 @@ main:
         SUB   A,1
         LD    (05003H),A
         ;;test1.p(19)   }
-        JP    L53
+        JP    L51
         ;;test1.p(20)   write(0);
         LD    A,0
         CALL  writeA

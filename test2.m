@@ -8,79 +8,63 @@
    7 acc8=> variable 0
    8 ;test2.p(4)   if (a == 1) write(8);
    9 acc16= variable 0
-  10 <acc16
-  11 acc16= unstack16
-  12 acc8= constant 1
-  13 acc16CompareAcc8
-  14 brne 19
-  15 acc8= constant 8
-  16 call writeAcc8
-  17 ;test2.p(5)   //commentaar.
-  18 ;test2.p(6)   if (a != 0) write(7);
-  19 acc16= variable 0
-  20 <acc16
-  21 acc16= unstack16
-  22 acc8= constant 0
-  23 acc16CompareAcc8
-  24 breq 28
-  25 acc8= constant 7
-  26 call writeAcc8
-  27 ;test2.p(7)   if (a > 0) write(6);
-  28 acc16= variable 0
-  29 <acc16
-  30 acc16= unstack16
-  31 acc8= constant 0
-  32 acc16CompareAcc8
-  33 brle 37
-  34 acc8= constant 6
-  35 call writeAcc8
-  36 ;test2.p(8)   if (a >= 0) write(5);
-  37 acc16= variable 0
-  38 <acc16
-  39 acc16= unstack16
-  40 acc8= constant 0
-  41 acc16CompareAcc8
-  42 brlt 46
-  43 acc8= constant 5
-  44 call writeAcc8
-  45 ;test2.p(9)   if (a >= 1) write(4);
-  46 acc16= variable 0
-  47 <acc16
-  48 acc16= unstack16
-  49 acc8= constant 1
-  50 acc16CompareAcc8
-  51 brlt 55
-  52 acc8= constant 4
-  53 call writeAcc8
-  54 ;test2.p(10)   if (a < 2) write(3);
-  55 acc16= variable 0
-  56 <acc16
-  57 acc16= unstack16
-  58 acc8= constant 2
-  59 acc16CompareAcc8
-  60 brge 64
-  61 acc8= constant 3
-  62 call writeAcc8
-  63 ;test2.p(11)   if (a <= 2) write(2);
-  64 acc16= variable 0
-  65 <acc16
-  66 acc16= unstack16
-  67 acc8= constant 2
-  68 acc16CompareAcc8
-  69 brgt 73
-  70 acc8= constant 2
-  71 call writeAcc8
-  72 ;test2.p(12)   if (a <= 1) write(1);
-  73 acc16= variable 0
-  74 <acc16
-  75 acc16= unstack16
-  76 acc8= constant 1
-  77 acc16CompareAcc8
-  78 brgt 82
-  79 acc8= constant 1
-  80 call writeAcc8
-  81 ;test2.p(13)   write(0);
-  82 acc8= constant 0
-  83 call writeAcc8
-  84 ;test2.p(14) }
-  85 stop
+  10 acc8= constant 1
+  11 acc16CompareAcc8
+  12 brne 17
+  13 acc8= constant 8
+  14 call writeAcc8
+  15 ;test2.p(5)   //commentaar.
+  16 ;test2.p(6)   if (a != 0) write(7);
+  17 acc16= variable 0
+  18 acc8= constant 0
+  19 acc16CompareAcc8
+  20 breq 24
+  21 acc8= constant 7
+  22 call writeAcc8
+  23 ;test2.p(7)   if (a > 0) write(6);
+  24 acc16= variable 0
+  25 acc8= constant 0
+  26 acc16CompareAcc8
+  27 brle 31
+  28 acc8= constant 6
+  29 call writeAcc8
+  30 ;test2.p(8)   if (a >= 0) write(5);
+  31 acc16= variable 0
+  32 acc8= constant 0
+  33 acc16CompareAcc8
+  34 brlt 38
+  35 acc8= constant 5
+  36 call writeAcc8
+  37 ;test2.p(9)   if (a >= 1) write(4);
+  38 acc16= variable 0
+  39 acc8= constant 1
+  40 acc16CompareAcc8
+  41 brlt 45
+  42 acc8= constant 4
+  43 call writeAcc8
+  44 ;test2.p(10)   if (a < 2) write(3);
+  45 acc16= variable 0
+  46 acc8= constant 2
+  47 acc16CompareAcc8
+  48 brge 52
+  49 acc8= constant 3
+  50 call writeAcc8
+  51 ;test2.p(11)   if (a <= 2) write(2);
+  52 acc16= variable 0
+  53 acc8= constant 2
+  54 acc16CompareAcc8
+  55 brgt 59
+  56 acc8= constant 2
+  57 call writeAcc8
+  58 ;test2.p(12)   if (a <= 1) write(1);
+  59 acc16= variable 0
+  60 acc8= constant 1
+  61 acc16CompareAcc8
+  62 brgt 66
+  63 acc8= constant 1
+  64 call writeAcc8
+  65 ;test2.p(13)   write(0);
+  66 acc8= constant 0
+  67 call writeAcc8
+  68 ;test2.p(14) }
+  69 stop

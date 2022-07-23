@@ -614,7 +614,7 @@ writeA:
         RET
 main:
         ;;test9.p(0) /* Program to test multiplication */
-        ;;test9.p(1) class TestMuliply {
+        ;;test9.p(1) class TestMultiply {
         ;;test9.p(2)   byte b = 9;
         LD    A,9
         LD    (05000H),A
@@ -668,18 +668,16 @@ main:
         LD    HL,(05001H)
         LD    DE,1
         CALL  mul16
-        PUSH HL
-        POP  HL
         LD    A,(05000H)
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L47
+        JP    Z,L45
         LD    A,19
         CALL  writeA
-        JP    L50
+        JP    L48
         LD    A,0
         CALL  writeA
         ;;test9.p(7)   if (b * 1 < i) write (18); else write (0);
@@ -695,10 +693,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L60
+        JP    NC,L58
         LD    A,18
         CALL  writeA
-        JP    L63
+        JP    L61
         LD    A,0
         CALL  writeA
         ;;test9.p(8)   if (i > b * 1) write (17); else write (0);
@@ -715,10 +713,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L73
+        JP    Z,L71
         LD    A,17
         CALL  writeA
-        JP    L76
+        JP    L74
         LD    A,0
         CALL  writeA
         ;;test9.p(9)   if (b < i * 1) write (16); else write (0);
@@ -732,10 +730,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L86
+        JP    NC,L84
         LD    A,16
         CALL  writeA
-        JP    L89
+        JP    L87
         LD    A,0
         CALL  writeA
         ;;test9.p(10)   if (3 * 3 < i) write (15); else write (0);
@@ -751,28 +749,26 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L99
+        JP    NC,L97
         LD    A,15
         CALL  writeA
-        JP    L102
+        JP    L100
         LD    A,0
         CALL  writeA
         ;;test9.p(11)   if (6561 * 1 > b) write (14); else write (0);
         LD    HL,6561
         LD    DE,1
         CALL  mul16
-        PUSH HL
-        POP  HL
         LD    A,(05000H)
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L112
+        JP    Z,L108
         LD    A,14
         CALL  writeA
-        JP    L115
+        JP    L111
         LD    A,0
         CALL  writeA
         ;;test9.p(12)   if (i > 3 * 3) write (13); else write (0);
@@ -789,10 +785,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L125
+        JP    Z,L121
         LD    A,13
         CALL  writeA
-        JP    L128
+        JP    L124
         LD    A,0
         CALL  writeA
         ;;test9.p(13)   if (b < 6561 * 1) write (12); else write (0);
@@ -806,26 +802,24 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L138
+        JP    NC,L134
         LD    A,12
         CALL  writeA
-        JP    L141
+        JP    L137
         LD    A,0
         CALL  writeA
         ;;test9.p(14)   if (i > b) write (11); else write (0);
         LD    HL,(05001H)
-        PUSH HL
-        POP  HL
         LD    A,(05000H)
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L150
+        JP    Z,L144
         LD    A,11
         CALL  writeA
-        JP    L153
+        JP    L147
         LD    A,0
         CALL  writeA
         ;;test9.p(15)   if (b < i) write (10); else write (0);
@@ -837,10 +831,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L162
+        JP    NC,L156
         LD    A,10
         CALL  writeA
-        JP    L166
+        JP    L160
         LD    A,0
         CALL  writeA
         ;;test9.p(16) 
@@ -859,10 +853,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L177
+        JP    NC,L171
         LD    A,9
         CALL  writeA
-        JP    L180
+        JP    L174
         LD    A,0
         CALL  writeA
         ;;test9.p(18)   if (6561 * 1 > 3 * 3) write (8); else write (0);
@@ -881,10 +875,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L191
+        JP    Z,L185
         LD    A,8
         CALL  writeA
-        JP    L194
+        JP    L188
         LD    A,0
         CALL  writeA
         ;;test9.p(19)   if (9 < 6561 * 1) write (7); else write (0);
@@ -896,28 +890,26 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L202
+        JP    NC,L196
         LD    A,7
         CALL  writeA
-        JP    L205
+        JP    L199
         LD    A,0
         CALL  writeA
         ;;test9.p(20)   if (6561 * 1 > 9) write (6); else write (0);
         LD    HL,6561
         LD    DE,1
         CALL  mul16
-        PUSH HL
-        POP  HL
         LD    A,9
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L215
+        JP    Z,L207
         LD    A,6
         CALL  writeA
-        JP    L218
+        JP    L210
         LD    A,0
         CALL  writeA
         ;;test9.p(21)   if (6561 > 3 * 3) write (5); else write (0);
@@ -932,10 +924,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L226
+        JP    Z,L218
         LD    A,5
         CALL  writeA
-        JP    L229
+        JP    L221
         LD    A,0
         CALL  writeA
         ;;test9.p(22)   if (3 * 3 < 6561) write (4); else write (0);
@@ -951,10 +943,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L239
+        JP    NC,L231
         LD    A,4
         CALL  writeA
-        JP    L242
+        JP    L234
         LD    A,0
         CALL  writeA
         ;;test9.p(23)   if (9 < 6561) write (3); else write (0);
@@ -964,10 +956,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L249
+        JP    NC,L241
         LD    A,3
         CALL  writeA
-        JP    L252
+        JP    L244
         LD    A,0
         CALL  writeA
         ;;test9.p(24)   if (6561 > 9) write (2); else write (0);
@@ -978,10 +970,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L259
+        JP    Z,L251
         LD    A,2
         CALL  writeA
-        JP    L262
+        JP    L254
         LD    A,0
         CALL  writeA
         ;;test9.p(25)   write(1);

@@ -20,21 +20,19 @@
   19 acc8= constant 2
   20 acc8=> variable 0
   21 acc16= variable 0
-  22 <acc16
-  23 acc16= unstack16
-  24 acc8= constant 0
-  25 acc16CompareAcc8
-  26 brle 36
-  27 br 30
-  28 decr16 variable 0
-  29 br 21
-  30 ;test11.p(6)     write(i);
-  31 acc16= variable 0
-  32 call writeAcc16
-  33 ;test11.p(7)   }
-  34 br 28
-  35 ;test11.p(8)   write(0);
-  36 acc8= constant 0
-  37 call writeAcc8
-  38 ;test11.p(9) }
-  39 stop
+  22 acc8= constant 0
+  23 acc16CompareAcc8
+  24 brle 34
+  25 br 28
+  26 decr16 variable 0
+  27 br 21
+  28 ;test11.p(6)     write(i);
+  29 acc16= variable 0
+  30 call writeAcc16
+  31 ;test11.p(7)   }
+  32 br 26
+  33 ;test11.p(8)   write(0);
+  34 acc8= constant 0
+  35 call writeAcc8
+  36 ;test11.p(9) }
+  37 stop

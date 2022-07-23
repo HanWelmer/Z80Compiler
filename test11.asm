@@ -638,16 +638,14 @@ main:
         LD    H,0
         LD    (05000H),HL
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,0
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L36
-        JP    L30
+        JP    Z,L34
+        JP    L28
         LD    HL,(05000H)
         DEC   HL
         LD    (05000H),HL
@@ -656,7 +654,7 @@ main:
         LD    HL,(05000H)
         CALL  writeHL
         ;;test11.p(7)   }
-        JP    L28
+        JP    L26
         ;;test11.p(8)   write(0);
         LD    A,0
         CALL  writeA

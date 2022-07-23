@@ -615,11 +615,11 @@ writeA:
 main:
         ;;test0.p(0) /* Program to test generated Z80 assembler code */
         ;;test0.p(1) class TestPrint {
-        ;;test0.p(2)   byte b = 1;
-        LD    A,1
-        LD    (05000H),A
-        ;;test0.p(3)   int i = 2;
+        ;;test0.p(2)   byte b = 2;
         LD    A,2
+        LD    (05000H),A
+        ;;test0.p(3)   int i = 1;
+        LD    A,1
         LD    L,A
         LD    H,0
         LD    (05001H),HL

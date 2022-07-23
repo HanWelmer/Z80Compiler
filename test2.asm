@@ -620,92 +620,78 @@ main:
         CALL  writeA
         ;;test2.p(3)   int a = 1;
         LD    A,1
-        LD    H,0
         LD    L,A
+        LD    H,0
         LD    (05000H),HL
         ;;test2.p(4)   if (a == 1) write(8);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,1
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NZ,L19
+        JP    NZ,L17
         LD    A,8
         CALL  writeA
         ;;test2.p(5)   //commentaar.
         ;;test2.p(6)   if (a != 0) write(7);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,0
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L28
+        JP    Z,L24
         LD    A,7
         CALL  writeA
         ;;test2.p(7)   if (a > 0) write(6);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,0
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L37
+        JP    Z,L31
         LD    A,6
         CALL  writeA
         ;;test2.p(8)   if (a >= 0) write(5);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,0
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    C,L46
+        JP    C,L38
         LD    A,5
         CALL  writeA
         ;;test2.p(9)   if (a >= 1) write(4);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,1
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    C,L55
+        JP    C,L45
         LD    A,4
         CALL  writeA
         ;;test2.p(10)   if (a < 2) write(3);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,2
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NC,L64
+        JP    NC,L52
         LD    A,3
         CALL  writeA
         ;;test2.p(11)   if (a <= 2) write(2);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,2
         LD    E,A
         LD    D,0
@@ -713,13 +699,11 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L73
+        JP    C,L59
         LD    A,2
         CALL  writeA
         ;;test2.p(12)   if (a <= 1) write(1);
         LD    HL,(05000H)
-        PUSH HL
-        POP  HL
         LD    A,1
         LD    E,A
         LD    D,0
@@ -727,7 +711,7 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L82
+        JP    C,L66
         LD    A,1
         CALL  writeA
         ;;test2.p(13)   write(0);

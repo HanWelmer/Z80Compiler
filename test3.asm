@@ -646,33 +646,29 @@ main:
         LD    HL,6561
         LD    DE,729
         CALL  div16
-        PUSH HL
-        POP  HL
         LD    A,9
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NZ,L32
+        JP    NZ,L30
         LD    A,11
         CALL  writeA
-        JP    L35
+        JP    L33
         LD    A,0
         CALL  writeA
         ;;test3.p(10)   if (729 * 9 == 6561) write (10); else write (0);
         LD    HL,729
         LD    DE,9
         CALL  mul16
-        PUSH HL
-        POP  HL
         LD    DE,6561
         OR    A
         SBC   HL,DE
-        JP    NZ,L44
+        JP    NZ,L40
         LD    A,10
         CALL  writeA
-        JP    L47
+        JP    L43
         LD    A,0
         CALL  writeA
         ;;test3.p(11)   if (729 == 729) write (9); else write (0);
@@ -680,10 +676,10 @@ main:
         LD    DE,729
         OR    A
         SBC   HL,DE
-        JP    NZ,L53
+        JP    NZ,L49
         LD    A,9
         CALL  writeA
-        JP    L56
+        JP    L52
         LD    A,0
         CALL  writeA
         ;;test3.p(12)   if (2 * 9 * 9 == 162) write (8); else write (0);
@@ -699,10 +695,10 @@ main:
         PUSH AF
         POP  AF
         SUB   A,162
-        JP    NZ,L66
+        JP    NZ,L62
         LD    A,8
         CALL  writeA
-        JP    L69
+        JP    L65
         LD    A,0
         CALL  writeA
         ;;test3.p(13)   if (7 * 5 == 35) write (7); else write (0);
@@ -714,10 +710,10 @@ main:
         PUSH AF
         POP  AF
         SUB   A,35
-        JP    NZ,L78
+        JP    NZ,L74
         LD    A,7
         CALL  writeA
-        JP    L81
+        JP    L77
         LD    A,0
         CALL  writeA
         ;;test3.p(14)   a = 2;
