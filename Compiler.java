@@ -59,7 +59,7 @@ public class Compiler {
     * Generated intermediate code goes to default system output.
     */
     LexemeReader lexemeReader = new LexemeReader();
-    PCompiler pCompiler = new PCompiler(debugMode, verboseMode);
+    pCompiler pCompiler = new pCompiler(debugMode, verboseMode);
     fileName = fileName.replace(".P", ".p");
     ArrayList<Instruction> instructions = null;
     if (lexemeReader.init(debugMode, fileName)) {

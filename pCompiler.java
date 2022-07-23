@@ -66,7 +66,7 @@ import java.util.Stack;
  * In an assignment the value of a byte expression can be assigned to an int variable.
  * In an assignment the value of a int expression assigned to a byte variable will be truncated.
  */
-public class PCompiler {
+public class pCompiler {
   /* global variables used by the constructor or the interface functions */
   private static boolean debugMode;
   private static boolean verboseMode;
@@ -75,7 +75,7 @@ public class PCompiler {
   private ArrayList<Instruction> storeInstruction = new ArrayList<Instruction>();
 
   //constructor
-  public PCompiler(boolean debugMode, boolean verboseMode) {
+  public pCompiler(boolean debugMode, boolean verboseMode) {
     this.debugMode = debugMode;
     this.verboseMode = verboseMode;
   }
