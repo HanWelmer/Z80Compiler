@@ -53,64 +53,60 @@
   52 acc8= constant 2
   53 acc8* constant 9
   54 acc8* constant 9
-  55 <acc8
-  56 acc8= unstack8
-  57 acc8Comp constant 162
-  58 brne 62
-  59 acc8= constant 8
-  60 call writeAcc8
-  61 br 65
-  62 acc8= constant 0
-  63 call writeAcc8
-  64 ;test3.p(13)   if (7 * 5 == 35) write (7); else write (0);
-  65 acc8= constant 7
-  66 acc8* constant 5
-  67 <acc8
-  68 acc8= unstack8
-  69 acc8Comp constant 35
-  70 brne 74
-  71 acc8= constant 7
-  72 call writeAcc8
-  73 br 77
-  74 acc8= constant 0
-  75 call writeAcc8
-  76 ;test3.p(14)   a = 2;
-  77 acc8= constant 2
-  78 acc8=> variable 0
-  79 ;test3.p(15)   write(3 * a);
-  80 acc8= constant 3
-  81 acc8ToAcc16
-  82 acc16* variable 0
-  83 call writeAcc16
-  84 ;test3.p(16)   a = 1;
-  85 acc8= constant 1
-  86 acc8=> variable 0
-  87 ;test3.p(17)   write(a * 5);
-  88 acc16= variable 0
-  89 acc16* constant 5
-  90 call writeAcc16
-  91 ;test3.p(18)   a = 2 * 2;
-  92 acc8= constant 2
-  93 acc8* constant 2
-  94 acc8=> variable 0
-  95 ;test3.p(19)   write(a);
-  96 acc16= variable 0
-  97 call writeAcc16
-  98 ;test3.p(20)   write(1 * 3);
-  99 acc8= constant 1
- 100 acc8* constant 3
+  55 acc8Comp constant 162
+  56 brne 60
+  57 acc8= constant 8
+  58 call writeAcc8
+  59 br 63
+  60 acc8= constant 0
+  61 call writeAcc8
+  62 ;test3.p(13)   if (7 * 5 == 35) write (7); else write (0);
+  63 acc8= constant 7
+  64 acc8* constant 5
+  65 acc8Comp constant 35
+  66 brne 70
+  67 acc8= constant 7
+  68 call writeAcc8
+  69 br 73
+  70 acc8= constant 0
+  71 call writeAcc8
+  72 ;test3.p(14)   a = 2;
+  73 acc8= constant 2
+  74 acc8=> variable 0
+  75 ;test3.p(15)   write(3 * a);
+  76 acc8= constant 3
+  77 acc8ToAcc16
+  78 acc16* variable 0
+  79 call writeAcc16
+  80 ;test3.p(16)   a = 1;
+  81 acc8= constant 1
+  82 acc8=> variable 0
+  83 ;test3.p(17)   write(a * 5);
+  84 acc16= variable 0
+  85 acc16* constant 5
+  86 call writeAcc16
+  87 ;test3.p(18)   a = 2 * 2;
+  88 acc8= constant 2
+  89 acc8* constant 2
+  90 acc8=> variable 0
+  91 ;test3.p(19)   write(a);
+  92 acc16= variable 0
+  93 call writeAcc16
+  94 ;test3.p(20)   write(1 * 3);
+  95 acc8= constant 1
+  96 acc8* constant 3
+  97 call writeAcc8
+  98 ;test3.p(21)   write(2 * 1);
+  99 acc8= constant 2
+ 100 acc8* constant 1
  101 call writeAcc8
- 102 ;test3.p(21)   write(2 * 1);
- 103 acc8= constant 2
+ 102 ;test3.p(22)   write(1 * 1);
+ 103 acc8= constant 1
  104 acc8* constant 1
  105 call writeAcc8
- 106 ;test3.p(22)   write(1 * 1);
+ 106 ;test3.p(23)   write(1 * 0);
  107 acc8= constant 1
- 108 acc8* constant 1
+ 108 acc8* constant 0
  109 call writeAcc8
- 110 ;test3.p(23)   write(1 * 0);
- 111 acc8= constant 1
- 112 acc8* constant 0
- 113 call writeAcc8
- 114 ;test3.p(24) }
- 115 stop
+ 110 ;test3.p(24) }
+ 111 stop

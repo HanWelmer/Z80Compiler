@@ -692,13 +692,11 @@ main:
         LD    C,9
         MLT   BC
         LD    A,C
-        PUSH AF
-        POP  AF
         SUB   A,162
-        JP    NZ,L62
+        JP    NZ,L60
         LD    A,8
         CALL  writeA
-        JP    L65
+        JP    L63
         LD    A,0
         CALL  writeA
         ;;test3.p(13)   if (7 * 5 == 35) write (7); else write (0);
@@ -707,13 +705,11 @@ main:
         LD    C,5
         MLT   BC
         LD    A,C
-        PUSH AF
-        POP  AF
         SUB   A,35
-        JP    NZ,L74
+        JP    NZ,L70
         LD    A,7
         CALL  writeA
-        JP    L77
+        JP    L73
         LD    A,0
         CALL  writeA
         ;;test3.p(14)   a = 2;

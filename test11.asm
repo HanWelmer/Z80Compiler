@@ -619,11 +619,9 @@ main:
         LD    A,4
         LD    (05000H),A
         LD    A,(05000H)
-        PUSH AF
-        POP  AF
         SUB   A,2
-        JP    Z,L19
-        JP    L13
+        JP    Z,L17
+        JP    L11
         LD    HL,(05000H)
         DEC   (HL)
         JP    L5
@@ -631,7 +629,7 @@ main:
         LD    A,(05000H)
         CALL  writeA
         ;;test11.p(4)   }
-        JP    L11
+        JP    L9
         ;;test11.p(5)   for(int i = 2; i>0; i--) {
         LD    A,2
         LD    L,A
@@ -644,17 +642,17 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L34
-        JP    L28
+        JP    Z,L32
+        JP    L26
         LD    HL,(05000H)
         DEC   HL
         LD    (05000H),HL
-        JP    L21
+        JP    L19
         ;;test11.p(6)     write(i);
         LD    HL,(05000H)
         CALL  writeHL
         ;;test11.p(7)   }
-        JP    L26
+        JP    L24
         ;;test11.p(8)   write(0);
         LD    A,0
         CALL  writeA

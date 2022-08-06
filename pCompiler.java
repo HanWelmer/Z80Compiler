@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO compiler optimalisatie, zie test3.p: <acc8; acc8= unstack8
 //TODO test5.p lijkt overbodige haakjes te moeten hebben.
 //TODO add test cases for whileStatement (see test2.p and test5.p).
 //TODO add test cases for doStatement (see test2.p and test5.p).
@@ -1311,9 +1310,13 @@ public class pCompiler {
     debug("\noptimize: start m-code optimization.");
     int pos = 0;
     while (pos < instructions.size()-2) {
-      //remove tuple { <acc16; acc16= unstack16 }
       if ((instructions.get(pos).function == FunctionType.stackAcc16) && (instructions.get(pos+1).function == FunctionType.unstackAcc16)) {
+        //remove tuple { <acc16; acc16= unstack16 }
         debug(String.format("\noptimize: removing tuple { <acc16; acc16= unstack16 } at %d-%d", pos, pos+1));
+        relocate(pos, 2);
+      } else if ((instructions.get(pos).function == FunctionType.stackAcc8) && (instructions.get(pos+1).function == FunctionType.unstackAcc8)) {
+        //remove tuple { <acc8; acc8= unstack8 }
+        debug(String.format("\noptimize: removing tuple { <acc8; acc8= unstack8 } at %d-%d", pos, pos+1));
         relocate(pos, 2);
       }
       pos++;

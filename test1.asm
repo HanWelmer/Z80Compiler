@@ -625,10 +625,8 @@ main:
         LD    (05001H),HL
         ;;test1.p(4)   while (b > 4) {
         LD    A,(05000H)
-        PUSH AF
-        POP  AF
         SUB   A,4
-        JP    Z,L28
+        JP    Z,L26
         ;;test1.p(5)     int test = 1;
         LD    A,1
         LD    L,A
@@ -661,7 +659,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L48
+        JP    Z,L46
         ;;test1.p(11)     int test = 2;
         LD    A,2
         LD    L,A
@@ -677,16 +675,14 @@ main:
         SBC   HL,DE
         LD    (05001H),HL
         ;;test1.p(14)   }
-        JP    L31
+        JP    L29
         ;;test1.p(15)   byte a = 2;
         LD    A,2
         LD    (05003H),A
         ;;test1.p(16)   while (a >= 1) {
         LD    A,(05003H)
-        PUSH AF
-        POP  AF
         SUB   A,1
-        JP    C,L66
+        JP    C,L62
         ;;test1.p(17)     write(a);
         LD    A,(05003H)
         CALL  writeA
@@ -695,7 +691,7 @@ main:
         SUB   A,1
         LD    (05003H),A
         ;;test1.p(19)   }
-        JP    L51
+        JP    L49
         ;;test1.p(20)   write(0);
         LD    A,0
         CALL  writeA
