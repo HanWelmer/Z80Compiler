@@ -1,6 +1,6 @@
-   0 ;test11.p(0) /* Program to test generated Z80 assembler code */
-   1 ;test11.p(1) class TestFor {
-   2 ;test11.p(2)   for(byte b = 4; b>2; b--) {
+   0 ;test11.j(0) /* Program to test generated Z80 assembler code */
+   1 ;test11.j(1) class TestFor {
+   2 ;test11.j(2)   for(byte b = 4; b>2; b--) {
    3 acc8= constant 4
    4 acc8=> variable 0
    5 acc8= variable 0
@@ -9,12 +9,12 @@
    8 br 11
    9 decr8 variable 0
   10 br 5
-  11 ;test11.p(3)     write(b);
+  11 ;test11.j(3)     write(b);
   12 acc8= variable 0
   13 call writeAcc8
-  14 ;test11.p(4)   }
+  14 ;test11.j(4)   }
   15 br 9
-  16 ;test11.p(5)   for(int i = 2; i>0; i--) {
+  16 ;test11.j(5)   for(int i = 2; i>0; i--) {
   17 acc8= constant 2
   18 acc8=> variable 0
   19 acc16= variable 0
@@ -24,13 +24,13 @@
   23 br 26
   24 decr16 variable 0
   25 br 19
-  26 ;test11.p(6)     write(i);
+  26 ;test11.j(6)     write(i);
   27 acc16= variable 0
   28 call writeAcc16
-  29 ;test11.p(7)   }
+  29 ;test11.j(7)   }
   30 br 24
-  31 ;test11.p(8)   write(0);
+  31 ;test11.j(8)   write(0);
   32 acc8= constant 0
   33 call writeAcc8
-  34 ;test11.p(9) }
+  34 ;test11.j(9) }
   35 stop

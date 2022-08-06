@@ -1,12 +1,12 @@
-   0 ;test9.p(0) /* Program to test multiplication */
-   1 ;test9.p(1) class TestMultiply {
-   2 ;test9.p(2)   byte b = 9;
+   0 ;test9.j(0) /* Program to test multiplication */
+   1 ;test9.j(1) class TestMultiply {
+   2 ;test9.j(2)   byte b = 9;
    3 acc8= constant 9
    4 acc8=> variable 0
-   5 ;test9.p(3)   int i = 6561;
+   5 ;test9.j(3)   int i = 6561;
    6 acc16= constant 6561
    7 acc16=> variable 1
-   8 ;test9.p(4)   if (i * 1 > b * 1) write (21); else write (0);
+   8 ;test9.j(4)   if (i * 1 > b * 1) write (21); else write (0);
    9 acc16= variable 1
   10 acc16* constant 1
   11 <acc16
@@ -20,7 +20,7 @@
   19 br 23
   20 acc8= constant 0
   21 call writeAcc8
-  22 ;test9.p(5)   if (b * 1 < i * 1) write (20); else write (0);
+  22 ;test9.j(5)   if (b * 1 < i * 1) write (20); else write (0);
   23 acc8= variable 0
   24 acc8* constant 1
   25 <acc8
@@ -34,7 +34,7 @@
   33 br 37
   34 acc8= constant 0
   35 call writeAcc8
-  36 ;test9.p(6)   if (i * 1 > b) write (19); else write (0);
+  36 ;test9.j(6)   if (i * 1 > b) write (19); else write (0);
   37 acc16= variable 1
   38 acc16* constant 1
   39 acc8= variable 0
@@ -45,7 +45,7 @@
   44 br 48
   45 acc8= constant 0
   46 call writeAcc8
-  47 ;test9.p(7)   if (b * 1 < i) write (18); else write (0);
+  47 ;test9.j(7)   if (b * 1 < i) write (18); else write (0);
   48 acc8= variable 0
   49 acc8* constant 1
   50 acc16= variable 1
@@ -56,7 +56,7 @@
   55 br 59
   56 acc8= constant 0
   57 call writeAcc8
-  58 ;test9.p(8)   if (i > b * 1) write (17); else write (0);
+  58 ;test9.j(8)   if (i > b * 1) write (17); else write (0);
   59 acc16= variable 1
   60 <acc16
   61 acc8= variable 0
@@ -69,7 +69,7 @@
   68 br 72
   69 acc8= constant 0
   70 call writeAcc8
-  71 ;test9.p(9)   if (b < i * 1) write (16); else write (0);
+  71 ;test9.j(9)   if (b < i * 1) write (16); else write (0);
   72 acc8= variable 0
   73 <acc8
   74 acc16= variable 1
@@ -82,7 +82,7 @@
   81 br 85
   82 acc8= constant 0
   83 call writeAcc8
-  84 ;test9.p(10)   if (3 * 3 < i) write (15); else write (0);
+  84 ;test9.j(10)   if (3 * 3 < i) write (15); else write (0);
   85 acc8= constant 3
   86 acc8* constant 3
   87 acc16= variable 1
@@ -93,7 +93,7 @@
   92 br 96
   93 acc8= constant 0
   94 call writeAcc8
-  95 ;test9.p(11)   if (6561 * 1 > b) write (14); else write (0);
+  95 ;test9.j(11)   if (6561 * 1 > b) write (14); else write (0);
   96 acc16= constant 6561
   97 acc16* constant 1
   98 acc8= variable 0
@@ -104,7 +104,7 @@
  103 br 107
  104 acc8= constant 0
  105 call writeAcc8
- 106 ;test9.p(12)   if (i > 3 * 3) write (13); else write (0);
+ 106 ;test9.j(12)   if (i > 3 * 3) write (13); else write (0);
  107 acc16= variable 1
  108 <acc16
  109 acc8= constant 3
@@ -117,7 +117,7 @@
  116 br 120
  117 acc8= constant 0
  118 call writeAcc8
- 119 ;test9.p(13)   if (b < 6561 * 1) write (12); else write (0);
+ 119 ;test9.j(13)   if (b < 6561 * 1) write (12); else write (0);
  120 acc8= variable 0
  121 <acc8
  122 acc16= constant 6561
@@ -130,7 +130,7 @@
  129 br 133
  130 acc8= constant 0
  131 call writeAcc8
- 132 ;test9.p(14)   if (i > b) write (11); else write (0);
+ 132 ;test9.j(14)   if (i > b) write (11); else write (0);
  133 acc16= variable 1
  134 acc8= variable 0
  135 acc16CompareAcc8
@@ -140,7 +140,7 @@
  139 br 143
  140 acc8= constant 0
  141 call writeAcc8
- 142 ;test9.p(15)   if (b < i) write (10); else write (0);
+ 142 ;test9.j(15)   if (b < i) write (10); else write (0);
  143 acc8= variable 0
  144 acc16= variable 1
  145 acc8CompareAcc16
@@ -150,8 +150,8 @@
  149 br 154
  150 acc8= constant 0
  151 call writeAcc8
- 152 ;test9.p(16) 
- 153 ;test9.p(17)   if (3 * 3 < 6561 * 1) write (9); else write (0);
+ 152 ;test9.j(16) 
+ 153 ;test9.j(17)   if (3 * 3 < 6561 * 1) write (9); else write (0);
  154 acc8= constant 3
  155 acc8* constant 3
  156 <acc8
@@ -165,7 +165,7 @@
  164 br 168
  165 acc8= constant 0
  166 call writeAcc8
- 167 ;test9.p(18)   if (6561 * 1 > 3 * 3) write (8); else write (0);
+ 167 ;test9.j(18)   if (6561 * 1 > 3 * 3) write (8); else write (0);
  168 acc16= constant 6561
  169 acc16* constant 1
  170 <acc16
@@ -179,7 +179,7 @@
  178 br 182
  179 acc8= constant 0
  180 call writeAcc8
- 181 ;test9.p(19)   if (9 < 6561 * 1) write (7); else write (0);
+ 181 ;test9.j(19)   if (9 < 6561 * 1) write (7); else write (0);
  182 acc16= constant 6561
  183 acc16* constant 1
  184 acc8= constant 9
@@ -190,7 +190,7 @@
  189 br 193
  190 acc8= constant 0
  191 call writeAcc8
- 192 ;test9.p(20)   if (6561 * 1 > 9) write (6); else write (0);
+ 192 ;test9.j(20)   if (6561 * 1 > 9) write (6); else write (0);
  193 acc16= constant 6561
  194 acc16* constant 1
  195 acc8= constant 9
@@ -201,7 +201,7 @@
  200 br 204
  201 acc8= constant 0
  202 call writeAcc8
- 203 ;test9.p(21)   if (6561 > 3 * 3) write (5); else write (0);
+ 203 ;test9.j(21)   if (6561 > 3 * 3) write (5); else write (0);
  204 acc8= constant 3
  205 acc8* constant 3
  206 acc16= constant 6561
@@ -212,7 +212,7 @@
  211 br 215
  212 acc8= constant 0
  213 call writeAcc8
- 214 ;test9.p(22)   if (3 * 3 < 6561) write (4); else write (0);
+ 214 ;test9.j(22)   if (3 * 3 < 6561) write (4); else write (0);
  215 acc8= constant 3
  216 acc8* constant 3
  217 acc16= constant 6561
@@ -223,7 +223,7 @@
  222 br 226
  223 acc8= constant 0
  224 call writeAcc8
- 225 ;test9.p(23)   if (9 < 6561) write (3); else write (0);
+ 225 ;test9.j(23)   if (9 < 6561) write (3); else write (0);
  226 acc8= constant 9
  227 acc16= constant 6561
  228 acc8CompareAcc16
@@ -233,7 +233,7 @@
  232 br 236
  233 acc8= constant 0
  234 call writeAcc8
- 235 ;test9.p(24)   if (6561 > 9) write (2); else write (0);
+ 235 ;test9.j(24)   if (6561 > 9) write (2); else write (0);
  236 acc16= constant 6561
  237 acc8= constant 9
  238 acc16CompareAcc8
@@ -243,11 +243,11 @@
  242 br 246
  243 acc8= constant 0
  244 call writeAcc8
- 245 ;test9.p(25)   write(1);
+ 245 ;test9.j(25)   write(1);
  246 acc8= constant 1
  247 call writeAcc8
- 248 ;test9.p(26)   write(0);
+ 248 ;test9.j(26)   write(0);
  249 acc8= constant 0
  250 call writeAcc8
- 251 ;test9.p(27) }
+ 251 ;test9.j(27) }
  252 stop

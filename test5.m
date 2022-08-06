@@ -30,7 +30,7 @@
   29 ;test5.p(13)   write(133);
   30 acc8= constant 133
   31 call writeAcc8
-  32 ;test5.p(14)   if (4 == (zero + twelve/(1+2))) write(132);
+  32 ;test5.p(14)   if (4 == zero + twelve/(1+2)) write(132);
   33 acc16= variable 0
   34 <acc16= variable 10
   35 acc8= constant 1
@@ -42,7 +42,7 @@
   41 brne 45
   42 acc8= constant 132
   43 call writeAcc8
-  44 ;test5.p(15)   if (four == (0 + 12/(one + 2))) write(131);
+  44 ;test5.p(15)   if (four == 0 + 12/(one + 2)) write(131);
   45 acc16= variable 6
   46 <acc16
   47 acc8= constant 0
@@ -55,7 +55,7 @@
   54 brne 58
   55 acc8= constant 131
   56 call writeAcc8
-  57 ;test5.p(16)   if (four == (0 + 12/(byteOne + 2))) write(130);
+  57 ;test5.p(16)   if (four == 0 + 12/(byteOne + 2)) write(130);
   58 acc16= variable 6
   59 <acc16
   60 acc8= constant 0
@@ -69,7 +69,7 @@
   68 brne 72
   69 acc8= constant 130
   70 call writeAcc8
-  71 ;test5.p(17)   if (four == (0 + 12/(1 + 2))) write(129);
+  71 ;test5.p(17)   if (four == 0 + 12/(1 + 2)) write(129);
   72 acc16= variable 6
   73 <acc16
   74 acc8= constant 0
@@ -98,7 +98,7 @@
   97 acc8= constant 128
   98 call writeAcc8
   99 ;test5.p(19)   //stack level 2
- 100 ;test5.p(20)   if (5 >= (twelve/(one+2))) write(127);
+ 100 ;test5.p(20)   if (5 >= twelve/(one+2)) write(127);
  101 acc16= variable 10
  102 <acc16= variable 2
  103 acc16+ constant 2
@@ -108,7 +108,7 @@
  107 brlt 111
  108 acc8= constant 127
  109 call writeAcc8
- 110 ;test5.p(21)   if (4 >= (twelve/(one+2))) write(126);
+ 110 ;test5.p(21)   if (4 >= twelve/(one+2)) write(126);
  111 acc16= variable 10
  112 <acc16= variable 2
  113 acc16+ constant 2
@@ -118,7 +118,7 @@
  117 brlt 121
  118 acc8= constant 126
  119 call writeAcc8
- 120 ;test5.p(22)   if (4 <= (twelve/(one+2))) write(125);
+ 120 ;test5.p(22)   if (4 <= twelve/(one+2)) write(125);
  121 acc16= variable 10
  122 <acc16= variable 2
  123 acc16+ constant 2
@@ -128,7 +128,7 @@
  127 brgt 131
  128 acc8= constant 125
  129 call writeAcc8
- 130 ;test5.p(23)   if (3 <= (twelve/(one+2))) write(124);
+ 130 ;test5.p(23)   if (3 <= twelve/(one+2)) write(124);
  131 acc16= variable 10
  132 <acc16= variable 2
  133 acc16+ constant 2
@@ -138,7 +138,7 @@
  137 brgt 141
  138 acc8= constant 124
  139 call writeAcc8
- 140 ;test5.p(24)   if (5 > (twelve/(one+2))) write(123);
+ 140 ;test5.p(24)   if (5 > twelve/(one+2)) write(123);
  141 acc16= variable 10
  142 <acc16= variable 2
  143 acc16+ constant 2
@@ -148,7 +148,7 @@
  147 brle 151
  148 acc8= constant 123
  149 call writeAcc8
- 150 ;test5.p(25)   if (2 < (twelve/(one+2))) write(122);
+ 150 ;test5.p(25)   if (2 < twelve/(one+2)) write(122);
  151 acc16= variable 10
  152 <acc16= variable 2
  153 acc16+ constant 2
@@ -158,7 +158,7 @@
  157 brge 161
  158 acc8= constant 122
  159 call writeAcc8
- 160 ;test5.p(26)   if (3 != (twelve/(one+2))) write(121);
+ 160 ;test5.p(26)   if (3 != twelve/(one+2)) write(121);
  161 acc16= variable 10
  162 <acc16= variable 2
  163 acc16+ constant 2
@@ -168,7 +168,7 @@
  167 breq 171
  168 acc8= constant 121
  169 call writeAcc8
- 170 ;test5.p(27)   if (4 == (twelve/(one+2))) write(120);
+ 170 ;test5.p(27)   if (4 == twelve/(one+2)) write(120);
  171 acc16= variable 10
  172 <acc16= variable 2
  173 acc16+ constant 2
@@ -178,7 +178,7 @@
  177 brne 181
  178 acc8= constant 120
  179 call writeAcc8
- 180 ;test5.p(28)   if (5 >= (12/(1+2))) write(119);
+ 180 ;test5.p(28)   if (5 >= 12/(1+2)) write(119);
  181 acc8= constant 12
  182 <acc8= constant 1
  183 acc8+ constant 2
@@ -187,7 +187,7 @@
  186 brgt 190
  187 acc8= constant 119
  188 call writeAcc8
- 189 ;test5.p(29)   if (4 >= (12/(1+2))) write(118);
+ 189 ;test5.p(29)   if (4 >= 12/(1+2)) write(118);
  190 acc8= constant 12
  191 <acc8= constant 1
  192 acc8+ constant 2
@@ -196,7 +196,7 @@
  195 brgt 199
  196 acc8= constant 118
  197 call writeAcc8
- 198 ;test5.p(30)   if (4 <= (12/(1+2))) write(117);
+ 198 ;test5.p(30)   if (4 <= 12/(1+2)) write(117);
  199 acc8= constant 12
  200 <acc8= constant 1
  201 acc8+ constant 2
@@ -205,7 +205,7 @@
  204 brlt 208
  205 acc8= constant 117
  206 call writeAcc8
- 207 ;test5.p(31)   if (3 <= (12/(1+2))) write(116);
+ 207 ;test5.p(31)   if (3 <= 12/(1+2)) write(116);
  208 acc8= constant 12
  209 <acc8= constant 1
  210 acc8+ constant 2
@@ -214,7 +214,7 @@
  213 brlt 217
  214 acc8= constant 116
  215 call writeAcc8
- 216 ;test5.p(32)   if (5 > (12/(1+2))) write(115);
+ 216 ;test5.p(32)   if (5 > 12/(1+2)) write(115);
  217 acc8= constant 12
  218 <acc8= constant 1
  219 acc8+ constant 2
@@ -223,7 +223,7 @@
  222 brge 226
  223 acc8= constant 115
  224 call writeAcc8
- 225 ;test5.p(33)   if (3 < (12/(1+2))) write(114);
+ 225 ;test5.p(33)   if (3 < 12/(1+2)) write(114);
  226 acc8= constant 12
  227 <acc8= constant 1
  228 acc8+ constant 2
@@ -232,7 +232,7 @@
  231 brle 235
  232 acc8= constant 114
  233 call writeAcc8
- 234 ;test5.p(34)   if (3 != (12/(1+2))) write(113);
+ 234 ;test5.p(34)   if (3 != 12/(1+2)) write(113);
  235 acc8= constant 12
  236 <acc8= constant 1
  237 acc8+ constant 2
@@ -241,7 +241,7 @@
  240 breq 244
  241 acc8= constant 113
  242 call writeAcc8
- 243 ;test5.p(35)   if (4 == (12/(1+2))) write(112);
+ 243 ;test5.p(35)   if (4 == 12/(1+2)) write(112);
  244 acc8= constant 12
  245 <acc8= constant 1
  246 acc8+ constant 2
@@ -250,7 +250,7 @@
  249 brne 253
  250 acc8= constant 112
  251 call writeAcc8
- 252 ;test5.p(36)   if (1+4 >= (twelve/(one+2))) write(111);
+ 252 ;test5.p(36)   if (1+4 >= twelve/(one+2)) write(111);
  253 acc8= constant 1
  254 acc8+ constant 4
  255 <acc8
@@ -263,7 +263,7 @@
  262 brlt 266
  263 acc8= constant 111
  264 call writeAcc8
- 265 ;test5.p(37)   if (1+3 >= (twelve/(one+2))) write(110);
+ 265 ;test5.p(37)   if (1+3 >= twelve/(one+2)) write(110);
  266 acc8= constant 1
  267 acc8+ constant 3
  268 <acc8
@@ -276,7 +276,7 @@
  275 brlt 279
  276 acc8= constant 110
  277 call writeAcc8
- 278 ;test5.p(38)   if (1+3 <= (twelve/(one+2))) write(109);
+ 278 ;test5.p(38)   if (1+3 <= twelve/(one+2)) write(109);
  279 acc8= constant 1
  280 acc8+ constant 3
  281 <acc8
@@ -289,7 +289,7 @@
  288 brgt 292
  289 acc8= constant 109
  290 call writeAcc8
- 291 ;test5.p(39)   if (1+2 <= (twelve/(one+2))) write(108);
+ 291 ;test5.p(39)   if (1+2 <= twelve/(one+2)) write(108);
  292 acc8= constant 1
  293 acc8+ constant 2
  294 <acc8
@@ -302,7 +302,7 @@
  301 brgt 305
  302 acc8= constant 108
  303 call writeAcc8
- 304 ;test5.p(40)   if (1+4 > (twelve/(one+2))) write(107);
+ 304 ;test5.p(40)   if (1+4 > twelve/(one+2)) write(107);
  305 acc8= constant 1
  306 acc8+ constant 4
  307 <acc8
@@ -315,7 +315,7 @@
  314 brle 318
  315 acc8= constant 107
  316 call writeAcc8
- 317 ;test5.p(41)   if (1+2 < (twelve/(one+2))) write(106);
+ 317 ;test5.p(41)   if (1+2 < twelve/(one+2)) write(106);
  318 acc8= constant 1
  319 acc8+ constant 2
  320 <acc8
@@ -328,7 +328,7 @@
  327 brge 331
  328 acc8= constant 106
  329 call writeAcc8
- 330 ;test5.p(42)   if (1+2 != (twelve/(one+2))) write(105);
+ 330 ;test5.p(42)   if (1+2 != twelve/(one+2)) write(105);
  331 acc8= constant 1
  332 acc8+ constant 2
  333 <acc8
@@ -341,7 +341,7 @@
  340 breq 344
  341 acc8= constant 105
  342 call writeAcc8
- 343 ;test5.p(43)   if (1+3 == (twelve/(one+2))) write(104);
+ 343 ;test5.p(43)   if (1+3 == twelve/(one+2)) write(104);
  344 acc8= constant 1
  345 acc8+ constant 3
  346 <acc8
@@ -354,7 +354,7 @@
  353 brne 357
  354 acc8= constant 104
  355 call writeAcc8
- 356 ;test5.p(44)   if (1+4 >= (12/(1+2))) write(103);
+ 356 ;test5.p(44)   if (1+4 >= 12/(1+2)) write(103);
  357 acc8= constant 1
  358 acc8+ constant 4
  359 <acc8
@@ -366,7 +366,7 @@
  365 brgt 369
  366 acc8= constant 103
  367 call writeAcc8
- 368 ;test5.p(45)   if (1+3 >= (12/(1+2))) write(102);
+ 368 ;test5.p(45)   if (1+3 >= 12/(1+2)) write(102);
  369 acc8= constant 1
  370 acc8+ constant 3
  371 <acc8
@@ -378,7 +378,7 @@
  377 brgt 381
  378 acc8= constant 102
  379 call writeAcc8
- 380 ;test5.p(46)   if (1+3 <= (12/(1+2))) write(101);
+ 380 ;test5.p(46)   if (1+3 <= 12/(1+2)) write(101);
  381 acc8= constant 1
  382 acc8+ constant 3
  383 <acc8
@@ -390,7 +390,7 @@
  389 brlt 393
  390 acc8= constant 101
  391 call writeAcc8
- 392 ;test5.p(47)   if (1+2 <= (12/(1+2))) write(100);
+ 392 ;test5.p(47)   if (1+2 <= 12/(1+2)) write(100);
  393 acc8= constant 1
  394 acc8+ constant 2
  395 <acc8
@@ -402,7 +402,7 @@
  401 brlt 405
  402 acc8= constant 100
  403 call writeAcc8
- 404 ;test5.p(48)   if (1+4 > (12/(1+2))) write(99);
+ 404 ;test5.p(48)   if (1+4 > 12/(1+2)) write(99);
  405 acc8= constant 1
  406 acc8+ constant 4
  407 <acc8
@@ -414,7 +414,7 @@
  413 brge 417
  414 acc8= constant 99
  415 call writeAcc8
- 416 ;test5.p(49)   if (1+2 < (12/(1+2))) write(98);
+ 416 ;test5.p(49)   if (1+2 < 12/(1+2)) write(98);
  417 acc8= constant 1
  418 acc8+ constant 2
  419 <acc8
@@ -426,7 +426,7 @@
  425 brle 429
  426 acc8= constant 98
  427 call writeAcc8
- 428 ;test5.p(50)   if (1+2 != (12/(1+2))) write(97);
+ 428 ;test5.p(50)   if (1+2 != 12/(1+2)) write(97);
  429 acc8= constant 1
  430 acc8+ constant 2
  431 <acc8
@@ -438,7 +438,7 @@
  437 breq 441
  438 acc8= constant 97
  439 call writeAcc8
- 440 ;test5.p(51)   if (1+3 == (12/(1+2))) write(96);
+ 440 ;test5.p(51)   if (1+3 == 12/(1+2)) write(96);
  441 acc8= constant 1
  442 acc8+ constant 3
  443 <acc8
@@ -450,7 +450,7 @@
  449 brne 453
  450 acc8= constant 96
  451 call writeAcc8
- 452 ;test5.p(52)   if (twelve >= (twelve/(one+2))) write(95);
+ 452 ;test5.p(52)   if (twelve >= twelve/(one+2)) write(95);
  453 acc16= variable 10
  454 <acc16
  455 acc16= variable 10
@@ -461,7 +461,7 @@
  460 brgt 464
  461 acc8= constant 95
  462 call writeAcc8
- 463 ;test5.p(53)   if (four >= (twelve/(one+2))) write(94);
+ 463 ;test5.p(53)   if (four >= twelve/(one+2)) write(94);
  464 acc16= variable 6
  465 <acc16
  466 acc16= variable 10
@@ -472,7 +472,7 @@
  471 brgt 475
  472 acc8= constant 94
  473 call writeAcc8
- 474 ;test5.p(54)   if (three <= (twelve/(one+2))) write(93);
+ 474 ;test5.p(54)   if (three <= twelve/(one+2)) write(93);
  475 acc16= variable 4
  476 <acc16
  477 acc16= variable 10
@@ -483,7 +483,7 @@
  482 brlt 486
  483 acc8= constant 93
  484 call writeAcc8
- 485 ;test5.p(55)   if (four <= (twelve/(one+2))) write(92);
+ 485 ;test5.p(55)   if (four <= twelve/(one+2)) write(92);
  486 acc16= variable 6
  487 <acc16
  488 acc16= variable 10
@@ -494,7 +494,7 @@
  493 brlt 497
  494 acc8= constant 92
  495 call writeAcc8
- 496 ;test5.p(56)   if (twelve > (twelve/(one+2))) write(91);
+ 496 ;test5.p(56)   if (twelve > twelve/(one+2)) write(91);
  497 acc16= variable 10
  498 <acc16
  499 acc16= variable 10
@@ -505,7 +505,7 @@
  504 brge 508
  505 acc8= constant 91
  506 call writeAcc8
- 507 ;test5.p(57)   if (three < (twelve/(one+2))) write(90);
+ 507 ;test5.p(57)   if (three < twelve/(one+2)) write(90);
  508 acc16= variable 4
  509 <acc16
  510 acc16= variable 10
@@ -516,7 +516,7 @@
  515 brle 519
  516 acc8= constant 90
  517 call writeAcc8
- 518 ;test5.p(58)   if (three != (twelve/(one+2))) write(89);
+ 518 ;test5.p(58)   if (three != twelve/(one+2)) write(89);
  519 acc16= variable 4
  520 <acc16
  521 acc16= variable 10
@@ -527,7 +527,7 @@
  526 breq 530
  527 acc8= constant 89
  528 call writeAcc8
- 529 ;test5.p(59)   if (four == (twelve/(one+2))) write(88);
+ 529 ;test5.p(59)   if (four == twelve/(one+2)) write(88);
  530 acc16= variable 6
  531 <acc16
  532 acc16= variable 10
@@ -538,7 +538,7 @@
  537 brne 541
  538 acc8= constant 88
  539 call writeAcc8
- 540 ;test5.p(60)   if (twelve >= (12/(1+2))) write(87);
+ 540 ;test5.p(60)   if (twelve >= 12/(1+2)) write(87);
  541 acc16= variable 10
  542 <acc16
  543 acc8= constant 12
@@ -550,7 +550,7 @@
  549 brlt 553
  550 acc8= constant 87
  551 call writeAcc8
- 552 ;test5.p(61)   if (four >= (12/(1+2))) write(86);
+ 552 ;test5.p(61)   if (four >= 12/(1+2)) write(86);
  553 acc16= variable 6
  554 <acc16
  555 acc8= constant 12
@@ -562,7 +562,7 @@
  561 brlt 565
  562 acc8= constant 86
  563 call writeAcc8
- 564 ;test5.p(62)   if (three <= (12/(1+2))) write(85);
+ 564 ;test5.p(62)   if (three <= 12/(1+2)) write(85);
  565 acc16= variable 4
  566 <acc16
  567 acc8= constant 12
@@ -574,7 +574,7 @@
  573 brgt 577
  574 acc8= constant 85
  575 call writeAcc8
- 576 ;test5.p(63)   if (four <= (12/(1+2))) write(84);
+ 576 ;test5.p(63)   if (four <= 12/(1+2)) write(84);
  577 acc16= variable 6
  578 <acc16
  579 acc8= constant 12
@@ -586,7 +586,7 @@
  585 brgt 589
  586 acc8= constant 84
  587 call writeAcc8
- 588 ;test5.p(64)   if (twelve > (12/(1+2))) write(83);
+ 588 ;test5.p(64)   if (twelve > 12/(1+2)) write(83);
  589 acc16= variable 10
  590 <acc16
  591 acc8= constant 12
@@ -598,7 +598,7 @@
  597 brle 601
  598 acc8= constant 83
  599 call writeAcc8
- 600 ;test5.p(65)   if (three < (12/(1+2))) write(82);
+ 600 ;test5.p(65)   if (three < 12/(1+2)) write(82);
  601 acc16= variable 4
  602 <acc16
  603 acc8= constant 12
@@ -610,7 +610,7 @@
  609 brge 613
  610 acc8= constant 82
  611 call writeAcc8
- 612 ;test5.p(66)   if (three != (12/(1+2))) write(81);
+ 612 ;test5.p(66)   if (three != 12/(1+2)) write(81);
  613 acc16= variable 4
  614 <acc16
  615 acc8= constant 12
@@ -622,7 +622,7 @@
  621 breq 625
  622 acc8= constant 81
  623 call writeAcc8
- 624 ;test5.p(67)   if (four == (12/(1+2))) write(80);
+ 624 ;test5.p(67)   if (four == 12/(1+2)) write(80);
  625 acc16= variable 6
  626 <acc16
  627 acc8= constant 12
@@ -634,7 +634,7 @@
  633 brne 637
  634 acc8= constant 80
  635 call writeAcc8
- 636 ;test5.p(68)   if (one+four >= (twelve/(one+2))) write(79);
+ 636 ;test5.p(68)   if (one+four >= twelve/(one+2)) write(79);
  637 acc16= variable 2
  638 acc16+ variable 6
  639 <acc16
@@ -646,7 +646,7 @@
  645 brgt 649
  646 acc8= constant 79
  647 call writeAcc8
- 648 ;test5.p(69)   if (one+three >= (twelve/(one+2))) write(78);
+ 648 ;test5.p(69)   if (one+three >= twelve/(one+2)) write(78);
  649 acc16= variable 2
  650 acc16+ variable 4
  651 <acc16
@@ -658,7 +658,7 @@
  657 brgt 661
  658 acc8= constant 78
  659 call writeAcc8
- 660 ;test5.p(70)   if (one+three <= (twelve/(one+2))) write(77);
+ 660 ;test5.p(70)   if (one+three <= twelve/(one+2)) write(77);
  661 acc16= variable 2
  662 acc16+ variable 4
  663 <acc16
@@ -670,7 +670,7 @@
  669 brlt 673
  670 acc8= constant 77
  671 call writeAcc8
- 672 ;test5.p(71)   if (one+one <= (twelve/(one+2))) write(76);
+ 672 ;test5.p(71)   if (one+one <= twelve/(one+2)) write(76);
  673 acc16= variable 2
  674 acc16+ variable 2
  675 <acc16
@@ -682,7 +682,7 @@
  681 brlt 685
  682 acc8= constant 76
  683 call writeAcc8
- 684 ;test5.p(72)   if (one+four > (twelve/(one+2))) write(75);
+ 684 ;test5.p(72)   if (one+four > twelve/(one+2)) write(75);
  685 acc16= variable 2
  686 acc16+ variable 6
  687 <acc16
@@ -694,7 +694,7 @@
  693 brge 697
  694 acc8= constant 75
  695 call writeAcc8
- 696 ;test5.p(73)   if (one+one < (twelve/(one+2))) write(74);
+ 696 ;test5.p(73)   if (one+one < twelve/(one+2)) write(74);
  697 acc16= variable 2
  698 acc16+ variable 2
  699 <acc16
@@ -706,7 +706,7 @@
  705 brle 709
  706 acc8= constant 74
  707 call writeAcc8
- 708 ;test5.p(74)   if (one+four  != (twelve/(one+2))) write(73);
+ 708 ;test5.p(74)   if (one+four  != twelve/(one+2)) write(73);
  709 acc16= variable 2
  710 acc16+ variable 6
  711 <acc16
@@ -718,7 +718,7 @@
  717 breq 721
  718 acc8= constant 73
  719 call writeAcc8
- 720 ;test5.p(75)   if (one+three == (twelve/(one+2))) write(72);
+ 720 ;test5.p(75)   if (one+three == twelve/(one+2)) write(72);
  721 acc16= variable 2
  722 acc16+ variable 4
  723 <acc16
@@ -730,7 +730,7 @@
  729 brne 733
  730 acc8= constant 72
  731 call writeAcc8
- 732 ;test5.p(76)   if (one+four >= (12/(1+2))) write(71);
+ 732 ;test5.p(76)   if (one+four >= 12/(1+2)) write(71);
  733 acc16= variable 2
  734 acc16+ variable 6
  735 <acc16
@@ -743,7 +743,7 @@
  742 brlt 746
  743 acc8= constant 71
  744 call writeAcc8
- 745 ;test5.p(77)   if (one+three >= (12/(1+2))) write(70);
+ 745 ;test5.p(77)   if (one+three >= 12/(1+2)) write(70);
  746 acc16= variable 2
  747 acc16+ variable 4
  748 <acc16
@@ -756,7 +756,7 @@
  755 brlt 759
  756 acc8= constant 70
  757 call writeAcc8
- 758 ;test5.p(78)   if (one+three <= (12/(1+2))) write(69);
+ 758 ;test5.p(78)   if (one+three <= 12/(1+2)) write(69);
  759 acc16= variable 2
  760 acc16+ variable 4
  761 <acc16
@@ -769,7 +769,7 @@
  768 brgt 772
  769 acc8= constant 69
  770 call writeAcc8
- 771 ;test5.p(79)   if (one+one <= (12/(1+2))) write(68);
+ 771 ;test5.p(79)   if (one+one <= 12/(1+2)) write(68);
  772 acc16= variable 2
  773 acc16+ variable 2
  774 <acc16
@@ -782,7 +782,7 @@
  781 brgt 785
  782 acc8= constant 68
  783 call writeAcc8
- 784 ;test5.p(80)   if (one+four > (12/(1+2))) write(67);
+ 784 ;test5.p(80)   if (one+four > 12/(1+2)) write(67);
  785 acc16= variable 2
  786 acc16+ variable 6
  787 <acc16
@@ -795,7 +795,7 @@
  794 brle 798
  795 acc8= constant 67
  796 call writeAcc8
- 797 ;test5.p(81)   if (one+one < (12/(1+2))) write(66);
+ 797 ;test5.p(81)   if (one+one < 12/(1+2)) write(66);
  798 acc16= variable 2
  799 acc16+ variable 2
  800 <acc16
@@ -808,7 +808,7 @@
  807 brge 811
  808 acc8= constant 66
  809 call writeAcc8
- 810 ;test5.p(82)   if (one+four  != (12/(1+2))) write(65);
+ 810 ;test5.p(82)   if (one+four  != 12/(1+2)) write(65);
  811 acc16= variable 2
  812 acc16+ variable 6
  813 <acc16
@@ -821,7 +821,7 @@
  820 breq 824
  821 acc8= constant 65
  822 call writeAcc8
- 823 ;test5.p(83)   if (one+three == (12/(1+2))) write(64);
+ 823 ;test5.p(83)   if (one+three == 12/(1+2)) write(64);
  824 acc16= variable 2
  825 acc16+ variable 4
  826 <acc16
@@ -843,7 +843,7 @@
  842 brlt 846
  843 acc8= constant 63
  844 call writeAcc8
- 845 ;test5.p(87)   if (four >= (12/(1+2))) write(62);
+ 845 ;test5.p(87)   if (four >= 12/(1+2)) write(62);
  846 acc16= variable 6
  847 <acc16
  848 acc8= constant 12
@@ -862,7 +862,7 @@
  861 brlt 865
  862 acc8= constant 61
  863 call writeAcc8
- 864 ;test5.p(89)   if (five >= (12/(1+2))) write(60);
+ 864 ;test5.p(89)   if (five >= 12/(1+2)) write(60);
  865 acc16= variable 8
  866 <acc16
  867 acc8= constant 12
@@ -881,7 +881,7 @@
  880 brgt 884
  881 acc8= constant 59
  882 call writeAcc8
- 883 ;test5.p(91)   if (four <= (12/(1+2))) write(58);
+ 883 ;test5.p(91)   if (four <= 12/(1+2)) write(58);
  884 acc16= variable 6
  885 <acc16
  886 acc8= constant 12
@@ -900,7 +900,7 @@
  899 brgt 903
  900 acc8= constant 57
  901 call writeAcc8
- 902 ;test5.p(93)   if (three <= (12/(1+2))) write(56);
+ 902 ;test5.p(93)   if (three <= 12/(1+2)) write(56);
  903 acc16= variable 4
  904 <acc16
  905 acc8= constant 12
@@ -919,7 +919,7 @@
  918 brle 922
  919 acc8= constant 55
  920 call writeAcc8
- 921 ;test5.p(95)   if (five > (12/(1+2))) write(54);
+ 921 ;test5.p(95)   if (five > 12/(1+2)) write(54);
  922 acc16= variable 8
  923 <acc16
  924 acc8= constant 12
@@ -938,7 +938,7 @@
  937 brge 941
  938 acc8= constant 53
  939 call writeAcc8
- 940 ;test5.p(97)   if (three < (12/(1+2))) write(52);
+ 940 ;test5.p(97)   if (three < 12/(1+2)) write(52);
  941 acc16= variable 4
  942 <acc16
  943 acc8= constant 12
@@ -957,7 +957,7 @@
  956 breq 960
  957 acc8= constant 51
  958 call writeAcc8
- 959 ;test5.p(99)   if (three != (12/(1+2))) write(50);
+ 959 ;test5.p(99)   if (three != 12/(1+2)) write(50);
  960 acc16= variable 4
  961 <acc16
  962 acc8= constant 12
@@ -976,7 +976,7 @@
  975 brne 979
  976 acc8= constant 49
  977 call writeAcc8
- 978 ;test5.p(101)   if (four == (12/(1+2))) write(48);
+ 978 ;test5.p(101)   if (four == 12/(1+2)) write(48);
  979 acc16= variable 6
  980 <acc16
  981 acc8= constant 12
@@ -996,7 +996,7 @@
  995 brlt 999
  996 acc8= constant 47
  997 call writeAcc8
- 998 ;test5.p(104)   if (4 >= (twelve/(1+2))) write(46);
+ 998 ;test5.p(104)   if (4 >= twelve/(1+2)) write(46);
  999 acc16= variable 10
 1000 acc8= constant 1
 1001 acc8+ constant 2
@@ -1013,7 +1013,7 @@
 1012 brlt 1016
 1013 acc8= constant 45
 1014 call writeAcc8
-1015 ;test5.p(106)   if (5 >= (twelve/(1+2))) write(44);
+1015 ;test5.p(106)   if (5 >= twelve/(1+2)) write(44);
 1016 acc16= variable 10
 1017 acc8= constant 1
 1018 acc8+ constant 2
@@ -1030,7 +1030,7 @@
 1029 brgt 1033
 1030 acc8= constant 43
 1031 call writeAcc8
-1032 ;test5.p(108)   if (4 <= (twelve/(1+2))) write(42);
+1032 ;test5.p(108)   if (4 <= twelve/(1+2)) write(42);
 1033 acc16= variable 10
 1034 acc8= constant 1
 1035 acc8+ constant 2
@@ -1047,7 +1047,7 @@
 1046 brgt 1050
 1047 acc8= constant 41
 1048 call writeAcc8
-1049 ;test5.p(110)   if (3 <= (twelve/(1+2))) write(40);
+1049 ;test5.p(110)   if (3 <= twelve/(1+2)) write(40);
 1050 acc16= variable 10
 1051 acc8= constant 1
 1052 acc8+ constant 2
@@ -1064,7 +1064,7 @@
 1063 brle 1067
 1064 acc8= constant 39
 1065 call writeAcc8
-1066 ;test5.p(112)   if (5 > (twelve/(1+2))) write(38);
+1066 ;test5.p(112)   if (5 > twelve/(1+2)) write(38);
 1067 acc16= variable 10
 1068 acc8= constant 1
 1069 acc8+ constant 2
@@ -1081,7 +1081,7 @@
 1080 brge 1084
 1081 acc8= constant 37
 1082 call writeAcc8
-1083 ;test5.p(114)   if (3 < (twelve/(1+2))) write(36);
+1083 ;test5.p(114)   if (3 < twelve/(1+2)) write(36);
 1084 acc16= variable 10
 1085 acc8= constant 1
 1086 acc8+ constant 2
@@ -1098,7 +1098,7 @@
 1097 breq 1101
 1098 acc8= constant 35
 1099 call writeAcc8
-1100 ;test5.p(116)   if (3 != (twelve/(1+2))) write(34);
+1100 ;test5.p(116)   if (3 != twelve/(1+2)) write(34);
 1101 acc16= variable 10
 1102 acc8= constant 1
 1103 acc8+ constant 2
@@ -1115,7 +1115,7 @@
 1114 brne 1118
 1115 acc8= constant 33
 1116 call writeAcc8
-1117 ;test5.p(118)   if (4 == (twelve/(1+2))) write(32);
+1117 ;test5.p(118)   if (4 == twelve/(1+2)) write(32);
 1118 acc16= variable 10
 1119 acc8= constant 1
 1120 acc8+ constant 2
@@ -1132,7 +1132,7 @@
 1131 brlt 1135
 1132 acc8= constant 31
 1133 call writeAcc8
-1134 ;test5.p(121)   if (400 >= (1200/(1+2))) write(30);
+1134 ;test5.p(121)   if (400 >= 1200/(1+2)) write(30);
 1135 acc16= constant 1200
 1136 acc8= constant 1
 1137 acc8+ constant 2
@@ -1147,7 +1147,7 @@
 1146 brlt 1150
 1147 acc8= constant 29
 1148 call writeAcc8
-1149 ;test5.p(123)   if (500 >= (1200/(1+2))) write(28);
+1149 ;test5.p(123)   if (500 >= 1200/(1+2)) write(28);
 1150 acc16= constant 1200
 1151 acc8= constant 1
 1152 acc8+ constant 2
@@ -1162,7 +1162,7 @@
 1161 brgt 1165
 1162 acc8= constant 27
 1163 call writeAcc8
-1164 ;test5.p(125)   if (400 <= (1200/(1+2))) write(26);
+1164 ;test5.p(125)   if (400 <= 1200/(1+2)) write(26);
 1165 acc16= constant 1200
 1166 acc8= constant 1
 1167 acc8+ constant 2
@@ -1177,7 +1177,7 @@
 1176 brgt 1180
 1177 acc8= constant 25
 1178 call writeAcc8
-1179 ;test5.p(127)   if (300 <= (1200/(1+2))) write(24);
+1179 ;test5.p(127)   if (300 <= 1200/(1+2)) write(24);
 1180 acc16= constant 1200
 1181 acc8= constant 1
 1182 acc8+ constant 2
@@ -1192,7 +1192,7 @@
 1191 brle 1195
 1192 acc8= constant 23
 1193 call writeAcc8
-1194 ;test5.p(129)   if (500 > (1200/(1+2))) write(22);
+1194 ;test5.p(129)   if (500 > 1200/(1+2)) write(22);
 1195 acc16= constant 1200
 1196 acc8= constant 1
 1197 acc8+ constant 2
@@ -1207,7 +1207,7 @@
 1206 brge 1210
 1207 acc8= constant 21
 1208 call writeAcc8
-1209 ;test5.p(131)   if (300 < (1200/(1+2))) write(20);
+1209 ;test5.p(131)   if (300 < 1200/(1+2)) write(20);
 1210 acc16= constant 1200
 1211 acc8= constant 1
 1212 acc8+ constant 2
@@ -1222,7 +1222,7 @@
 1221 breq 1225
 1222 acc8= constant 19
 1223 call writeAcc8
-1224 ;test5.p(133)   if (300 != (1200/(1+2))) write(18);
+1224 ;test5.p(133)   if (300 != 1200/(1+2)) write(18);
 1225 acc16= constant 1200
 1226 acc8= constant 1
 1227 acc8+ constant 2
@@ -1237,7 +1237,7 @@
 1236 brne 1240
 1237 acc8= constant 17
 1238 call writeAcc8
-1239 ;test5.p(135)   if (400 == (1200/(1+2))) write(16);
+1239 ;test5.p(135)   if (400 == 1200/(1+2)) write(16);
 1240 acc16= constant 1200
 1241 acc8= constant 1
 1242 acc8+ constant 2
@@ -1253,7 +1253,7 @@
 1252 brlt 1256
 1253 acc8= constant 15
 1254 call writeAcc8
-1255 ;test5.p(138)   if (4 >= (12/(1+2))) write(14);
+1255 ;test5.p(138)   if (4 >= 12/(1+2)) write(14);
 1256 acc8= constant 12
 1257 <acc8= constant 1
 1258 acc8+ constant 2
@@ -1268,7 +1268,7 @@
 1267 brlt 1271
 1268 acc8= constant 13
 1269 call writeAcc8
-1270 ;test5.p(140)   if (5 >= (12/(1+2))) write(12);
+1270 ;test5.p(140)   if (5 >= 12/(1+2)) write(12);
 1271 acc8= constant 12
 1272 <acc8= constant 1
 1273 acc8+ constant 2
@@ -1283,7 +1283,7 @@
 1282 brgt 1286
 1283 acc8= constant 11
 1284 call writeAcc8
-1285 ;test5.p(142)   if (4 <= (12/(1+2))) write(10);
+1285 ;test5.p(142)   if (4 <= 12/(1+2)) write(10);
 1286 acc8= constant 12
 1287 <acc8= constant 1
 1288 acc8+ constant 2
@@ -1298,7 +1298,7 @@
 1297 brgt 1301
 1298 acc8= constant 9
 1299 call writeAcc8
-1300 ;test5.p(144)   if (3 <= (12/(1+2))) write(8);
+1300 ;test5.p(144)   if (3 <= 12/(1+2)) write(8);
 1301 acc8= constant 12
 1302 <acc8= constant 1
 1303 acc8+ constant 2
@@ -1313,7 +1313,7 @@
 1312 brle 1316
 1313 acc8= constant 7
 1314 call writeAcc8
-1315 ;test5.p(146)   if (5 > (12/(1+2))) write(6);
+1315 ;test5.p(146)   if (5 > 12/(1+2)) write(6);
 1316 acc8= constant 12
 1317 <acc8= constant 1
 1318 acc8+ constant 2
@@ -1328,7 +1328,7 @@
 1327 brge 1331
 1328 acc8= constant 5
 1329 call writeAcc8
-1330 ;test5.p(148)   if (3 < (12/(1+2))) write(4);
+1330 ;test5.p(148)   if (3 < 12/(1+2)) write(4);
 1331 acc8= constant 12
 1332 <acc8= constant 1
 1333 acc8+ constant 2
@@ -1343,7 +1343,7 @@
 1342 breq 1346
 1343 acc8= constant 3
 1344 call writeAcc8
-1345 ;test5.p(150)   if (3 != (12/(1+2))) write(2);
+1345 ;test5.p(150)   if (3 != 12/(1+2)) write(2);
 1346 acc8= constant 12
 1347 <acc8= constant 1
 1348 acc8+ constant 2
@@ -1358,7 +1358,7 @@
 1357 brne 1361
 1358 acc8= constant 1
 1359 call writeAcc8
-1360 ;test5.p(152)   if (4 == (12/(1+2))) write(0);
+1360 ;test5.p(152)   if (4 == 12/(1+2)) write(0);
 1361 acc8= constant 12
 1362 <acc8= constant 1
 1363 acc8+ constant 2

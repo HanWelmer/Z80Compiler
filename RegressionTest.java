@@ -69,7 +69,7 @@ public class RegressionTest {
     System.out.println("       -z generate and verify Z80 assembler output.");
     System.out.println("       ? show this help message.");
     System.out.println("       help show this help message.");
-    System.out.println("       filename (default: RegressionTest.txt) each line a *.p file which will be compiled and the output compared with *.exp.");
+    System.out.println("       filename (default: RegressionTest.txt) each line a *.j file which will be compiled and the output compared with *.exp.");
     System.exit(1);
   }
 
@@ -89,7 +89,7 @@ public class RegressionTest {
 
       //Read filenames from the testsuite.
       while (testSuiteBufferedReader.ready()) {
-        //P-Code to be tested.
+        //miniJava-Code to be tested.
         String fileName = testSuiteBufferedReader.readLine();
 
         //Run the test.
@@ -108,8 +108,8 @@ public class RegressionTest {
   * Run a single test in the regression test suite.
   */
   private static String singleTest(boolean debugMode, LexemeReader lexemeReader, pCompiler pCompiler, String fileName) {
-    // Compile P-code to M-code instructions.
-    fileName.replace(".P", ".p");
+    // Compile miniJava-code to M-code instructions.
+    fileName.replace(".J", ".j");
     lexemeReader.init(debugMode, fileName);
     ArrayList<Instruction> instructions = pCompiler.compile(fileName, lexemeReader);
 
@@ -119,7 +119,7 @@ public class RegressionTest {
     String result;
     try {
       int pos=0;
-      fr = new FileReader(fileName.replace(".p", ".exp")); 
+      fr = new FileReader(fileName.replace(".j", ".exp")); 
       br = new BufferedReader(fr);
       String actual = "";
       String expected = "";

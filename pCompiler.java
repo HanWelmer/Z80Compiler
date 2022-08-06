@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO test5.p lijkt overbodige haakjes te moeten hebben.
-//TODO add test cases for whileStatement (see test2.p and test5.p).
-//TODO add test cases for doStatement (see test2.p and test5.p).
-//TODO add test cases for forStatement (see test2.p and test5.p).
-//TODO add test cases for whileStatement (see test1.p en test5.p).
-//TODO add test cases for doStatement (see test10.p en test5.p).
-//TODO add test cases for forStatement (see test11.p en test5.p).
+//TODO add test cases for whileStatement (see test2.j and test5.j).
+//TODO add test cases for doStatement (see test2.j and test5.j).
+//TODO add test cases for forStatement (see test2.j and test5.j).
+//TODO add test cases for whileStatement (see test1.j en test5.j).
+//TODO add test cases for doStatement (see test10.j en test5.j).
+//TODO add test cases for forStatement (see test11.j en test5.j).
 
 //TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).

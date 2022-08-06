@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Command line fascade for the P programming language compiler, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
+ * Command line fascade for the miniJava programming language compiler, based on the Pprogramming language as described 
+   in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
  * See usage() for a functional description.
  */
 public class Compiler {
@@ -54,13 +55,13 @@ public class Compiler {
     }
 
     /*
-    * Force file extension to lower case p.
-    * Compile the file with p source code.
+    * Force file extension to lower case j.
+    * Compile the file with miniJava source code.
     * Generated intermediate code goes to default system output.
     */
     LexemeReader lexemeReader = new LexemeReader();
     pCompiler pCompiler = new pCompiler(debugMode, verboseMode);
-    fileName = fileName.replace(".P", ".p");
+    fileName = fileName.replace(".J", ".j");
     ArrayList<Instruction> instructions = null;
     if (lexemeReader.init(debugMode, fileName)) {
       try {
@@ -110,25 +111,25 @@ public class Compiler {
   }
   
   private static void usage() {
-    System.out.println("Usage: Compiler [-Z80] [-b] [-d] source.p");
+    System.out.println("Usage: Compiler [-Z80] [-b] [-d] source.j");
     System.out.println(" where -b generate binary output (M-code or Z80 assembler)");
     System.out.println("       -d issue debug messages during compilation");
     System.out.println("       -r run the compiled code using the built-in interpreter");
     System.out.println("       -v verbose: issue feedback messages during compilation");
     System.out.println("       -z generate Z80 assembler output");
-    System.out.println("       source.p input sourcecode file in P programming language.");
+    System.out.println("       source.j input sourcecode file in miniJava programming language.");
     System.exit(1);
   }
 
   private static void deleteOldOutput(String fileName) {
-    String outputFilename = fileName.replace(".p", ".m");
+    String outputFilename = fileName.replace(".j", ".m");
     try {
       Files.deleteIfExists(Paths.get(outputFilename));
-      outputFilename = fileName.replace(".p", ".asm");
+      outputFilename = fileName.replace(".j", ".asm");
       Files.deleteIfExists(Paths.get(outputFilename));
-      outputFilename = fileName.replace(".p", ".lst");
+      outputFilename = fileName.replace(".j", ".lst");
       Files.deleteIfExists(Paths.get(outputFilename));
-      outputFilename = fileName.replace(".p", ".hex");
+      outputFilename = fileName.replace(".j", ".hex");
       Files.deleteIfExists(Paths.get(outputFilename));
     } catch (IOException x) {
         // File permission problems are caught here.
@@ -139,7 +140,7 @@ public class Compiler {
   
   private static void writeListing(String fileName, ArrayList<Instruction> instructions, boolean verboseMode) {
     /* write M assembly code to an *.m file */
-    String outputFilename = fileName.replace(".p", ".m");
+    String outputFilename = fileName.replace(".j", ".m");
     if (verboseMode) System.out.println("Writing M code to " + outputFilename);
     BufferedWriter writer = null;
     try {
@@ -163,7 +164,7 @@ public class Compiler {
   
   private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
     /* write Z80S180 assembly code to an asm file */
-    String outputFilename = fileName.replace(".p", ".asm");
+    String outputFilename = fileName.replace(".j", ".asm");
     if (verboseMode) System.out.println("Writing Z80 assembler code to " + outputFilename);
     BufferedWriter writer = null;
     try {
@@ -191,7 +192,7 @@ public class Compiler {
       , Map<String, ArrayList<Long>> labelReferences
       , boolean verboseMode) {
     /* write Z80S180 assembly and binary code to a Listing file */
-    String outputFilename = fileName.replace(".p", ".lst");
+    String outputFilename = fileName.replace(".j", ".lst");
     if (verboseMode) System.out.println("Writing Z80 assembler and binary code to listing file " + outputFilename);
     BufferedWriter writer = null;
     try {
@@ -261,7 +262,7 @@ public class Compiler {
   
   private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
     /* write binary Z80S180 code to Intel hex file */
-    String outputFilename = fileName.replace(".p", ".hex");
+    String outputFilename = fileName.replace(".j", ".hex");
     if (verboseMode) System.out.println("Writing Z80 binary code to Intel hex file " + outputFilename);
     IntelHexWriter writer = null;
     try {

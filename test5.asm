@@ -658,7 +658,7 @@ main:
         ;;test5.p(13)   write(133);
         LD    A,133
         CALL  writeA
-        ;;test5.p(14)   if (4 == (zero + twelve/(1+2))) write(132);
+        ;;test5.p(14)   if (4 == zero + twelve/(1+2)) write(132);
         LD    HL,(05000H)
         PUSH  HL
         LD    HL,(0500AH)
@@ -675,7 +675,7 @@ main:
         JP    NZ,L45
         LD    A,132
         CALL  writeA
-        ;;test5.p(15)   if (four == (0 + 12/(one + 2))) write(131);
+        ;;test5.p(15)   if (four == 0 + 12/(one + 2)) write(131);
         LD    HL,(05006H)
         PUSH HL
         LD    A,0
@@ -695,7 +695,7 @@ main:
         JP    NZ,L58
         LD    A,131
         CALL  writeA
-        ;;test5.p(16)   if (four == (0 + 12/(byteOne + 2))) write(130);
+        ;;test5.p(16)   if (four == 0 + 12/(byteOne + 2)) write(130);
         LD    HL,(05006H)
         PUSH HL
         LD    A,0
@@ -718,7 +718,7 @@ main:
         JP    NZ,L72
         LD    A,130
         CALL  writeA
-        ;;test5.p(17)   if (four == (0 + 12/(1 + 2))) write(129);
+        ;;test5.p(17)   if (four == 0 + 12/(1 + 2)) write(129);
         LD    HL,(05006H)
         PUSH HL
         LD    A,0
@@ -765,7 +765,7 @@ main:
         LD    A,128
         CALL  writeA
         ;;test5.p(19)   //stack level 2
-        ;;test5.p(20)   if (5 >= (twelve/(one+2))) write(127);
+        ;;test5.p(20)   if (5 >= twelve/(one+2)) write(127);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -782,7 +782,7 @@ main:
         JP    C,L111
         LD    A,127
         CALL  writeA
-        ;;test5.p(21)   if (4 >= (twelve/(one+2))) write(126);
+        ;;test5.p(21)   if (4 >= twelve/(one+2)) write(126);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -799,7 +799,7 @@ main:
         JP    C,L121
         LD    A,126
         CALL  writeA
-        ;;test5.p(22)   if (4 <= (twelve/(one+2))) write(125);
+        ;;test5.p(22)   if (4 <= twelve/(one+2)) write(125);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -817,7 +817,7 @@ main:
         JP    C,L131
         LD    A,125
         CALL  writeA
-        ;;test5.p(23)   if (3 <= (twelve/(one+2))) write(124);
+        ;;test5.p(23)   if (3 <= twelve/(one+2)) write(124);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -835,7 +835,7 @@ main:
         JP    C,L141
         LD    A,124
         CALL  writeA
-        ;;test5.p(24)   if (5 > (twelve/(one+2))) write(123);
+        ;;test5.p(24)   if (5 > twelve/(one+2)) write(123);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -852,7 +852,7 @@ main:
         JP    Z,L151
         LD    A,123
         CALL  writeA
-        ;;test5.p(25)   if (2 < (twelve/(one+2))) write(122);
+        ;;test5.p(25)   if (2 < twelve/(one+2)) write(122);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -869,7 +869,7 @@ main:
         JP    NC,L161
         LD    A,122
         CALL  writeA
-        ;;test5.p(26)   if (3 != (twelve/(one+2))) write(121);
+        ;;test5.p(26)   if (3 != twelve/(one+2)) write(121);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -886,7 +886,7 @@ main:
         JP    Z,L171
         LD    A,121
         CALL  writeA
-        ;;test5.p(27)   if (4 == (twelve/(one+2))) write(120);
+        ;;test5.p(27)   if (4 == twelve/(one+2)) write(120);
         LD    HL,(0500AH)
         PUSH  HL
         LD    HL,(05002H)
@@ -903,7 +903,7 @@ main:
         JP    NZ,L181
         LD    A,120
         CALL  writeA
-        ;;test5.p(28)   if (5 >= (12/(1+2))) write(119);
+        ;;test5.p(28)   if (5 >= 12/(1+2)) write(119);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -916,7 +916,7 @@ main:
         JP    C,L190
         LD    A,119
         CALL  writeA
-        ;;test5.p(29)   if (4 >= (12/(1+2))) write(118);
+        ;;test5.p(29)   if (4 >= 12/(1+2)) write(118);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -929,7 +929,7 @@ main:
         JP    C,L199
         LD    A,118
         CALL  writeA
-        ;;test5.p(30)   if (4 <= (12/(1+2))) write(117);
+        ;;test5.p(30)   if (4 <= 12/(1+2)) write(117);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -941,7 +941,7 @@ main:
         JP    C,L208
         LD    A,117
         CALL  writeA
-        ;;test5.p(31)   if (3 <= (12/(1+2))) write(116);
+        ;;test5.p(31)   if (3 <= 12/(1+2)) write(116);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -953,7 +953,7 @@ main:
         JP    C,L217
         LD    A,116
         CALL  writeA
-        ;;test5.p(32)   if (5 > (12/(1+2))) write(115);
+        ;;test5.p(32)   if (5 > 12/(1+2)) write(115);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -965,7 +965,7 @@ main:
         JP    NC,L226
         LD    A,115
         CALL  writeA
-        ;;test5.p(33)   if (3 < (12/(1+2))) write(114);
+        ;;test5.p(33)   if (3 < 12/(1+2)) write(114);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -977,7 +977,7 @@ main:
         JP    Z,L235
         LD    A,114
         CALL  writeA
-        ;;test5.p(34)   if (3 != (12/(1+2))) write(113);
+        ;;test5.p(34)   if (3 != 12/(1+2)) write(113);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -989,7 +989,7 @@ main:
         JP    Z,L244
         LD    A,113
         CALL  writeA
-        ;;test5.p(35)   if (4 == (12/(1+2))) write(112);
+        ;;test5.p(35)   if (4 == 12/(1+2)) write(112);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -1001,7 +1001,7 @@ main:
         JP    NZ,L253
         LD    A,112
         CALL  writeA
-        ;;test5.p(36)   if (1+4 >= (twelve/(one+2))) write(111);
+        ;;test5.p(36)   if (1+4 >= twelve/(one+2)) write(111);
         LD    A,1
         ADD   A,4
         PUSH AF
@@ -1021,7 +1021,7 @@ main:
         JP    C,L266
         LD    A,111
         CALL  writeA
-        ;;test5.p(37)   if (1+3 >= (twelve/(one+2))) write(110);
+        ;;test5.p(37)   if (1+3 >= twelve/(one+2)) write(110);
         LD    A,1
         ADD   A,3
         PUSH AF
@@ -1041,7 +1041,7 @@ main:
         JP    C,L279
         LD    A,110
         CALL  writeA
-        ;;test5.p(38)   if (1+3 <= (twelve/(one+2))) write(109);
+        ;;test5.p(38)   if (1+3 <= twelve/(one+2)) write(109);
         LD    A,1
         ADD   A,3
         PUSH AF
@@ -1062,7 +1062,7 @@ main:
         JP    C,L292
         LD    A,109
         CALL  writeA
-        ;;test5.p(39)   if (1+2 <= (twelve/(one+2))) write(108);
+        ;;test5.p(39)   if (1+2 <= twelve/(one+2)) write(108);
         LD    A,1
         ADD   A,2
         PUSH AF
@@ -1083,7 +1083,7 @@ main:
         JP    C,L305
         LD    A,108
         CALL  writeA
-        ;;test5.p(40)   if (1+4 > (twelve/(one+2))) write(107);
+        ;;test5.p(40)   if (1+4 > twelve/(one+2)) write(107);
         LD    A,1
         ADD   A,4
         PUSH AF
@@ -1103,7 +1103,7 @@ main:
         JP    Z,L318
         LD    A,107
         CALL  writeA
-        ;;test5.p(41)   if (1+2 < (twelve/(one+2))) write(106);
+        ;;test5.p(41)   if (1+2 < twelve/(one+2)) write(106);
         LD    A,1
         ADD   A,2
         PUSH AF
@@ -1123,7 +1123,7 @@ main:
         JP    NC,L331
         LD    A,106
         CALL  writeA
-        ;;test5.p(42)   if (1+2 != (twelve/(one+2))) write(105);
+        ;;test5.p(42)   if (1+2 != twelve/(one+2)) write(105);
         LD    A,1
         ADD   A,2
         PUSH AF
@@ -1143,7 +1143,7 @@ main:
         JP    Z,L344
         LD    A,105
         CALL  writeA
-        ;;test5.p(43)   if (1+3 == (twelve/(one+2))) write(104);
+        ;;test5.p(43)   if (1+3 == twelve/(one+2)) write(104);
         LD    A,1
         ADD   A,3
         PUSH AF
@@ -1163,7 +1163,7 @@ main:
         JP    NZ,L357
         LD    A,104
         CALL  writeA
-        ;;test5.p(44)   if (1+4 >= (12/(1+2))) write(103);
+        ;;test5.p(44)   if (1+4 >= 12/(1+2)) write(103);
         LD    A,1
         ADD   A,4
         PUSH AF
@@ -1180,7 +1180,7 @@ main:
         JP    C,L369
         LD    A,103
         CALL  writeA
-        ;;test5.p(45)   if (1+3 >= (12/(1+2))) write(102);
+        ;;test5.p(45)   if (1+3 >= 12/(1+2)) write(102);
         LD    A,1
         ADD   A,3
         PUSH AF
@@ -1197,7 +1197,7 @@ main:
         JP    C,L381
         LD    A,102
         CALL  writeA
-        ;;test5.p(46)   if (1+3 <= (12/(1+2))) write(101);
+        ;;test5.p(46)   if (1+3 <= 12/(1+2)) write(101);
         LD    A,1
         ADD   A,3
         PUSH AF
@@ -1213,7 +1213,7 @@ main:
         JP    C,L393
         LD    A,101
         CALL  writeA
-        ;;test5.p(47)   if (1+2 <= (12/(1+2))) write(100);
+        ;;test5.p(47)   if (1+2 <= 12/(1+2)) write(100);
         LD    A,1
         ADD   A,2
         PUSH AF
@@ -1229,7 +1229,7 @@ main:
         JP    C,L405
         LD    A,100
         CALL  writeA
-        ;;test5.p(48)   if (1+4 > (12/(1+2))) write(99);
+        ;;test5.p(48)   if (1+4 > 12/(1+2)) write(99);
         LD    A,1
         ADD   A,4
         PUSH AF
@@ -1245,7 +1245,7 @@ main:
         JP    NC,L417
         LD    A,99
         CALL  writeA
-        ;;test5.p(49)   if (1+2 < (12/(1+2))) write(98);
+        ;;test5.p(49)   if (1+2 < 12/(1+2)) write(98);
         LD    A,1
         ADD   A,2
         PUSH AF
@@ -1261,7 +1261,7 @@ main:
         JP    Z,L429
         LD    A,98
         CALL  writeA
-        ;;test5.p(50)   if (1+2 != (12/(1+2))) write(97);
+        ;;test5.p(50)   if (1+2 != 12/(1+2)) write(97);
         LD    A,1
         ADD   A,2
         PUSH AF
@@ -1277,7 +1277,7 @@ main:
         JP    Z,L441
         LD    A,97
         CALL  writeA
-        ;;test5.p(51)   if (1+3 == (12/(1+2))) write(96);
+        ;;test5.p(51)   if (1+3 == 12/(1+2)) write(96);
         LD    A,1
         ADD   A,3
         PUSH AF
@@ -1293,7 +1293,7 @@ main:
         JP    NZ,L453
         LD    A,96
         CALL  writeA
-        ;;test5.p(52)   if (twelve >= (twelve/(one+2))) write(95);
+        ;;test5.p(52)   if (twelve >= twelve/(one+2)) write(95);
         LD    HL,(0500AH)
         PUSH HL
         LD    HL,(0500AH)
@@ -1311,7 +1311,7 @@ main:
         JP    C,L464
         LD    A,95
         CALL  writeA
-        ;;test5.p(53)   if (four >= (twelve/(one+2))) write(94);
+        ;;test5.p(53)   if (four >= twelve/(one+2)) write(94);
         LD    HL,(05006H)
         PUSH HL
         LD    HL,(0500AH)
@@ -1329,7 +1329,7 @@ main:
         JP    C,L475
         LD    A,94
         CALL  writeA
-        ;;test5.p(54)   if (three <= (twelve/(one+2))) write(93);
+        ;;test5.p(54)   if (three <= twelve/(one+2)) write(93);
         LD    HL,(05004H)
         PUSH HL
         LD    HL,(0500AH)
@@ -1346,7 +1346,7 @@ main:
         JP    C,L486
         LD    A,93
         CALL  writeA
-        ;;test5.p(55)   if (four <= (twelve/(one+2))) write(92);
+        ;;test5.p(55)   if (four <= twelve/(one+2)) write(92);
         LD    HL,(05006H)
         PUSH HL
         LD    HL,(0500AH)
@@ -1363,7 +1363,7 @@ main:
         JP    C,L497
         LD    A,92
         CALL  writeA
-        ;;test5.p(56)   if (twelve > (twelve/(one+2))) write(91);
+        ;;test5.p(56)   if (twelve > twelve/(one+2)) write(91);
         LD    HL,(0500AH)
         PUSH HL
         LD    HL,(0500AH)
@@ -1380,7 +1380,7 @@ main:
         JP    NC,L508
         LD    A,91
         CALL  writeA
-        ;;test5.p(57)   if (three < (twelve/(one+2))) write(90);
+        ;;test5.p(57)   if (three < twelve/(one+2)) write(90);
         LD    HL,(05004H)
         PUSH HL
         LD    HL,(0500AH)
@@ -1397,7 +1397,7 @@ main:
         JP    Z,L519
         LD    A,90
         CALL  writeA
-        ;;test5.p(58)   if (three != (twelve/(one+2))) write(89);
+        ;;test5.p(58)   if (three != twelve/(one+2)) write(89);
         LD    HL,(05004H)
         PUSH HL
         LD    HL,(0500AH)
@@ -1414,7 +1414,7 @@ main:
         JP    Z,L530
         LD    A,89
         CALL  writeA
-        ;;test5.p(59)   if (four == (twelve/(one+2))) write(88);
+        ;;test5.p(59)   if (four == twelve/(one+2)) write(88);
         LD    HL,(05006H)
         PUSH HL
         LD    HL,(0500AH)
@@ -1431,7 +1431,7 @@ main:
         JP    NZ,L541
         LD    A,88
         CALL  writeA
-        ;;test5.p(60)   if (twelve >= (12/(1+2))) write(87);
+        ;;test5.p(60)   if (twelve >= 12/(1+2)) write(87);
         LD    HL,(0500AH)
         PUSH HL
         LD    A,12
@@ -1450,7 +1450,7 @@ main:
         JP    C,L553
         LD    A,87
         CALL  writeA
-        ;;test5.p(61)   if (four >= (12/(1+2))) write(86);
+        ;;test5.p(61)   if (four >= 12/(1+2)) write(86);
         LD    HL,(05006H)
         PUSH HL
         LD    A,12
@@ -1469,7 +1469,7 @@ main:
         JP    C,L565
         LD    A,86
         CALL  writeA
-        ;;test5.p(62)   if (three <= (12/(1+2))) write(85);
+        ;;test5.p(62)   if (three <= 12/(1+2)) write(85);
         LD    HL,(05004H)
         PUSH HL
         LD    A,12
@@ -1489,7 +1489,7 @@ main:
         JP    C,L577
         LD    A,85
         CALL  writeA
-        ;;test5.p(63)   if (four <= (12/(1+2))) write(84);
+        ;;test5.p(63)   if (four <= 12/(1+2)) write(84);
         LD    HL,(05006H)
         PUSH HL
         LD    A,12
@@ -1509,7 +1509,7 @@ main:
         JP    C,L589
         LD    A,84
         CALL  writeA
-        ;;test5.p(64)   if (twelve > (12/(1+2))) write(83);
+        ;;test5.p(64)   if (twelve > 12/(1+2)) write(83);
         LD    HL,(0500AH)
         PUSH HL
         LD    A,12
@@ -1528,7 +1528,7 @@ main:
         JP    Z,L601
         LD    A,83
         CALL  writeA
-        ;;test5.p(65)   if (three < (12/(1+2))) write(82);
+        ;;test5.p(65)   if (three < 12/(1+2)) write(82);
         LD    HL,(05004H)
         PUSH HL
         LD    A,12
@@ -1547,7 +1547,7 @@ main:
         JP    NC,L613
         LD    A,82
         CALL  writeA
-        ;;test5.p(66)   if (three != (12/(1+2))) write(81);
+        ;;test5.p(66)   if (three != 12/(1+2)) write(81);
         LD    HL,(05004H)
         PUSH HL
         LD    A,12
@@ -1566,7 +1566,7 @@ main:
         JP    Z,L625
         LD    A,81
         CALL  writeA
-        ;;test5.p(67)   if (four == (12/(1+2))) write(80);
+        ;;test5.p(67)   if (four == 12/(1+2)) write(80);
         LD    HL,(05006H)
         PUSH HL
         LD    A,12
@@ -1585,7 +1585,7 @@ main:
         JP    NZ,L637
         LD    A,80
         CALL  writeA
-        ;;test5.p(68)   if (one+four >= (twelve/(one+2))) write(79);
+        ;;test5.p(68)   if (one+four >= twelve/(one+2)) write(79);
         LD    HL,(05002H)
         LD    DE,(05006H)
         ADD   HL,DE
@@ -1605,7 +1605,7 @@ main:
         JP    C,L649
         LD    A,79
         CALL  writeA
-        ;;test5.p(69)   if (one+three >= (twelve/(one+2))) write(78);
+        ;;test5.p(69)   if (one+three >= twelve/(one+2)) write(78);
         LD    HL,(05002H)
         LD    DE,(05004H)
         ADD   HL,DE
@@ -1625,7 +1625,7 @@ main:
         JP    C,L661
         LD    A,78
         CALL  writeA
-        ;;test5.p(70)   if (one+three <= (twelve/(one+2))) write(77);
+        ;;test5.p(70)   if (one+three <= twelve/(one+2)) write(77);
         LD    HL,(05002H)
         LD    DE,(05004H)
         ADD   HL,DE
@@ -1644,7 +1644,7 @@ main:
         JP    C,L673
         LD    A,77
         CALL  writeA
-        ;;test5.p(71)   if (one+one <= (twelve/(one+2))) write(76);
+        ;;test5.p(71)   if (one+one <= twelve/(one+2)) write(76);
         LD    HL,(05002H)
         LD    DE,(05002H)
         ADD   HL,DE
@@ -1663,7 +1663,7 @@ main:
         JP    C,L685
         LD    A,76
         CALL  writeA
-        ;;test5.p(72)   if (one+four > (twelve/(one+2))) write(75);
+        ;;test5.p(72)   if (one+four > twelve/(one+2)) write(75);
         LD    HL,(05002H)
         LD    DE,(05006H)
         ADD   HL,DE
@@ -1682,7 +1682,7 @@ main:
         JP    NC,L697
         LD    A,75
         CALL  writeA
-        ;;test5.p(73)   if (one+one < (twelve/(one+2))) write(74);
+        ;;test5.p(73)   if (one+one < twelve/(one+2)) write(74);
         LD    HL,(05002H)
         LD    DE,(05002H)
         ADD   HL,DE
@@ -1701,7 +1701,7 @@ main:
         JP    Z,L709
         LD    A,74
         CALL  writeA
-        ;;test5.p(74)   if (one+four  != (twelve/(one+2))) write(73);
+        ;;test5.p(74)   if (one+four  != twelve/(one+2)) write(73);
         LD    HL,(05002H)
         LD    DE,(05006H)
         ADD   HL,DE
@@ -1720,7 +1720,7 @@ main:
         JP    Z,L721
         LD    A,73
         CALL  writeA
-        ;;test5.p(75)   if (one+three == (twelve/(one+2))) write(72);
+        ;;test5.p(75)   if (one+three == twelve/(one+2)) write(72);
         LD    HL,(05002H)
         LD    DE,(05004H)
         ADD   HL,DE
@@ -1739,7 +1739,7 @@ main:
         JP    NZ,L733
         LD    A,72
         CALL  writeA
-        ;;test5.p(76)   if (one+four >= (12/(1+2))) write(71);
+        ;;test5.p(76)   if (one+four >= 12/(1+2)) write(71);
         LD    HL,(05002H)
         LD    DE,(05006H)
         ADD   HL,DE
@@ -1760,7 +1760,7 @@ main:
         JP    C,L746
         LD    A,71
         CALL  writeA
-        ;;test5.p(77)   if (one+three >= (12/(1+2))) write(70);
+        ;;test5.p(77)   if (one+three >= 12/(1+2)) write(70);
         LD    HL,(05002H)
         LD    DE,(05004H)
         ADD   HL,DE
@@ -1781,7 +1781,7 @@ main:
         JP    C,L759
         LD    A,70
         CALL  writeA
-        ;;test5.p(78)   if (one+three <= (12/(1+2))) write(69);
+        ;;test5.p(78)   if (one+three <= 12/(1+2)) write(69);
         LD    HL,(05002H)
         LD    DE,(05004H)
         ADD   HL,DE
@@ -1803,7 +1803,7 @@ main:
         JP    C,L772
         LD    A,69
         CALL  writeA
-        ;;test5.p(79)   if (one+one <= (12/(1+2))) write(68);
+        ;;test5.p(79)   if (one+one <= 12/(1+2)) write(68);
         LD    HL,(05002H)
         LD    DE,(05002H)
         ADD   HL,DE
@@ -1825,7 +1825,7 @@ main:
         JP    C,L785
         LD    A,68
         CALL  writeA
-        ;;test5.p(80)   if (one+four > (12/(1+2))) write(67);
+        ;;test5.p(80)   if (one+four > 12/(1+2)) write(67);
         LD    HL,(05002H)
         LD    DE,(05006H)
         ADD   HL,DE
@@ -1846,7 +1846,7 @@ main:
         JP    Z,L798
         LD    A,67
         CALL  writeA
-        ;;test5.p(81)   if (one+one < (12/(1+2))) write(66);
+        ;;test5.p(81)   if (one+one < 12/(1+2)) write(66);
         LD    HL,(05002H)
         LD    DE,(05002H)
         ADD   HL,DE
@@ -1867,7 +1867,7 @@ main:
         JP    NC,L811
         LD    A,66
         CALL  writeA
-        ;;test5.p(82)   if (one+four  != (12/(1+2))) write(65);
+        ;;test5.p(82)   if (one+four  != 12/(1+2)) write(65);
         LD    HL,(05002H)
         LD    DE,(05006H)
         ADD   HL,DE
@@ -1888,7 +1888,7 @@ main:
         JP    Z,L824
         LD    A,65
         CALL  writeA
-        ;;test5.p(83)   if (one+three == (12/(1+2))) write(64);
+        ;;test5.p(83)   if (one+three == 12/(1+2)) write(64);
         LD    HL,(05002H)
         LD    DE,(05004H)
         ADD   HL,DE
@@ -1922,7 +1922,7 @@ main:
         JP    C,L846
         LD    A,63
         CALL  writeA
-        ;;test5.p(87)   if (four >= (12/(1+2))) write(62);
+        ;;test5.p(87)   if (four >= 12/(1+2)) write(62);
         LD    HL,(05006H)
         PUSH HL
         LD    A,12
@@ -1952,7 +1952,7 @@ main:
         JP    C,L865
         LD    A,61
         CALL  writeA
-        ;;test5.p(89)   if (five >= (12/(1+2))) write(60);
+        ;;test5.p(89)   if (five >= 12/(1+2)) write(60);
         LD    HL,(05008H)
         PUSH HL
         LD    A,12
@@ -1983,7 +1983,7 @@ main:
         JP    C,L884
         LD    A,59
         CALL  writeA
-        ;;test5.p(91)   if (four <= (12/(1+2))) write(58);
+        ;;test5.p(91)   if (four <= 12/(1+2)) write(58);
         LD    HL,(05006H)
         PUSH HL
         LD    A,12
@@ -2015,7 +2015,7 @@ main:
         JP    C,L903
         LD    A,57
         CALL  writeA
-        ;;test5.p(93)   if (three <= (12/(1+2))) write(56);
+        ;;test5.p(93)   if (three <= 12/(1+2)) write(56);
         LD    HL,(05004H)
         PUSH HL
         LD    A,12
@@ -2046,7 +2046,7 @@ main:
         JP    Z,L922
         LD    A,55
         CALL  writeA
-        ;;test5.p(95)   if (five > (12/(1+2))) write(54);
+        ;;test5.p(95)   if (five > 12/(1+2)) write(54);
         LD    HL,(05008H)
         PUSH HL
         LD    A,12
@@ -2076,7 +2076,7 @@ main:
         JP    NC,L941
         LD    A,53
         CALL  writeA
-        ;;test5.p(97)   if (three < (12/(1+2))) write(52);
+        ;;test5.p(97)   if (three < 12/(1+2)) write(52);
         LD    HL,(05004H)
         PUSH HL
         LD    A,12
@@ -2106,7 +2106,7 @@ main:
         JP    Z,L960
         LD    A,51
         CALL  writeA
-        ;;test5.p(99)   if (three != (12/(1+2))) write(50);
+        ;;test5.p(99)   if (three != 12/(1+2)) write(50);
         LD    HL,(05004H)
         PUSH HL
         LD    A,12
@@ -2136,7 +2136,7 @@ main:
         JP    NZ,L979
         LD    A,49
         CALL  writeA
-        ;;test5.p(101)   if (four == (12/(1+2))) write(48);
+        ;;test5.p(101)   if (four == 12/(1+2)) write(48);
         LD    HL,(05006H)
         PUSH HL
         LD    A,12
@@ -2166,7 +2166,7 @@ main:
         JP    C,L999
         LD    A,47
         CALL  writeA
-        ;;test5.p(104)   if (4 >= (twelve/(1+2))) write(46);
+        ;;test5.p(104)   if (4 >= twelve/(1+2)) write(46);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2189,7 +2189,7 @@ main:
         JP    C,L1016
         LD    A,45
         CALL  writeA
-        ;;test5.p(106)   if (5 >= (twelve/(1+2))) write(44);
+        ;;test5.p(106)   if (5 >= twelve/(1+2)) write(44);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2213,7 +2213,7 @@ main:
         JP    C,L1033
         LD    A,43
         CALL  writeA
-        ;;test5.p(108)   if (4 <= (twelve/(1+2))) write(42);
+        ;;test5.p(108)   if (4 <= twelve/(1+2)) write(42);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2238,7 +2238,7 @@ main:
         JP    C,L1050
         LD    A,41
         CALL  writeA
-        ;;test5.p(110)   if (3 <= (twelve/(1+2))) write(40);
+        ;;test5.p(110)   if (3 <= twelve/(1+2)) write(40);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2262,7 +2262,7 @@ main:
         JP    Z,L1067
         LD    A,39
         CALL  writeA
-        ;;test5.p(112)   if (5 > (twelve/(1+2))) write(38);
+        ;;test5.p(112)   if (5 > twelve/(1+2)) write(38);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2285,7 +2285,7 @@ main:
         JP    NC,L1084
         LD    A,37
         CALL  writeA
-        ;;test5.p(114)   if (3 < (twelve/(1+2))) write(36);
+        ;;test5.p(114)   if (3 < twelve/(1+2)) write(36);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2308,7 +2308,7 @@ main:
         JP    Z,L1101
         LD    A,35
         CALL  writeA
-        ;;test5.p(116)   if (3 != (twelve/(1+2))) write(34);
+        ;;test5.p(116)   if (3 != twelve/(1+2)) write(34);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2331,7 +2331,7 @@ main:
         JP    NZ,L1118
         LD    A,33
         CALL  writeA
-        ;;test5.p(118)   if (4 == (twelve/(1+2))) write(32);
+        ;;test5.p(118)   if (4 == twelve/(1+2)) write(32);
         LD    HL,(0500AH)
         LD    A,1
         ADD   A,2
@@ -2353,7 +2353,7 @@ main:
         JP    C,L1135
         LD    A,31
         CALL  writeA
-        ;;test5.p(121)   if (400 >= (1200/(1+2))) write(30);
+        ;;test5.p(121)   if (400 >= 1200/(1+2)) write(30);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2373,7 +2373,7 @@ main:
         JP    C,L1150
         LD    A,29
         CALL  writeA
-        ;;test5.p(123)   if (500 >= (1200/(1+2))) write(28);
+        ;;test5.p(123)   if (500 >= 1200/(1+2)) write(28);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2394,7 +2394,7 @@ main:
         JP    C,L1165
         LD    A,27
         CALL  writeA
-        ;;test5.p(125)   if (400 <= (1200/(1+2))) write(26);
+        ;;test5.p(125)   if (400 <= 1200/(1+2)) write(26);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2414,7 +2414,7 @@ main:
         JP    C,L1180
         LD    A,25
         CALL  writeA
-        ;;test5.p(127)   if (300 <= (1200/(1+2))) write(24);
+        ;;test5.p(127)   if (300 <= 1200/(1+2)) write(24);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2433,7 +2433,7 @@ main:
         JP    Z,L1195
         LD    A,23
         CALL  writeA
-        ;;test5.p(129)   if (500 > (1200/(1+2))) write(22);
+        ;;test5.p(129)   if (500 > 1200/(1+2)) write(22);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2452,7 +2452,7 @@ main:
         JP    NC,L1210
         LD    A,21
         CALL  writeA
-        ;;test5.p(131)   if (300 < (1200/(1+2))) write(20);
+        ;;test5.p(131)   if (300 < 1200/(1+2)) write(20);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2471,7 +2471,7 @@ main:
         JP    Z,L1225
         LD    A,19
         CALL  writeA
-        ;;test5.p(133)   if (300 != (1200/(1+2))) write(18);
+        ;;test5.p(133)   if (300 != 1200/(1+2)) write(18);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2490,7 +2490,7 @@ main:
         JP    NZ,L1240
         LD    A,17
         CALL  writeA
-        ;;test5.p(135)   if (400 == (1200/(1+2))) write(16);
+        ;;test5.p(135)   if (400 == 1200/(1+2)) write(16);
         LD    HL,1200
         LD    A,1
         ADD   A,2
@@ -2508,7 +2508,7 @@ main:
         JP    C,L1256
         LD    A,15
         CALL  writeA
-        ;;test5.p(138)   if (4 >= (12/(1+2))) write(14);
+        ;;test5.p(138)   if (4 >= 12/(1+2)) write(14);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -2527,7 +2527,7 @@ main:
         JP    C,L1271
         LD    A,13
         CALL  writeA
-        ;;test5.p(140)   if (5 >= (12/(1+2))) write(12);
+        ;;test5.p(140)   if (5 >= 12/(1+2)) write(12);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -2547,7 +2547,7 @@ main:
         JP    C,L1286
         LD    A,11
         CALL  writeA
-        ;;test5.p(142)   if (4 <= (12/(1+2))) write(10);
+        ;;test5.p(142)   if (4 <= 12/(1+2)) write(10);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -2566,7 +2566,7 @@ main:
         JP    C,L1301
         LD    A,9
         CALL  writeA
-        ;;test5.p(144)   if (3 <= (12/(1+2))) write(8);
+        ;;test5.p(144)   if (3 <= 12/(1+2)) write(8);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -2584,7 +2584,7 @@ main:
         JP    Z,L1316
         LD    A,7
         CALL  writeA
-        ;;test5.p(146)   if (5 > (12/(1+2))) write(6);
+        ;;test5.p(146)   if (5 > 12/(1+2)) write(6);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -2602,7 +2602,7 @@ main:
         JP    NC,L1331
         LD    A,5
         CALL  writeA
-        ;;test5.p(148)   if (3 < (12/(1+2))) write(4);
+        ;;test5.p(148)   if (3 < 12/(1+2)) write(4);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -2620,7 +2620,7 @@ main:
         JP    Z,L1346
         LD    A,3
         CALL  writeA
-        ;;test5.p(150)   if (3 != (12/(1+2))) write(2);
+        ;;test5.p(150)   if (3 != 12/(1+2)) write(2);
         LD    A,12
         PUSH  AF
         LD    A,1
@@ -2638,7 +2638,7 @@ main:
         JP    NZ,L1361
         LD    A,1
         CALL  writeA
-        ;;test5.p(152)   if (4 == (12/(1+2))) write(0);
+        ;;test5.p(152)   if (4 == 12/(1+2)) write(0);
         LD    A,12
         PUSH  AF
         LD    A,1
