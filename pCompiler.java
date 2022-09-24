@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add test cases for whileStatement (see test2.j and test5.j).
-//TODO add test cases for doStatement (see test2.j and test5.j).
+//TODO add test cases for doStatement (see test2.j and test5.j and comparisonInDoStatement() ).
 //TODO add test cases for forStatement (see test2.j and test5.j).
 //TODO add test cases for whileStatement (see test1.j en test5.j).
 //TODO add test cases for doStatement (see test10.j en test5.j).
 //TODO add test cases for forStatement (see test11.j en test5.j).
+//TODO optimize comparison(): postpone loading var as leftOperand. 
 
 //TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
@@ -629,7 +629,7 @@ public class pCompiler {
     /* part of code generation */
     debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     /*Possible operand types: 
-     * leftOperand:  constant, acc, var, stack16, stack8
+     * leftOperand:  constant, acc, var, stack16, stack8; NB: var is loaded into acc and acc is pushed onto stack prior to evaluating right hand expression into rightOperand.
      * rightOperand: constant, acc, var, stack16, stack8
     */
     boolean reverseCompare = false;
@@ -666,12 +666,22 @@ public class pCompiler {
       }
     } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.var)) {
       plantAccLoad(rightOperand);
-      if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc16Compare, leftOperand));
+      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+        plantAccLoad(leftOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
+    /*
     } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.stack8)) {
       if (leftOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.unstackAcc8));
@@ -679,6 +689,7 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
+    */
     } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.constant)) {
       if (rightOperand.datatype == Datatype.integer) { 
         plant(new Instruction(FunctionType.unstackAcc16));
@@ -701,7 +712,10 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.var)) {
-      if (rightOperand.datatype == Datatype.byt) {
+      if (rightOperand.datatype == Datatype.integer) {
+        plant(new Instruction(FunctionType.unstackAcc16));
+        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      }else if (rightOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.unstackAcc16));
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc16CompareAcc8));
@@ -734,6 +748,9 @@ public class pCompiler {
         plant(new Instruction(FunctionType.unstackAcc8));
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
