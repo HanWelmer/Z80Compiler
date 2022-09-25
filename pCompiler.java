@@ -4,11 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add test cases for doStatement (see test2.j and test5.j and comparisonInDoStatement() ).
-//TODO add test cases for forStatement (see test2.j and test5.j).
-//TODO add test cases for whileStatement (see test1.j en test5.j).
-//TODO add test cases for doStatement (see test10.j en test5.j).
-//TODO add test cases for forStatement (see test11.j en test5.j).
+//TODO add test cases for doStatement (see test10.j, test2.j and test5.j and comparisonInDoStatement() ).
+//TODO add test cases for forStatement (see test11.j, test2.j and test5.j).
 //TODO optimize comparison(): postpone loading var as leftOperand. 
 
 //TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
@@ -622,17 +619,94 @@ public class pCompiler {
     localSet = stopSet.clone();
     localSet.addAll(startStatement);
     localSet.remove(LexemeType.identifier);
-
-    /* part of lexical analysis */
     Operand rightOperand = expression(localSet);
 
     /* part of code generation */
+    boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);   
+    int ifLabel = saveLabel();
+    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
+    if (reverseCompare) {
+      debug(", reverseCompare");
+      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
+    } else {
+      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
+    }
+
+    debug("\ncomparison: end");
+    return ifLabel;
+  } //comparison(stopSet)
+  
+  //parse a comparison, jump back to the label if the comparison yields true.
+  //comparison = expression relop expression
+  private void comparisonInDoStatement(EnumSet<LexemeType> stopSet, int doLabel) throws FatalError {
+    debug("\ncomparisonInDoStatement: start with stopSet = " + stopSet);
+
+    /* part of lexical analysis */
+    EnumSet<LexemeType> localSet = stopSet.clone();
+    localSet.add(LexemeType.relop);
+    Operand leftOperand = expression(localSet);
+
+    /* part of code generation */
+    if (leftOperand.opType == OperandType.var) {
+      plantAccLoad(leftOperand);
+      debug("\ncomparisonInDoStatement: plantAccLoad(leftOperand), acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+      leftOperand.opType = OperandType.acc;
+    }
+    /* part of code generation */
+    if (leftOperand.opType == OperandType.acc) {
+      debug("\ncomparisonInDoStatement: push leftOperand to the stack; " + leftOperand );
+      if (leftOperand.datatype == Datatype.integer) {
+        plant(new Instruction(FunctionType.stackAcc16));
+      } else if (leftOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.stackAcc8));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    }
+
+    /* part of lexical analysis */
+    localSet = stopSet.clone();
+    localSet.addAll(startExp);
+    RelValType compareOp;
+    if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
+      /* part of code generation */
+      compareOp = lexeme.relVal;
+      /* part of lexical analysis */
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    } else {
+      /* part of code generation */
+      compareOp = RelValType.eq;
+    }
+    
+    /* part of lexical analysis */
+    localSet = stopSet.clone();
+    localSet.addAll(startStatement);
+    localSet.remove(LexemeType.identifier);
+    Operand rightOperand = expression(localSet);
+
+    /* part of code generation */
+    // result from plantComparisonCode is inverted because doStatement uses reverse comparison.
+    boolean reverseCompare = !plantComparisonCode(leftOperand, rightOperand);
+    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, doLabel);
+    if (reverseCompare) {
+      debug(", reverseCompare");
+      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
+    } else {
+      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
+    }
+
+    debug("\ncomparison: end");
+  } //comparisonInDoStatement(stopSet, doLabel)
+
+  private boolean plantComparisonCode(Operand leftOperand, Operand rightOperand) {
     debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     /*Possible operand types: 
      * leftOperand:  constant, acc, var, stack16, stack8; NB: var is loaded into acc and acc is pushed onto stack prior to evaluating right hand expression into rightOperand.
      * rightOperand: constant, acc, var, stack16, stack8
     */
+
     boolean reverseCompare = false;
+    //plant(new Instruction(FunctionType.acc16Compare, rightOperand));
     if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.constant)) {
       plantAccLoad(leftOperand);
       if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
@@ -757,65 +831,8 @@ public class pCompiler {
     } else {
       throw new RuntimeException("Internal compiler error: abort.");
     }
-      
-    int ifLabel = saveLabel();
-    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
-    if (reverseCompare) {
-      debug(", reverseCompare");
-      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
-    } else {
-      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
-    }
-
-    debug("\ncomparison: end");
-    return ifLabel;
-  } //comparison(stopSet)
-  
-  //parse a comparison, jump back to the label if the comparison yields true.
-  //comparison = expression relop expression
-  private void comparisonInDoStatement(EnumSet<LexemeType> stopSet, int doLabel) throws FatalError {
-    debug("\ncomparison: start with stopSet = " + stopSet);
-
-    /* part of lexical analysis */
-    EnumSet<LexemeType> localSet = stopSet.clone();
-    localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(localSet);
-
-    /* part of code generation */
-    plantAccLoad(leftOperand);
-
-    /* part of lexical analysis */
-    localSet = stopSet.clone();
-    localSet.addAll(startExp);
-    RelValType compareOp;
-    if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
-      /* part of code generation */
-      compareOp = lexeme.relVal;
-      /* part of lexical analysis */
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    } else {
-      /* part of code generation */
-      compareOp = RelValType.eq;
-    }
-    
-    /* part of lexical analysis */
-    localSet = stopSet.clone();
-    localSet.addAll(startStatement);
-    localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(localSet);
-
-    /* part of code generation */
-    plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, doLabel);
-    if (rightOperand.opType == OperandType.stack16) {
-      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
-    } else {
-      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
-    }
-
-    debug("\ncomparison: end");
-  } //comparisonInDoStatement(stopSet, doLabel)
-
+    return reverseCompare;
+  } //plantComparisonCode()
   
   //parse a block of statements, and return the address of the first object code in the block of statements.
   //block = statement | "{" statements "}".

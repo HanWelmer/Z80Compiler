@@ -613,21 +613,21 @@ writeA:
         POP   HL
         RET
 main:
-        ;;test10.p(0) /* Program to test generated Z80 assembler code */
-        ;;test10.p(1) class TestDo {
-        ;;test10.p(2)   byte a = 2;
+        ;;test10.j(0) /* Program to test generated Z80 assembler code */
+        ;;test10.j(1) class TestDo {
+        ;;test10.j(2)   byte a = 2;
         LD    A,2
         LD    (05000H),A
-        ;;test10.p(3)   do {
-        ;;test10.p(4)     int i = 1;
+        ;;test10.j(3)   do {
+        ;;test10.j(4)     int i = 1;
         LD    A,1
         LD    L,A
         LD    H,0
         LD    (05001H),HL
-        ;;test10.p(5)     write(a);
+        ;;test10.j(5)     write(a);
         LD    A,(05000H)
         CALL  writeA
-        ;;test10.p(6)     a = a - i;
+        ;;test10.j(6)     a = a - i;
         LD    A,(05000H)
         LD    L,A
         LD    H,0
@@ -636,14 +636,12 @@ main:
         SBC   HL,DE
         LD    A,L
         LD    (05000H),A
-        ;;test10.p(7)   } while (a > 1);
+        ;;test10.j(7)   } while (a > 1);
         LD    A,(05000H)
-        LD    DE,1
-        OR    A
-        SBC   HL,DE
+        SUB   A,1
         JP    NC,L6
-        ;;test10.p(8)   write(0);
+        ;;test10.j(8)   write(0);
         LD    A,0
         CALL  writeA
-        ;;test10.p(9) }
+        ;;test10.j(9) }
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
