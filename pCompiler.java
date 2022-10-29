@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add test cases for doStatement (see test10.j, test2.j and test5.j and comparisonInDoStatement() ).
+//TODO add test cases for whileStatement (see test10.j).
 //TODO add test cases for forStatement (see test11.j, test2.j and test5.j).
-//TODO optimize comparison(): postpone loading var as leftOperand. 
+//TODO optimize comparison() and comparisonInDoStatement(): postpone loading var as leftOperand. 
 
 //TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
@@ -685,14 +685,37 @@ public class pCompiler {
     Operand rightOperand = expression(localSet);
 
     /* part of code generation */
-    // result from plantComparisonCode is inverted because doStatement uses reverse comparison.
-    boolean reverseCompare = !plantComparisonCode(leftOperand, rightOperand);
+    boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);
     Operand labelOperand = new Operand(OperandType.label, Datatype.integer, doLabel);
     if (reverseCompare) {
       debug(", reverseCompare");
-      plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
+      if (compareOp == RelValType.eq) {
+        plant(new Instruction(FunctionType.brEq, labelOperand));
+      } else if (compareOp == RelValType.ne) {
+        plant(new Instruction(FunctionType.brNe, labelOperand));
+      } else if (compareOp == RelValType.gt) {
+        plant(new Instruction(FunctionType.brLt, labelOperand));
+      } else if (compareOp == RelValType.lt) {
+        plant(new Instruction(FunctionType.brGt, labelOperand));
+      } else if (compareOp == RelValType.ge) {
+        plant(new Instruction(FunctionType.brLe, labelOperand));
+      } else if (compareOp == RelValType.le) {
+        plant(new Instruction(FunctionType.brGe, labelOperand));
+      }
     } else {
-      plant(new Instruction(normalSkip.get(compareOp), labelOperand));
+      if (compareOp == RelValType.eq) {
+        plant(new Instruction(FunctionType.brEq, labelOperand));
+      } else if (compareOp == RelValType.ne) {
+        plant(new Instruction(FunctionType.brNe, labelOperand));
+      } else if (compareOp == RelValType.gt) {
+        plant(new Instruction(FunctionType.brGt, labelOperand));
+      } else if (compareOp == RelValType.lt) {
+        plant(new Instruction(FunctionType.brLt, labelOperand));
+      } else if (compareOp == RelValType.ge) {
+        plant(new Instruction(FunctionType.brGe, labelOperand));
+      } else if (compareOp == RelValType.le) {
+        plant(new Instruction(FunctionType.brLe, labelOperand));
+      }
     }
 
     debug("\ncomparison: end");
