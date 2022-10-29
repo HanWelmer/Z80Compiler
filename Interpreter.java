@@ -130,24 +130,24 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case acc16Compare: //normal compare
-        debug(" acc16=" + acc16 + ", operand=" + getOp());
+        debug("        acc16=" + acc16 + ", operand=" + getOp() + "\n");
         branchSet = compare(acc16, getOp());
         break;
       case revAcc16Compare: //reverse compare
         debug(" acc16=" + acc16 + ", operand=");
         if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
-          debug("" + peek());
+          debug("" + peek() + "\n");
         } else {
-          debug("" + getOp());
+          debug("" + getOp() + "\n");
         }
         branchSet = compare(acc16, getOp());
         break;
       case acc16CompareAcc8: //normal compare
-        debug(" acc16=" + acc16 + ", acc8=" + acc8);
+        debug(" acc16=" + acc16 + ", acc8=" + acc8 + "\n");
         branchSet = compare(acc16, acc8);
         break;
       case acc8CompareAcc16: //reverse compare
-        debug(" acc8=" + acc8 + ", acc16=" + acc16);
+        debug(" acc8=" + acc8 + ", acc16=" + acc16 + "\n");
         branchSet = compare(acc8, acc16);
         break;
       // 8-bit arithmetic:
@@ -222,15 +222,15 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case acc8Compare: //normal compare
-        debug(" acc8=" + acc8 + ", operand=" + getOp());
+        debug(" acc8=" + acc8 + ", operand=" + getOp() + "\n");
         branchSet = compare(acc8, getOp());
         break;
       case revAcc8Compare: //reverse compare
         debug(" acc8=" + acc8 + ", operand=");
         if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
-          debug("" + peek());
+          debug("" + peek() + "\n");
         } else {
-          debug("" + getOp());
+          debug("" + getOp() + "\n");
         }
         branchSet = compare(acc8, getOp());
         break;
@@ -270,7 +270,7 @@ public class Interpreter {
       case brLe:
       case brGt:
       case brGe:
-        debug(" branch=" + instr.function + " branchSet=" + branchSet);
+        debug(" branch=" + instr.function + " branchSet=" + branchSet + "\n");
         if (branchSet.contains(instr.function)) {
           pc = instr.operand.intValue - 1;
         }
@@ -302,14 +302,14 @@ public class Interpreter {
           break;
       case writeAcc8:
           if (debugMode) {
-            debug("\n" + acc8);
+            debug(acc8 + "\n");
           } else {
             System.out.println(acc8);
           }
           break;
       case writeAcc16:
           if (debugMode) {
-            debug("\n" + acc16);
+            debug(acc16 + "\n");
           } else {
             System.out.println(acc16);
           }
@@ -412,7 +412,7 @@ public class Interpreter {
       case constant: result = instr.operand.intValue; break;
       case var:
         if (instr.operand.intValue < vars.length) {
-          debug("\npc=" + pc + " vars[" + instr.operand.intValue + "] = " + vars[instr.operand.intValue]);
+          debug("pc=" + pc + " vars[" + instr.operand.intValue + "] = " + vars[instr.operand.intValue] + "\n");
           result = vars[instr.operand.intValue];
         } else {
           runError("undefined variable");
