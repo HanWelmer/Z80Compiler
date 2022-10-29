@@ -60,7 +60,6 @@ class TestWhile {
   b=104;
   while (b <= 105+0) { write (i); i--; b++; }
   // byte - integer
-  //not relevant
   i=103;
   b=102;
   while (b <= i+0) { write (b); b--; i=i-2; }

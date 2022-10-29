@@ -4,10 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//BUGFIX  ";" , block and whilestatement: compare while (i2 <= i) { write (i); i--; } with do { write (i); i--; b++; } while (b <= 105+0);
-//TODO add test cases for forStatement (see test11.j, test2.j and test5.j).
 //TODO optimize comparison() and comparisonInDoStatement(): postpone loading var as leftOperand. 
-
 //TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
 //TODO check memory usage in scope hierarchy (root, for, while, if blocks).
 
@@ -22,7 +19,7 @@ import java.util.Stack;
  * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
  * assignment     = [datatype] update ";".
  * datatype       = "byte" | "int".
- * update         = identifier++ | identifier-- | identifier "=" expression
+ * update         = identifier++ | identifier-- | identifier "=" expression.
  * writeStatement = "write" "(" expression ")" ";".
  * ifStatement    = "if" "(" comparison ")" block [ "else" block].
  * forStatement   = "for" "(" initialization ";" comparison ";" update ")" block.
