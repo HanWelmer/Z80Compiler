@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add test cases for whileStatement (see test10.j).
+//BUGFIX  ";" , block and whilestatement: compare while (i2 <= i) { write (i); i--; } with do { write (i); i--; b++; } while (b <= 105+0);
 //TODO add test cases for forStatement (see test11.j, test2.j and test5.j).
 //TODO optimize comparison() and comparisonInDoStatement(): postpone loading var as leftOperand. 
 
