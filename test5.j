@@ -3,6 +3,20 @@
  * Test comparisons
  */
 class TestIf {
+  write (134);
+  /************************/
+  // global variable within if scope
+  byte b = 133;
+  if (b>132) {
+    int j = 1001;
+    byte c = b;
+    byte d = c;
+    b--;
+    write (c);
+  } else {
+    write(0);
+  }
+  /************************/
   int zero = 0;
   int one = 1;
   int three = 3;
@@ -11,7 +25,6 @@ class TestIf {
   int twelve = 12;
   byte byteOne = 1;
   byte byteSix = 262;
-  write(133);
   if (4 == zero + twelve/(1+2)) write(132);
   if (four == 0 + 12/(one + 2)) write(131);
   if (four == 0 + 12/(byteOne + 2)) write(130);

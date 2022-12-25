@@ -1,9 +1,22 @@
 /* Program to test generated Z80 assembler code */
 class TestWhile {
+  byte b = 115;
+  
+  /************************/
+  // global variable within while scope
+  write (b);
+  b--;
+  while (b>112) {
+    int j = 1001;
+    byte c = b;
+    byte d = c;
+    b--;
+    write (c);
+  }
+
   int i = 110;
   int i2 = 105;
   int p = 12;
-  byte b = 112;
   byte b2 = 111;
 
   /************************/

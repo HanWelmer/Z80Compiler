@@ -1,8 +1,22 @@
 /* Program to test generated Z80 assembler code */
 class TestDo {
+  byte b = 115;
+  
+  /************************/
+  // global variable within do scope
+  write (b);
+  b--;
+  do {
+    int j = 1001;
+    byte c = b;
+    byte d = c;
+    b--;
+    write (c);
+  } while (b>112);
+
   int i = 12;
   int p = 12;
-  byte b = 24;
+  b = 24;
 
   /************************/
   // stack8 - constant

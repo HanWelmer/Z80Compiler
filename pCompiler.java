@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO check stack usage/clear m.b.t. <acc8= en <acc16= etc.
-//TODO check memory usage in scope hierarchy (root, for, while, if blocks).
+//TODO extend transcoder.java: after debug("\n..function:" + function) should follow logging of generated asm code (1..* lines).
+//TODO extend transcode.java: generate asm line for label (see test1.asm: JP    L14).
+//TODO introduce built in function malloc() (see test1, test5, test10, test11).
 //TODO replace integer by word
-//TODO add printing a string constant
-//TODO add string variable type and string constant assignment
+//TODO add string constant assignment
+//TODO add write string constant
 //TODO add string expression (+ and *)
 //TODO add logical AND
 //TODO add logical OR

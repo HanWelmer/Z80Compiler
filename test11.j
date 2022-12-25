@@ -1,5 +1,20 @@
 /* Program to test generated Z80 assembler code */
 class TestFor {
+  byte b1 = 115;
+  
+  /************************/
+  // global variable within for scope
+  write (b1);
+  b1--;
+  do {
+    int j = 1001;
+    byte c = b1;
+    byte d = c;
+    b1--;
+    write (c);
+  } while (b1>112);
+
+  /************************/
   int i2 = 105;
   int p = 12;
   byte b2 = 111;

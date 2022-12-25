@@ -615,1189 +615,1898 @@ writeA:
 main:
         ;;test11.j(0) /* Program to test generated Z80 assembler code */
         ;;test11.j(1) class TestFor {
-        ;;test11.j(2)   int i2 = 105;
-        LD    A,105
-        LD    L,A
-        LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(3)   int p = 12;
-        LD    A,12
-        LD    L,A
-        LD    H,0
-        LD    (05002H),HL
-        ;;test11.j(4)   byte b2 = 111;
-        LD    A,111
-        LD    (05004H),A
-        ;;test11.j(5) 
-        ;;test11.j(6)   /************************/
-        ;;test11.j(7)   // stack8 - constant
-        ;;test11.j(8)   // stack8 - acc
-        ;;test11.j(9)   // stack8 - var
-        ;;test11.j(10)   // stack8 - stack8
-        ;;test11.j(11)   // stack8 - stack16
-        ;;test11.j(12)   //TODO
-        ;;test11.j(13) 
-        ;;test11.j(14)   /************************/
-        ;;test11.j(15)   // stack16 - constant
-        ;;test11.j(16)   // stack16 - acc
-        ;;test11.j(17)   // stack16 - var
-        ;;test11.j(18)   // stack16 - stack8
-        ;;test11.j(19)   // stack16 - stack16
-        ;;test11.j(20)   //TODO
-        ;;test11.j(21) 
-        ;;test11.j(22)   /************************/
-        ;;test11.j(23)   // var - stack16
-        ;;test11.j(24)   // byte - byte
-        ;;test11.j(25)   // byte - integer
-        ;;test11.j(26)   // integer - byte
-        ;;test11.j(27)   // integer - integer
-        ;;test11.j(28)   //TODO
-        ;;test11.j(29) 
-        ;;test11.j(30)   /************************/
-        ;;test11.j(31)   // var - stack8
-        ;;test11.j(32)   // byte - byte
-        ;;test11.j(33)   // byte - integer
-        ;;test11.j(34)   // integer - byte
-        ;;test11.j(35)   // integer - integer
-        ;;test11.j(36)   //TODO
-        ;;test11.j(37) 
-        ;;test11.j(38)   /************************/
-        ;;test11.j(39)   // var - var
-        ;;test11.j(40)   // byte - byte
-        ;;test11.j(41)   b2 = 111;
-        LD    A,111
-        LD    (05004H),A
-        ;;test11.j(42)   for (byte b = 112; b2 <= b; b--) { write (b); }
-        LD    A,112
-        LD    (05005H),A
-        LD    A,(05004H)
-        LD    B,A
-        LD    A,(05005H)
-        SUB   A,B
-        JP    Z,$+5
-        JP    C,L64
-        JP    L59
-        LD    HL,(05005H)
-        DEC   (HL)
-        JP    L53
-        LD    A,(05005H)
+        ;;test11.j(2)   byte b1 = 115;
+        ;acc8= constant 115
+        LD    A,115
+        ;acc8=> variable 0
+        LD    (05000H),A
+        ;;test11.j(3)   
+        ;;test11.j(4)   /************************/
+        ;;test11.j(5)   // global variable within for scope
+        ;;test11.j(6)   write (b1);
+        ;acc8= variable 0
+        LD    A,(05000H)
+        ;call writeAcc8
         CALL  writeA
-        JP    L57
-        ;;test11.j(43)   // byte - integer
-        ;;test11.j(44)   b2 = 109;
-        LD    A,109
+        ;;test11.j(7)   b1--;
+        ;decr8 variable 0
+        LD    HL,(05000H)
+        DEC   (HL)
+        ;;test11.j(8)   do {
+        ;;test11.j(9)     int j = 1001;
+        ;acc16= constant 1001
+        LD    HL,1001
+        ;acc16=> variable 1
+        LD    (05001H),HL
+        ;;test11.j(10)     byte c = b1;
+        ;acc8= variable 0
+        LD    A,(05000H)
+        ;acc8=> variable 3
+        LD    (05003H),A
+        ;;test11.j(11)     byte d = c;
+        ;acc8= variable 3
+        LD    A,(05003H)
+        ;acc8=> variable 4
         LD    (05004H),A
-        ;;test11.j(45)   for(int i = 110; b2 <= i; i--) { write(i); }
-        LD    A,110
+        ;;test11.j(12)     b1--;
+        ;decr8 variable 0
+        LD    HL,(05000H)
+        DEC   (HL)
+        ;;test11.j(13)     write (c);
+        ;acc8= variable 3
+        LD    A,(05003H)
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(14)   } while (b1>112);
+        ;acc8= variable 0
+        LD    A,(05000H)
+        ;acc8Comp constant 112
+        SUB   A,112
+        ;brgt 14
+        JP    Z,$+5
+        JP    C,L14
+        ;;test11.j(15) 
+        ;;test11.j(16)   /************************/
+        ;;test11.j(17)   int i2 = 105;
+        ;acc8= constant 105
+        LD    A,105
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    A,(05004H)
-        LD    HL,(05005H)
+        LD    (05001H),HL
+        ;;test11.j(18)   int p = 12;
+        ;acc8= constant 12
+        LD    A,12
+        ;acc8=> variable 3
+        LD    L,A
+        LD    H,0
+        LD    (05003H),HL
+        ;;test11.j(19)   byte b2 = 111;
+        ;acc8= constant 111
+        LD    A,111
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(20) 
+        ;;test11.j(21)   /************************/
+        ;;test11.j(22)   // stack8 - constant
+        ;;test11.j(23)   // stack8 - acc
+        ;;test11.j(24)   // stack8 - var
+        ;;test11.j(25)   // stack8 - stack8
+        ;;test11.j(26)   // stack8 - stack16
+        ;;test11.j(27)   //TODO
+        ;;test11.j(28) 
+        ;;test11.j(29)   /************************/
+        ;;test11.j(30)   // stack16 - constant
+        ;;test11.j(31)   // stack16 - acc
+        ;;test11.j(32)   // stack16 - var
+        ;;test11.j(33)   // stack16 - stack8
+        ;;test11.j(34)   // stack16 - stack16
+        ;;test11.j(35)   //TODO
+        ;;test11.j(36) 
+        ;;test11.j(37)   /************************/
+        ;;test11.j(38)   // var - stack16
+        ;;test11.j(39)   // byte - byte
+        ;;test11.j(40)   // byte - integer
+        ;;test11.j(41)   // integer - byte
+        ;;test11.j(42)   // integer - integer
+        ;;test11.j(43)   //TODO
+        ;;test11.j(44) 
+        ;;test11.j(45)   /************************/
+        ;;test11.j(46)   // var - stack8
+        ;;test11.j(47)   // byte - byte
+        ;;test11.j(48)   // byte - integer
+        ;;test11.j(49)   // integer - byte
+        ;;test11.j(50)   // integer - integer
+        ;;test11.j(51)   //TODO
+        ;;test11.j(52) 
+        ;;test11.j(53)   /************************/
+        ;;test11.j(54)   // var - var
+        ;;test11.j(55)   // byte - byte
+        ;;test11.j(56)   b2 = 111;
+        ;acc8= constant 111
+        LD    A,111
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(57)   for (byte b = 112; b2 <= b; b--) { write (b); }
+        ;acc8= constant 112
+        LD    A,112
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;acc8Comp variable 6
+        LD    B,A
+        LD    A,(05006H)
+        SUB   A,B
+        ;brgt 96
+        JP    Z,$+5
+        JP    C,L96
+        ;br 91
+        JP    L91
+        ;decr8 variable 6
+        LD    HL,(05006H)
+        DEC   (HL)
+        ;br 85
+        JP    L85
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
+        CALL  writeA
+        ;br 89
+        JP    L89
+        ;;test11.j(58)   // byte - integer
+        ;;test11.j(59)   b2 = 109;
+        ;acc8= constant 109
+        LD    A,109
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(60)   for(int i = 110; b2 <= i; i--) { write(i); }
+        ;acc8= constant 110
+        LD    A,110
+        ;acc8=> variable 6
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brgt 113
         JP    Z,$+5
-        JP    C,L81
-        JP    L76
-        LD    HL,(05005H)
+        JP    C,L113
+        ;br 108
+        JP    L108
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L69
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 101
+        JP    L101
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L74
-        ;;test11.j(46)   // integer - byte
-        ;;test11.j(47)   i2=107;
+        ;br 106
+        JP    L106
+        ;;test11.j(61)   // integer - byte
+        ;;test11.j(62)   i2=107;
+        ;acc8= constant 107
         LD    A,107
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(48)   for (byte b = 108; i2 <= b; b--) { write (b); }
+        LD    (05001H),HL
+        ;;test11.j(63)   for (byte b = 108; i2 <= b; b--) { write (b); }
+        ;acc8= constant 108
         LD    A,108
-        LD    (05005H),A
-        LD    HL,(05000H)
-        LD    A,(05005H)
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brgt 130
         JP    Z,$+5
-        JP    C,L98
-        JP    L93
-        LD    HL,(05005H)
+        JP    C,L130
+        ;br 125
+        JP    L125
+        ;decr8 variable 6
+        LD    HL,(05006H)
         DEC   (HL)
-        JP    L86
-        LD    A,(05005H)
+        ;br 118
+        JP    L118
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
         CALL  writeA
-        JP    L91
-        ;;test11.j(49)   // integer - integer
-        ;;test11.j(50)   i2=105;
+        ;br 123
+        JP    L123
+        ;;test11.j(64)   // integer - integer
+        ;;test11.j(65)   i2=105;
+        ;acc8= constant 105
         LD    A,105
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(51)   for(int i = 106; i2 <= i; i--) { write(i); }
+        LD    (05001H),HL
+        ;;test11.j(66)   for(int i = 106; i2 <= i; i--) { write(i); }
+        ;acc8= constant 106
         LD    A,106
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05000H)
-        LD    DE,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;acc16Comp variable 6
+        LD    DE,(05006H)
         OR    A
         SBC   HL,DE
+        ;brgt 149
         JP    Z,$+5
-        JP    C,L117
-        JP    L109
-        LD    HL,(05005H)
+        JP    C,L149
+        ;br 141
+        JP    L141
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L103
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 135
+        JP    L135
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L107
-        ;;test11.j(52) 
-        ;;test11.j(53)   /************************/
-        ;;test11.j(54)   // var - acc
-        ;;test11.j(55)   // byte - byte
-        ;;test11.j(56)   i2=104;
+        ;br 139
+        JP    L139
+        ;;test11.j(67) 
+        ;;test11.j(68)   /************************/
+        ;;test11.j(69)   // var - acc
+        ;;test11.j(70)   // byte - byte
+        ;;test11.j(71)   i2=104;
+        ;acc8= constant 104
         LD    A,104
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(57)   for (byte b = 104; b <= 105+0; b++) { write (i2); i2--; }
+        LD    (05001H),HL
+        ;;test11.j(72)   for (byte b = 104; b <= 105+0; b++) { write (i2); i2--; }
+        ;acc8= constant 104
         LD    A,104
-        LD    (05005H),A
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= constant 105
         LD    A,105
+        ;acc8+ constant 0
         ADD   A,0
+        ;acc8Comp variable 6
         LD    B,A
-        LD    A,(05005H)
+        LD    A,(05006H)
         SUB   A,B
-        JP    C,L135
-        JP    L129
-        LD    HL,(05005H)
+        ;brlt 167
+        JP    C,L167
+        ;br 161
+        JP    L161
+        ;incr8 variable 6
+        LD    HL,(05006H)
         INC   (HL)
-        JP    L122
-        LD    HL,(05000H)
+        ;br 154
+        JP    L154
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;call writeAcc16
         CALL  writeHL
-        LD    HL,(05000H)
+        ;decr16 variable 1
+        LD    HL,(05001H)
         DEC   HL
-        LD    (05000H),HL
-        JP    L127
-        ;;test11.j(58)   // byte - integer
-        ;;test11.j(59)   i2=103;
+        LD    (05001H),HL
+        ;br 159
+        JP    L159
+        ;;test11.j(73)   // byte - integer
+        ;;test11.j(74)   i2=103;
+        ;acc8= constant 103
         LD    A,103
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(60)   for (byte b = 102; b <= i2+0; b--) { write (b); i2=i2-2; }
+        LD    (05001H),HL
+        ;;test11.j(75)   for (byte b = 102; b <= i2+0; b--) { write (b); i2=i2-2; }
+        ;acc8= constant 102
         LD    A,102
-        LD    (05005H),A
-        LD    HL,(05000H)
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
-        LD    A,(05005H)
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brgt 188
         JP    Z,$+5
-        JP    C,L156
-        JP    L148
-        LD    HL,(05005H)
+        JP    C,L188
+        ;br 180
+        JP    L180
+        ;decr8 variable 6
+        LD    HL,(05006H)
         DEC   (HL)
-        JP    L140
-        LD    A,(05005H)
+        ;br 172
+        JP    L172
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
         CALL  writeA
-        LD    HL,(05000H)
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;acc16- constant 2
         LD    DE,2
         OR    A
         SBC   HL,DE
-        LD    (05000H),HL
-        JP    L146
-        ;;test11.j(61)   // integer - byte
-        ;;test11.j(62)   b2=100;
+        ;acc16=> variable 1
+        LD    (05001H),HL
+        ;br 178
+        JP    L178
+        ;;test11.j(76)   // integer - byte
+        ;;test11.j(77)   b2=100;
+        ;acc8= constant 100
         LD    A,100
-        LD    (05004H),A
-        ;;test11.j(63)   for(int i = 100; i <= 101+0; i++) { write(b2); b2--; }
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(78)   for(int i = 100; i <= 101+0; i++) { write(b2); b2--; }
+        ;acc8= constant 100
         LD    A,100
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
+        LD    (05006H),HL
+        ;acc8= constant 101
         LD    A,101
+        ;acc8+ constant 0
         ADD   A,0
-        LD    HL,(05005H)
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brgt 207
         JP    Z,$+5
-        JP    C,L175
-        JP    L169
-        LD    HL,(05005H)
+        JP    C,L207
+        ;br 201
+        JP    L201
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L161
-        LD    A,(05004H)
+        LD    (05006H),HL
+        ;br 193
+        JP    L193
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
         CALL  writeA
-        LD    HL,(05004H)
+        ;decr8 variable 5
+        LD    HL,(05005H)
         DEC   (HL)
-        JP    L167
-        ;;test11.j(64)   // integer - integer
-        ;;test11.j(65)   for(int i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
+        ;br 199
+        JP    L199
+        ;;test11.j(79)   // integer - integer
+        ;;test11.j(80)   for(int i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
+        ;acc16= constant 1098
         LD    HL,1098
-        LD    (05005H),HL
+        ;acc16=> variable 6
+        LD    (05006H),HL
+        ;acc16= constant 1099
         LD    HL,1099
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
-        LD    DE,(05005H)
+        ;acc16Comp variable 6
+        LD    DE,(05006H)
         OR    A
         SBC   HL,DE
-        JP    C,L193
-        JP    L184
-        LD    HL,(05005H)
+        ;brlt 225
+        JP    C,L225
+        ;br 216
+        JP    L216
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L177
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L182
-        ;;test11.j(66) 
-        ;;test11.j(67)   /************************/
-        ;;test11.j(68)   // var - constant
-        ;;test11.j(69)   // byte - byte
-        ;;test11.j(70)   i2=96;
-        LD    A,96
-        LD    L,A
-        LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(71)   for (byte b = 96; b <= 97; b++) { write (i2); i2--; }
-        LD    A,96
-        LD    (05005H),A
+        LD    (05006H),HL
+        ;br 209
+        JP    L209
+        ;acc8= variable 5
         LD    A,(05005H)
-        SUB   A,97
-        JP    Z,$+5
-        JP    C,L211
-        JP    L204
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
         LD    HL,(05005H)
-        INC   (HL)
-        JP    L198
-        LD    HL,(05000H)
-        CALL  writeHL
-        LD    HL,(05000H)
-        DEC   HL
-        LD    (05000H),HL
-        JP    L202
-        ;;test11.j(72)   // byte - integer
-        ;;test11.j(73)   //not relevant
-        ;;test11.j(74)   write(94);
-        LD    A,94
-        CALL  writeA
-        ;;test11.j(75)   write(93);
-        LD    A,93
-        CALL  writeA
-        ;;test11.j(76)   // integer - byte
-        ;;test11.j(77)   b2=92;
-        LD    A,92
-        LD    (05004H),A
-        ;;test11.j(78)   for(int i = 92; i <= 93; i++) { write(b2); b2--; }
-        LD    A,92
+        DEC   (HL)
+        ;br 214
+        JP    L214
+        ;;test11.j(81) 
+        ;;test11.j(82)   /************************/
+        ;;test11.j(83)   // var - constant
+        ;;test11.j(84)   // byte - byte
+        ;;test11.j(85)   i2=96;
+        ;acc8= constant 96
+        LD    A,96
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05001H),HL
+        ;;test11.j(86)   for (byte b = 96; b <= 97; b++) { write (i2); i2--; }
+        ;acc8= constant 96
+        LD    A,96
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8Comp constant 97
+        SUB   A,97
+        ;brgt 243
+        JP    Z,$+5
+        JP    C,L243
+        ;br 236
+        JP    L236
+        ;incr8 variable 6
+        LD    HL,(05006H)
+        INC   (HL)
+        ;br 230
+        JP    L230
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;call writeAcc16
+        CALL  writeHL
+        ;decr16 variable 1
+        LD    HL,(05001H)
+        DEC   HL
+        LD    (05001H),HL
+        ;br 234
+        JP    L234
+        ;;test11.j(87)   // byte - integer
+        ;;test11.j(88)   //not relevant
+        ;;test11.j(89)   write(94);
+        ;acc8= constant 94
+        LD    A,94
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(90)   write(93);
+        ;acc8= constant 93
         LD    A,93
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(91)   // integer - byte
+        ;;test11.j(92)   b2=92;
+        ;acc8= constant 92
+        LD    A,92
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(93)   for(int i = 92; i <= 93; i++) { write(b2); b2--; }
+        ;acc8= constant 92
+        LD    A,92
+        ;acc8=> variable 6
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc8= constant 93
+        LD    A,93
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brgt 268
         JP    Z,$+5
-        JP    C,L236
-        JP    L230
-        LD    HL,(05005H)
+        JP    C,L268
+        ;br 262
+        JP    L262
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L223
-        LD    A,(05004H)
+        LD    (05006H),HL
+        ;br 255
+        JP    L255
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
         CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L228
-        ;;test11.j(79)   // integer - integer
-        ;;test11.j(80)   for(int i = 1090; i <= 1091; i++) { write(b2); b2--; }
-        LD    HL,1090
-        LD    (05005H),HL
+        ;decr8 variable 5
         LD    HL,(05005H)
+        DEC   (HL)
+        ;br 260
+        JP    L260
+        ;;test11.j(94)   // integer - integer
+        ;;test11.j(95)   for(int i = 1090; i <= 1091; i++) { write(b2); b2--; }
+        ;acc16= constant 1090
+        LD    HL,1090
+        ;acc16=> variable 6
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16Comp constant 1091
         LD    DE,1091
         OR    A
         SBC   HL,DE
+        ;brgt 286
         JP    Z,$+5
-        JP    C,L254
-        JP    L244
-        LD    HL,(05005H)
+        JP    C,L286
+        ;br 276
+        JP    L276
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L238
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L242
-        ;;test11.j(81) 
-        ;;test11.j(82)   /************************/
-        ;;test11.j(83)   // acc - stack8
-        ;;test11.j(84)   // byte - byte
-        ;;test11.j(85)   //TODO
-        ;;test11.j(86)   write(88);
-        LD    A,88
-        CALL  writeA
-        ;;test11.j(87)   write(87);
-        LD    A,87
-        CALL  writeA
-        ;;test11.j(88)   // byte - integer
-        ;;test11.j(89)   //TODO
-        ;;test11.j(90)   write(86);
-        LD    A,86
-        CALL  writeA
-        ;;test11.j(91)   write(85);
-        LD    A,85
-        CALL  writeA
-        ;;test11.j(92)   // integer - byte
-        ;;test11.j(93)   //TODO
-        ;;test11.j(94)   write(84);
-        LD    A,84
-        CALL  writeA
-        ;;test11.j(95)   write(83);
-        LD    A,83
-        CALL  writeA
-        ;;test11.j(96)   // integer - integer
-        ;;test11.j(97)   //TODO
-        ;;test11.j(98)   write(82);
-        LD    A,82
-        CALL  writeA
-        ;;test11.j(99)   write(81);
-        LD    A,81
-        CALL  writeA
-        ;;test11.j(100) 
-        ;;test11.j(101)   /************************/
-        ;;test11.j(102)   // acc - stack16
-        ;;test11.j(103)   // byte - byte
-        ;;test11.j(104)   //TODO
-        ;;test11.j(105)   write(80);
-        LD    A,80
-        CALL  writeA
-        ;;test11.j(106)   write(79);
-        LD    A,79
-        CALL  writeA
-        ;;test11.j(107)   // byte - integer
-        ;;test11.j(108)   //TODO
-        ;;test11.j(109)   write(78);
-        LD    A,78
-        CALL  writeA
-        ;;test11.j(110)   write(77);
-        LD    A,77
-        CALL  writeA
-        ;;test11.j(111)   // integer - byte
-        ;;test11.j(112)   //TODO
-        ;;test11.j(113)   write(76);
-        LD    A,76
-        CALL  writeA
-        ;;test11.j(114)   write(75);
-        LD    A,75
-        CALL  writeA
-        ;;test11.j(115)   // integer - integer
-        ;;test11.j(116)   //TODO
-        ;;test11.j(117)   write(74);
-        LD    A,74
-        CALL  writeA
-        ;;test11.j(118)   write(73);
-        LD    A,73
-        CALL  writeA
-        ;;test11.j(119) 
-        ;;test11.j(120)   /************************/
-        ;;test11.j(121)   // acc - var
-        ;;test11.j(122)   // byte - byte
-        ;;test11.j(123)   for (byte b = 72; 71+0 <= b; b--) { write (b); }
-        LD    A,72
-        LD    (05005H),A
-        LD    A,71
-        ADD   A,0
-        LD    B,A
+        LD    (05006H),HL
+        ;br 270
+        JP    L270
+        ;acc8= variable 5
         LD    A,(05005H)
-        SUB   A,B
-        JP    Z,$+5
-        JP    C,L337
-        JP    L332
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
         LD    HL,(05005H)
         DEC   (HL)
-        JP    L325
-        LD    A,(05005H)
+        ;br 274
+        JP    L274
+        ;;test11.j(96) 
+        ;;test11.j(97)   /************************/
+        ;;test11.j(98)   // acc - stack8
+        ;;test11.j(99)   // byte - byte
+        ;;test11.j(100)   //TODO
+        ;;test11.j(101)   write(88);
+        ;acc8= constant 88
+        LD    A,88
+        ;call writeAcc8
         CALL  writeA
-        JP    L330
-        ;;test11.j(124)   // byte - integer
-        ;;test11.j(125)   for(int i = 70; 69+0 <= i; i--) { write(i); }
+        ;;test11.j(102)   write(87);
+        ;acc8= constant 87
+        LD    A,87
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(103)   // byte - integer
+        ;;test11.j(104)   //TODO
+        ;;test11.j(105)   write(86);
+        ;acc8= constant 86
+        LD    A,86
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(106)   write(85);
+        ;acc8= constant 85
+        LD    A,85
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(107)   // integer - byte
+        ;;test11.j(108)   //TODO
+        ;;test11.j(109)   write(84);
+        ;acc8= constant 84
+        LD    A,84
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(110)   write(83);
+        ;acc8= constant 83
+        LD    A,83
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(111)   // integer - integer
+        ;;test11.j(112)   //TODO
+        ;;test11.j(113)   write(82);
+        ;acc8= constant 82
+        LD    A,82
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(114)   write(81);
+        ;acc8= constant 81
+        LD    A,81
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(115) 
+        ;;test11.j(116)   /************************/
+        ;;test11.j(117)   // acc - stack16
+        ;;test11.j(118)   // byte - byte
+        ;;test11.j(119)   //TODO
+        ;;test11.j(120)   write(80);
+        ;acc8= constant 80
+        LD    A,80
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(121)   write(79);
+        ;acc8= constant 79
+        LD    A,79
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(122)   // byte - integer
+        ;;test11.j(123)   //TODO
+        ;;test11.j(124)   write(78);
+        ;acc8= constant 78
+        LD    A,78
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(125)   write(77);
+        ;acc8= constant 77
+        LD    A,77
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(126)   // integer - byte
+        ;;test11.j(127)   //TODO
+        ;;test11.j(128)   write(76);
+        ;acc8= constant 76
+        LD    A,76
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(129)   write(75);
+        ;acc8= constant 75
+        LD    A,75
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(130)   // integer - integer
+        ;;test11.j(131)   //TODO
+        ;;test11.j(132)   write(74);
+        ;acc8= constant 74
+        LD    A,74
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(133)   write(73);
+        ;acc8= constant 73
+        LD    A,73
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(134) 
+        ;;test11.j(135)   /************************/
+        ;;test11.j(136)   // acc - var
+        ;;test11.j(137)   // byte - byte
+        ;;test11.j(138)   for (byte b = 72; 71+0 <= b; b--) { write (b); }
+        ;acc8= constant 72
+        LD    A,72
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= constant 71
+        LD    A,71
+        ;acc8+ constant 0
+        ADD   A,0
+        ;acc8Comp variable 6
+        LD    B,A
+        LD    A,(05006H)
+        SUB   A,B
+        ;brgt 369
+        JP    Z,$+5
+        JP    C,L369
+        ;br 364
+        JP    L364
+        ;decr8 variable 6
+        LD    HL,(05006H)
+        DEC   (HL)
+        ;br 357
+        JP    L357
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
+        CALL  writeA
+        ;br 362
+        JP    L362
+        ;;test11.j(139)   // byte - integer
+        ;;test11.j(140)   for(int i = 70; 69+0 <= i; i--) { write(i); }
+        ;acc8= constant 70
         LD    A,70
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
+        LD    (05006H),HL
+        ;acc8= constant 69
         LD    A,69
+        ;acc8+ constant 0
         ADD   A,0
-        LD    HL,(05005H)
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brgt 384
         JP    Z,$+5
-        JP    C,L352
-        JP    L347
-        LD    HL,(05005H)
+        JP    C,L384
+        ;br 379
+        JP    L379
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L339
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 371
+        JP    L371
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L345
-        ;;test11.j(126)   // integer - byte
-        ;;test11.j(127)   i2=67;
+        ;br 377
+        JP    L377
+        ;;test11.j(141)   // integer - byte
+        ;;test11.j(142)   i2=67;
+        ;acc8= constant 67
         LD    A,67
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(128)   for (byte b = 68; i2+0 <= b; b--) { write (b); }
+        LD    (05001H),HL
+        ;;test11.j(143)   for (byte b = 68; i2+0 <= b; b--) { write (b); }
+        ;acc8= constant 68
         LD    A,68
-        LD    (05005H),A
-        LD    HL,(05000H)
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
-        LD    A,(05005H)
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brgt 402
         JP    Z,$+5
-        JP    C,L370
-        JP    L365
-        LD    HL,(05005H)
+        JP    C,L402
+        ;br 397
+        JP    L397
+        ;decr8 variable 6
+        LD    HL,(05006H)
         DEC   (HL)
-        JP    L357
-        LD    A,(05005H)
+        ;br 389
+        JP    L389
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
         CALL  writeA
-        JP    L363
-        ;;test11.j(129)   // integer - integer
-        ;;test11.j(130)   b2 = 66;
+        ;br 395
+        JP    L395
+        ;;test11.j(144)   // integer - integer
+        ;;test11.j(145)   b2 = 66;
+        ;acc8= constant 66
         LD    A,66
-        LD    (05004H),A
-        ;;test11.j(131)   for(int i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(146)   for(int i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
+        ;acc16= constant 1066
         LD    HL,1066
-        LD    (05005H),HL
+        ;acc16=> variable 6
+        LD    (05006H),HL
+        ;acc16= constant 1000
         LD    HL,1000
+        ;acc16+ constant 65
         LD    DE,65
         ADD   HL,DE
-        LD    DE,(05005H)
+        ;acc16Comp variable 6
+        LD    DE,(05006H)
         OR    A
         SBC   HL,DE
+        ;brgt 423
         JP    Z,$+5
-        JP    C,L391
-        JP    L382
-        LD    HL,(05005H)
+        JP    C,L423
+        ;br 414
+        JP    L414
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L375
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L380
-        ;;test11.j(132) 
-        ;;test11.j(133)   /************************/
-        ;;test11.j(134)   // acc - acc
-        ;;test11.j(135)   // byte - byte
-        ;;test11.j(136)   for (byte b = 64; 63+0 <= b+0; b--) { write (b); }
-        LD    A,64
-        LD    (05005H),A
-        LD    A,63
-        ADD   A,0
-        PUSH AF
+        LD    (05006H),HL
+        ;br 407
+        JP    L407
+        ;acc8= variable 5
         LD    A,(05005H)
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
+        LD    HL,(05005H)
+        DEC   (HL)
+        ;br 412
+        JP    L412
+        ;;test11.j(147) 
+        ;;test11.j(148)   /************************/
+        ;;test11.j(149)   // acc - acc
+        ;;test11.j(150)   // byte - byte
+        ;;test11.j(151)   for (byte b = 64; 63+0 <= b+0; b--) { write (b); }
+        ;acc8= constant 64
+        LD    A,64
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= constant 63
+        LD    A,63
+        ;acc8+ constant 0
         ADD   A,0
+        ;<acc8
+        PUSH AF
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 0
+        ADD   A,0
+        ;revAcc8Comp unstack8
         POP   BC
         SUB   A,B
-        JP    C,L408
-        JP    L403
-        LD    HL,(05005H)
+        ;brlt 440
+        JP    C,L440
+        ;br 435
+        JP    L435
+        ;decr8 variable 6
+        LD    HL,(05006H)
         DEC   (HL)
-        JP    L393
-        LD    A,(05005H)
+        ;br 425
+        JP    L425
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
         CALL  writeA
-        JP    L401
-        ;;test11.j(137)   // byte - integer
-        ;;test11.j(138)   for(int i = 62; 61+0 <= i+0; i--) { write(i); }
+        ;br 433
+        JP    L433
+        ;;test11.j(152)   // byte - integer
+        ;;test11.j(153)   for(int i = 62; 61+0 <= i+0; i--) { write(i); }
+        ;acc8= constant 62
         LD    A,62
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
+        LD    (05006H),HL
+        ;acc8= constant 61
         LD    A,61
+        ;acc8+ constant 0
         ADD   A,0
+        ;<acc8
         PUSH AF
-        LD    HL,(05005H)
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
+        ;acc8= unstack8
         POP  AF
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brgt 458
         JP    Z,$+5
-        JP    C,L426
-        JP    L421
-        LD    HL,(05005H)
+        JP    C,L458
+        ;br 453
+        JP    L453
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L410
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 442
+        JP    L442
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L419
-        ;;test11.j(139)   // integer - byte
-        ;;test11.j(140)   i2=59;
+        ;br 451
+        JP    L451
+        ;;test11.j(154)   // integer - byte
+        ;;test11.j(155)   i2=59;
+        ;acc8= constant 59
         LD    A,59
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(141)   for (byte b = 60; i2+0 <= b+0; b--) { write (b); }
+        LD    (05001H),HL
+        ;;test11.j(156)   for (byte b = 60; i2+0 <= b+0; b--) { write (b); }
+        ;acc8= constant 60
         LD    A,60
-        LD    (05005H),A
-        LD    HL,(05000H)
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
+        ;<acc16
         PUSH HL
-        LD    A,(05005H)
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 0
         ADD   A,0
+        ;acc16= unstack16
         POP  HL
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brgt 479
         JP    Z,$+5
-        JP    C,L447
-        JP    L442
-        LD    HL,(05005H)
+        JP    C,L479
+        ;br 474
+        JP    L474
+        ;decr8 variable 6
+        LD    HL,(05006H)
         DEC   (HL)
-        JP    L431
-        LD    A,(05005H)
+        ;br 463
+        JP    L463
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
         CALL  writeA
-        JP    L440
-        ;;test11.j(142)   // integer - integer
-        ;;test11.j(143)   b2=58;
+        ;br 472
+        JP    L472
+        ;;test11.j(157)   // integer - integer
+        ;;test11.j(158)   b2=58;
+        ;acc8= constant 58
         LD    A,58
-        LD    (05004H),A
-        ;;test11.j(144)   for(int i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(159)   for(int i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
+        ;acc16= constant 1058
         LD    HL,1058
-        LD    (05005H),HL
+        ;acc16=> variable 6
+        LD    (05006H),HL
+        ;acc16= constant 1000
         LD    HL,1000
+        ;acc16+ constant 57
         LD    DE,57
         ADD   HL,DE
+        ;<acc16
         PUSH HL
-        LD    HL,(05005H)
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
+        ;revAcc16Comp unstack16
         POP   DE
         OR    A
         SBC   HL,DE
-        JP    C,L471
-        JP    L462
-        LD    HL,(05005H)
+        ;brlt 503
+        JP    C,L503
+        ;br 494
+        JP    L494
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L452
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L460
-        ;;test11.j(145) 
-        ;;test11.j(146)   /************************/
-        ;;test11.j(147)   // acc - constant
-        ;;test11.j(148)   // byte - byte
-        ;;test11.j(149)   i2=56;
-        LD    A,56
-        LD    L,A
-        LD    H,0
-        LD    (05000H),HL
-        ;;test11.j(150)   for (byte b = 56; b+0 <= 57; b++) { write (i2); i2--; }
-        LD    A,56
-        LD    (05005H),A
+        LD    (05006H),HL
+        ;br 484
+        JP    L484
+        ;acc8= variable 5
         LD    A,(05005H)
-        ADD   A,0
-        SUB   A,57
-        JP    Z,$+5
-        JP    C,L491
-        JP    L483
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
         LD    HL,(05005H)
-        INC   (HL)
-        JP    L476
-        LD    HL,(05000H)
-        CALL  writeHL
-        LD    HL,(05000H)
-        DEC   HL
-        LD    (05000H),HL
-        JP    L481
-        ;;test11.j(151)   // byte - integer
-        ;;test11.j(152)   //not relevant
-        ;;test11.j(153)   // integer - byte
-        ;;test11.j(154)   b2=54;
-        LD    A,54
-        LD    (05004H),A
-        ;;test11.j(155)   for (int i = 54; i+0 <= 55; i++) { write (b2); b2--;}
-        LD    A,54
+        DEC   (HL)
+        ;br 492
+        JP    L492
+        ;;test11.j(160) 
+        ;;test11.j(161)   /************************/
+        ;;test11.j(162)   // acc - constant
+        ;;test11.j(163)   // byte - byte
+        ;;test11.j(164)   i2=56;
+        ;acc8= constant 56
+        LD    A,56
+        ;acc8=> variable 1
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05001H),HL
+        ;;test11.j(165)   for (byte b = 56; b+0 <= 57; b++) { write (i2); i2--; }
+        ;acc8= constant 56
+        LD    A,56
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 0
+        ADD   A,0
+        ;acc8Comp constant 57
+        SUB   A,57
+        ;brgt 523
+        JP    Z,$+5
+        JP    C,L523
+        ;br 515
+        JP    L515
+        ;incr8 variable 6
+        LD    HL,(05006H)
+        INC   (HL)
+        ;br 508
+        JP    L508
+        ;acc16= variable 1
+        LD    HL,(05001H)
+        ;call writeAcc16
+        CALL  writeHL
+        ;decr16 variable 1
+        LD    HL,(05001H)
+        DEC   HL
+        LD    (05001H),HL
+        ;br 513
+        JP    L513
+        ;;test11.j(166)   // byte - integer
+        ;;test11.j(167)   //not relevant
+        ;;test11.j(168)   // integer - byte
+        ;;test11.j(169)   b2=54;
+        ;acc8= constant 54
+        LD    A,54
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(170)   for (int i = 54; i+0 <= 55; i++) { write (b2); b2--;}
+        ;acc8= constant 54
+        LD    A,54
+        ;acc8=> variable 6
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
+        ;acc8= constant 55
         LD    A,55
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brgt 542
         JP    Z,$+5
-        JP    C,L510
-        JP    L504
-        LD    HL,(05005H)
+        JP    C,L542
+        ;br 536
+        JP    L536
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L496
-        LD    A,(05004H)
+        LD    (05006H),HL
+        ;br 528
+        JP    L528
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
         CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L502
-        ;;test11.j(156)   // integer - integer
-        ;;test11.j(157)   b2=52;
-        LD    A,52
-        LD    (05004H),A
-        ;;test11.j(158)   for(int i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
-        LD    HL,1052
-        LD    (05005H),HL
+        ;decr8 variable 5
         LD    HL,(05005H)
+        DEC   (HL)
+        ;br 534
+        JP    L534
+        ;;test11.j(171)   // integer - integer
+        ;;test11.j(172)   b2=52;
+        ;acc8= constant 52
+        LD    A,52
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(173)   for(int i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
+        ;acc16= constant 1052
+        LD    HL,1052
+        ;acc16=> variable 6
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
+        ;acc16Comp constant 1053
         LD    DE,1053
         OR    A
         SBC   HL,DE
+        ;brgt 564
         JP    Z,$+5
-        JP    C,L532
-        JP    L522
-        LD    HL,(05005H)
+        JP    C,L564
+        ;br 554
+        JP    L554
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L515
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L520
-        ;;test11.j(159) 
-        ;;test11.j(160)   /************************/
-        ;;test11.j(161)   // constant - stack8
-        ;;test11.j(162)   // byte - byte
-        ;;test11.j(163)   //TODO
-        ;;test11.j(164)   write(50);
-        LD    A,50
-        CALL  writeA
-        ;;test11.j(165)   // constant - stack8
-        ;;test11.j(166)   // byte - integer
-        ;;test11.j(167)   //TODO
-        ;;test11.j(168)   write(49);
-        LD    A,49
-        CALL  writeA
-        ;;test11.j(169)   // constant - stack8
-        ;;test11.j(170)   // integer - byte
-        ;;test11.j(171)   //TODO
-        ;;test11.j(172)   write(48);
-        LD    A,48
-        CALL  writeA
-        ;;test11.j(173)   // constant - stack88
-        ;;test11.j(174)   // integer - integer
-        ;;test11.j(175)   //TODO
-        ;;test11.j(176)   write(47);
-        LD    A,47
-        CALL  writeA
-        ;;test11.j(177) 
-        ;;test11.j(178)   /************************/
-        ;;test11.j(179)   // constant - stack16
-        ;;test11.j(180)   // byte - byte
-        ;;test11.j(181)   //TODO
-        ;;test11.j(182)   write(46);
-        LD    A,46
-        CALL  writeA
-        ;;test11.j(183)   // constant - stack16
-        ;;test11.j(184)   // byte - integer
-        ;;test11.j(185)   //TODO
-        ;;test11.j(186)   write(45);
-        LD    A,45
-        CALL  writeA
-        ;;test11.j(187)   // constant - stack16
-        ;;test11.j(188)   // integer - byte
-        ;;test11.j(189)   //TODO
-        ;;test11.j(190)   write(44);
-        LD    A,44
-        CALL  writeA
-        ;;test11.j(191)   // constant - stack16
-        ;;test11.j(192)   // integer - integer
-        ;;test11.j(193)   //TODO
-        ;;test11.j(194)   write(43);
-        LD    A,43
-        CALL  writeA
-        ;;test11.j(195) 
-        ;;test11.j(196)   /************************/
-        ;;test11.j(197)   // constant - var
-        ;;test11.j(198)   // byte - byte
-        ;;test11.j(199)   for (byte b = 42; 41 <= b; b--) { write (b); }
-        LD    A,42
-        LD    (05005H),A
+        LD    (05006H),HL
+        ;br 547
+        JP    L547
+        ;acc8= variable 5
         LD    A,(05005H)
-        SUB   A,41
-        JP    C,L597
-        JP    L591
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
         LD    HL,(05005H)
         DEC   (HL)
-        JP    L585
-        LD    A,(05005H)
+        ;br 552
+        JP    L552
+        ;;test11.j(174) 
+        ;;test11.j(175)   /************************/
+        ;;test11.j(176)   // constant - stack8
+        ;;test11.j(177)   // byte - byte
+        ;;test11.j(178)   //TODO
+        ;;test11.j(179)   write(50);
+        ;acc8= constant 50
+        LD    A,50
+        ;call writeAcc8
         CALL  writeA
-        JP    L589
-        ;;test11.j(200)   // constant - var
-        ;;test11.j(201)   // byte - integer
-        ;;test11.j(202)   for(int i = 40; 39 <= i; i--) { write(i); }
+        ;;test11.j(180)   // constant - stack8
+        ;;test11.j(181)   // byte - integer
+        ;;test11.j(182)   //TODO
+        ;;test11.j(183)   write(49);
+        ;acc8= constant 49
+        LD    A,49
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(184)   // constant - stack8
+        ;;test11.j(185)   // integer - byte
+        ;;test11.j(186)   //TODO
+        ;;test11.j(187)   write(48);
+        ;acc8= constant 48
+        LD    A,48
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(188)   // constant - stack88
+        ;;test11.j(189)   // integer - integer
+        ;;test11.j(190)   //TODO
+        ;;test11.j(191)   write(47);
+        ;acc8= constant 47
+        LD    A,47
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(192) 
+        ;;test11.j(193)   /************************/
+        ;;test11.j(194)   // constant - stack16
+        ;;test11.j(195)   // byte - byte
+        ;;test11.j(196)   //TODO
+        ;;test11.j(197)   write(46);
+        ;acc8= constant 46
+        LD    A,46
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(198)   // constant - stack16
+        ;;test11.j(199)   // byte - integer
+        ;;test11.j(200)   //TODO
+        ;;test11.j(201)   write(45);
+        ;acc8= constant 45
+        LD    A,45
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(202)   // constant - stack16
+        ;;test11.j(203)   // integer - byte
+        ;;test11.j(204)   //TODO
+        ;;test11.j(205)   write(44);
+        ;acc8= constant 44
+        LD    A,44
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(206)   // constant - stack16
+        ;;test11.j(207)   // integer - integer
+        ;;test11.j(208)   //TODO
+        ;;test11.j(209)   write(43);
+        ;acc8= constant 43
+        LD    A,43
+        ;call writeAcc8
+        CALL  writeA
+        ;;test11.j(210) 
+        ;;test11.j(211)   /************************/
+        ;;test11.j(212)   // constant - var
+        ;;test11.j(213)   // byte - byte
+        ;;test11.j(214)   for (byte b = 42; 41 <= b; b--) { write (b); }
+        ;acc8= constant 42
+        LD    A,42
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8Comp constant 41
+        SUB   A,41
+        ;brlt 629
+        JP    C,L629
+        ;br 623
+        JP    L623
+        ;decr8 variable 6
+        LD    HL,(05006H)
+        DEC   (HL)
+        ;br 617
+        JP    L617
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
+        CALL  writeA
+        ;br 621
+        JP    L621
+        ;;test11.j(215)   // constant - var
+        ;;test11.j(216)   // byte - integer
+        ;;test11.j(217)   for(int i = 40; 39 <= i; i--) { write(i); }
+        ;acc8= constant 40
         LD    A,40
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc8= constant 39
         LD    A,39
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brgt 647
         JP    Z,$+5
-        JP    C,L615
-        JP    L606
-        LD    HL,(05005H)
+        JP    C,L647
+        ;br 638
+        JP    L638
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L599
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 631
+        JP    L631
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L604
-        ;;test11.j(203)   // constant - var
-        ;;test11.j(204)   // integer - byte
-        ;;test11.j(205)   // not relevant
-        ;;test11.j(206)   // constant - var
-        ;;test11.j(207)   // integer - integer
-        ;;test11.j(208)   b2=38;
+        ;br 636
+        JP    L636
+        ;;test11.j(218)   // constant - var
+        ;;test11.j(219)   // integer - byte
+        ;;test11.j(220)   // not relevant
+        ;;test11.j(221)   // constant - var
+        ;;test11.j(222)   // integer - integer
+        ;;test11.j(223)   b2=38;
+        ;acc8= constant 38
         LD    A,38
-        LD    (05004H),A
-        ;;test11.j(209)   for(int i = 1038; 1037 <= i; i--) { write(b2); b2--; }
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(224)   for(int i = 1038; 1037 <= i; i--) { write(b2); b2--; }
+        ;acc16= constant 1038
         LD    HL,1038
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        ;acc16=> variable 6
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16Comp constant 1037
         LD    DE,1037
         OR    A
         SBC   HL,DE
-        JP    C,L635
-        JP    L626
-        LD    HL,(05005H)
+        ;brlt 667
+        JP    C,L667
+        ;br 658
+        JP    L658
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L620
-        LD    A,(05004H)
+        LD    (05006H),HL
+        ;br 652
+        JP    L652
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
         CALL  writeA
-        LD    HL,(05004H)
+        ;decr8 variable 5
+        LD    HL,(05005H)
         DEC   (HL)
-        JP    L624
-        ;;test11.j(210) 
-        ;;test11.j(211)   /************************/
-        ;;test11.j(212)   // constant - acc
-        ;;test11.j(213)   // byte - byte
-        ;;test11.j(214)   for (byte b = 36; 136 == b+100; b--) { write (b); }
+        ;br 656
+        JP    L656
+        ;;test11.j(225) 
+        ;;test11.j(226)   /************************/
+        ;;test11.j(227)   // constant - acc
+        ;;test11.j(228)   // byte - byte
+        ;;test11.j(229)   for (byte b = 36; 136 == b+100; b--) { write (b); }
+        ;acc8= constant 36
         LD    A,36
-        LD    (05005H),A
-        LD    A,(05005H)
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 100
         ADD   A,100
+        ;acc8Comp constant 136
         SUB   A,136
-        JP    NZ,L648
-        JP    L644
-        LD    HL,(05005H)
+        ;brne 680
+        JP    NZ,L680
+        ;br 676
+        JP    L676
+        ;decr8 variable 6
+        LD    HL,(05006H)
         DEC   (HL)
-        JP    L637
-        LD    A,(05005H)
+        ;br 669
+        JP    L669
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
         CALL  writeA
-        JP    L642
-        ;;test11.j(215)   for (byte b = 35; 132 != b+100; b--) { write (b); }
+        ;br 674
+        JP    L674
+        ;;test11.j(230)   for (byte b = 35; 132 != b+100; b--) { write (b); }
+        ;acc8= constant 35
         LD    A,35
-        LD    (05005H),A
-        LD    A,(05005H)
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 100
         ADD   A,100
+        ;acc8Comp constant 132
         SUB   A,132
-        JP    Z,L661
-        JP    L657
-        LD    HL,(05005H)
+        ;breq 693
+        JP    Z,L693
+        ;br 689
+        JP    L689
+        ;decr8 variable 6
+        LD    HL,(05006H)
         DEC   (HL)
-        JP    L650
-        LD    A,(05005H)
+        ;br 682
+        JP    L682
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
         CALL  writeA
-        JP    L655
-        ;;test11.j(216)   b2=32;
-        LD    A,32
-        LD    (05004H),A
-        ;;test11.j(217)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2--; }
-        LD    A,32
-        LD    (05005H),A
-        LD    A,(05005H)
-        ADD   A,100
-        SUB   A,134
-        JP    NC,L678
-        JP    L673
-        LD    HL,(05005H)
-        INC   (HL)
-        JP    L666
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L671
-        ;;test11.j(218)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2--; }
-        LD    A,34
-        LD    (05005H),A
-        LD    A,(05005H)
-        ADD   A,100
-        SUB   A,135
-        JP    Z,$+5
-        JP    C,L692
+        ;br 687
         JP    L687
-        LD    HL,(05005H)
+        ;;test11.j(231)   b2=32;
+        ;acc8= constant 32
+        LD    A,32
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(232)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2--; }
+        ;acc8= constant 32
+        LD    A,32
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 100
+        ADD   A,100
+        ;acc8Comp constant 134
+        SUB   A,134
+        ;brge 710
+        JP    NC,L710
+        ;br 705
+        JP    L705
+        ;incr8 variable 6
+        LD    HL,(05006H)
         INC   (HL)
-        JP    L680
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L685
-        ;;test11.j(219)   for (byte b = 28; 126 <  b+100; b--) { write (b); }
-        LD    A,28
-        LD    (05005H),A
+        ;br 698
+        JP    L698
+        ;acc8= variable 5
         LD    A,(05005H)
-        ADD   A,100
-        SUB   A,126
-        JP    Z,L705
-        JP    L701
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
         LD    HL,(05005H)
         DEC   (HL)
-        JP    L694
-        LD    A,(05005H)
-        CALL  writeA
-        JP    L699
-        ;;test11.j(220)   for (byte b = 26; 125 <= b+100; b--) { write (b); }
-        LD    A,26
-        LD    (05005H),A
-        LD    A,(05005H)
+        ;br 703
+        JP    L703
+        ;;test11.j(233)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2--; }
+        ;acc8= constant 34
+        LD    A,34
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 100
         ADD   A,100
-        SUB   A,125
-        JP    C,L720
-        JP    L714
-        LD    HL,(05005H)
-        DEC   (HL)
-        JP    L707
-        LD    A,(05005H)
-        CALL  writeA
+        ;acc8Comp constant 135
+        SUB   A,135
+        ;brgt 724
+        JP    Z,$+5
+        JP    C,L724
+        ;br 719
+        JP    L719
+        ;incr8 variable 6
+        LD    HL,(05006H)
+        INC   (HL)
+        ;br 712
         JP    L712
-        ;;test11.j(221)   // constant - acc
-        ;;test11.j(222)   // byte - integer
-        ;;test11.j(223)   for(int i = 24; 24 == i+0; i--) { write(i); }
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
+        LD    HL,(05005H)
+        DEC   (HL)
+        ;br 717
+        JP    L717
+        ;;test11.j(234)   for (byte b = 28; 126 <  b+100; b--) { write (b); }
+        ;acc8= constant 28
+        LD    A,28
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 100
+        ADD   A,100
+        ;acc8Comp constant 126
+        SUB   A,126
+        ;brle 737
+        JP    Z,L737
+        ;br 733
+        JP    L733
+        ;decr8 variable 6
+        LD    HL,(05006H)
+        DEC   (HL)
+        ;br 726
+        JP    L726
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
+        CALL  writeA
+        ;br 731
+        JP    L731
+        ;;test11.j(235)   for (byte b = 26; 125 <= b+100; b--) { write (b); }
+        ;acc8= constant 26
+        LD    A,26
+        ;acc8=> variable 6
+        LD    (05006H),A
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;acc8+ constant 100
+        ADD   A,100
+        ;acc8Comp constant 125
+        SUB   A,125
+        ;brlt 752
+        JP    C,L752
+        ;br 746
+        JP    L746
+        ;decr8 variable 6
+        LD    HL,(05006H)
+        DEC   (HL)
+        ;br 739
+        JP    L739
+        ;acc8= variable 6
+        LD    A,(05006H)
+        ;call writeAcc8
+        CALL  writeA
+        ;br 744
+        JP    L744
+        ;;test11.j(236)   // constant - acc
+        ;;test11.j(237)   // byte - integer
+        ;;test11.j(238)   for(int i = 24; 24 == i+0; i--) { write(i); }
+        ;acc8= constant 24
         LD    A,24
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 0
         LD    DE,0
         ADD   HL,DE
+        ;acc8= constant 24
         LD    A,24
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NZ,L734
-        JP    L730
-        LD    HL,(05005H)
+        ;brne 766
+        JP    NZ,L766
+        ;br 762
+        JP    L762
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L722
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 754
+        JP    L754
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L728
-        ;;test11.j(224)   for(int i = 23; 120 != i+100; i--) { write(i); }
+        ;br 760
+        JP    L760
+        ;;test11.j(239)   for(int i = 23; 120 != i+100; i--) { write(i); }
+        ;acc8= constant 23
         LD    A,23
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 100
         LD    DE,100
         ADD   HL,DE
+        ;acc8= constant 120
         LD    A,120
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L748
-        JP    L744
-        LD    HL,(05005H)
-        DEC   HL
-        LD    (05005H),HL
-        JP    L736
-        LD    HL,(05005H)
-        CALL  writeHL
-        JP    L742
-        ;;test11.j(225)   b2=20;
-        LD    A,20
-        LD    (05004H),A
-        ;;test11.j(226)   for(int i = 20; 122 > i+100; i++) { write (b2); b2--; }
-        LD    A,20
-        LD    L,A
-        LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
-        LD    DE,100
-        ADD   HL,DE
-        LD    A,122
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    Z,L766
-        JP    L761
-        LD    HL,(05005H)
-        INC   HL
-        LD    (05005H),HL
-        JP    L753
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
-        JP    L759
-        ;;test11.j(227)   for(int i = 22; 123 >= i+100; i++) { write (b2); b2--; }
-        LD    A,22
-        LD    L,A
-        LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
-        LD    DE,100
-        ADD   HL,DE
-        LD    A,123
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    C,L781
+        ;breq 780
+        JP    Z,L780
+        ;br 776
         JP    L776
-        LD    HL,(05005H)
-        INC   HL
-        LD    (05005H),HL
+        ;decr16 variable 6
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+        ;br 768
         JP    L768
-        LD    A,(05004H)
-        CALL  writeA
-        LD    HL,(05004H)
-        DEC   (HL)
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
+        CALL  writeHL
+        ;br 774
         JP    L774
-        ;;test11.j(228)   for(int i = 16; 114 <  i+100; i--) { write(i); }
-        LD    A,16
+        ;;test11.j(240)   b2=20;
+        ;acc8= constant 20
+        LD    A,20
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(241)   for(int i = 20; 122 > i+100; i++) { write (b2); b2--; }
+        ;acc8= constant 20
+        LD    A,20
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 100
         LD    DE,100
         ADD   HL,DE
-        LD    A,114
+        ;acc8= constant 122
+        LD    A,122
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L795
+        ;brle 798
+        JP    Z,L798
+        ;br 793
+        JP    L793
+        ;incr16 variable 6
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+        ;br 785
+        JP    L785
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
+        LD    HL,(05005H)
+        DEC   (HL)
+        ;br 791
         JP    L791
-        LD    HL,(05005H)
-        DEC   HL
-        LD    (05005H),HL
-        JP    L783
-        LD    HL,(05005H)
-        CALL  writeHL
-        JP    L789
-        ;;test11.j(229)   for(int i = 14; 113 <= i+100; i--) { write(i); }
-        LD    A,14
+        ;;test11.j(242)   for(int i = 22; 123 >= i+100; i++) { write (b2); b2--; }
+        ;acc8= constant 22
+        LD    A,22
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 100
         LD    DE,100
         ADD   HL,DE
-        LD    A,113
+        ;acc8= constant 123
+        LD    A,123
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,$+5
-        JP    C,L815
-        JP    L805
+        ;brlt 813
+        JP    C,L813
+        ;br 808
+        JP    L808
+        ;incr16 variable 6
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+        ;br 800
+        JP    L800
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
+        CALL  writeA
+        ;decr8 variable 5
         LD    HL,(05005H)
-        DEC   HL
-        LD    (05005H),HL
-        JP    L797
-        LD    HL,(05005H)
-        CALL  writeHL
-        JP    L803
-        ;;test11.j(230)   // constant - acc
-        ;;test11.j(231)   // integer - byte
-        ;;test11.j(232)   // not relevant
-        ;;test11.j(233) 
-        ;;test11.j(234)   // constant - acc
-        ;;test11.j(235)   // integer - integer
-        ;;test11.j(236)   for(int i = 12; 1012 == i+1000; i--) { write(i); }
-        LD    A,12
+        DEC   (HL)
+        ;br 806
+        JP    L806
+        ;;test11.j(243)   for(int i = 16; 114 <  i+100; i--) { write(i); }
+        ;acc8= constant 16
+        LD    A,16
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 100
+        LD    DE,100
+        ADD   HL,DE
+        ;acc8= constant 114
+        LD    A,114
+        ;acc8CompareAcc16
+        LD    E,A
+        LD    D,0
+        OR    A
+        SBC   HL,DE
+        ;brge 827
+        JP    NC,L827
+        ;br 823
+        JP    L823
+        ;decr16 variable 6
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+        ;br 815
+        JP    L815
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
+        CALL  writeHL
+        ;br 821
+        JP    L821
+        ;;test11.j(244)   for(int i = 14; 113 <= i+100; i--) { write(i); }
+        ;acc8= constant 14
+        LD    A,14
+        ;acc8=> variable 6
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 100
+        LD    DE,100
+        ADD   HL,DE
+        ;acc8= constant 113
+        LD    A,113
+        ;acc8CompareAcc16
+        LD    E,A
+        LD    D,0
+        OR    A
+        SBC   HL,DE
+        ;brgt 847
+        JP    Z,$+5
+        JP    C,L847
+        ;br 837
+        JP    L837
+        ;decr16 variable 6
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+        ;br 829
+        JP    L829
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
+        CALL  writeHL
+        ;br 835
+        JP    L835
+        ;;test11.j(245)   // constant - acc
+        ;;test11.j(246)   // integer - byte
+        ;;test11.j(247)   // not relevant
+        ;;test11.j(248) 
+        ;;test11.j(249)   // constant - acc
+        ;;test11.j(250)   // integer - integer
+        ;;test11.j(251)   for(int i = 12; 1012 == i+1000; i--) { write(i); }
+        ;acc8= constant 12
+        LD    A,12
+        ;acc8=> variable 6
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 1000
         LD    DE,1000
         ADD   HL,DE
+        ;acc16Comp constant 1012
         LD    DE,1012
         OR    A
         SBC   HL,DE
-        JP    NZ,L828
-        JP    L824
-        LD    HL,(05005H)
+        ;brne 860
+        JP    NZ,L860
+        ;br 856
+        JP    L856
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L817
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 849
+        JP    L849
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L822
-        ;;test11.j(237)   for(int i = 11; 1008 != i+1000; i--) { write(i); }
+        ;br 854
+        JP    L854
+        ;;test11.j(252)   for(int i = 11; 1008 != i+1000; i--) { write(i); }
+        ;acc8= constant 11
         LD    A,11
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 1000
         LD    DE,1000
         ADD   HL,DE
+        ;acc16Comp constant 1008
         LD    DE,1008
         OR    A
         SBC   HL,DE
-        JP    Z,L841
-        JP    L837
-        LD    HL,(05005H)
+        ;breq 873
+        JP    Z,L873
+        ;br 869
+        JP    L869
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L830
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 862
+        JP    L862
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L835
-        ;;test11.j(238)   b2=8;
+        ;br 867
+        JP    L867
+        ;;test11.j(253)   b2=8;
+        ;acc8= constant 8
         LD    A,8
-        LD    (05004H),A
-        ;;test11.j(239)   for(int i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
+        ;acc8=> variable 5
+        LD    (05005H),A
+        ;;test11.j(254)   for(int i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
+        ;acc8= constant 8
         LD    A,8
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 1000
         LD    DE,1000
         ADD   HL,DE
+        ;acc16Comp constant 1010
         LD    DE,1010
         OR    A
         SBC   HL,DE
-        JP    NC,L858
-        JP    L853
-        LD    HL,(05005H)
+        ;brge 890
+        JP    NC,L890
+        ;br 885
+        JP    L885
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L846
-        LD    A,(05004H)
+        LD    (05006H),HL
+        ;br 878
+        JP    L878
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
         CALL  writeA
-        LD    HL,(05004H)
+        ;decr8 variable 5
+        LD    HL,(05005H)
         DEC   (HL)
-        JP    L851
-        ;;test11.j(240)   for(int i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
+        ;br 883
+        JP    L883
+        ;;test11.j(255)   for(int i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
+        ;acc8= constant 10
         LD    A,10
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 1000
         LD    DE,1000
         ADD   HL,DE
+        ;acc16Comp constant 1011
         LD    DE,1011
         OR    A
         SBC   HL,DE
+        ;brgt 904
         JP    Z,$+5
-        JP    C,L872
-        JP    L867
-        LD    HL,(05005H)
+        JP    C,L904
+        ;br 899
+        JP    L899
+        ;incr16 variable 6
+        LD    HL,(05006H)
         INC   HL
-        LD    (05005H),HL
-        JP    L860
-        LD    A,(05004H)
+        LD    (05006H),HL
+        ;br 892
+        JP    L892
+        ;acc8= variable 5
+        LD    A,(05005H)
+        ;call writeAcc8
         CALL  writeA
-        LD    HL,(05004H)
+        ;decr8 variable 5
+        LD    HL,(05005H)
         DEC   (HL)
-        JP    L865
-        ;;test11.j(241)   for(int i = 4; 1002 <  i+1000; i--) { write(i); }
+        ;br 897
+        JP    L897
+        ;;test11.j(256)   for(int i = 4; 1002 <  i+1000; i--) { write(i); }
+        ;acc8= constant 4
         LD    A,4
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 1000
         LD    DE,1000
         ADD   HL,DE
+        ;acc16Comp constant 1002
         LD    DE,1002
         OR    A
         SBC   HL,DE
-        JP    Z,L885
-        JP    L881
-        LD    HL,(05005H)
+        ;brle 917
+        JP    Z,L917
+        ;br 913
+        JP    L913
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L874
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 906
+        JP    L906
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L879
-        ;;test11.j(242)   for(int i = 2; 1001 <= i+1000; i--) { write(i); }
+        ;br 911
+        JP    L911
+        ;;test11.j(257)   for(int i = 2; 1001 <= i+1000; i--) { write(i); }
+        ;acc8= constant 2
         LD    A,2
+        ;acc8=> variable 6
         LD    L,A
         LD    H,0
-        LD    (05005H),HL
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;acc16+ constant 1000
         LD    DE,1000
         ADD   HL,DE
+        ;acc16Comp constant 1001
         LD    DE,1001
         OR    A
         SBC   HL,DE
-        JP    C,L898
-        JP    L894
-        LD    HL,(05005H)
+        ;brlt 930
+        JP    C,L930
+        ;br 926
+        JP    L926
+        ;decr16 variable 6
+        LD    HL,(05006H)
         DEC   HL
-        LD    (05005H),HL
-        JP    L887
-        LD    HL,(05005H)
+        LD    (05006H),HL
+        ;br 919
+        JP    L919
+        ;acc16= variable 6
+        LD    HL,(05006H)
+        ;call writeAcc16
         CALL  writeHL
-        JP    L892
-        ;;test11.j(243)   write(0);
+        ;br 924
+        JP    L924
+        ;;test11.j(258)   write(0);
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
-        ;;test11.j(244) }
+        ;;test11.j(259) }
+        ;stop
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

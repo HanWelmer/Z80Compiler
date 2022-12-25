@@ -616,355 +616,572 @@ main:
         ;;test9.j(0) /* Program to test multiplication */
         ;;test9.j(1) class TestMultiply {
         ;;test9.j(2)   byte b = 9;
+        ;acc8= constant 9
         LD    A,9
+        ;acc8=> variable 0
         LD    (05000H),A
         ;;test9.j(3)   int i = 6561;
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16=> variable 1
         LD    (05001H),HL
         ;;test9.j(4)   if (i * 1 > b * 1) write (21); else write (0);
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;<acc16
         PUSH HL
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+        ;acc16= unstack16
         POP  HL
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 20
         JP    Z,L20
+        ;acc8= constant 21
         LD    A,21
+        ;call writeAcc8
         CALL  writeA
+        ;br 23
         JP    L23
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(5)   if (b * 1 < i * 1) write (20); else write (0);
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+        ;<acc8
         PUSH AF
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= unstack8
         POP  AF
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 34
         JP    NC,L34
+        ;acc8= constant 20
         LD    A,20
+        ;call writeAcc8
         CALL  writeA
+        ;br 37
         JP    L37
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(6)   if (i * 1 > b) write (19); else write (0);
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 45
         JP    Z,L45
+        ;acc8= constant 19
         LD    A,19
+        ;call writeAcc8
         CALL  writeA
+        ;br 48
         JP    L48
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(7)   if (b * 1 < i) write (18); else write (0);
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 56
         JP    NC,L56
+        ;acc8= constant 18
         LD    A,18
+        ;call writeAcc8
         CALL  writeA
+        ;br 59
         JP    L59
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(8)   if (i > b * 1) write (17); else write (0);
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 67
         JP    Z,L67
+        ;acc8= constant 17
         LD    A,17
+        ;call writeAcc8
         CALL  writeA
+        ;br 70
         JP    L70
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(9)   if (b < i * 1) write (16); else write (0);
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 78
         JP    NC,L78
+        ;acc8= constant 16
         LD    A,16
+        ;call writeAcc8
         CALL  writeA
+        ;br 81
         JP    L81
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(10)   if (3 * 3 < i) write (15); else write (0);
+        ;acc8= constant 3
         LD    A,3
+        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 89
         JP    NC,L89
+        ;acc8= constant 15
         LD    A,15
+        ;call writeAcc8
         CALL  writeA
+        ;br 92
         JP    L92
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(11)   if (6561 * 1 > b) write (14); else write (0);
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 100
         JP    Z,L100
+        ;acc8= constant 14
         LD    A,14
+        ;call writeAcc8
         CALL  writeA
+        ;br 103
         JP    L103
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(12)   if (i > 3 * 3) write (13); else write (0);
+        ;acc8= constant 3
         LD    A,3
+        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 111
         JP    Z,L111
+        ;acc8= constant 13
         LD    A,13
+        ;call writeAcc8
         CALL  writeA
+        ;br 114
         JP    L114
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(13)   if (b < 6561 * 1) write (12); else write (0);
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 122
         JP    NC,L122
+        ;acc8= constant 12
         LD    A,12
+        ;call writeAcc8
         CALL  writeA
+        ;br 125
         JP    L125
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(14)   if (i > b) write (11); else write (0);
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 132
         JP    Z,L132
+        ;acc8= constant 11
         LD    A,11
+        ;call writeAcc8
         CALL  writeA
+        ;br 135
         JP    L135
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(15)   if (b < i) write (10); else write (0);
+        ;acc8= variable 0
         LD    A,(05000H)
+        ;acc16= variable 1
         LD    HL,(05001H)
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 142
         JP    NC,L142
+        ;acc8= constant 10
         LD    A,10
+        ;call writeAcc8
         CALL  writeA
+        ;br 146
         JP    L146
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(16) 
         ;;test9.j(17)   if (3 * 3 < 6561 * 1) write (9); else write (0);
+        ;acc8= constant 3
         LD    A,3
+        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
+        ;<acc8
         PUSH AF
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= unstack8
         POP  AF
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 157
         JP    NC,L157
+        ;acc8= constant 9
         LD    A,9
+        ;call writeAcc8
         CALL  writeA
+        ;br 160
         JP    L160
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(18)   if (6561 * 1 > 3 * 3) write (8); else write (0);
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;<acc16
         PUSH HL
+        ;acc8= constant 3
         LD    A,3
+        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
+        ;acc16= unstack16
         POP  HL
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 171
         JP    Z,L171
+        ;acc8= constant 8
         LD    A,8
+        ;call writeAcc8
         CALL  writeA
+        ;br 174
         JP    L174
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(19)   if (9 < 6561 * 1) write (7); else write (0);
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= constant 9
         LD    A,9
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 182
         JP    NC,L182
+        ;acc8= constant 7
         LD    A,7
+        ;call writeAcc8
         CALL  writeA
+        ;br 185
         JP    L185
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(20)   if (6561 * 1 > 9) write (6); else write (0);
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16* constant 1
         LD    DE,1
         CALL  mul16
+        ;acc8= constant 9
         LD    A,9
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 193
         JP    Z,L193
+        ;acc8= constant 6
         LD    A,6
+        ;call writeAcc8
         CALL  writeA
+        ;br 196
         JP    L196
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(21)   if (6561 > 3 * 3) write (5); else write (0);
+        ;acc8= constant 3
         LD    A,3
+        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 204
         JP    Z,L204
+        ;acc8= constant 5
         LD    A,5
+        ;call writeAcc8
         CALL  writeA
+        ;br 207
         JP    L207
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(22)   if (3 * 3 < 6561) write (4); else write (0);
+        ;acc8= constant 3
         LD    A,3
+        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 215
         JP    NC,L215
+        ;acc8= constant 4
         LD    A,4
+        ;call writeAcc8
         CALL  writeA
+        ;br 218
         JP    L218
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(23)   if (9 < 6561) write (3); else write (0);
+        ;acc8= constant 9
         LD    A,9
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc8CompareAcc16
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
+        ;brge 225
         JP    NC,L225
+        ;acc8= constant 3
         LD    A,3
+        ;call writeAcc8
         CALL  writeA
+        ;br 228
         JP    L228
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(24)   if (6561 > 9) write (2); else write (0);
+        ;acc16= constant 6561
         LD    HL,6561
+        ;acc8= constant 9
         LD    A,9
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+        ;brle 235
         JP    Z,L235
+        ;acc8= constant 2
         LD    A,2
+        ;call writeAcc8
         CALL  writeA
+        ;br 238
         JP    L238
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(25)   write(1);
+        ;acc8= constant 1
         LD    A,1
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(26)   write(0);
+        ;acc8= constant 0
         LD    A,0
+        ;call writeAcc8
         CALL  writeA
         ;;test9.j(27) }
+        ;stop
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
