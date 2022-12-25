@@ -183,7 +183,7 @@ public class Transcoder {
     }
     int memAddress = MEM_START + word;
     AssemblyInstruction asm = null;
-    debug("\n..function:" + function);
+    debug("\n..function: " + function);
 
     //TODO refactor by removing asmCode.
     String asmCode = null;
@@ -575,6 +575,14 @@ public class Transcoder {
       byteAddress += asm.getBytes().size();
     }
 
+    /*
+     * when debugging, log generated assembly code.
+     */
+    if (debugMode) {
+      for (AssemblyInstruction asmLine: result) {
+        debug("\n..asm: " + String.format("0%04XH", asmLine.getAddress()) + asmLine.getCode());
+      }
+    }
     return result;
   }
   
