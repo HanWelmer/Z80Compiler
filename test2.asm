@@ -780,108 +780,94 @@ main:
         LD    A,148
         CALL  writeA
         ;;test2.j(83)   if (i > 1000+0) write(147);
-        LD    HL,(05000H)
-        PUSH HL
         LD    HL,1000
         LD    DE,0
         ADD   HL,DE
-        POP   DE
+        LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        JP    NC,L158
+        JP    NC,L156
         LD    A,147
         CALL  writeA
         ;;test2.j(84)   if (i < 3000+0) write(146);
-        LD    HL,(05000H)
-        PUSH HL
         LD    HL,3000
         LD    DE,0
         ADD   HL,DE
-        POP   DE
+        LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        JP    Z,L169
+        JP    Z,L165
         LD    A,146
         CALL  writeA
         ;;test2.j(85)   // var - acc
         ;;test2.j(86)   // integer - byte
         ;;test2.j(87)   if (i > 1000+0) write(145);
-        LD    HL,(05000H)
-        PUSH HL
         LD    HL,1000
         LD    DE,0
         ADD   HL,DE
-        POP   DE
+        LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        JP    NC,L178
+        JP    NC,L172
         LD    A,145
         CALL  writeA
         ;;test2.j(88)   if (i < 3000+0) write(144);
-        LD    HL,(05000H)
-        PUSH HL
         LD    HL,3000
         LD    DE,0
         ADD   HL,DE
-        POP   DE
+        LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        JP    Z,L189
+        JP    Z,L181
         LD    A,144
         CALL  writeA
         ;;test2.j(89)   // var - acc
         ;;test2.j(90)   // byte - integer
         ;;test2.j(91)   if (b > 1000+0) write(999); else write(143);
-        LD    A,(05006H)
-        PUSH AF
         LD    HL,1000
         LD    DE,0
         ADD   HL,DE
-        POP  AF
+        LD    A,(05006H)
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L199
+        JP    Z,L189
         LD    HL,999
         CALL  writeHL
-        JP    L202
+        JP    L192
         LD    A,143
         CALL  writeA
         ;;test2.j(92)   if (b < 1000+0) write(142);
-        LD    A,(05006H)
-        PUSH AF
         LD    HL,1000
         LD    DE,0
         ADD   HL,DE
-        POP  AF
+        LD    A,(05006H)
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L214
+        JP    NC,L202
         LD    A,142
         CALL  writeA
         ;;test2.j(93)   // var - acc
         ;;test2.j(94)   // byte - byte
         ;;test2.j(95)   if (b > 10+0) write(141);
-        LD    A,(05006H)
-        PUSH AF
         LD    A,10
         ADD   A,0
-        POP   BC
+        LD    B,A
+        LD    A,(05006H)
         SUB   A,B
-        JP    NC,L223
+        JP    NC,L209
         LD    A,141
         CALL  writeA
         ;;test2.j(96)   if (b < 30+0) write(140);
-        LD    A,(05006H)
-        PUSH AF
         LD    A,30
         ADD   A,0
-        POP   BC
+        LD    B,A
+        LD    A,(05006H)
         SUB   A,B
-        JP    Z,L236
+        JP    Z,L220
         LD    A,140
         CALL  writeA
         ;;test2.j(97) 
@@ -899,7 +885,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    Z,L248
+        JP    Z,L232
         LD    A,137
         CALL  writeA
         ;;test2.j(104)   if (i < 3000) write(136);
@@ -907,7 +893,7 @@ main:
         LD    DE,3000
         OR    A
         SBC   HL,DE
-        JP    NC,L256
+        JP    NC,L240
         LD    A,136
         CALL  writeA
         ;;test2.j(105)   // var - constant
@@ -917,7 +903,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    Z,L262
+        JP    Z,L246
         LD    A,135
         CALL  writeA
         ;;test2.j(108)   if (i < 3000) write(134);
@@ -925,7 +911,7 @@ main:
         LD    DE,3000
         OR    A
         SBC   HL,DE
-        JP    NC,L270
+        JP    NC,L254
         LD    A,134
         CALL  writeA
         ;;test2.j(109)   // var - constant
@@ -937,10 +923,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L277
+        JP    Z,L261
         LD    HL,999
         CALL  writeHL
-        JP    L280
+        JP    L264
         LD    A,133
         CALL  writeA
         ;;test2.j(112)   if (b < 1000) write(132);
@@ -950,7 +936,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L289
+        JP    NC,L273
         LD    A,132
         CALL  writeA
         ;;test2.j(113)   // var - constant
@@ -958,13 +944,13 @@ main:
         ;;test2.j(115)   if (b > 10) write(131);
         LD    A,(05006H)
         SUB   A,10
-        JP    Z,L295
+        JP    Z,L279
         LD    A,131
         CALL  writeA
         ;;test2.j(116)   if (b < 30) write(130);
         LD    A,(05006H)
         SUB   A,30
-        JP    NC,L305
+        JP    NC,L289
         LD    A,130
         CALL  writeA
         ;;test2.j(117) 
@@ -1064,7 +1050,7 @@ main:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        JP    Z,L398
+        JP    Z,L382
         LD    A,107
         CALL  writeA
         ;;test2.j(164)   if (1000+0 < i) write(106);
@@ -1074,7 +1060,7 @@ main:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        JP    NC,L407
+        JP    NC,L391
         LD    A,106
         CALL  writeA
         ;;test2.j(165)   // acc - var
@@ -1089,7 +1075,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L415
+        JP    Z,L399
         LD    A,105
         CALL  writeA
         ;;test2.j(168)   if (1000+0 < b) write(999); else write(104);
@@ -1102,10 +1088,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NC,L423
+        JP    NC,L407
         LD    HL,999
         CALL  writeHL
-        JP    L428
+        JP    L412
         LD    A,104
         CALL  writeA
         ;;test2.j(169)   // acc - var
@@ -1118,10 +1104,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L436
+        JP    Z,L420
         LD    HL,999
         CALL  writeHL
-        JP    L439
+        JP    L423
         LD    A,103
         CALL  writeA
         ;;test2.j(172)   if (10+0 < i) write(102);
@@ -1132,7 +1118,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L449
+        JP    NC,L433
         LD    A,102
         CALL  writeA
         ;;test2.j(173)   // acc - var
@@ -1143,7 +1129,7 @@ main:
         LD    B,A
         LD    A,(05006H)
         SUB   A,B
-        JP    Z,L456
+        JP    Z,L440
         LD    A,101
         CALL  writeA
         ;;test2.j(176)   if (10+0 < b) write(100);
@@ -1152,7 +1138,7 @@ main:
         LD    B,A
         LD    A,(05006H)
         SUB   A,B
-        JP    NC,L467
+        JP    NC,L451
         LD    A,100
         CALL  writeA
         ;;test2.j(177) 
@@ -1176,7 +1162,7 @@ main:
         POP   DE
         OR    A
         SBC   HL,DE
-        JP    NC,L483
+        JP    NC,L467
         LD    A,97
         CALL  writeA
         ;;test2.j(184)   if (1000+0 < 2000+0) write(96);
@@ -1190,7 +1176,7 @@ main:
         POP   DE
         OR    A
         SBC   HL,DE
-        JP    Z,L495
+        JP    Z,L479
         LD    A,96
         CALL  writeA
         ;;test2.j(185)   // acc - acc
@@ -1208,7 +1194,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L506
+        JP    Z,L490
         LD    A,95
         CALL  writeA
         ;;test2.j(188)   if (1000+0 < 20+0) write(999); else write(94);
@@ -1224,10 +1210,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NC,L517
+        JP    NC,L501
         LD    HL,999
         CALL  writeHL
-        JP    L522
+        JP    L506
         LD    A,94
         CALL  writeA
         ;;test2.j(189)   // acc - acc
@@ -1244,10 +1230,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L533
+        JP    Z,L517
         LD    HL,999
         CALL  writeHL
-        JP    L536
+        JP    L520
         LD    A,93
         CALL  writeA
         ;;test2.j(192)   if (10+0 < 2000+0) write(92);
@@ -1262,7 +1248,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L549
+        JP    NC,L533
         LD    A,92
         CALL  writeA
         ;;test2.j(193)   // acc - acc
@@ -1275,7 +1261,7 @@ main:
         ADD   A,0
         POP   BC
         SUB   A,B
-        JP    NC,L559
+        JP    NC,L543
         LD    A,91
         CALL  writeA
         ;;test2.j(196)   if (10+0 < 20+0) write(90);
@@ -1286,7 +1272,7 @@ main:
         ADD   A,0
         POP   BC
         SUB   A,B
-        JP    Z,L573
+        JP    Z,L557
         LD    A,90
         CALL  writeA
         ;;test2.j(197) 
@@ -1306,7 +1292,7 @@ main:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        JP    Z,L586
+        JP    Z,L570
         LD    A,87
         CALL  writeA
         ;;test2.j(204)   if (1000+0 < 2000) write(86);
@@ -1316,7 +1302,7 @@ main:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        JP    NC,L595
+        JP    NC,L579
         LD    A,86
         CALL  writeA
         ;;test2.j(205)   // acc - constant
@@ -1331,7 +1317,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L603
+        JP    Z,L587
         LD    A,85
         CALL  writeA
         ;;test2.j(208)   if (1000+0 < 20) write(999); else write(84);
@@ -1344,10 +1330,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NC,L611
+        JP    NC,L595
         LD    HL,999
         CALL  writeHL
-        JP    L616
+        JP    L600
         LD    A,84
         CALL  writeA
         ;;test2.j(209)   // acc - constant
@@ -1360,10 +1346,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L624
+        JP    Z,L608
         LD    HL,999
         CALL  writeHL
-        JP    L627
+        JP    L611
         LD    A,83
         CALL  writeA
         ;;test2.j(212)   if (10+0 < 2000) write(82);
@@ -1374,7 +1360,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L637
+        JP    NC,L621
         LD    A,82
         CALL  writeA
         ;;test2.j(213)   // acc - constant
@@ -1383,14 +1369,14 @@ main:
         LD    A,30
         ADD   A,0
         SUB   A,20
-        JP    Z,L644
+        JP    Z,L628
         LD    A,81
         CALL  writeA
         ;;test2.j(216)   if (10+0 < 20) write(80);
         LD    A,10
         ADD   A,0
         SUB   A,20
-        JP    NC,L655
+        JP    NC,L639
         LD    A,80
         CALL  writeA
         ;;test2.j(217) 
@@ -1488,13 +1474,13 @@ main:
         ;;test2.j(265)   if (30 > b) write(57);
         LD    A,(05006H)
         SUB   A,30
-        JP    NC,L749
+        JP    NC,L733
         LD    A,57
         CALL  writeA
         ;;test2.j(266)   if (10 < b) write(56);
         LD    A,(05006H)
         SUB   A,10
-        JP    Z,L757
+        JP    Z,L741
         LD    A,56
         CALL  writeA
         ;;test2.j(267)   // constant - var
@@ -1506,10 +1492,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L764
+        JP    Z,L748
         LD    HL,999
         CALL  writeHL
-        JP    L767
+        JP    L751
         LD    A,55
         CALL  writeA
         ;;test2.j(270)   if (10 < i) write(54);
@@ -1519,7 +1505,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L776
+        JP    NC,L760
         LD    A,54
         CALL  writeA
         ;;test2.j(271)   // constant - var
@@ -1532,7 +1518,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L783
+        JP    Z,L767
         LD    A,53
         CALL  writeA
         ;;test2.j(274)   if (1000 < b) write(999); else write(52);
@@ -1543,10 +1529,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NC,L790
+        JP    NC,L774
         LD    HL,999
         CALL  writeHL
-        JP    L795
+        JP    L779
         LD    A,52
         CALL  writeA
         ;;test2.j(275)   // constant - var
@@ -1556,7 +1542,7 @@ main:
         LD    DE,3000
         OR    A
         SBC   HL,DE
-        JP    NC,L801
+        JP    NC,L785
         LD    A,51
         CALL  writeA
         ;;test2.j(278)   if (1000 < i) write(50);
@@ -1564,7 +1550,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    Z,L811
+        JP    Z,L795
         LD    A,50
         CALL  writeA
         ;;test2.j(279) 
@@ -1581,14 +1567,14 @@ main:
         LD    A,0
         ADD   A,0
         SUB   A,1
-        JP    NC,L824
+        JP    NC,L808
         LD    A,47
         CALL  writeA
         ;;test2.j(286)   if (1 < 2+0) write(46);
         LD    A,2
         ADD   A,0
         SUB   A,1
-        JP    Z,L833
+        JP    Z,L817
         LD    A,46
         CALL  writeA
         ;;test2.j(287)   // constant - acc
@@ -1602,10 +1588,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L841
+        JP    Z,L825
         LD    HL,999
         CALL  writeHL
-        JP    L844
+        JP    L828
         LD    A,45
         CALL  writeA
         ;;test2.j(290)   if (1 < 1000+0) write(44);
@@ -1617,7 +1603,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L854
+        JP    NC,L838
         LD    A,44
         CALL  writeA
         ;;test2.j(291)   // constant - acc
@@ -1631,7 +1617,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L862
+        JP    Z,L846
         LD    A,43
         CALL  writeA
         ;;test2.j(294)   if (1000 < 0+0) write(999); else write(42);
@@ -1643,10 +1629,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NC,L870
+        JP    NC,L854
         LD    HL,999
         CALL  writeHL
-        JP    L875
+        JP    L859
         LD    A,42
         CALL  writeA
         ;;test2.j(295)   // constant - acc
@@ -1658,7 +1644,7 @@ main:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        JP    NC,L882
+        JP    NC,L866
         LD    A,41
         CALL  writeA
         ;;test2.j(298)   if (1000 < 2000+0) write(40);
@@ -1668,7 +1654,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    Z,L893
+        JP    Z,L877
         LD    A,40
         CALL  writeA
         ;;test2.j(299) 
@@ -1681,51 +1667,51 @@ main:
         ;;test2.j(304)   if (1 == 1) write(38);
         LD    A,1
         SUB   A,1
-        JP    NZ,L902
+        JP    NZ,L886
         LD    A,38
         CALL  writeA
         ;;test2.j(305)   if (1 != 0) write(37);
         LD    A,1
         SUB   A,0
-        JP    Z,L908
+        JP    Z,L892
         LD    A,37
         CALL  writeA
         ;;test2.j(306)   if (1 > 0) write(36);
         LD    A,1
         SUB   A,0
-        JP    Z,L914
+        JP    Z,L898
         LD    A,36
         CALL  writeA
         ;;test2.j(307)   if (1 >= 0) write(35);
         LD    A,1
         SUB   A,0
-        JP    C,L920
+        JP    C,L904
         LD    A,35
         CALL  writeA
         ;;test2.j(308)   if (1 >= 1) write(34);
         LD    A,1
         SUB   A,1
-        JP    C,L926
+        JP    C,L910
         LD    A,34
         CALL  writeA
         ;;test2.j(309)   if (1 < 2) write(33);
         LD    A,1
         SUB   A,2
-        JP    NC,L932
+        JP    NC,L916
         LD    A,33
         CALL  writeA
         ;;test2.j(310)   if (1 <= 2) write(32);
         LD    A,1
         SUB   A,2
         JP    Z,$+5
-        JP    C,L938
+        JP    C,L922
         LD    A,32
         CALL  writeA
         ;;test2.j(311)   if (1 <= 1) write(31);
         LD    A,1
         SUB   A,1
         JP    Z,$+5
-        JP    C,L944
+        JP    C,L928
         LD    A,31
         CALL  writeA
         ;;test2.j(312)   write(30);
@@ -1743,10 +1729,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NZ,L959
+        JP    NZ,L943
         LD    HL,999
         CALL  writeHL
-        JP    L962
+        JP    L946
         LD    A,28
         CALL  writeA
         ;;test2.j(317)   if (1 != 1000) write(27);
@@ -1756,7 +1742,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L969
+        JP    Z,L953
         LD    A,27
         CALL  writeA
         ;;test2.j(318)   if (1 > 1000) write(999); else write(26);
@@ -1766,10 +1752,10 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    Z,L976
+        JP    Z,L960
         LD    HL,999
         CALL  writeHL
-        JP    L979
+        JP    L963
         LD    A,26
         CALL  writeA
         ;;test2.j(319)   if (1 >= 1000) write(999); write(25);
@@ -1779,7 +1765,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    C,L985
+        JP    C,L969
         LD    HL,999
         CALL  writeHL
         LD    A,25
@@ -1791,7 +1777,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    C,L994
+        JP    C,L978
         LD    HL,999
         CALL  writeHL
         LD    A,24
@@ -1803,7 +1789,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L1004
+        JP    NC,L988
         LD    A,23
         CALL  writeA
         ;;test2.j(322)   if (1 <= 2000) write(22);
@@ -1814,7 +1800,7 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L1011
+        JP    C,L995
         LD    A,22
         CALL  writeA
         ;;test2.j(323)   if (1 <= 1000) write(21);
@@ -1825,7 +1811,7 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L1018
+        JP    C,L1002
         LD    A,21
         CALL  writeA
         ;;test2.j(324)   write(20);
@@ -1844,10 +1830,10 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    NZ,L1033
+        JP    NZ,L1017
         LD    HL,999
         CALL  writeHL
-        JP    L1036
+        JP    L1020
         LD    A,18
         CALL  writeA
         ;;test2.j(329)   if (1000 != 0) write(17);
@@ -1858,7 +1844,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L1043
+        JP    Z,L1027
         LD    A,17
         CALL  writeA
         ;;test2.j(330)   if (1000 > 0) write(16);
@@ -1869,7 +1855,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    Z,L1050
+        JP    Z,L1034
         LD    A,16
         CALL  writeA
         ;;test2.j(331)   if (1000 >= 0) write(15);
@@ -1880,7 +1866,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    C,L1057
+        JP    C,L1041
         LD    A,15
         CALL  writeA
         ;;test2.j(332)   if (1000 >= 1) write(14);
@@ -1891,7 +1877,7 @@ main:
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        JP    C,L1064
+        JP    C,L1048
         LD    A,14
         CALL  writeA
         ;;test2.j(333)   if (1 < 2000) write(13);
@@ -1901,7 +1887,7 @@ main:
         LD    D,0
         OR    A
         SBC   HL,DE
-        JP    NC,L1071
+        JP    NC,L1055
         LD    A,13
         CALL  writeA
         ;;test2.j(334)   if (1 <= 2000) write(12);
@@ -1912,7 +1898,7 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L1078
+        JP    C,L1062
         LD    A,12
         CALL  writeA
         ;;test2.j(335)   if (1 <= 1000) write(11);
@@ -1923,7 +1909,7 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L1085
+        JP    C,L1069
         LD    A,11
         CALL  writeA
         ;;test2.j(336)   write(10);
@@ -1939,7 +1925,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    NZ,L1099
+        JP    NZ,L1083
         LD    A,8
         CALL  writeA
         ;;test2.j(341)   if (1000 != 2000) write(7);
@@ -1947,7 +1933,7 @@ main:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        JP    Z,L1105
+        JP    Z,L1089
         LD    A,7
         CALL  writeA
         ;;test2.j(342)   if (2000 > 1000) write(6);
@@ -1955,7 +1941,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    Z,L1111
+        JP    Z,L1095
         LD    A,6
         CALL  writeA
         ;;test2.j(343)   if (2000 >= 1000) write(5);
@@ -1963,7 +1949,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    C,L1117
+        JP    C,L1101
         LD    A,5
         CALL  writeA
         ;;test2.j(344)   if (1000 >= 1000) write(4);
@@ -1971,7 +1957,7 @@ main:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        JP    C,L1123
+        JP    C,L1107
         LD    A,4
         CALL  writeA
         ;;test2.j(345)   if (1000 < 2000) write(3);
@@ -1979,7 +1965,7 @@ main:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        JP    NC,L1129
+        JP    NC,L1113
         LD    A,3
         CALL  writeA
         ;;test2.j(346)   if (1000 <= 2000) write(2);
@@ -1988,7 +1974,7 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L1135
+        JP    C,L1119
         LD    A,2
         CALL  writeA
         ;;test2.j(347)   if (1000 <= 1000) write(1);
@@ -1997,7 +1983,7 @@ main:
         OR    A
         SBC   HL,DE
         JP    Z,$+5
-        JP    C,L1142
+        JP    C,L1126
         LD    A,1
         CALL  writeA
         ;;test2.j(348) 

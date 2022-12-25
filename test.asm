@@ -613,358 +613,40 @@ writeA:
         POP   HL
         RET
 main:
-        ;;test9.j(0) /* Program to test multiplication */
-        ;;test9.j(1) class TestMultiply {
-        ;;test9.j(2)   byte b = 9;
-        LD    A,9
-        LD    (05000H),A
-        ;;test9.j(3)   int i = 6561;
-        LD    HL,6561
-        LD    (05001H),HL
-        ;;test9.j(4)   if (i * 1 > b * 1) write (21); else write (0);
-        LD    HL,(05001H)
-        LD    DE,1
-        CALL  mul16
-        PUSH HL
-        LD    A,(05000H)
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-        POP  HL
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L20
-        LD    A,21
-        CALL  writeA
-        JP    L23
+        ;;test.j(0) /*
+        ;;test.j(1)  * A small program in the miniJava language.
+        ;;test.j(2)  * Test something
+        ;;test.j(3)  */
+        ;;test.j(4) class Test {
+        ;;test.j(5)   int zero = 0;
         LD    A,0
-        CALL  writeA
-        ;;test9.j(5)   if (b * 1 < i * 1) write (20); else write (0);
-        LD    A,(05000H)
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-        PUSH AF
-        LD    HL,(05001H)
-        LD    DE,1
-        CALL  mul16
-        POP  AF
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L34
-        LD    A,20
-        CALL  writeA
-        JP    L37
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(6)   if (i * 1 > b) write (19); else write (0);
-        LD    HL,(05001H)
-        LD    DE,1
-        CALL  mul16
-        LD    A,(05000H)
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L45
-        LD    A,19
-        CALL  writeA
-        JP    L48
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(7)   if (b * 1 < i) write (18); else write (0);
-        LD    A,(05000H)
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-        LD    HL,(05001H)
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L56
-        LD    A,18
-        CALL  writeA
-        JP    L59
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(8)   if (i > b * 1) write (17); else write (0);
-        LD    A,(05000H)
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-        LD    HL,(05001H)
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L67
-        LD    A,17
-        CALL  writeA
-        JP    L70
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(9)   if (b < i * 1) write (16); else write (0);
-        LD    HL,(05001H)
-        LD    DE,1
-        CALL  mul16
-        LD    A,(05000H)
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L78
-        LD    A,16
-        CALL  writeA
-        JP    L81
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(10)   if (3 * 3 < i) write (15); else write (0);
-        LD    A,3
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
-        LD    HL,(05001H)
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L89
-        LD    A,15
-        CALL  writeA
-        JP    L92
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(11)   if (6561 * 1 > b) write (14); else write (0);
-        LD    HL,6561
-        LD    DE,1
-        CALL  mul16
-        LD    A,(05000H)
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L100
-        LD    A,14
-        CALL  writeA
-        JP    L103
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(12)   if (i > 3 * 3) write (13); else write (0);
-        LD    A,3
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
-        LD    HL,(05001H)
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L111
-        LD    A,13
-        CALL  writeA
-        JP    L114
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(13)   if (b < 6561 * 1) write (12); else write (0);
-        LD    HL,6561
-        LD    DE,1
-        CALL  mul16
-        LD    A,(05000H)
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L122
-        LD    A,12
-        CALL  writeA
-        JP    L125
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(14)   if (i > b) write (11); else write (0);
-        LD    HL,(05001H)
-        LD    A,(05000H)
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L132
-        LD    A,11
-        CALL  writeA
-        JP    L135
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(15)   if (b < i) write (10); else write (0);
-        LD    A,(05000H)
-        LD    HL,(05001H)
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L142
-        LD    A,10
-        CALL  writeA
-        JP    L146
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(16) 
-        ;;test9.j(17)   if (3 * 3 < 6561 * 1) write (9); else write (0);
-        LD    A,3
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
-        PUSH AF
-        LD    HL,6561
-        LD    DE,1
-        CALL  mul16
-        POP  AF
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L157
-        LD    A,9
-        CALL  writeA
-        JP    L160
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(18)   if (6561 * 1 > 3 * 3) write (8); else write (0);
-        LD    HL,6561
-        LD    DE,1
-        CALL  mul16
-        PUSH HL
-        LD    A,3
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
-        POP  HL
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L171
-        LD    A,8
-        CALL  writeA
-        JP    L174
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(19)   if (9 < 6561 * 1) write (7); else write (0);
-        LD    HL,6561
-        LD    DE,1
-        CALL  mul16
-        LD    A,9
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L182
-        LD    A,7
-        CALL  writeA
-        JP    L185
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(20)   if (6561 * 1 > 9) write (6); else write (0);
-        LD    HL,6561
-        LD    DE,1
-        CALL  mul16
-        LD    A,9
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L193
-        LD    A,6
-        CALL  writeA
-        JP    L196
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(21)   if (6561 > 3 * 3) write (5); else write (0);
-        LD    A,3
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
-        LD    HL,6561
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L204
-        LD    A,5
-        CALL  writeA
-        JP    L207
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(22)   if (3 * 3 < 6561) write (4); else write (0);
-        LD    A,3
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
-        LD    HL,6561
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L215
-        LD    A,4
-        CALL  writeA
-        JP    L218
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(23)   if (9 < 6561) write (3); else write (0);
-        LD    A,9
-        LD    HL,6561
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-        JP    NC,L225
-        LD    A,3
-        CALL  writeA
-        JP    L228
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(24)   if (6561 > 9) write (2); else write (0);
-        LD    HL,6561
-        LD    A,9
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-        JP    Z,L235
-        LD    A,2
-        CALL  writeA
-        JP    L238
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(25)   write(1);
+        LD    L,A
+        LD    H,0
+        LD    (05000H),HL
+        ;;test.j(6)   int one = 1;
         LD    A,1
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
+        ;;test.j(7)   int four = 4;
+        LD    A,4
+        LD    L,A
+        LD    H,0
+        LD    (05004H),HL
+        ;;test.j(8)   int twelve = 12;
+        LD    A,12
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+        ;;test.j(9)   byte byteOne = 1;
+        LD    A,1
+        LD    (05008H),A
+        ;;test.j(10)   //if (four == zero + 12/(one + 2)) write(2);
+        ;;test.j(11)   write(byteOne);
+        LD    A,(05008H)
         CALL  writeA
-        ;;test9.j(26)   write(0);
-        LD    A,0
-        CALL  writeA
-        ;;test9.j(27) }
+        ;;test.j(12)   write(zero);
+        LD    HL,(05000H)
+        CALL  writeHL
+        ;;test.j(13) }
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

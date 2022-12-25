@@ -120,791 +120,783 @@
  119 ;test11.j(57)   for (byte b = 104; b <= 105+0; b++) { write (i2); i2--; }
  120 acc8= constant 104
  121 acc8=> variable 5
- 122 acc8= variable 5
- 123 <acc8
- 124 acc8= constant 105
- 125 acc8+ constant 0
- 126 revAcc8Comp unstack8
- 127 brlt 137
- 128 br 131
- 129 incr8 variable 5
- 130 br 122
- 131 acc16= variable 0
- 132 call writeAcc16
- 133 decr16 variable 0
- 134 br 129
- 135 ;test11.j(58)   // byte - integer
- 136 ;test11.j(59)   i2=103;
- 137 acc8= constant 103
- 138 acc8=> variable 0
- 139 ;test11.j(60)   for (byte b = 102; b <= i2+0; b--) { write (b); i2=i2-2; }
- 140 acc8= constant 102
- 141 acc8=> variable 5
+ 122 acc8= constant 105
+ 123 acc8+ constant 0
+ 124 acc8Comp variable 5
+ 125 brlt 135
+ 126 br 129
+ 127 incr8 variable 5
+ 128 br 122
+ 129 acc16= variable 0
+ 130 call writeAcc16
+ 131 decr16 variable 0
+ 132 br 127
+ 133 ;test11.j(58)   // byte - integer
+ 134 ;test11.j(59)   i2=103;
+ 135 acc8= constant 103
+ 136 acc8=> variable 0
+ 137 ;test11.j(60)   for (byte b = 102; b <= i2+0; b--) { write (b); i2=i2-2; }
+ 138 acc8= constant 102
+ 139 acc8=> variable 5
+ 140 acc16= variable 0
+ 141 acc16+ constant 0
  142 acc8= variable 5
- 143 <acc8
- 144 acc16= variable 0
- 145 acc16+ constant 0
- 146 acc8= unstack8
- 147 acc8CompareAcc16
- 148 brgt 160
- 149 br 152
- 150 decr8 variable 5
- 151 br 142
- 152 acc8= variable 5
- 153 call writeAcc8
- 154 acc16= variable 0
- 155 acc16- constant 2
- 156 acc16=> variable 0
- 157 br 150
- 158 ;test11.j(61)   // integer - byte
- 159 ;test11.j(62)   b2=100;
- 160 acc8= constant 100
- 161 acc8=> variable 4
- 162 ;test11.j(63)   for(int i = 100; i <= 101+0; i++) { write(b2); b2--; }
- 163 acc8= constant 100
- 164 acc8=> variable 5
- 165 acc16= variable 5
- 166 <acc16
- 167 acc8= constant 101
- 168 acc8+ constant 0
- 169 acc16= unstack16
- 170 acc16CompareAcc8
- 171 brgt 181
- 172 br 175
- 173 incr16 variable 5
- 174 br 165
- 175 acc8= variable 4
- 176 call writeAcc8
- 177 decr8 variable 4
- 178 br 173
- 179 ;test11.j(64)   // integer - integer
- 180 ;test11.j(65)   for(int i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
- 181 acc16= constant 1098
- 182 acc16=> variable 5
- 183 acc16= variable 5
- 184 <acc16
- 185 acc16= constant 1099
- 186 acc16+ constant 0
- 187 revAcc16Comp unstack16
- 188 brlt 201
- 189 br 192
- 190 incr16 variable 5
- 191 br 183
- 192 acc8= variable 4
- 193 call writeAcc8
- 194 decr8 variable 4
- 195 br 190
- 196 ;test11.j(66) 
- 197 ;test11.j(67)   /************************/
- 198 ;test11.j(68)   // var - constant
- 199 ;test11.j(69)   // byte - byte
- 200 ;test11.j(70)   i2=96;
- 201 acc8= constant 96
- 202 acc8=> variable 0
- 203 ;test11.j(71)   for (byte b = 96; b <= 97; b++) { write (i2); i2--; }
- 204 acc8= constant 96
- 205 acc8=> variable 5
- 206 acc8= variable 5
- 207 acc8Comp constant 97
- 208 brgt 219
- 209 br 212
- 210 incr8 variable 5
- 211 br 206
- 212 acc16= variable 0
- 213 call writeAcc16
- 214 decr16 variable 0
- 215 br 210
- 216 ;test11.j(72)   // byte - integer
- 217 ;test11.j(73)   //not relevant
- 218 ;test11.j(74)   write(94);
- 219 acc8= constant 94
- 220 call writeAcc8
- 221 ;test11.j(75)   write(93);
- 222 acc8= constant 93
- 223 call writeAcc8
- 224 ;test11.j(76)   // integer - byte
- 225 ;test11.j(77)   b2=92;
- 226 acc8= constant 92
- 227 acc8=> variable 4
- 228 ;test11.j(78)   for(int i = 92; i <= 93; i++) { write(b2); b2--; }
- 229 acc8= constant 92
- 230 acc8=> variable 5
- 231 acc16= variable 5
- 232 acc8= constant 93
- 233 acc16CompareAcc8
- 234 brgt 244
- 235 br 238
- 236 incr16 variable 5
- 237 br 231
- 238 acc8= variable 4
- 239 call writeAcc8
- 240 decr8 variable 4
- 241 br 236
- 242 ;test11.j(79)   // integer - integer
- 243 ;test11.j(80)   for(int i = 1090; i <= 1091; i++) { write(b2); b2--; }
- 244 acc16= constant 1090
- 245 acc16=> variable 5
- 246 acc16= variable 5
- 247 acc16Comp constant 1091
- 248 brgt 262
- 249 br 252
- 250 incr16 variable 5
- 251 br 246
- 252 acc8= variable 4
- 253 call writeAcc8
- 254 decr8 variable 4
- 255 br 250
- 256 ;test11.j(81) 
- 257 ;test11.j(82)   /************************/
- 258 ;test11.j(83)   // acc - stack8
- 259 ;test11.j(84)   // byte - byte
- 260 ;test11.j(85)   //TODO
- 261 ;test11.j(86)   write(88);
- 262 acc8= constant 88
+ 143 acc8CompareAcc16
+ 144 brgt 156
+ 145 br 148
+ 146 decr8 variable 5
+ 147 br 140
+ 148 acc8= variable 5
+ 149 call writeAcc8
+ 150 acc16= variable 0
+ 151 acc16- constant 2
+ 152 acc16=> variable 0
+ 153 br 146
+ 154 ;test11.j(61)   // integer - byte
+ 155 ;test11.j(62)   b2=100;
+ 156 acc8= constant 100
+ 157 acc8=> variable 4
+ 158 ;test11.j(63)   for(int i = 100; i <= 101+0; i++) { write(b2); b2--; }
+ 159 acc8= constant 100
+ 160 acc8=> variable 5
+ 161 acc8= constant 101
+ 162 acc8+ constant 0
+ 163 acc16= variable 5
+ 164 acc16CompareAcc8
+ 165 brgt 175
+ 166 br 169
+ 167 incr16 variable 5
+ 168 br 161
+ 169 acc8= variable 4
+ 170 call writeAcc8
+ 171 decr8 variable 4
+ 172 br 167
+ 173 ;test11.j(64)   // integer - integer
+ 174 ;test11.j(65)   for(int i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
+ 175 acc16= constant 1098
+ 176 acc16=> variable 5
+ 177 acc16= constant 1099
+ 178 acc16+ constant 0
+ 179 acc16Comp variable 5
+ 180 brlt 193
+ 181 br 184
+ 182 incr16 variable 5
+ 183 br 177
+ 184 acc8= variable 4
+ 185 call writeAcc8
+ 186 decr8 variable 4
+ 187 br 182
+ 188 ;test11.j(66) 
+ 189 ;test11.j(67)   /************************/
+ 190 ;test11.j(68)   // var - constant
+ 191 ;test11.j(69)   // byte - byte
+ 192 ;test11.j(70)   i2=96;
+ 193 acc8= constant 96
+ 194 acc8=> variable 0
+ 195 ;test11.j(71)   for (byte b = 96; b <= 97; b++) { write (i2); i2--; }
+ 196 acc8= constant 96
+ 197 acc8=> variable 5
+ 198 acc8= variable 5
+ 199 acc8Comp constant 97
+ 200 brgt 211
+ 201 br 204
+ 202 incr8 variable 5
+ 203 br 198
+ 204 acc16= variable 0
+ 205 call writeAcc16
+ 206 decr16 variable 0
+ 207 br 202
+ 208 ;test11.j(72)   // byte - integer
+ 209 ;test11.j(73)   //not relevant
+ 210 ;test11.j(74)   write(94);
+ 211 acc8= constant 94
+ 212 call writeAcc8
+ 213 ;test11.j(75)   write(93);
+ 214 acc8= constant 93
+ 215 call writeAcc8
+ 216 ;test11.j(76)   // integer - byte
+ 217 ;test11.j(77)   b2=92;
+ 218 acc8= constant 92
+ 219 acc8=> variable 4
+ 220 ;test11.j(78)   for(int i = 92; i <= 93; i++) { write(b2); b2--; }
+ 221 acc8= constant 92
+ 222 acc8=> variable 5
+ 223 acc16= variable 5
+ 224 acc8= constant 93
+ 225 acc16CompareAcc8
+ 226 brgt 236
+ 227 br 230
+ 228 incr16 variable 5
+ 229 br 223
+ 230 acc8= variable 4
+ 231 call writeAcc8
+ 232 decr8 variable 4
+ 233 br 228
+ 234 ;test11.j(79)   // integer - integer
+ 235 ;test11.j(80)   for(int i = 1090; i <= 1091; i++) { write(b2); b2--; }
+ 236 acc16= constant 1090
+ 237 acc16=> variable 5
+ 238 acc16= variable 5
+ 239 acc16Comp constant 1091
+ 240 brgt 254
+ 241 br 244
+ 242 incr16 variable 5
+ 243 br 238
+ 244 acc8= variable 4
+ 245 call writeAcc8
+ 246 decr8 variable 4
+ 247 br 242
+ 248 ;test11.j(81) 
+ 249 ;test11.j(82)   /************************/
+ 250 ;test11.j(83)   // acc - stack8
+ 251 ;test11.j(84)   // byte - byte
+ 252 ;test11.j(85)   //TODO
+ 253 ;test11.j(86)   write(88);
+ 254 acc8= constant 88
+ 255 call writeAcc8
+ 256 ;test11.j(87)   write(87);
+ 257 acc8= constant 87
+ 258 call writeAcc8
+ 259 ;test11.j(88)   // byte - integer
+ 260 ;test11.j(89)   //TODO
+ 261 ;test11.j(90)   write(86);
+ 262 acc8= constant 86
  263 call writeAcc8
- 264 ;test11.j(87)   write(87);
- 265 acc8= constant 87
+ 264 ;test11.j(91)   write(85);
+ 265 acc8= constant 85
  266 call writeAcc8
- 267 ;test11.j(88)   // byte - integer
- 268 ;test11.j(89)   //TODO
- 269 ;test11.j(90)   write(86);
- 270 acc8= constant 86
+ 267 ;test11.j(92)   // integer - byte
+ 268 ;test11.j(93)   //TODO
+ 269 ;test11.j(94)   write(84);
+ 270 acc8= constant 84
  271 call writeAcc8
- 272 ;test11.j(91)   write(85);
- 273 acc8= constant 85
+ 272 ;test11.j(95)   write(83);
+ 273 acc8= constant 83
  274 call writeAcc8
- 275 ;test11.j(92)   // integer - byte
- 276 ;test11.j(93)   //TODO
- 277 ;test11.j(94)   write(84);
- 278 acc8= constant 84
+ 275 ;test11.j(96)   // integer - integer
+ 276 ;test11.j(97)   //TODO
+ 277 ;test11.j(98)   write(82);
+ 278 acc8= constant 82
  279 call writeAcc8
- 280 ;test11.j(95)   write(83);
- 281 acc8= constant 83
+ 280 ;test11.j(99)   write(81);
+ 281 acc8= constant 81
  282 call writeAcc8
- 283 ;test11.j(96)   // integer - integer
- 284 ;test11.j(97)   //TODO
- 285 ;test11.j(98)   write(82);
- 286 acc8= constant 82
- 287 call writeAcc8
- 288 ;test11.j(99)   write(81);
- 289 acc8= constant 81
+ 283 ;test11.j(100) 
+ 284 ;test11.j(101)   /************************/
+ 285 ;test11.j(102)   // acc - stack16
+ 286 ;test11.j(103)   // byte - byte
+ 287 ;test11.j(104)   //TODO
+ 288 ;test11.j(105)   write(80);
+ 289 acc8= constant 80
  290 call writeAcc8
- 291 ;test11.j(100) 
- 292 ;test11.j(101)   /************************/
- 293 ;test11.j(102)   // acc - stack16
- 294 ;test11.j(103)   // byte - byte
- 295 ;test11.j(104)   //TODO
- 296 ;test11.j(105)   write(80);
- 297 acc8= constant 80
+ 291 ;test11.j(106)   write(79);
+ 292 acc8= constant 79
+ 293 call writeAcc8
+ 294 ;test11.j(107)   // byte - integer
+ 295 ;test11.j(108)   //TODO
+ 296 ;test11.j(109)   write(78);
+ 297 acc8= constant 78
  298 call writeAcc8
- 299 ;test11.j(106)   write(79);
- 300 acc8= constant 79
+ 299 ;test11.j(110)   write(77);
+ 300 acc8= constant 77
  301 call writeAcc8
- 302 ;test11.j(107)   // byte - integer
- 303 ;test11.j(108)   //TODO
- 304 ;test11.j(109)   write(78);
- 305 acc8= constant 78
+ 302 ;test11.j(111)   // integer - byte
+ 303 ;test11.j(112)   //TODO
+ 304 ;test11.j(113)   write(76);
+ 305 acc8= constant 76
  306 call writeAcc8
- 307 ;test11.j(110)   write(77);
- 308 acc8= constant 77
+ 307 ;test11.j(114)   write(75);
+ 308 acc8= constant 75
  309 call writeAcc8
- 310 ;test11.j(111)   // integer - byte
- 311 ;test11.j(112)   //TODO
- 312 ;test11.j(113)   write(76);
- 313 acc8= constant 76
+ 310 ;test11.j(115)   // integer - integer
+ 311 ;test11.j(116)   //TODO
+ 312 ;test11.j(117)   write(74);
+ 313 acc8= constant 74
  314 call writeAcc8
- 315 ;test11.j(114)   write(75);
- 316 acc8= constant 75
+ 315 ;test11.j(118)   write(73);
+ 316 acc8= constant 73
  317 call writeAcc8
- 318 ;test11.j(115)   // integer - integer
- 319 ;test11.j(116)   //TODO
- 320 ;test11.j(117)   write(74);
- 321 acc8= constant 74
- 322 call writeAcc8
- 323 ;test11.j(118)   write(73);
- 324 acc8= constant 73
- 325 call writeAcc8
- 326 ;test11.j(119) 
- 327 ;test11.j(120)   /************************/
- 328 ;test11.j(121)   // acc - var
- 329 ;test11.j(122)   // byte - byte
- 330 ;test11.j(123)   for (byte b = 72; 71+0 <= b; b--) { write (b); }
- 331 acc8= constant 72
- 332 acc8=> variable 5
- 333 acc8= constant 71
- 334 acc8+ constant 0
- 335 acc8Comp variable 5
- 336 brgt 345
- 337 br 340
- 338 decr8 variable 5
- 339 br 333
- 340 acc8= variable 5
- 341 call writeAcc8
- 342 br 338
- 343 ;test11.j(124)   // byte - integer
- 344 ;test11.j(125)   for(int i = 70; 69+0 <= i; i--) { write(i); }
- 345 acc8= constant 70
- 346 acc8=> variable 5
- 347 acc8= constant 69
- 348 acc8+ constant 0
- 349 acc16= variable 5
- 350 acc8CompareAcc16
- 351 brgt 360
- 352 br 355
- 353 decr16 variable 5
- 354 br 347
- 355 acc16= variable 5
- 356 call writeAcc16
- 357 br 353
- 358 ;test11.j(126)   // integer - byte
- 359 ;test11.j(127)   i2=67;
- 360 acc8= constant 67
- 361 acc8=> variable 0
- 362 ;test11.j(128)   for (byte b = 68; i2+0 <= b; b--) { write (b); }
- 363 acc8= constant 68
- 364 acc8=> variable 5
- 365 acc16= variable 0
- 366 acc16+ constant 0
- 367 acc8= variable 5
- 368 acc16CompareAcc8
- 369 brgt 378
- 370 br 373
- 371 decr8 variable 5
- 372 br 365
- 373 acc8= variable 5
- 374 call writeAcc8
- 375 br 371
- 376 ;test11.j(129)   // integer - integer
- 377 ;test11.j(130)   b2 = 66;
- 378 acc8= constant 66
- 379 acc8=> variable 4
- 380 ;test11.j(131)   for(int i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
- 381 acc16= constant 1066
- 382 acc16=> variable 5
- 383 acc16= constant 1000
- 384 acc16+ constant 65
- 385 acc16Comp variable 5
- 386 brgt 399
- 387 br 390
- 388 decr16 variable 5
- 389 br 383
- 390 acc8= variable 4
- 391 call writeAcc8
- 392 decr8 variable 4
- 393 br 388
- 394 ;test11.j(132) 
- 395 ;test11.j(133)   /************************/
- 396 ;test11.j(134)   // acc - acc
- 397 ;test11.j(135)   // byte - byte
- 398 ;test11.j(136)   for (byte b = 64; 63+0 <= b+0; b--) { write (b); }
- 399 acc8= constant 64
- 400 acc8=> variable 5
- 401 acc8= constant 63
- 402 acc8+ constant 0
- 403 <acc8
- 404 acc8= variable 5
- 405 acc8+ constant 0
- 406 revAcc8Comp unstack8
- 407 brlt 416
- 408 br 411
- 409 decr8 variable 5
- 410 br 401
- 411 acc8= variable 5
- 412 call writeAcc8
- 413 br 409
- 414 ;test11.j(137)   // byte - integer
- 415 ;test11.j(138)   for(int i = 62; 61+0 <= i+0; i--) { write(i); }
- 416 acc8= constant 62
- 417 acc8=> variable 5
- 418 acc8= constant 61
- 419 acc8+ constant 0
- 420 <acc8
+ 318 ;test11.j(119) 
+ 319 ;test11.j(120)   /************************/
+ 320 ;test11.j(121)   // acc - var
+ 321 ;test11.j(122)   // byte - byte
+ 322 ;test11.j(123)   for (byte b = 72; 71+0 <= b; b--) { write (b); }
+ 323 acc8= constant 72
+ 324 acc8=> variable 5
+ 325 acc8= constant 71
+ 326 acc8+ constant 0
+ 327 acc8Comp variable 5
+ 328 brgt 337
+ 329 br 332
+ 330 decr8 variable 5
+ 331 br 325
+ 332 acc8= variable 5
+ 333 call writeAcc8
+ 334 br 330
+ 335 ;test11.j(124)   // byte - integer
+ 336 ;test11.j(125)   for(int i = 70; 69+0 <= i; i--) { write(i); }
+ 337 acc8= constant 70
+ 338 acc8=> variable 5
+ 339 acc8= constant 69
+ 340 acc8+ constant 0
+ 341 acc16= variable 5
+ 342 acc8CompareAcc16
+ 343 brgt 352
+ 344 br 347
+ 345 decr16 variable 5
+ 346 br 339
+ 347 acc16= variable 5
+ 348 call writeAcc16
+ 349 br 345
+ 350 ;test11.j(126)   // integer - byte
+ 351 ;test11.j(127)   i2=67;
+ 352 acc8= constant 67
+ 353 acc8=> variable 0
+ 354 ;test11.j(128)   for (byte b = 68; i2+0 <= b; b--) { write (b); }
+ 355 acc8= constant 68
+ 356 acc8=> variable 5
+ 357 acc16= variable 0
+ 358 acc16+ constant 0
+ 359 acc8= variable 5
+ 360 acc16CompareAcc8
+ 361 brgt 370
+ 362 br 365
+ 363 decr8 variable 5
+ 364 br 357
+ 365 acc8= variable 5
+ 366 call writeAcc8
+ 367 br 363
+ 368 ;test11.j(129)   // integer - integer
+ 369 ;test11.j(130)   b2 = 66;
+ 370 acc8= constant 66
+ 371 acc8=> variable 4
+ 372 ;test11.j(131)   for(int i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
+ 373 acc16= constant 1066
+ 374 acc16=> variable 5
+ 375 acc16= constant 1000
+ 376 acc16+ constant 65
+ 377 acc16Comp variable 5
+ 378 brgt 391
+ 379 br 382
+ 380 decr16 variable 5
+ 381 br 375
+ 382 acc8= variable 4
+ 383 call writeAcc8
+ 384 decr8 variable 4
+ 385 br 380
+ 386 ;test11.j(132) 
+ 387 ;test11.j(133)   /************************/
+ 388 ;test11.j(134)   // acc - acc
+ 389 ;test11.j(135)   // byte - byte
+ 390 ;test11.j(136)   for (byte b = 64; 63+0 <= b+0; b--) { write (b); }
+ 391 acc8= constant 64
+ 392 acc8=> variable 5
+ 393 acc8= constant 63
+ 394 acc8+ constant 0
+ 395 <acc8
+ 396 acc8= variable 5
+ 397 acc8+ constant 0
+ 398 revAcc8Comp unstack8
+ 399 brlt 408
+ 400 br 403
+ 401 decr8 variable 5
+ 402 br 393
+ 403 acc8= variable 5
+ 404 call writeAcc8
+ 405 br 401
+ 406 ;test11.j(137)   // byte - integer
+ 407 ;test11.j(138)   for(int i = 62; 61+0 <= i+0; i--) { write(i); }
+ 408 acc8= constant 62
+ 409 acc8=> variable 5
+ 410 acc8= constant 61
+ 411 acc8+ constant 0
+ 412 <acc8
+ 413 acc16= variable 5
+ 414 acc16+ constant 0
+ 415 acc8= unstack8
+ 416 acc8CompareAcc16
+ 417 brgt 426
+ 418 br 421
+ 419 decr16 variable 5
+ 420 br 410
  421 acc16= variable 5
- 422 acc16+ constant 0
- 423 acc8= unstack8
- 424 acc8CompareAcc16
- 425 brgt 434
- 426 br 429
- 427 decr16 variable 5
- 428 br 418
- 429 acc16= variable 5
- 430 call writeAcc16
- 431 br 427
- 432 ;test11.j(139)   // integer - byte
- 433 ;test11.j(140)   i2=59;
- 434 acc8= constant 59
- 435 acc8=> variable 0
- 436 ;test11.j(141)   for (byte b = 60; i2+0 <= b+0; b--) { write (b); }
- 437 acc8= constant 60
- 438 acc8=> variable 5
- 439 acc16= variable 0
- 440 acc16+ constant 0
- 441 <acc16
+ 422 call writeAcc16
+ 423 br 419
+ 424 ;test11.j(139)   // integer - byte
+ 425 ;test11.j(140)   i2=59;
+ 426 acc8= constant 59
+ 427 acc8=> variable 0
+ 428 ;test11.j(141)   for (byte b = 60; i2+0 <= b+0; b--) { write (b); }
+ 429 acc8= constant 60
+ 430 acc8=> variable 5
+ 431 acc16= variable 0
+ 432 acc16+ constant 0
+ 433 <acc16
+ 434 acc8= variable 5
+ 435 acc8+ constant 0
+ 436 acc16= unstack16
+ 437 acc16CompareAcc8
+ 438 brgt 447
+ 439 br 442
+ 440 decr8 variable 5
+ 441 br 431
  442 acc8= variable 5
- 443 acc8+ constant 0
- 444 acc16= unstack16
- 445 acc16CompareAcc8
- 446 brgt 455
- 447 br 450
- 448 decr8 variable 5
- 449 br 439
- 450 acc8= variable 5
- 451 call writeAcc8
- 452 br 448
- 453 ;test11.j(142)   // integer - integer
- 454 ;test11.j(143)   b2=58;
- 455 acc8= constant 58
- 456 acc8=> variable 4
- 457 ;test11.j(144)   for(int i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
- 458 acc16= constant 1058
- 459 acc16=> variable 5
- 460 acc16= constant 1000
- 461 acc16+ constant 57
- 462 <acc16
- 463 acc16= variable 5
- 464 acc16+ constant 0
- 465 revAcc16Comp unstack16
- 466 brlt 479
- 467 br 470
- 468 decr16 variable 5
- 469 br 460
- 470 acc8= variable 4
- 471 call writeAcc8
- 472 decr8 variable 4
- 473 br 468
- 474 ;test11.j(145) 
- 475 ;test11.j(146)   /************************/
- 476 ;test11.j(147)   // acc - constant
- 477 ;test11.j(148)   // byte - byte
- 478 ;test11.j(149)   i2=56;
- 479 acc8= constant 56
- 480 acc8=> variable 0
- 481 ;test11.j(150)   for (byte b = 56; b+0 <= 57; b++) { write (i2); i2--; }
- 482 acc8= constant 56
- 483 acc8=> variable 5
- 484 acc8= variable 5
- 485 acc8+ constant 0
- 486 acc8Comp constant 57
- 487 brgt 499
- 488 br 491
- 489 incr8 variable 5
- 490 br 484
- 491 acc16= variable 0
- 492 call writeAcc16
- 493 decr16 variable 0
- 494 br 489
- 495 ;test11.j(151)   // byte - integer
- 496 ;test11.j(152)   //not relevant
- 497 ;test11.j(153)   // integer - byte
- 498 ;test11.j(154)   b2=54;
- 499 acc8= constant 54
- 500 acc8=> variable 4
- 501 ;test11.j(155)   for (int i = 54; i+0 <= 55; i++) { write (b2); b2--;}
- 502 acc8= constant 54
- 503 acc8=> variable 5
- 504 acc16= variable 5
- 505 acc16+ constant 0
- 506 acc8= constant 55
- 507 acc16CompareAcc8
- 508 brgt 518
- 509 br 512
- 510 incr16 variable 5
- 511 br 504
- 512 acc8= variable 4
- 513 call writeAcc8
- 514 decr8 variable 4
- 515 br 510
- 516 ;test11.j(156)   // integer - integer
- 517 ;test11.j(157)   b2=52;
- 518 acc8= constant 52
- 519 acc8=> variable 4
- 520 ;test11.j(158)   for(int i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
- 521 acc16= constant 1052
- 522 acc16=> variable 5
- 523 acc16= variable 5
- 524 acc16+ constant 0
- 525 acc16Comp constant 1053
- 526 brgt 540
- 527 br 530
- 528 incr16 variable 5
- 529 br 523
- 530 acc8= variable 4
- 531 call writeAcc8
- 532 decr8 variable 4
- 533 br 528
- 534 ;test11.j(159) 
- 535 ;test11.j(160)   /************************/
- 536 ;test11.j(161)   // constant - stack8
- 537 ;test11.j(162)   // byte - byte
- 538 ;test11.j(163)   //TODO
- 539 ;test11.j(164)   write(50);
- 540 acc8= constant 50
- 541 call writeAcc8
- 542 ;test11.j(165)   // constant - stack8
- 543 ;test11.j(166)   // byte - integer
- 544 ;test11.j(167)   //TODO
- 545 ;test11.j(168)   write(49);
- 546 acc8= constant 49
- 547 call writeAcc8
- 548 ;test11.j(169)   // constant - stack8
- 549 ;test11.j(170)   // integer - byte
- 550 ;test11.j(171)   //TODO
- 551 ;test11.j(172)   write(48);
- 552 acc8= constant 48
- 553 call writeAcc8
- 554 ;test11.j(173)   // constant - stack88
- 555 ;test11.j(174)   // integer - integer
- 556 ;test11.j(175)   //TODO
- 557 ;test11.j(176)   write(47);
- 558 acc8= constant 47
+ 443 call writeAcc8
+ 444 br 440
+ 445 ;test11.j(142)   // integer - integer
+ 446 ;test11.j(143)   b2=58;
+ 447 acc8= constant 58
+ 448 acc8=> variable 4
+ 449 ;test11.j(144)   for(int i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
+ 450 acc16= constant 1058
+ 451 acc16=> variable 5
+ 452 acc16= constant 1000
+ 453 acc16+ constant 57
+ 454 <acc16
+ 455 acc16= variable 5
+ 456 acc16+ constant 0
+ 457 revAcc16Comp unstack16
+ 458 brlt 471
+ 459 br 462
+ 460 decr16 variable 5
+ 461 br 452
+ 462 acc8= variable 4
+ 463 call writeAcc8
+ 464 decr8 variable 4
+ 465 br 460
+ 466 ;test11.j(145) 
+ 467 ;test11.j(146)   /************************/
+ 468 ;test11.j(147)   // acc - constant
+ 469 ;test11.j(148)   // byte - byte
+ 470 ;test11.j(149)   i2=56;
+ 471 acc8= constant 56
+ 472 acc8=> variable 0
+ 473 ;test11.j(150)   for (byte b = 56; b+0 <= 57; b++) { write (i2); i2--; }
+ 474 acc8= constant 56
+ 475 acc8=> variable 5
+ 476 acc8= variable 5
+ 477 acc8+ constant 0
+ 478 acc8Comp constant 57
+ 479 brgt 491
+ 480 br 483
+ 481 incr8 variable 5
+ 482 br 476
+ 483 acc16= variable 0
+ 484 call writeAcc16
+ 485 decr16 variable 0
+ 486 br 481
+ 487 ;test11.j(151)   // byte - integer
+ 488 ;test11.j(152)   //not relevant
+ 489 ;test11.j(153)   // integer - byte
+ 490 ;test11.j(154)   b2=54;
+ 491 acc8= constant 54
+ 492 acc8=> variable 4
+ 493 ;test11.j(155)   for (int i = 54; i+0 <= 55; i++) { write (b2); b2--;}
+ 494 acc8= constant 54
+ 495 acc8=> variable 5
+ 496 acc16= variable 5
+ 497 acc16+ constant 0
+ 498 acc8= constant 55
+ 499 acc16CompareAcc8
+ 500 brgt 510
+ 501 br 504
+ 502 incr16 variable 5
+ 503 br 496
+ 504 acc8= variable 4
+ 505 call writeAcc8
+ 506 decr8 variable 4
+ 507 br 502
+ 508 ;test11.j(156)   // integer - integer
+ 509 ;test11.j(157)   b2=52;
+ 510 acc8= constant 52
+ 511 acc8=> variable 4
+ 512 ;test11.j(158)   for(int i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
+ 513 acc16= constant 1052
+ 514 acc16=> variable 5
+ 515 acc16= variable 5
+ 516 acc16+ constant 0
+ 517 acc16Comp constant 1053
+ 518 brgt 532
+ 519 br 522
+ 520 incr16 variable 5
+ 521 br 515
+ 522 acc8= variable 4
+ 523 call writeAcc8
+ 524 decr8 variable 4
+ 525 br 520
+ 526 ;test11.j(159) 
+ 527 ;test11.j(160)   /************************/
+ 528 ;test11.j(161)   // constant - stack8
+ 529 ;test11.j(162)   // byte - byte
+ 530 ;test11.j(163)   //TODO
+ 531 ;test11.j(164)   write(50);
+ 532 acc8= constant 50
+ 533 call writeAcc8
+ 534 ;test11.j(165)   // constant - stack8
+ 535 ;test11.j(166)   // byte - integer
+ 536 ;test11.j(167)   //TODO
+ 537 ;test11.j(168)   write(49);
+ 538 acc8= constant 49
+ 539 call writeAcc8
+ 540 ;test11.j(169)   // constant - stack8
+ 541 ;test11.j(170)   // integer - byte
+ 542 ;test11.j(171)   //TODO
+ 543 ;test11.j(172)   write(48);
+ 544 acc8= constant 48
+ 545 call writeAcc8
+ 546 ;test11.j(173)   // constant - stack88
+ 547 ;test11.j(174)   // integer - integer
+ 548 ;test11.j(175)   //TODO
+ 549 ;test11.j(176)   write(47);
+ 550 acc8= constant 47
+ 551 call writeAcc8
+ 552 ;test11.j(177) 
+ 553 ;test11.j(178)   /************************/
+ 554 ;test11.j(179)   // constant - stack16
+ 555 ;test11.j(180)   // byte - byte
+ 556 ;test11.j(181)   //TODO
+ 557 ;test11.j(182)   write(46);
+ 558 acc8= constant 46
  559 call writeAcc8
- 560 ;test11.j(177) 
- 561 ;test11.j(178)   /************************/
- 562 ;test11.j(179)   // constant - stack16
- 563 ;test11.j(180)   // byte - byte
- 564 ;test11.j(181)   //TODO
- 565 ;test11.j(182)   write(46);
- 566 acc8= constant 46
- 567 call writeAcc8
- 568 ;test11.j(183)   // constant - stack16
- 569 ;test11.j(184)   // byte - integer
- 570 ;test11.j(185)   //TODO
- 571 ;test11.j(186)   write(45);
- 572 acc8= constant 45
- 573 call writeAcc8
- 574 ;test11.j(187)   // constant - stack16
- 575 ;test11.j(188)   // integer - byte
- 576 ;test11.j(189)   //TODO
- 577 ;test11.j(190)   write(44);
- 578 acc8= constant 44
- 579 call writeAcc8
- 580 ;test11.j(191)   // constant - stack16
- 581 ;test11.j(192)   // integer - integer
- 582 ;test11.j(193)   //TODO
- 583 ;test11.j(194)   write(43);
- 584 acc8= constant 43
- 585 call writeAcc8
- 586 ;test11.j(195) 
- 587 ;test11.j(196)   /************************/
- 588 ;test11.j(197)   // constant - var
- 589 ;test11.j(198)   // byte - byte
- 590 ;test11.j(199)   for (byte b = 42; 41 <= b; b--) { write (b); }
- 591 acc8= constant 42
- 592 acc8=> variable 5
- 593 acc8= variable 5
- 594 acc8Comp constant 41
- 595 brlt 605
- 596 br 599
- 597 decr8 variable 5
- 598 br 593
- 599 acc8= variable 5
- 600 call writeAcc8
- 601 br 597
- 602 ;test11.j(200)   // constant - var
- 603 ;test11.j(201)   // byte - integer
- 604 ;test11.j(202)   for(int i = 40; 39 <= i; i--) { write(i); }
- 605 acc8= constant 40
- 606 acc8=> variable 5
- 607 acc16= variable 5
- 608 acc8= constant 39
- 609 acc8CompareAcc16
- 610 brgt 623
- 611 br 614
- 612 decr16 variable 5
- 613 br 607
- 614 acc16= variable 5
- 615 call writeAcc16
- 616 br 612
- 617 ;test11.j(203)   // constant - var
- 618 ;test11.j(204)   // integer - byte
- 619 ;test11.j(205)   // not relevant
- 620 ;test11.j(206)   // constant - var
- 621 ;test11.j(207)   // integer - integer
- 622 ;test11.j(208)   b2=38;
- 623 acc8= constant 38
- 624 acc8=> variable 4
- 625 ;test11.j(209)   for(int i = 1038; 1037 <= i; i--) { write(b2); b2--; }
- 626 acc16= constant 1038
- 627 acc16=> variable 5
- 628 acc16= variable 5
- 629 acc16Comp constant 1037
- 630 brlt 643
- 631 br 634
- 632 decr16 variable 5
- 633 br 628
- 634 acc8= variable 4
- 635 call writeAcc8
- 636 decr8 variable 4
- 637 br 632
- 638 ;test11.j(210) 
- 639 ;test11.j(211)   /************************/
- 640 ;test11.j(212)   // constant - acc
- 641 ;test11.j(213)   // byte - byte
- 642 ;test11.j(214)   for (byte b = 36; 136 == b+100; b--) { write (b); }
- 643 acc8= constant 36
- 644 acc8=> variable 5
- 645 acc8= variable 5
- 646 acc8+ constant 100
- 647 acc8Comp constant 136
- 648 brne 656
- 649 br 652
- 650 decr8 variable 5
- 651 br 645
- 652 acc8= variable 5
- 653 call writeAcc8
- 654 br 650
- 655 ;test11.j(215)   for (byte b = 35; 132 != b+100; b--) { write (b); }
- 656 acc8= constant 35
- 657 acc8=> variable 5
- 658 acc8= variable 5
- 659 acc8+ constant 100
- 660 acc8Comp constant 132
- 661 breq 669
- 662 br 665
- 663 decr8 variable 5
- 664 br 658
- 665 acc8= variable 5
- 666 call writeAcc8
- 667 br 663
- 668 ;test11.j(216)   b2=32;
- 669 acc8= constant 32
- 670 acc8=> variable 4
- 671 ;test11.j(217)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2--; }
- 672 acc8= constant 32
- 673 acc8=> variable 5
- 674 acc8= variable 5
- 675 acc8+ constant 100
- 676 acc8Comp constant 134
- 677 brge 686
- 678 br 681
- 679 incr8 variable 5
- 680 br 674
- 681 acc8= variable 4
- 682 call writeAcc8
- 683 decr8 variable 4
- 684 br 679
- 685 ;test11.j(218)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2--; }
- 686 acc8= constant 34
- 687 acc8=> variable 5
- 688 acc8= variable 5
- 689 acc8+ constant 100
- 690 acc8Comp constant 135
- 691 brgt 700
- 692 br 695
- 693 incr8 variable 5
- 694 br 688
- 695 acc8= variable 4
- 696 call writeAcc8
- 697 decr8 variable 4
- 698 br 693
- 699 ;test11.j(219)   for (byte b = 28; 126 <  b+100; b--) { write (b); }
- 700 acc8= constant 28
- 701 acc8=> variable 5
- 702 acc8= variable 5
- 703 acc8+ constant 100
- 704 acc8Comp constant 126
- 705 brle 713
- 706 br 709
- 707 decr8 variable 5
- 708 br 702
- 709 acc8= variable 5
- 710 call writeAcc8
- 711 br 707
- 712 ;test11.j(220)   for (byte b = 26; 125 <= b+100; b--) { write (b); }
- 713 acc8= constant 26
- 714 acc8=> variable 5
- 715 acc8= variable 5
- 716 acc8+ constant 100
- 717 acc8Comp constant 125
- 718 brlt 728
- 719 br 722
- 720 decr8 variable 5
- 721 br 715
- 722 acc8= variable 5
- 723 call writeAcc8
- 724 br 720
- 725 ;test11.j(221)   // constant - acc
- 726 ;test11.j(222)   // byte - integer
- 727 ;test11.j(223)   for(int i = 24; 24 == i+0; i--) { write(i); }
- 728 acc8= constant 24
- 729 acc8=> variable 5
+ 560 ;test11.j(183)   // constant - stack16
+ 561 ;test11.j(184)   // byte - integer
+ 562 ;test11.j(185)   //TODO
+ 563 ;test11.j(186)   write(45);
+ 564 acc8= constant 45
+ 565 call writeAcc8
+ 566 ;test11.j(187)   // constant - stack16
+ 567 ;test11.j(188)   // integer - byte
+ 568 ;test11.j(189)   //TODO
+ 569 ;test11.j(190)   write(44);
+ 570 acc8= constant 44
+ 571 call writeAcc8
+ 572 ;test11.j(191)   // constant - stack16
+ 573 ;test11.j(192)   // integer - integer
+ 574 ;test11.j(193)   //TODO
+ 575 ;test11.j(194)   write(43);
+ 576 acc8= constant 43
+ 577 call writeAcc8
+ 578 ;test11.j(195) 
+ 579 ;test11.j(196)   /************************/
+ 580 ;test11.j(197)   // constant - var
+ 581 ;test11.j(198)   // byte - byte
+ 582 ;test11.j(199)   for (byte b = 42; 41 <= b; b--) { write (b); }
+ 583 acc8= constant 42
+ 584 acc8=> variable 5
+ 585 acc8= variable 5
+ 586 acc8Comp constant 41
+ 587 brlt 597
+ 588 br 591
+ 589 decr8 variable 5
+ 590 br 585
+ 591 acc8= variable 5
+ 592 call writeAcc8
+ 593 br 589
+ 594 ;test11.j(200)   // constant - var
+ 595 ;test11.j(201)   // byte - integer
+ 596 ;test11.j(202)   for(int i = 40; 39 <= i; i--) { write(i); }
+ 597 acc8= constant 40
+ 598 acc8=> variable 5
+ 599 acc16= variable 5
+ 600 acc8= constant 39
+ 601 acc8CompareAcc16
+ 602 brgt 615
+ 603 br 606
+ 604 decr16 variable 5
+ 605 br 599
+ 606 acc16= variable 5
+ 607 call writeAcc16
+ 608 br 604
+ 609 ;test11.j(203)   // constant - var
+ 610 ;test11.j(204)   // integer - byte
+ 611 ;test11.j(205)   // not relevant
+ 612 ;test11.j(206)   // constant - var
+ 613 ;test11.j(207)   // integer - integer
+ 614 ;test11.j(208)   b2=38;
+ 615 acc8= constant 38
+ 616 acc8=> variable 4
+ 617 ;test11.j(209)   for(int i = 1038; 1037 <= i; i--) { write(b2); b2--; }
+ 618 acc16= constant 1038
+ 619 acc16=> variable 5
+ 620 acc16= variable 5
+ 621 acc16Comp constant 1037
+ 622 brlt 635
+ 623 br 626
+ 624 decr16 variable 5
+ 625 br 620
+ 626 acc8= variable 4
+ 627 call writeAcc8
+ 628 decr8 variable 4
+ 629 br 624
+ 630 ;test11.j(210) 
+ 631 ;test11.j(211)   /************************/
+ 632 ;test11.j(212)   // constant - acc
+ 633 ;test11.j(213)   // byte - byte
+ 634 ;test11.j(214)   for (byte b = 36; 136 == b+100; b--) { write (b); }
+ 635 acc8= constant 36
+ 636 acc8=> variable 5
+ 637 acc8= variable 5
+ 638 acc8+ constant 100
+ 639 acc8Comp constant 136
+ 640 brne 648
+ 641 br 644
+ 642 decr8 variable 5
+ 643 br 637
+ 644 acc8= variable 5
+ 645 call writeAcc8
+ 646 br 642
+ 647 ;test11.j(215)   for (byte b = 35; 132 != b+100; b--) { write (b); }
+ 648 acc8= constant 35
+ 649 acc8=> variable 5
+ 650 acc8= variable 5
+ 651 acc8+ constant 100
+ 652 acc8Comp constant 132
+ 653 breq 661
+ 654 br 657
+ 655 decr8 variable 5
+ 656 br 650
+ 657 acc8= variable 5
+ 658 call writeAcc8
+ 659 br 655
+ 660 ;test11.j(216)   b2=32;
+ 661 acc8= constant 32
+ 662 acc8=> variable 4
+ 663 ;test11.j(217)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2--; }
+ 664 acc8= constant 32
+ 665 acc8=> variable 5
+ 666 acc8= variable 5
+ 667 acc8+ constant 100
+ 668 acc8Comp constant 134
+ 669 brge 678
+ 670 br 673
+ 671 incr8 variable 5
+ 672 br 666
+ 673 acc8= variable 4
+ 674 call writeAcc8
+ 675 decr8 variable 4
+ 676 br 671
+ 677 ;test11.j(218)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2--; }
+ 678 acc8= constant 34
+ 679 acc8=> variable 5
+ 680 acc8= variable 5
+ 681 acc8+ constant 100
+ 682 acc8Comp constant 135
+ 683 brgt 692
+ 684 br 687
+ 685 incr8 variable 5
+ 686 br 680
+ 687 acc8= variable 4
+ 688 call writeAcc8
+ 689 decr8 variable 4
+ 690 br 685
+ 691 ;test11.j(219)   for (byte b = 28; 126 <  b+100; b--) { write (b); }
+ 692 acc8= constant 28
+ 693 acc8=> variable 5
+ 694 acc8= variable 5
+ 695 acc8+ constant 100
+ 696 acc8Comp constant 126
+ 697 brle 705
+ 698 br 701
+ 699 decr8 variable 5
+ 700 br 694
+ 701 acc8= variable 5
+ 702 call writeAcc8
+ 703 br 699
+ 704 ;test11.j(220)   for (byte b = 26; 125 <= b+100; b--) { write (b); }
+ 705 acc8= constant 26
+ 706 acc8=> variable 5
+ 707 acc8= variable 5
+ 708 acc8+ constant 100
+ 709 acc8Comp constant 125
+ 710 brlt 720
+ 711 br 714
+ 712 decr8 variable 5
+ 713 br 707
+ 714 acc8= variable 5
+ 715 call writeAcc8
+ 716 br 712
+ 717 ;test11.j(221)   // constant - acc
+ 718 ;test11.j(222)   // byte - integer
+ 719 ;test11.j(223)   for(int i = 24; 24 == i+0; i--) { write(i); }
+ 720 acc8= constant 24
+ 721 acc8=> variable 5
+ 722 acc16= variable 5
+ 723 acc16+ constant 0
+ 724 acc8= constant 24
+ 725 acc8CompareAcc16
+ 726 brne 734
+ 727 br 730
+ 728 decr16 variable 5
+ 729 br 722
  730 acc16= variable 5
- 731 acc16+ constant 0
- 732 acc8= constant 24
- 733 acc8CompareAcc16
- 734 brne 742
- 735 br 738
- 736 decr16 variable 5
- 737 br 730
- 738 acc16= variable 5
- 739 call writeAcc16
- 740 br 736
- 741 ;test11.j(224)   for(int i = 23; 120 != i+100; i--) { write(i); }
- 742 acc8= constant 23
- 743 acc8=> variable 5
+ 731 call writeAcc16
+ 732 br 728
+ 733 ;test11.j(224)   for(int i = 23; 120 != i+100; i--) { write(i); }
+ 734 acc8= constant 23
+ 735 acc8=> variable 5
+ 736 acc16= variable 5
+ 737 acc16+ constant 100
+ 738 acc8= constant 120
+ 739 acc8CompareAcc16
+ 740 breq 748
+ 741 br 744
+ 742 decr16 variable 5
+ 743 br 736
  744 acc16= variable 5
- 745 acc16+ constant 100
- 746 acc8= constant 120
- 747 acc8CompareAcc16
- 748 breq 756
- 749 br 752
- 750 decr16 variable 5
- 751 br 744
- 752 acc16= variable 5
- 753 call writeAcc16
- 754 br 750
- 755 ;test11.j(225)   b2=20;
- 756 acc8= constant 20
- 757 acc8=> variable 4
- 758 ;test11.j(226)   for(int i = 20; 122 > i+100; i++) { write (b2); b2--; }
- 759 acc8= constant 20
- 760 acc8=> variable 5
- 761 acc16= variable 5
- 762 acc16+ constant 100
- 763 acc8= constant 122
- 764 acc8CompareAcc16
- 765 brle 774
- 766 br 769
- 767 incr16 variable 5
- 768 br 761
- 769 acc8= variable 4
- 770 call writeAcc8
- 771 decr8 variable 4
- 772 br 767
- 773 ;test11.j(227)   for(int i = 22; 123 >= i+100; i++) { write (b2); b2--; }
- 774 acc8= constant 22
- 775 acc8=> variable 5
- 776 acc16= variable 5
- 777 acc16+ constant 100
- 778 acc8= constant 123
- 779 acc8CompareAcc16
- 780 brlt 789
- 781 br 784
- 782 incr16 variable 5
- 783 br 776
- 784 acc8= variable 4
- 785 call writeAcc8
- 786 decr8 variable 4
- 787 br 782
- 788 ;test11.j(228)   for(int i = 16; 114 <  i+100; i--) { write(i); }
- 789 acc8= constant 16
- 790 acc8=> variable 5
+ 745 call writeAcc16
+ 746 br 742
+ 747 ;test11.j(225)   b2=20;
+ 748 acc8= constant 20
+ 749 acc8=> variable 4
+ 750 ;test11.j(226)   for(int i = 20; 122 > i+100; i++) { write (b2); b2--; }
+ 751 acc8= constant 20
+ 752 acc8=> variable 5
+ 753 acc16= variable 5
+ 754 acc16+ constant 100
+ 755 acc8= constant 122
+ 756 acc8CompareAcc16
+ 757 brle 766
+ 758 br 761
+ 759 incr16 variable 5
+ 760 br 753
+ 761 acc8= variable 4
+ 762 call writeAcc8
+ 763 decr8 variable 4
+ 764 br 759
+ 765 ;test11.j(227)   for(int i = 22; 123 >= i+100; i++) { write (b2); b2--; }
+ 766 acc8= constant 22
+ 767 acc8=> variable 5
+ 768 acc16= variable 5
+ 769 acc16+ constant 100
+ 770 acc8= constant 123
+ 771 acc8CompareAcc16
+ 772 brlt 781
+ 773 br 776
+ 774 incr16 variable 5
+ 775 br 768
+ 776 acc8= variable 4
+ 777 call writeAcc8
+ 778 decr8 variable 4
+ 779 br 774
+ 780 ;test11.j(228)   for(int i = 16; 114 <  i+100; i--) { write(i); }
+ 781 acc8= constant 16
+ 782 acc8=> variable 5
+ 783 acc16= variable 5
+ 784 acc16+ constant 100
+ 785 acc8= constant 114
+ 786 acc8CompareAcc16
+ 787 brge 795
+ 788 br 791
+ 789 decr16 variable 5
+ 790 br 783
  791 acc16= variable 5
- 792 acc16+ constant 100
- 793 acc8= constant 114
- 794 acc8CompareAcc16
- 795 brge 803
- 796 br 799
- 797 decr16 variable 5
- 798 br 791
- 799 acc16= variable 5
- 800 call writeAcc16
- 801 br 797
- 802 ;test11.j(229)   for(int i = 14; 113 <= i+100; i--) { write(i); }
- 803 acc8= constant 14
- 804 acc8=> variable 5
+ 792 call writeAcc16
+ 793 br 789
+ 794 ;test11.j(229)   for(int i = 14; 113 <= i+100; i--) { write(i); }
+ 795 acc8= constant 14
+ 796 acc8=> variable 5
+ 797 acc16= variable 5
+ 798 acc16+ constant 100
+ 799 acc8= constant 113
+ 800 acc8CompareAcc16
+ 801 brgt 815
+ 802 br 805
+ 803 decr16 variable 5
+ 804 br 797
  805 acc16= variable 5
- 806 acc16+ constant 100
- 807 acc8= constant 113
- 808 acc8CompareAcc16
- 809 brgt 823
- 810 br 813
- 811 decr16 variable 5
- 812 br 805
- 813 acc16= variable 5
- 814 call writeAcc16
- 815 br 811
- 816 ;test11.j(230)   // constant - acc
- 817 ;test11.j(231)   // integer - byte
- 818 ;test11.j(232)   // not relevant
- 819 ;test11.j(233) 
- 820 ;test11.j(234)   // constant - acc
- 821 ;test11.j(235)   // integer - integer
- 822 ;test11.j(236)   for(int i = 12; 1012 == i+1000; i--) { write(i); }
- 823 acc8= constant 12
- 824 acc8=> variable 5
- 825 acc16= variable 5
- 826 acc16+ constant 1000
- 827 acc16Comp constant 1012
- 828 brne 836
- 829 br 832
- 830 decr16 variable 5
- 831 br 825
- 832 acc16= variable 5
- 833 call writeAcc16
- 834 br 830
- 835 ;test11.j(237)   for(int i = 11; 1008 != i+1000; i--) { write(i); }
- 836 acc8= constant 11
- 837 acc8=> variable 5
- 838 acc16= variable 5
- 839 acc16+ constant 1000
- 840 acc16Comp constant 1008
- 841 breq 849
- 842 br 845
- 843 decr16 variable 5
- 844 br 838
- 845 acc16= variable 5
- 846 call writeAcc16
- 847 br 843
- 848 ;test11.j(238)   b2=8;
- 849 acc8= constant 8
- 850 acc8=> variable 4
- 851 ;test11.j(239)   for(int i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
- 852 acc8= constant 8
- 853 acc8=> variable 5
- 854 acc16= variable 5
- 855 acc16+ constant 1000
- 856 acc16Comp constant 1010
- 857 brge 866
- 858 br 861
- 859 incr16 variable 5
- 860 br 854
- 861 acc8= variable 4
- 862 call writeAcc8
- 863 decr8 variable 4
- 864 br 859
- 865 ;test11.j(240)   for(int i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
- 866 acc8= constant 10
- 867 acc8=> variable 5
- 868 acc16= variable 5
- 869 acc16+ constant 1000
- 870 acc16Comp constant 1011
- 871 brgt 880
- 872 br 875
- 873 incr16 variable 5
- 874 br 868
- 875 acc8= variable 4
- 876 call writeAcc8
- 877 decr8 variable 4
- 878 br 873
- 879 ;test11.j(241)   for(int i = 4; 1002 <  i+1000; i--) { write(i); }
- 880 acc8= constant 4
- 881 acc8=> variable 5
- 882 acc16= variable 5
- 883 acc16+ constant 1000
- 884 acc16Comp constant 1002
- 885 brle 893
- 886 br 889
- 887 decr16 variable 5
- 888 br 882
- 889 acc16= variable 5
- 890 call writeAcc16
- 891 br 887
- 892 ;test11.j(242)   for(int i = 2; 1001 <= i+1000; i--) { write(i); }
- 893 acc8= constant 2
- 894 acc8=> variable 5
- 895 acc16= variable 5
- 896 acc16+ constant 1000
- 897 acc16Comp constant 1001
- 898 brlt 906
- 899 br 902
- 900 decr16 variable 5
- 901 br 895
- 902 acc16= variable 5
- 903 call writeAcc16
- 904 br 900
- 905 ;test11.j(243)   write(0);
- 906 acc8= constant 0
- 907 call writeAcc8
- 908 ;test11.j(244) }
- 909 stop
+ 806 call writeAcc16
+ 807 br 803
+ 808 ;test11.j(230)   // constant - acc
+ 809 ;test11.j(231)   // integer - byte
+ 810 ;test11.j(232)   // not relevant
+ 811 ;test11.j(233) 
+ 812 ;test11.j(234)   // constant - acc
+ 813 ;test11.j(235)   // integer - integer
+ 814 ;test11.j(236)   for(int i = 12; 1012 == i+1000; i--) { write(i); }
+ 815 acc8= constant 12
+ 816 acc8=> variable 5
+ 817 acc16= variable 5
+ 818 acc16+ constant 1000
+ 819 acc16Comp constant 1012
+ 820 brne 828
+ 821 br 824
+ 822 decr16 variable 5
+ 823 br 817
+ 824 acc16= variable 5
+ 825 call writeAcc16
+ 826 br 822
+ 827 ;test11.j(237)   for(int i = 11; 1008 != i+1000; i--) { write(i); }
+ 828 acc8= constant 11
+ 829 acc8=> variable 5
+ 830 acc16= variable 5
+ 831 acc16+ constant 1000
+ 832 acc16Comp constant 1008
+ 833 breq 841
+ 834 br 837
+ 835 decr16 variable 5
+ 836 br 830
+ 837 acc16= variable 5
+ 838 call writeAcc16
+ 839 br 835
+ 840 ;test11.j(238)   b2=8;
+ 841 acc8= constant 8
+ 842 acc8=> variable 4
+ 843 ;test11.j(239)   for(int i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
+ 844 acc8= constant 8
+ 845 acc8=> variable 5
+ 846 acc16= variable 5
+ 847 acc16+ constant 1000
+ 848 acc16Comp constant 1010
+ 849 brge 858
+ 850 br 853
+ 851 incr16 variable 5
+ 852 br 846
+ 853 acc8= variable 4
+ 854 call writeAcc8
+ 855 decr8 variable 4
+ 856 br 851
+ 857 ;test11.j(240)   for(int i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
+ 858 acc8= constant 10
+ 859 acc8=> variable 5
+ 860 acc16= variable 5
+ 861 acc16+ constant 1000
+ 862 acc16Comp constant 1011
+ 863 brgt 872
+ 864 br 867
+ 865 incr16 variable 5
+ 866 br 860
+ 867 acc8= variable 4
+ 868 call writeAcc8
+ 869 decr8 variable 4
+ 870 br 865
+ 871 ;test11.j(241)   for(int i = 4; 1002 <  i+1000; i--) { write(i); }
+ 872 acc8= constant 4
+ 873 acc8=> variable 5
+ 874 acc16= variable 5
+ 875 acc16+ constant 1000
+ 876 acc16Comp constant 1002
+ 877 brle 885
+ 878 br 881
+ 879 decr16 variable 5
+ 880 br 874
+ 881 acc16= variable 5
+ 882 call writeAcc16
+ 883 br 879
+ 884 ;test11.j(242)   for(int i = 2; 1001 <= i+1000; i--) { write(i); }
+ 885 acc8= constant 2
+ 886 acc8=> variable 5
+ 887 acc16= variable 5
+ 888 acc16+ constant 1000
+ 889 acc16Comp constant 1001
+ 890 brlt 898
+ 891 br 894
+ 892 decr16 variable 5
+ 893 br 887
+ 894 acc16= variable 5
+ 895 call writeAcc16
+ 896 br 892
+ 897 ;test11.j(243)   write(0);
+ 898 acc8= constant 0
+ 899 call writeAcc8
+ 900 ;test11.j(244) }
+ 901 stop
