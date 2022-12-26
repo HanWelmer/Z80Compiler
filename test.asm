@@ -613,40 +613,69 @@ writeA:
         POP   HL
         RET
 main:
+L0:
         ;;test.j(0) /*
+L1:
         ;;test.j(1)  * A small program in the miniJava language.
+L2:
         ;;test.j(2)  * Test something
+L3:
         ;;test.j(3)  */
+L4:
         ;;test.j(4) class Test {
+L5:
         ;;test.j(5)   int zero = 0;
+L6:
         LD    A,0
+L7:
         LD    L,A
         LD    H,0
         LD    (05000H),HL
+L8:
         ;;test.j(6)   int one = 1;
+L9:
         LD    A,1
+L10:
         LD    L,A
         LD    H,0
         LD    (05002H),HL
+L11:
         ;;test.j(7)   int four = 4;
+L12:
         LD    A,4
+L13:
         LD    L,A
         LD    H,0
         LD    (05004H),HL
+L14:
         ;;test.j(8)   int twelve = 12;
+L15:
         LD    A,12
+L16:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
+L17:
         ;;test.j(9)   byte byteOne = 1;
+L18:
         LD    A,1
+L19:
         LD    (05008H),A
+L20:
         ;;test.j(10)   //if (four == zero + 12/(one + 2)) write(2);
+L21:
         ;;test.j(11)   write(byteOne);
+L22:
         LD    A,(05008H)
+L23:
         CALL  writeA
+L24:
         ;;test.j(12)   write(zero);
+L25:
         LD    HL,(05000H)
+L26:
         CALL  writeHL
+L27:
         ;;test.j(13) }
+L28:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

@@ -6,11 +6,11 @@ import java.util.Arrays;
 public class AssemblyInstruction {
   
   private String code;            /* assembler code */
-  private long address;           /* start address of the assembled instruction. */
+  private int address;           /* start address of the assembled instruction. */
   private ArrayList<Byte> bytes;  /* assembler instruction coded as an array of bytes. */
 
   /* constructor */
-  public AssemblyInstruction(long address, String code, int... bytes) {
+  public AssemblyInstruction(int address, String code, int... bytes) {
     this.address = address;
     this.code = code;
     if (bytes != null && bytes.length > 0) {
@@ -25,7 +25,7 @@ public class AssemblyInstruction {
     return code;
   }
 
-  public Long getAddress() {
+  public int getAddress() {
     return address;
   }
   

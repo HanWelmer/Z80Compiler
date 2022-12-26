@@ -613,1598 +613,1897 @@ writeA:
         POP   HL
         RET
 main:
+L0:
         ;;test10.j(0) /* Program to test generated Z80 assembler code */
+L1:
         ;;test10.j(1) class TestDo {
+L2:
         ;;test10.j(2)   byte b = 115;
-        ;acc8= constant 115
+L3:
         LD    A,115
-        ;acc8=> variable 0
+L4:
         LD    (05000H),A
+L5:
         ;;test10.j(3)   
+L6:
         ;;test10.j(4)   /************************/
+L7:
         ;;test10.j(5)   // global variable within do scope
+L8:
         ;;test10.j(6)   write (b);
-        ;acc8= variable 0
+L9:
         LD    A,(05000H)
-        ;call writeAcc8
+L10:
         CALL  writeA
+L11:
         ;;test10.j(7)   b--;
-        ;decr8 variable 0
+L12:
         LD    HL,(05000H)
         DEC   (HL)
+L13:
         ;;test10.j(8)   do {
+L14:
         ;;test10.j(9)     int j = 1001;
-        ;acc16= constant 1001
+L15:
         LD    HL,1001
-        ;acc16=> variable 1
+L16:
         LD    (05001H),HL
+L17:
         ;;test10.j(10)     byte c = b;
-        ;acc8= variable 0
+L18:
         LD    A,(05000H)
-        ;acc8=> variable 3
+L19:
         LD    (05003H),A
+L20:
         ;;test10.j(11)     byte d = c;
-        ;acc8= variable 3
+L21:
         LD    A,(05003H)
-        ;acc8=> variable 4
+L22:
         LD    (05004H),A
+L23:
         ;;test10.j(12)     b--;
-        ;decr8 variable 0
+L24:
         LD    HL,(05000H)
         DEC   (HL)
+L25:
         ;;test10.j(13)     write (c);
-        ;acc8= variable 3
+L26:
         LD    A,(05003H)
-        ;call writeAcc8
+L27:
         CALL  writeA
+L28:
         ;;test10.j(14)   } while (b>112);
-        ;acc8= variable 0
+L29:
         LD    A,(05000H)
-        ;acc8Comp constant 112
+L30:
         SUB   A,112
-        ;brgt 14
-        JP    Z,$+5
+L31:
+        JR    Z,$+5
         JP    C,L14
+L32:
         ;;test10.j(15) 
+L33:
         ;;test10.j(16)   int i = 12;
-        ;acc8= constant 12
+L34:
         LD    A,12
-        ;acc8=> variable 1
+L35:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L36:
         ;;test10.j(17)   int p = 12;
-        ;acc8= constant 12
+L37:
         LD    A,12
-        ;acc8=> variable 3
+L38:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
+L39:
         ;;test10.j(18)   b = 24;
-        ;acc8= constant 24
+L40:
         LD    A,24
-        ;acc8=> variable 0
+L41:
         LD    (05000H),A
+L42:
         ;;test10.j(19) 
+L43:
         ;;test10.j(20)   /************************/
+L44:
         ;;test10.j(21)   // stack8 - constant
+L45:
         ;;test10.j(22)   // stack8 - acc
+L46:
         ;;test10.j(23)   // stack8 - var
+L47:
         ;;test10.j(24)   // stack8 - stack8
+L48:
         ;;test10.j(25)   // stack8 - stack16
+L49:
         ;;test10.j(26)   //TODO
+L50:
         ;;test10.j(27) 
+L51:
         ;;test10.j(28)   /************************/
+L52:
         ;;test10.j(29)   // stack16 - constant
+L53:
         ;;test10.j(30)   // stack16 - acc
+L54:
         ;;test10.j(31)   // stack16 - var
+L55:
         ;;test10.j(32)   // stack16 - stack8
+L56:
         ;;test10.j(33)   // stack16 - stack16
+L57:
         ;;test10.j(34)   //TODO
+L58:
         ;;test10.j(35) 
+L59:
         ;;test10.j(36)   /************************/
+L60:
         ;;test10.j(37)   // var - stack16
+L61:
         ;;test10.j(38)   // byte - byte
+L62:
         ;;test10.j(39)   // byte - integer
+L63:
         ;;test10.j(40)   // integer - byte
+L64:
         ;;test10.j(41)   // integer - integer
+L65:
         ;;test10.j(42)   //TODO
+L66:
         ;;test10.j(43) 
+L67:
         ;;test10.j(44)   /************************/
+L68:
         ;;test10.j(45)   // var - stack8
+L69:
         ;;test10.j(46)   // byte - byte
+L70:
         ;;test10.j(47)   // byte - integer
+L71:
         ;;test10.j(48)   // integer - byte
+L72:
         ;;test10.j(49)   // integer - integer
+L73:
         ;;test10.j(50)   //TODO
+L74:
         ;;test10.j(51) 
+L75:
         ;;test10.j(52)   /************************/
+L76:
         ;;test10.j(53)   // var - var
+L77:
         ;;test10.j(54)   // byte - byte
+L78:
         ;;test10.j(55)   b=112;
-        ;acc8= constant 112
+L79:
         LD    A,112
-        ;acc8=> variable 0
+L80:
         LD    (05000H),A
+L81:
         ;;test10.j(56)   byte b2 = 111;
-        ;acc8= constant 111
+L82:
         LD    A,111
-        ;acc8=> variable 5
+L83:
         LD    (05005H),A
+L84:
         ;;test10.j(57)   do { write (b); b--; } while (b2 <= b);
-        ;acc8= variable 0
+L85:
         LD    A,(05000H)
-        ;call writeAcc8
+L86:
         CALL  writeA
-        ;decr8 variable 0
+L87:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= variable 5
+L88:
         LD    A,(05005H)
-        ;acc8Comp variable 0
+L89:
         LD    B,A
         LD    A,(05000H)
         SUB   A,B
-        ;brle 85
+L90:
         JP    Z,L85
+L91:
         ;;test10.j(58)   // byte - integer
+L92:
         ;;test10.j(59)   i=110;
-        ;acc8= constant 110
+L93:
         LD    A,110
-        ;acc8=> variable 1
+L94:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L95:
         ;;test10.j(60)   b2 = 109;
-        ;acc8= constant 109
+L96:
         LD    A,109
-        ;acc8=> variable 5
+L97:
         LD    (05005H),A
+L98:
         ;;test10.j(61)   do { write (i); i--; } while (b2 <= i);
-        ;acc16= variable 1
+L99:
         LD    HL,(05001H)
-        ;call writeAcc16
+L100:
         CALL  writeHL
-        ;decr16 variable 1
+L101:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc8= variable 5
+L102:
         LD    A,(05005H)
-        ;acc16= variable 1
+L103:
         LD    HL,(05001H)
-        ;acc8CompareAcc16
+L104:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 99
+L105:
         JP    Z,L99
+L106:
         ;;test10.j(62)   // integer - byte
+L107:
         ;;test10.j(63)   b=108;
-        ;acc8= constant 108
+L108:
         LD    A,108
-        ;acc8=> variable 0
+L109:
         LD    (05000H),A
+L110:
         ;;test10.j(64)   i=107;
-        ;acc8= constant 107
+L111:
         LD    A,107
-        ;acc8=> variable 1
+L112:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L113:
         ;;test10.j(65)   do { write (b); b--; } while (i <= b);
-        ;acc8= variable 0
+L114:
         LD    A,(05000H)
-        ;call writeAcc8
+L115:
         CALL  writeA
-        ;decr8 variable 0
+L116:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc16= variable 1
+L117:
         LD    HL,(05001H)
-        ;acc8= variable 0
+L118:
         LD    A,(05000H)
-        ;acc16CompareAcc8
+L119:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 114
+L120:
         JP    Z,L114
+L121:
         ;;test10.j(66)   // integer - integer
+L122:
         ;;test10.j(67)   i=106;
-        ;acc8= constant 106
+L123:
         LD    A,106
-        ;acc8=> variable 1
+L124:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L125:
         ;;test10.j(68)   int i2 = 105;
-        ;acc8= constant 105
+L126:
         LD    A,105
-        ;acc8=> variable 6
+L127:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
+L128:
         ;;test10.j(69)   do { write (i); i--; } while (i2 <= i);
-        ;acc16= variable 1
+L129:
         LD    HL,(05001H)
-        ;call writeAcc16
+L130:
         CALL  writeHL
-        ;decr16 variable 1
+L131:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 6
+L132:
         LD    HL,(05006H)
-        ;acc16Comp variable 1
+L133:
         LD    DE,(05001H)
         OR    A
         SBC   HL,DE
-        ;brle 129
+L134:
         JP    Z,L129
+L135:
         ;;test10.j(70) 
+L136:
         ;;test10.j(71)   /************************/
+L137:
         ;;test10.j(72)   // var - acc
+L138:
         ;;test10.j(73)   // byte - byte
+L139:
         ;;test10.j(74)   i=104;
-        ;acc8= constant 104
+L140:
         LD    A,104
-        ;acc8=> variable 1
+L141:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L142:
         ;;test10.j(75)   b=104;
-        ;acc8= constant 104
+L143:
         LD    A,104
-        ;acc8=> variable 0
+L144:
         LD    (05000H),A
+L145:
         ;;test10.j(76)   do { write (i); i--; b++; } while (b <= 105+0);
-        ;acc16= variable 1
+L146:
         LD    HL,(05001H)
-        ;call writeAcc16
+L147:
         CALL  writeHL
-        ;decr16 variable 1
+L148:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;incr8 variable 0
+L149:
         LD    HL,(05000H)
         INC   (HL)
-        ;acc8= constant 105
+L150:
         LD    A,105
-        ;acc8+ constant 0
+L151:
         ADD   A,0
-        ;acc8Comp variable 0
+L152:
         LD    B,A
         LD    A,(05000H)
         SUB   A,B
-        ;brge 146
+L153:
         JP    NC,L146
+L154:
         ;;test10.j(77)   // byte - integer
+L155:
         ;;test10.j(78)   //not relevant
+L156:
         ;;test10.j(79)   i=103;
-        ;acc8= constant 103
+L157:
         LD    A,103
-        ;acc8=> variable 1
+L158:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L159:
         ;;test10.j(80)   b=102;
-        ;acc8= constant 102
+L160:
         LD    A,102
-        ;acc8=> variable 0
+L161:
         LD    (05000H),A
+L162:
         ;;test10.j(81)   do { write (b); b--; i=i-2; } while (b <= i+0);
-        ;acc8= variable 0
+L163:
         LD    A,(05000H)
-        ;call writeAcc8
+L164:
         CALL  writeA
-        ;decr8 variable 0
+L165:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc16= variable 1
+L166:
         LD    HL,(05001H)
-        ;acc16- constant 2
+L167:
         LD    DE,2
         OR    A
         SBC   HL,DE
-        ;acc16=> variable 1
+L168:
         LD    (05001H),HL
-        ;acc16= variable 1
+L169:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L170:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= variable 0
+L171:
         LD    A,(05000H)
-        ;acc8CompareAcc16
+L172:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 163
+L173:
         JP    Z,L163
+L174:
         ;;test10.j(82)   // integer - byte
+L175:
         ;;test10.j(83)   i=100;
-        ;acc8= constant 100
+L176:
         LD    A,100
-        ;acc8=> variable 1
+L177:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L178:
         ;;test10.j(84)   do { write (b); b--; i++; } while (i <= 101+0);
-        ;acc8= variable 0
+L179:
         LD    A,(05000H)
-        ;call writeAcc8
+L180:
         CALL  writeA
-        ;decr8 variable 0
+L181:
         LD    HL,(05000H)
         DEC   (HL)
-        ;incr16 variable 1
+L182:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc8= constant 101
+L183:
         LD    A,101
-        ;acc8+ constant 0
+L184:
         ADD   A,0
-        ;acc16= variable 1
+L185:
         LD    HL,(05001H)
-        ;acc16CompareAcc8
+L186:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 179
+L187:
         JP    Z,L179
+L188:
         ;;test10.j(85)   // integer - integer
+L189:
         ;;test10.j(86)   i=1098;
-        ;acc16= constant 1098
+L190:
         LD    HL,1098
-        ;acc16=> variable 1
+L191:
         LD    (05001H),HL
+L192:
         ;;test10.j(87)   do { write (b); b--; i++; } while (i <= 1099+0);
-        ;acc8= variable 0
+L193:
         LD    A,(05000H)
-        ;call writeAcc8
+L194:
         CALL  writeA
-        ;decr8 variable 0
+L195:
         LD    HL,(05000H)
         DEC   (HL)
-        ;incr16 variable 1
+L196:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= constant 1099
+L197:
         LD    HL,1099
-        ;acc16+ constant 0
+L198:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp variable 1
+L199:
         LD    DE,(05001H)
         OR    A
         SBC   HL,DE
-        ;brge 193
+L200:
         JP    NC,L193
+L201:
         ;;test10.j(88) 
+L202:
         ;;test10.j(89)   /************************/
+L203:
         ;;test10.j(90)   // var - constant
+L204:
         ;;test10.j(91)   // byte - byte
+L205:
         ;;test10.j(92)   i=96;
-        ;acc8= constant 96
+L206:
         LD    A,96
-        ;acc8=> variable 1
+L207:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L208:
         ;;test10.j(93)   b=96;
-        ;acc8= constant 96
+L209:
         LD    A,96
-        ;acc8=> variable 0
+L210:
         LD    (05000H),A
+L211:
         ;;test10.j(94)   do { write (i); i--; b++; } while (b <= 97);
-        ;acc16= variable 1
+L212:
         LD    HL,(05001H)
-        ;call writeAcc16
+L213:
         CALL  writeHL
-        ;decr16 variable 1
+L214:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;incr8 variable 0
+L215:
         LD    HL,(05000H)
         INC   (HL)
-        ;acc8= variable 0
+L216:
         LD    A,(05000H)
-        ;acc8Comp constant 97
+L217:
         SUB   A,97
-        ;brle 212
+L218:
         JP    Z,L212
+L219:
         ;;test10.j(95)   // byte - integer
+L220:
         ;;test10.j(96)   //not relevant
+L221:
         ;;test10.j(97)   write(94);
-        ;acc8= constant 94
+L222:
         LD    A,94
-        ;call writeAcc8
+L223:
         CALL  writeA
+L224:
         ;;test10.j(98)   write(93);
-        ;acc8= constant 93
+L225:
         LD    A,93
-        ;call writeAcc8
+L226:
         CALL  writeA
+L227:
         ;;test10.j(99)   // integer - byte
+L228:
         ;;test10.j(100)   i=92;
-        ;acc8= constant 92
+L229:
         LD    A,92
-        ;acc8=> variable 1
+L230:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L231:
         ;;test10.j(101)   b=92;
-        ;acc8= constant 92
+L232:
         LD    A,92
-        ;acc8=> variable 0
+L233:
         LD    (05000H),A
+L234:
         ;;test10.j(102)   do { write (b); b--; i++; } while (i <= 93);
-        ;acc8= variable 0
+L235:
         LD    A,(05000H)
-        ;call writeAcc8
+L236:
         CALL  writeA
-        ;decr8 variable 0
+L237:
         LD    HL,(05000H)
         DEC   (HL)
-        ;incr16 variable 1
+L238:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L239:
         LD    HL,(05001H)
-        ;acc8= constant 93
+L240:
         LD    A,93
-        ;acc16CompareAcc8
+L241:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 235
+L242:
         JP    Z,L235
+L243:
         ;;test10.j(103)   // integer - integer
+L244:
         ;;test10.j(104)   i=1090;
-        ;acc16= constant 1090
+L245:
         LD    HL,1090
-        ;acc16=> variable 1
+L246:
         LD    (05001H),HL
+L247:
         ;;test10.j(105)   do { write (b); b--; i++; } while (i <= 1091);
-        ;acc8= variable 0
+L248:
         LD    A,(05000H)
-        ;call writeAcc8
+L249:
         CALL  writeA
-        ;decr8 variable 0
+L250:
         LD    HL,(05000H)
         DEC   (HL)
-        ;incr16 variable 1
+L251:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L252:
         LD    HL,(05001H)
-        ;acc16Comp constant 1091
+L253:
         LD    DE,1091
         OR    A
         SBC   HL,DE
-        ;brle 248
+L254:
         JP    Z,L248
+L255:
         ;;test10.j(106) 
+L256:
         ;;test10.j(107)   /************************/
+L257:
         ;;test10.j(108)   // acc - stack8
+L258:
         ;;test10.j(109)   // byte - byte
+L259:
         ;;test10.j(110)   //TODO
+L260:
         ;;test10.j(111)   write(88);
-        ;acc8= constant 88
+L261:
         LD    A,88
-        ;call writeAcc8
+L262:
         CALL  writeA
+L263:
         ;;test10.j(112)   write(87);
-        ;acc8= constant 87
+L264:
         LD    A,87
-        ;call writeAcc8
+L265:
         CALL  writeA
+L266:
         ;;test10.j(113)   // byte - integer
+L267:
         ;;test10.j(114)   //TODO
+L268:
         ;;test10.j(115)   write(86);
-        ;acc8= constant 86
+L269:
         LD    A,86
-        ;call writeAcc8
+L270:
         CALL  writeA
+L271:
         ;;test10.j(116)   write(85);
-        ;acc8= constant 85
+L272:
         LD    A,85
-        ;call writeAcc8
+L273:
         CALL  writeA
+L274:
         ;;test10.j(117)   // integer - byte
+L275:
         ;;test10.j(118)   //TODO
+L276:
         ;;test10.j(119)   write(84);
-        ;acc8= constant 84
+L277:
         LD    A,84
-        ;call writeAcc8
+L278:
         CALL  writeA
+L279:
         ;;test10.j(120)   write(83);
-        ;acc8= constant 83
+L280:
         LD    A,83
-        ;call writeAcc8
+L281:
         CALL  writeA
+L282:
         ;;test10.j(121)   // integer - integer
+L283:
         ;;test10.j(122)   //TODO
+L284:
         ;;test10.j(123)   write(82);
-        ;acc8= constant 82
+L285:
         LD    A,82
-        ;call writeAcc8
+L286:
         CALL  writeA
+L287:
         ;;test10.j(124)   write(81);
-        ;acc8= constant 81
+L288:
         LD    A,81
-        ;call writeAcc8
+L289:
         CALL  writeA
+L290:
         ;;test10.j(125) 
+L291:
         ;;test10.j(126)   /************************/
+L292:
         ;;test10.j(127)   // acc - stack16
+L293:
         ;;test10.j(128)   // byte - byte
+L294:
         ;;test10.j(129)   //TODO
+L295:
         ;;test10.j(130)   write(80);
-        ;acc8= constant 80
+L296:
         LD    A,80
-        ;call writeAcc8
+L297:
         CALL  writeA
+L298:
         ;;test10.j(131)   write(79);
-        ;acc8= constant 79
+L299:
         LD    A,79
-        ;call writeAcc8
+L300:
         CALL  writeA
+L301:
         ;;test10.j(132)   // byte - integer
+L302:
         ;;test10.j(133)   //TODO
+L303:
         ;;test10.j(134)   write(78);
-        ;acc8= constant 78
+L304:
         LD    A,78
-        ;call writeAcc8
+L305:
         CALL  writeA
+L306:
         ;;test10.j(135)   write(77);
-        ;acc8= constant 77
+L307:
         LD    A,77
-        ;call writeAcc8
+L308:
         CALL  writeA
+L309:
         ;;test10.j(136)   // integer - byte
+L310:
         ;;test10.j(137)   //TODO
+L311:
         ;;test10.j(138)   write(76);
-        ;acc8= constant 76
+L312:
         LD    A,76
-        ;call writeAcc8
+L313:
         CALL  writeA
+L314:
         ;;test10.j(139)   write(75);
-        ;acc8= constant 75
+L315:
         LD    A,75
-        ;call writeAcc8
+L316:
         CALL  writeA
+L317:
         ;;test10.j(140)   // integer - integer
+L318:
         ;;test10.j(141)   //TODO
+L319:
         ;;test10.j(142)   write(74);
-        ;acc8= constant 74
+L320:
         LD    A,74
-        ;call writeAcc8
+L321:
         CALL  writeA
+L322:
         ;;test10.j(143)   write(73);
-        ;acc8= constant 73
+L323:
         LD    A,73
-        ;call writeAcc8
+L324:
         CALL  writeA
+L325:
         ;;test10.j(144) 
+L326:
         ;;test10.j(145)   /************************/
+L327:
         ;;test10.j(146)   // acc - var
+L328:
         ;;test10.j(147)   // byte - byte
+L329:
         ;;test10.j(148)   b=72;
-        ;acc8= constant 72
+L330:
         LD    A,72
-        ;acc8=> variable 0
+L331:
         LD    (05000H),A
+L332:
         ;;test10.j(149)   do { write (b); b--; } while (71+0 <= b);
-        ;acc8= variable 0
+L333:
         LD    A,(05000H)
-        ;call writeAcc8
+L334:
         CALL  writeA
-        ;decr8 variable 0
+L335:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= constant 71
+L336:
         LD    A,71
-        ;acc8+ constant 0
+L337:
         ADD   A,0
-        ;acc8Comp variable 0
+L338:
         LD    B,A
         LD    A,(05000H)
         SUB   A,B
-        ;brle 333
+L339:
         JP    Z,L333
+L340:
         ;;test10.j(150)   // byte - integer
+L341:
         ;;test10.j(151)   i=70;
-        ;acc8= constant 70
+L342:
         LD    A,70
-        ;acc8=> variable 1
+L343:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L344:
         ;;test10.j(152)   do { write (i); i--; } while (69+0 <= i);
-        ;acc16= variable 1
+L345:
         LD    HL,(05001H)
-        ;call writeAcc16
+L346:
         CALL  writeHL
-        ;decr16 variable 1
+L347:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc8= constant 69
+L348:
         LD    A,69
-        ;acc8+ constant 0
+L349:
         ADD   A,0
-        ;acc16= variable 1
+L350:
         LD    HL,(05001H)
-        ;acc8CompareAcc16
+L351:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 345
+L352:
         JP    Z,L345
+L353:
         ;;test10.j(153)   // integer - byte
+L354:
         ;;test10.j(154)   i=67;
-        ;acc8= constant 67
+L355:
         LD    A,67
-        ;acc8=> variable 1
+L356:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L357:
         ;;test10.j(155)   b=68;
-        ;acc8= constant 68
+L358:
         LD    A,68
-        ;acc8=> variable 0
+L359:
         LD    (05000H),A
+L360:
         ;;test10.j(156)   do { write (b); b--; } while (i+0 <= b);
-        ;acc8= variable 0
+L361:
         LD    A,(05000H)
-        ;call writeAcc8
+L362:
         CALL  writeA
-        ;decr8 variable 0
+L363:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc16= variable 1
+L364:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L365:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= variable 0
+L366:
         LD    A,(05000H)
-        ;acc16CompareAcc8
+L367:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 361
+L368:
         JP    Z,L361
+L369:
         ;;test10.j(157)   // integer - integer
+L370:
         ;;test10.j(158)   i=1066;
-        ;acc16= constant 1066
+L371:
         LD    HL,1066
-        ;acc16=> variable 1
+L372:
         LD    (05001H),HL
+L373:
         ;;test10.j(159)   do { write (b); b--; i--; } while (1000+65 <= i);
-        ;acc8= variable 0
+L374:
         LD    A,(05000H)
-        ;call writeAcc8
+L375:
         CALL  writeA
-        ;decr8 variable 0
+L376:
         LD    HL,(05000H)
         DEC   (HL)
-        ;decr16 variable 1
+L377:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= constant 1000
+L378:
         LD    HL,1000
-        ;acc16+ constant 65
+L379:
         LD    DE,65
         ADD   HL,DE
-        ;acc16Comp variable 1
+L380:
         LD    DE,(05001H)
         OR    A
         SBC   HL,DE
-        ;brle 374
+L381:
         JP    Z,L374
+L382:
         ;;test10.j(160) 
+L383:
         ;;test10.j(161)   /************************/
+L384:
         ;;test10.j(162)   // acc - acc
+L385:
         ;;test10.j(163)   // byte - byte
+L386:
         ;;test10.j(164)   b=64;
-        ;acc8= constant 64
+L387:
         LD    A,64
-        ;acc8=> variable 0
+L388:
         LD    (05000H),A
+L389:
         ;;test10.j(165)   do { write (b); b--; } while (63+0 <= b+0);
-        ;acc8= variable 0
+L390:
         LD    A,(05000H)
-        ;call writeAcc8
+L391:
         CALL  writeA
-        ;decr8 variable 0
+L392:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= constant 63
+L393:
         LD    A,63
-        ;acc8+ constant 0
+L394:
         ADD   A,0
-        ;<acc8
+L395:
         PUSH AF
-        ;acc8= variable 0
+L396:
         LD    A,(05000H)
-        ;acc8+ constant 0
+L397:
         ADD   A,0
-        ;revAcc8Comp unstack8
+L398:
         POP   BC
         SUB   A,B
-        ;brge 390
+L399:
         JP    NC,L390
+L400:
         ;;test10.j(166)   // byte - integer
+L401:
         ;;test10.j(167)   i=62;
-        ;acc8= constant 62
+L402:
         LD    A,62
-        ;acc8=> variable 1
+L403:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L404:
         ;;test10.j(168)   do { write (i); i--; } while (61+0 <= i+0);
-        ;acc16= variable 1
+L405:
         LD    HL,(05001H)
-        ;call writeAcc16
+L406:
         CALL  writeHL
-        ;decr16 variable 1
+L407:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc8= constant 61
+L408:
         LD    A,61
-        ;acc8+ constant 0
+L409:
         ADD   A,0
-        ;<acc8
+L410:
         PUSH AF
-        ;acc16= variable 1
+L411:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L412:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= unstack8
+L413:
         POP  AF
-        ;acc8CompareAcc16
+L414:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 405
+L415:
         JP    Z,L405
+L416:
         ;;test10.j(169)   // integer - byte
+L417:
         ;;test10.j(170)   i=59;
-        ;acc8= constant 59
+L418:
         LD    A,59
-        ;acc8=> variable 1
+L419:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L420:
         ;;test10.j(171)   b=60;
-        ;acc8= constant 60
+L421:
         LD    A,60
-        ;acc8=> variable 0
+L422:
         LD    (05000H),A
+L423:
         ;;test10.j(172)   do { write (b); b--; } while (i+0 <= b+0);
-        ;acc8= variable 0
+L424:
         LD    A,(05000H)
-        ;call writeAcc8
+L425:
         CALL  writeA
-        ;decr8 variable 0
+L426:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc16= variable 1
+L427:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L428:
         LD    DE,0
         ADD   HL,DE
-        ;<acc16
+L429:
         PUSH HL
-        ;acc8= variable 0
+L430:
         LD    A,(05000H)
-        ;acc8+ constant 0
+L431:
         ADD   A,0
-        ;acc16= unstack16
+L432:
         POP  HL
-        ;acc16CompareAcc8
+L433:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 424
+L434:
         JP    Z,L424
+L435:
         ;;test10.j(173)   // integer - integer
+L436:
         ;;test10.j(174)   i=1058;
-        ;acc16= constant 1058
+L437:
         LD    HL,1058
-        ;acc16=> variable 1
+L438:
         LD    (05001H),HL
+L439:
         ;;test10.j(175)   do { write (b); b--; i--; } while (1000+57 <= i+0);
-        ;acc8= variable 0
+L440:
         LD    A,(05000H)
-        ;call writeAcc8
+L441:
         CALL  writeA
-        ;decr8 variable 0
+L442:
         LD    HL,(05000H)
         DEC   (HL)
-        ;decr16 variable 1
+L443:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= constant 1000
+L444:
         LD    HL,1000
-        ;acc16+ constant 57
+L445:
         LD    DE,57
         ADD   HL,DE
-        ;<acc16
+L446:
         PUSH HL
-        ;acc16= variable 1
+L447:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L448:
         LD    DE,0
         ADD   HL,DE
-        ;revAcc16Comp unstack16
+L449:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brge 440
+L450:
         JP    NC,L440
+L451:
         ;;test10.j(176) 
+L452:
         ;;test10.j(177)   /************************/
+L453:
         ;;test10.j(178)   // acc - constant
+L454:
         ;;test10.j(179)   // byte - byte
+L455:
         ;;test10.j(180)   i=56;
-        ;acc8= constant 56
+L456:
         LD    A,56
-        ;acc8=> variable 1
+L457:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L458:
         ;;test10.j(181)   b=56;
-        ;acc8= constant 56
+L459:
         LD    A,56
-        ;acc8=> variable 0
+L460:
         LD    (05000H),A
+L461:
         ;;test10.j(182)   do { write (i); i--; b++; } while (b+0 <= 57);
-        ;acc16= variable 1
+L462:
         LD    HL,(05001H)
-        ;call writeAcc16
+L463:
         CALL  writeHL
-        ;decr16 variable 1
+L464:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;incr8 variable 0
+L465:
         LD    HL,(05000H)
         INC   (HL)
-        ;acc8= variable 0
+L466:
         LD    A,(05000H)
-        ;acc8+ constant 0
+L467:
         ADD   A,0
-        ;acc8Comp constant 57
+L468:
         SUB   A,57
-        ;brle 462
+L469:
         JP    Z,L462
+L470:
         ;;test10.j(183)   // byte - integer
+L471:
         ;;test10.j(184)   //not relevant
+L472:
         ;;test10.j(185)   // integer - byte
+L473:
         ;;test10.j(186)   i=54;
-        ;acc8= constant 54
+L474:
         LD    A,54
-        ;acc8=> variable 1
+L475:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L476:
         ;;test10.j(187)   b=54;
-        ;acc8= constant 54
+L477:
         LD    A,54
-        ;acc8=> variable 0
+L478:
         LD    (05000H),A
+L479:
         ;;test10.j(188)   do { write (b); b--; i++; } while (i+0 <= 55);
-        ;acc8= variable 0
+L480:
         LD    A,(05000H)
-        ;call writeAcc8
+L481:
         CALL  writeA
-        ;decr8 variable 0
+L482:
         LD    HL,(05000H)
         DEC   (HL)
-        ;incr16 variable 1
+L483:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L484:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L485:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= constant 55
+L486:
         LD    A,55
-        ;acc16CompareAcc8
+L487:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 480
+L488:
         JP    Z,L480
+L489:
         ;;test10.j(189)   i=1052;
-        ;acc16= constant 1052
+L490:
         LD    HL,1052
-        ;acc16=> variable 1
+L491:
         LD    (05001H),HL
+L492:
         ;;test10.j(190)   // integer - integer
+L493:
         ;;test10.j(191)   do { write (b); b--; i++; } while (i+0 <= 1053);
-        ;acc8= variable 0
+L494:
         LD    A,(05000H)
-        ;call writeAcc8
+L495:
         CALL  writeA
-        ;decr8 variable 0
+L496:
         LD    HL,(05000H)
         DEC   (HL)
-        ;incr16 variable 1
+L497:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L498:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L499:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp constant 1053
+L500:
         LD    DE,1053
         OR    A
         SBC   HL,DE
-        ;brle 494
+L501:
         JP    Z,L494
+L502:
         ;;test10.j(192) 
+L503:
         ;;test10.j(193)   /************************/
+L504:
         ;;test10.j(194)   // constant - stack8
+L505:
         ;;test10.j(195)   // byte - byte
+L506:
         ;;test10.j(196)   //TODO
+L507:
         ;;test10.j(197)   write(50);
-        ;acc8= constant 50
+L508:
         LD    A,50
-        ;call writeAcc8
+L509:
         CALL  writeA
+L510:
         ;;test10.j(198)   // constant - stack8
+L511:
         ;;test10.j(199)   // byte - integer
+L512:
         ;;test10.j(200)   //TODO
+L513:
         ;;test10.j(201)   write(49);
-        ;acc8= constant 49
+L514:
         LD    A,49
-        ;call writeAcc8
+L515:
         CALL  writeA
+L516:
         ;;test10.j(202)   // constant - stack8
+L517:
         ;;test10.j(203)   // integer - byte
+L518:
         ;;test10.j(204)   //TODO
+L519:
         ;;test10.j(205)   write(48);
-        ;acc8= constant 48
+L520:
         LD    A,48
-        ;call writeAcc8
+L521:
         CALL  writeA
+L522:
         ;;test10.j(206)   // constant - stack88
+L523:
         ;;test10.j(207)   // integer - integer
+L524:
         ;;test10.j(208)   //TODO
+L525:
         ;;test10.j(209)   write(47);
-        ;acc8= constant 47
+L526:
         LD    A,47
-        ;call writeAcc8
+L527:
         CALL  writeA
+L528:
         ;;test10.j(210) 
+L529:
         ;;test10.j(211)   /************************/
+L530:
         ;;test10.j(212)   // constant - stack16
+L531:
         ;;test10.j(213)   // byte - byte
+L532:
         ;;test10.j(214)   //TODO
+L533:
         ;;test10.j(215)   write(46);
-        ;acc8= constant 46
+L534:
         LD    A,46
-        ;call writeAcc8
+L535:
         CALL  writeA
+L536:
         ;;test10.j(216)   // constant - stack16
+L537:
         ;;test10.j(217)   // byte - integer
+L538:
         ;;test10.j(218)   //TODO
+L539:
         ;;test10.j(219)   write(45);
-        ;acc8= constant 45
+L540:
         LD    A,45
-        ;call writeAcc8
+L541:
         CALL  writeA
+L542:
         ;;test10.j(220)   // constant - stack16
+L543:
         ;;test10.j(221)   // integer - byte
+L544:
         ;;test10.j(222)   //TODO
+L545:
         ;;test10.j(223)   write(44);
-        ;acc8= constant 44
+L546:
         LD    A,44
-        ;call writeAcc8
+L547:
         CALL  writeA
+L548:
         ;;test10.j(224)   // constant - stack16
+L549:
         ;;test10.j(225)   // integer - integer
+L550:
         ;;test10.j(226)   //TODO
+L551:
         ;;test10.j(227)   write(43);
-        ;acc8= constant 43
+L552:
         LD    A,43
-        ;call writeAcc8
+L553:
         CALL  writeA
+L554:
         ;;test10.j(228) 
+L555:
         ;;test10.j(229)   /************************/
+L556:
         ;;test10.j(230)   // constant - var
+L557:
         ;;test10.j(231)   // byte - byte
+L558:
         ;;test10.j(232)   b=42;
-        ;acc8= constant 42
+L559:
         LD    A,42
-        ;acc8=> variable 0
+L560:
         LD    (05000H),A
+L561:
         ;;test10.j(233)   do { write (b); b--; } while (41 <= b);
-        ;acc8= variable 0
+L562:
         LD    A,(05000H)
-        ;call writeAcc8
+L563:
         CALL  writeA
-        ;decr8 variable 0
+L564:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= variable 0
+L565:
         LD    A,(05000H)
-        ;acc8Comp constant 41
+L566:
         SUB   A,41
-        ;brge 562
+L567:
         JP    NC,L562
+L568:
         ;;test10.j(234) 
+L569:
         ;;test10.j(235)   // constant - var
+L570:
         ;;test10.j(236)   // byte - integer
+L571:
         ;;test10.j(237)   i=40;
-        ;acc8= constant 40
+L572:
         LD    A,40
-        ;acc8=> variable 1
+L573:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L574:
         ;;test10.j(238)   do { write (i); i--; } while (39 <= i);
-        ;acc16= variable 1
+L575:
         LD    HL,(05001H)
-        ;call writeAcc16
+L576:
         CALL  writeHL
-        ;decr16 variable 1
+L577:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L578:
         LD    HL,(05001H)
-        ;acc8= constant 39
+L579:
         LD    A,39
-        ;acc8CompareAcc16
+L580:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 575
+L581:
         JP    Z,L575
+L582:
         ;;test10.j(239) 
+L583:
         ;;test10.j(240)   // constant - var
+L584:
         ;;test10.j(241)   // integer - byte
+L585:
         ;;test10.j(242)   // not relevant
+L586:
         ;;test10.j(243) 
+L587:
         ;;test10.j(244)   // constant - var
+L588:
         ;;test10.j(245)   // integer - integer
+L589:
         ;;test10.j(246)   i=1038;
-        ;acc16= constant 1038
+L590:
         LD    HL,1038
-        ;acc16=> variable 1
+L591:
         LD    (05001H),HL
+L592:
         ;;test10.j(247)   b=38;
-        ;acc8= constant 38
+L593:
         LD    A,38
-        ;acc8=> variable 0
+L594:
         LD    (05000H),A
+L595:
         ;;test10.j(248)   do { write (b); b--; i--; } while (1037 <= i);
-        ;acc8= variable 0
+L596:
         LD    A,(05000H)
-        ;call writeAcc8
+L597:
         CALL  writeA
-        ;decr8 variable 0
+L598:
         LD    HL,(05000H)
         DEC   (HL)
-        ;decr16 variable 1
+L599:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L600:
         LD    HL,(05001H)
-        ;acc16Comp constant 1037
+L601:
         LD    DE,1037
         OR    A
         SBC   HL,DE
-        ;brge 596
+L602:
         JP    NC,L596
+L603:
         ;;test10.j(249) 
+L604:
         ;;test10.j(250)   /************************/
+L605:
         ;;test10.j(251)   // constant - acc
+L606:
         ;;test10.j(252)   // byte - byte
+L607:
         ;;test10.j(253)   b=36;
-        ;acc8= constant 36
+L608:
         LD    A,36
-        ;acc8=> variable 0
+L609:
         LD    (05000H),A
+L610:
         ;;test10.j(254)   do { write (b); b--; } while (135 == b+100);
-        ;acc8= variable 0
+L611:
         LD    A,(05000H)
-        ;call writeAcc8
+L612:
         CALL  writeA
-        ;decr8 variable 0
+L613:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= variable 0
+L614:
         LD    A,(05000H)
-        ;acc8+ constant 100
+L615:
         ADD   A,100
-        ;acc8Comp constant 135
+L616:
         SUB   A,135
-        ;breq 611
+L617:
         JP    Z,L611
+L618:
         ;;test10.j(255)   do { write (b); b--; } while (132 != b+100);
-        ;acc8= variable 0
+L619:
         LD    A,(05000H)
-        ;call writeAcc8
+L620:
         CALL  writeA
-        ;decr8 variable 0
+L621:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= variable 0
+L622:
         LD    A,(05000H)
-        ;acc8+ constant 100
+L623:
         ADD   A,100
-        ;acc8Comp constant 132
+L624:
         SUB   A,132
-        ;brne 619
+L625:
         JP    NZ,L619
+L626:
         ;;test10.j(256)   p=32;
-        ;acc8= constant 32
+L627:
         LD    A,32
-        ;acc8=> variable 3
+L628:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
+L629:
         ;;test10.j(257)   do { write (p); p--; b++; } while (134 > b+100);
-        ;acc16= variable 3
+L630:
         LD    HL,(05003H)
-        ;call writeAcc16
+L631:
         CALL  writeHL
-        ;decr16 variable 3
+L632:
         LD    HL,(05003H)
         DEC   HL
         LD    (05003H),HL
-        ;incr8 variable 0
+L633:
         LD    HL,(05000H)
         INC   (HL)
-        ;acc8= variable 0
+L634:
         LD    A,(05000H)
-        ;acc8+ constant 100
+L635:
         ADD   A,100
-        ;acc8Comp constant 134
+L636:
         SUB   A,134
-        ;brlt 630
+L637:
         JP    C,L630
+L638:
         ;;test10.j(258)   do { write (p); p--; b++; } while (135 >= b+100);
-        ;acc16= variable 3
+L639:
         LD    HL,(05003H)
-        ;call writeAcc16
+L640:
         CALL  writeHL
-        ;decr16 variable 3
+L641:
         LD    HL,(05003H)
         DEC   HL
         LD    (05003H),HL
-        ;incr8 variable 0
+L642:
         LD    HL,(05000H)
         INC   (HL)
-        ;acc8= variable 0
+L643:
         LD    A,(05000H)
-        ;acc8+ constant 100
+L644:
         ADD   A,100
-        ;acc8Comp constant 135
+L645:
         SUB   A,135
-        ;brle 639
+L646:
         JP    Z,L639
+L647:
         ;;test10.j(259)   b=28;
-        ;acc8= constant 28
+L648:
         LD    A,28
-        ;acc8=> variable 0
+L649:
         LD    (05000H),A
+L650:
         ;;test10.j(260)   do { write (b); b--; } while (126 <  b+100);
-        ;acc8= variable 0
+L651:
         LD    A,(05000H)
-        ;call writeAcc8
+L652:
         CALL  writeA
-        ;decr8 variable 0
+L653:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= variable 0
+L654:
         LD    A,(05000H)
-        ;acc8+ constant 100
+L655:
         ADD   A,100
-        ;acc8Comp constant 126
+L656:
         SUB   A,126
-        ;brgt 651
-        JP    Z,$+5
+L657:
+        JR    Z,$+5
         JP    C,L651
+L658:
         ;;test10.j(261)   do { write (b); b--; } while (125 <= b+100);
-        ;acc8= variable 0
+L659:
         LD    A,(05000H)
-        ;call writeAcc8
+L660:
         CALL  writeA
-        ;decr8 variable 0
+L661:
         LD    HL,(05000H)
         DEC   (HL)
-        ;acc8= variable 0
+L662:
         LD    A,(05000H)
-        ;acc8+ constant 100
+L663:
         ADD   A,100
-        ;acc8Comp constant 125
+L664:
         SUB   A,125
-        ;brge 659
+L665:
         JP    NC,L659
+L666:
         ;;test10.j(262)   // constant - acc
+L667:
         ;;test10.j(263)   // byte - integer
+L668:
         ;;test10.j(264)   i=24;
-        ;acc8= constant 24
+L669:
         LD    A,24
-        ;acc8=> variable 1
+L670:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L671:
         ;;test10.j(265)   b=23;
-        ;acc8= constant 23
+L672:
         LD    A,23
-        ;acc8=> variable 0
+L673:
         LD    (05000H),A
+L674:
         ;;test10.j(266)   do { write (i); i--; } while (23 == i+0);
-        ;acc16= variable 1
+L675:
         LD    HL,(05001H)
-        ;call writeAcc16
+L676:
         CALL  writeHL
-        ;decr16 variable 1
+L677:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L678:
         LD    HL,(05001H)
-        ;acc16+ constant 0
+L679:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= constant 23
+L680:
         LD    A,23
-        ;acc8CompareAcc16
+L681:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;breq 675
+L682:
         JP    Z,L675
+L683:
         ;;test10.j(267)   do { write (i); i--; } while (120 != i+100);
-        ;acc16= variable 1
+L684:
         LD    HL,(05001H)
-        ;call writeAcc16
+L685:
         CALL  writeHL
-        ;decr16 variable 1
+L686:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L687:
         LD    HL,(05001H)
-        ;acc16+ constant 100
+L688:
         LD    DE,100
         ADD   HL,DE
-        ;acc8= constant 120
+L689:
         LD    A,120
-        ;acc8CompareAcc16
+L690:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brne 684
+L691:
         JP    NZ,L684
+L692:
         ;;test10.j(268)   p=20;
-        ;acc8= constant 20
+L693:
         LD    A,20
-        ;acc8=> variable 3
+L694:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
+L695:
         ;;test10.j(269)   do { write (p); p--; i++; } while (122 > i+100);
-        ;acc16= variable 3
+L696:
         LD    HL,(05003H)
-        ;call writeAcc16
+L697:
         CALL  writeHL
-        ;decr16 variable 3
+L698:
         LD    HL,(05003H)
         DEC   HL
         LD    (05003H),HL
-        ;incr16 variable 1
+L699:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L700:
         LD    HL,(05001H)
-        ;acc16+ constant 100
+L701:
         LD    DE,100
         ADD   HL,DE
-        ;acc8= constant 122
+L702:
         LD    A,122
-        ;acc8CompareAcc16
+L703:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 696
-        JP    Z,$+5
+L704:
+        JR    Z,$+5
         JP    C,L696
+L705:
         ;;test10.j(270)   do { write (p); p--; i++; } while (123 >= i+100);
-        ;acc16= variable 3
+L706:
         LD    HL,(05003H)
-        ;call writeAcc16
+L707:
         CALL  writeHL
-        ;decr16 variable 3
+L708:
         LD    HL,(05003H)
         DEC   HL
         LD    (05003H),HL
-        ;incr16 variable 1
+L709:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L710:
         LD    HL,(05001H)
-        ;acc16+ constant 100
+L711:
         LD    DE,100
         ADD   HL,DE
-        ;acc8= constant 123
+L712:
         LD    A,123
-        ;acc8CompareAcc16
+L713:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 706
+L714:
         JP    NC,L706
+L715:
         ;;test10.j(271)   i=16;
-        ;acc8= constant 16
+L716:
         LD    A,16
-        ;acc8=> variable 1
+L717:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L718:
         ;;test10.j(272)   do { write (i); i--; } while (114 <  i+100);
-        ;acc16= variable 1
+L719:
         LD    HL,(05001H)
-        ;call writeAcc16
+L720:
         CALL  writeHL
-        ;decr16 variable 1
+L721:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L722:
         LD    HL,(05001H)
-        ;acc16+ constant 100
+L723:
         LD    DE,100
         ADD   HL,DE
-        ;acc8= constant 114
+L724:
         LD    A,114
-        ;acc8CompareAcc16
+L725:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 719
+L726:
         JP    C,L719
+L727:
         ;;test10.j(273)   do { write (i); i--; } while (113 <= i+100);
-        ;acc16= variable 1
+L728:
         LD    HL,(05001H)
-        ;call writeAcc16
+L729:
         CALL  writeHL
-        ;decr16 variable 1
+L730:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L731:
         LD    HL,(05001H)
-        ;acc16+ constant 100
+L732:
         LD    DE,100
         ADD   HL,DE
-        ;acc8= constant 113
+L733:
         LD    A,113
-        ;acc8CompareAcc16
+L734:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 728
+L735:
         JP    Z,L728
+L736:
         ;;test10.j(274)   // constant - acc
+L737:
         ;;test10.j(275)   // integer - byte
+L738:
         ;;test10.j(276)   // not relevant
+L739:
         ;;test10.j(277) 
+L740:
         ;;test10.j(278)   // constant - acc
+L741:
         ;;test10.j(279)   // integer - integer
+L742:
         ;;test10.j(280)   i=12;
-        ;acc8= constant 12
+L743:
         LD    A,12
-        ;acc8=> variable 1
+L744:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L745:
         ;;test10.j(281)   do { write (i); i--; } while (1011 == i+1000);
-        ;acc16= variable 1
+L746:
         LD    HL,(05001H)
-        ;call writeAcc16
+L747:
         CALL  writeHL
-        ;decr16 variable 1
+L748:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L749:
         LD    HL,(05001H)
-        ;acc16+ constant 1000
+L750:
         LD    DE,1000
         ADD   HL,DE
-        ;acc16Comp constant 1011
+L751:
         LD    DE,1011
         OR    A
         SBC   HL,DE
-        ;breq 746
+L752:
         JP    Z,L746
+L753:
         ;;test10.j(282)   //i=10
+L754:
         ;;test10.j(283)   do { write (i); i--; } while (1008 != i+1000);
-        ;acc16= variable 1
+L755:
         LD    HL,(05001H)
-        ;call writeAcc16
+L756:
         CALL  writeHL
-        ;decr16 variable 1
+L757:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L758:
         LD    HL,(05001H)
-        ;acc16+ constant 1000
+L759:
         LD    DE,1000
         ADD   HL,DE
-        ;acc16Comp constant 1008
+L760:
         LD    DE,1008
         OR    A
         SBC   HL,DE
-        ;brne 755
+L761:
         JP    NZ,L755
+L762:
         ;;test10.j(284)   //i=8
+L763:
         ;;test10.j(285)   p=8;
-        ;acc8= constant 8
+L764:
         LD    A,8
-        ;acc8=> variable 3
+L765:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
+L766:
         ;;test10.j(286)   do { write (p); p--; i++; } while (1010 > i+1000);
-        ;acc16= variable 3
+L767:
         LD    HL,(05003H)
-        ;call writeAcc16
+L768:
         CALL  writeHL
-        ;decr16 variable 3
+L769:
         LD    HL,(05003H)
         DEC   HL
         LD    (05003H),HL
-        ;incr16 variable 1
+L770:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L771:
         LD    HL,(05001H)
-        ;acc16+ constant 1000
+L772:
         LD    DE,1000
         ADD   HL,DE
-        ;acc16Comp constant 1010
+L773:
         LD    DE,1010
         OR    A
         SBC   HL,DE
-        ;brlt 767
+L774:
         JP    C,L767
+L775:
         ;;test10.j(287)   //i=10; p=6
+L776:
         ;;test10.j(288)   do { write (p); p--; i++; } while (1011 >= i+1000);
-        ;acc16= variable 3
+L777:
         LD    HL,(05003H)
-        ;call writeAcc16
+L778:
         CALL  writeHL
-        ;decr16 variable 3
+L779:
         LD    HL,(05003H)
         DEC   HL
         LD    (05003H),HL
-        ;incr16 variable 1
+L780:
         LD    HL,(05001H)
         INC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L781:
         LD    HL,(05001H)
-        ;acc16+ constant 1000
+L782:
         LD    DE,1000
         ADD   HL,DE
-        ;acc16Comp constant 1011
+L783:
         LD    DE,1011
         OR    A
         SBC   HL,DE
-        ;brle 777
+L784:
         JP    Z,L777
+L785:
         ;;test10.j(289)   i=4;
-        ;acc8= constant 4
+L786:
         LD    A,4
-        ;acc8=> variable 1
+L787:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L788:
         ;;test10.j(290)   do { write (i); i--; } while (1002 <  i+1000);
-        ;acc16= variable 1
+L789:
         LD    HL,(05001H)
-        ;call writeAcc16
+L790:
         CALL  writeHL
-        ;decr16 variable 1
+L791:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L792:
         LD    HL,(05001H)
-        ;acc16+ constant 1000
+L793:
         LD    DE,1000
         ADD   HL,DE
-        ;acc16Comp constant 1002
+L794:
         LD    DE,1002
         OR    A
         SBC   HL,DE
-        ;brgt 789
-        JP    Z,$+5
+L795:
+        JR    Z,$+5
         JP    C,L789
+L796:
         ;;test10.j(291)   //i=2;
+L797:
         ;;test10.j(292)   do { write (i); i--; } while (1001 <= i+1000);
-        ;acc16= variable 1
+L798:
         LD    HL,(05001H)
-        ;call writeAcc16
+L799:
         CALL  writeHL
-        ;decr16 variable 1
+L800:
         LD    HL,(05001H)
         DEC   HL
         LD    (05001H),HL
-        ;acc16= variable 1
+L801:
         LD    HL,(05001H)
-        ;acc16+ constant 1000
+L802:
         LD    DE,1000
         ADD   HL,DE
-        ;acc16Comp constant 1001
+L803:
         LD    DE,1001
         OR    A
         SBC   HL,DE
-        ;brge 798
+L804:
         JP    NC,L798
+L805:
         ;;test10.j(293) 
+L806:
         ;;test10.j(294)   /************************/
+L807:
         ;;test10.j(295)   // constant - constant
+L808:
         ;;test10.j(296)   // not relevant
+L809:
         ;;test10.j(297)   write(0);
-        ;acc8= constant 0
+L810:
         LD    A,0
-        ;call writeAcc8
+L811:
         CALL  writeA
+L812:
         ;;test10.j(298) }
-        ;stop
+L813:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

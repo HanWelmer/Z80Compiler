@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Command line fascade for the miniJava programming language compiler, based on the Pprogramming language as described 
@@ -188,8 +189,8 @@ public class Compiler {
   
   private static void writeZ80toListing(String fileName
       , ArrayList<AssemblyInstruction> z80Instructions
-      , Map<String, Long> labels
-      , Map<String, ArrayList<Long>> labelReferences
+      , Map<String, Integer> labels
+      , Map<String, ArrayList<Integer>> labelReferences
       , boolean verboseMode) {
     /* write Z80S180 assembly and binary code to a Listing file */
     String outputFilename = fileName.replace(".j", ".lst");
@@ -230,23 +231,26 @@ public class Compiler {
           }
         }
         
-        //dump label list
-        writer.write("\n");
-        writer.write("Labels:\n");
-        for (String key : labels.keySet()) {
-          writer.write(String.format("%04X : %s\n", labels.get(key), key));
-        }
-
         //dump label cross reference list
         writer.write("\n");
-        writer.write("Cross references:\n");
-        for (String key : labelReferences.keySet()) {
-          writer.write(String.format("%8s = %04X :", key, labels.get(key)));
-          for (Long address : labelReferences.get(key)) {
-            writer.write(String.format(" %04X", address));
+        writer.write("Labels and cross references:\n");
+        Map<String, Integer> sortedLabels = new TreeMap<String, Integer>(labels);
+        for (Map.Entry<String, Integer> entry : sortedLabels.entrySet()) {
+          writer.write(String.format("%8s = %04X :", entry.getKey(), entry.getValue()));
+          if (labelReferences.get(entry.getKey()) != null) {
+            int refCount = 0;
+            for (Integer address : labelReferences.get(entry.getKey())) {
+              writer.write(String.format(" %04X", address));
+              if (refCount==11) {
+                writer.write(String.format("\n%16s:", " "));
+                refCount = 0;
+              } else {
+                refCount++;
+              }
+            }
           }
           writer.write("\n");
-        }
+        }        
     } catch (IOException e) {
         System.out.println("\nException " + e.getMessage());
     } finally {
@@ -257,6 +261,14 @@ public class Compiler {
           System.out.println("\nException while closing: " + ee.getMessage());
         }
       }
+    }
+  }
+  
+  private static void writeLabel(BufferedWriter writer, String label, Integer value) {
+    try {
+      writer.write(String.format("%04X : %s\n", value, label));
+    } catch (IOException e) {
+      System.out.println("\nException " + e.getMessage());
     }
   }
   

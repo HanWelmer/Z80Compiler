@@ -613,3195 +613,3362 @@ writeA:
         POP   HL
         RET
 main:
+L0:
         ;;test5.j(0) /*
+L1:
         ;;test5.j(1)  * A small program in the miniJava language.
+L2:
         ;;test5.j(2)  * Test comparisons
+L3:
         ;;test5.j(3)  */
+L4:
         ;;test5.j(4) class TestIf {
+L5:
         ;;test5.j(5)   write (134);
-        ;acc8= constant 134
+L6:
         LD    A,134
-        ;call writeAcc8
+L7:
         CALL  writeA
+L8:
         ;;test5.j(6)   /************************/
+L9:
         ;;test5.j(7)   // global variable within if scope
+L10:
         ;;test5.j(8)   byte b = 133;
-        ;acc8= constant 133
+L11:
         LD    A,133
-        ;acc8=> variable 0
+L12:
         LD    (05000H),A
+L13:
         ;;test5.j(9)   if (b>132) {
-        ;acc8= variable 0
+L14:
         LD    A,(05000H)
-        ;acc8Comp constant 132
+L15:
         SUB   A,132
-        ;brle 34
+L16:
         JP    Z,L34
+L17:
         ;;test5.j(10)     int j = 1001;
-        ;acc16= constant 1001
+L18:
         LD    HL,1001
-        ;acc16=> variable 1
+L19:
         LD    (05001H),HL
+L20:
         ;;test5.j(11)     byte c = b;
-        ;acc8= variable 0
+L21:
         LD    A,(05000H)
-        ;acc8=> variable 3
+L22:
         LD    (05003H),A
+L23:
         ;;test5.j(12)     byte d = c;
-        ;acc8= variable 3
+L24:
         LD    A,(05003H)
-        ;acc8=> variable 4
+L25:
         LD    (05004H),A
+L26:
         ;;test5.j(13)     b--;
-        ;decr8 variable 0
+L27:
         LD    HL,(05000H)
         DEC   (HL)
+L28:
         ;;test5.j(14)     write (c);
-        ;acc8= variable 3
+L29:
         LD    A,(05003H)
-        ;call writeAcc8
+L30:
         CALL  writeA
+L31:
         ;;test5.j(15)   } else {
-        ;br 39
+L32:
         JP    L39
+L33:
         ;;test5.j(16)     write(0);
-        ;acc8= constant 0
+L34:
         LD    A,0
-        ;call writeAcc8
+L35:
         CALL  writeA
+L36:
         ;;test5.j(17)   }
+L37:
         ;;test5.j(18)   /************************/
+L38:
         ;;test5.j(19)   int zero = 0;
-        ;acc8= constant 0
+L39:
         LD    A,0
-        ;acc8=> variable 1
+L40:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L41:
         ;;test5.j(20)   int one = 1;
-        ;acc8= constant 1
+L42:
         LD    A,1
-        ;acc8=> variable 3
+L43:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
+L44:
         ;;test5.j(21)   int three = 3;
-        ;acc8= constant 3
+L45:
         LD    A,3
-        ;acc8=> variable 5
+L46:
         LD    L,A
         LD    H,0
         LD    (05005H),HL
+L47:
         ;;test5.j(22)   int four = 4;
-        ;acc8= constant 4
+L48:
         LD    A,4
-        ;acc8=> variable 7
+L49:
         LD    L,A
         LD    H,0
         LD    (05007H),HL
+L50:
         ;;test5.j(23)   int five = 5;
-        ;acc8= constant 5
+L51:
         LD    A,5
-        ;acc8=> variable 9
+L52:
         LD    L,A
         LD    H,0
         LD    (05009H),HL
+L53:
         ;;test5.j(24)   int twelve = 12;
-        ;acc8= constant 12
+L54:
         LD    A,12
-        ;acc8=> variable 11
+L55:
         LD    L,A
         LD    H,0
         LD    (0500BH),HL
+L56:
         ;;test5.j(25)   byte byteOne = 1;
-        ;acc8= constant 1
+L57:
         LD    A,1
-        ;acc8=> variable 13
+L58:
         LD    (0500DH),A
+L59:
         ;;test5.j(26)   byte byteSix = 262;
-        ;acc16= constant 262
+L60:
         LD    HL,262
-        ;acc16=> variable 14
+L61:
         LD    A,L
         LD    (0500EH),A
+L62:
         ;;test5.j(27)   if (4 == zero + twelve/(1+2)) write(132);
-        ;acc16= variable 1
+L63:
         LD    HL,(05001H)
-        ;<acc16= variable 11
+L64:
         PUSH  HL
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L65:
         LD    A,1
-        ;acc8+ constant 2
+L66:
         ADD   A,2
-        ;acc16/ acc8
+L67:
         CALL  div16_8
-        ;acc16+ unstack16
+L68:
         POP   DE
         ADD   HL,DE
-        ;acc8= constant 4
+L69:
         LD    A,4
-        ;acc8CompareAcc16
+L70:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brne 75
+L71:
         JP    NZ,L75
-        ;acc8= constant 132
+L72:
         LD    A,132
-        ;call writeAcc8
+L73:
         CALL  writeA
+L74:
         ;;test5.j(28)   if (four == 0 + 12/(one + 2)) write(131);
-        ;acc8= constant 0
+L75:
         LD    A,0
-        ;<acc8= constant 12
+L76:
         PUSH  AF
         LD    A,12
-        ;acc16= variable 3
+L77:
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L78:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 acc8
+L79:
         EX    DE,HL
         CALL  div8_16
-        ;acc16+ unstack8
+L80:
         POP   DE
         LD    D,0
         ADD   HL,DE
-        ;acc16Comp variable 7
+L81:
         LD    DE,(05007H)
         OR    A
         SBC   HL,DE
-        ;brne 86
+L82:
         JP    NZ,L86
-        ;acc8= constant 131
+L83:
         LD    A,131
-        ;call writeAcc8
+L84:
         CALL  writeA
+L85:
         ;;test5.j(29)   if (four == 0 + 12/(byteOne + 2)) write(130);
-        ;acc8= constant 0
+L86:
         LD    A,0
-        ;<acc8= constant 12
+L87:
         PUSH  AF
         LD    A,12
-        ;<acc8= variable 13
+L88:
         PUSH  AF
         LD    A,(0500DH)
-        ;acc8+ constant 2
+L89:
         ADD   A,2
-        ;/acc8 unstack8
+L90:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8+ unstack8
+L91:
         POP   BC
         ADD   A,B
-        ;acc16= variable 7
+L92:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L93:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 98
+L94:
         JP    NZ,L98
-        ;acc8= constant 130
+L95:
         LD    A,130
-        ;call writeAcc8
+L96:
         CALL  writeA
+L97:
         ;;test5.j(30)   if (four == 0 + 12/(1 + 2)) write(129);
-        ;acc8= constant 0
+L98:
         LD    A,0
-        ;<acc8= constant 12
+L99:
         PUSH  AF
         LD    A,12
-        ;<acc8= constant 1
+L100:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L101:
         ADD   A,2
-        ;/acc8 unstack8
+L102:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8+ unstack8
+L103:
         POP   BC
         ADD   A,B
-        ;acc16= variable 7
+L104:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L105:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 110
+L106:
         JP    NZ,L110
-        ;acc8= constant 129
+L107:
         LD    A,129
-        ;call writeAcc8
+L108:
         CALL  writeA
+L109:
         ;;test5.j(31)   if (four == 0 + 12/(1 + 2)) write(128);
-        ;acc8= constant 0
+L110:
         LD    A,0
-        ;<acc8= constant 12
+L111:
         PUSH  AF
         LD    A,12
-        ;<acc8= constant 1
+L112:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L113:
         ADD   A,2
-        ;/acc8 unstack8
+L114:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8+ unstack8
+L115:
         POP   BC
         ADD   A,B
-        ;acc16= variable 7
+L116:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L117:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 123
+L118:
         JP    NZ,L123
-        ;acc8= constant 128
+L119:
         LD    A,128
-        ;call writeAcc8
+L120:
         CALL  writeA
+L121:
         ;;test5.j(32)   //stack level 2
+L122:
         ;;test5.j(33)   if (5 >= twelve/(one+2)) write(127);
-        ;acc16= variable 11
+L123:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L124:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L125:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L126:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 5
+L127:
         LD    A,5
-        ;acc8CompareAcc16
+L128:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 133
+L129:
         JP    C,L133
-        ;acc8= constant 127
+L130:
         LD    A,127
-        ;call writeAcc8
+L131:
         CALL  writeA
+L132:
         ;;test5.j(34)   if (4 >= twelve/(one+2)) write(126);
-        ;acc16= variable 11
+L133:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L134:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L135:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L136:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 4
+L137:
         LD    A,4
-        ;acc8CompareAcc16
+L138:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 143
+L139:
         JP    C,L143
-        ;acc8= constant 126
+L140:
         LD    A,126
-        ;call writeAcc8
+L141:
         CALL  writeA
+L142:
         ;;test5.j(35)   if (4 <= twelve/(one+2)) write(125);
-        ;acc16= variable 11
+L143:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L144:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L145:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L146:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 4
+L147:
         LD    A,4
-        ;acc8CompareAcc16
+L148:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 153
-        JP    Z,$+5
+L149:
+        JR    Z,$+5
         JP    C,L153
-        ;acc8= constant 125
+L150:
         LD    A,125
-        ;call writeAcc8
+L151:
         CALL  writeA
+L152:
         ;;test5.j(36)   if (3 <= twelve/(one+2)) write(124);
-        ;acc16= variable 11
+L153:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L154:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L155:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L156:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 3
+L157:
         LD    A,3
-        ;acc8CompareAcc16
+L158:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 163
-        JP    Z,$+5
+L159:
+        JR    Z,$+5
         JP    C,L163
-        ;acc8= constant 124
+L160:
         LD    A,124
-        ;call writeAcc8
+L161:
         CALL  writeA
+L162:
         ;;test5.j(37)   if (5 > twelve/(one+2)) write(123);
-        ;acc16= variable 11
+L163:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L164:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L165:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L166:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 5
+L167:
         LD    A,5
-        ;acc8CompareAcc16
+L168:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 173
+L169:
         JP    Z,L173
-        ;acc8= constant 123
+L170:
         LD    A,123
-        ;call writeAcc8
+L171:
         CALL  writeA
+L172:
         ;;test5.j(38)   if (2 < twelve/(one+2)) write(122);
-        ;acc16= variable 11
+L173:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L174:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L175:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L176:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 2
+L177:
         LD    A,2
-        ;acc8CompareAcc16
+L178:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 183
+L179:
         JP    NC,L183
-        ;acc8= constant 122
+L180:
         LD    A,122
-        ;call writeAcc8
+L181:
         CALL  writeA
+L182:
         ;;test5.j(39)   if (3 != twelve/(one+2)) write(121);
-        ;acc16= variable 11
+L183:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L184:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L185:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L186:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 3
+L187:
         LD    A,3
-        ;acc8CompareAcc16
+L188:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;breq 193
+L189:
         JP    Z,L193
-        ;acc8= constant 121
+L190:
         LD    A,121
-        ;call writeAcc8
+L191:
         CALL  writeA
+L192:
         ;;test5.j(40)   if (4 == twelve/(one+2)) write(120);
-        ;acc16= variable 11
+L193:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L194:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L195:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L196:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= constant 4
+L197:
         LD    A,4
-        ;acc8CompareAcc16
+L198:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brne 203
+L199:
         JP    NZ,L203
-        ;acc8= constant 120
+L200:
         LD    A,120
-        ;call writeAcc8
+L201:
         CALL  writeA
+L202:
         ;;test5.j(41)   if (5 >= 12/(1+2)) write(119);
-        ;acc8= constant 12
+L203:
         LD    A,12
-        ;<acc8= constant 1
+L204:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L205:
         ADD   A,2
-        ;/acc8 unstack8
+L206:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 5
+L207:
         SUB   A,5
-        ;brgt 212
-        JP    Z,$+5
+L208:
+        JR    Z,$+5
         JP    C,L212
-        ;acc8= constant 119
+L209:
         LD    A,119
-        ;call writeAcc8
+L210:
         CALL  writeA
+L211:
         ;;test5.j(42)   if (4 >= 12/(1+2)) write(118);
-        ;acc8= constant 12
+L212:
         LD    A,12
-        ;<acc8= constant 1
+L213:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L214:
         ADD   A,2
-        ;/acc8 unstack8
+L215:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 4
+L216:
         SUB   A,4
-        ;brgt 221
-        JP    Z,$+5
+L217:
+        JR    Z,$+5
         JP    C,L221
-        ;acc8= constant 118
+L218:
         LD    A,118
-        ;call writeAcc8
+L219:
         CALL  writeA
+L220:
         ;;test5.j(43)   if (4 <= 12/(1+2)) write(117);
-        ;acc8= constant 12
+L221:
         LD    A,12
-        ;<acc8= constant 1
+L222:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L223:
         ADD   A,2
-        ;/acc8 unstack8
+L224:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 4
+L225:
         SUB   A,4
-        ;brlt 230
+L226:
         JP    C,L230
-        ;acc8= constant 117
+L227:
         LD    A,117
-        ;call writeAcc8
+L228:
         CALL  writeA
+L229:
         ;;test5.j(44)   if (3 <= 12/(1+2)) write(116);
-        ;acc8= constant 12
+L230:
         LD    A,12
-        ;<acc8= constant 1
+L231:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L232:
         ADD   A,2
-        ;/acc8 unstack8
+L233:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 3
+L234:
         SUB   A,3
-        ;brlt 239
+L235:
         JP    C,L239
-        ;acc8= constant 116
+L236:
         LD    A,116
-        ;call writeAcc8
+L237:
         CALL  writeA
+L238:
         ;;test5.j(45)   if (5 > 12/(1+2)) write(115);
-        ;acc8= constant 12
+L239:
         LD    A,12
-        ;<acc8= constant 1
+L240:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L241:
         ADD   A,2
-        ;/acc8 unstack8
+L242:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 5
+L243:
         SUB   A,5
-        ;brge 248
+L244:
         JP    NC,L248
-        ;acc8= constant 115
+L245:
         LD    A,115
-        ;call writeAcc8
+L246:
         CALL  writeA
+L247:
         ;;test5.j(46)   if (3 < 12/(1+2)) write(114);
-        ;acc8= constant 12
+L248:
         LD    A,12
-        ;<acc8= constant 1
+L249:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L250:
         ADD   A,2
-        ;/acc8 unstack8
+L251:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 3
+L252:
         SUB   A,3
-        ;brle 257
+L253:
         JP    Z,L257
-        ;acc8= constant 114
+L254:
         LD    A,114
-        ;call writeAcc8
+L255:
         CALL  writeA
+L256:
         ;;test5.j(47)   if (3 != 12/(1+2)) write(113);
-        ;acc8= constant 12
+L257:
         LD    A,12
-        ;<acc8= constant 1
+L258:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L259:
         ADD   A,2
-        ;/acc8 unstack8
+L260:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 3
+L261:
         SUB   A,3
-        ;breq 266
+L262:
         JP    Z,L266
-        ;acc8= constant 113
+L263:
         LD    A,113
-        ;call writeAcc8
+L264:
         CALL  writeA
+L265:
         ;;test5.j(48)   if (4 == 12/(1+2)) write(112);
-        ;acc8= constant 12
+L266:
         LD    A,12
-        ;<acc8= constant 1
+L267:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L268:
         ADD   A,2
-        ;/acc8 unstack8
+L269:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 4
+L270:
         SUB   A,4
-        ;brne 275
+L271:
         JP    NZ,L275
-        ;acc8= constant 112
+L272:
         LD    A,112
-        ;call writeAcc8
+L273:
         CALL  writeA
+L274:
         ;;test5.j(49)   if (1+4 >= twelve/(one+2)) write(111);
-        ;acc8= constant 1
+L275:
         LD    A,1
-        ;acc8+ constant 4
+L276:
         ADD   A,4
-        ;<acc8
+L277:
         PUSH AF
-        ;acc16= variable 11
+L278:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L279:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L280:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L281:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L282:
         POP  AF
-        ;acc8CompareAcc16
+L283:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 288
+L284:
         JP    C,L288
-        ;acc8= constant 111
+L285:
         LD    A,111
-        ;call writeAcc8
+L286:
         CALL  writeA
+L287:
         ;;test5.j(50)   if (1+3 >= twelve/(one+2)) write(110);
-        ;acc8= constant 1
+L288:
         LD    A,1
-        ;acc8+ constant 3
+L289:
         ADD   A,3
-        ;<acc8
+L290:
         PUSH AF
-        ;acc16= variable 11
+L291:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L292:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L293:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L294:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L295:
         POP  AF
-        ;acc8CompareAcc16
+L296:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 301
+L297:
         JP    C,L301
-        ;acc8= constant 110
+L298:
         LD    A,110
-        ;call writeAcc8
+L299:
         CALL  writeA
+L300:
         ;;test5.j(51)   if (1+3 <= twelve/(one+2)) write(109);
-        ;acc8= constant 1
+L301:
         LD    A,1
-        ;acc8+ constant 3
+L302:
         ADD   A,3
-        ;<acc8
+L303:
         PUSH AF
-        ;acc16= variable 11
+L304:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L305:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L306:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L307:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L308:
         POP  AF
-        ;acc8CompareAcc16
+L309:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 314
-        JP    Z,$+5
+L310:
+        JR    Z,$+5
         JP    C,L314
-        ;acc8= constant 109
+L311:
         LD    A,109
-        ;call writeAcc8
+L312:
         CALL  writeA
+L313:
         ;;test5.j(52)   if (1+2 <= twelve/(one+2)) write(108);
-        ;acc8= constant 1
+L314:
         LD    A,1
-        ;acc8+ constant 2
+L315:
         ADD   A,2
-        ;<acc8
+L316:
         PUSH AF
-        ;acc16= variable 11
+L317:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L318:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L319:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L320:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L321:
         POP  AF
-        ;acc8CompareAcc16
+L322:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 327
-        JP    Z,$+5
+L323:
+        JR    Z,$+5
         JP    C,L327
-        ;acc8= constant 108
+L324:
         LD    A,108
-        ;call writeAcc8
+L325:
         CALL  writeA
+L326:
         ;;test5.j(53)   if (1+4 > twelve/(one+2)) write(107);
-        ;acc8= constant 1
+L327:
         LD    A,1
-        ;acc8+ constant 4
+L328:
         ADD   A,4
-        ;<acc8
+L329:
         PUSH AF
-        ;acc16= variable 11
+L330:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L331:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L332:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L333:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L334:
         POP  AF
-        ;acc8CompareAcc16
+L335:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 340
+L336:
         JP    Z,L340
-        ;acc8= constant 107
+L337:
         LD    A,107
-        ;call writeAcc8
+L338:
         CALL  writeA
+L339:
         ;;test5.j(54)   if (1+2 < twelve/(one+2)) write(106);
-        ;acc8= constant 1
+L340:
         LD    A,1
-        ;acc8+ constant 2
+L341:
         ADD   A,2
-        ;<acc8
+L342:
         PUSH AF
-        ;acc16= variable 11
+L343:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L344:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L345:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L346:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L347:
         POP  AF
-        ;acc8CompareAcc16
+L348:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 353
+L349:
         JP    NC,L353
-        ;acc8= constant 106
+L350:
         LD    A,106
-        ;call writeAcc8
+L351:
         CALL  writeA
+L352:
         ;;test5.j(55)   if (1+2 != twelve/(one+2)) write(105);
-        ;acc8= constant 1
+L353:
         LD    A,1
-        ;acc8+ constant 2
+L354:
         ADD   A,2
-        ;<acc8
+L355:
         PUSH AF
-        ;acc16= variable 11
+L356:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L357:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L358:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L359:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L360:
         POP  AF
-        ;acc8CompareAcc16
+L361:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;breq 366
+L362:
         JP    Z,L366
-        ;acc8= constant 105
+L363:
         LD    A,105
-        ;call writeAcc8
+L364:
         CALL  writeA
+L365:
         ;;test5.j(56)   if (1+3 == twelve/(one+2)) write(104);
-        ;acc8= constant 1
+L366:
         LD    A,1
-        ;acc8+ constant 3
+L367:
         ADD   A,3
-        ;<acc8
+L368:
         PUSH AF
-        ;acc16= variable 11
+L369:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L370:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L371:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L372:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc8= unstack8
+L373:
         POP  AF
-        ;acc8CompareAcc16
+L374:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brne 379
+L375:
         JP    NZ,L379
-        ;acc8= constant 104
+L376:
         LD    A,104
-        ;call writeAcc8
+L377:
         CALL  writeA
+L378:
         ;;test5.j(57)   if (1+4 >= 12/(1+2)) write(103);
-        ;acc8= constant 1
+L379:
         LD    A,1
-        ;acc8+ constant 4
+L380:
         ADD   A,4
-        ;<acc8
+L381:
         PUSH AF
-        ;acc8= constant 12
+L382:
         LD    A,12
-        ;<acc8= constant 1
+L383:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L384:
         ADD   A,2
-        ;/acc8 unstack8
+L385:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L386:
         POP   BC
         SUB   A,B
-        ;brgt 391
-        JP    Z,$+5
+L387:
+        JR    Z,$+5
         JP    C,L391
-        ;acc8= constant 103
+L388:
         LD    A,103
-        ;call writeAcc8
+L389:
         CALL  writeA
+L390:
         ;;test5.j(58)   if (1+3 >= 12/(1+2)) write(102);
-        ;acc8= constant 1
+L391:
         LD    A,1
-        ;acc8+ constant 3
+L392:
         ADD   A,3
-        ;<acc8
+L393:
         PUSH AF
-        ;acc8= constant 12
+L394:
         LD    A,12
-        ;<acc8= constant 1
+L395:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L396:
         ADD   A,2
-        ;/acc8 unstack8
+L397:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L398:
         POP   BC
         SUB   A,B
-        ;brgt 403
-        JP    Z,$+5
+L399:
+        JR    Z,$+5
         JP    C,L403
-        ;acc8= constant 102
+L400:
         LD    A,102
-        ;call writeAcc8
+L401:
         CALL  writeA
+L402:
         ;;test5.j(59)   if (1+3 <= 12/(1+2)) write(101);
-        ;acc8= constant 1
+L403:
         LD    A,1
-        ;acc8+ constant 3
+L404:
         ADD   A,3
-        ;<acc8
+L405:
         PUSH AF
-        ;acc8= constant 12
+L406:
         LD    A,12
-        ;<acc8= constant 1
+L407:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L408:
         ADD   A,2
-        ;/acc8 unstack8
+L409:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L410:
         POP   BC
         SUB   A,B
-        ;brlt 415
+L411:
         JP    C,L415
-        ;acc8= constant 101
+L412:
         LD    A,101
-        ;call writeAcc8
+L413:
         CALL  writeA
+L414:
         ;;test5.j(60)   if (1+2 <= 12/(1+2)) write(100);
-        ;acc8= constant 1
+L415:
         LD    A,1
-        ;acc8+ constant 2
+L416:
         ADD   A,2
-        ;<acc8
+L417:
         PUSH AF
-        ;acc8= constant 12
+L418:
         LD    A,12
-        ;<acc8= constant 1
+L419:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L420:
         ADD   A,2
-        ;/acc8 unstack8
+L421:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L422:
         POP   BC
         SUB   A,B
-        ;brlt 427
+L423:
         JP    C,L427
-        ;acc8= constant 100
+L424:
         LD    A,100
-        ;call writeAcc8
+L425:
         CALL  writeA
+L426:
         ;;test5.j(61)   if (1+4 > 12/(1+2)) write(99);
-        ;acc8= constant 1
+L427:
         LD    A,1
-        ;acc8+ constant 4
+L428:
         ADD   A,4
-        ;<acc8
+L429:
         PUSH AF
-        ;acc8= constant 12
+L430:
         LD    A,12
-        ;<acc8= constant 1
+L431:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L432:
         ADD   A,2
-        ;/acc8 unstack8
+L433:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L434:
         POP   BC
         SUB   A,B
-        ;brge 439
+L435:
         JP    NC,L439
-        ;acc8= constant 99
+L436:
         LD    A,99
-        ;call writeAcc8
+L437:
         CALL  writeA
+L438:
         ;;test5.j(62)   if (1+2 < 12/(1+2)) write(98);
-        ;acc8= constant 1
+L439:
         LD    A,1
-        ;acc8+ constant 2
+L440:
         ADD   A,2
-        ;<acc8
+L441:
         PUSH AF
-        ;acc8= constant 12
+L442:
         LD    A,12
-        ;<acc8= constant 1
+L443:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L444:
         ADD   A,2
-        ;/acc8 unstack8
+L445:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L446:
         POP   BC
         SUB   A,B
-        ;brle 451
+L447:
         JP    Z,L451
-        ;acc8= constant 98
+L448:
         LD    A,98
-        ;call writeAcc8
+L449:
         CALL  writeA
+L450:
         ;;test5.j(63)   if (1+2 != 12/(1+2)) write(97);
-        ;acc8= constant 1
+L451:
         LD    A,1
-        ;acc8+ constant 2
+L452:
         ADD   A,2
-        ;<acc8
+L453:
         PUSH AF
-        ;acc8= constant 12
+L454:
         LD    A,12
-        ;<acc8= constant 1
+L455:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L456:
         ADD   A,2
-        ;/acc8 unstack8
+L457:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L458:
         POP   BC
         SUB   A,B
-        ;breq 463
+L459:
         JP    Z,L463
-        ;acc8= constant 97
+L460:
         LD    A,97
-        ;call writeAcc8
+L461:
         CALL  writeA
+L462:
         ;;test5.j(64)   if (1+3 == 12/(1+2)) write(96);
-        ;acc8= constant 1
+L463:
         LD    A,1
-        ;acc8+ constant 3
+L464:
         ADD   A,3
-        ;<acc8
+L465:
         PUSH AF
-        ;acc8= constant 12
+L466:
         LD    A,12
-        ;<acc8= constant 1
+L467:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L468:
         ADD   A,2
-        ;/acc8 unstack8
+L469:
         LD    C,A
         POP   AF
         CALL  div8
-        ;revAcc8Comp unstack8
+L470:
         POP   BC
         SUB   A,B
-        ;brne 475
+L471:
         JP    NZ,L475
-        ;acc8= constant 96
+L472:
         LD    A,96
-        ;call writeAcc8
+L473:
         CALL  writeA
+L474:
         ;;test5.j(65)   if (twelve >= twelve/(one+2)) write(95);
-        ;acc16= variable 11
+L475:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L476:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L477:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L478:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 11
+L479:
         LD    DE,(0500BH)
         OR    A
         SBC   HL,DE
-        ;brgt 484
-        JP    Z,$+5
+L480:
+        JR    Z,$+5
         JP    C,L484
-        ;acc8= constant 95
+L481:
         LD    A,95
-        ;call writeAcc8
+L482:
         CALL  writeA
+L483:
         ;;test5.j(66)   if (four >= twelve/(one+2)) write(94);
-        ;acc16= variable 11
+L484:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L485:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L486:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L487:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 7
+L488:
         LD    DE,(05007H)
         OR    A
         SBC   HL,DE
-        ;brgt 493
-        JP    Z,$+5
+L489:
+        JR    Z,$+5
         JP    C,L493
-        ;acc8= constant 94
+L490:
         LD    A,94
-        ;call writeAcc8
+L491:
         CALL  writeA
+L492:
         ;;test5.j(67)   if (three <= twelve/(one+2)) write(93);
-        ;acc16= variable 11
+L493:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L494:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L495:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L496:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 5
+L497:
         LD    DE,(05005H)
         OR    A
         SBC   HL,DE
-        ;brlt 502
+L498:
         JP    C,L502
-        ;acc8= constant 93
+L499:
         LD    A,93
-        ;call writeAcc8
+L500:
         CALL  writeA
+L501:
         ;;test5.j(68)   if (four <= twelve/(one+2)) write(92);
-        ;acc16= variable 11
+L502:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L503:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L504:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L505:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 7
+L506:
         LD    DE,(05007H)
         OR    A
         SBC   HL,DE
-        ;brlt 511
+L507:
         JP    C,L511
-        ;acc8= constant 92
+L508:
         LD    A,92
-        ;call writeAcc8
+L509:
         CALL  writeA
+L510:
         ;;test5.j(69)   if (twelve > twelve/(one+2)) write(91);
-        ;acc16= variable 11
+L511:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L512:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L513:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L514:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 11
+L515:
         LD    DE,(0500BH)
         OR    A
         SBC   HL,DE
-        ;brge 520
+L516:
         JP    NC,L520
-        ;acc8= constant 91
+L517:
         LD    A,91
-        ;call writeAcc8
+L518:
         CALL  writeA
+L519:
         ;;test5.j(70)   if (three < twelve/(one+2)) write(90);
-        ;acc16= variable 11
+L520:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L521:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L522:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L523:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 5
+L524:
         LD    DE,(05005H)
         OR    A
         SBC   HL,DE
-        ;brle 529
+L525:
         JP    Z,L529
-        ;acc8= constant 90
+L526:
         LD    A,90
-        ;call writeAcc8
+L527:
         CALL  writeA
+L528:
         ;;test5.j(71)   if (three != twelve/(one+2)) write(89);
-        ;acc16= variable 11
+L529:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L530:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L531:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L532:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 5
+L533:
         LD    DE,(05005H)
         OR    A
         SBC   HL,DE
-        ;breq 538
+L534:
         JP    Z,L538
-        ;acc8= constant 89
+L535:
         LD    A,89
-        ;call writeAcc8
+L536:
         CALL  writeA
+L537:
         ;;test5.j(72)   if (four == twelve/(one+2)) write(88);
-        ;acc16= variable 11
+L538:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L539:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L540:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L541:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;acc16Comp variable 7
+L542:
         LD    DE,(05007H)
         OR    A
         SBC   HL,DE
-        ;brne 547
+L543:
         JP    NZ,L547
-        ;acc8= constant 88
+L544:
         LD    A,88
-        ;call writeAcc8
+L545:
         CALL  writeA
+L546:
         ;;test5.j(73)   if (twelve >= 12/(1+2)) write(87);
-        ;acc8= constant 12
+L547:
         LD    A,12
-        ;<acc8= constant 1
+L548:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L549:
         ADD   A,2
-        ;/acc8 unstack8
+L550:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 11
+L551:
         LD    HL,(0500BH)
-        ;acc16CompareAcc8
+L552:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 557
+L553:
         JP    C,L557
-        ;acc8= constant 87
+L554:
         LD    A,87
-        ;call writeAcc8
+L555:
         CALL  writeA
+L556:
         ;;test5.j(74)   if (four >= 12/(1+2)) write(86);
-        ;acc8= constant 12
+L557:
         LD    A,12
-        ;<acc8= constant 1
+L558:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L559:
         ADD   A,2
-        ;/acc8 unstack8
+L560:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 7
+L561:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L562:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 567
+L563:
         JP    C,L567
-        ;acc8= constant 86
+L564:
         LD    A,86
-        ;call writeAcc8
+L565:
         CALL  writeA
+L566:
         ;;test5.j(75)   if (three <= 12/(1+2)) write(85);
-        ;acc8= constant 12
+L567:
         LD    A,12
-        ;<acc8= constant 1
+L568:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L569:
         ADD   A,2
-        ;/acc8 unstack8
+L570:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 5
+L571:
         LD    HL,(05005H)
-        ;acc16CompareAcc8
+L572:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 577
-        JP    Z,$+5
+L573:
+        JR    Z,$+5
         JP    C,L577
-        ;acc8= constant 85
+L574:
         LD    A,85
-        ;call writeAcc8
+L575:
         CALL  writeA
+L576:
         ;;test5.j(76)   if (four <= 12/(1+2)) write(84);
-        ;acc8= constant 12
+L577:
         LD    A,12
-        ;<acc8= constant 1
+L578:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L579:
         ADD   A,2
-        ;/acc8 unstack8
+L580:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 7
+L581:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L582:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 587
-        JP    Z,$+5
+L583:
+        JR    Z,$+5
         JP    C,L587
-        ;acc8= constant 84
+L584:
         LD    A,84
-        ;call writeAcc8
+L585:
         CALL  writeA
+L586:
         ;;test5.j(77)   if (twelve > 12/(1+2)) write(83);
-        ;acc8= constant 12
+L587:
         LD    A,12
-        ;<acc8= constant 1
+L588:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L589:
         ADD   A,2
-        ;/acc8 unstack8
+L590:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 11
+L591:
         LD    HL,(0500BH)
-        ;acc16CompareAcc8
+L592:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 597
+L593:
         JP    Z,L597
-        ;acc8= constant 83
+L594:
         LD    A,83
-        ;call writeAcc8
+L595:
         CALL  writeA
+L596:
         ;;test5.j(78)   if (three < 12/(1+2)) write(82);
-        ;acc8= constant 12
+L597:
         LD    A,12
-        ;<acc8= constant 1
+L598:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L599:
         ADD   A,2
-        ;/acc8 unstack8
+L600:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 5
+L601:
         LD    HL,(05005H)
-        ;acc16CompareAcc8
+L602:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 607
+L603:
         JP    NC,L607
-        ;acc8= constant 82
+L604:
         LD    A,82
-        ;call writeAcc8
+L605:
         CALL  writeA
+L606:
         ;;test5.j(79)   if (three != 12/(1+2)) write(81);
-        ;acc8= constant 12
+L607:
         LD    A,12
-        ;<acc8= constant 1
+L608:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L609:
         ADD   A,2
-        ;/acc8 unstack8
+L610:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 5
+L611:
         LD    HL,(05005H)
-        ;acc16CompareAcc8
+L612:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;breq 617
+L613:
         JP    Z,L617
-        ;acc8= constant 81
+L614:
         LD    A,81
-        ;call writeAcc8
+L615:
         CALL  writeA
+L616:
         ;;test5.j(80)   if (four == 12/(1+2)) write(80);
-        ;acc8= constant 12
+L617:
         LD    A,12
-        ;<acc8= constant 1
+L618:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L619:
         ADD   A,2
-        ;/acc8 unstack8
+L620:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 7
+L621:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L622:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 627
+L623:
         JP    NZ,L627
-        ;acc8= constant 80
+L624:
         LD    A,80
-        ;call writeAcc8
+L625:
         CALL  writeA
+L626:
         ;;test5.j(81)   if (one+four >= twelve/(one+2)) write(79);
-        ;acc16= variable 3
+L627:
         LD    HL,(05003H)
-        ;acc16+ variable 7
+L628:
         LD    DE,(05007H)
         ADD   HL,DE
-        ;<acc16
+L629:
         PUSH HL
-        ;acc16= variable 11
+L630:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L631:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L632:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L633:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L634:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brgt 639
-        JP    Z,$+5
+L635:
+        JR    Z,$+5
         JP    C,L639
-        ;acc8= constant 79
+L636:
         LD    A,79
-        ;call writeAcc8
+L637:
         CALL  writeA
+L638:
         ;;test5.j(82)   if (one+three >= twelve/(one+2)) write(78);
-        ;acc16= variable 3
+L639:
         LD    HL,(05003H)
-        ;acc16+ variable 5
+L640:
         LD    DE,(05005H)
         ADD   HL,DE
-        ;<acc16
+L641:
         PUSH HL
-        ;acc16= variable 11
+L642:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L643:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L644:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L645:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L646:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brgt 651
-        JP    Z,$+5
+L647:
+        JR    Z,$+5
         JP    C,L651
-        ;acc8= constant 78
+L648:
         LD    A,78
-        ;call writeAcc8
+L649:
         CALL  writeA
+L650:
         ;;test5.j(83)   if (one+three <= twelve/(one+2)) write(77);
-        ;acc16= variable 3
+L651:
         LD    HL,(05003H)
-        ;acc16+ variable 5
+L652:
         LD    DE,(05005H)
         ADD   HL,DE
-        ;<acc16
+L653:
         PUSH HL
-        ;acc16= variable 11
+L654:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L655:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L656:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L657:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L658:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brlt 663
+L659:
         JP    C,L663
-        ;acc8= constant 77
+L660:
         LD    A,77
-        ;call writeAcc8
+L661:
         CALL  writeA
+L662:
         ;;test5.j(84)   if (one+one <= twelve/(one+2)) write(76);
-        ;acc16= variable 3
+L663:
         LD    HL,(05003H)
-        ;acc16+ variable 3
+L664:
         LD    DE,(05003H)
         ADD   HL,DE
-        ;<acc16
+L665:
         PUSH HL
-        ;acc16= variable 11
+L666:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L667:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L668:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L669:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L670:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brlt 675
+L671:
         JP    C,L675
-        ;acc8= constant 76
+L672:
         LD    A,76
-        ;call writeAcc8
+L673:
         CALL  writeA
+L674:
         ;;test5.j(85)   if (one+four > twelve/(one+2)) write(75);
-        ;acc16= variable 3
+L675:
         LD    HL,(05003H)
-        ;acc16+ variable 7
+L676:
         LD    DE,(05007H)
         ADD   HL,DE
-        ;<acc16
+L677:
         PUSH HL
-        ;acc16= variable 11
+L678:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L679:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L680:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L681:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L682:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brge 687
+L683:
         JP    NC,L687
-        ;acc8= constant 75
+L684:
         LD    A,75
-        ;call writeAcc8
+L685:
         CALL  writeA
+L686:
         ;;test5.j(86)   if (one+one < twelve/(one+2)) write(74);
-        ;acc16= variable 3
+L687:
         LD    HL,(05003H)
-        ;acc16+ variable 3
+L688:
         LD    DE,(05003H)
         ADD   HL,DE
-        ;<acc16
+L689:
         PUSH HL
-        ;acc16= variable 11
+L690:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L691:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L692:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L693:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L694:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brle 699
+L695:
         JP    Z,L699
-        ;acc8= constant 74
+L696:
         LD    A,74
-        ;call writeAcc8
+L697:
         CALL  writeA
+L698:
         ;;test5.j(87)   if (one+four  != twelve/(one+2)) write(73);
-        ;acc16= variable 3
+L699:
         LD    HL,(05003H)
-        ;acc16+ variable 7
+L700:
         LD    DE,(05007H)
         ADD   HL,DE
-        ;<acc16
+L701:
         PUSH HL
-        ;acc16= variable 11
+L702:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L703:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L704:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L705:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L706:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;breq 711
+L707:
         JP    Z,L711
-        ;acc8= constant 73
+L708:
         LD    A,73
-        ;call writeAcc8
+L709:
         CALL  writeA
+L710:
         ;;test5.j(88)   if (one+three == twelve/(one+2)) write(72);
-        ;acc16= variable 3
+L711:
         LD    HL,(05003H)
-        ;acc16+ variable 5
+L712:
         LD    DE,(05005H)
         ADD   HL,DE
-        ;<acc16
+L713:
         PUSH HL
-        ;acc16= variable 11
+L714:
         LD    HL,(0500BH)
-        ;<acc16= variable 3
+L715:
         PUSH  HL
         LD    HL,(05003H)
-        ;acc16+ constant 2
+L716:
         LD    DE,2
         ADD   HL,DE
-        ;/acc16 unstack16
+L717:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;revAcc16Comp unstack16
+L718:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brne 723
+L719:
         JP    NZ,L723
-        ;acc8= constant 72
+L720:
         LD    A,72
-        ;call writeAcc8
+L721:
         CALL  writeA
+L722:
         ;;test5.j(89)   if (one+four >= 12/(1+2)) write(71);
-        ;acc16= variable 3
+L723:
         LD    HL,(05003H)
-        ;acc16+ variable 7
+L724:
         LD    DE,(05007H)
         ADD   HL,DE
-        ;<acc16
+L725:
         PUSH HL
-        ;acc8= constant 12
+L726:
         LD    A,12
-        ;<acc8= constant 1
+L727:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L728:
         ADD   A,2
-        ;/acc8 unstack8
+L729:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L730:
         POP  HL
-        ;acc16CompareAcc8
+L731:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 736
+L732:
         JP    C,L736
-        ;acc8= constant 71
+L733:
         LD    A,71
-        ;call writeAcc8
+L734:
         CALL  writeA
+L735:
         ;;test5.j(90)   if (one+three >= 12/(1+2)) write(70);
-        ;acc16= variable 3
+L736:
         LD    HL,(05003H)
-        ;acc16+ variable 5
+L737:
         LD    DE,(05005H)
         ADD   HL,DE
-        ;<acc16
+L738:
         PUSH HL
-        ;acc8= constant 12
+L739:
         LD    A,12
-        ;<acc8= constant 1
+L740:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L741:
         ADD   A,2
-        ;/acc8 unstack8
+L742:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L743:
         POP  HL
-        ;acc16CompareAcc8
+L744:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 749
+L745:
         JP    C,L749
-        ;acc8= constant 70
+L746:
         LD    A,70
-        ;call writeAcc8
+L747:
         CALL  writeA
+L748:
         ;;test5.j(91)   if (one+three <= 12/(1+2)) write(69);
-        ;acc16= variable 3
+L749:
         LD    HL,(05003H)
-        ;acc16+ variable 5
+L750:
         LD    DE,(05005H)
         ADD   HL,DE
-        ;<acc16
+L751:
         PUSH HL
-        ;acc8= constant 12
+L752:
         LD    A,12
-        ;<acc8= constant 1
+L753:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L754:
         ADD   A,2
-        ;/acc8 unstack8
+L755:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L756:
         POP  HL
-        ;acc16CompareAcc8
+L757:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 762
-        JP    Z,$+5
+L758:
+        JR    Z,$+5
         JP    C,L762
-        ;acc8= constant 69
+L759:
         LD    A,69
-        ;call writeAcc8
+L760:
         CALL  writeA
+L761:
         ;;test5.j(92)   if (one+one <= 12/(1+2)) write(68);
-        ;acc16= variable 3
+L762:
         LD    HL,(05003H)
-        ;acc16+ variable 3
+L763:
         LD    DE,(05003H)
         ADD   HL,DE
-        ;<acc16
+L764:
         PUSH HL
-        ;acc8= constant 12
+L765:
         LD    A,12
-        ;<acc8= constant 1
+L766:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L767:
         ADD   A,2
-        ;/acc8 unstack8
+L768:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L769:
         POP  HL
-        ;acc16CompareAcc8
+L770:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 775
-        JP    Z,$+5
+L771:
+        JR    Z,$+5
         JP    C,L775
-        ;acc8= constant 68
+L772:
         LD    A,68
-        ;call writeAcc8
+L773:
         CALL  writeA
+L774:
         ;;test5.j(93)   if (one+four > 12/(1+2)) write(67);
-        ;acc16= variable 3
+L775:
         LD    HL,(05003H)
-        ;acc16+ variable 7
+L776:
         LD    DE,(05007H)
         ADD   HL,DE
-        ;<acc16
+L777:
         PUSH HL
-        ;acc8= constant 12
+L778:
         LD    A,12
-        ;<acc8= constant 1
+L779:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L780:
         ADD   A,2
-        ;/acc8 unstack8
+L781:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L782:
         POP  HL
-        ;acc16CompareAcc8
+L783:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 788
+L784:
         JP    Z,L788
-        ;acc8= constant 67
+L785:
         LD    A,67
-        ;call writeAcc8
+L786:
         CALL  writeA
+L787:
         ;;test5.j(94)   if (one+one < 12/(1+2)) write(66);
-        ;acc16= variable 3
+L788:
         LD    HL,(05003H)
-        ;acc16+ variable 3
+L789:
         LD    DE,(05003H)
         ADD   HL,DE
-        ;<acc16
+L790:
         PUSH HL
-        ;acc8= constant 12
+L791:
         LD    A,12
-        ;<acc8= constant 1
+L792:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L793:
         ADD   A,2
-        ;/acc8 unstack8
+L794:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L795:
         POP  HL
-        ;acc16CompareAcc8
+L796:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 801
+L797:
         JP    NC,L801
-        ;acc8= constant 66
+L798:
         LD    A,66
-        ;call writeAcc8
+L799:
         CALL  writeA
+L800:
         ;;test5.j(95)   if (one+four  != 12/(1+2)) write(65);
-        ;acc16= variable 3
+L801:
         LD    HL,(05003H)
-        ;acc16+ variable 7
+L802:
         LD    DE,(05007H)
         ADD   HL,DE
-        ;<acc16
+L803:
         PUSH HL
-        ;acc8= constant 12
+L804:
         LD    A,12
-        ;<acc8= constant 1
+L805:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L806:
         ADD   A,2
-        ;/acc8 unstack8
+L807:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L808:
         POP  HL
-        ;acc16CompareAcc8
+L809:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;breq 814
+L810:
         JP    Z,L814
-        ;acc8= constant 65
+L811:
         LD    A,65
-        ;call writeAcc8
+L812:
         CALL  writeA
+L813:
         ;;test5.j(96)   if (one+three == 12/(1+2)) write(64);
-        ;acc16= variable 3
+L814:
         LD    HL,(05003H)
-        ;acc16+ variable 5
+L815:
         LD    DE,(05005H)
         ADD   HL,DE
-        ;<acc16
+L816:
         PUSH HL
-        ;acc8= constant 12
+L817:
         LD    A,12
-        ;<acc8= constant 1
+L818:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L819:
         ADD   A,2
-        ;/acc8 unstack8
+L820:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= unstack16
+L821:
         POP  HL
-        ;acc16CompareAcc8
+L822:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 829
+L823:
         JP    NZ,L829
-        ;acc8= constant 64
+L824:
         LD    A,64
-        ;call writeAcc8
+L825:
         CALL  writeA
+L826:
         ;;test5.j(97)   //stack level 1
+L827:
         ;;test5.j(98)   //integer-byte
+L828:
         ;;test5.j(99)   if (four >= 4) write(63);
-        ;acc16= variable 7
+L829:
         LD    HL,(05007H)
-        ;acc8= constant 4
+L830:
         LD    A,4
-        ;acc16CompareAcc8
+L831:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 836
+L832:
         JP    C,L836
-        ;acc8= constant 63
+L833:
         LD    A,63
-        ;call writeAcc8
+L834:
         CALL  writeA
+L835:
         ;;test5.j(100)   if (four >= 12/(1+2)) write(62);
-        ;acc8= constant 12
+L836:
         LD    A,12
-        ;<acc8= constant 1
+L837:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L838:
         ADD   A,2
-        ;/acc8 unstack8
+L839:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 7
+L840:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L841:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 846
+L842:
         JP    C,L846
-        ;acc8= constant 62
+L843:
         LD    A,62
-        ;call writeAcc8
+L844:
         CALL  writeA
+L845:
         ;;test5.j(101)   if (five >= 4) write(61);
-        ;acc16= variable 9
+L846:
         LD    HL,(05009H)
-        ;acc8= constant 4
+L847:
         LD    A,4
-        ;acc16CompareAcc8
+L848:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 853
+L849:
         JP    C,L853
-        ;acc8= constant 61
+L850:
         LD    A,61
-        ;call writeAcc8
+L851:
         CALL  writeA
+L852:
         ;;test5.j(102)   if (five >= 12/(1+2)) write(60);
-        ;acc8= constant 12
+L853:
         LD    A,12
-        ;<acc8= constant 1
+L854:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L855:
         ADD   A,2
-        ;/acc8 unstack8
+L856:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 9
+L857:
         LD    HL,(05009H)
-        ;acc16CompareAcc8
+L858:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 863
+L859:
         JP    C,L863
-        ;acc8= constant 60
+L860:
         LD    A,60
-        ;call writeAcc8
+L861:
         CALL  writeA
+L862:
         ;;test5.j(103)   if (four <= 4) write(59);
-        ;acc16= variable 7
+L863:
         LD    HL,(05007H)
-        ;acc8= constant 4
+L864:
         LD    A,4
-        ;acc16CompareAcc8
+L865:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 870
-        JP    Z,$+5
+L866:
+        JR    Z,$+5
         JP    C,L870
-        ;acc8= constant 59
+L867:
         LD    A,59
-        ;call writeAcc8
+L868:
         CALL  writeA
+L869:
         ;;test5.j(104)   if (four <= 12/(1+2)) write(58);
-        ;acc8= constant 12
+L870:
         LD    A,12
-        ;<acc8= constant 1
+L871:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L872:
         ADD   A,2
-        ;/acc8 unstack8
+L873:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 7
+L874:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L875:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 880
-        JP    Z,$+5
+L876:
+        JR    Z,$+5
         JP    C,L880
-        ;acc8= constant 58
+L877:
         LD    A,58
-        ;call writeAcc8
+L878:
         CALL  writeA
+L879:
         ;;test5.j(105)   if (three <= 4) write(57);
-        ;acc16= variable 5
+L880:
         LD    HL,(05005H)
-        ;acc8= constant 4
+L881:
         LD    A,4
-        ;acc16CompareAcc8
+L882:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 887
-        JP    Z,$+5
+L883:
+        JR    Z,$+5
         JP    C,L887
-        ;acc8= constant 57
+L884:
         LD    A,57
-        ;call writeAcc8
+L885:
         CALL  writeA
+L886:
         ;;test5.j(106)   if (three <= 12/(1+2)) write(56);
-        ;acc8= constant 12
+L887:
         LD    A,12
-        ;<acc8= constant 1
+L888:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L889:
         ADD   A,2
-        ;/acc8 unstack8
+L890:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 5
+L891:
         LD    HL,(05005H)
-        ;acc16CompareAcc8
+L892:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brgt 897
-        JP    Z,$+5
+L893:
+        JR    Z,$+5
         JP    C,L897
-        ;acc8= constant 56
+L894:
         LD    A,56
-        ;call writeAcc8
+L895:
         CALL  writeA
+L896:
         ;;test5.j(107)   if (five > 4) write(55);
-        ;acc16= variable 9
+L897:
         LD    HL,(05009H)
-        ;acc8= constant 4
+L898:
         LD    A,4
-        ;acc16CompareAcc8
+L899:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 904
+L900:
         JP    Z,L904
-        ;acc8= constant 55
+L901:
         LD    A,55
-        ;call writeAcc8
+L902:
         CALL  writeA
+L903:
         ;;test5.j(108)   if (five > 12/(1+2)) write(54);
-        ;acc8= constant 12
+L904:
         LD    A,12
-        ;<acc8= constant 1
+L905:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L906:
         ADD   A,2
-        ;/acc8 unstack8
+L907:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 9
+L908:
         LD    HL,(05009H)
-        ;acc16CompareAcc8
+L909:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 914
+L910:
         JP    Z,L914
-        ;acc8= constant 54
+L911:
         LD    A,54
-        ;call writeAcc8
+L912:
         CALL  writeA
+L913:
         ;;test5.j(109)   if (three < 4) write(53);
-        ;acc16= variable 5
+L914:
         LD    HL,(05005H)
-        ;acc8= constant 4
+L915:
         LD    A,4
-        ;acc16CompareAcc8
+L916:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 921
+L917:
         JP    NC,L921
-        ;acc8= constant 53
+L918:
         LD    A,53
-        ;call writeAcc8
+L919:
         CALL  writeA
+L920:
         ;;test5.j(110)   if (three < 12/(1+2)) write(52);
-        ;acc8= constant 12
+L921:
         LD    A,12
-        ;<acc8= constant 1
+L922:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L923:
         ADD   A,2
-        ;/acc8 unstack8
+L924:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 5
+L925:
         LD    HL,(05005H)
-        ;acc16CompareAcc8
+L926:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 931
+L927:
         JP    NC,L931
-        ;acc8= constant 52
+L928:
         LD    A,52
-        ;call writeAcc8
+L929:
         CALL  writeA
+L930:
         ;;test5.j(111)   if (three != 4) write(51);
-        ;acc16= variable 5
+L931:
         LD    HL,(05005H)
-        ;acc8= constant 4
+L932:
         LD    A,4
-        ;acc16CompareAcc8
+L933:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;breq 938
+L934:
         JP    Z,L938
-        ;acc8= constant 51
+L935:
         LD    A,51
-        ;call writeAcc8
+L936:
         CALL  writeA
+L937:
         ;;test5.j(112)   if (three != 12/(1+2)) write(50);
-        ;acc8= constant 12
+L938:
         LD    A,12
-        ;<acc8= constant 1
+L939:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L940:
         ADD   A,2
-        ;/acc8 unstack8
+L941:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 5
+L942:
         LD    HL,(05005H)
-        ;acc16CompareAcc8
+L943:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;breq 948
+L944:
         JP    Z,L948
-        ;acc8= constant 50
+L945:
         LD    A,50
-        ;call writeAcc8
+L946:
         CALL  writeA
+L947:
         ;;test5.j(113)   if (four == 4) write(49);
-        ;acc16= variable 7
+L948:
         LD    HL,(05007H)
-        ;acc8= constant 4
+L949:
         LD    A,4
-        ;acc16CompareAcc8
+L950:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 955
+L951:
         JP    NZ,L955
-        ;acc8= constant 49
+L952:
         LD    A,49
-        ;call writeAcc8
+L953:
         CALL  writeA
+L954:
         ;;test5.j(114)   if (four == 12/(1+2)) write(48);
-        ;acc8= constant 12
+L955:
         LD    A,12
-        ;<acc8= constant 1
+L956:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L957:
         ADD   A,2
-        ;/acc8 unstack8
+L958:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc16= variable 7
+L959:
         LD    HL,(05007H)
-        ;acc16CompareAcc8
+L960:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 966
+L961:
         JP    NZ,L966
-        ;acc8= constant 48
+L962:
         LD    A,48
-        ;call writeAcc8
+L963:
         CALL  writeA
+L964:
         ;;test5.j(115)   //byte-integer
+L965:
         ;;test5.j(116)   if (4 >= four) write(47);
-        ;acc16= variable 7
+L966:
         LD    HL,(05007H)
-        ;acc8= constant 4
+L967:
         LD    A,4
-        ;acc8CompareAcc16
+L968:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 973
+L969:
         JP    C,L973
-        ;acc8= constant 47
+L970:
         LD    A,47
-        ;call writeAcc8
+L971:
         CALL  writeA
+L972:
         ;;test5.j(117)   if (4 >= twelve/(1+2)) write(46);
-        ;acc16= variable 11
+L973:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L974:
         LD    A,1
-        ;acc8+ constant 2
+L975:
         ADD   A,2
-        ;acc16/ acc8
+L976:
         CALL  div16_8
-        ;acc8= constant 4
+L977:
         LD    A,4
-        ;acc8CompareAcc16
+L978:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 983
+L979:
         JP    C,L983
-        ;acc8= constant 46
+L980:
         LD    A,46
-        ;call writeAcc8
+L981:
         CALL  writeA
+L982:
         ;;test5.j(118)   if (5 >= four) write(45);
-        ;acc16= variable 7
+L983:
         LD    HL,(05007H)
-        ;acc8= constant 5
+L984:
         LD    A,5
-        ;acc8CompareAcc16
+L985:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 990
+L986:
         JP    C,L990
-        ;acc8= constant 45
+L987:
         LD    A,45
-        ;call writeAcc8
+L988:
         CALL  writeA
+L989:
         ;;test5.j(119)   if (5 >= twelve/(1+2)) write(44);
-        ;acc16= variable 11
+L990:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L991:
         LD    A,1
-        ;acc8+ constant 2
+L992:
         ADD   A,2
-        ;acc16/ acc8
+L993:
         CALL  div16_8
-        ;acc8= constant 5
+L994:
         LD    A,5
-        ;acc8CompareAcc16
+L995:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 1000
+L996:
         JP    C,L1000
-        ;acc8= constant 44
+L997:
         LD    A,44
-        ;call writeAcc8
+L998:
         CALL  writeA
+L999:
         ;;test5.j(120)   if (4 <= four) write(43);
-        ;acc16= variable 7
+L1000:
         LD    HL,(05007H)
-        ;acc8= constant 4
+L1001:
         LD    A,4
-        ;acc8CompareAcc16
+L1002:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 1007
-        JP    Z,$+5
+L1003:
+        JR    Z,$+5
         JP    C,L1007
-        ;acc8= constant 43
+L1004:
         LD    A,43
-        ;call writeAcc8
+L1005:
         CALL  writeA
+L1006:
         ;;test5.j(121)   if (4 <= twelve/(1+2)) write(42);
-        ;acc16= variable 11
+L1007:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L1008:
         LD    A,1
-        ;acc8+ constant 2
+L1009:
         ADD   A,2
-        ;acc16/ acc8
+L1010:
         CALL  div16_8
-        ;acc8= constant 4
+L1011:
         LD    A,4
-        ;acc8CompareAcc16
+L1012:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 1017
-        JP    Z,$+5
+L1013:
+        JR    Z,$+5
         JP    C,L1017
-        ;acc8= constant 42
+L1014:
         LD    A,42
-        ;call writeAcc8
+L1015:
         CALL  writeA
+L1016:
         ;;test5.j(122)   if (3 <= four) write(41);
-        ;acc16= variable 7
+L1017:
         LD    HL,(05007H)
-        ;acc8= constant 3
+L1018:
         LD    A,3
-        ;acc8CompareAcc16
+L1019:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 1024
-        JP    Z,$+5
+L1020:
+        JR    Z,$+5
         JP    C,L1024
-        ;acc8= constant 41
+L1021:
         LD    A,41
-        ;call writeAcc8
+L1022:
         CALL  writeA
+L1023:
         ;;test5.j(123)   if (3 <= twelve/(1+2)) write(40);
-        ;acc16= variable 11
+L1024:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L1025:
         LD    A,1
-        ;acc8+ constant 2
+L1026:
         ADD   A,2
-        ;acc16/ acc8
+L1027:
         CALL  div16_8
-        ;acc8= constant 3
+L1028:
         LD    A,3
-        ;acc8CompareAcc16
+L1029:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 1034
-        JP    Z,$+5
+L1030:
+        JR    Z,$+5
         JP    C,L1034
-        ;acc8= constant 40
+L1031:
         LD    A,40
-        ;call writeAcc8
+L1032:
         CALL  writeA
+L1033:
         ;;test5.j(124)   if (5 > four) write(39);
-        ;acc16= variable 7
+L1034:
         LD    HL,(05007H)
-        ;acc8= constant 5
+L1035:
         LD    A,5
-        ;acc8CompareAcc16
+L1036:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 1041
+L1037:
         JP    Z,L1041
-        ;acc8= constant 39
+L1038:
         LD    A,39
-        ;call writeAcc8
+L1039:
         CALL  writeA
+L1040:
         ;;test5.j(125)   if (5 > twelve/(1+2)) write(38);
-        ;acc16= variable 11
+L1041:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L1042:
         LD    A,1
-        ;acc8+ constant 2
+L1043:
         ADD   A,2
-        ;acc16/ acc8
+L1044:
         CALL  div16_8
-        ;acc8= constant 5
+L1045:
         LD    A,5
-        ;acc8CompareAcc16
+L1046:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 1051
+L1047:
         JP    Z,L1051
-        ;acc8= constant 38
+L1048:
         LD    A,38
-        ;call writeAcc8
+L1049:
         CALL  writeA
+L1050:
         ;;test5.j(126)   if (3 < four) write(37);
-        ;acc16= variable 7
+L1051:
         LD    HL,(05007H)
-        ;acc8= constant 3
+L1052:
         LD    A,3
-        ;acc8CompareAcc16
+L1053:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 1058
+L1054:
         JP    NC,L1058
-        ;acc8= constant 37
+L1055:
         LD    A,37
-        ;call writeAcc8
+L1056:
         CALL  writeA
+L1057:
         ;;test5.j(127)   if (3 < twelve/(1+2)) write(36);
-        ;acc16= variable 11
+L1058:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L1059:
         LD    A,1
-        ;acc8+ constant 2
+L1060:
         ADD   A,2
-        ;acc16/ acc8
+L1061:
         CALL  div16_8
-        ;acc8= constant 3
+L1062:
         LD    A,3
-        ;acc8CompareAcc16
+L1063:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 1068
+L1064:
         JP    NC,L1068
-        ;acc8= constant 36
+L1065:
         LD    A,36
-        ;call writeAcc8
+L1066:
         CALL  writeA
+L1067:
         ;;test5.j(128)   if (3 != four) write(35);
-        ;acc16= variable 7
+L1068:
         LD    HL,(05007H)
-        ;acc8= constant 3
+L1069:
         LD    A,3
-        ;acc8CompareAcc16
+L1070:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;breq 1075
+L1071:
         JP    Z,L1075
-        ;acc8= constant 35
+L1072:
         LD    A,35
-        ;call writeAcc8
+L1073:
         CALL  writeA
+L1074:
         ;;test5.j(129)   if (3 != twelve/(1+2)) write(34);
-        ;acc16= variable 11
+L1075:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L1076:
         LD    A,1
-        ;acc8+ constant 2
+L1077:
         ADD   A,2
-        ;acc16/ acc8
+L1078:
         CALL  div16_8
-        ;acc8= constant 3
+L1079:
         LD    A,3
-        ;acc8CompareAcc16
+L1080:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;breq 1085
+L1081:
         JP    Z,L1085
-        ;acc8= constant 34
+L1082:
         LD    A,34
-        ;call writeAcc8
+L1083:
         CALL  writeA
+L1084:
         ;;test5.j(130)   if (4 == four) write(33);
-        ;acc16= variable 7
+L1085:
         LD    HL,(05007H)
-        ;acc8= constant 4
+L1086:
         LD    A,4
-        ;acc8CompareAcc16
+L1087:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brne 1092
+L1088:
         JP    NZ,L1092
-        ;acc8= constant 33
+L1089:
         LD    A,33
-        ;call writeAcc8
+L1090:
         CALL  writeA
+L1091:
         ;;test5.j(131)   if (4 == twelve/(1+2)) write(32);
-        ;acc16= variable 11
+L1092:
         LD    HL,(0500BH)
-        ;acc8= constant 1
+L1093:
         LD    A,1
-        ;acc8+ constant 2
+L1094:
         ADD   A,2
-        ;acc16/ acc8
+L1095:
         CALL  div16_8
-        ;acc8= constant 4
+L1096:
         LD    A,4
-        ;acc8CompareAcc16
+L1097:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brne 1103
+L1098:
         JP    NZ,L1103
-        ;acc8= constant 32
+L1099:
         LD    A,32
-        ;call writeAcc8
+L1100:
         CALL  writeA
+L1101:
         ;;test5.j(132)   //integer-integer
+L1102:
         ;;test5.j(133)   if (400 >= 400) write(31);
-        ;acc16= constant 400
+L1103:
         LD    HL,400
-        ;acc16Comp constant 400
+L1104:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brlt 1109
+L1105:
         JP    C,L1109
-        ;acc8= constant 31
+L1106:
         LD    A,31
-        ;call writeAcc8
+L1107:
         CALL  writeA
+L1108:
         ;;test5.j(134)   if (400 >= 1200/(1+2)) write(30);
-        ;acc16= constant 1200
+L1109:
         LD    HL,1200
-        ;acc8= constant 1
+L1110:
         LD    A,1
-        ;acc8+ constant 2
+L1111:
         ADD   A,2
-        ;acc16/ acc8
+L1112:
         CALL  div16_8
-        ;acc16Comp constant 400
+L1113:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brgt 1118
-        JP    Z,$+5
+L1114:
+        JR    Z,$+5
         JP    C,L1118
-        ;acc8= constant 30
+L1115:
         LD    A,30
-        ;call writeAcc8
+L1116:
         CALL  writeA
+L1117:
         ;;test5.j(135)   if (500 >= 400) write(29);
-        ;acc16= constant 500
+L1118:
         LD    HL,500
-        ;acc16Comp constant 400
+L1119:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brlt 1124
+L1120:
         JP    C,L1124
-        ;acc8= constant 29
+L1121:
         LD    A,29
-        ;call writeAcc8
+L1122:
         CALL  writeA
+L1123:
         ;;test5.j(136)   if (500 >= 1200/(1+2)) write(28);
-        ;acc16= constant 1200
+L1124:
         LD    HL,1200
-        ;acc8= constant 1
+L1125:
         LD    A,1
-        ;acc8+ constant 2
+L1126:
         ADD   A,2
-        ;acc16/ acc8
+L1127:
         CALL  div16_8
-        ;acc16Comp constant 500
+L1128:
         LD    DE,500
         OR    A
         SBC   HL,DE
-        ;brgt 1133
-        JP    Z,$+5
+L1129:
+        JR    Z,$+5
         JP    C,L1133
-        ;acc8= constant 28
+L1130:
         LD    A,28
-        ;call writeAcc8
+L1131:
         CALL  writeA
+L1132:
         ;;test5.j(137)   if (400 <= 400) write(27);
-        ;acc16= constant 400
+L1133:
         LD    HL,400
-        ;acc16Comp constant 400
+L1134:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brgt 1139
-        JP    Z,$+5
+L1135:
+        JR    Z,$+5
         JP    C,L1139
-        ;acc8= constant 27
+L1136:
         LD    A,27
-        ;call writeAcc8
+L1137:
         CALL  writeA
+L1138:
         ;;test5.j(138)   if (400 <= 1200/(1+2)) write(26);
-        ;acc16= constant 1200
+L1139:
         LD    HL,1200
-        ;acc8= constant 1
+L1140:
         LD    A,1
-        ;acc8+ constant 2
+L1141:
         ADD   A,2
-        ;acc16/ acc8
+L1142:
         CALL  div16_8
-        ;acc16Comp constant 400
+L1143:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brlt 1148
+L1144:
         JP    C,L1148
-        ;acc8= constant 26
+L1145:
         LD    A,26
-        ;call writeAcc8
+L1146:
         CALL  writeA
+L1147:
         ;;test5.j(139)   if (300 <= 400) write(25);
-        ;acc16= constant 300
+L1148:
         LD    HL,300
-        ;acc16Comp constant 400
+L1149:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brgt 1154
-        JP    Z,$+5
+L1150:
+        JR    Z,$+5
         JP    C,L1154
-        ;acc8= constant 25
+L1151:
         LD    A,25
-        ;call writeAcc8
+L1152:
         CALL  writeA
+L1153:
         ;;test5.j(140)   if (300 <= 1200/(1+2)) write(24);
-        ;acc16= constant 1200
+L1154:
         LD    HL,1200
-        ;acc8= constant 1
+L1155:
         LD    A,1
-        ;acc8+ constant 2
+L1156:
         ADD   A,2
-        ;acc16/ acc8
+L1157:
         CALL  div16_8
-        ;acc16Comp constant 300
+L1158:
         LD    DE,300
         OR    A
         SBC   HL,DE
-        ;brlt 1163
+L1159:
         JP    C,L1163
-        ;acc8= constant 24
+L1160:
         LD    A,24
-        ;call writeAcc8
+L1161:
         CALL  writeA
+L1162:
         ;;test5.j(141)   if (500 > 400) write(23);
-        ;acc16= constant 500
+L1163:
         LD    HL,500
-        ;acc16Comp constant 400
+L1164:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brle 1169
+L1165:
         JP    Z,L1169
-        ;acc8= constant 23
+L1166:
         LD    A,23
-        ;call writeAcc8
+L1167:
         CALL  writeA
+L1168:
         ;;test5.j(142)   if (500 > 1200/(1+2)) write(22);
-        ;acc16= constant 1200
+L1169:
         LD    HL,1200
-        ;acc8= constant 1
+L1170:
         LD    A,1
-        ;acc8+ constant 2
+L1171:
         ADD   A,2
-        ;acc16/ acc8
+L1172:
         CALL  div16_8
-        ;acc16Comp constant 500
+L1173:
         LD    DE,500
         OR    A
         SBC   HL,DE
-        ;brge 1178
+L1174:
         JP    NC,L1178
-        ;acc8= constant 22
+L1175:
         LD    A,22
-        ;call writeAcc8
+L1176:
         CALL  writeA
+L1177:
         ;;test5.j(143)   if (300 < 400) write(21);
-        ;acc16= constant 300
+L1178:
         LD    HL,300
-        ;acc16Comp constant 400
+L1179:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brge 1184
+L1180:
         JP    NC,L1184
-        ;acc8= constant 21
+L1181:
         LD    A,21
-        ;call writeAcc8
+L1182:
         CALL  writeA
+L1183:
         ;;test5.j(144)   if (300 < 1200/(1+2)) write(20);
-        ;acc16= constant 1200
+L1184:
         LD    HL,1200
-        ;acc8= constant 1
+L1185:
         LD    A,1
-        ;acc8+ constant 2
+L1186:
         ADD   A,2
-        ;acc16/ acc8
+L1187:
         CALL  div16_8
-        ;acc16Comp constant 300
+L1188:
         LD    DE,300
         OR    A
         SBC   HL,DE
-        ;brle 1193
+L1189:
         JP    Z,L1193
-        ;acc8= constant 20
+L1190:
         LD    A,20
-        ;call writeAcc8
+L1191:
         CALL  writeA
+L1192:
         ;;test5.j(145)   if (300 != 400) write(19);
-        ;acc16= constant 300
+L1193:
         LD    HL,300
-        ;acc16Comp constant 400
+L1194:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;breq 1199
+L1195:
         JP    Z,L1199
-        ;acc8= constant 19
+L1196:
         LD    A,19
-        ;call writeAcc8
+L1197:
         CALL  writeA
+L1198:
         ;;test5.j(146)   if (300 != 1200/(1+2)) write(18);
-        ;acc16= constant 1200
+L1199:
         LD    HL,1200
-        ;acc8= constant 1
+L1200:
         LD    A,1
-        ;acc8+ constant 2
+L1201:
         ADD   A,2
-        ;acc16/ acc8
+L1202:
         CALL  div16_8
-        ;acc16Comp constant 300
+L1203:
         LD    DE,300
         OR    A
         SBC   HL,DE
-        ;breq 1208
+L1204:
         JP    Z,L1208
-        ;acc8= constant 18
+L1205:
         LD    A,18
-        ;call writeAcc8
+L1206:
         CALL  writeA
+L1207:
         ;;test5.j(147)   if (400 == 400) write(17);
-        ;acc16= constant 400
+L1208:
         LD    HL,400
-        ;acc16Comp constant 400
+L1209:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brne 1214
+L1210:
         JP    NZ,L1214
-        ;acc8= constant 17
+L1211:
         LD    A,17
-        ;call writeAcc8
+L1212:
         CALL  writeA
+L1213:
         ;;test5.j(148)   if (400 == 1200/(1+2)) write(16);
-        ;acc16= constant 1200
+L1214:
         LD    HL,1200
-        ;acc8= constant 1
+L1215:
         LD    A,1
-        ;acc8+ constant 2
+L1216:
         ADD   A,2
-        ;acc16/ acc8
+L1217:
         CALL  div16_8
-        ;acc16Comp constant 400
+L1218:
         LD    DE,400
         OR    A
         SBC   HL,DE
-        ;brne 1224
+L1219:
         JP    NZ,L1224
-        ;acc8= constant 16
+L1220:
         LD    A,16
-        ;call writeAcc8
+L1221:
         CALL  writeA
+L1222:
         ;;test5.j(149)   //byte-byte
+L1223:
         ;;test5.j(150)   if (4 >= 4) write(15);
-        ;acc8= constant 4
+L1224:
         LD    A,4
-        ;acc8Comp constant 4
+L1225:
         SUB   A,4
-        ;brlt 1230
+L1226:
         JP    C,L1230
-        ;acc8= constant 15
+L1227:
         LD    A,15
-        ;call writeAcc8
+L1228:
         CALL  writeA
+L1229:
         ;;test5.j(151)   if (4 >= 12/(1+2)) write(14);
-        ;acc8= constant 12
+L1230:
         LD    A,12
-        ;<acc8= constant 1
+L1231:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1232:
         ADD   A,2
-        ;/acc8 unstack8
+L1233:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 4
+L1234:
         SUB   A,4
-        ;brgt 1239
-        JP    Z,$+5
+L1235:
+        JR    Z,$+5
         JP    C,L1239
-        ;acc8= constant 14
+L1236:
         LD    A,14
-        ;call writeAcc8
+L1237:
         CALL  writeA
+L1238:
         ;;test5.j(152)   if (5 >= 4) write(13);
-        ;acc8= constant 5
+L1239:
         LD    A,5
-        ;acc8Comp constant 4
+L1240:
         SUB   A,4
-        ;brlt 1245
+L1241:
         JP    C,L1245
-        ;acc8= constant 13
+L1242:
         LD    A,13
-        ;call writeAcc8
+L1243:
         CALL  writeA
+L1244:
         ;;test5.j(153)   if (5 >= 12/(1+2)) write(12);
-        ;acc8= constant 12
+L1245:
         LD    A,12
-        ;<acc8= constant 1
+L1246:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1247:
         ADD   A,2
-        ;/acc8 unstack8
+L1248:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 5
+L1249:
         SUB   A,5
-        ;brgt 1254
-        JP    Z,$+5
+L1250:
+        JR    Z,$+5
         JP    C,L1254
-        ;acc8= constant 12
+L1251:
         LD    A,12
-        ;call writeAcc8
+L1252:
         CALL  writeA
+L1253:
         ;;test5.j(154)   if (4 <= 4) write(11);
-        ;acc8= constant 4
+L1254:
         LD    A,4
-        ;acc8Comp constant 4
+L1255:
         SUB   A,4
-        ;brgt 1260
-        JP    Z,$+5
+L1256:
+        JR    Z,$+5
         JP    C,L1260
-        ;acc8= constant 11
+L1257:
         LD    A,11
-        ;call writeAcc8
+L1258:
         CALL  writeA
+L1259:
         ;;test5.j(155)   if (4 <= 12/(1+2)) write(10);
-        ;acc8= constant 12
+L1260:
         LD    A,12
-        ;<acc8= constant 1
+L1261:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1262:
         ADD   A,2
-        ;/acc8 unstack8
+L1263:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 4
+L1264:
         SUB   A,4
-        ;brlt 1269
+L1265:
         JP    C,L1269
-        ;acc8= constant 10
+L1266:
         LD    A,10
-        ;call writeAcc8
+L1267:
         CALL  writeA
+L1268:
         ;;test5.j(156)   if (3 <= 4) write(9);
-        ;acc8= constant 3
+L1269:
         LD    A,3
-        ;acc8Comp constant 4
+L1270:
         SUB   A,4
-        ;brgt 1275
-        JP    Z,$+5
+L1271:
+        JR    Z,$+5
         JP    C,L1275
-        ;acc8= constant 9
+L1272:
         LD    A,9
-        ;call writeAcc8
+L1273:
         CALL  writeA
+L1274:
         ;;test5.j(157)   if (3 <= 12/(1+2)) write(8);
-        ;acc8= constant 12
+L1275:
         LD    A,12
-        ;<acc8= constant 1
+L1276:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1277:
         ADD   A,2
-        ;/acc8 unstack8
+L1278:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 3
+L1279:
         SUB   A,3
-        ;brlt 1284
+L1280:
         JP    C,L1284
-        ;acc8= constant 8
+L1281:
         LD    A,8
-        ;call writeAcc8
+L1282:
         CALL  writeA
+L1283:
         ;;test5.j(158)   if (5 > 4) write(7);
-        ;acc8= constant 5
+L1284:
         LD    A,5
-        ;acc8Comp constant 4
+L1285:
         SUB   A,4
-        ;brle 1290
+L1286:
         JP    Z,L1290
-        ;acc8= constant 7
+L1287:
         LD    A,7
-        ;call writeAcc8
+L1288:
         CALL  writeA
+L1289:
         ;;test5.j(159)   if (5 > 12/(1+2)) write(6);
-        ;acc8= constant 12
+L1290:
         LD    A,12
-        ;<acc8= constant 1
+L1291:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1292:
         ADD   A,2
-        ;/acc8 unstack8
+L1293:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 5
+L1294:
         SUB   A,5
-        ;brge 1299
+L1295:
         JP    NC,L1299
-        ;acc8= constant 6
+L1296:
         LD    A,6
-        ;call writeAcc8
+L1297:
         CALL  writeA
+L1298:
         ;;test5.j(160)   if (3 < 4) write(5);
-        ;acc8= constant 3
+L1299:
         LD    A,3
-        ;acc8Comp constant 4
+L1300:
         SUB   A,4
-        ;brge 1305
+L1301:
         JP    NC,L1305
-        ;acc8= constant 5
+L1302:
         LD    A,5
-        ;call writeAcc8
+L1303:
         CALL  writeA
+L1304:
         ;;test5.j(161)   if (3 < 12/(1+2)) write(4);
-        ;acc8= constant 12
+L1305:
         LD    A,12
-        ;<acc8= constant 1
+L1306:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1307:
         ADD   A,2
-        ;/acc8 unstack8
+L1308:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 3
+L1309:
         SUB   A,3
-        ;brle 1314
+L1310:
         JP    Z,L1314
-        ;acc8= constant 4
+L1311:
         LD    A,4
-        ;call writeAcc8
+L1312:
         CALL  writeA
+L1313:
         ;;test5.j(162)   if (3 != 4) write(3);
-        ;acc8= constant 3
+L1314:
         LD    A,3
-        ;acc8Comp constant 4
+L1315:
         SUB   A,4
-        ;breq 1320
+L1316:
         JP    Z,L1320
-        ;acc8= constant 3
+L1317:
         LD    A,3
-        ;call writeAcc8
+L1318:
         CALL  writeA
+L1319:
         ;;test5.j(163)   if (3 != 12/(1+2)) write(2);
-        ;acc8= constant 12
+L1320:
         LD    A,12
-        ;<acc8= constant 1
+L1321:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1322:
         ADD   A,2
-        ;/acc8 unstack8
+L1323:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 3
+L1324:
         SUB   A,3
-        ;breq 1329
+L1325:
         JP    Z,L1329
-        ;acc8= constant 2
+L1326:
         LD    A,2
-        ;call writeAcc8
+L1327:
         CALL  writeA
+L1328:
         ;;test5.j(164)   if (4 == 4) write(1);
-        ;acc8= constant 4
+L1329:
         LD    A,4
-        ;acc8Comp constant 4
+L1330:
         SUB   A,4
-        ;brne 1335
+L1331:
         JP    NZ,L1335
-        ;acc8= constant 1
+L1332:
         LD    A,1
-        ;call writeAcc8
+L1333:
         CALL  writeA
+L1334:
         ;;test5.j(165)   if (4 == 12/(1+2)) write(0);
-        ;acc8= constant 12
+L1335:
         LD    A,12
-        ;<acc8= constant 1
+L1336:
         PUSH  AF
         LD    A,1
-        ;acc8+ constant 2
+L1337:
         ADD   A,2
-        ;/acc8 unstack8
+L1338:
         LD    C,A
         POP   AF
         CALL  div8
-        ;acc8Comp constant 4
+L1339:
         SUB   A,4
-        ;brne 1344
+L1340:
         JP    NZ,L1344
-        ;acc8= constant 0
+L1341:
         LD    A,0
-        ;call writeAcc8
+L1342:
         CALL  writeA
+L1343:
         ;;test5.j(166) }
-        ;stop
+L1344:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

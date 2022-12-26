@@ -613,94 +613,152 @@ writeA:
         POP   HL
         RET
 main:
-        ;;test4.p(0) /* Program to test division */
-        ;;test4.p(1) class TestMultiplyDivide {
-        ;;test4.p(2)   write(11);
+L0:
+        ;;test4.j(0) /* Program to test division */
+L1:
+        ;;test4.j(1) class TestMultiplyDivide {
+L2:
+        ;;test4.j(2)   write(11);
+L3:
         LD    A,11
+L4:
         CALL  writeA
-        ;;test4.p(3)   write((4 * 5) / 2);
+L5:
+        ;;test4.j(3)   write((4 * 5) / 2);
+L6:
         LD    A,4
+L7:
         LD    B,A
         LD    C,5
         MLT   BC
         LD    A,C
+L8:
         LD    C,2
         CALL  div8
+L9:
         CALL  writeA
-        ;;test4.p(4)   write((7 * 7 + 5) / 6);
+L10:
+        ;;test4.j(4)   write((7 * 7 + 5) / 6);
+L11:
         LD    A,7
+L12:
         LD    B,A
         LD    C,7
         MLT   BC
         LD    A,C
+L13:
         ADD   A,5
+L14:
         LD    C,6
         CALL  div8
+L15:
         CALL  writeA
-        ;;test4.p(5)   write((4 * 5 * 2) / 5);
+L16:
+        ;;test4.j(5)   write((4 * 5 * 2) / 5);
+L17:
         LD    A,4
+L18:
         LD    B,A
         LD    C,5
         MLT   BC
         LD    A,C
+L19:
         LD    B,A
         LD    C,2
         MLT   BC
         LD    A,C
+L20:
         LD    C,5
         CALL  div8
+L21:
         CALL  writeA
-        ;;test4.p(6)   write((7 * 7) / 7);
+L22:
+        ;;test4.j(6)   write((7 * 7) / 7);
+L23:
         LD    A,7
+L24:
         LD    B,A
         LD    C,7
         MLT   BC
         LD    A,C
+L25:
         LD    C,7
         CALL  div8
+L26:
         CALL  writeA
-        ;;test4.p(7)   write((3 * 8) / 4);
+L27:
+        ;;test4.j(7)   write((3 * 8) / 4);
+L28:
         LD    A,3
+L29:
         LD    B,A
         LD    C,8
         MLT   BC
         LD    A,C
+L30:
         LD    C,4
         CALL  div8
+L31:
         CALL  writeA
-        ;;test4.p(8)   write(5 / 1);
+L32:
+        ;;test4.j(8)   write(5 / 1);
+L33:
         LD    A,5
+L34:
         LD    C,1
         CALL  div8
+L35:
         CALL  writeA
-        ;;test4.p(9)   write(8 / 2);
+L36:
+        ;;test4.j(9)   write(8 / 2);
+L37:
         LD    A,8
+L38:
         LD    C,2
         CALL  div8
+L39:
         CALL  writeA
-        ;;test4.p(10)   write(9 / 3);
+L40:
+        ;;test4.j(10)   write(9 / 3);
+L41:
         LD    A,9
+L42:
         LD    C,3
         CALL  div8
+L43:
         CALL  writeA
-        ;;test4.p(11)   write(4 / 2);
+L44:
+        ;;test4.j(11)   write(4 / 2);
+L45:
         LD    A,4
+L46:
         LD    C,2
         CALL  div8
+L47:
         CALL  writeA
-        ;;test4.p(12)   write(1 * 1);
+L48:
+        ;;test4.j(12)   write(1 * 1);
+L49:
         LD    A,1
+L50:
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+L51:
         CALL  writeA
-        ;;test4.p(13)   write(0 * 1);
+L52:
+        ;;test4.j(13)   write(0 * 1);
+L53:
         LD    A,0
+L54:
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+L55:
         CALL  writeA
-        ;;test4.p(14) }
+L56:
+        ;;test4.j(14) }
+L57:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

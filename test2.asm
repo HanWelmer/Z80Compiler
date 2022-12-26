@@ -613,2161 +613,2512 @@ writeA:
         POP   HL
         RET
 main:
+L0:
         ;;test2.j(0) /* Program to test branch instructions */
+L1:
         ;;test2.j(1) class TestBranches {
+L2:
         ;;test2.j(2)   int i = 2000;
-        ;acc16= constant 2000
+L3:
         LD    HL,2000
-        ;acc16=> variable 0
+L4:
         LD    (05000H),HL
+L5:
         ;;test2.j(3)   int i1 = 1000;
-        ;acc16= constant 1000
+L6:
         LD    HL,1000
-        ;acc16=> variable 2
+L7:
         LD    (05002H),HL
+L8:
         ;;test2.j(4)   int i3 = 3000;
-        ;acc16= constant 3000
+L9:
         LD    HL,3000
-        ;acc16=> variable 4
+L10:
         LD    (05004H),HL
+L11:
         ;;test2.j(5)   byte b = 20;
-        ;acc8= constant 20
+L12:
         LD    A,20
-        ;acc8=> variable 6
+L13:
         LD    (05006H),A
+L14:
         ;;test2.j(6)   byte b1 = 10;
-        ;acc8= constant 10
+L15:
         LD    A,10
-        ;acc8=> variable 7
+L16:
         LD    (05007H),A
+L17:
         ;;test2.j(7)   byte b3 = 30;
-        ;acc8= constant 30
+L18:
         LD    A,30
-        ;acc8=> variable 8
+L19:
         LD    (05008H),A
+L20:
         ;;test2.j(8)     /*Possible operand types: 
+L21:
         ;;test2.j(9)      * leftOperand:  constant, acc, var, stack16, stack8
+L22:
         ;;test2.j(10)      * rightOperand: constant, acc, var, stack16, stack8
+L23:
         ;;test2.j(11)      *Possible datatype combinations:
+L24:
         ;;test2.j(12)      * integer - integer
+L25:
         ;;test2.j(13)      * integer - byte
+L26:
         ;;test2.j(14)      * byte - integer
+L27:
         ;;test2.j(15)      * byte - byte
+L28:
         ;;test2.j(16)     */
+L29:
         ;;test2.j(17) 
+L30:
         ;;test2.j(18)   /************************/
+L31:
         ;;test2.j(19)   // stack16 - constant
+L32:
         ;;test2.j(20)   // stack16 - acc
+L33:
         ;;test2.j(21)   // stack16 - var
+L34:
         ;;test2.j(22)   // stack16 - stack16
+L35:
         ;;test2.j(23)   // stack16 - stack8
+L36:
         ;;test2.j(24) 
+L37:
         ;;test2.j(25)   /************************/
+L38:
         ;;test2.j(26)   // stack8 - constant
+L39:
         ;;test2.j(27)   // stack8 - acc
+L40:
         ;;test2.j(28)   // stack8 - var
+L41:
         ;;test2.j(29)   // stack8 - stack16
+L42:
         ;;test2.j(30)   // stack8 - stack8
+L43:
         ;;test2.j(31) 
+L44:
         ;;test2.j(32)   /************************/
+L45:
         ;;test2.j(33)   // var - stack8
+L46:
         ;;test2.j(34)   // integer - integer
+L47:
         ;;test2.j(35) 
+L48:
         ;;test2.j(36)   // var - stack8
+L49:
         ;;test2.j(37)   // integer - byte 
+L50:
         ;;test2.j(38) 
+L51:
         ;;test2.j(39)   // var - stack8
+L52:
         ;;test2.j(40)   // byte - integer
+L53:
         ;;test2.j(41) 
+L54:
         ;;test2.j(42)   // var - stack8
+L55:
         ;;test2.j(43)   // byte - byte
+L56:
         ;;test2.j(44) 
+L57:
         ;;test2.j(45)   /************************/
+L58:
         ;;test2.j(46)   // var - stack16
+L59:
         ;;test2.j(47)   // integer - integer
+L60:
         ;;test2.j(48) 
+L61:
         ;;test2.j(49)   // var - stack16
+L62:
         ;;test2.j(50)   // integer - byte
+L63:
         ;;test2.j(51) 
+L64:
         ;;test2.j(52)   // var - stack16
+L65:
         ;;test2.j(53)   // byte - integer
+L66:
         ;;test2.j(54) 
+L67:
         ;;test2.j(55)   // var - stack16
+L68:
         ;;test2.j(56)   // byte - byte
+L69:
         ;;test2.j(57) 
+L70:
         ;;test2.j(58)   /************************/
+L71:
         ;;test2.j(59)   // var - var
+L72:
         ;;test2.j(60)   // integer - integer
+L73:
         ;;test2.j(61)   write(159);
-        ;acc8= constant 159
+L74:
         LD    A,159
-        ;call writeAcc8
+L75:
         CALL  writeA
+L76:
         ;;test2.j(62)   write(158);
-        ;acc8= constant 158
+L77:
         LD    A,158
-        ;call writeAcc8
+L78:
         CALL  writeA
+L79:
         ;;test2.j(63)   if (i > i1) write(157);
-        ;acc16= variable 0
+L80:
         LD    HL,(05000H)
-        ;acc16Comp variable 2
+L81:
         LD    DE,(05002H)
         OR    A
         SBC   HL,DE
-        ;brle 86
+L82:
         JP    Z,L86
-        ;acc8= constant 157
+L83:
         LD    A,157
-        ;call writeAcc8
+L84:
         CALL  writeA
+L85:
         ;;test2.j(64)   if (i < i3) write(156);
-        ;acc16= variable 0
+L86:
         LD    HL,(05000H)
-        ;acc16Comp variable 4
+L87:
         LD    DE,(05004H)
         OR    A
         SBC   HL,DE
-        ;brge 94
+L88:
         JP    NC,L94
-        ;acc8= constant 156
+L89:
         LD    A,156
-        ;call writeAcc8
+L90:
         CALL  writeA
+L91:
         ;;test2.j(65)   // var - var
+L92:
         ;;test2.j(66)   // integer - byte
+L93:
         ;;test2.j(67)   if (i > i1) write(155);
-        ;acc16= variable 0
+L94:
         LD    HL,(05000H)
-        ;acc16Comp variable 2
+L95:
         LD    DE,(05002H)
         OR    A
         SBC   HL,DE
-        ;brle 100
+L96:
         JP    Z,L100
-        ;acc8= constant 155
+L97:
         LD    A,155
-        ;call writeAcc8
+L98:
         CALL  writeA
+L99:
         ;;test2.j(68)   if (i < i3) write(154);
-        ;acc16= variable 0
+L100:
         LD    HL,(05000H)
-        ;acc16Comp variable 4
+L101:
         LD    DE,(05004H)
         OR    A
         SBC   HL,DE
-        ;brge 108
+L102:
         JP    NC,L108
-        ;acc8= constant 154
+L103:
         LD    A,154
-        ;call writeAcc8
+L104:
         CALL  writeA
+L105:
         ;;test2.j(69)   // var - var
+L106:
         ;;test2.j(70)   // byte - integer
+L107:
         ;;test2.j(71)   if (b > i1) write(999); else write(153);
-        ;acc8= variable 6
+L108:
         LD    A,(05006H)
-        ;acc16= variable 2
+L109:
         LD    HL,(05002H)
-        ;acc8CompareAcc16
+L110:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 115
+L111:
         JP    Z,L115
-        ;acc16= constant 999
+L112:
         LD    HL,999
-        ;call writeAcc16
+L113:
         CALL  writeHL
-        ;br 118
+L114:
         JP    L118
-        ;acc8= constant 153
+L115:
         LD    A,153
-        ;call writeAcc8
+L116:
         CALL  writeA
+L117:
         ;;test2.j(72)   if (b < i3) write(152);
-        ;acc8= variable 6
+L118:
         LD    A,(05006H)
-        ;acc16= variable 4
+L119:
         LD    HL,(05004H)
-        ;acc8CompareAcc16
+L120:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 127
+L121:
         JP    NC,L127
-        ;acc8= constant 152
+L122:
         LD    A,152
-        ;call writeAcc8
+L123:
         CALL  writeA
+L124:
         ;;test2.j(73)   // var - var
+L125:
         ;;test2.j(74)   // byte - byte
+L126:
         ;;test2.j(75)   if (b > b1) write(151);
-        ;acc8= variable 6
+L127:
         LD    A,(05006H)
-        ;acc8Comp variable 7
+L128:
         LD    B,A
         LD    A,(05007H)
         SUB   A,B
-        ;brle 133
+L129:
         JP    Z,L133
-        ;acc8= constant 151
+L130:
         LD    A,151
-        ;call writeAcc8
+L131:
         CALL  writeA
+L132:
         ;;test2.j(76)   if (b < b3) write(150);
-        ;acc8= variable 6
+L133:
         LD    A,(05006H)
-        ;acc8Comp variable 8
+L134:
         LD    B,A
         LD    A,(05008H)
         SUB   A,B
-        ;brge 143
+L135:
         JP    NC,L143
-        ;acc8= constant 150
+L136:
         LD    A,150
-        ;call writeAcc8
+L137:
         CALL  writeA
+L138:
         ;;test2.j(77) 
+L139:
         ;;test2.j(78)   /************************/
+L140:
         ;;test2.j(79)   // var - acc
+L141:
         ;;test2.j(80)   // integer - integer
+L142:
         ;;test2.j(81)   write(149);
-        ;acc8= constant 149
+L143:
         LD    A,149
-        ;call writeAcc8
+L144:
         CALL  writeA
+L145:
         ;;test2.j(82)   write(148);
-        ;acc8= constant 148
+L146:
         LD    A,148
-        ;call writeAcc8
+L147:
         CALL  writeA
+L148:
         ;;test2.j(83)   if (i > 1000+0) write(147);
-        ;acc16= constant 1000
+L149:
         LD    HL,1000
-        ;acc16+ constant 0
+L150:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp variable 0
+L151:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        ;brge 156
+L152:
         JP    NC,L156
-        ;acc8= constant 147
+L153:
         LD    A,147
-        ;call writeAcc8
+L154:
         CALL  writeA
+L155:
         ;;test2.j(84)   if (i < 3000+0) write(146);
-        ;acc16= constant 3000
+L156:
         LD    HL,3000
-        ;acc16+ constant 0
+L157:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp variable 0
+L158:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        ;brle 165
+L159:
         JP    Z,L165
-        ;acc8= constant 146
+L160:
         LD    A,146
-        ;call writeAcc8
+L161:
         CALL  writeA
+L162:
         ;;test2.j(85)   // var - acc
+L163:
         ;;test2.j(86)   // integer - byte
+L164:
         ;;test2.j(87)   if (i > 1000+0) write(145);
-        ;acc16= constant 1000
+L165:
         LD    HL,1000
-        ;acc16+ constant 0
+L166:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp variable 0
+L167:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        ;brge 172
+L168:
         JP    NC,L172
-        ;acc8= constant 145
+L169:
         LD    A,145
-        ;call writeAcc8
+L170:
         CALL  writeA
+L171:
         ;;test2.j(88)   if (i < 3000+0) write(144);
-        ;acc16= constant 3000
+L172:
         LD    HL,3000
-        ;acc16+ constant 0
+L173:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp variable 0
+L174:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        ;brle 181
+L175:
         JP    Z,L181
-        ;acc8= constant 144
+L176:
         LD    A,144
-        ;call writeAcc8
+L177:
         CALL  writeA
+L178:
         ;;test2.j(89)   // var - acc
+L179:
         ;;test2.j(90)   // byte - integer
+L180:
         ;;test2.j(91)   if (b > 1000+0) write(999); else write(143);
-        ;acc16= constant 1000
+L181:
         LD    HL,1000
-        ;acc16+ constant 0
+L182:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= variable 6
+L183:
         LD    A,(05006H)
-        ;acc8CompareAcc16
+L184:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 189
+L185:
         JP    Z,L189
-        ;acc16= constant 999
+L186:
         LD    HL,999
-        ;call writeAcc16
+L187:
         CALL  writeHL
-        ;br 192
+L188:
         JP    L192
-        ;acc8= constant 143
+L189:
         LD    A,143
-        ;call writeAcc8
+L190:
         CALL  writeA
+L191:
         ;;test2.j(92)   if (b < 1000+0) write(142);
-        ;acc16= constant 1000
+L192:
         LD    HL,1000
-        ;acc16+ constant 0
+L193:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= variable 6
+L194:
         LD    A,(05006H)
-        ;acc8CompareAcc16
+L195:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 202
+L196:
         JP    NC,L202
-        ;acc8= constant 142
+L197:
         LD    A,142
-        ;call writeAcc8
+L198:
         CALL  writeA
+L199:
         ;;test2.j(93)   // var - acc
+L200:
         ;;test2.j(94)   // byte - byte
+L201:
         ;;test2.j(95)   if (b > 10+0) write(141);
-        ;acc8= constant 10
+L202:
         LD    A,10
-        ;acc8+ constant 0
+L203:
         ADD   A,0
-        ;acc8Comp variable 6
+L204:
         LD    B,A
         LD    A,(05006H)
         SUB   A,B
-        ;brge 209
+L205:
         JP    NC,L209
-        ;acc8= constant 141
+L206:
         LD    A,141
-        ;call writeAcc8
+L207:
         CALL  writeA
+L208:
         ;;test2.j(96)   if (b < 30+0) write(140);
-        ;acc8= constant 30
+L209:
         LD    A,30
-        ;acc8+ constant 0
+L210:
         ADD   A,0
-        ;acc8Comp variable 6
+L211:
         LD    B,A
         LD    A,(05006H)
         SUB   A,B
-        ;brle 220
+L212:
         JP    Z,L220
-        ;acc8= constant 140
+L213:
         LD    A,140
-        ;call writeAcc8
+L214:
         CALL  writeA
+L215:
         ;;test2.j(97) 
+L216:
         ;;test2.j(98)   /************************/
+L217:
         ;;test2.j(99)   // var - constant
+L218:
         ;;test2.j(100)   // integer - integer
+L219:
         ;;test2.j(101)   write(139);
-        ;acc8= constant 139
+L220:
         LD    A,139
-        ;call writeAcc8
+L221:
         CALL  writeA
+L222:
         ;;test2.j(102)   write(138);
-        ;acc8= constant 138
+L223:
         LD    A,138
-        ;call writeAcc8
+L224:
         CALL  writeA
+L225:
         ;;test2.j(103)   if (i > 1000) write(137);
-        ;acc16= variable 0
+L226:
         LD    HL,(05000H)
-        ;acc16Comp constant 1000
+L227:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brle 232
+L228:
         JP    Z,L232
-        ;acc8= constant 137
+L229:
         LD    A,137
-        ;call writeAcc8
+L230:
         CALL  writeA
+L231:
         ;;test2.j(104)   if (i < 3000) write(136);
-        ;acc16= variable 0
+L232:
         LD    HL,(05000H)
-        ;acc16Comp constant 3000
+L233:
         LD    DE,3000
         OR    A
         SBC   HL,DE
-        ;brge 240
+L234:
         JP    NC,L240
-        ;acc8= constant 136
+L235:
         LD    A,136
-        ;call writeAcc8
+L236:
         CALL  writeA
+L237:
         ;;test2.j(105)   // var - constant
+L238:
         ;;test2.j(106)   // integer - byte
+L239:
         ;;test2.j(107)   if (i > 1000) write(135);
-        ;acc16= variable 0
+L240:
         LD    HL,(05000H)
-        ;acc16Comp constant 1000
+L241:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brle 246
+L242:
         JP    Z,L246
-        ;acc8= constant 135
+L243:
         LD    A,135
-        ;call writeAcc8
+L244:
         CALL  writeA
+L245:
         ;;test2.j(108)   if (i < 3000) write(134);
-        ;acc16= variable 0
+L246:
         LD    HL,(05000H)
-        ;acc16Comp constant 3000
+L247:
         LD    DE,3000
         OR    A
         SBC   HL,DE
-        ;brge 254
+L248:
         JP    NC,L254
-        ;acc8= constant 134
+L249:
         LD    A,134
-        ;call writeAcc8
+L250:
         CALL  writeA
+L251:
         ;;test2.j(109)   // var - constant
+L252:
         ;;test2.j(110)   // byte - integer
+L253:
         ;;test2.j(111)   if (b > 1000) write(999); else write(133);
-        ;acc8= variable 6
+L254:
         LD    A,(05006H)
-        ;acc16= constant 1000
+L255:
         LD    HL,1000
-        ;acc8CompareAcc16
+L256:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 261
+L257:
         JP    Z,L261
-        ;acc16= constant 999
+L258:
         LD    HL,999
-        ;call writeAcc16
+L259:
         CALL  writeHL
-        ;br 264
+L260:
         JP    L264
-        ;acc8= constant 133
+L261:
         LD    A,133
-        ;call writeAcc8
+L262:
         CALL  writeA
+L263:
         ;;test2.j(112)   if (b < 1000) write(132);
-        ;acc8= variable 6
+L264:
         LD    A,(05006H)
-        ;acc16= constant 1000
+L265:
         LD    HL,1000
-        ;acc8CompareAcc16
+L266:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 273
+L267:
         JP    NC,L273
-        ;acc8= constant 132
+L268:
         LD    A,132
-        ;call writeAcc8
+L269:
         CALL  writeA
+L270:
         ;;test2.j(113)   // var - constant
+L271:
         ;;test2.j(114)   // byte - byte
+L272:
         ;;test2.j(115)   if (b > 10) write(131);
-        ;acc8= variable 6
+L273:
         LD    A,(05006H)
-        ;acc8Comp constant 10
+L274:
         SUB   A,10
-        ;brle 279
+L275:
         JP    Z,L279
-        ;acc8= constant 131
+L276:
         LD    A,131
-        ;call writeAcc8
+L277:
         CALL  writeA
+L278:
         ;;test2.j(116)   if (b < 30) write(130);
-        ;acc8= variable 6
+L279:
         LD    A,(05006H)
-        ;acc8Comp constant 30
+L280:
         SUB   A,30
-        ;brge 289
+L281:
         JP    NC,L289
-        ;acc8= constant 130
+L282:
         LD    A,130
-        ;call writeAcc8
+L283:
         CALL  writeA
+L284:
         ;;test2.j(117) 
+L285:
         ;;test2.j(118)   /************************/
+L286:
         ;;test2.j(119)   // acc - stack8
+L287:
         ;;test2.j(120)   // integer - integer
+L288:
         ;;test2.j(121)   write(129);
-        ;acc8= constant 129
+L289:
         LD    A,129
-        ;call writeAcc8
+L290:
         CALL  writeA
+L291:
         ;;test2.j(122)   write(128);
-        ;acc8= constant 128
+L292:
         LD    A,128
-        ;call writeAcc8
+L293:
         CALL  writeA
+L294:
         ;;test2.j(123)   write(127);
-        ;acc8= constant 127
+L295:
         LD    A,127
-        ;call writeAcc8
+L296:
         CALL  writeA
+L297:
         ;;test2.j(124)   write(126);
-        ;acc8= constant 126
+L298:
         LD    A,126
-        ;call writeAcc8
+L299:
         CALL  writeA
+L300:
         ;;test2.j(125)   // acc - stack8
+L301:
         ;;test2.j(126)   // integer - byte
+L302:
         ;;test2.j(127)   write(125);
-        ;acc8= constant 125
+L303:
         LD    A,125
-        ;call writeAcc8
+L304:
         CALL  writeA
+L305:
         ;;test2.j(128)   write(124);
-        ;acc8= constant 124
+L306:
         LD    A,124
-        ;call writeAcc8
+L307:
         CALL  writeA
+L308:
         ;;test2.j(129)   // acc - stack8
+L309:
         ;;test2.j(130)   // byte - integer
+L310:
         ;;test2.j(131)   write(123);
-        ;acc8= constant 123
+L311:
         LD    A,123
-        ;call writeAcc8
+L312:
         CALL  writeA
+L313:
         ;;test2.j(132)   write(122);
-        ;acc8= constant 122
+L314:
         LD    A,122
-        ;call writeAcc8
+L315:
         CALL  writeA
+L316:
         ;;test2.j(133)   // acc - stack8
+L317:
         ;;test2.j(134)   // byte - byte
+L318:
         ;;test2.j(135)   write(121);
-        ;acc8= constant 121
+L319:
         LD    A,121
-        ;call writeAcc8
+L320:
         CALL  writeA
+L321:
         ;;test2.j(136)   write(120);
-        ;acc8= constant 120
+L322:
         LD    A,120
-        ;call writeAcc8
+L323:
         CALL  writeA
+L324:
         ;;test2.j(137) 
+L325:
         ;;test2.j(138)   /************************/
+L326:
         ;;test2.j(139)   // acc - stack16
+L327:
         ;;test2.j(140)   // integer - integer
+L328:
         ;;test2.j(141)   write(119);
-        ;acc8= constant 119
+L329:
         LD    A,119
-        ;call writeAcc8
+L330:
         CALL  writeA
+L331:
         ;;test2.j(142)   write(118);
-        ;acc8= constant 118
+L332:
         LD    A,118
-        ;call writeAcc8
+L333:
         CALL  writeA
+L334:
         ;;test2.j(143)   write(117);
-        ;acc8= constant 117
+L335:
         LD    A,117
-        ;call writeAcc8
+L336:
         CALL  writeA
+L337:
         ;;test2.j(144)   write(116);
-        ;acc8= constant 116
+L338:
         LD    A,116
-        ;call writeAcc8
+L339:
         CALL  writeA
+L340:
         ;;test2.j(145)   // acc - stack16
+L341:
         ;;test2.j(146)   // integer - byte
+L342:
         ;;test2.j(147)   write(115);
-        ;acc8= constant 115
+L343:
         LD    A,115
-        ;call writeAcc8
+L344:
         CALL  writeA
+L345:
         ;;test2.j(148)   write(114);
-        ;acc8= constant 114
+L346:
         LD    A,114
-        ;call writeAcc8
+L347:
         CALL  writeA
+L348:
         ;;test2.j(149)   // acc - stack16
+L349:
         ;;test2.j(150)   // byte - integer
+L350:
         ;;test2.j(151)   write(113);
-        ;acc8= constant 113
+L351:
         LD    A,113
-        ;call writeAcc8
+L352:
         CALL  writeA
+L353:
         ;;test2.j(152)   write(112);
-        ;acc8= constant 112
+L354:
         LD    A,112
-        ;call writeAcc8
+L355:
         CALL  writeA
+L356:
         ;;test2.j(153)   // acc - stack16
+L357:
         ;;test2.j(154)   // byte - byte
+L358:
         ;;test2.j(155)   write(111);
-        ;acc8= constant 111
+L359:
         LD    A,111
-        ;call writeAcc8
+L360:
         CALL  writeA
+L361:
         ;;test2.j(156)   write(110);
-        ;acc8= constant 110
+L362:
         LD    A,110
-        ;call writeAcc8
+L363:
         CALL  writeA
+L364:
         ;;test2.j(157) 
+L365:
         ;;test2.j(158)   /************************/
+L366:
         ;;test2.j(159)   // acc - var
+L367:
         ;;test2.j(160)   // integer - integer
+L368:
         ;;test2.j(161)   write(109);
-        ;acc8= constant 109
+L369:
         LD    A,109
-        ;call writeAcc8
+L370:
         CALL  writeA
+L371:
         ;;test2.j(162)   write(108);
-        ;acc8= constant 108
+L372:
         LD    A,108
-        ;call writeAcc8
+L373:
         CALL  writeA
+L374:
         ;;test2.j(163)   if (3000+0 > i) write(107);
-        ;acc16= constant 3000
+L375:
         LD    HL,3000
-        ;acc16+ constant 0
+L376:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp variable 0
+L377:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        ;brle 382
+L378:
         JP    Z,L382
-        ;acc8= constant 107
+L379:
         LD    A,107
-        ;call writeAcc8
+L380:
         CALL  writeA
+L381:
         ;;test2.j(164)   if (1000+0 < i) write(106);
-        ;acc16= constant 1000
+L382:
         LD    HL,1000
-        ;acc16+ constant 0
+L383:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp variable 0
+L384:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-        ;brge 391
+L385:
         JP    NC,L391
-        ;acc8= constant 106
+L386:
         LD    A,106
-        ;call writeAcc8
+L387:
         CALL  writeA
+L388:
         ;;test2.j(165)   // acc - var
+L389:
         ;;test2.j(166)   // integer - byte
+L390:
         ;;test2.j(167)   if (3000+0 > b) write(105);
-        ;acc16= constant 3000
+L391:
         LD    HL,3000
-        ;acc16+ constant 0
+L392:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= variable 6
+L393:
         LD    A,(05006H)
-        ;acc16CompareAcc8
+L394:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 399
+L395:
         JP    Z,L399
-        ;acc8= constant 105
+L396:
         LD    A,105
-        ;call writeAcc8
+L397:
         CALL  writeA
+L398:
         ;;test2.j(168)   if (1000+0 < b) write(999); else write(104);
-        ;acc16= constant 1000
+L399:
         LD    HL,1000
-        ;acc16+ constant 0
+L400:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= variable 6
+L401:
         LD    A,(05006H)
-        ;acc16CompareAcc8
+L402:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 407
+L403:
         JP    NC,L407
-        ;acc16= constant 999
+L404:
         LD    HL,999
-        ;call writeAcc16
+L405:
         CALL  writeHL
-        ;br 412
+L406:
         JP    L412
-        ;acc8= constant 104
+L407:
         LD    A,104
-        ;call writeAcc8
+L408:
         CALL  writeA
+L409:
         ;;test2.j(169)   // acc - var
+L410:
         ;;test2.j(170)   // byte - integer
+L411:
         ;;test2.j(171)   if (30+0 > i) write(999); else write(103);
-        ;acc8= constant 30
+L412:
         LD    A,30
-        ;acc8+ constant 0
+L413:
         ADD   A,0
-        ;acc16= variable 0
+L414:
         LD    HL,(05000H)
-        ;acc8CompareAcc16
+L415:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 420
+L416:
         JP    Z,L420
-        ;acc16= constant 999
+L417:
         LD    HL,999
-        ;call writeAcc16
+L418:
         CALL  writeHL
-        ;br 423
+L419:
         JP    L423
-        ;acc8= constant 103
+L420:
         LD    A,103
-        ;call writeAcc8
+L421:
         CALL  writeA
+L422:
         ;;test2.j(172)   if (10+0 < i) write(102);
-        ;acc8= constant 10
+L423:
         LD    A,10
-        ;acc8+ constant 0
+L424:
         ADD   A,0
-        ;acc16= variable 0
+L425:
         LD    HL,(05000H)
-        ;acc8CompareAcc16
+L426:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 433
+L427:
         JP    NC,L433
-        ;acc8= constant 102
+L428:
         LD    A,102
-        ;call writeAcc8
+L429:
         CALL  writeA
+L430:
         ;;test2.j(173)   // acc - var
+L431:
         ;;test2.j(174)   // byte - byte
+L432:
         ;;test2.j(175)   if (30+0 > b) write(101);
-        ;acc8= constant 30
+L433:
         LD    A,30
-        ;acc8+ constant 0
+L434:
         ADD   A,0
-        ;acc8Comp variable 6
+L435:
         LD    B,A
         LD    A,(05006H)
         SUB   A,B
-        ;brle 440
+L436:
         JP    Z,L440
-        ;acc8= constant 101
+L437:
         LD    A,101
-        ;call writeAcc8
+L438:
         CALL  writeA
+L439:
         ;;test2.j(176)   if (10+0 < b) write(100);
-        ;acc8= constant 10
+L440:
         LD    A,10
-        ;acc8+ constant 0
+L441:
         ADD   A,0
-        ;acc8Comp variable 6
+L442:
         LD    B,A
         LD    A,(05006H)
         SUB   A,B
-        ;brge 451
+L443:
         JP    NC,L451
-        ;acc8= constant 100
+L444:
         LD    A,100
-        ;call writeAcc8
+L445:
         CALL  writeA
+L446:
         ;;test2.j(177) 
+L447:
         ;;test2.j(178)   /************************/
+L448:
         ;;test2.j(179)   // acc - acc
+L449:
         ;;test2.j(180)   // integer - integer
+L450:
         ;;test2.j(181)   write(99);
-        ;acc8= constant 99
+L451:
         LD    A,99
-        ;call writeAcc8
+L452:
         CALL  writeA
+L453:
         ;;test2.j(182)   write(98);
-        ;acc8= constant 98
+L454:
         LD    A,98
-        ;call writeAcc8
+L455:
         CALL  writeA
+L456:
         ;;test2.j(183)   if (3000+0 > 2000+0) write(97);
-        ;acc16= constant 3000
+L457:
         LD    HL,3000
-        ;acc16+ constant 0
+L458:
         LD    DE,0
         ADD   HL,DE
-        ;<acc16
+L459:
         PUSH HL
-        ;acc16= constant 2000
+L460:
         LD    HL,2000
-        ;acc16+ constant 0
+L461:
         LD    DE,0
         ADD   HL,DE
-        ;revAcc16Comp unstack16
+L462:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brge 467
+L463:
         JP    NC,L467
-        ;acc8= constant 97
+L464:
         LD    A,97
-        ;call writeAcc8
+L465:
         CALL  writeA
+L466:
         ;;test2.j(184)   if (1000+0 < 2000+0) write(96);
-        ;acc16= constant 1000
+L467:
         LD    HL,1000
-        ;acc16+ constant 0
+L468:
         LD    DE,0
         ADD   HL,DE
-        ;<acc16
+L469:
         PUSH HL
-        ;acc16= constant 2000
+L470:
         LD    HL,2000
-        ;acc16+ constant 0
+L471:
         LD    DE,0
         ADD   HL,DE
-        ;revAcc16Comp unstack16
+L472:
         POP   DE
         OR    A
         SBC   HL,DE
-        ;brle 479
+L473:
         JP    Z,L479
-        ;acc8= constant 96
+L474:
         LD    A,96
-        ;call writeAcc8
+L475:
         CALL  writeA
+L476:
         ;;test2.j(185)   // acc - acc
+L477:
         ;;test2.j(186)   // integer - byte
+L478:
         ;;test2.j(187)   if (3000+0 > 20+0) write(95);
-        ;acc16= constant 3000
+L479:
         LD    HL,3000
-        ;acc16+ constant 0
+L480:
         LD    DE,0
         ADD   HL,DE
-        ;<acc16
+L481:
         PUSH HL
-        ;acc8= constant 20
+L482:
         LD    A,20
-        ;acc8+ constant 0
+L483:
         ADD   A,0
-        ;acc16= unstack16
+L484:
         POP  HL
-        ;acc16CompareAcc8
+L485:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 490
+L486:
         JP    Z,L490
-        ;acc8= constant 95
+L487:
         LD    A,95
-        ;call writeAcc8
+L488:
         CALL  writeA
+L489:
         ;;test2.j(188)   if (1000+0 < 20+0) write(999); else write(94);
-        ;acc16= constant 1000
+L490:
         LD    HL,1000
-        ;acc16+ constant 0
+L491:
         LD    DE,0
         ADD   HL,DE
-        ;<acc16
+L492:
         PUSH HL
-        ;acc8= constant 20
+L493:
         LD    A,20
-        ;acc8+ constant 0
+L494:
         ADD   A,0
-        ;acc16= unstack16
+L495:
         POP  HL
-        ;acc16CompareAcc8
+L496:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 501
+L497:
         JP    NC,L501
-        ;acc16= constant 999
+L498:
         LD    HL,999
-        ;call writeAcc16
+L499:
         CALL  writeHL
-        ;br 506
+L500:
         JP    L506
-        ;acc8= constant 94
+L501:
         LD    A,94
-        ;call writeAcc8
+L502:
         CALL  writeA
+L503:
         ;;test2.j(189)   // acc - acc
+L504:
         ;;test2.j(190)   // byte - integer
+L505:
         ;;test2.j(191)   if (30+0 > 2000+0) write(999); else write(93);
-        ;acc8= constant 30
+L506:
         LD    A,30
-        ;acc8+ constant 0
+L507:
         ADD   A,0
-        ;<acc8
+L508:
         PUSH AF
-        ;acc16= constant 2000
+L509:
         LD    HL,2000
-        ;acc16+ constant 0
+L510:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= unstack8
+L511:
         POP  AF
-        ;acc8CompareAcc16
+L512:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 517
+L513:
         JP    Z,L517
-        ;acc16= constant 999
+L514:
         LD    HL,999
-        ;call writeAcc16
+L515:
         CALL  writeHL
-        ;br 520
+L516:
         JP    L520
-        ;acc8= constant 93
+L517:
         LD    A,93
-        ;call writeAcc8
+L518:
         CALL  writeA
+L519:
         ;;test2.j(192)   if (10+0 < 2000+0) write(92);
-        ;acc8= constant 10
+L520:
         LD    A,10
-        ;acc8+ constant 0
+L521:
         ADD   A,0
-        ;<acc8
+L522:
         PUSH AF
-        ;acc16= constant 2000
+L523:
         LD    HL,2000
-        ;acc16+ constant 0
+L524:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= unstack8
+L525:
         POP  AF
-        ;acc8CompareAcc16
+L526:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 533
+L527:
         JP    NC,L533
-        ;acc8= constant 92
+L528:
         LD    A,92
-        ;call writeAcc8
+L529:
         CALL  writeA
+L530:
         ;;test2.j(193)   // acc - acc
+L531:
         ;;test2.j(194)   // byte - byte
+L532:
         ;;test2.j(195)   if (30+0 > 20+0) write(91);
-        ;acc8= constant 30
+L533:
         LD    A,30
-        ;acc8+ constant 0
+L534:
         ADD   A,0
-        ;<acc8
+L535:
         PUSH AF
-        ;acc8= constant 20
+L536:
         LD    A,20
-        ;acc8+ constant 0
+L537:
         ADD   A,0
-        ;revAcc8Comp unstack8
+L538:
         POP   BC
         SUB   A,B
-        ;brge 543
+L539:
         JP    NC,L543
-        ;acc8= constant 91
+L540:
         LD    A,91
-        ;call writeAcc8
+L541:
         CALL  writeA
+L542:
         ;;test2.j(196)   if (10+0 < 20+0) write(90);
-        ;acc8= constant 10
+L543:
         LD    A,10
-        ;acc8+ constant 0
+L544:
         ADD   A,0
-        ;<acc8
+L545:
         PUSH AF
-        ;acc8= constant 20
+L546:
         LD    A,20
-        ;acc8+ constant 0
+L547:
         ADD   A,0
-        ;revAcc8Comp unstack8
+L548:
         POP   BC
         SUB   A,B
-        ;brle 557
+L549:
         JP    Z,L557
-        ;acc8= constant 90
+L550:
         LD    A,90
-        ;call writeAcc8
+L551:
         CALL  writeA
+L552:
         ;;test2.j(197) 
+L553:
         ;;test2.j(198)   /************************/
+L554:
         ;;test2.j(199)   // acc - constant
+L555:
         ;;test2.j(200)   // integer - integer
+L556:
         ;;test2.j(201)   write(89);
-        ;acc8= constant 89
+L557:
         LD    A,89
-        ;call writeAcc8
+L558:
         CALL  writeA
+L559:
         ;;test2.j(202)   write(88);
-        ;acc8= constant 88
+L560:
         LD    A,88
-        ;call writeAcc8
+L561:
         CALL  writeA
+L562:
         ;;test2.j(203)   if (3000+0 > 2000) write(87);
-        ;acc16= constant 3000
+L563:
         LD    HL,3000
-        ;acc16+ constant 0
+L564:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp constant 2000
+L565:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        ;brle 570
+L566:
         JP    Z,L570
-        ;acc8= constant 87
+L567:
         LD    A,87
-        ;call writeAcc8
+L568:
         CALL  writeA
+L569:
         ;;test2.j(204)   if (1000+0 < 2000) write(86);
-        ;acc16= constant 1000
+L570:
         LD    HL,1000
-        ;acc16+ constant 0
+L571:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp constant 2000
+L572:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        ;brge 579
+L573:
         JP    NC,L579
-        ;acc8= constant 86
+L574:
         LD    A,86
-        ;call writeAcc8
+L575:
         CALL  writeA
+L576:
         ;;test2.j(205)   // acc - constant
+L577:
         ;;test2.j(206)   // integer - byte
+L578:
         ;;test2.j(207)   if (3000+0 > 20) write(85);
-        ;acc16= constant 3000
+L579:
         LD    HL,3000
-        ;acc16+ constant 0
+L580:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= constant 20
+L581:
         LD    A,20
-        ;acc16CompareAcc8
+L582:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 587
+L583:
         JP    Z,L587
-        ;acc8= constant 85
+L584:
         LD    A,85
-        ;call writeAcc8
+L585:
         CALL  writeA
+L586:
         ;;test2.j(208)   if (1000+0 < 20) write(999); else write(84);
-        ;acc16= constant 1000
+L587:
         LD    HL,1000
-        ;acc16+ constant 0
+L588:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= constant 20
+L589:
         LD    A,20
-        ;acc16CompareAcc8
+L590:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 595
+L591:
         JP    NC,L595
-        ;acc16= constant 999
+L592:
         LD    HL,999
-        ;call writeAcc16
+L593:
         CALL  writeHL
-        ;br 600
+L594:
         JP    L600
-        ;acc8= constant 84
+L595:
         LD    A,84
-        ;call writeAcc8
+L596:
         CALL  writeA
+L597:
         ;;test2.j(209)   // acc - constant
+L598:
         ;;test2.j(210)   // byte - integer
+L599:
         ;;test2.j(211)   if (30+0 > 2000) write(999); else write(83);
-        ;acc8= constant 30
+L600:
         LD    A,30
-        ;acc8+ constant 0
+L601:
         ADD   A,0
-        ;acc16= constant 2000
+L602:
         LD    HL,2000
-        ;acc8CompareAcc16
+L603:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 608
+L604:
         JP    Z,L608
-        ;acc16= constant 999
+L605:
         LD    HL,999
-        ;call writeAcc16
+L606:
         CALL  writeHL
-        ;br 611
+L607:
         JP    L611
-        ;acc8= constant 83
+L608:
         LD    A,83
-        ;call writeAcc8
+L609:
         CALL  writeA
+L610:
         ;;test2.j(212)   if (10+0 < 2000) write(82);
-        ;acc8= constant 10
+L611:
         LD    A,10
-        ;acc8+ constant 0
+L612:
         ADD   A,0
-        ;acc16= constant 2000
+L613:
         LD    HL,2000
-        ;acc8CompareAcc16
+L614:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 621
+L615:
         JP    NC,L621
-        ;acc8= constant 82
+L616:
         LD    A,82
-        ;call writeAcc8
+L617:
         CALL  writeA
+L618:
         ;;test2.j(213)   // acc - constant
+L619:
         ;;test2.j(214)   // byte - byte
+L620:
         ;;test2.j(215)   if (30+0 > 20) write(81);
-        ;acc8= constant 30
+L621:
         LD    A,30
-        ;acc8+ constant 0
+L622:
         ADD   A,0
-        ;acc8Comp constant 20
+L623:
         SUB   A,20
-        ;brle 628
+L624:
         JP    Z,L628
-        ;acc8= constant 81
+L625:
         LD    A,81
-        ;call writeAcc8
+L626:
         CALL  writeA
+L627:
         ;;test2.j(216)   if (10+0 < 20) write(80);
-        ;acc8= constant 10
+L628:
         LD    A,10
-        ;acc8+ constant 0
+L629:
         ADD   A,0
-        ;acc8Comp constant 20
+L630:
         SUB   A,20
-        ;brge 639
+L631:
         JP    NC,L639
-        ;acc8= constant 80
+L632:
         LD    A,80
-        ;call writeAcc8
+L633:
         CALL  writeA
+L634:
         ;;test2.j(217) 
+L635:
         ;;test2.j(218)   /************************/
+L636:
         ;;test2.j(219)   // constant - stack8
+L637:
         ;;test2.j(220)   // byte - byte
+L638:
         ;;test2.j(221)   write(79);
-        ;acc8= constant 79
+L639:
         LD    A,79
-        ;call writeAcc8
+L640:
         CALL  writeA
+L641:
         ;;test2.j(222)   write(78);
-        ;acc8= constant 78
+L642:
         LD    A,78
-        ;call writeAcc8
+L643:
         CALL  writeA
+L644:
         ;;test2.j(223)   write(77);
-        ;acc8= constant 77
+L645:
         LD    A,77
-        ;call writeAcc8
+L646:
         CALL  writeA
+L647:
         ;;test2.j(224)   write(76);
-        ;acc8= constant 76
+L648:
         LD    A,76
-        ;call writeAcc8
+L649:
         CALL  writeA
+L650:
         ;;test2.j(225)   // constant - stack8
+L651:
         ;;test2.j(226)   // byte - integer
+L652:
         ;;test2.j(227)   write(75);
-        ;acc8= constant 75
+L653:
         LD    A,75
-        ;call writeAcc8
+L654:
         CALL  writeA
+L655:
         ;;test2.j(228)   write(74);
-        ;acc8= constant 74
+L656:
         LD    A,74
-        ;call writeAcc8
+L657:
         CALL  writeA
+L658:
         ;;test2.j(229)   // constant - stack8
+L659:
         ;;test2.j(230)   // integer - byte
+L660:
         ;;test2.j(231)   write(73);
-        ;acc8= constant 73
+L661:
         LD    A,73
-        ;call writeAcc8
+L662:
         CALL  writeA
+L663:
         ;;test2.j(232)   write(72);
-        ;acc8= constant 72
+L664:
         LD    A,72
-        ;call writeAcc8
+L665:
         CALL  writeA
+L666:
         ;;test2.j(233)   // constant - stack8
+L667:
         ;;test2.j(234)   // integer - integer
+L668:
         ;;test2.j(235)   write(71);
-        ;acc8= constant 71
+L669:
         LD    A,71
-        ;call writeAcc8
+L670:
         CALL  writeA
+L671:
         ;;test2.j(236)   write(70);
-        ;acc8= constant 70
+L672:
         LD    A,70
-        ;call writeAcc8
+L673:
         CALL  writeA
+L674:
         ;;test2.j(237) 
+L675:
         ;;test2.j(238) 
+L676:
         ;;test2.j(239)   /************************/
+L677:
         ;;test2.j(240)   // constant - stack16
+L678:
         ;;test2.j(241)   // byte - byte
+L679:
         ;;test2.j(242)   write(69);
-        ;acc8= constant 69
+L680:
         LD    A,69
-        ;call writeAcc8
+L681:
         CALL  writeA
+L682:
         ;;test2.j(243)   write(68);
-        ;acc8= constant 68
+L683:
         LD    A,68
-        ;call writeAcc8
+L684:
         CALL  writeA
+L685:
         ;;test2.j(244)   write(67);
-        ;acc8= constant 67
+L686:
         LD    A,67
-        ;call writeAcc8
+L687:
         CALL  writeA
+L688:
         ;;test2.j(245)   write(66);
-        ;acc8= constant 66
+L689:
         LD    A,66
-        ;call writeAcc8
+L690:
         CALL  writeA
+L691:
         ;;test2.j(246)   // constant - stack16
+L692:
         ;;test2.j(247)   // byte - integer
+L693:
         ;;test2.j(248)   write(65);
-        ;acc8= constant 65
+L694:
         LD    A,65
-        ;call writeAcc8
+L695:
         CALL  writeA
+L696:
         ;;test2.j(249)   write(64);
-        ;acc8= constant 64
+L697:
         LD    A,64
-        ;call writeAcc8
+L698:
         CALL  writeA
+L699:
         ;;test2.j(250)   // constant - stack16
+L700:
         ;;test2.j(251)   // integer - byte
+L701:
         ;;test2.j(252)   write(63);
-        ;acc8= constant 63
+L702:
         LD    A,63
-        ;call writeAcc8
+L703:
         CALL  writeA
+L704:
         ;;test2.j(253)   write(62);
-        ;acc8= constant 62
+L705:
         LD    A,62
-        ;call writeAcc8
+L706:
         CALL  writeA
+L707:
         ;;test2.j(254)   // constant - stack16
+L708:
         ;;test2.j(255)   // integer - integer
+L709:
         ;;test2.j(256)   write(61);
-        ;acc8= constant 61
+L710:
         LD    A,61
-        ;call writeAcc8
+L711:
         CALL  writeA
+L712:
         ;;test2.j(257)   write(60);
-        ;acc8= constant 60
+L713:
         LD    A,60
-        ;call writeAcc8
+L714:
         CALL  writeA
+L715:
         ;;test2.j(258) 
+L716:
         ;;test2.j(259) 
+L717:
         ;;test2.j(260)   /************************/
+L718:
         ;;test2.j(261)   // constant - var
+L719:
         ;;test2.j(262)   // byte - byte
+L720:
         ;;test2.j(263)   write(59);
-        ;acc8= constant 59
+L721:
         LD    A,59
-        ;call writeAcc8
+L722:
         CALL  writeA
+L723:
         ;;test2.j(264)   write(58);
-        ;acc8= constant 58
+L724:
         LD    A,58
-        ;call writeAcc8
+L725:
         CALL  writeA
+L726:
         ;;test2.j(265)   if (30 > b) write(57);
-        ;acc8= variable 6
+L727:
         LD    A,(05006H)
-        ;acc8Comp constant 30
+L728:
         SUB   A,30
-        ;brge 733
+L729:
         JP    NC,L733
-        ;acc8= constant 57
+L730:
         LD    A,57
-        ;call writeAcc8
+L731:
         CALL  writeA
+L732:
         ;;test2.j(266)   if (10 < b) write(56);
-        ;acc8= variable 6
+L733:
         LD    A,(05006H)
-        ;acc8Comp constant 10
+L734:
         SUB   A,10
-        ;brle 741
+L735:
         JP    Z,L741
-        ;acc8= constant 56
+L736:
         LD    A,56
-        ;call writeAcc8
+L737:
         CALL  writeA
+L738:
         ;;test2.j(267)   // constant - var
+L739:
         ;;test2.j(268)   // byte - integer
+L740:
         ;;test2.j(269)   if (30 > i) write(999); else write(55);
-        ;acc16= variable 0
+L741:
         LD    HL,(05000H)
-        ;acc8= constant 30
+L742:
         LD    A,30
-        ;acc8CompareAcc16
+L743:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 748
+L744:
         JP    Z,L748
-        ;acc16= constant 999
+L745:
         LD    HL,999
-        ;call writeAcc16
+L746:
         CALL  writeHL
-        ;br 751
+L747:
         JP    L751
-        ;acc8= constant 55
+L748:
         LD    A,55
-        ;call writeAcc8
+L749:
         CALL  writeA
+L750:
         ;;test2.j(270)   if (10 < i) write(54);
-        ;acc16= variable 0
+L751:
         LD    HL,(05000H)
-        ;acc8= constant 10
+L752:
         LD    A,10
-        ;acc8CompareAcc16
+L753:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 760
+L754:
         JP    NC,L760
-        ;acc8= constant 54
+L755:
         LD    A,54
-        ;call writeAcc8
+L756:
         CALL  writeA
+L757:
         ;;test2.j(271)   // constant - var
+L758:
         ;;test2.j(272)   // integer - byte
+L759:
         ;;test2.j(273)   if (3000 > b) write(53);
-        ;acc8= variable 6
+L760:
         LD    A,(05006H)
-        ;acc16= constant 3000
+L761:
         LD    HL,3000
-        ;acc16CompareAcc8
+L762:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 767
+L763:
         JP    Z,L767
-        ;acc8= constant 53
+L764:
         LD    A,53
-        ;call writeAcc8
+L765:
         CALL  writeA
+L766:
         ;;test2.j(274)   if (1000 < b) write(999); else write(52);
-        ;acc8= variable 6
+L767:
         LD    A,(05006H)
-        ;acc16= constant 1000
+L768:
         LD    HL,1000
-        ;acc16CompareAcc8
+L769:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 774
+L770:
         JP    NC,L774
-        ;acc16= constant 999
+L771:
         LD    HL,999
-        ;call writeAcc16
+L772:
         CALL  writeHL
-        ;br 779
+L773:
         JP    L779
-        ;acc8= constant 52
+L774:
         LD    A,52
-        ;call writeAcc8
+L775:
         CALL  writeA
+L776:
         ;;test2.j(275)   // constant - var
+L777:
         ;;test2.j(276)   // integer - integer
+L778:
         ;;test2.j(277)   if (3000 > i) write(51);
-        ;acc16= variable 0
+L779:
         LD    HL,(05000H)
-        ;acc16Comp constant 3000
+L780:
         LD    DE,3000
         OR    A
         SBC   HL,DE
-        ;brge 785
+L781:
         JP    NC,L785
-        ;acc8= constant 51
+L782:
         LD    A,51
-        ;call writeAcc8
+L783:
         CALL  writeA
+L784:
         ;;test2.j(278)   if (1000 < i) write(50);
-        ;acc16= variable 0
+L785:
         LD    HL,(05000H)
-        ;acc16Comp constant 1000
+L786:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brle 795
+L787:
         JP    Z,L795
-        ;acc8= constant 50
+L788:
         LD    A,50
-        ;call writeAcc8
+L789:
         CALL  writeA
+L790:
         ;;test2.j(279) 
+L791:
         ;;test2.j(280)   /************************/
+L792:
         ;;test2.j(281)   // constant - acc
+L793:
         ;;test2.j(282)   // byte - byte
+L794:
         ;;test2.j(283)   write(49);
-        ;acc8= constant 49
+L795:
         LD    A,49
-        ;call writeAcc8
+L796:
         CALL  writeA
+L797:
         ;;test2.j(284)   write(48);
-        ;acc8= constant 48
+L798:
         LD    A,48
-        ;call writeAcc8
+L799:
         CALL  writeA
+L800:
         ;;test2.j(285)   if (1 > 0+0) write(47);
-        ;acc8= constant 0
+L801:
         LD    A,0
-        ;acc8+ constant 0
+L802:
         ADD   A,0
-        ;acc8Comp constant 1
+L803:
         SUB   A,1
-        ;brge 808
+L804:
         JP    NC,L808
-        ;acc8= constant 47
+L805:
         LD    A,47
-        ;call writeAcc8
+L806:
         CALL  writeA
+L807:
         ;;test2.j(286)   if (1 < 2+0) write(46);
-        ;acc8= constant 2
+L808:
         LD    A,2
-        ;acc8+ constant 0
+L809:
         ADD   A,0
-        ;acc8Comp constant 1
+L810:
         SUB   A,1
-        ;brle 817
+L811:
         JP    Z,L817
-        ;acc8= constant 46
+L812:
         LD    A,46
-        ;call writeAcc8
+L813:
         CALL  writeA
+L814:
         ;;test2.j(287)   // constant - acc
+L815:
         ;;test2.j(288)   // byte - integer
+L816:
         ;;test2.j(289)   if (1 > 1000+0) write(999); else write(45);
-        ;acc16= constant 1000
+L817:
         LD    HL,1000
-        ;acc16+ constant 0
+L818:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= constant 1
+L819:
         LD    A,1
-        ;acc8CompareAcc16
+L820:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 825
+L821:
         JP    Z,L825
-        ;acc16= constant 999
+L822:
         LD    HL,999
-        ;call writeAcc16
+L823:
         CALL  writeHL
-        ;br 828
+L824:
         JP    L828
-        ;acc8= constant 45
+L825:
         LD    A,45
-        ;call writeAcc8
+L826:
         CALL  writeA
+L827:
         ;;test2.j(290)   if (1 < 1000+0) write(44);
-        ;acc16= constant 1000
+L828:
         LD    HL,1000
-        ;acc16+ constant 0
+L829:
         LD    DE,0
         ADD   HL,DE
-        ;acc8= constant 1
+L830:
         LD    A,1
-        ;acc8CompareAcc16
+L831:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 838
+L832:
         JP    NC,L838
-        ;acc8= constant 44
+L833:
         LD    A,44
-        ;call writeAcc8
+L834:
         CALL  writeA
+L835:
         ;;test2.j(291)   // constant - acc
+L836:
         ;;test2.j(292)   // integer - byte
+L837:
         ;;test2.j(293)   if (1000 > 0+0) write(43);
-        ;acc8= constant 0
+L838:
         LD    A,0
-        ;acc8+ constant 0
+L839:
         ADD   A,0
-        ;acc16= constant 1000
+L840:
         LD    HL,1000
-        ;acc16CompareAcc8
+L841:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 846
+L842:
         JP    Z,L846
-        ;acc8= constant 43
+L843:
         LD    A,43
-        ;call writeAcc8
+L844:
         CALL  writeA
+L845:
         ;;test2.j(294)   if (1000 < 0+0) write(999); else write(42);
-        ;acc8= constant 0
+L846:
         LD    A,0
-        ;acc8+ constant 0
+L847:
         ADD   A,0
-        ;acc16= constant 1000
+L848:
         LD    HL,1000
-        ;acc16CompareAcc8
+L849:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brge 854
+L850:
         JP    NC,L854
-        ;acc16= constant 999
+L851:
         LD    HL,999
-        ;call writeAcc16
+L852:
         CALL  writeHL
-        ;br 859
+L853:
         JP    L859
-        ;acc8= constant 42
+L854:
         LD    A,42
-        ;call writeAcc8
+L855:
         CALL  writeA
+L856:
         ;;test2.j(295)   // constant - acc
+L857:
         ;;test2.j(296)   // integer - integer
+L858:
         ;;test2.j(297)   if (2000 > 1000+0) write(41);
-        ;acc16= constant 1000
+L859:
         LD    HL,1000
-        ;acc16+ constant 0
+L860:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp constant 2000
+L861:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        ;brge 866
+L862:
         JP    NC,L866
-        ;acc8= constant 41
+L863:
         LD    A,41
-        ;call writeAcc8
+L864:
         CALL  writeA
+L865:
         ;;test2.j(298)   if (1000 < 2000+0) write(40);
-        ;acc16= constant 2000
+L866:
         LD    HL,2000
-        ;acc16+ constant 0
+L867:
         LD    DE,0
         ADD   HL,DE
-        ;acc16Comp constant 1000
+L868:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brle 877
+L869:
         JP    Z,L877
-        ;acc8= constant 40
+L870:
         LD    A,40
-        ;call writeAcc8
+L871:
         CALL  writeA
+L872:
         ;;test2.j(299) 
+L873:
         ;;test2.j(300)   /************************/
+L874:
         ;;test2.j(301)   // constant - constant
+L875:
         ;;test2.j(302)   // byte - byte
+L876:
         ;;test2.j(303)   write(39);
-        ;acc8= constant 39
+L877:
         LD    A,39
-        ;call writeAcc8
+L878:
         CALL  writeA
+L879:
         ;;test2.j(304)   if (1 == 1) write(38);
-        ;acc8= constant 1
+L880:
         LD    A,1
-        ;acc8Comp constant 1
+L881:
         SUB   A,1
-        ;brne 886
+L882:
         JP    NZ,L886
-        ;acc8= constant 38
+L883:
         LD    A,38
-        ;call writeAcc8
+L884:
         CALL  writeA
+L885:
         ;;test2.j(305)   if (1 != 0) write(37);
-        ;acc8= constant 1
+L886:
         LD    A,1
-        ;acc8Comp constant 0
+L887:
         SUB   A,0
-        ;breq 892
+L888:
         JP    Z,L892
-        ;acc8= constant 37
+L889:
         LD    A,37
-        ;call writeAcc8
+L890:
         CALL  writeA
+L891:
         ;;test2.j(306)   if (1 > 0) write(36);
-        ;acc8= constant 1
+L892:
         LD    A,1
-        ;acc8Comp constant 0
+L893:
         SUB   A,0
-        ;brle 898
+L894:
         JP    Z,L898
-        ;acc8= constant 36
+L895:
         LD    A,36
-        ;call writeAcc8
+L896:
         CALL  writeA
+L897:
         ;;test2.j(307)   if (1 >= 0) write(35);
-        ;acc8= constant 1
+L898:
         LD    A,1
-        ;acc8Comp constant 0
+L899:
         SUB   A,0
-        ;brlt 904
+L900:
         JP    C,L904
-        ;acc8= constant 35
+L901:
         LD    A,35
-        ;call writeAcc8
+L902:
         CALL  writeA
+L903:
         ;;test2.j(308)   if (1 >= 1) write(34);
-        ;acc8= constant 1
+L904:
         LD    A,1
-        ;acc8Comp constant 1
+L905:
         SUB   A,1
-        ;brlt 910
+L906:
         JP    C,L910
-        ;acc8= constant 34
+L907:
         LD    A,34
-        ;call writeAcc8
+L908:
         CALL  writeA
+L909:
         ;;test2.j(309)   if (1 < 2) write(33);
-        ;acc8= constant 1
+L910:
         LD    A,1
-        ;acc8Comp constant 2
+L911:
         SUB   A,2
-        ;brge 916
+L912:
         JP    NC,L916
-        ;acc8= constant 33
+L913:
         LD    A,33
-        ;call writeAcc8
+L914:
         CALL  writeA
+L915:
         ;;test2.j(310)   if (1 <= 2) write(32);
-        ;acc8= constant 1
+L916:
         LD    A,1
-        ;acc8Comp constant 2
+L917:
         SUB   A,2
-        ;brgt 922
-        JP    Z,$+5
+L918:
+        JR    Z,$+5
         JP    C,L922
-        ;acc8= constant 32
+L919:
         LD    A,32
-        ;call writeAcc8
+L920:
         CALL  writeA
+L921:
         ;;test2.j(311)   if (1 <= 1) write(31);
-        ;acc8= constant 1
+L922:
         LD    A,1
-        ;acc8Comp constant 1
+L923:
         SUB   A,1
-        ;brgt 928
-        JP    Z,$+5
+L924:
+        JR    Z,$+5
         JP    C,L928
-        ;acc8= constant 31
+L925:
         LD    A,31
-        ;call writeAcc8
+L926:
         CALL  writeA
+L927:
         ;;test2.j(312)   write(30);
-        ;acc8= constant 30
+L928:
         LD    A,30
-        ;call writeAcc8
+L929:
         CALL  writeA
+L930:
         ;;test2.j(313)   // constant - constant
+L931:
         ;;test2.j(314)   // byte - integer
+L932:
         ;;test2.j(315)   write(29);
-        ;acc8= constant 29
+L933:
         LD    A,29
-        ;call writeAcc8
+L934:
         CALL  writeA
+L935:
         ;;test2.j(316)   if (1 == 1000) write(999); else write(28);
-        ;acc8= constant 1
+L936:
         LD    A,1
-        ;acc16= constant 1000
+L937:
         LD    HL,1000
-        ;acc8CompareAcc16
+L938:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brne 943
+L939:
         JP    NZ,L943
-        ;acc16= constant 999
+L940:
         LD    HL,999
-        ;call writeAcc16
+L941:
         CALL  writeHL
-        ;br 946
+L942:
         JP    L946
-        ;acc8= constant 28
+L943:
         LD    A,28
-        ;call writeAcc8
+L944:
         CALL  writeA
+L945:
         ;;test2.j(317)   if (1 != 1000) write(27);
-        ;acc8= constant 1
+L946:
         LD    A,1
-        ;acc16= constant 1000
+L947:
         LD    HL,1000
-        ;acc8CompareAcc16
+L948:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;breq 953
+L949:
         JP    Z,L953
-        ;acc8= constant 27
+L950:
         LD    A,27
-        ;call writeAcc8
+L951:
         CALL  writeA
+L952:
         ;;test2.j(318)   if (1 > 1000) write(999); else write(26);
-        ;acc8= constant 1
+L953:
         LD    A,1
-        ;acc16= constant 1000
+L954:
         LD    HL,1000
-        ;acc8CompareAcc16
+L955:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brle 960
+L956:
         JP    Z,L960
-        ;acc16= constant 999
+L957:
         LD    HL,999
-        ;call writeAcc16
+L958:
         CALL  writeHL
-        ;br 963
+L959:
         JP    L963
-        ;acc8= constant 26
+L960:
         LD    A,26
-        ;call writeAcc8
+L961:
         CALL  writeA
+L962:
         ;;test2.j(319)   if (1 >= 1000) write(999); write(25);
-        ;acc8= constant 1
+L963:
         LD    A,1
-        ;acc16= constant 1000
+L964:
         LD    HL,1000
-        ;acc8CompareAcc16
+L965:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 969
+L966:
         JP    C,L969
-        ;acc16= constant 999
+L967:
         LD    HL,999
-        ;call writeAcc16
+L968:
         CALL  writeHL
-        ;acc8= constant 25
+L969:
         LD    A,25
-        ;call writeAcc8
+L970:
         CALL  writeA
+L971:
         ;;test2.j(320)   if (1 >= 1000) write(999); write(24);
-        ;acc8= constant 1
+L972:
         LD    A,1
-        ;acc16= constant 1000
+L973:
         LD    HL,1000
-        ;acc8CompareAcc16
+L974:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brlt 978
+L975:
         JP    C,L978
-        ;acc16= constant 999
+L976:
         LD    HL,999
-        ;call writeAcc16
+L977:
         CALL  writeHL
-        ;acc8= constant 24
+L978:
         LD    A,24
-        ;call writeAcc8
+L979:
         CALL  writeA
+L980:
         ;;test2.j(321)   if (1 < 2000) write(23);
-        ;acc8= constant 1
+L981:
         LD    A,1
-        ;acc16= constant 2000
+L982:
         LD    HL,2000
-        ;acc8CompareAcc16
+L983:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 988
+L984:
         JP    NC,L988
-        ;acc8= constant 23
+L985:
         LD    A,23
-        ;call writeAcc8
+L986:
         CALL  writeA
+L987:
         ;;test2.j(322)   if (1 <= 2000) write(22);
-        ;acc8= constant 1
+L988:
         LD    A,1
-        ;acc16= constant 2000
+L989:
         LD    HL,2000
-        ;acc8CompareAcc16
+L990:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 995
-        JP    Z,$+5
+L991:
+        JR    Z,$+5
         JP    C,L995
-        ;acc8= constant 22
+L992:
         LD    A,22
-        ;call writeAcc8
+L993:
         CALL  writeA
+L994:
         ;;test2.j(323)   if (1 <= 1000) write(21);
-        ;acc8= constant 1
+L995:
         LD    A,1
-        ;acc16= constant 1000
+L996:
         LD    HL,1000
-        ;acc8CompareAcc16
+L997:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 1002
-        JP    Z,$+5
+L998:
+        JR    Z,$+5
         JP    C,L1002
-        ;acc8= constant 21
+L999:
         LD    A,21
-        ;call writeAcc8
+L1000:
         CALL  writeA
+L1001:
         ;;test2.j(324)   write(20);
-        ;acc8= constant 20
+L1002:
         LD    A,20
-        ;call writeAcc8
+L1003:
         CALL  writeA
+L1004:
         ;;test2.j(325)   // constant - constant
+L1005:
         ;;test2.j(326)   // integer - byte
+L1006:
         ;;test2.j(327)   write(19);
-        ;acc8= constant 19
+L1007:
         LD    A,19
-        ;call writeAcc8
+L1008:
         CALL  writeA
+L1009:
         ;;test2.j(328)   if (1000 == 1) { write(999); } else { write(18); }
-        ;acc16= constant 1000
+L1010:
         LD    HL,1000
-        ;acc8= constant 1
+L1011:
         LD    A,1
-        ;acc16CompareAcc8
+L1012:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brne 1017
+L1013:
         JP    NZ,L1017
-        ;acc16= constant 999
+L1014:
         LD    HL,999
-        ;call writeAcc16
+L1015:
         CALL  writeHL
-        ;br 1020
+L1016:
         JP    L1020
-        ;acc8= constant 18
+L1017:
         LD    A,18
-        ;call writeAcc8
+L1018:
         CALL  writeA
+L1019:
         ;;test2.j(329)   if (1000 != 0) write(17);
-        ;acc16= constant 1000
+L1020:
         LD    HL,1000
-        ;acc8= constant 0
+L1021:
         LD    A,0
-        ;acc16CompareAcc8
+L1022:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;breq 1027
+L1023:
         JP    Z,L1027
-        ;acc8= constant 17
+L1024:
         LD    A,17
-        ;call writeAcc8
+L1025:
         CALL  writeA
+L1026:
         ;;test2.j(330)   if (1000 > 0) write(16);
-        ;acc16= constant 1000
+L1027:
         LD    HL,1000
-        ;acc8= constant 0
+L1028:
         LD    A,0
-        ;acc16CompareAcc8
+L1029:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brle 1034
+L1030:
         JP    Z,L1034
-        ;acc8= constant 16
+L1031:
         LD    A,16
-        ;call writeAcc8
+L1032:
         CALL  writeA
+L1033:
         ;;test2.j(331)   if (1000 >= 0) write(15);
-        ;acc16= constant 1000
+L1034:
         LD    HL,1000
-        ;acc8= constant 0
+L1035:
         LD    A,0
-        ;acc16CompareAcc8
+L1036:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 1041
+L1037:
         JP    C,L1041
-        ;acc8= constant 15
+L1038:
         LD    A,15
-        ;call writeAcc8
+L1039:
         CALL  writeA
+L1040:
         ;;test2.j(332)   if (1000 >= 1) write(14);
-        ;acc16= constant 1000
+L1041:
         LD    HL,1000
-        ;acc8= constant 1
+L1042:
         LD    A,1
-        ;acc16CompareAcc8
+L1043:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;brlt 1048
+L1044:
         JP    C,L1048
-        ;acc8= constant 14
+L1045:
         LD    A,14
-        ;call writeAcc8
+L1046:
         CALL  writeA
+L1047:
         ;;test2.j(333)   if (1 < 2000) write(13);
-        ;acc8= constant 1
+L1048:
         LD    A,1
-        ;acc16= constant 2000
+L1049:
         LD    HL,2000
-        ;acc8CompareAcc16
+L1050:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brge 1055
+L1051:
         JP    NC,L1055
-        ;acc8= constant 13
+L1052:
         LD    A,13
-        ;call writeAcc8
+L1053:
         CALL  writeA
+L1054:
         ;;test2.j(334)   if (1 <= 2000) write(12);
-        ;acc8= constant 1
+L1055:
         LD    A,1
-        ;acc16= constant 2000
+L1056:
         LD    HL,2000
-        ;acc8CompareAcc16
+L1057:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 1062
-        JP    Z,$+5
+L1058:
+        JR    Z,$+5
         JP    C,L1062
-        ;acc8= constant 12
+L1059:
         LD    A,12
-        ;call writeAcc8
+L1060:
         CALL  writeA
+L1061:
         ;;test2.j(335)   if (1 <= 1000) write(11);
-        ;acc8= constant 1
+L1062:
         LD    A,1
-        ;acc16= constant 1000
+L1063:
         LD    HL,1000
-        ;acc8CompareAcc16
+L1064:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;brgt 1069
-        JP    Z,$+5
+L1065:
+        JR    Z,$+5
         JP    C,L1069
-        ;acc8= constant 11
+L1066:
         LD    A,11
-        ;call writeAcc8
+L1067:
         CALL  writeA
+L1068:
         ;;test2.j(336)   write(10);
-        ;acc8= constant 10
+L1069:
         LD    A,10
-        ;call writeAcc8
+L1070:
         CALL  writeA
+L1071:
         ;;test2.j(337)   // constant - constant
+L1072:
         ;;test2.j(338)   // integer - integer
+L1073:
         ;;test2.j(339)   write(9);
-        ;acc8= constant 9
+L1074:
         LD    A,9
-        ;call writeAcc8
+L1075:
         CALL  writeA
+L1076:
         ;;test2.j(340)   if (1000 == 1000) write(8);
-        ;acc16= constant 1000
+L1077:
         LD    HL,1000
-        ;acc16Comp constant 1000
+L1078:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brne 1083
+L1079:
         JP    NZ,L1083
-        ;acc8= constant 8
+L1080:
         LD    A,8
-        ;call writeAcc8
+L1081:
         CALL  writeA
+L1082:
         ;;test2.j(341)   if (1000 != 2000) write(7);
-        ;acc16= constant 1000
+L1083:
         LD    HL,1000
-        ;acc16Comp constant 2000
+L1084:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        ;breq 1089
+L1085:
         JP    Z,L1089
-        ;acc8= constant 7
+L1086:
         LD    A,7
-        ;call writeAcc8
+L1087:
         CALL  writeA
+L1088:
         ;;test2.j(342)   if (2000 > 1000) write(6);
-        ;acc16= constant 2000
+L1089:
         LD    HL,2000
-        ;acc16Comp constant 1000
+L1090:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brle 1095
+L1091:
         JP    Z,L1095
-        ;acc8= constant 6
+L1092:
         LD    A,6
-        ;call writeAcc8
+L1093:
         CALL  writeA
+L1094:
         ;;test2.j(343)   if (2000 >= 1000) write(5);
-        ;acc16= constant 2000
+L1095:
         LD    HL,2000
-        ;acc16Comp constant 1000
+L1096:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brlt 1101
+L1097:
         JP    C,L1101
-        ;acc8= constant 5
+L1098:
         LD    A,5
-        ;call writeAcc8
+L1099:
         CALL  writeA
+L1100:
         ;;test2.j(344)   if (1000 >= 1000) write(4);
-        ;acc16= constant 1000
+L1101:
         LD    HL,1000
-        ;acc16Comp constant 1000
+L1102:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brlt 1107
+L1103:
         JP    C,L1107
-        ;acc8= constant 4
+L1104:
         LD    A,4
-        ;call writeAcc8
+L1105:
         CALL  writeA
+L1106:
         ;;test2.j(345)   if (1000 < 2000) write(3);
-        ;acc16= constant 1000
+L1107:
         LD    HL,1000
-        ;acc16Comp constant 2000
+L1108:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        ;brge 1113
+L1109:
         JP    NC,L1113
-        ;acc8= constant 3
+L1110:
         LD    A,3
-        ;call writeAcc8
+L1111:
         CALL  writeA
+L1112:
         ;;test2.j(346)   if (1000 <= 2000) write(2);
-        ;acc16= constant 1000
+L1113:
         LD    HL,1000
-        ;acc16Comp constant 2000
+L1114:
         LD    DE,2000
         OR    A
         SBC   HL,DE
-        ;brgt 1119
-        JP    Z,$+5
+L1115:
+        JR    Z,$+5
         JP    C,L1119
-        ;acc8= constant 2
+L1116:
         LD    A,2
-        ;call writeAcc8
+L1117:
         CALL  writeA
+L1118:
         ;;test2.j(347)   if (1000 <= 1000) write(1);
-        ;acc16= constant 1000
+L1119:
         LD    HL,1000
-        ;acc16Comp constant 1000
+L1120:
         LD    DE,1000
         OR    A
         SBC   HL,DE
-        ;brgt 1126
-        JP    Z,$+5
+L1121:
+        JR    Z,$+5
         JP    C,L1126
-        ;acc8= constant 1
+L1122:
         LD    A,1
-        ;call writeAcc8
+L1123:
         CALL  writeA
+L1124:
         ;;test2.j(348) 
+L1125:
         ;;test2.j(349)   write(0);
-        ;acc8= constant 0
+L1126:
         LD    A,0
-        ;call writeAcc8
+L1127:
         CALL  writeA
+L1128:
         ;;test2.j(350) }
-        ;stop
+L1129:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

@@ -54,9 +54,9 @@ public class Transcoder {
   /* global variables */
   private boolean debugMode = false;
   private boolean generateBinary = false;
-  private long byteAddress = MIN_BIN;
-  public Map<String, Long> labels = new HashMap<String, Long>();
-  public Map<String, ArrayList<Long>> labelReferences = new HashMap<String, ArrayList<Long>>();
+  private int byteAddress = MIN_BIN;
+  public Map<String, Integer> labels = new HashMap<String, Integer>();
+  public Map<String, ArrayList<Integer>> labelReferences = new HashMap<String, ArrayList<Integer>>();
   
   /* constructor */
   public Transcoder(boolean debugMode, boolean binary) {
@@ -85,9 +85,10 @@ public class Transcoder {
     labels.put("main", byteAddress);
     z80Instructions.add(new AssemblyInstruction(byteAddress, "main:"));
     for (Instruction instruction: instructions) {
-      //add label and address to map with labels.
+      //add label and address to map with labels and to the assembler output
       String label = "L" + instructions.indexOf(instruction);
       labels.put(label, byteAddress);
+      z80Instructions.add(new AssemblyInstruction(byteAddress, label + ":"));
 
       z80Instructions.addAll(transcode(instruction));
 
@@ -102,10 +103,10 @@ public class Transcoder {
   
   private void resolveLabelReferences(ArrayList<AssemblyInstruction> z80Instructions) {
     for (String key : labelReferences.keySet()) {
-      Long address = labels.get(key);
+      Integer address = labels.get(key);
       if (address != null) {
-        for (long reference : labelReferences.get(key)) {
-          updateLabelReference(z80Instructions, (int)reference, key, (int)((long)address));
+        for (int reference : labelReferences.get(key)) {
+          updateLabelReference(z80Instructions, reference, key, address);
         }
       }
     }
@@ -132,17 +133,18 @@ public class Transcoder {
     }
     
     //update address part of the instruction
+    int referenceAddress = reference - instruction.getAddress() + 1;
     if (instruction.getBytes().size() == 3 && LONG_JUMP_INSTRUCTIONS.contains(instruction.getBytes().get(0))) {
       //long jump or call
-      instruction.getBytes().set((int)(reference - instruction.getAddress() + 1), (byte)(address % 256));
-      instruction.getBytes().set((int)(reference - instruction.getAddress() + 2), (byte)((address / 256) % 256));
+      instruction.getBytes().set(referenceAddress, (byte)(address % 256));
+      instruction.getBytes().set(referenceAddress + 1, (byte)((address / 256) % 256));
     } else if (instruction.getBytes().size() == 2 && RELATIVE_JUMP_INSTRUCTIONS.contains(instruction.getBytes().get(0))) {
       long offset = address - instruction.getAddress() - 2L;
       if (offset > 127 || offset < -128) {
         throw new RuntimeException(String.format("relative jump to label %s from address %04X (index %d) by instruction %s reaches too far."
           , key, reference, index, instruction.getCode()));
       }
-      instruction.getBytes().set((int)(reference - instruction.getAddress() + 1), (byte)(offset));
+      instruction.getBytes().set(referenceAddress, (byte)(offset));
     } else {
       throw new RuntimeException(String.format("illegal reference to label %s from address %04X (index %d) by instruction %s"
         , key, reference, index, instruction.getCode()));
@@ -554,7 +556,7 @@ public class Transcoder {
       putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP    Z,L" + word, 0xCA, word % 256, word / 256);
     } else if (function == FunctionType.brGt) {
-      asm = new AssemblyInstruction(byteAddress, INDENT + "JP    Z,$+5", 0x28, 3);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "JR    Z,$+5", 0x28, 3);
       result.add(asm);
       byteAddress += asm.getBytes().size();
       putLabelReference(word, byteAddress);
@@ -649,14 +651,14 @@ public class Transcoder {
     return asm;
   }
 
-  private void putLabelReference(int value, long reference) {
+  private void putLabelReference(int value, int reference) {
     String label = "L" + value;
     putLabelReference(label, reference);
   }
   
-  private void putLabelReference(String label, long reference) {
+  private void putLabelReference(String label, int reference) {
     if (labelReferences.get(label) == null) {
-      labelReferences.put(label, new ArrayList<Long>());
+      labelReferences.put(label, new ArrayList<Integer>());
     }
     labelReferences.get(label).add(reference);
   }

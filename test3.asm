@@ -613,166 +613,278 @@ writeA:
         POP   HL
         RET
 main:
-        ;;test3.p(0) /* Program to test multiplication */
-        ;;test3.p(1) class TestMultiply {
-        ;;test3.p(2)   write(14);
+L0:
+        ;;test3.j(0) /* Program to test multiplication */
+L1:
+        ;;test3.j(1) class TestMultiply {
+L2:
+        ;;test3.j(2)   write(14);
+L3:
         LD    A,14
+L4:
         CALL  writeA
-        ;;test3.p(3)   int a = 14;
+L5:
+        ;;test3.j(3)   int a = 14;
+L6:
         LD    A,14
+L7:
         LD    L,A
         LD    H,0
         LD    (05000H),HL
-        ;;test3.p(4)   a--;
+L8:
+        ;;test3.j(4)   a--;
+L9:
         LD    HL,(05000H)
         DEC   HL
         LD    (05000H),HL
-        ;;test3.p(5)   write(a);
+L10:
+        ;;test3.j(5)   write(a);
+L11:
         LD    HL,(05000H)
+L12:
         CALL  writeHL
-        ;;test3.p(6)   a = 11;
+L13:
+        ;;test3.j(6)   a = 11;
+L14:
         LD    A,11
+L15:
         LD    L,A
         LD    H,0
         LD    (05000H),HL
-        ;;test3.p(7)   a++;
+L16:
+        ;;test3.j(7)   a++;
+L17:
         LD    HL,(05000H)
         INC   HL
         LD    (05000H),HL
-        ;;test3.p(8)   write(a);
+L18:
+        ;;test3.j(8)   write(a);
+L19:
         LD    HL,(05000H)
+L20:
         CALL  writeHL
-        ;;test3.p(9)   if (6561 / 729 == 9) write (11); else write (0);
+L21:
+        ;;test3.j(9)   if (6561 / 729 == 9) write (11); else write (0);
+L22:
         LD    HL,6561
+L23:
         LD    DE,729
         CALL  div16
+L24:
         LD    A,9
+L25:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
+L26:
         JP    NZ,L30
+L27:
         LD    A,11
+L28:
         CALL  writeA
+L29:
         JP    L33
+L30:
         LD    A,0
+L31:
         CALL  writeA
-        ;;test3.p(10)   if (729 * 9 == 6561) write (10); else write (0);
+L32:
+        ;;test3.j(10)   if (729 * 9 == 6561) write (10); else write (0);
+L33:
         LD    HL,729
+L34:
         LD    DE,9
         CALL  mul16
+L35:
         LD    DE,6561
         OR    A
         SBC   HL,DE
+L36:
         JP    NZ,L40
+L37:
         LD    A,10
+L38:
         CALL  writeA
+L39:
         JP    L43
+L40:
         LD    A,0
+L41:
         CALL  writeA
-        ;;test3.p(11)   if (729 == 729) write (9); else write (0);
+L42:
+        ;;test3.j(11)   if (729 == 729) write (9); else write (0);
+L43:
         LD    HL,729
+L44:
         LD    DE,729
         OR    A
         SBC   HL,DE
+L45:
         JP    NZ,L49
+L46:
         LD    A,9
+L47:
         CALL  writeA
+L48:
         JP    L52
+L49:
         LD    A,0
+L50:
         CALL  writeA
-        ;;test3.p(12)   if (2 * 9 * 9 == 162) write (8); else write (0);
+L51:
+        ;;test3.j(12)   if (2 * 9 * 9 == 162) write (8); else write (0);
+L52:
         LD    A,2
+L53:
         LD    B,A
         LD    C,9
         MLT   BC
         LD    A,C
+L54:
         LD    B,A
         LD    C,9
         MLT   BC
         LD    A,C
+L55:
         SUB   A,162
+L56:
         JP    NZ,L60
+L57:
         LD    A,8
+L58:
         CALL  writeA
+L59:
         JP    L63
+L60:
         LD    A,0
+L61:
         CALL  writeA
-        ;;test3.p(13)   if (7 * 5 == 35) write (7); else write (0);
+L62:
+        ;;test3.j(13)   if (7 * 5 == 35) write (7); else write (0);
+L63:
         LD    A,7
+L64:
         LD    B,A
         LD    C,5
         MLT   BC
         LD    A,C
+L65:
         SUB   A,35
+L66:
         JP    NZ,L70
+L67:
         LD    A,7
+L68:
         CALL  writeA
+L69:
         JP    L73
+L70:
         LD    A,0
+L71:
         CALL  writeA
-        ;;test3.p(14)   a = 2;
+L72:
+        ;;test3.j(14)   a = 2;
+L73:
         LD    A,2
+L74:
         LD    L,A
         LD    H,0
         LD    (05000H),HL
-        ;;test3.p(15)   write(3 * a);
+L75:
+        ;;test3.j(15)   write(3 * a);
+L76:
         LD    A,3
+L77:
         LD    L,A
         LD    H,0
+L78:
         LD    DE,(05000H)
         CALL  mul16
+L79:
         CALL  writeHL
-        ;;test3.p(16)   a = 1;
+L80:
+        ;;test3.j(16)   a = 1;
+L81:
         LD    A,1
+L82:
         LD    L,A
         LD    H,0
         LD    (05000H),HL
-        ;;test3.p(17)   write(a * 5);
+L83:
+        ;;test3.j(17)   write(a * 5);
+L84:
         LD    HL,(05000H)
+L85:
         LD    DE,5
         CALL  mul16
+L86:
         CALL  writeHL
-        ;;test3.p(18)   a = 2 * 2;
+L87:
+        ;;test3.j(18)   a = 2 * 2;
+L88:
         LD    A,2
+L89:
         LD    B,A
         LD    C,2
         MLT   BC
         LD    A,C
+L90:
         LD    L,A
         LD    H,0
         LD    (05000H),HL
-        ;;test3.p(19)   write(a);
+L91:
+        ;;test3.j(19)   write(a);
+L92:
         LD    HL,(05000H)
+L93:
         CALL  writeHL
-        ;;test3.p(20)   write(1 * 3);
+L94:
+        ;;test3.j(20)   write(1 * 3);
+L95:
         LD    A,1
+L96:
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
+L97:
         CALL  writeA
-        ;;test3.p(21)   write(2 * 1);
+L98:
+        ;;test3.j(21)   write(2 * 1);
+L99:
         LD    A,2
+L100:
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+L101:
         CALL  writeA
-        ;;test3.p(22)   write(1 * 1);
+L102:
+        ;;test3.j(22)   write(1 * 1);
+L103:
         LD    A,1
+L104:
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
+L105:
         CALL  writeA
-        ;;test3.p(23)   write(1 * 0);
+L106:
+        ;;test3.j(23)   write(1 * 0);
+L107:
         LD    A,1
+L108:
         LD    B,A
         LD    C,0
         MLT   BC
         LD    A,C
+L109:
         CALL  writeA
-        ;;test3.p(24) }
+L110:
+        ;;test3.j(24) }
+L111:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

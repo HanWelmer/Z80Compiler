@@ -61,7 +61,7 @@ public class IntelHexWriter extends BufferedWriter {
   
   private static final int MAX_BYTES = 16;
   private ArrayList<Byte> line = new ArrayList<Byte>();
-  private Long startAddress = 0L;
+  private int startAddress = 0;
   
   //avoid use of this constructor
   private IntelHexWriter(Writer writer) {
@@ -84,10 +84,10 @@ public class IntelHexWriter extends BufferedWriter {
     super.close();
   }
   
-  public void write(Long address, ArrayList<Byte> bytes) throws IOException {
+  public void write(int address, ArrayList<Byte> bytes) throws IOException {
     if (bytes != null) {
       //start a new line if address does not follow current address 
-      if (!address.equals(startAddress + line.size())) {
+      if (address != (startAddress + line.size())) {
         flushLine();
         startAddress = address;
       }

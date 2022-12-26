@@ -613,494 +613,572 @@ writeA:
         POP   HL
         RET
 main:
+L0:
         ;;test8.j(0) /*
+L1:
         ;;test8.j(1)  * A small program in the miniJava language.
+L2:
         ;;test8.j(2)  * Test 8-bit and 16-bit expressions.
+L3:
         ;;test8.j(3)  */
+L4:
         ;;test8.j(4) class Test8And16BitExpressions {
+L5:
         ;;test8.j(5)   /*************************/
+L6:
         ;;test8.j(6)   /* reverse subtract byte */
+L7:
         ;;test8.j(7)   /*************************/
+L8:
         ;;test8.j(8)   write(10 - 3*3);         // 1
-        ;acc8= constant 10
+L9:
         LD    A,10
-        ;<acc8= constant 3
+L10:
         PUSH  AF
         LD    A,3
-        ;acc8* constant 3
+L11:
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
-        ;-acc8 unstack8
+L12:
         POP   BC
         SUB   A,B
         NEG
-        ;call writeAcc8
+L13:
         CALL  writeA
+L14:
         ;;test8.j(9)   byte b = 11;
-        ;acc8= constant 11
+L15:
         LD    A,11
-        ;acc8=> variable 0
+L16:
         LD    (05000H),A
+L17:
         ;;test8.j(10)   write(b - 3*3);          // 2
-        ;acc8= variable 0
+L18:
         LD    A,(05000H)
-        ;<acc8= constant 3
+L19:
         PUSH  AF
         LD    A,3
-        ;acc8* constant 3
+L20:
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
-        ;-acc8 unstack8
+L21:
         POP   BC
         SUB   A,B
         NEG
-        ;call writeAcc8
+L22:
         CALL  writeA
+L23:
         ;;test8.j(11)   byte c = 3;
-        ;acc8= constant 3
+L24:
         LD    A,3
-        ;acc8=> variable 1
+L25:
         LD    (05001H),A
+L26:
         ;;test8.j(12)   byte d = 3;
-        ;acc8= constant 3
+L27:
         LD    A,3
-        ;acc8=> variable 2
+L28:
         LD    (05002H),A
+L29:
         ;;test8.j(13)   write(12 - c*d);         // 3
-        ;acc8= constant 12
+L30:
         LD    A,12
-        ;<acc8= variable 1
+L31:
         PUSH  AF
         LD    A,(05001H)
-        ;acc8* variable 2
+L32:
         LD    B,A
         LD    A,(05002H)
         LD    C,A
         MLT   BC
         LD    A,C
-        ;-acc8 unstack8
+L33:
         POP   BC
         SUB   A,B
         NEG
-        ;call writeAcc8
+L34:
         CALL  writeA
+L35:
         ;;test8.j(14)   b = 13;
-        ;acc8= constant 13
+L36:
         LD    A,13
-        ;acc8=> variable 0
+L37:
         LD    (05000H),A
+L38:
         ;;test8.j(15)   write(b - c*d);          // 4
-        ;acc8= variable 0
+L39:
         LD    A,(05000H)
-        ;<acc8= variable 1
+L40:
         PUSH  AF
         LD    A,(05001H)
-        ;acc8* variable 2
+L41:
         LD    B,A
         LD    A,(05002H)
         LD    C,A
         MLT   BC
         LD    A,C
-        ;-acc8 unstack8
+L42:
         POP   BC
         SUB   A,B
         NEG
-        ;call writeAcc8
+L43:
         CALL  writeA
+L44:
         ;;test8.j(16) 
+L45:
         ;;test8.j(17)   /*************************/
+L46:
         ;;test8.j(18)   /* reverse subtract int  */
+L47:
         ;;test8.j(19)   /*************************/
+L48:
         ;;test8.j(20)   write(1005 - 1000*1);    // 5
-        ;acc16= constant 1005
+L49:
         LD    HL,1005
-        ;<acc16= constant 1000
+L50:
         PUSH  HL
         LD    HL,1000
-        ;acc16* constant 1
+L51:
         LD    DE,1
         CALL  mul16
-        ;-acc16 unstack16
+L52:
         POP   DE
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;call writeAcc16
+L53:
         CALL  writeHL
+L54:
         ;;test8.j(21)   int i = 1006;
-        ;acc16= constant 1006
+L55:
         LD    HL,1006
-        ;acc16=> variable 3
+L56:
         LD    (05003H),HL
+L57:
         ;;test8.j(22)   write(i - 1000*1);       // 6
-        ;acc16= variable 3
+L58:
         LD    HL,(05003H)
-        ;<acc16= constant 1000
+L59:
         PUSH  HL
         LD    HL,1000
-        ;acc16* constant 1
+L60:
         LD    DE,1
         CALL  mul16
-        ;-acc16 unstack16
+L61:
         POP   DE
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;call writeAcc16
+L62:
         CALL  writeHL
+L63:
         ;;test8.j(23)   int j = 1000;
-        ;acc16= constant 1000
+L64:
         LD    HL,1000
-        ;acc16=> variable 5
+L65:
         LD    (05005H),HL
+L66:
         ;;test8.j(24)   int k = 1;
-        ;acc8= constant 1
+L67:
         LD    A,1
-        ;acc8=> variable 7
+L68:
         LD    L,A
         LD    H,0
         LD    (05007H),HL
+L69:
         ;;test8.j(25)   write(1007 - j*k);       // 7
-        ;acc16= constant 1007
+L70:
         LD    HL,1007
-        ;<acc16= variable 5
+L71:
         PUSH  HL
         LD    HL,(05005H)
-        ;acc16* variable 7
+L72:
         LD    DE,(05007H)
         CALL  mul16
-        ;-acc16 unstack16
+L73:
         POP   DE
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;call writeAcc16
+L74:
         CALL  writeHL
+L75:
         ;;test8.j(26)   i = 1008;
-        ;acc16= constant 1008
+L76:
         LD    HL,1008
-        ;acc16=> variable 3
+L77:
         LD    (05003H),HL
+L78:
         ;;test8.j(27)   write(i - j*k);          // 8
-        ;acc16= variable 3
+L79:
         LD    HL,(05003H)
-        ;<acc16= variable 5
+L80:
         PUSH  HL
         LD    HL,(05005H)
-        ;acc16* variable 7
+L81:
         LD    DE,(05007H)
         CALL  mul16
-        ;-acc16 unstack16
+L82:
         POP   DE
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;call writeAcc16
+L83:
         CALL  writeHL
+L84:
         ;;test8.j(28) 
+L85:
         ;;test8.j(29)   /***********************/
+L86:
         ;;test8.j(30)   /* reverse divide byte */
+L87:
         ;;test8.j(31)   /***********************/
+L88:
         ;;test8.j(32)   write(36 / (4*1));     // 9
-        ;acc8= constant 36
+L89:
         LD    A,36
-        ;<acc8= constant 4
+L90:
         PUSH  AF
         LD    A,4
-        ;acc8* constant 1
+L91:
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
-        ;/acc8 unstack8
+L92:
         LD    C,A
         POP   AF
         CALL  div8
-        ;call writeAcc8
+L93:
         CALL  writeA
+L94:
         ;;test8.j(33)   b = 40;
-        ;acc8= constant 40
+L95:
         LD    A,40
-        ;acc8=> variable 0
+L96:
         LD    (05000H),A
+L97:
         ;;test8.j(34)   write(b / (4*1));      // 10
-        ;acc8= variable 0
+L98:
         LD    A,(05000H)
-        ;<acc8= constant 4
+L99:
         PUSH  AF
         LD    A,4
-        ;acc8* constant 1
+L100:
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
-        ;/acc8 unstack8
+L101:
         LD    C,A
         POP   AF
         CALL  div8
-        ;call writeAcc8
+L102:
         CALL  writeA
+L103:
         ;;test8.j(35)   c = 4;
-        ;acc8= constant 4
+L104:
         LD    A,4
-        ;acc8=> variable 1
+L105:
         LD    (05001H),A
+L106:
         ;;test8.j(36)   d = 1;
-        ;acc8= constant 1
+L107:
         LD    A,1
-        ;acc8=> variable 2
+L108:
         LD    (05002H),A
+L109:
         ;;test8.j(37)   write(44 / (c*d));     // 11
-        ;acc8= constant 44
+L110:
         LD    A,44
-        ;<acc8= variable 1
+L111:
         PUSH  AF
         LD    A,(05001H)
-        ;acc8* variable 2
+L112:
         LD    B,A
         LD    A,(05002H)
         LD    C,A
         MLT   BC
         LD    A,C
-        ;/acc8 unstack8
+L113:
         LD    C,A
         POP   AF
         CALL  div8
-        ;call writeAcc8
+L114:
         CALL  writeA
+L115:
         ;;test8.j(38)   b = 48;
-        ;acc8= constant 48
+L116:
         LD    A,48
-        ;acc8=> variable 0
+L117:
         LD    (05000H),A
+L118:
         ;;test8.j(39)   write(b / (c*d));      // 12
-        ;acc8= variable 0
+L119:
         LD    A,(05000H)
-        ;<acc8= variable 1
+L120:
         PUSH  AF
         LD    A,(05001H)
-        ;acc8* variable 2
+L121:
         LD    B,A
         LD    A,(05002H)
         LD    C,A
         MLT   BC
         LD    A,C
-        ;/acc8 unstack8
+L122:
         LD    C,A
         POP   AF
         CALL  div8
-        ;call writeAcc8
+L123:
         CALL  writeA
+L124:
         ;;test8.j(40) 
+L125:
         ;;test8.j(41)   /***********************/
+L126:
         ;;test8.j(42)   /* reverse divide int  */
+L127:
         ;;test8.j(43)   /***********************/
+L128:
         ;;test8.j(44)   write(3900 / (300*1)); // 13
-        ;acc16= constant 3900
+L129:
         LD    HL,3900
-        ;<acc16= constant 300
+L130:
         PUSH  HL
         LD    HL,300
-        ;acc16* constant 1
+L131:
         LD    DE,1
         CALL  mul16
-        ;/acc16 unstack16
+L132:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;call writeAcc16
+L133:
         CALL  writeHL
+L134:
         ;;test8.j(45)   i = 4200;
-        ;acc16= constant 4200
+L135:
         LD    HL,4200
-        ;acc16=> variable 3
+L136:
         LD    (05003H),HL
+L137:
         ;;test8.j(46)   write(i / (300*1));    // 14
-        ;acc16= variable 3
+L138:
         LD    HL,(05003H)
-        ;<acc16= constant 300
+L139:
         PUSH  HL
         LD    HL,300
-        ;acc16* constant 1
+L140:
         LD    DE,1
         CALL  mul16
-        ;/acc16 unstack16
+L141:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;call writeAcc16
+L142:
         CALL  writeHL
+L143:
         ;;test8.j(47)   j = 300;
-        ;acc16= constant 300
+L144:
         LD    HL,300
-        ;acc16=> variable 5
+L145:
         LD    (05005H),HL
+L146:
         ;;test8.j(48)   k = 1;
-        ;acc8= constant 1
+L147:
         LD    A,1
-        ;acc8=> variable 7
+L148:
         LD    L,A
         LD    H,0
         LD    (05007H),HL
+L149:
         ;;test8.j(49)   write(4500 / (j*k));   // 15
-        ;acc16= constant 4500
+L150:
         LD    HL,4500
-        ;<acc16= variable 5
+L151:
         PUSH  HL
         LD    HL,(05005H)
-        ;acc16* variable 7
+L152:
         LD    DE,(05007H)
         CALL  mul16
-        ;/acc16 unstack16
+L153:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;call writeAcc16
+L154:
         CALL  writeHL
+L155:
         ;;test8.j(50)   i = 4800;
-        ;acc16= constant 4800
+L156:
         LD    HL,4800
-        ;acc16=> variable 3
+L157:
         LD    (05003H),HL
+L158:
         ;;test8.j(51)   write(i / (j*k));      // 16
-        ;acc16= variable 3
+L159:
         LD    HL,(05003H)
-        ;<acc16= variable 5
+L160:
         PUSH  HL
         LD    HL,(05005H)
-        ;acc16* variable 7
+L161:
         LD    DE,(05007H)
         CALL  mul16
-        ;/acc16 unstack16
+L162:
         POP   DE
         EX    DE,HL
         CALL  div16
-        ;call writeAcc16
+L163:
         CALL  writeHL
+L164:
         ;;test8.j(52) 
+L165:
         ;;test8.j(53)   /**************************/
+L166:
         ;;test8.j(54)   /* reverse subtract mixed */
+L167:
         ;;test8.j(55)   /**************************/
+L168:
         ;;test8.j(56)   i = 21;
-        ;acc8= constant 21
+L169:
         LD    A,21
-        ;acc8=> variable 3
+L170:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
+L171:
         ;;test8.j(57)   c = 4;
-        ;acc8= constant 4
+L172:
         LD    A,4
-        ;acc8=> variable 1
+L173:
         LD    (05001H),A
+L174:
         ;;test8.j(58)   d = 1;
-        ;acc8= constant 1
+L175:
         LD    A,1
-        ;acc8=> variable 2
+L176:
         LD    (05002H),A
+L177:
         ;;test8.j(59)   write(i - c*d);           // 17
-        ;acc16= variable 3
+L178:
         LD    HL,(05003H)
-        ;acc8= variable 1
+L179:
         LD    A,(05001H)
-        ;acc8* variable 2
+L180:
         LD    B,A
         LD    A,(05002H)
         LD    C,A
         MLT   BC
         LD    A,C
-        ;acc16- acc8
+L181:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-        ;call writeAcc16
+L182:
         CALL  writeHL
+L183:
         ;;test8.j(60)   b = 22;
-        ;acc8= constant 22
+L184:
         LD    A,22
-        ;acc8=> variable 0
+L185:
         LD    (05000H),A
+L186:
         ;;test8.j(61)   j = 4;
-        ;acc8= constant 4
+L187:
         LD    A,4
-        ;acc8=> variable 5
+L188:
         LD    L,A
         LD    H,0
         LD    (05005H),HL
+L189:
         ;;test8.j(62)   k = 1;
-        ;acc8= constant 1
+L190:
         LD    A,1
-        ;acc8=> variable 7
+L191:
         LD    L,A
         LD    H,0
         LD    (05007H),HL
+L192:
         ;;test8.j(63)   write(b - j*k);           // 18
-        ;acc8= variable 0
+L193:
         LD    A,(05000H)
-        ;acc16= variable 5
+L194:
         LD    HL,(05005H)
-        ;acc16* variable 7
+L195:
         LD    DE,(05007H)
         CALL  mul16
-        ;-acc16 acc8
+L196:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-        ;call writeAcc16
+L197:
         CALL  writeHL
+L198:
         ;;test8.j(64) 
+L199:
         ;;test8.j(65)   /**************************/
+L200:
         ;;test8.j(66)   /* reverse divide mixed   */
+L201:
         ;;test8.j(67)   /**************************/
+L202:
         ;;test8.j(68) 
+L203:
         ;;test8.j(69)   /**************************/
+L204:
         ;;test8.j(70)   /* forward divide mixed   */
+L205:
         ;;test8.j(71)   /**************************/
+L206:
         ;;test8.j(72)   i = 19;
-        ;acc8= constant 19
+L207:
         LD    A,19
-        ;acc8=> variable 3
+L208:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
+L209:
         ;;test8.j(73)   write(i / (1+0));         // 19
-        ;acc16= variable 3
+L210:
         LD    HL,(05003H)
-        ;acc8= constant 1
+L211:
         LD    A,1
-        ;acc8+ constant 0
+L212:
         ADD   A,0
-        ;acc16/ acc8
+L213:
         CALL  div16_8
-        ;call writeAcc16
+L214:
         CALL  writeHL
+L215:
         ;;test8.j(74)   
+L216:
         ;;test8.j(75)   write(i + 1);             // 20
-        ;acc16= variable 3
+L217:
         LD    HL,(05003H)
-        ;acc16+ constant 1
+L218:
         LD    DE,1
         ADD   HL,DE
-        ;call writeAcc16
+L219:
         CALL  writeHL
+L220:
         ;;test8.j(76)   write(2 + i);             // 21
-        ;acc8= constant 2
+L221:
         LD    A,2
-        ;acc8ToAcc16
+L222:
         LD    L,A
         LD    H,0
-        ;acc16+ variable 3
+L223:
         LD    DE,(05003H)
         ADD   HL,DE
-        ;call writeAcc16
+L224:
         CALL  writeHL
+L225:
         ;;test8.j(77) }
-        ;stop
+L226:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
