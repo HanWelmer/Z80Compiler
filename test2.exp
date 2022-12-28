@@ -1,12 +1,12 @@
    0 ;test2.j(0) /* Program to test branch instructions */
    1 ;test2.j(1) class TestBranches {
-   2 ;test2.j(2)   int i = 2000;
+   2 ;test2.j(2)   word i = 2000;
    3 acc16= constant 2000
    4 acc16=> variable 0
-   5 ;test2.j(3)   int i1 = 1000;
+   5 ;test2.j(3)   word i1 = 1000;
    6 acc16= constant 1000
    7 acc16=> variable 2
-   8 ;test2.j(4)   int i3 = 3000;
+   8 ;test2.j(4)   word i3 = 3000;
    9 acc16= constant 3000
   10 acc16=> variable 4
   11 ;test2.j(5)   byte b = 20;

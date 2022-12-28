@@ -1,7 +1,7 @@
 /* Program to test multiplication */
 class TestMultiply {
   write(14);
-  int a = 14;
+  word a = 14;
   a--;
   write(a);
   a = 11;

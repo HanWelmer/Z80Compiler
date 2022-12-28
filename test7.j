@@ -24,16 +24,16 @@ class Test8And16BitExpressions {
   write(121 / read); // 121 / 11 = 11
   
   write(1047);      // 1047
-  /*************************/
-  /* Single term read: int */
-  /*************************/
+  /**************************/
+  /* Single term read: word */
+  /**************************/
   write(read);      // 1048
-  int i = read;
+  word i = read;
   write(i);         // 1049
 
-  /*********************************/
-  /* Dual term read: int constants */
-  /*********************************/
+  /**********************************/
+  /* Dual term read: word constants */
+  /**********************************/
   write(read + 1000);   // 1050 + 1000 = 2050
   write(1000 + read);   // 1000 + 1051 = 2051
   write(read - 1000);   // 1052 - 1000 =   52
@@ -43,9 +43,9 @@ class Test8And16BitExpressions {
   write(read / 1000);   // 1056 / 1000 = 1
   write(2114 / read);   // 2114 / 1057 = 2
   
-  /***************************************/
-  /* Dual term read: int + byte variable */
-  /***************************************/
+  /****************************************/
+  /* Dual term read: word + byte variable */
+  /****************************************/
   b = 0;
   write(read + b);   // 1058 + 0 = 1058
   write(b + read);   // 0 + 1059 = 1059
@@ -59,9 +59,9 @@ class Test8And16BitExpressions {
   write(3);
   write(b / read);   // 12 / 3 = 4
   
-  /***************************************/
-  /* Dual term read: int + int variable */
-  /***************************************/
+  /****************************************/
+  /* Dual term read: word + word variable */
+  /****************************************/
   i = 0;
   write(1066);
   write(read + i);   // 1066 + 0 = 1066

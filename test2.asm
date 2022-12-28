@@ -618,19 +618,19 @@ L0:
 L1:
         ;;test2.j(1) class TestBranches {
 L2:
-        ;;test2.j(2)   int i = 2000;
+        ;;test2.j(2)   word i = 2000;
 L3:
         LD    HL,2000
 L4:
         LD    (05000H),HL
 L5:
-        ;;test2.j(3)   int i1 = 1000;
+        ;;test2.j(3)   word i1 = 1000;
 L6:
         LD    HL,1000
 L7:
         LD    (05002H),HL
 L8:
-        ;;test2.j(4)   int i3 = 3000;
+        ;;test2.j(4)   word i3 = 3000;
 L9:
         LD    HL,3000
 L10:

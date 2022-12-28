@@ -62,22 +62,22 @@
   61 ;test7.j(25)   write(1047);      // 1047
   62 acc16= constant 1047
   63 call writeAcc16
-  64 ;test7.j(26)   /*************************/
-  65 ;test7.j(27)   /* Single term read: int */
-  66 ;test7.j(28)   /*************************/
+  64 ;test7.j(26)   /**************************/
+  65 ;test7.j(27)   /* Single term read: word */
+  66 ;test7.j(28)   /**************************/
   67 ;test7.j(29)   write(read);      // 1048
   68 call read
   69 call writeAcc16
-  70 ;test7.j(30)   int i = read;
+  70 ;test7.j(30)   word i = read;
   71 call read
   72 acc16=> variable 1
   73 ;test7.j(31)   write(i);         // 1049
   74 acc16= variable 1
   75 call writeAcc16
   76 ;test7.j(32) 
-  77 ;test7.j(33)   /*********************************/
-  78 ;test7.j(34)   /* Dual term read: int constants */
-  79 ;test7.j(35)   /*********************************/
+  77 ;test7.j(33)   /**********************************/
+  78 ;test7.j(34)   /* Dual term read: word constants */
+  79 ;test7.j(35)   /**********************************/
   80 ;test7.j(36)   write(read + 1000);   // 1050 + 1000 = 2050
   81 call read
   82 acc16+ constant 1000
@@ -119,9 +119,9 @@
  118 /acc16 unstack16
  119 call writeAcc16
  120 ;test7.j(44)   
- 121 ;test7.j(45)   /***************************************/
- 122 ;test7.j(46)   /* Dual term read: int + byte variable */
- 123 ;test7.j(47)   /***************************************/
+ 121 ;test7.j(45)   /****************************************/
+ 122 ;test7.j(46)   /* Dual term read: word + byte variable */
+ 123 ;test7.j(47)   /****************************************/
  124 ;test7.j(48)   b = 0;
  125 acc8= constant 0
  126 acc8=> variable 0
@@ -171,9 +171,9 @@
  170 /acc16 acc8
  171 call writeAcc16
  172 ;test7.j(60)   
- 173 ;test7.j(61)   /***************************************/
- 174 ;test7.j(62)   /* Dual term read: int + int variable */
- 175 ;test7.j(63)   /***************************************/
+ 173 ;test7.j(61)   /****************************************/
+ 174 ;test7.j(62)   /* Dual term read: word + word variable */
+ 175 ;test7.j(63)   /****************************************/
  176 ;test7.j(64)   i = 0;
  177 acc8= constant 0
  178 acc8=> variable 1

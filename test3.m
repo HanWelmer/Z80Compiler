@@ -3,7 +3,7 @@
    2 ;test3.j(2)   write(14);
    3 acc8= constant 14
    4 call writeAcc8
-   5 ;test3.j(3)   int a = 14;
+   5 ;test3.j(3)   word a = 14;
    6 acc8= constant 14
    7 acc8=> variable 0
    8 ;test3.j(4)   a--;

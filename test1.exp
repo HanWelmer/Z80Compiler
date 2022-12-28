@@ -15,7 +15,7 @@
   14 acc8= variable 0
   15 acc8Comp constant 112
   16 brle 35
-  17 ;test1.j(9)     int j = 1001;
+  17 ;test1.j(9)     word j = 1001;
   18 acc16= constant 1001
   19 acc16=> variable 1
   20 ;test1.j(10)     byte c = b;
@@ -32,13 +32,13 @@
   31 ;test1.j(14)   }
   32 br 14
   33 ;test1.j(15) 
-  34 ;test1.j(16)   int i = 110;
+  34 ;test1.j(16)   word i = 110;
   35 acc8= constant 110
   36 acc8=> variable 1
-  37 ;test1.j(17)   int i2 = 105;
+  37 ;test1.j(17)   word i2 = 105;
   38 acc8= constant 105
   39 acc8=> variable 3
-  40 ;test1.j(18)   int p = 12;
+  40 ;test1.j(18)   word p = 12;
   41 acc8= constant 12
   42 acc8=> variable 5
   43 ;test1.j(19)   byte b2 = 111;

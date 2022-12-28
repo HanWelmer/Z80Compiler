@@ -624,7 +624,7 @@ L3:
 L4:
         CALL  writeA
 L5:
-        ;;test3.j(3)   int a = 14;
+        ;;test3.j(3)   word a = 14;
 L6:
         LD    A,14
 L7:

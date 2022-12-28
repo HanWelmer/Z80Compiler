@@ -8,7 +8,7 @@ class TestIf {
   // global variable within if scope
   byte b = 133;
   if (b>132) {
-    int j = 1001;
+    word j = 1001;
     byte c = b;
     byte d = c;
     b--;
@@ -17,12 +17,12 @@ class TestIf {
     write(0);
   }
   /************************/
-  int zero = 0;
-  int one = 1;
-  int three = 3;
-  int four = 4;
-  int five = 5;
-  int twelve = 12;
+  word zero = 0;
+  word one = 1;
+  word three = 3;
+  word four = 4;
+  word five = 5;
+  word twelve = 12;
   byte byteOne = 1;
   byte byteSix = 262;
   if (4 == zero + twelve/(1+2)) write(132);

@@ -12,7 +12,7 @@
   11 ;test10.j(7)   b--;
   12 decr8 variable 0
   13 ;test10.j(8)   do {
-  14 ;test10.j(9)     int j = 1001;
+  14 ;test10.j(9)     word j = 1001;
   15 acc16= constant 1001
   16 acc16=> variable 1
   17 ;test10.j(10)     byte c = b;
@@ -31,10 +31,10 @@
   30 acc8Comp constant 112
   31 brgt 14
   32 ;test10.j(15) 
-  33 ;test10.j(16)   int i = 12;
+  33 ;test10.j(16)   word i = 12;
   34 acc8= constant 12
   35 acc8=> variable 1
-  36 ;test10.j(17)   int p = 12;
+  36 ;test10.j(17)   word p = 12;
   37 acc8= constant 12
   38 acc8=> variable 3
   39 ;test10.j(18)   b = 24;
@@ -123,7 +123,7 @@
  122 ;test10.j(67)   i=106;
  123 acc8= constant 106
  124 acc8=> variable 1
- 125 ;test10.j(68)   int i2 = 105;
+ 125 ;test10.j(68)   word i2 = 105;
  126 acc8= constant 105
  127 acc8=> variable 6
  128 ;test10.j(69)   do { write (i); i--; } while (i2 <= i);

@@ -7,16 +7,16 @@ class TestWhile {
   write (b);
   b--;
   while (b>112) {
-    int j = 1001;
+    word j = 1001;
     byte c = b;
     byte d = c;
     b--;
     write (c);
   }
 
-  int i = 110;
-  int i2 = 105;
-  int p = 12;
+  word i = 110;
+  word i2 = 105;
+  word p = 12;
   byte b2 = 111;
 
   /************************/

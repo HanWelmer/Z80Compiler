@@ -613,24 +613,43 @@ writeA:
         POP   HL
         RET
 main:
-        ;;test0.p(0) /* Program to test generated Z80 assembler code */
-        ;;test0.p(1) class TestPrint {
-        ;;test0.p(2)   byte b = 2;
+L0:
+        ;;test0.j(0) /* Program to test generated Z80 assembler code */
+L1:
+        ;;test0.j(1) class TestPrint {
+L2:
+        ;;test0.j(2)   byte b = 2;
+L3:
         LD    A,2
+L4:
         LD    (05000H),A
-        ;;test0.p(3)   int i = 1;
+L5:
+        ;;test0.j(3)   word i = 1;
+L6:
         LD    A,1
+L7:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
-        ;;test0.p(4)   write(b);
+L8:
+        ;;test0.j(4)   write(b);
+L9:
         LD    A,(05000H)
+L10:
         CALL  writeA
-        ;;test0.p(5)   write(i);
+L11:
+        ;;test0.j(5)   write(i);
+L12:
         LD    HL,(05001H)
+L13:
         CALL  writeHL
-        ;;test0.p(6)   write(0);
+L14:
+        ;;test0.j(6)   write(0);
+L15:
         LD    A,0
+L16:
         CALL  writeA
-        ;;test0.p(7) }
+L17:
+        ;;test0.j(7) }
+L18:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

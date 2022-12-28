@@ -643,7 +643,7 @@ L12:
 L13:
         ;;test10.j(8)   do {
 L14:
-        ;;test10.j(9)     int j = 1001;
+        ;;test10.j(9)     word j = 1001;
 L15:
         LD    HL,1001
 L16:
@@ -683,7 +683,7 @@ L31:
 L32:
         ;;test10.j(15) 
 L33:
-        ;;test10.j(16)   int i = 12;
+        ;;test10.j(16)   word i = 12;
 L34:
         LD    A,12
 L35:
@@ -691,7 +691,7 @@ L35:
         LD    H,0
         LD    (05001H),HL
 L36:
-        ;;test10.j(17)   int p = 12;
+        ;;test10.j(17)   word p = 12;
 L37:
         LD    A,12
 L38:
@@ -890,7 +890,7 @@ L124:
         LD    H,0
         LD    (05001H),HL
 L125:
-        ;;test10.j(68)   int i2 = 105;
+        ;;test10.j(68)   word i2 = 105;
 L126:
         LD    A,105
 L127:

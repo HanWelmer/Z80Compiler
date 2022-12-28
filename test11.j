@@ -7,7 +7,7 @@ class TestFor {
   write (b1);
   b1--;
   do {
-    int j = 1001;
+    word j = 1001;
     byte c = b1;
     byte d = c;
     b1--;
@@ -15,8 +15,8 @@ class TestFor {
   } while (b1>112);
 
   /************************/
-  int i2 = 105;
-  int p = 12;
+  word i2 = 105;
+  word p = 12;
   byte b2 = 111;
 
   /************************/
@@ -58,13 +58,13 @@ class TestFor {
   for (byte b = 112; b2 <= b; b--) { write (b); }
   // byte - integer
   b2 = 109;
-  for(int i = 110; b2 <= i; i--) { write(i); }
+  for(word i = 110; b2 <= i; i--) { write(i); }
   // integer - byte
   i2=107;
   for (byte b = 108; i2 <= b; b--) { write (b); }
   // integer - integer
   i2=105;
-  for(int i = 106; i2 <= i; i--) { write(i); }
+  for(word i = 106; i2 <= i; i--) { write(i); }
 
   /************************/
   // var - acc
@@ -76,9 +76,9 @@ class TestFor {
   for (byte b = 102; b <= i2+0; b--) { write (b); i2=i2-2; }
   // integer - byte
   b2=100;
-  for(int i = 100; i <= 101+0; i++) { write(b2); b2--; }
+  for(word i = 100; i <= 101+0; i++) { write(b2); b2--; }
   // integer - integer
-  for(int i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
+  for(word i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
 
   /************************/
   // var - constant
@@ -91,9 +91,9 @@ class TestFor {
   write(93);
   // integer - byte
   b2=92;
-  for(int i = 92; i <= 93; i++) { write(b2); b2--; }
+  for(word i = 92; i <= 93; i++) { write(b2); b2--; }
   // integer - integer
-  for(int i = 1090; i <= 1091; i++) { write(b2); b2--; }
+  for(word i = 1090; i <= 1091; i++) { write(b2); b2--; }
 
   /************************/
   // acc - stack8
@@ -138,26 +138,26 @@ class TestFor {
   // byte - byte
   for (byte b = 72; 71+0 <= b; b--) { write (b); }
   // byte - integer
-  for(int i = 70; 69+0 <= i; i--) { write(i); }
+  for(word i = 70; 69+0 <= i; i--) { write(i); }
   // integer - byte
   i2=67;
   for (byte b = 68; i2+0 <= b; b--) { write (b); }
   // integer - integer
   b2 = 66;
-  for(int i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
+  for(word i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
 
   /************************/
   // acc - acc
   // byte - byte
   for (byte b = 64; 63+0 <= b+0; b--) { write (b); }
   // byte - integer
-  for(int i = 62; 61+0 <= i+0; i--) { write(i); }
+  for(word i = 62; 61+0 <= i+0; i--) { write(i); }
   // integer - byte
   i2=59;
   for (byte b = 60; i2+0 <= b+0; b--) { write (b); }
   // integer - integer
   b2=58;
-  for(int i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
+  for(word i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
 
   /************************/
   // acc - constant
@@ -168,10 +168,10 @@ class TestFor {
   //not relevant
   // integer - byte
   b2=54;
-  for (int i = 54; i+0 <= 55; i++) { write (b2); b2--;}
+  for (word i = 54; i+0 <= 55; i++) { write (b2); b2--;}
   // integer - integer
   b2=52;
-  for(int i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
+  for(word i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
 
   /************************/
   // constant - stack8
@@ -215,14 +215,14 @@ class TestFor {
   for (byte b = 42; 41 <= b; b--) { write (b); }
   // constant - var
   // byte - integer
-  for(int i = 40; 39 <= i; i--) { write(i); }
+  for(word i = 40; 39 <= i; i--) { write(i); }
   // constant - var
   // integer - byte
   // not relevant
   // constant - var
   // integer - integer
   b2=38;
-  for(int i = 1038; 1037 <= i; i--) { write(b2); b2--; }
+  for(word i = 1038; 1037 <= i; i--) { write(b2); b2--; }
 
   /************************/
   // constant - acc
@@ -236,25 +236,25 @@ class TestFor {
   for (byte b = 26; 125 <= b+100; b--) { write (b); }
   // constant - acc
   // byte - integer
-  for(int i = 24; 24 == i+0; i--) { write(i); }
-  for(int i = 23; 120 != i+100; i--) { write(i); }
+  for(word i = 24; 24 == i+0; i--) { write(i); }
+  for(word i = 23; 120 != i+100; i--) { write(i); }
   b2=20;
-  for(int i = 20; 122 > i+100; i++) { write (b2); b2--; }
-  for(int i = 22; 123 >= i+100; i++) { write (b2); b2--; }
-  for(int i = 16; 114 <  i+100; i--) { write(i); }
-  for(int i = 14; 113 <= i+100; i--) { write(i); }
+  for(word i = 20; 122 > i+100; i++) { write (b2); b2--; }
+  for(word i = 22; 123 >= i+100; i++) { write (b2); b2--; }
+  for(word i = 16; 114 <  i+100; i--) { write(i); }
+  for(word i = 14; 113 <= i+100; i--) { write(i); }
   // constant - acc
   // integer - byte
   // not relevant
 
   // constant - acc
   // integer - integer
-  for(int i = 12; 1012 == i+1000; i--) { write(i); }
-  for(int i = 11; 1008 != i+1000; i--) { write(i); }
+  for(word i = 12; 1012 == i+1000; i--) { write(i); }
+  for(word i = 11; 1008 != i+1000; i--) { write(i); }
   b2=8;
-  for(int i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
-  for(int i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
-  for(int i = 4; 1002 <  i+1000; i--) { write(i); }
-  for(int i = 2; 1001 <= i+1000; i--) { write(i); }
+  for(word i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
+  for(word i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
+  for(word i = 4; 1002 <  i+1000; i--) { write(i); }
+  for(word i = 2; 1001 <= i+1000; i--) { write(i); }
   write(0);
 }

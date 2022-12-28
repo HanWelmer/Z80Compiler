@@ -3,7 +3,7 @@
    2 ;test9.j(2)   byte b = 9;
    3 acc8= constant 9
    4 acc8=> variable 0
-   5 ;test9.j(3)   int i = 6561;
+   5 ;test9.j(3)   word i = 6561;
    6 acc16= constant 6561
    7 acc16=> variable 1
    8 ;test9.j(4)   if (i * 1 > b * 1) write (21); else write (0);

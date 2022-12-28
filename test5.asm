@@ -648,7 +648,7 @@ L15:
 L16:
         JP    Z,L34
 L17:
-        ;;test5.j(10)     int j = 1001;
+        ;;test5.j(10)     word j = 1001;
 L18:
         LD    HL,1001
 L19:
@@ -691,7 +691,7 @@ L36:
 L37:
         ;;test5.j(18)   /************************/
 L38:
-        ;;test5.j(19)   int zero = 0;
+        ;;test5.j(19)   word zero = 0;
 L39:
         LD    A,0
 L40:
@@ -699,7 +699,7 @@ L40:
         LD    H,0
         LD    (05001H),HL
 L41:
-        ;;test5.j(20)   int one = 1;
+        ;;test5.j(20)   word one = 1;
 L42:
         LD    A,1
 L43:
@@ -707,7 +707,7 @@ L43:
         LD    H,0
         LD    (05003H),HL
 L44:
-        ;;test5.j(21)   int three = 3;
+        ;;test5.j(21)   word three = 3;
 L45:
         LD    A,3
 L46:
@@ -715,7 +715,7 @@ L46:
         LD    H,0
         LD    (05005H),HL
 L47:
-        ;;test5.j(22)   int four = 4;
+        ;;test5.j(22)   word four = 4;
 L48:
         LD    A,4
 L49:
@@ -723,7 +723,7 @@ L49:
         LD    H,0
         LD    (05007H),HL
 L50:
-        ;;test5.j(23)   int five = 5;
+        ;;test5.j(23)   word five = 5;
 L51:
         LD    A,5
 L52:
@@ -731,7 +731,7 @@ L52:
         LD    H,0
         LD    (05009H),HL
 L53:
-        ;;test5.j(24)   int twelve = 12;
+        ;;test5.j(24)   word twelve = 12;
 L54:
         LD    A,12
 L55:

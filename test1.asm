@@ -649,7 +649,7 @@ L15:
 L16:
         JP    Z,L35
 L17:
-        ;;test1.j(9)     int j = 1001;
+        ;;test1.j(9)     word j = 1001;
 L18:
         LD    HL,1001
 L19:
@@ -684,7 +684,7 @@ L32:
 L33:
         ;;test1.j(15) 
 L34:
-        ;;test1.j(16)   int i = 110;
+        ;;test1.j(16)   word i = 110;
 L35:
         LD    A,110
 L36:
@@ -692,7 +692,7 @@ L36:
         LD    H,0
         LD    (05001H),HL
 L37:
-        ;;test1.j(17)   int i2 = 105;
+        ;;test1.j(17)   word i2 = 105;
 L38:
         LD    A,105
 L39:
@@ -700,7 +700,7 @@ L39:
         LD    H,0
         LD    (05003H),HL
 L40:
-        ;;test1.j(18)   int p = 12;
+        ;;test1.j(18)   word p = 12;
 L41:
         LD    A,12
 L42:

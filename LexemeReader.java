@@ -164,7 +164,7 @@ public class LexemeReader {
           ch = getChar(sourceCode);
         }
       }
-      lexeme.datatype = (lexeme.constVal <= MAX_BYT_CONSTANT) ? Datatype.byt : Datatype.integer;
+      lexeme.datatype = (lexeme.constVal <= MAX_BYT_CONSTANT) ? Datatype.byt : Datatype.word;
     } else if (ch == '{') {
       lexeme.type = LexemeType.beginlexeme;
     } else if (ch == '}') {

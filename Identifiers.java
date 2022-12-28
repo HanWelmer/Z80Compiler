@@ -91,8 +91,8 @@ public class Identifiers {
       debug(String.format("declareId() overriding default datatype and other properties."));
       if (datatype == LexemeType.bytelexeme) {
         var.setDatatype(Datatype.byt);
-      } else if (datatype == LexemeType.intlexeme) {
-        var.setDatatype(Datatype.integer);
+      } else if (datatype == LexemeType.wordlexeme) {
+        var.setDatatype(Datatype.word);
       } else if (datatype == LexemeType.classlexeme) {
         var.setDatatype(Datatype.clazz);
       } else {

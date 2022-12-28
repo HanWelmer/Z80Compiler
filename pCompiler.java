@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO replace integer by word
+//BUG  Error: undefined label: div8
+//BUG  Error: undefined label: div8_16
 //TODO add string constant assignment
 //TODO add write string constant
 //TODO add string expression (+ and *)
@@ -29,12 +30,12 @@ import java.util.Stack;
  * statements     = (statement)*.
  * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
  * assignment     = [datatype] update ";".
- * datatype       = "byte" | "int".
+ * datatype       = "byte" | "word".
  * update         = identifier++ | identifier-- | identifier "=" expression.
  * writeStatement = "write" "(" expression ")" ";".
  * ifStatement    = "if" "(" comparison ")" block [ "else" block].
  * forStatement   = "for" "(" initialization ";" comparison ";" update ")" block.
- * initialization = "int" identifier "=" expression.
+ * initialization = "word" identifier "=" expression.
  * doStatement    = "do" block "while" "(" comparison ")" ";".
  * whileStatement = "while" "(" comparison ")" block.
  * block          = statement | "{" statements "}".
@@ -56,17 +57,17 @@ import java.util.Stack;
  * The name of a valid declaration may only be declared once within its scope (overloading is not supported).
  * A variable declaration must include the datatype.
  * A variable of type byte takes one byte (8 bit).
- * A variable of type int takes two bytes (16 bit).
+ * A variable of type word takes two bytes (16 bit).
  * A variable of type byte has a range from 0 to 255.
- * A variable of type int has a range from -32768 to 32767.
+ * A variable of type word has a range from 0 to 65535.
  * An expression is initially evaluated in the type of the first (left most) factor.
  * A constant has a type byte if the value is between 0 and 255.
- * A byte expression is promoted to an int expression if a right-hand factor requires so.
- * The read() function returns an int value.
+ * A byte expression is promoted to a word expression if a right-hand factor requires so.
+ * The read() function returns a word value.
  * In an addop, mulop or relop the type of the lefthand operand and the right hand operand must be the same.
- * The value of the lefthand operand of an addop, mulop or relop is changed from byte to int if the type of the righthand operand is an int.
- * In an assignment the value of a byte expression can be assigned to an int variable.
- * In an assignment the value of a int expression assigned to a byte variable will be truncated.
+ * The value of the lefthand operand of an addop, mulop or relop is changed from byte to word if the type of the righthand operand is a word.
+ * In an assignment the value of a byte expression can be assigned to a word variable.
+ * In an assignment the value of a word expression assigned to a byte variable will be truncated.
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
@@ -143,7 +144,7 @@ public class pCompiler {
   private EnumSet<LexemeType> startStatement = EnumSet.of(
       LexemeType.identifier
     , LexemeType.bytelexeme
-    , LexemeType.intlexeme
+    , LexemeType.wordlexeme
     , LexemeType.writelexeme
     , LexemeType.iflexeme
     , LexemeType.forlexeme
@@ -153,7 +154,7 @@ public class pCompiler {
   private EnumSet<LexemeType> startAssignment = EnumSet.of(
       LexemeType.identifier
     , LexemeType.bytelexeme
-    , LexemeType.intlexeme
+    , LexemeType.wordlexeme
   );
   private EnumSet<LexemeType> startExp = EnumSet.of(
       LexemeType.lbracket
@@ -327,14 +328,14 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
         /* 
          * Part of code generation.
-         * The read() function always returns an int value.
+         * The read() function always returns an word value.
          */
         if (acc16.inUse()) {
           plant(new Instruction(FunctionType.stackAcc16));
         }
         plant(new Instruction(FunctionType.read));
         operand.opType = OperandType.acc;
-        operand.datatype = Datatype.integer;
+        operand.datatype = Datatype.word;
         acc16.setOperand(operand);
       } else if (lexeme.type == LexemeType.lbracket) {
         //skip left bracket.
@@ -391,29 +392,29 @@ public class pCompiler {
       /* leftOperand:  constant, acc, var, stack16, stack8
        * rOperand:     constant, acc, var, stack16, stack8
        *
-       * term loop: lOperand=operand(acc, type=integer),             rOperand=operand(constant, type=integer, ...), acc16InUse = true, acc8InUse = false
-       * term loop: lOperand=operand(acc, type=integer, intValue=1), rOperand=operand(constant, type=byt, intValue=1), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=word),                rOperand=operand(constant, type=word, ...), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=word, intValue=1),    rOperand=operand(constant, type=byt, intValue=1), acc16InUse = true, acc8InUse = false
        * term loop: lOperand=operand(acc, type=byt, intValue=12),    rOperand=operand(constant, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=byt, intValue=1),     rOperand=operand(constant, type=integer, ...), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=integer, intValue=3), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=byt, intValue=12),    rOperand=operand(acc, type=integer, intValue=2), acc16InUse = true, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=integer, intValue=5), rOperand=operand(var, type=integer, intValue=7), acc16InUse = true, acc8InUse = false
-       * term loop: lOperand=operand(acc, type=integer),             rOperand=operand(var, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=byt, intValue=1),     rOperand=operand(constant, type=word, ...), acc16InUse = false, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=word, intValue=3),    rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=byt, intValue=12),    rOperand=operand(acc, type=word, intValue=2), acc16InUse = true, acc8InUse = true
+       * term loop: lOperand=operand(acc, type=word, intValue=5),    rOperand=operand(var, type=word, intValue=7), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=word),                rOperand=operand(var, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
        * term loop: lOperand=operand(acc, type=byt, intValue=1),     rOperand=operand(var, type=byt, intValue=2), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=byt, intValue=2),     rOperand=operand(var, type=integer, intValue=2), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(stack16, type=integer, ...),    rOperand=operand(acc, type=integer, ...), acc16InUse = true, acc8InUse = false
+       * term loop: lOperand=operand(acc, type=byt, intValue=2),     rOperand=operand(var, type=word, intValue=2), acc16InUse = false, acc8InUse = true
+       * term loop: lOperand=operand(stack16, type=word, ...),       rOperand=operand(acc, type=word, ...), acc16InUse = true, acc8InUse = false
        * term loop: lOperand=operand(stack8, type=byt, intValue=12), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
        */
       if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.constant)) {
-        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+        if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.word) {
           plant(new Instruction(forwardMul16.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+        } else if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardMul16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardMul8.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.word) {
           plant(new Instruction(FunctionType.acc8ToAcc16));
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
           plant(new Instruction(forwardMul16.get(operator), rOperand));
@@ -421,27 +422,27 @@ public class pCompiler {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.acc)) {
-        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+        if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardMul16.get(operator), rOperand));
           acc8.clear();
-        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.word) {
           plant(new Instruction(reverseMul16.get(operator), leftOperand));
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.var)) {
-        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+        if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.word) {
           plant(new Instruction(forwardMul16.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+        } else if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardMul16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardMul8.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.word) {
           plant(new Instruction(FunctionType.acc8ToAcc16));
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
           plant(new Instruction(forwardMul16.get(operator), rOperand));
@@ -449,10 +450,10 @@ public class pCompiler {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.stack16) && (rOperand.opType == OperandType.acc)) {
-        if (rOperand.datatype == Datatype.integer) {
+        if (rOperand.datatype == Datatype.word) {
           plant(new Instruction(reverseMul16.get(operator), leftOperand));
           leftOperand.opType = OperandType.acc;
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
@@ -507,15 +508,15 @@ public class pCompiler {
        * rOperand:     constant, acc, var, stack16, stack8
        */
       if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.constant)) {
-        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+        if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.word) {
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+        } else if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd8.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.word) {
           plant(new Instruction(FunctionType.acc8ToAcc16));
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
@@ -523,27 +524,27 @@ public class pCompiler {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.acc)) {
-        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+        if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
           acc8.clear();
-        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.word) {
           plant(new Instruction(reverseAdd16.get(operator), leftOperand));
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.var)) {
-        if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.integer) {
+        if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.word) {
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.integer && rOperand.datatype == Datatype.byt) {
+        } else if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardAdd8.get(operator), rOperand));
-        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.integer) {
+        } else if (leftOperand.datatype == Datatype.byt && rOperand.datatype == Datatype.word) {
           plant(new Instruction(FunctionType.acc8ToAcc16));
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
           plant(new Instruction(forwardAdd16.get(operator), rOperand));
@@ -551,10 +552,10 @@ public class pCompiler {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.stack16) && (rOperand.opType == OperandType.acc)) {
-        if (rOperand.datatype == Datatype.integer) {
+        if (rOperand.datatype == Datatype.word) {
           plant(new Instruction(reverseAdd16.get(operator), leftOperand));
           leftOperand.opType = OperandType.acc;
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
@@ -564,10 +565,10 @@ public class pCompiler {
           plant(new Instruction(reverseAdd8.get(operator), leftOperand));
           leftOperand.opType = OperandType.acc;
           acc8.setOperand(leftOperand);
-        } else if (rOperand.datatype == Datatype.integer) {
+        } else if (rOperand.datatype == Datatype.word) {
           plant(new Instruction(reverseAdd16.get(operator), leftOperand));
           leftOperand.opType = OperandType.acc;
-          leftOperand.datatype = Datatype.integer;
+          leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
@@ -594,7 +595,7 @@ public class pCompiler {
     /* part of code generation */
     if (leftOperand.opType == OperandType.acc) {
       debug("\ncomparison: push leftOperand to the stack; " + leftOperand );
-      if (leftOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.stackAcc16));
       } else if (leftOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.stackAcc8));
@@ -626,7 +627,7 @@ public class pCompiler {
     /* part of code generation */
     boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);   
     int ifLabel = saveLabel();
-    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, 0);
+    Operand labelOperand = new Operand(OperandType.label, Datatype.word, 0);
     if (reverseCompare) {
       debug(", reverseCompare");
       plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
@@ -651,7 +652,7 @@ public class pCompiler {
     /* part of code generation */
     if (leftOperand.opType == OperandType.acc) {
       debug("\ncomparisonInDoStatement: push leftOperand to the stack; " + leftOperand );
-      if (leftOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.stackAcc16));
       } else if (leftOperand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.stackAcc8));
@@ -682,7 +683,7 @@ public class pCompiler {
 
     /* part of code generation */
     boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);
-    Operand labelOperand = new Operand(OperandType.label, Datatype.integer, doLabel);
+    Operand labelOperand = new Operand(OperandType.label, Datatype.word, doLabel);
     if (reverseCompare) {
       debug(", reverseCompare");
       if (compareOp == RelValType.eq) {
@@ -728,12 +729,12 @@ public class pCompiler {
     //plant(new Instruction(FunctionType.acc16Compare, rightOperand));
     if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.constant)) {
       plantAccLoad(leftOperand);
-      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
@@ -742,13 +743,13 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.acc)) {
-      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         reverseCompare = true;
         plant(new Instruction(FunctionType.acc16Compare, leftOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
@@ -759,13 +760,13 @@ public class pCompiler {
       }
     } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.var)) {
       plantAccLoad(rightOperand);
-      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         reverseCompare = true;
         plant(new Instruction(FunctionType.acc16Compare, leftOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
@@ -785,12 +786,12 @@ public class pCompiler {
     */
     } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.constant)) {
       plantAccLoad(leftOperand);
-      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
@@ -799,13 +800,13 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.acc)) {
-      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         reverseCompare = true;
         plant(new Instruction(FunctionType.acc16Compare, leftOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
         plantAccLoad(leftOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
@@ -816,12 +817,12 @@ public class pCompiler {
       }
     } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.var)) {
       plantAccLoad(leftOperand);
-      if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.integer) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      } else if (leftOperand.datatype == Datatype.integer && rightOperand.datatype == Datatype.byt) {
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.integer) {
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
@@ -830,7 +831,7 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.constant)) {
-      if (rightOperand.datatype == Datatype.integer) { 
+      if (rightOperand.datatype == Datatype.word) { 
         plant(new Instruction(FunctionType.unstackAcc16));
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
       } else if (rightOperand.datatype == Datatype.byt) {
@@ -841,7 +842,7 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.acc)) {
-      if (rightOperand.datatype == Datatype.integer) {
+      if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.revAcc16Compare, leftOperand));
         reverseCompare = true;
       } else if (rightOperand.datatype == Datatype.byt) {
@@ -851,7 +852,7 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.var)) {
-      if (rightOperand.datatype == Datatype.integer) {
+      if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc16));
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
       }else if (rightOperand.datatype == Datatype.byt) {
@@ -862,7 +863,7 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.constant)) {
-      if (rightOperand.datatype == Datatype.integer) {
+      if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc8));
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
@@ -873,7 +874,7 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.acc)) {
-      if (rightOperand.datatype == Datatype.integer) {
+      if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc8));
         plant(new Instruction(FunctionType.acc8CompareAcc16));
       } else if (rightOperand.datatype == Datatype.byt) {
@@ -883,7 +884,7 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.var)) {
-      if (rightOperand.datatype == Datatype.integer) {
+      if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc8));
         plantAccLoad(rightOperand);
         plant(new Instruction(FunctionType.acc8CompareAcc16));
@@ -956,7 +957,7 @@ public class pCompiler {
     String variable = assignment(stopInitializationSet);
     if (variable == null) {
       error();
-      System.out.println("Loop variable must be declared in for statement; for (int variable; .. ; ..) {..} expected.");
+      System.out.println("Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
     }
     
     //release acc after initialization part.
@@ -977,7 +978,7 @@ public class pCompiler {
 
     /* part of code generation: skip update and jump forward to block */
     int gotoBlock = saveLabel();
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, 0)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
     int updateLabel = saveLabel();
 
     //release acc after comparison part.
@@ -989,7 +990,7 @@ public class pCompiler {
     update(stopForSet);
 
     /* part of code generation: jump back to comparison */
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, forLabel)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, forLabel)));
 
     /* part of lexical analysis: ")" */
     stopForSet = stopSet.clone();
@@ -1005,7 +1006,7 @@ public class pCompiler {
     block(stopSet);
     
     /* part of code generation; jump back to update */
-    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, updateLabel)));
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, updateLabel)));
     plantForwardLabel(gotoEnd, saveLabel());
     
     //todo: getLexeme na bovenstaande code generatie.
@@ -1089,7 +1090,7 @@ public class pCompiler {
     block(stopSet);
     
     /* part of code generation */
-    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, whileLabel)));
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, whileLabel)));
     plantForwardLabel(endLabel, saveLabel());
     debug("\nwhileStatement: end");
   } //whileStatement()
@@ -1133,7 +1134,7 @@ public class pCompiler {
 
       /* part of code generation */
       int elseLabel = saveLabel();
-      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.integer, 0)));
+      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
       debug("\nifStatement: elselabel=" + elseLabel);
       debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
 
@@ -1153,7 +1154,7 @@ public class pCompiler {
   } //ifStatement()
   
   //assignment = [datatype] update ";".
-  //datatype   = "byte" | "int".
+  //datatype   = "byte" | "word".
   private String assignment(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nassignment: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
@@ -1162,7 +1163,7 @@ public class pCompiler {
     stopAssignmentSet.add(LexemeType.semicolon);
 
     String variable = null;
-    if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.intlexeme) {
+    if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.wordlexeme) {
       /* part of lexical analysis */
       LexemeType datatype = lexeme.type;
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1220,8 +1221,8 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
 
         /* part of code generation */
-        if (varDatatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.decrement16, new Operand(OperandType.var, Datatype.integer, varAddress)));
+        if (varDatatype == Datatype.word) {
+          plant(new Instruction(FunctionType.decrement16, new Operand(OperandType.var, Datatype.word, varAddress)));
         } else if (varDatatype == Datatype.byt) {
           plant(new Instruction(FunctionType.decrement8, new Operand(OperandType.var, Datatype.byt, varAddress)));
         } else {
@@ -1235,8 +1236,8 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
 
         /* part of code generation */
-        if (varDatatype == Datatype.integer) {
-          plant(new Instruction(FunctionType.increment16, new Operand(OperandType.var, Datatype.integer, varAddress)));
+        if (varDatatype == Datatype.word) {
+          plant(new Instruction(FunctionType.increment16, new Operand(OperandType.var, Datatype.word, varAddress)));
         } else if (varDatatype == Datatype.byt) {
           plant(new Instruction(FunctionType.increment8, new Operand(OperandType.var, Datatype.byt, varAddress)));
         } else {
@@ -1255,7 +1256,7 @@ public class pCompiler {
         plantAccLoad(operand);
       }
       //actual assignment.
-      if (operand.datatype == Datatype.integer) {
+      if (operand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, varDatatype, varAddress)));
       } else if (operand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, varDatatype, varAddress)));
@@ -1292,7 +1293,7 @@ public class pCompiler {
     if (operand.opType != OperandType.acc) {
       plantAccLoad(operand);
     }
-    if (operand.datatype == Datatype.integer) {
+    if (operand.datatype == Datatype.word) {
       plant(new Instruction(FunctionType.writeAcc16));
     } else if (operand.datatype == Datatype.byt) {
       plant(new Instruction(FunctionType.writeAcc8));
@@ -1425,7 +1426,7 @@ public class pCompiler {
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
     //load acc with operand.
-    if (operand.datatype == Datatype.integer) {
+    if (operand.datatype == Datatype.word) {
       if (operand.opType != OperandType.stack16) {
         if (acc16.inUse()) {
             plant(new Instruction(FunctionType.stackAcc16Load, operand));
@@ -1494,21 +1495,21 @@ public class pCompiler {
       acc8.operand().opType = OperandType.stack8;
       acc8.clear();
     } else if (instruction.function == FunctionType.stackAcc16) {
-      stackedDatatypes.push(Datatype.integer);
+      stackedDatatypes.push(Datatype.word);
       acc16.operand().opType = OperandType.stack16;
       acc16.clear();
     } else if (instruction.function == FunctionType.stackAcc8Load) {
       stackedDatatypes.push(Datatype.byt);
       acc8.operand().opType = OperandType.stack8;
     } else if (instruction.function == FunctionType.stackAcc16Load) {
-      stackedDatatypes.push(Datatype.integer);
+      stackedDatatypes.push(Datatype.word);
       acc16.operand().opType = OperandType.stack16;
     } else if (instruction.function == FunctionType.stackAcc16ToAcc8) {
       stackedDatatypes.push(Datatype.byt);
       acc8.operand().opType = OperandType.stack8;
       acc16.clear();
     } else if (instruction.function == FunctionType.stackAcc8ToAcc16) {
-      stackedDatatypes.push(Datatype.integer);
+      stackedDatatypes.push(Datatype.word);
       acc16.operand().opType = OperandType.stack16;
       acc8.clear();
     }
@@ -1544,7 +1545,7 @@ public class pCompiler {
     Datatype datatype = stackedDatatypes.pop();
     if (datatype == Datatype.byt) {
       return OperandType.stack8;
-    } else if (datatype == Datatype.integer) {
+    } else if (datatype == Datatype.word) {
       return OperandType.stack16;
     } else {
         throw new RuntimeException("Internal compiler error: abort.");

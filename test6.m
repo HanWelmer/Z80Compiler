@@ -78,7 +78,7 @@
   77 call writeAcc8
   78 ;test6.j(38) 
   79 ;test6.j(39) 
-  80 ;test6.j(40)   int i = 10;
+  80 ;test6.j(40)   word i = 10;
   81 acc8= constant 10
   82 acc8=> variable 2
   83 ;test6.j(41)   write(i);         // 10
@@ -114,7 +114,7 @@
  113 acc16+ variable 2
  114 call writeAcc16
  115 ;test6.j(54) 
- 116 ;test6.j(55)   int j = i + 5;    // 15
+ 116 ;test6.j(55)   word j = i + 5;    // 15
  117 acc16= variable 2
  118 acc16+ constant 5
  119 acc16=> variable 4

@@ -1,8 +1,8 @@
 /* Program to test branch instructions */
 class TestBranches {
-  int i = 2000;
-  int i1 = 1000;
-  int i3 = 3000;
+  word i = 2000;
+  word i1 = 1000;
+  word i3 = 3000;
   byte b = 20;
   byte b1 = 10;
   byte b3 = 30;

@@ -38,7 +38,7 @@ class Test8And16BitExpressions {
   write(c);         // 9
 
 
-  int i = 10;
+  word i = 10;
   write(i);         // 10
   //LD    A,10
   //LD    L,A
@@ -53,7 +53,7 @@ class Test8And16BitExpressions {
   b++; //4
   write(b + i);     // 14
 
-  int j = i + 5;    // 15
+  word j = i + 5;    // 15
   write(j);
   j = 6 + i;        // 16
   write(j);

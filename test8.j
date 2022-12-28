@@ -15,14 +15,14 @@ class Test8And16BitExpressions {
   b = 13;
   write(b - c*d);          // 4
 
-  /*************************/
-  /* reverse subtract int  */
-  /*************************/
+  /**************************/
+  /* reverse subtract word  */
+  /**************************/
   write(1005 - 1000*1);    // 5
-  int i = 1006;
+  word i = 1006;
   write(i - 1000*1);       // 6
-  int j = 1000;
-  int k = 1;
+  word j = 1000;
+  word k = 1;
   write(1007 - j*k);       // 7
   i = 1008;
   write(i - j*k);          // 8
@@ -39,9 +39,9 @@ class Test8And16BitExpressions {
   b = 48;
   write(b / (c*d));      // 12
 
-  /***********************/
-  /* reverse divide int  */
-  /***********************/
+  /************************/
+  /* reverse divide word  */
+  /************************/
   write(3900 / (300*1)); // 13
   i = 4200;
   write(i / (300*1));    // 14

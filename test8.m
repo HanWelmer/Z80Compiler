@@ -43,16 +43,16 @@
   42 -acc8 unstack8
   43 call writeAcc8
   44 ;test8.j(16) 
-  45 ;test8.j(17)   /*************************/
-  46 ;test8.j(18)   /* reverse subtract int  */
-  47 ;test8.j(19)   /*************************/
+  45 ;test8.j(17)   /**************************/
+  46 ;test8.j(18)   /* reverse subtract word  */
+  47 ;test8.j(19)   /**************************/
   48 ;test8.j(20)   write(1005 - 1000*1);    // 5
   49 acc16= constant 1005
   50 <acc16= constant 1000
   51 acc16* constant 1
   52 -acc16 unstack16
   53 call writeAcc16
-  54 ;test8.j(21)   int i = 1006;
+  54 ;test8.j(21)   word i = 1006;
   55 acc16= constant 1006
   56 acc16=> variable 3
   57 ;test8.j(22)   write(i - 1000*1);       // 6
@@ -61,10 +61,10 @@
   60 acc16* constant 1
   61 -acc16 unstack16
   62 call writeAcc16
-  63 ;test8.j(23)   int j = 1000;
+  63 ;test8.j(23)   word j = 1000;
   64 acc16= constant 1000
   65 acc16=> variable 5
-  66 ;test8.j(24)   int k = 1;
+  66 ;test8.j(24)   word k = 1;
   67 acc8= constant 1
   68 acc8=> variable 7
   69 ;test8.j(25)   write(1007 - j*k);       // 7
@@ -123,9 +123,9 @@
  122 /acc8 unstack8
  123 call writeAcc8
  124 ;test8.j(40) 
- 125 ;test8.j(41)   /***********************/
- 126 ;test8.j(42)   /* reverse divide int  */
- 127 ;test8.j(43)   /***********************/
+ 125 ;test8.j(41)   /************************/
+ 126 ;test8.j(42)   /* reverse divide word  */
+ 127 ;test8.j(43)   /************************/
  128 ;test8.j(44)   write(3900 / (300*1)); // 13
  129 acc16= constant 3900
  130 <acc16= constant 300

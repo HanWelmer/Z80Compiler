@@ -643,7 +643,7 @@ L12:
 L13:
         ;;test11.j(8)   do {
 L14:
-        ;;test11.j(9)     int j = 1001;
+        ;;test11.j(9)     word j = 1001;
 L15:
         LD    HL,1001
 L16:
@@ -685,7 +685,7 @@ L32:
 L33:
         ;;test11.j(16)   /************************/
 L34:
-        ;;test11.j(17)   int i2 = 105;
+        ;;test11.j(17)   word i2 = 105;
 L35:
         LD    A,105
 L36:
@@ -693,7 +693,7 @@ L36:
         LD    H,0
         LD    (05001H),HL
 L37:
-        ;;test11.j(18)   int p = 12;
+        ;;test11.j(18)   word p = 12;
 L38:
         LD    A,12
 L39:
@@ -821,7 +821,7 @@ L96:
 L97:
         LD    (05005H),A
 L98:
-        ;;test11.j(60)   for(int i = 110; b2 <= i; i--) { write(i); }
+        ;;test11.j(60)   for(word i = 110; b2 <= i; i--) { write(i); }
 L99:
         LD    A,110
 L100:
@@ -907,7 +907,7 @@ L131:
         LD    H,0
         LD    (05001H),HL
 L132:
-        ;;test11.j(66)   for(int i = 106; i2 <= i; i--) { write(i); }
+        ;;test11.j(66)   for(word i = 106; i2 <= i; i--) { write(i); }
 L133:
         LD    A,106
 L134:
@@ -1047,7 +1047,7 @@ L188:
 L189:
         LD    (05005H),A
 L190:
-        ;;test11.j(78)   for(int i = 100; i <= 101+0; i++) { write(b2); b2--; }
+        ;;test11.j(78)   for(word i = 100; i <= 101+0; i++) { write(b2); b2--; }
 L191:
         LD    A,100
 L192:
@@ -1089,7 +1089,7 @@ L204:
 L205:
         ;;test11.j(79)   // integer - integer
 L206:
-        ;;test11.j(80)   for(int i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
+        ;;test11.j(80)   for(word i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
 L207:
         LD    HL,1098
 L208:
@@ -1193,7 +1193,7 @@ L250:
 L251:
         LD    (05005H),A
 L252:
-        ;;test11.j(93)   for(int i = 92; i <= 93; i++) { write(b2); b2--; }
+        ;;test11.j(93)   for(word i = 92; i <= 93; i++) { write(b2); b2--; }
 L253:
         LD    A,92
 L254:
@@ -1233,7 +1233,7 @@ L265:
 L266:
         ;;test11.j(94)   // integer - integer
 L267:
-        ;;test11.j(95)   for(int i = 1090; i <= 1091; i++) { write(b2); b2--; }
+        ;;test11.j(95)   for(word i = 1090; i <= 1091; i++) { write(b2); b2--; }
 L268:
         LD    HL,1090
 L269:
@@ -1445,7 +1445,7 @@ L366:
 L367:
         ;;test11.j(139)   // byte - integer
 L368:
-        ;;test11.j(140)   for(int i = 70; 69+0 <= i; i--) { write(i); }
+        ;;test11.j(140)   for(word i = 70; 69+0 <= i; i--) { write(i); }
 L369:
         LD    A,70
 L370:
@@ -1534,7 +1534,7 @@ L402:
 L403:
         LD    (05005H),A
 L404:
-        ;;test11.j(146)   for(int i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
+        ;;test11.j(146)   for(word i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
 L405:
         LD    HL,1066
 L406:
@@ -1613,7 +1613,7 @@ L437:
 L438:
         ;;test11.j(152)   // byte - integer
 L439:
-        ;;test11.j(153)   for(int i = 62; 61+0 <= i+0; i--) { write(i); }
+        ;;test11.j(153)   for(word i = 62; 61+0 <= i+0; i--) { write(i); }
 L440:
         LD    A,62
 L441:
@@ -1715,7 +1715,7 @@ L479:
 L480:
         LD    (05005H),A
 L481:
-        ;;test11.j(159)   for(int i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
+        ;;test11.j(159)   for(word i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
 L482:
         LD    HL,1058
 L483:
@@ -1816,7 +1816,7 @@ L523:
 L524:
         LD    (05005H),A
 L525:
-        ;;test11.j(170)   for (int i = 54; i+0 <= 55; i++) { write (b2); b2--;}
+        ;;test11.j(170)   for (word i = 54; i+0 <= 55; i++) { write (b2); b2--;}
 L526:
         LD    A,54
 L527:
@@ -1865,7 +1865,7 @@ L542:
 L543:
         LD    (05005H),A
 L544:
-        ;;test11.j(173)   for(int i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
+        ;;test11.j(173)   for(word i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
 L545:
         LD    HL,1052
 L546:
@@ -2041,7 +2041,7 @@ L626:
 L627:
         ;;test11.j(216)   // byte - integer
 L628:
-        ;;test11.j(217)   for(int i = 40; 39 <= i; i--) { write(i); }
+        ;;test11.j(217)   for(word i = 40; 39 <= i; i--) { write(i); }
 L629:
         LD    A,40
 L630:
@@ -2091,7 +2091,7 @@ L647:
 L648:
         LD    (05005H),A
 L649:
-        ;;test11.j(224)   for(int i = 1038; 1037 <= i; i--) { write(b2); b2--; }
+        ;;test11.j(224)   for(word i = 1038; 1037 <= i; i--) { write(b2); b2--; }
 L650:
         LD    HL,1038
 L651:
@@ -2309,7 +2309,7 @@ L749:
 L750:
         ;;test11.j(237)   // byte - integer
 L751:
-        ;;test11.j(238)   for(int i = 24; 24 == i+0; i--) { write(i); }
+        ;;test11.j(238)   for(word i = 24; 24 == i+0; i--) { write(i); }
 L752:
         LD    A,24
 L753:
@@ -2345,7 +2345,7 @@ L763:
 L764:
         JP    L760
 L765:
-        ;;test11.j(239)   for(int i = 23; 120 != i+100; i--) { write(i); }
+        ;;test11.j(239)   for(word i = 23; 120 != i+100; i--) { write(i); }
 L766:
         LD    A,23
 L767:
@@ -2387,7 +2387,7 @@ L780:
 L781:
         LD    (05005H),A
 L782:
-        ;;test11.j(241)   for(int i = 20; 122 > i+100; i++) { write (b2); b2--; }
+        ;;test11.j(241)   for(word i = 20; 122 > i+100; i++) { write (b2); b2--; }
 L783:
         LD    A,20
 L784:
@@ -2426,7 +2426,7 @@ L795:
 L796:
         JP    L791
 L797:
-        ;;test11.j(242)   for(int i = 22; 123 >= i+100; i++) { write (b2); b2--; }
+        ;;test11.j(242)   for(word i = 22; 123 >= i+100; i++) { write (b2); b2--; }
 L798:
         LD    A,22
 L799:
@@ -2465,7 +2465,7 @@ L810:
 L811:
         JP    L806
 L812:
-        ;;test11.j(243)   for(int i = 16; 114 <  i+100; i--) { write(i); }
+        ;;test11.j(243)   for(word i = 16; 114 <  i+100; i--) { write(i); }
 L813:
         LD    A,16
 L814:
@@ -2501,7 +2501,7 @@ L824:
 L825:
         JP    L821
 L826:
-        ;;test11.j(244)   for(int i = 14; 113 <= i+100; i--) { write(i); }
+        ;;test11.j(244)   for(word i = 14; 113 <= i+100; i--) { write(i); }
 L827:
         LD    A,14
 L828:
@@ -2550,7 +2550,7 @@ L844:
 L845:
         ;;test11.j(250)   // integer - integer
 L846:
-        ;;test11.j(251)   for(int i = 12; 1012 == i+1000; i--) { write(i); }
+        ;;test11.j(251)   for(word i = 12; 1012 == i+1000; i--) { write(i); }
 L847:
         LD    A,12
 L848:
@@ -2583,7 +2583,7 @@ L857:
 L858:
         JP    L854
 L859:
-        ;;test11.j(252)   for(int i = 11; 1008 != i+1000; i--) { write(i); }
+        ;;test11.j(252)   for(word i = 11; 1008 != i+1000; i--) { write(i); }
 L860:
         LD    A,11
 L861:
@@ -2622,7 +2622,7 @@ L873:
 L874:
         LD    (05005H),A
 L875:
-        ;;test11.j(254)   for(int i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
+        ;;test11.j(254)   for(word i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
 L876:
         LD    A,8
 L877:
@@ -2658,7 +2658,7 @@ L887:
 L888:
         JP    L883
 L889:
-        ;;test11.j(255)   for(int i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
+        ;;test11.j(255)   for(word i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
 L890:
         LD    A,10
 L891:
@@ -2695,7 +2695,7 @@ L901:
 L902:
         JP    L897
 L903:
-        ;;test11.j(256)   for(int i = 4; 1002 <  i+1000; i--) { write(i); }
+        ;;test11.j(256)   for(word i = 4; 1002 <  i+1000; i--) { write(i); }
 L904:
         LD    A,4
 L905:
@@ -2728,7 +2728,7 @@ L914:
 L915:
         JP    L911
 L916:
-        ;;test11.j(257)   for(int i = 2; 1001 <= i+1000; i--) { write(i); }
+        ;;test11.j(257)   for(word i = 2; 1001 <= i+1000; i--) { write(i); }
 L917:
         LD    A,2
 L918:

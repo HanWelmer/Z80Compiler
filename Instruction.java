@@ -95,7 +95,7 @@ public class Instruction {
           // no error.
         } else if (operand.opType == OperandType.var && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.acc && operand.datatype == Datatype.integer) {
+        } else if (operand.opType == OperandType.acc && operand.datatype == Datatype.word) {
           // no error.
         } else {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -145,11 +145,11 @@ public class Instruction {
           case stack8: break;
           case stack16: break;
           case constant:
-            if (operand.datatype != Datatype.byt && operand.datatype != Datatype.integer) {
-              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer or byte datatype for its constant operand.");
+            if (operand.datatype != Datatype.byt && operand.datatype != Datatype.word) {
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an word or byte datatype for its constant operand.");
             }
             if (operand.intValue == null) {
-              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an integer value for its constant operand.");
+              throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an word value for its constant operand.");
             }
             break;
           case var:
@@ -158,7 +158,7 @@ public class Instruction {
             }
             break;
           case acc:
-            if (operand.datatype == Datatype.byt || operand.datatype == Datatype.integer) {
+            if (operand.datatype == Datatype.byt || operand.datatype == Datatype.word) {
               // no error.
             } else {
               throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -200,7 +200,7 @@ public class Instruction {
     }
     
     //deep copy of operand, otherwise a reference to the mutable object operand is copied into the Instruction.
-    if (operand.datatype == Datatype.integer || operand.datatype == Datatype.byt) {
+    if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
       this.operand = new Operand(operand.opType, operand.datatype, operand.intValue);
     } else {
       this.operand = new Operand(operand.opType, operand.datatype, operand.strValue);
@@ -256,14 +256,14 @@ public class Instruction {
           case stack8:
             if (operand.datatype == Datatype.byt) {
               result += " unstack8";
-            } else if (operand.datatype == Datatype.integer) {
+            } else if (operand.datatype == Datatype.word) {
               result += " unstack16";
             }
             break;
           case acc: 
             if (operand.datatype == Datatype.byt) {
               result += " acc8";
-            } else if (operand.datatype == Datatype.integer) {
+            } else if (operand.datatype == Datatype.word) {
               result += " acc16";
             }
             break;

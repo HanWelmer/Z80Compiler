@@ -15,7 +15,7 @@
   14 acc8= variable 0
   15 acc8Comp constant 132
   16 brle 34
-  17 ;test5.j(10)     int j = 1001;
+  17 ;test5.j(10)     word j = 1001;
   18 acc16= constant 1001
   19 acc16=> variable 1
   20 ;test5.j(11)     byte c = b;
@@ -36,22 +36,22 @@
   35 call writeAcc8
   36 ;test5.j(17)   }
   37 ;test5.j(18)   /************************/
-  38 ;test5.j(19)   int zero = 0;
+  38 ;test5.j(19)   word zero = 0;
   39 acc8= constant 0
   40 acc8=> variable 1
-  41 ;test5.j(20)   int one = 1;
+  41 ;test5.j(20)   word one = 1;
   42 acc8= constant 1
   43 acc8=> variable 3
-  44 ;test5.j(21)   int three = 3;
+  44 ;test5.j(21)   word three = 3;
   45 acc8= constant 3
   46 acc8=> variable 5
-  47 ;test5.j(22)   int four = 4;
+  47 ;test5.j(22)   word four = 4;
   48 acc8= constant 4
   49 acc8=> variable 7
-  50 ;test5.j(23)   int five = 5;
+  50 ;test5.j(23)   word five = 5;
   51 acc8= constant 5
   52 acc8=> variable 9
-  53 ;test5.j(24)   int twelve = 12;
+  53 ;test5.j(24)   word twelve = 12;
   54 acc8= constant 12
   55 acc8=> variable 11
   56 ;test5.j(25)   byte byteOne = 1;

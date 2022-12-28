@@ -1,7 +1,7 @@
 /* Program to test multiplication */
 class TestMultiply {
   byte b = 9;
-  int i = 6561;
+  word i = 6561;
   if (i * 1 > b * 1) write (21); else write (0);
   if (b * 1 < i * 1) write (20); else write (0);
   if (i * 1 > b) write (19); else write (0);

@@ -6,7 +6,7 @@
 public enum Datatype {
   clazz("class", 0),
   byt("byte", 1),
-  integer("int", 2),
+  word("word", 2),
   string("string", 2);
 
   private String value;

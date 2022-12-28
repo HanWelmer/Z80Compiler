@@ -624,7 +624,7 @@ L3:
 L4:
         LD    (05000H),A
 L5:
-        ;;test9.j(3)   int i = 6561;
+        ;;test9.j(3)   word i = 6561;
 L6:
         LD    HL,6561
 L7:

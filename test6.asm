@@ -782,7 +782,7 @@ L78:
 L79:
         ;;test6.j(39) 
 L80:
-        ;;test6.j(40)   int i = 10;
+        ;;test6.j(40)   word i = 10;
 L81:
         LD    A,10
 L82:
@@ -863,7 +863,7 @@ L114:
 L115:
         ;;test6.j(54) 
 L116:
-        ;;test6.j(55)   int j = i + 5;    // 15
+        ;;test6.j(55)   word j = i + 5;    // 15
 L117:
         LD    HL,(05002H)
 L118:

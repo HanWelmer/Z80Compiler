@@ -7,15 +7,15 @@ class TestDo {
   write (b);
   b--;
   do {
-    int j = 1001;
+    word j = 1001;
     byte c = b;
     byte d = c;
     b--;
     write (c);
   } while (b>112);
 
-  int i = 12;
-  int p = 12;
+  word i = 12;
+  word p = 12;
   b = 24;
 
   /************************/
@@ -66,7 +66,7 @@ class TestDo {
   do { write (b); b--; } while (i <= b);
   // integer - integer
   i=106;
-  int i2 = 105;
+  word i2 = 105;
   do { write (i); i--; } while (i2 <= i);
 
   /************************/

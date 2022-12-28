@@ -84,7 +84,7 @@ public class Interpreter {
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
             }
-            if (instr.operand.datatype == Datatype.integer) {
+            if (instr.operand.datatype == Datatype.word) {
               vars[instr.operand.intValue] = acc16;
             } else if (instr.operand.datatype == Datatype.byt) {
               vars[instr.operand.intValue] = acc16 % 256;
@@ -421,7 +421,7 @@ public class Interpreter {
       case acc:
         if (instr.operand.datatype == Datatype.byt) {
           result = acc8;
-        } else if (instr.operand.datatype == Datatype.integer) {
+        } else if (instr.operand.datatype == Datatype.word) {
           result = acc16;
         }
         break;

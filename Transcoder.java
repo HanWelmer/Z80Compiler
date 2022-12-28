@@ -213,7 +213,7 @@ public class Transcoder {
     } else if (function == FunctionType.acc16Store) {
       if (instruction.operand.opType == OperandType.stack16) {
           asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH  HL", 0xE5);
-      } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.integer)) {
+      } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.word)) {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
       } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.byt)) {
@@ -343,7 +343,7 @@ public class Transcoder {
       } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.byt)) {
         asmCode = String.format(INDENT + "LD    (0%04XH),A", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x32, memAddress % 256, memAddress / 256);
-      } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.integer)) {
+      } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.word)) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    H,0", 0x26, 0));
         byteAddress++;
