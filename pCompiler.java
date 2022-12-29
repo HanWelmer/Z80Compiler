@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//BUG  Error: undefined label: div8
-//BUG  Error: undefined label: div8_16
+//BUG  Error: undefined label: div8_16 (see test5.j, test7.j)
 //TODO add string constant assignment
 //TODO add write string constant
 //TODO add string expression (+ and *)

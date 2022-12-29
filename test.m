@@ -3,16 +3,16 @@
    2 ;test.j(2)  * Test something
    3 ;test.j(3)  */
    4 ;test.j(4) class Test {
-   5 ;test.j(5)   int zero = 0;
+   5 ;test.j(5)   word zero = 0;
    6 acc8= constant 0
    7 acc8=> variable 0
-   8 ;test.j(6)   int one = 1;
+   8 ;test.j(6)   word one = 1;
    9 acc8= constant 1
   10 acc8=> variable 2
-  11 ;test.j(7)   int four = 4;
+  11 ;test.j(7)   word four = 4;
   12 acc8= constant 4
   13 acc8=> variable 4
-  14 ;test.j(8)   int twelve = 12;
+  14 ;test.j(8)   word twelve = 12;
   15 acc8= constant 12
   16 acc8=> variable 6
   17 ;test.j(9)   byte byteOne = 1;
