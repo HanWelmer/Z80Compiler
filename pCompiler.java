@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add escape sequences tnrabvf in string constant.
 //TODO add string constant table in M-code.
+//TODO add add writeString and string constant table to transcoder and Z80 assembly code.
 //TODO add string constant assignment.
 //TODO add string expression (+ and *).
 //TODO add logical AND.
@@ -72,15 +72,15 @@ import java.util.Stack;
  * A string constant consists of a sequence of characters and/or escape sequences.
  * All ASCII printable characters are allowed, except \ (backslash) and " (double quote).
  * In a string constant the \ symbol is the escape token. Supported characters in escape sequences are:
- * - " double quote
- * - \ backslash
- * - t horizontal tab
- * - n new line
- * - r carriage return
- * - a alert/bell
- * - b backspace
- * - v vertical tab
- * - f form feed/new page
+ * - \\ backslash
+ * - \' single quote
+ * - \" double quote
+ * - \n new line
+ * - \r carriage return
+ * - \t horizontal tab
+ * - \b backspace
+ * - \f form feed/new page
+ * - \a alert/bell
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */

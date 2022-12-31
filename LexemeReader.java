@@ -171,9 +171,24 @@ public class LexemeReader {
       lexeme.datatype = Datatype.string;
       lexeme.stringVal = "";
       while (nextChar(sourceCode) != '"') {
-        //todo: add handling of escape sequence \ followed by (\"tnrabvf)*.
         ch = getChar(sourceCode);
-        lexeme.stringVal += ch;
+        //handle escape sequences
+        if (ch != '\\') {
+          lexeme.stringVal += ch;
+        } else {
+          switch (nextChar(sourceCode)) {
+            case '\\': lexeme.stringVal += '\\'; ch = getChar(sourceCode); break;  // backslash
+            case '\'': lexeme.stringVal += '\''; ch = getChar(sourceCode); break;  // single quote
+            case '"': lexeme.stringVal += '\"'; ch = getChar(sourceCode); break;   // double quotes
+            case 'n': lexeme.stringVal += '\n'; ch = getChar(sourceCode); break;   // newline
+            case 'r': lexeme.stringVal += '\r'; ch = getChar(sourceCode); break;   // carriage return
+            case 't': lexeme.stringVal += '\t'; ch = getChar(sourceCode); break;   // horizondal tab
+            case 'b': lexeme.stringVal += '\b'; ch = getChar(sourceCode); break;   // backspace
+            case 'f': lexeme.stringVal += '\012'; ch = getChar(sourceCode); break; // form feed
+            case 'a': lexeme.stringVal += '\007'; ch = getChar(sourceCode); break; // alert/bell
+            default : error(); System.out.println("illegal character " + nextChar(sourceCode) + " after escape character '\'.");
+          }
+        }
       }
       /* eat up closing " of string constant */
       ch = getChar(sourceCode);
