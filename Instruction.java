@@ -30,10 +30,8 @@ public class Instruction {
   }
 
   public Instruction(FunctionType fn, Operand operand) {
-    function = fn;
-    
     //error detection (internal compiler errors):
-    switch (function) {
+    switch (fn) {
       case stop:
       case read:
       case writeAcc8:
@@ -57,6 +55,16 @@ public class Instruction {
         if (operand.datatype != Datatype.string || operand.strValue == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a string constant operand.");
         };
+        break;
+      case writeString:
+        if (operand == null) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
+        }
+        if (operand.opType == OperandType.constant && operand.datatype == Datatype.string && operand.strValue != null) {
+          // no error.
+        } else {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
+        }
         break;
       case acc16Store:
         if (operand == null) {
@@ -199,7 +207,9 @@ public class Instruction {
         throw new RuntimeException("Internal compiler error: unknown functionType " + fn);
     }
     
-    //deep copy of operand, otherwise a reference to the mutable object operand is copied into the Instruction.
+    //copy parameter fn to member function.
+    function = fn;
+    //deep copy of parameter operand to member operand, otherwise a reference to the mutable object operand is copied into the Instruction.
     if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
       this.operand = new Operand(operand.opType, operand.datatype, operand.intValue);
     } else {
@@ -211,6 +221,9 @@ public class Instruction {
     String result = function.getValue();
     switch (function) {
       case comment: result += operand.strValue; break;
+      case writeString:
+        result = "call writeString \"" + operand.strValue + "\"";
+        break;
       case acc16Store:
       case acc8Store:
         switch(operand.opType) {

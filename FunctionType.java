@@ -10,6 +10,7 @@ public enum FunctionType {
   read("read"),
   writeAcc16("writeAcc16"),
   writeAcc8("writeAcc8"),
+  writeString("writeString"),
   //16-bit instructions:
   acc16Store("acc16=>"),
   acc16Load("acc16="),

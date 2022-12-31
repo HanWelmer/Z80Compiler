@@ -314,6 +314,13 @@ public class Interpreter {
             System.out.println(acc16);
           }
           break;
+      case writeString:
+          if (debugMode) {
+            debug(instr.operand.strValue + "\n");
+          } else {
+            System.out.println(instr.operand.strValue);
+          }
+          break;
       case stop:
         stopRun = true;
         break;

@@ -4,11 +4,10 @@
  */
 class Test {
   word zero = 0;
-  word one = 1;
-  word four = 4;
-  word twelve = 12;
-  byte byteOne = 1;
-  //if (four == zero + 12/(one + 2)) write(2);
-  write(byteOne);
+  byte one = 1;
+  write("4 als een string");
+  write(1003-1000);
+  write(2);
+  write(one);
   write(zero);
 }

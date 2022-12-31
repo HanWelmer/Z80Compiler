@@ -18,6 +18,7 @@ public enum LexemeType {
   //from here until unknown are the keywords...
   beginlexeme("{"),
   constant("constant"),
+  stringConstant("stringConstant"),
   bytelexeme("byte"),
   wordlexeme("word"),
   //shortlexeme("short"),

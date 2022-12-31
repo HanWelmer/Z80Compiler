@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add string constant assignment
-//TODO add write string constant
-//TODO add string expression (+ and *)
-//TODO add logical AND
-//TODO add logical OR
-//TODO add logical NOT
-//TODO add logical XOR
+//TODO add escape sequences tnrabvf in string constant.
+//TODO add string constant table in M-code.
+//TODO add string constant assignment.
+//TODO add string expression (+ and *).
+//TODO add logical AND.
+//TODO add logical OR.
+//TODO add logical NOT.
+//TODO add logical XOR.
 //TODO add function (parameter less; no global/local variables).
 //TODO add glocal variable to function.
 //TODO add local variable to function.
@@ -40,11 +41,12 @@ import java.util.Stack;
  * comparison     = expression relop expression.
  * expression     = term {addop term}.
  * term           = factor {mulop factor}.
- * factor         = identifier | constant | "read" | "(" expression ")".
+ * factor         = identifier | constant | stringConstant | "read" | "(" expression ")".
  * addop          = "+" | "-".
  * mulop          = "*" | "/".
  * relop          = "==" | "!=" | ">" | ">=" | "<" | "<=".
  * constant       = "(0-9)*".
+ * stringConstant = "\"" ((char - ["\"\\"]) | ("\\" ["\"\\tnrabvf"]))* "\"".
  *
  * Java style end of line comment.
  * Java style multi-line comment.
@@ -66,6 +68,19 @@ import java.util.Stack;
  * The value of the lefthand operand of an addop, mulop or relop is changed from byte to word if the type of the righthand operand is a word.
  * In an assignment the value of a byte expression can be assigned to a word variable.
  * In an assignment the value of a word expression assigned to a byte variable will be truncated.
+ * A string constant is enclosed between double quotes.
+ * A string constant consists of a sequence of characters and/or escape sequences.
+ * All ASCII printable characters are allowed, except \ (backslash) and " (double quote).
+ * In a string constant the \ symbol is the escape token. Supported characters in escape sequences are:
+ * - " double quote
+ * - \ backslash
+ * - t horizontal tab
+ * - n new line
+ * - r carriage return
+ * - a alert/bell
+ * - b backspace
+ * - v vertical tab
+ * - f form feed/new page
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
@@ -158,6 +173,7 @@ public class pCompiler {
       LexemeType.lbracket
     , LexemeType.identifier
     , LexemeType.constant
+    , LexemeType.stringConstant
     , LexemeType.readlexeme
   );
 
@@ -281,7 +297,6 @@ public class pCompiler {
   /*Class member methods for syntax analysis phase */
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws FatalError {
     //debug("\ncheckOrSkip: start");
-    boolean orFlag = false;
     boolean result = false;
     if (okSet.contains(lexeme.type)) {
       //debug("\ncheckOrSkip: lexeme \"" + lexeme.type + "\" in okSet " + okSet);
@@ -300,7 +315,7 @@ public class pCompiler {
     return result;
   }
   
-  //factor = identifier | constant | "read" | "(" expression ")".
+  //factor = identifier | constant | stringConstant | "read" | "(" expression ")".
   private Operand factor(EnumSet<LexemeType> stopSet) throws FatalError {
     Operand operand = new Operand(OperandType.unknown);
     debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
@@ -311,17 +326,26 @@ public class pCompiler {
         /* part of code generation */
         Variable var = identifiers.getId(lexeme.idVal);
         operand.opType = OperandType.var;
-        operand.intValue = var.getAddress();
         operand.datatype = var.getDatatype();
+        operand.intValue = var.getAddress();
         /* part of lexical analysis */
         lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.constant) {
         /* part of code generation */
         operand.opType = OperandType.constant;
-        operand.intValue = lexeme.constVal;
         operand.datatype = lexeme.datatype;
+        operand.intValue = lexeme.constVal;
         /* part of lexical analysis */
         lexeme = lexemeReader.getLexeme(sourceCode);
+      } else if (lexeme.type == LexemeType.stringConstant) {
+        debug("\nlexeme = " + lexeme.makeString(null));
+        /* part of code generation */
+        operand.opType = OperandType.constant;
+        operand.datatype = lexeme.datatype;
+        operand.strValue = lexeme.stringVal;
+        /* part of lexical analysis */
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        debug("\nlexeme = " + lexeme.makeString(null));
       } else if (lexeme.type == LexemeType.readlexeme) {
         lexeme = lexemeReader.getLexeme(sourceCode);
         /* 
@@ -1288,15 +1312,20 @@ public class pCompiler {
     debug("\nwriteStatement: " + operand);
     
     /* part of code generation */
-    if (operand.opType != OperandType.acc) {
+    if ((operand.opType != OperandType.acc) && (operand.datatype != Datatype.string)) {
       plantAccLoad(operand);
     }
-    if (operand.datatype == Datatype.word) {
-      plant(new Instruction(FunctionType.writeAcc16));
-    } else if (operand.datatype == Datatype.byt) {
-      plant(new Instruction(FunctionType.writeAcc8));
-    } else {
-      error(15);
+    switch (operand.datatype) {
+      case word :
+        plant(new Instruction(FunctionType.writeAcc16));
+        break;
+      case byt :
+        plant(new Instruction(FunctionType.writeAcc8));
+        break;
+      case string :
+        plant(new Instruction(FunctionType.writeString, operand));
+        break;
+      default: error(15);
     }
 
     /* part of lexical analysis */

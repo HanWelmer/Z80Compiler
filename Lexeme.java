@@ -7,6 +7,7 @@ import java.util.Map;
 public class Lexeme {
   protected LexemeType type;
   protected Integer constVal;
+  protected String stringVal;
   protected Datatype datatype;
   protected String idVal;
   protected AddValType addVal;
@@ -30,6 +31,11 @@ public class Lexeme {
         result += datatype.getValue();
         result += " ";
         result += constVal;
+        break;
+      case stringConstant:
+        result += " \"";
+        result += stringVal;
+        result += "\"";
         break;
       case identifier: 
         result += " " + idVal;

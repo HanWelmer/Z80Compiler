@@ -6,24 +6,23 @@
    5 ;test.j(5)   word zero = 0;
    6 acc8= constant 0
    7 acc8=> variable 0
-   8 ;test.j(6)   word one = 1;
+   8 ;test.j(6)   byte one = 1;
    9 acc8= constant 1
   10 acc8=> variable 2
-  11 ;test.j(7)   word four = 4;
-  12 acc8= constant 4
-  13 acc8=> variable 4
-  14 ;test.j(8)   word twelve = 12;
-  15 acc8= constant 12
-  16 acc8=> variable 6
-  17 ;test.j(9)   byte byteOne = 1;
-  18 acc8= constant 1
-  19 acc8=> variable 8
-  20 ;test.j(10)   //if (four == zero + 12/(one + 2)) write(2);
-  21 ;test.j(11)   write(byteOne);
-  22 acc8= variable 8
-  23 call writeAcc8
-  24 ;test.j(12)   write(zero);
-  25 acc16= variable 0
-  26 call writeAcc16
-  27 ;test.j(13) }
-  28 stop
+  11 ;test.j(7)   write("4 als een string");
+  12 call writeString "4 als een string"
+  13 ;test.j(8)   write(1003-1000);
+  14 acc16= constant 1003
+  15 acc16- constant 1000
+  16 call writeAcc16
+  17 ;test.j(9)   write(2);
+  18 acc8= constant 2
+  19 call writeAcc8
+  20 ;test.j(10)   write(one);
+  21 acc8= variable 2
+  22 call writeAcc8
+  23 ;test.j(11)   write(zero);
+  24 acc16= variable 0
+  25 call writeAcc16
+  26 ;test.j(12) }
+  27 stop

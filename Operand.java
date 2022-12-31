@@ -49,7 +49,11 @@ public class Operand {
         result += ", intValue=" + intValue;
       }
       if (strValue != null) {
-        result += ", strValue=" + strValue;
+        if (datatype == Datatype.string) {
+          result += ", strValue=\"" + strValue + "\"";
+        } else {
+          result += ", strValue=" + strValue;
+        }
       }
       result += ")";
       return result;

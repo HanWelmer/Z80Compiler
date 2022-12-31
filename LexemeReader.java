@@ -165,11 +165,23 @@ public class LexemeReader {
         }
       }
       lexeme.datatype = (lexeme.constVal <= MAX_BYT_CONSTANT) ? Datatype.byt : Datatype.word;
+    } else if (ch == '"') {
+      /* try to recognise a string constant */
+      lexeme.type = LexemeType.stringConstant;
+      lexeme.datatype = Datatype.string;
+      lexeme.stringVal = "";
+      while (nextChar(sourceCode) != '"') {
+        //todo: add handling of escape sequence \ followed by (\"tnrabvf)*.
+        ch = getChar(sourceCode);
+        lexeme.stringVal += ch;
+      }
+      /* eat up closing " of string constant */
+      ch = getChar(sourceCode);
     } else if (ch == '{') {
       lexeme.type = LexemeType.beginlexeme;
     } else if (ch == '}') {
       lexeme.type = LexemeType.endlexeme;
-    }else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
+    } else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
       /* try to recognise an identifier or a keyword */
       String name = String.valueOf(ch);
       int charno = 0;
