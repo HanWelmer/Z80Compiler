@@ -15,6 +15,7 @@ public class Instruction {
       && function != FunctionType.read
       && function != FunctionType.writeAcc8
       && function != FunctionType.writeAcc16
+      && function != FunctionType.writeString
       && function != FunctionType.acc16CompareAcc8
       && function != FunctionType.acc8CompareAcc16
       && function != FunctionType.acc8ToAcc16
@@ -36,10 +37,17 @@ public class Instruction {
       case read:
       case writeAcc8:
       case writeAcc16:
+      case writeString:
+      case acc16CompareAcc8:
+      case acc8CompareAcc16:
       case acc8ToAcc16:
       case acc16ToAcc8:
-      case stackAcc16ToAcc8:
       case stackAcc8ToAcc16:
+      case stackAcc16ToAcc8:
+      case stackAcc8:
+      case stackAcc16:
+      case unstackAcc8:
+      case unstackAcc16:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " expects no operand.");
         //break;
       case call:
@@ -56,15 +64,16 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a string constant operand.");
         };
         break;
-      case writeString:
+      case stringConstant:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
-        }
-        if (operand.opType == OperandType.constant && operand.datatype == Datatype.string && operand.strValue != null) {
-          // no error.
-        } else {
-          throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
-        }
+        };
+        if (operand.intValue == null) {
+          throw new RuntimeException("Internal compiler error: " + fn + " needs an intValue.");
+        };
+        if (operand.strValue == null) {
+          throw new RuntimeException("Internal compiler error: " + fn + " needs an strValue.");
+        };
         break;
       case acc16Store:
         if (operand == null) {
@@ -210,7 +219,10 @@ public class Instruction {
     //copy parameter fn to member function.
     function = fn;
     //deep copy of parameter operand to member operand, otherwise a reference to the mutable object operand is copied into the Instruction.
-    if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
+    if (operand.datatype == Datatype.string) {
+      this.operand = new Operand(operand.opType, operand.datatype, operand.intValue);
+      this.operand.strValue = operand.strValue;
+    } else if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
       this.operand = new Operand(operand.opType, operand.datatype, operand.intValue);
     } else {
       this.operand = new Operand(operand.opType, operand.datatype, operand.strValue);
@@ -221,9 +233,7 @@ public class Instruction {
     String result = function.getValue();
     switch (function) {
       case comment: result += operand.strValue; break;
-      case writeString:
-        result = "call writeString \"" + operand.strValue + "\"";
-        break;
+      case stringConstant: result += " " + operand.intValue + " = \"" + operand.strValue + "\""; break;
       case acc16Store:
       case acc8Store:
         switch(operand.opType) {
@@ -263,7 +273,11 @@ public class Instruction {
             result += " variable " + operand.intValue;
             break;
           case constant:
-            result += " constant " + operand.intValue;
+            result += " constant ";
+            if (operand.datatype == Datatype.string) {
+              result += "id=";
+            }
+            result += operand.intValue;
             break;
           case stack16:
           case stack8:
@@ -311,6 +325,9 @@ public class Instruction {
         break;
       case writeAcc16:
         result = "call writeAcc16";
+        break;
+      case writeString:
+        result = "call writeString";
         break;
       case stop:
       case acc16CompareAcc8:

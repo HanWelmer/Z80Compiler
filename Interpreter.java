@@ -315,10 +315,11 @@ public class Interpreter {
           }
           break;
       case writeString:
+          String str = instructions.get(acc16).operand.strValue;
           if (debugMode) {
-            debug(instr.operand.strValue + "\n");
+            debug(str + "\n");
           } else {
-            System.out.println(instr.operand.strValue);
+            System.out.println(str);
           }
           break;
       case stop:

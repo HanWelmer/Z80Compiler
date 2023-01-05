@@ -2,7 +2,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for the regression test of the compiler for the P programming language compiler.
@@ -129,10 +131,57 @@ public class RegressionTest {
 
         //expected M-Code.expected
         expected = br.readLine();
+        
+        //for debugging purposes
+        //System.out.println("actual   " + actual);
+        //System.out.println("expected " + expected);
 
         //compared
         if (actual.equals(expected)) {
           pos++;
+        //special cases for string comparisons
+        } else if (actual.contains("\r")) {
+          List<String> actualLines = Arrays.asList(actual.split("\r", -1));
+          // for debugging purposes
+          //System.out.println("actual contains carriage return.");
+          //for (int i = 0; i<actualLines.size(); i++) {
+          //  System.out.println(i + " " + actualLines.get(i));
+          //}
+          // compare string sequences
+          //System.out.println("actual 0 " + actualLines.get(0));
+          //System.out.println("expected " + expected);
+          if (!actualLines.get(0).equals(expected)) {
+            return String.format("Error : %s(%d)\n  received: 0 %s\n  expected: %s", fileName, pos, actualLines.get(0), expected);
+          }
+          expected = br.readLine();
+          //System.out.println("actual 1 " + actualLines.get(1));
+          //System.out.println("expected " + expected);
+          if (!actualLines.get(1).equals(expected)) {
+            return String.format("Error : %s(%d)\n  received: 1 %s\n  expected: %s", fileName, pos, actualLines.get(1), expected);
+          } else {
+            pos++;
+          }
+        } else if (actual.contains("\n")) {
+          List<String> actualLines = Arrays.asList(actual.split("\n", -1));
+          // for debugging purposes
+          //System.out.println("actual contains linefeed.");
+          //for (int i = 0; i<actualLines.size(); i++) {
+          //  System.out.println(i + " " + actualLines.get(i));
+          //}
+          // compare string sequences
+          //System.out.println("actual 0 " + actualLines.get(0));
+          //System.out.println("expected " + expected);
+          if (!actualLines.get(0).equals(expected)) {
+            return String.format("Error : %s(%d)\n  received: 0 %s\n  expected: %s", fileName, pos, actualLines.get(0), expected);
+          }
+          expected = br.readLine();
+          //System.out.println("actual 1 " + actualLines.get(1));
+          //System.out.println("expected " + expected);
+          if (!actualLines.get(1).equals(expected)) {
+            return String.format("Error : %s(%d)\n  received: 1 %s\n  expected: %s", fileName, pos, actualLines.get(1), expected);
+          } else {
+            pos++;
+          }
         } else {
           return String.format("Error : %s(%d)\n  received: %s\n  expected: %s", fileName, pos, actual, expected);
         }

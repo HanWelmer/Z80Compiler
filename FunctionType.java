@@ -4,6 +4,7 @@
  */
 public enum FunctionType {
   //special instructions:
+  stringConstant("stringConstant"),
   comment(";"),
   stop("stop"),
   call("call"),

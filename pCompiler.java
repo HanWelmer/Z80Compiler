@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add string constant table in M-code.
 //TODO add add writeString and string constant table to transcoder and Z80 assembly code.
 //TODO add string constant assignment.
 //TODO add string expression (+ and *).
@@ -107,6 +106,8 @@ public class pCompiler {
       prog();
       plant(new Instruction(FunctionType.stop));
       optimize();
+      plantStringConstants();
+      logStringReferences();
     } catch (FatalError e) {
       error(e.getErrorNumber());
       System.exit(1);
@@ -179,6 +180,7 @@ public class pCompiler {
 
   /* Constants and class member variables for semantic analysis phase */
   private Identifiers identifiers = new Identifiers();
+  private StringConstants stringConstants = new StringConstants();
  
   /* Constants and class member variables for code generation phase */
   private static final int NULL_OP = 0;
@@ -213,6 +215,7 @@ public class pCompiler {
 
     /* initialisation of semantic analysis variables */
     identifiers.init();
+    stringConstants.init();
 
     /* initialisation of code generation variables */
     acc16.clear();
@@ -339,10 +342,13 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.stringConstant) {
         debug("\nlexeme = " + lexeme.makeString(null));
+        /* part of semantic analysis */
+        int constantId = stringConstants.add(lexeme.stringVal, instructions.size() + 1);
         /* part of code generation */
         operand.opType = OperandType.constant;
-        operand.datatype = lexeme.datatype;
+        operand.datatype = Datatype.string;
         operand.strValue = lexeme.stringVal;
+        operand.intValue = constantId;
         /* part of lexical analysis */
         lexeme = lexemeReader.getLexeme(sourceCode);
         debug("\nlexeme = " + lexeme.makeString(null));
@@ -1312,7 +1318,7 @@ public class pCompiler {
     debug("\nwriteStatement: " + operand);
     
     /* part of code generation */
-    if ((operand.opType != OperandType.acc) && (operand.datatype != Datatype.string)) {
+    if (operand.opType != OperandType.acc) {
       plantAccLoad(operand);
     }
     switch (operand.datatype) {
@@ -1323,7 +1329,7 @@ public class pCompiler {
         plant(new Instruction(FunctionType.writeAcc8));
         break;
       case string :
-        plant(new Instruction(FunctionType.writeString, operand));
+        plant(new Instruction(FunctionType.writeString));
         break;
       default: error(15);
     }
@@ -1463,7 +1469,7 @@ public class pCompiler {
         operand.opType = OperandType.acc;
         acc16.setOperand(operand);
       }
-    } else { //operand.datatype == Datatype.byt
+    } else if (operand.datatype == Datatype.byt) {
       if (operand.opType != OperandType.stack8) {
         if (acc8.inUse()) {
             plant(new Instruction(FunctionType.stackAcc8Load, operand));
@@ -1473,6 +1479,15 @@ public class pCompiler {
         operand.opType = OperandType.acc;
         acc8.setOperand(operand);
       }
+    } else if (operand.datatype == Datatype.string) {
+      if (acc16.inUse()) {
+          plant(new Instruction(FunctionType.stackAcc16Load, operand));
+        } else {
+          plant(new Instruction(FunctionType.acc16Load, operand));
+      }
+      operand.opType = OperandType.acc;
+      acc16.setOperand(operand);
+    } else {
     }
   }
 
@@ -1503,7 +1518,7 @@ public class pCompiler {
   } //plantSource
 
   private void plantCode(Instruction instruction) {
-    /* insert M (virtual machine) code into memory */
+    /* clear memory if number of M-code (virtual machine codes) exceeds memory size. */
     if (instructions.size() >= MAX_M_CODE) {
       error(10);
       instructions.clear();
@@ -1511,26 +1526,27 @@ public class pCompiler {
 
     /* for debugging purposes */
     debug("\n" + String.format(LINE_NR_FORMAT, instructions.size()) + instruction.toString());
-    debug(" ;" + instruction.function + " " + instruction.operand);
+    debug(" ;" + instruction.function);
+    if (instruction.operand != null) {
+      debug(" " + instruction.operand);
+    }
 
+    /* insert M-code (virtual machine code) into memory */
     instructions.add(instruction);
-    if (instruction.function == FunctionType.acc8ToAcc16) {
+
+    /* update accumulator metadata */
+    if (instruction.function == FunctionType.acc16ToAcc8) {
+      acc8.setOperand(acc16.operand());
+      acc16.clear();
+    } else if (instruction.function == FunctionType.acc8ToAcc16) {
       acc16.setOperand(acc8.operand());
       acc8.clear();
-    } else if (instruction.function == FunctionType.stackAcc8) {
-      stackedDatatypes.push(Datatype.byt);
-      acc8.operand().opType = OperandType.stack8;
-      acc8.clear();
-    } else if (instruction.function == FunctionType.stackAcc16) {
-      stackedDatatypes.push(Datatype.word);
-      acc16.operand().opType = OperandType.stack16;
-      acc16.clear();
-    } else if (instruction.function == FunctionType.stackAcc8Load) {
-      stackedDatatypes.push(Datatype.byt);
-      acc8.operand().opType = OperandType.stack8;
     } else if (instruction.function == FunctionType.stackAcc16Load) {
       stackedDatatypes.push(Datatype.word);
       acc16.operand().opType = OperandType.stack16;
+    } else if (instruction.function == FunctionType.stackAcc8Load) {
+      stackedDatatypes.push(Datatype.byt);
+      acc8.operand().opType = OperandType.stack8;
     } else if (instruction.function == FunctionType.stackAcc16ToAcc8) {
       stackedDatatypes.push(Datatype.byt);
       acc8.operand().opType = OperandType.stack8;
@@ -1539,7 +1555,17 @@ public class pCompiler {
       stackedDatatypes.push(Datatype.word);
       acc16.operand().opType = OperandType.stack16;
       acc8.clear();
+    } else if (instruction.function == FunctionType.stackAcc16) {
+      stackedDatatypes.push(Datatype.word);
+      acc16.operand().opType = OperandType.stack16;
+      acc16.clear();
+    } else if (instruction.function == FunctionType.stackAcc8) {
+      stackedDatatypes.push(Datatype.byt);
+      acc8.operand().opType = OperandType.stack8;
+      acc8.clear();
     }
+
+    /* for debugging purposes */
     debug(" ;" + " stackedDatatypes=" + stackedDatatypes);
   } //plantCode
 
@@ -1555,6 +1581,35 @@ public class pCompiler {
     debug("\nplantForwardLabel instruction[" + pos + "]=" + address);
   } //plantForwardLabel(pos, address)
 
+  private void plantStringConstants() {
+    for (int id = 0; id < stringConstants.size(); id++) {
+      //Update references to this string constant.
+      for(Integer lineNumber : stringConstants.getReferences(id)) {
+        debug("\nUpdating string constant " + id + " at " + lineNumber + " to " + instructions.size());
+        Instruction updatedInstruction = instructions.get(lineNumber);
+        updatedInstruction.operand.intValue = instructions.size();
+        instructions.set(lineNumber, updatedInstruction);
+      }
+      //plant string constant.
+      Operand operand = new Operand(OperandType.constant, Datatype.string, stringConstants.get(id));
+      operand.intValue = id;
+      instructions.add(new Instruction(FunctionType.stringConstant, operand));
+    }
+  }
+  
+  private void logStringReferences() {
+    if (debugMode) {
+      debug("\nString constants cross reference list:\n");
+      for (int id = 0; id < stringConstants.size(); id++) {
+        debug(String.format("%03d : ", id));
+        for(Integer lineNumber : stringConstants.getReferences(id)) {
+          debug(String.format("%05d ", lineNumber));
+        }
+        debug("\n");
+      }
+    }
+  }
+        
   private int saveLabel() {
     //address of next object code.
     int address = instructions.size();

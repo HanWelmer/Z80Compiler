@@ -40,22 +40,22 @@ public class Operand {
     this.strValue = value;
   }
   
-    public String toString() {
-      String result = "operand(" + opType;
-      if (datatype != null) {
-        result += ", type=" + datatype;
-      }
-      if (intValue != null) {
-        result += ", intValue=" + intValue;
-      }
-      if (strValue != null) {
-        if (datatype == Datatype.string) {
-          result += ", strValue=\"" + strValue + "\"";
-        } else {
-          result += ", strValue=" + strValue;
-        }
-      }
-      result += ")";
-      return result;
+  public String toString() {
+    String result = "operand(" + opType;
+    if (datatype != null) {
+      result += ", type=" + datatype;
     }
+    if (intValue != null) {
+      result += ", intValue=" + intValue;
+    }
+    if (strValue != null) {
+      if (datatype == Datatype.string) {
+        result += ", strValue=\"" + strValue + "\"";
+      } else {
+        result += ", strValue=" + strValue;
+      }
+    }
+    result += ")";
+    return result;
+  }
 }
