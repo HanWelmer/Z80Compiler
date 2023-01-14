@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add add writeString and string constant table to transcoder and Z80 assembly code.
 //TODO add string constant assignment.
 //TODO add string expression (+ and *).
 //TODO add logical AND.
@@ -45,7 +44,7 @@ import java.util.Stack;
  * mulop          = "*" | "/".
  * relop          = "==" | "!=" | ">" | ">=" | "<" | "<=".
  * constant       = "(0-9)*".
- * stringConstant = "\"" ((char - ["\"\\"]) | ("\\" ["\"\\tnrabvf"]))* "\"".
+ * stringConstant = "\"" ((char - ["\"\\"]) | ("\\" ["\\\'\"nrtbfa"]))* "\"".
  *
  * Java style end of line comment.
  * Java style multi-line comment.
@@ -1318,7 +1317,7 @@ public class pCompiler {
     debug("\nwriteStatement: " + operand);
     
     /* part of code generation */
-    if (operand.opType != OperandType.acc) {
+    if (operand.opType != OperandType.acc && operand.datatype != Datatype.string) {
       plantAccLoad(operand);
     }
     switch (operand.datatype) {
@@ -1329,7 +1328,7 @@ public class pCompiler {
         plant(new Instruction(FunctionType.writeAcc8));
         break;
       case string :
-        plant(new Instruction(FunctionType.writeString));
+        plant(new Instruction(FunctionType.writeString, operand));
         break;
       default: error(15);
     }
@@ -1479,15 +1478,8 @@ public class pCompiler {
         operand.opType = OperandType.acc;
         acc8.setOperand(operand);
       }
-    } else if (operand.datatype == Datatype.string) {
-      if (acc16.inUse()) {
-          plant(new Instruction(FunctionType.stackAcc16Load, operand));
-        } else {
-          plant(new Instruction(FunctionType.acc16Load, operand));
-      }
-      operand.opType = OperandType.acc;
-      acc16.setOperand(operand);
     } else {
+      throw new RuntimeException("Unsupported operand " + operand);
     }
   }
 

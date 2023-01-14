@@ -167,6 +167,20 @@ public class Transcoder {
     if (function == FunctionType.comment) {
       result.add(new AssemblyInstruction(byteAddress, INDENT + ';' + instruction));
       return result;
+    } else if (function == FunctionType.stringConstant) {
+      String str = instruction.operand.strValue;
+      //escape control characters \\, \', \", \n, \r, \t, \b, \f, \a
+      str = str.replace("\\", "\\\\");
+      str = str.replace("\'", "\\'");
+      str = str.replace("\"", "\\\"");
+      str = str.replace("\n", "\\n");
+      str = str.replace("\r", "\\r");
+      str = str.replace("\t", "\\t");
+      str = str.replace("\b", "\\b");
+      str = str.replace("\f", "\\f");
+      str = str.replace("\007", "\\a");
+      result.add(new AssemblyInstruction(byteAddress, INDENT + ".ASCIZ  \"" + str + "\""));
+      return result;
     }
     
     //add original M-code instruction as assembler comment
@@ -207,6 +221,13 @@ public class Transcoder {
     } else if (function == FunctionType.writeAcc16) {
       putLabelReference("writeHL", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  writeHL", 0xCD, 0, 0);
+    } else if (function == FunctionType.writeString) {
+      asmCode = INDENT + "LD    HL," + instruction.operand.intValue;
+      asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, instruction.operand.intValue % 256, instruction.operand.intValue / 256);
+      result.add(asm);
+      byteAddress += 3;
+      putLabelReference("putStr", byteAddress);
+      asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  putStr", 0xCD, 0, 0);
     /*
      * 16-bit instructions:
      */
@@ -859,7 +880,7 @@ public class Transcoder {
     result.add(new AssemblyInstruction(byteAddress, ";Send one character to ASCI0."));
     result.add(new AssemblyInstruction(byteAddress, ";  IN:  A = character"));
     result.add(new AssemblyInstruction(byteAddress, ";  OUT: none."));
-    result.add(new AssemblyInstruction(byteAddress, ";  USES:AF"));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES:none."));
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
     labels.put("putChar", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "putChar:"));

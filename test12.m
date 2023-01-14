@@ -13,61 +13,49 @@
   12 acc8= constant 13
   13 call writeAcc8
   14 ;test12.j(8)   write("12 Hier komt een backslash \\");
-  15 acc16= constant id=61
-  16 call writeString
-  17 ;test12.j(9)   write("11 Hier komt een single quote \'");
-  18 acc16= constant id=62
-  19 call writeString
-  20 ;test12.j(10)   write("10 Hier komt een dubbele quote \"");
-  21 acc16= constant id=63
-  22 call writeString
-  23 ;test12.j(11)   write("9  Dit is regel 1.\n   En dit regel 2.");
-  24 acc16= constant id=64
-  25 call writeString
-  26 ;test12.j(12)   write("8  Dit zie je niet\r8  Dit zie je wel.");
-  27 acc16= constant id=65
-  28 call writeString
-  29 ;test12.j(13)   write("7  Getal na een tab\t1");
-  30 acc16= constant id=66
-  31 call writeString
-  32 ;test12.j(14)   write("6  Dit is gu\boed.");
-  33 acc16= constant id=67
-  34 call writeString
-  35 ;test12.j(15)   write("5  Dit is pagina 1.\f   En dit is pagina 2.");
-  36 acc16= constant id=68
-  37 call writeString
-  38 ;test12.j(16)   write("4  Hier klinkt een bel\a en dan gaan we door.");
-  39 acc16= constant id=69
-  40 call writeString
-  41 ;test12.j(17)   write("3 Drie keer.");
-  42 acc16= constant id=70
-  43 call writeString
-  44 ;test12.j(18)   write("3 Drie keer.");
-  45 acc16= constant id=70
-  46 call writeString
-  47 ;test12.j(19)   write("3 Drie keer.");
-  48 acc16= constant id=70
-  49 call writeString
-  50 ;test12.j(20)   write(2);
-  51 acc8= constant 2
-  52 call writeAcc8
-  53 ;test12.j(21)   write(one);
-  54 acc8= variable 2
-  55 call writeAcc8
-  56 ;test12.j(22)   write(zero);
-  57 acc16= variable 0
-  58 call writeAcc16
-  59 ;test12.j(23) }
-  60 stop
-  61 stringConstant 0 = "12 Hier komt een backslash \"
-  62 stringConstant 1 = "11 Hier komt een single quote '"
-  63 stringConstant 2 = "10 Hier komt een dubbele quote ""
-  64 stringConstant 3 = "9  Dit is regel 1.
+  15 writeString 49
+  16 ;test12.j(9)   write("11 Hier komt een single quote \'");
+  17 writeString 50
+  18 ;test12.j(10)   write("10 Hier komt een dubbele quote \"");
+  19 writeString 51
+  20 ;test12.j(11)   write("9  Dit is regel 1.\n   En dit regel 2.");
+  21 writeString 52
+  22 ;test12.j(12)   write("8  Dit zie je niet\r8  Dit zie je wel.");
+  23 writeString 53
+  24 ;test12.j(13)   write("7  Getal na een tab\t1");
+  25 writeString 54
+  26 ;test12.j(14)   write("6  Dit is gu\boed.");
+  27 writeString 55
+  28 ;test12.j(15)   write("5  Dit is pagina 1.\f   En dit is pagina 2.");
+  29 writeString 56
+  30 ;test12.j(16)   write("4  Hier klinkt een bel\a en dan gaan we door.");
+  31 writeString 57
+  32 ;test12.j(17)   write("3 Drie keer.");
+  33 writeString 58
+  34 ;test12.j(18)   write("3 Drie keer.");
+  35 writeString 58
+  36 ;test12.j(19)   write("3 Drie keer.");
+  37 writeString 58
+  38 ;test12.j(20)   write(2);
+  39 acc8= constant 2
+  40 call writeAcc8
+  41 ;test12.j(21)   write(one);
+  42 acc8= variable 2
+  43 call writeAcc8
+  44 ;test12.j(22)   write(zero);
+  45 acc16= variable 0
+  46 call writeAcc16
+  47 ;test12.j(23) }
+  48 stop
+  49 stringConstant 0 = "12 Hier komt een backslash \"
+  50 stringConstant 1 = "11 Hier komt een single quote '"
+  51 stringConstant 2 = "10 Hier komt een dubbele quote ""
+  52 stringConstant 3 = "9  Dit is regel 1.
    En dit regel 2."
-  65 stringConstant 4 = "8  Dit zie je niet8  Dit zie je wel."
-  66 stringConstant 5 = "7  Getal na een tab	1"
-  67 stringConstant 6 = "6  Dit is guoed."
-  68 stringConstant 7 = "5  Dit is pagina 1.
+  53 stringConstant 4 = "8  Dit zie je niet8  Dit zie je wel."
+  54 stringConstant 5 = "7  Getal na een tab	1"
+  55 stringConstant 6 = "6  Dit is guoed."
+  56 stringConstant 7 = "5  Dit is pagina 1.
    En dit is pagina 2."
-  69 stringConstant 8 = "4  Hier klinkt een bel en dan gaan we door."
-  70 stringConstant 9 = "3 Drie keer."
+  57 stringConstant 8 = "4  Hier klinkt een bel en dan gaan we door."
+  58 stringConstant 9 = "3 Drie keer."
