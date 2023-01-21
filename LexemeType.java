@@ -23,6 +23,7 @@ public enum LexemeType {
   wordlexeme("word"),
   //shortlexeme("short"),
   //intlexeme("int"),
+  stringlexeme("String"),
   readlexeme("read"),
   writelexeme("write"),
   iflexeme("if"),

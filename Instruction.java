@@ -15,6 +15,7 @@ public class Instruction {
       && function != FunctionType.read
       && function != FunctionType.writeAcc8
       && function != FunctionType.writeAcc16
+      && function != FunctionType.writeString
       && function != FunctionType.acc16CompareAcc8
       && function != FunctionType.acc8CompareAcc16
       && function != FunctionType.acc8ToAcc16
@@ -36,6 +37,7 @@ public class Instruction {
       case read:
       case writeAcc8:
       case writeAcc16:
+      case writeString:
       case acc16CompareAcc8:
       case acc8CompareAcc16:
       case acc8ToAcc16:
@@ -51,17 +53,6 @@ public class Instruction {
       case call:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " not yet implemented.");
         //break;
-      case writeString:
-        if (operand == null) {
-          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
-        };
-        if (operand.datatype != Datatype.string || operand.strValue == null) {
-          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a string constant operand.");
-        };
-        if (operand.intValue == null) {
-          throw new RuntimeException("Internal compiler error: string not found in table with string constants: " + operand.strValue);
-        };
-        break;
       case comment:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
@@ -332,7 +323,7 @@ public class Instruction {
         result = "call writeAcc16";
         break;
       case writeString:
-        result = "writeString " + operand.intValue;
+        result = "writeString";
         break;
       case stop:
       case acc16CompareAcc8:

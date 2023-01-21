@@ -84,7 +84,7 @@ public class Interpreter {
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
             }
-            if (instr.operand.datatype == Datatype.word) {
+            if (instr.operand.datatype == Datatype.word || instr.operand.datatype == Datatype.string) {
               vars[instr.operand.intValue] = acc16;
             } else if (instr.operand.datatype == Datatype.byt) {
               vars[instr.operand.intValue] = acc16 % 256;

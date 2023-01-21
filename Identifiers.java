@@ -1,6 +1,4 @@
-//import java.util.HashMap;
 import java.util.Iterator;
-//import java.util.Map;
 import java.util.Stack;
 
 public class Identifiers {
@@ -93,14 +91,17 @@ public class Identifiers {
         var.setDatatype(Datatype.byt);
       } else if (datatype == LexemeType.wordlexeme) {
         var.setDatatype(Datatype.word);
+      } else if (datatype == LexemeType.stringlexeme) {
+        var.setDatatype(Datatype.string);
       } else if (datatype == LexemeType.classlexeme) {
         var.setDatatype(Datatype.clazz);
       } else {
         result = false;
       }
       //this scheme assumes that memory allocation can only occur in the current top level scope.
-      var.setAddress(stackOfScopes.peek().getAddress());
-      stackOfScopes.peek().setAddress(stackOfScopes.peek().getAddress() + var.getDatatype().getSize());
+      int address = stackOfScopes.peek().getAddress();
+      var.setAddress(address);
+      stackOfScopes.peek().setAddress(address + var.getDatatype().getSize());
     }
     return result;
   }

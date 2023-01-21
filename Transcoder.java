@@ -222,10 +222,6 @@ public class Transcoder {
       putLabelReference("writeHL", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  writeHL", 0xCD, 0, 0);
     } else if (function == FunctionType.writeString) {
-      asmCode = INDENT + "LD    HL," + instruction.operand.intValue;
-      asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, instruction.operand.intValue % 256, instruction.operand.intValue / 256);
-      result.add(asm);
-      byteAddress += 3;
       putLabelReference("putStr", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  putStr", 0xCD, 0, 0);
     /*
@@ -234,7 +230,7 @@ public class Transcoder {
     } else if (function == FunctionType.acc16Store) {
       if (instruction.operand.opType == OperandType.stack16) {
           asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH  HL", 0xE5);
-      } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.word)) {
+    } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.word || instruction.operand.datatype == Datatype.string)) {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
       } else if ((instruction.operand.opType == OperandType.var) && (instruction.operand.datatype == Datatype.byt)) {
@@ -242,7 +238,7 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),A", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x32, memAddress % 256, memAddress / 256);
       } else {
-        throw new RuntimeException("illegal M-code instruction: " + instruction);
+        throw new RuntimeException("illegal M-code instruction: " + instruction + " " + instruction.operand);
       }
     } else if (function == FunctionType.acc16Load) {
       asm = operandToHL(instruction);

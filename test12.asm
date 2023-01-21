@@ -747,110 +747,138 @@ L9:
 L10:
         LD    (05002H),A
 L11:
-        ;;test12.j(7)   write(13);
+        ;;test12.j(7)   write(zero);
 L12:
-        LD    A,13
+        LD    HL,(05000H)
 L13:
-        CALL  writeA
+        CALL  writeHL
 L14:
-        ;;test12.j(8)   write("12 Hier komt een backslash \\");
+        ;;test12.j(8)   write(one);
 L15:
-        LD    HL,49
-        CALL  putStr
+        LD    A,(05002H)
 L16:
-        ;;test12.j(9)   write("11 Hier komt een single quote \'");
+        CALL  writeA
 L17:
-        LD    HL,50
-        CALL  putStr
+        ;;test12.j(9)   write(2);
 L18:
-        ;;test12.j(10)   write("10 Hier komt een dubbele quote \"");
+        LD    A,2
 L19:
-        LD    HL,51
-        CALL  putStr
+        CALL  writeA
 L20:
-        ;;test12.j(11)   write("9  Dit is regel 1.\n   En dit regel 2.");
+        ;;test12.j(10)   write("3  Drie keer.");
 L21:
-        LD    HL,52
-        CALL  putStr
+        LD    HL,67
 L22:
-        ;;test12.j(12)   write("8  Dit zie je niet\r8  Dit zie je wel.");
-L23:
-        LD    HL,53
         CALL  putStr
+L23:
+        ;;test12.j(11)   write("3  Drie keer.");
 L24:
-        ;;test12.j(13)   write("7  Getal na een tab\t1");
+        LD    HL,67
 L25:
-        LD    HL,54
         CALL  putStr
 L26:
-        ;;test12.j(14)   write("6  Dit is gu\boed.");
+        ;;test12.j(12)   write("3  Drie keer.");
 L27:
-        LD    HL,55
-        CALL  putStr
+        LD    HL,67
 L28:
-        ;;test12.j(15)   write("5  Dit is pagina 1.\f   En dit is pagina 2.");
-L29:
-        LD    HL,56
         CALL  putStr
+L29:
+        ;;test12.j(13)   write("4  Hier klinkt een bel\a en dan gaan we door.");
 L30:
-        ;;test12.j(16)   write("4  Hier klinkt een bel\a en dan gaan we door.");
+        LD    HL,68
 L31:
-        LD    HL,57
         CALL  putStr
 L32:
-        ;;test12.j(17)   write("3 Drie keer.");
+        ;;test12.j(14)   write("5  Dit is pagina 1.\f   En dit is pagina 2.");
 L33:
-        LD    HL,58
-        CALL  putStr
+        LD    HL,69
 L34:
-        ;;test12.j(18)   write("3 Drie keer.");
-L35:
-        LD    HL,58
         CALL  putStr
+L35:
+        ;;test12.j(15)   write("6  Dit is gu\boed.");
 L36:
-        ;;test12.j(19)   write("3 Drie keer.");
+        LD    HL,70
 L37:
-        LD    HL,58
         CALL  putStr
 L38:
-        ;;test12.j(20)   write(2);
+        ;;test12.j(16)   write("7  Getal na een tab\t1.");
 L39:
-        LD    A,2
+        LD    HL,71
 L40:
-        CALL  writeA
+        CALL  putStr
 L41:
-        ;;test12.j(21)   write(one);
+        ;;test12.j(17)   write("8  Dit zie je niet\r8  Dit zie je wel.");
 L42:
-        LD    A,(05002H)
+        LD    HL,72
 L43:
-        CALL  writeA
+        CALL  putStr
 L44:
-        ;;test12.j(22)   write(zero);
+        ;;test12.j(18)   write("9  Dit is regel 1.\n   En dit regel 2.");
 L45:
-        LD    HL,(05000H)
+        LD    HL,73
 L46:
-        CALL  writeHL
+        CALL  putStr
 L47:
-        ;;test12.j(23) }
+        ;;test12.j(19)   write("10 Hier komt een dubbele quote \".");
 L48:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        LD    HL,74
 L49:
-        .ASCIZ  "12 Hier komt een backslash \\"
+        CALL  putStr
 L50:
-        .ASCIZ  "11 Hier komt een single quote \'"
+        ;;test12.j(20)   write("11 Hier komt een single quote \'.");
 L51:
-        .ASCIZ  "10 Hier komt een dubbele quote \""
+        LD    HL,75
 L52:
-        .ASCIZ  "9  Dit is regel 1.\n   En dit regel 2."
+        CALL  putStr
 L53:
-        .ASCIZ  "8  Dit zie je niet\r8  Dit zie je wel."
+        ;;test12.j(21)   write("12 Hier komt een backslash \\.");
 L54:
-        .ASCIZ  "7  Getal na een tab\t1"
+        LD    HL,76
 L55:
-        .ASCIZ  "6  Dit is gu\boed."
+        CALL  putStr
 L56:
-        .ASCIZ  "5  Dit is pagina 1.\n   En dit is pagina 2."
+        ;;test12.j(22)   String str = "13 Hallo wereld.";
 L57:
-        .ASCIZ  "4  Hier klinkt een bel\a en dan gaan we door."
+        LD    HL,77
 L58:
-        .ASCIZ  "3 Drie keer."
+        LD    (05003H),HL
+L59:
+        ;;test12.j(23)   write(str);
+L60:
+        LD    HL,(05003H)
+L61:
+        CALL  putStr
+L62:
+        ;;test12.j(24)   write("Klaar");
+L63:
+        LD    HL,78
+L64:
+        CALL  putStr
+L65:
+        ;;test12.j(25) }
+L66:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L67:
+        .ASCIZ  "3  Drie keer."
+L68:
+        .ASCIZ  "4  Hier klinkt een bel\a en dan gaan we door."
+L69:
+        .ASCIZ  "5  Dit is pagina 1.\n   En dit is pagina 2."
+L70:
+        .ASCIZ  "6  Dit is gu\boed."
+L71:
+        .ASCIZ  "7  Getal na een tab\t1."
+L72:
+        .ASCIZ  "8  Dit zie je niet\r8  Dit zie je wel."
+L73:
+        .ASCIZ  "9  Dit is regel 1.\n   En dit regel 2."
+L74:
+        .ASCIZ  "10 Hier komt een dubbele quote \"."
+L75:
+        .ASCIZ  "11 Hier komt een single quote \'."
+L76:
+        .ASCIZ  "12 Hier komt een backslash \\."
+L77:
+        .ASCIZ  "13 Hallo wereld."
+L78:
+        .ASCIZ  "Klaar"

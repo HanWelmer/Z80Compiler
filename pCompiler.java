@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add string constant assignment.
-//TODO add string expression (+ and *).
+//TODO add string expression (+).
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
@@ -27,7 +26,7 @@ import java.util.Stack;
  * statements     = (statement)*.
  * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
  * assignment     = [datatype] update ";".
- * datatype       = "byte" | "word".
+ * datatype       = "byte" | "word" | "String".
  * update         = identifier++ | identifier-- | identifier "=" expression.
  * writeStatement = "write" "(" expression ")" ";".
  * ifStatement    = "if" "(" comparison ")" block [ "else" block].
@@ -158,6 +157,7 @@ public class pCompiler {
       LexemeType.identifier
     , LexemeType.bytelexeme
     , LexemeType.wordlexeme
+    , LexemeType.stringlexeme
     , LexemeType.writelexeme
     , LexemeType.iflexeme
     , LexemeType.forlexeme
@@ -168,6 +168,7 @@ public class pCompiler {
       LexemeType.identifier
     , LexemeType.bytelexeme
     , LexemeType.wordlexeme
+    , LexemeType.stringlexeme
   );
   private EnumSet<LexemeType> startExp = EnumSet.of(
       LexemeType.lbracket
@@ -1181,7 +1182,7 @@ public class pCompiler {
   } //ifStatement()
   
   //assignment = [datatype] update ";".
-  //datatype   = "byte" | "word".
+  //datatype   = "byte" | "word" | "String".
   private String assignment(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nassignment: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
@@ -1190,7 +1191,7 @@ public class pCompiler {
     stopAssignmentSet.add(LexemeType.semicolon);
 
     String variable = null;
-    if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.wordlexeme) {
+    if (lexeme.type == LexemeType.bytelexeme || lexeme.type == LexemeType.wordlexeme || lexeme.type == LexemeType.stringlexeme) {
       /* part of lexical analysis */
       LexemeType datatype = lexeme.type;
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1283,7 +1284,7 @@ public class pCompiler {
         plantAccLoad(operand);
       }
       //actual assignment.
-      if (operand.datatype == Datatype.word) {
+      if (operand.datatype == Datatype.word || operand.datatype == Datatype.string) {
         plant(new Instruction(FunctionType.acc16Store, new Operand(OperandType.var, varDatatype, varAddress)));
       } else if (operand.datatype == Datatype.byt) {
         plant(new Instruction(FunctionType.acc8Store, new Operand(OperandType.var, varDatatype, varAddress)));
@@ -1317,7 +1318,7 @@ public class pCompiler {
     debug("\nwriteStatement: " + operand);
     
     /* part of code generation */
-    if (operand.opType != OperandType.acc && operand.datatype != Datatype.string) {
+    if (operand.opType != OperandType.acc) {
       plantAccLoad(operand);
     }
     switch (operand.datatype) {
@@ -1328,7 +1329,7 @@ public class pCompiler {
         plant(new Instruction(FunctionType.writeAcc8));
         break;
       case string :
-        plant(new Instruction(FunctionType.writeString, operand));
+        plant(new Instruction(FunctionType.writeString));
         break;
       default: error(15);
     }
@@ -1478,6 +1479,11 @@ public class pCompiler {
         operand.opType = OperandType.acc;
         acc8.setOperand(operand);
       }
+    } else if (operand.datatype == Datatype.string) {
+        if (acc16.inUse()) {
+          throw new RuntimeException("Compiler error; acc16 is in use unexpectedly.");
+        }
+        plant(new Instruction(FunctionType.acc16Load, operand));
     } else {
       throw new RuntimeException("Unsupported operand " + operand);
     }
