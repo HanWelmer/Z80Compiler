@@ -54,5 +54,9 @@
   53 acc8= constant 0
   54 acc8* constant 1
   55 call writeAcc8
-  56 ;test4.j(14) }
-  57 stop
+  56 ;test4.j(14)   write("Klaar");
+  57 acc16= constant 61
+  58 writeString
+  59 ;test4.j(15) }
+  60 stop
+  61 stringConstant 0 = "Klaar"

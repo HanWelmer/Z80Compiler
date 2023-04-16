@@ -25,4 +25,5 @@ class TestMultiply {
   if (6561 > 9) write (2); else write (0);
   write(1);
   write(0);
+  write("Klaar");
 }

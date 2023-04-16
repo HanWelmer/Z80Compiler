@@ -306,4 +306,5 @@ class Test8And16BitExpressions {
   i = 300 * 302;
   write(i);         // 90.600 % 65536 = 25.064
 
+  write("Klaar");
 }

@@ -850,5 +850,9 @@
  849 acc16= variable 2
  850 call writeAcc16
  851 ;test6.j(307) 
- 852 ;test6.j(308) }
- 853 stop
+ 852 ;test6.j(308)   write("Klaar");
+ 853 acc16= constant 857
+ 854 writeString
+ 855 ;test6.j(309) }
+ 856 stop
+ 857 stringConstant 0 = "Klaar"

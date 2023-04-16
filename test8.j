@@ -75,4 +75,5 @@ class Test8And16BitExpressions {
   
   write(i + 1);             // 20
   write(2 + i);             // 21
+  write("Klaar");
 }

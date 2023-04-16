@@ -1126,5 +1126,9 @@
 1125 ;test2.j(349)   write(0);
 1126 acc8= constant 0
 1127 call writeAcc8
-1128 ;test2.j(350) }
-1129 stop
+1128 ;test2.j(350)   write("Klaar");
+1129 acc16= constant 1133
+1130 writeString
+1131 ;test2.j(351) }
+1132 stop
+1133 stringConstant 0 = "Klaar"

@@ -150,7 +150,7 @@ putSpace:
 ;Send one character to ASCI0.
 ;  IN:  A = character
 ;  OUT: none.
-;  USES:AF
+;  USES:none.
 ;****************
 putChar:
         PUSH  AF          ;send the character via ASCI0
@@ -543,7 +543,7 @@ div16_83:
 ;div8
 ;8 by 8 bit unsigned division.
 ;  IN:  A = dividend
-;       C  = divisor
+;       C = divisor
 ;  OUT: A = quotient
 ;       C = remainder
 ;  USES:F(lags)
@@ -608,6 +608,46 @@ div8_2:           ;                      }
         LD    A,D         ;4        393 441      return Quotient[D] in A
         POP   DE          ;9        402 450
         RET               ;9        411 459
+;****************
+;div8_16
+;8 by 16 bit unsigned division.
+;  IN:  A = dividend
+;       HL = divisor
+;  OUT: A = quotient
+;       C = remainder
+;  USES:F(lags)
+;  Size 13 bytes (plus dependency on div8)
+;  Time 31 or between 436 and 484 cycles
+;****************
+;invariante betrekking:
+; T = dividend
+; D = divisor
+; Q = quotient
+; R = remainder
+; T = QD + R
+;pseudo code:
+; if D >= 256 {
+;   R = T
+;   Q = 0
+; } else {
+;   R = T/D (using div8)
+;   Q = T%D (using div8)
+; }
+;****************
+
+
+div8_16:
+        LD    C,A         ;  4  4         save dividend(A) in C
+        LD    A,H         ;  4  8         if D >= 256 {
+        OR    A           ;  4 12
+        JR    Z,div8_161  ;  6 18  8  20
+        XOR   A           ;  4 22           R = T;
+        RET               ;  9 31           Q = 0;
+div8_161:                     ;               } else {
+        LD    A,C         ;        4  24    restore dividend into A
+        LD    C,L         ;        4  28    load divisor (HL) into C
+        CALL  div8        ; 16+411/16+459               R = T/D; Q = T%D;
+        RET               ; 9  436/484    }
 ;****************
 ;read
 ;read a 16 bit unsigned number from the input
@@ -2580,6 +2620,14 @@ L850:
 L851:
         ;;test6.j(307) 
 L852:
-        ;;test6.j(308) }
+        ;;test6.j(308)   write("Klaar");
 L853:
+        LD    HL,857
+L854:
+        CALL  putStr
+L855:
+        ;;test6.j(309) }
+L856:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L857:
+        .ASCIZ  "Klaar"

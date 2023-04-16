@@ -223,5 +223,9 @@
  222 acc8ToAcc16
  223 acc16+ variable 3
  224 call writeAcc16
- 225 ;test8.j(77) }
- 226 stop
+ 225 ;test8.j(77)   write("Klaar");
+ 226 acc16= constant 230
+ 227 writeString
+ 228 ;test8.j(78) }
+ 229 stop
+ 230 stringConstant 0 = "Klaar"

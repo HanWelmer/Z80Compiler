@@ -22,4 +22,5 @@ class TestMultiply {
   write(2 * 1);
   write(1 * 1);
   write(1 * 0);
+  write("Klaar");
 }

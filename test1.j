@@ -292,4 +292,5 @@ class TestWhile {
   // constant - constant
   // not relevant
   write(0);
+  write("Klaar");
 }

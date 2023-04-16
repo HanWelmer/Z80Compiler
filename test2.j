@@ -348,4 +348,5 @@ class TestBranches {
   if (1000 <= 1000) write(1);
 
   write(0);
+  write("Klaar");
 }

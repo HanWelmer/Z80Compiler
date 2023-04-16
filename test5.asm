@@ -150,7 +150,7 @@ putSpace:
 ;Send one character to ASCI0.
 ;  IN:  A = character
 ;  OUT: none.
-;  USES:AF
+;  USES:none.
 ;****************
 putChar:
         PUSH  AF          ;send the character via ASCI0
@@ -4078,6 +4078,14 @@ L1341:
 L1342:
         CALL  writeA
 L1343:
-        ;;test5.j(166) }
+        ;;test5.j(166)   write("Klaar");
 L1344:
+        LD    HL,1348
+L1345:
+        CALL  putStr
+L1346:
+        ;;test5.j(167) }
+L1347:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L1348:
+        .ASCIZ  "Klaar"

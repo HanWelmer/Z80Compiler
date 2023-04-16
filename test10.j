@@ -296,4 +296,5 @@ class TestDo {
   // constant - constant
   // not relevant
   write(0);
+  write("Klaar");
 }

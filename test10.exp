@@ -810,5 +810,9 @@
  809 ;test10.j(297)   write(0);
  810 acc8= constant 0
  811 call writeAcc8
- 812 ;test10.j(298) }
- 813 stop
+ 812 ;test10.j(298)   write("Klaar");
+ 813 acc16= constant 817
+ 814 writeString
+ 815 ;test10.j(299) }
+ 816 stop
+ 817 stringConstant 0 = "Klaar"

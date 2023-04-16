@@ -7,9 +7,11 @@ class Test8And16BitExpressions {
   /* Single term read: byte */
   /**************************/
   write(1);          // 1
+
+  write("Type 2, 3, 4 etc");
   write(read);       // 2
   byte b = read;
-  write(b);          // 3
+  write(b);       // 3
 
   /**********************************/
   /* Dual term read: byte constants */
@@ -23,7 +25,7 @@ class Test8And16BitExpressions {
   write(read / 1);   // 10 / 1 = 10
   write(121 / read); // 121 / 11 = 11
   
-  write(1047);      // 1047
+  write("Type 1048 etc");
   /**************************/
   /* Single term read: word */
   /**************************/
@@ -56,6 +58,7 @@ class Test8And16BitExpressions {
   write(b * read);   // 1 * 1063 = 1063
   write(read / b);   // 1064 / 1 = 1064
   b = 12;
+  write("Type 3 etc");
   write(3);
   write(b / read);   // 12 / 3 = 4
   
@@ -63,7 +66,7 @@ class Test8And16BitExpressions {
   /* Dual term read: word + word variable */
   /****************************************/
   i = 0;
-  write(1066);
+  write("Type 1066 etc");
   write(read + i);   // 1066 + 0 = 1066
   write(i + read);   // 0 + 1067 = 1067
   write(read - i);   // 1068 - 0 = 1068
@@ -73,6 +76,7 @@ class Test8And16BitExpressions {
   write(i * read);   // 1 * 1071 = 1071
   write(read / i);   // 1072 / 1 = 1072
   i = 3219;
-  write(3);
+  write("Type 3");
   write(i / read);   // 3219 / 3 = 1073  
+  write("Klaar");
 }

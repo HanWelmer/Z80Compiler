@@ -150,7 +150,7 @@ putSpace:
 ;Send one character to ASCI0.
 ;  IN:  A = character
 ;  OUT: none.
-;  USES:AF
+;  USES:none.
 ;****************
 putChar:
         PUSH  AF          ;send the character via ASCI0
@@ -745,499 +745,531 @@ L9:
 L10:
         CALL  writeA
 L11:
-        ;;test7.j(9)   write(read);       // 2
+        ;;test7.j(9) 
 L12:
-        CALL  read
+        ;;test7.j(10)   write("Type 2, 3, 4 etc");
 L13:
-        CALL  writeHL
+        LD    HL,243
 L14:
-        ;;test7.j(10)   byte b = read;
+        CALL  putStr
 L15:
-        CALL  read
+        ;;test7.j(11)   write(read);       // 2
 L16:
+        CALL  read
+L17:
+        CALL  writeHL
+L18:
+        ;;test7.j(12)   byte b = read;
+L19:
+        CALL  read
+L20:
         LD    A,L
         LD    (05000H),A
-L17:
-        ;;test7.j(11)   write(b);          // 3
-L18:
-        LD    A,(05000H)
-L19:
-        CALL  writeA
-L20:
-        ;;test7.j(12) 
 L21:
-        ;;test7.j(13)   /**********************************/
+        ;;test7.j(13)   write(b);       // 3
 L22:
-        ;;test7.j(14)   /* Dual term read: byte constants */
+        LD    A,(05000H)
 L23:
-        ;;test7.j(15)   /**********************************/
+        CALL  writeA
 L24:
-        ;;test7.j(16)   write(read + 0);   // 4 + 0 = 4
+        ;;test7.j(14) 
 L25:
-        CALL  read
+        ;;test7.j(15)   /**********************************/
 L26:
+        ;;test7.j(16)   /* Dual term read: byte constants */
+L27:
+        ;;test7.j(17)   /**********************************/
+L28:
+        ;;test7.j(18)   write(read + 0);   // 4 + 0 = 4
+L29:
+        CALL  read
+L30:
         LD    DE,0
         ADD   HL,DE
-L27:
-        CALL  writeHL
-L28:
-        ;;test7.j(17)   write(0 + read);   // 0 + 5 = 5
-L29:
-        LD    A,0
-L30:
-        CALL  read
 L31:
-        LD    E,A
-        LD    D,0
-        ADD   HL,DE
-L32:
         CALL  writeHL
+L32:
+        ;;test7.j(19)   write(0 + read);   // 0 + 5 = 5
 L33:
-        ;;test7.j(18)   write(read - 0);   // 6 - 0 = 6
+        LD    A,0
 L34:
         CALL  read
 L35:
-        LD    DE,0
-        OR    A
-        SBC   HL,DE
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
 L36:
         CALL  writeHL
 L37:
-        ;;test7.j(19)   write(14 - read);  // 14 - 7 = 7
+        ;;test7.j(20)   write(read - 0);   // 6 - 0 = 6
 L38:
-        LD    A,14
-L39:
         CALL  read
-L40:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
+L39:
+        LD    DE,0
         OR    A
         SBC   HL,DE
-L41:
+L40:
         CALL  writeHL
+L41:
+        ;;test7.j(21)   write(14 - read);  // 14 - 7 = 7
 L42:
-        ;;test7.j(20)   write(read * 1);   // 8 * 1 = 8
+        LD    A,14
 L43:
         CALL  read
 L44:
-        LD    DE,1
-        CALL  mul16
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L45:
         CALL  writeHL
 L46:
-        ;;test7.j(21)   write(1 * read);   // 1 * 9 = 9
+        ;;test7.j(22)   write(read * 1);   // 8 * 1 = 8
 L47:
-        LD    A,1
-L48:
         CALL  read
+L48:
+        LD    DE,1
+        CALL  mul16
 L49:
-        CALL  mul16_8
-L50:
         CALL  writeHL
+L50:
+        ;;test7.j(23)   write(1 * read);   // 1 * 9 = 9
 L51:
-        ;;test7.j(22)   write(read / 1);   // 10 / 1 = 10
+        LD    A,1
 L52:
         CALL  read
 L53:
-        LD    DE,1
-        CALL  div16
+        CALL  mul16_8
 L54:
         CALL  writeHL
 L55:
-        ;;test7.j(23)   write(121 / read); // 121 / 11 = 11
+        ;;test7.j(24)   write(read / 1);   // 10 / 1 = 10
 L56:
-        LD    A,121
-L57:
         CALL  read
+L57:
+        LD    DE,1
+        CALL  div16
 L58:
+        CALL  writeHL
+L59:
+        ;;test7.j(25)   write(121 / read); // 121 / 11 = 11
+L60:
+        LD    A,121
+L61:
+        CALL  read
+L62:
         EX    DE,HL
         CALL  div8_16
-L59:
-        CALL  writeHL
-L60:
-        ;;test7.j(24)   
-L61:
-        ;;test7.j(25)   write(1047);      // 1047
-L62:
-        LD    HL,1047
 L63:
         CALL  writeHL
 L64:
-        ;;test7.j(26)   /**************************/
+        ;;test7.j(26)   
 L65:
-        ;;test7.j(27)   /* Single term read: word */
+        ;;test7.j(27)   write("Type 1048 etc");
 L66:
-        ;;test7.j(28)   /**************************/
+        LD    HL,244
 L67:
-        ;;test7.j(29)   write(read);      // 1048
+        CALL  putStr
 L68:
-        CALL  read
+        ;;test7.j(28)   /**************************/
 L69:
-        CALL  writeHL
+        ;;test7.j(29)   /* Single term read: word */
 L70:
-        ;;test7.j(30)   word i = read;
+        ;;test7.j(30)   /**************************/
 L71:
-        CALL  read
+        ;;test7.j(31)   write(read);      // 1048
 L72:
-        LD    (05001H),HL
-L73:
-        ;;test7.j(31)   write(i);         // 1049
-L74:
-        LD    HL,(05001H)
-L75:
-        CALL  writeHL
-L76:
-        ;;test7.j(32) 
-L77:
-        ;;test7.j(33)   /**********************************/
-L78:
-        ;;test7.j(34)   /* Dual term read: word constants */
-L79:
-        ;;test7.j(35)   /**********************************/
-L80:
-        ;;test7.j(36)   write(read + 1000);   // 1050 + 1000 = 2050
-L81:
         CALL  read
+L73:
+        CALL  writeHL
+L74:
+        ;;test7.j(32)   word i = read;
+L75:
+        CALL  read
+L76:
+        LD    (05001H),HL
+L77:
+        ;;test7.j(33)   write(i);         // 1049
+L78:
+        LD    HL,(05001H)
+L79:
+        CALL  writeHL
+L80:
+        ;;test7.j(34) 
+L81:
+        ;;test7.j(35)   /**********************************/
 L82:
+        ;;test7.j(36)   /* Dual term read: word constants */
+L83:
+        ;;test7.j(37)   /**********************************/
+L84:
+        ;;test7.j(38)   write(read + 1000);   // 1050 + 1000 = 2050
+L85:
+        CALL  read
+L86:
         LD    DE,1000
         ADD   HL,DE
-L83:
-        CALL  writeHL
-L84:
-        ;;test7.j(37)   write(1000 + read);   // 1000 + 1051 = 2051
-L85:
-        LD    HL,1000
-L86:
-        PUSH HL
 L87:
-        CALL  read
-L88:
-        POP   DE
-        ADD   HL,DE
-L89:
         CALL  writeHL
+L88:
+        ;;test7.j(39)   write(1000 + read);   // 1000 + 1051 = 2051
+L89:
+        LD    HL,1000
 L90:
-        ;;test7.j(38)   write(read - 1000);   // 1052 - 1000 =   52
+        PUSH HL
 L91:
         CALL  read
 L92:
-        LD    DE,1000
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        ADD   HL,DE
 L93:
         CALL  writeHL
 L94:
-        ;;test7.j(39)   write(2106 - read);   // 2106 - 1053 = 1053
+        ;;test7.j(40)   write(read - 1000);   // 1052 - 1000 =   52
 L95:
-        LD    HL,2106
-L96:
-        PUSH HL
-L97:
         CALL  read
-L98:
-        POP   DE
-        EX    DE,HL
+L96:
+        LD    DE,1000
         OR    A
         SBC   HL,DE
-L99:
+L97:
         CALL  writeHL
+L98:
+        ;;test7.j(41)   write(2106 - read);   // 2106 - 1053 = 1053
+L99:
+        LD    HL,2106
 L100:
-        ;;test7.j(40)   write(read * 1000);   // 1054 * 1000 = 5254
+        PUSH HL
 L101:
         CALL  read
 L102:
-        LD    DE,1000
-        CALL  mul16
+        POP   DE
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L103:
         CALL  writeHL
 L104:
-        ;;test7.j(41)   write(1000 * read);   // 1000 * 1055 = 1.055.000 = 6424
+        ;;test7.j(42)   write(read * 1000);   // 1054 * 1000 = 5254
 L105:
-        LD    HL,1000
-L106:
-        PUSH HL
-L107:
         CALL  read
-L108:
-        POP   DE
+L106:
+        LD    DE,1000
         CALL  mul16
-L109:
+L107:
         CALL  writeHL
+L108:
+        ;;test7.j(43)   write(1000 * read);   // 1000 * 1055 = 1.055.000 = 6424
+L109:
+        LD    HL,1000
 L110:
-        ;;test7.j(42)   write(read / 1000);   // 1056 / 1000 = 1
+        PUSH HL
 L111:
         CALL  read
 L112:
-        LD    DE,1000
-        CALL  div16
+        POP   DE
+        CALL  mul16
 L113:
         CALL  writeHL
 L114:
-        ;;test7.j(43)   write(2114 / read);   // 2114 / 1057 = 2
+        ;;test7.j(44)   write(read / 1000);   // 1056 / 1000 = 1
 L115:
-        LD    HL,2114
-L116:
-        PUSH HL
-L117:
         CALL  read
+L116:
+        LD    DE,1000
+        CALL  div16
+L117:
+        CALL  writeHL
 L118:
+        ;;test7.j(45)   write(2114 / read);   // 2114 / 1057 = 2
+L119:
+        LD    HL,2114
+L120:
+        PUSH HL
+L121:
+        CALL  read
+L122:
         POP   DE
         EX    DE,HL
         CALL  div16
-L119:
-        CALL  writeHL
-L120:
-        ;;test7.j(44)   
-L121:
-        ;;test7.j(45)   /****************************************/
-L122:
-        ;;test7.j(46)   /* Dual term read: word + byte variable */
 L123:
-        ;;test7.j(47)   /****************************************/
+        CALL  writeHL
 L124:
-        ;;test7.j(48)   b = 0;
+        ;;test7.j(46)   
 L125:
-        LD    A,0
+        ;;test7.j(47)   /****************************************/
 L126:
-        LD    (05000H),A
+        ;;test7.j(48)   /* Dual term read: word + byte variable */
 L127:
-        ;;test7.j(49)   write(read + b);   // 1058 + 0 = 1058
+        ;;test7.j(49)   /****************************************/
 L128:
-        CALL  read
+        ;;test7.j(50)   b = 0;
 L129:
+        LD    A,0
+L130:
+        LD    (05000H),A
+L131:
+        ;;test7.j(51)   write(read + b);   // 1058 + 0 = 1058
+L132:
+        CALL  read
+L133:
         LD    DE,(05000H)
         ADD   HL,DE
-L130:
-        CALL  writeHL
-L131:
-        ;;test7.j(50)   write(b + read);   // 0 + 1059 = 1059
-L132:
-        LD    A,(05000H)
-L133:
-        CALL  read
 L134:
-        LD    E,A
-        LD    D,0
-        ADD   HL,DE
-L135:
         CALL  writeHL
+L135:
+        ;;test7.j(52)   write(b + read);   // 0 + 1059 = 1059
 L136:
-        ;;test7.j(51)   write(read - b);   // 1060 - 0 = 1060
+        LD    A,(05000H)
 L137:
         CALL  read
 L138:
-        LD    DE,(05000H)
-        OR    A
-        SBC   HL,DE
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
 L139:
         CALL  writeHL
 L140:
-        ;;test7.j(52)   write(b - read);   // 0 - 1061 = -1061
+        ;;test7.j(53)   write(read - b);   // 1060 - 0 = 1060
 L141:
-        LD    A,(05000H)
-L142:
         CALL  read
+L142:
+        LD    DE,(05000H)
+        OR    A
+        SBC   HL,DE
 L143:
+        CALL  writeHL
+L144:
+        ;;test7.j(54)   write(b - read);   // 0 - 1061 = -1061
+L145:
+        LD    A,(05000H)
+L146:
+        CALL  read
+L147:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L144:
-        CALL  writeHL
-L145:
-        ;;test7.j(53)   b = 1;
-L146:
-        LD    A,1
-L147:
-        LD    (05000H),A
 L148:
-        ;;test7.j(54)   write(read * b);   // 1062 * 1 = 1062
+        CALL  writeHL
 L149:
-        CALL  read
+        ;;test7.j(55)   b = 1;
 L150:
+        LD    A,1
+L151:
+        LD    (05000H),A
+L152:
+        ;;test7.j(56)   write(read * b);   // 1062 * 1 = 1062
+L153:
+        CALL  read
+L154:
         LD    DE,(05000H)
         CALL  mul16
-L151:
-        CALL  writeHL
-L152:
-        ;;test7.j(55)   write(b * read);   // 1 * 1063 = 1063
-L153:
-        LD    A,(05000H)
-L154:
-        CALL  read
 L155:
-        CALL  mul16_8
-L156:
         CALL  writeHL
+L156:
+        ;;test7.j(57)   write(b * read);   // 1 * 1063 = 1063
 L157:
-        ;;test7.j(56)   write(read / b);   // 1064 / 1 = 1064
+        LD    A,(05000H)
 L158:
         CALL  read
 L159:
-        LD    DE,(05000H)
-        CALL  div16
+        CALL  mul16_8
 L160:
         CALL  writeHL
 L161:
-        ;;test7.j(57)   b = 12;
+        ;;test7.j(58)   write(read / b);   // 1064 / 1 = 1064
 L162:
-        LD    A,12
-L163:
-        LD    (05000H),A
-L164:
-        ;;test7.j(58)   write(3);
-L165:
-        LD    A,3
-L166:
-        CALL  writeA
-L167:
-        ;;test7.j(59)   write(b / read);   // 12 / 3 = 4
-L168:
-        LD    A,(05000H)
-L169:
         CALL  read
+L163:
+        LD    DE,(05000H)
+        CALL  div16
+L164:
+        CALL  writeHL
+L165:
+        ;;test7.j(59)   b = 12;
+L166:
+        LD    A,12
+L167:
+        LD    (05000H),A
+L168:
+        ;;test7.j(60)   write("Type 3 etc");
+L169:
+        LD    HL,245
 L170:
+        CALL  putStr
+L171:
+        ;;test7.j(61)   write(3);
+L172:
+        LD    A,3
+L173:
+        CALL  writeA
+L174:
+        ;;test7.j(62)   write(b / read);   // 12 / 3 = 4
+L175:
+        LD    A,(05000H)
+L176:
+        CALL  read
+L177:
         EX    DE,HL
         CALL  div8_16
-L171:
-        CALL  writeHL
-L172:
-        ;;test7.j(60)   
-L173:
-        ;;test7.j(61)   /****************************************/
-L174:
-        ;;test7.j(62)   /* Dual term read: word + word variable */
-L175:
-        ;;test7.j(63)   /****************************************/
-L176:
-        ;;test7.j(64)   i = 0;
-L177:
-        LD    A,0
 L178:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
+        CALL  writeHL
 L179:
-        ;;test7.j(65)   write(1066);
+        ;;test7.j(63)   
 L180:
-        LD    HL,1066
+        ;;test7.j(64)   /****************************************/
 L181:
-        CALL  writeHL
+        ;;test7.j(65)   /* Dual term read: word + word variable */
 L182:
-        ;;test7.j(66)   write(read + i);   // 1066 + 0 = 1066
+        ;;test7.j(66)   /****************************************/
 L183:
-        CALL  read
+        ;;test7.j(67)   i = 0;
 L184:
-        LD    DE,(05001H)
-        ADD   HL,DE
+        LD    A,0
 L185:
-        CALL  writeHL
-L186:
-        ;;test7.j(67)   write(i + read);   // 0 + 1067 = 1067
-L187:
-        LD    HL,(05001H)
-L188:
-        PUSH HL
-L189:
-        CALL  read
-L190:
-        POP   DE
-        ADD   HL,DE
-L191:
-        CALL  writeHL
-L192:
-        ;;test7.j(68)   write(read - i);   // 1068 - 0 = 1068
-L193:
-        CALL  read
-L194:
-        LD    DE,(05001H)
-        OR    A
-        SBC   HL,DE
-L195:
-        CALL  writeHL
-L196:
-        ;;test7.j(69)   write(i - read);   // 0 - 1069 = -1069
-L197:
-        LD    HL,(05001H)
-L198:
-        PUSH HL
-L199:
-        CALL  read
-L200:
-        POP   DE
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L201:
-        CALL  writeHL
-L202:
-        ;;test7.j(70)   i = 1;
-L203:
-        LD    A,1
-L204:
         LD    L,A
         LD    H,0
         LD    (05001H),HL
+L186:
+        ;;test7.j(68)   write("Type 1066 etc");
+L187:
+        LD    HL,246
+L188:
+        CALL  putStr
+L189:
+        ;;test7.j(69)   write(read + i);   // 1066 + 0 = 1066
+L190:
+        CALL  read
+L191:
+        LD    DE,(05001H)
+        ADD   HL,DE
+L192:
+        CALL  writeHL
+L193:
+        ;;test7.j(70)   write(i + read);   // 0 + 1067 = 1067
+L194:
+        LD    HL,(05001H)
+L195:
+        PUSH HL
+L196:
+        CALL  read
+L197:
+        POP   DE
+        ADD   HL,DE
+L198:
+        CALL  writeHL
+L199:
+        ;;test7.j(71)   write(read - i);   // 1068 - 0 = 1068
+L200:
+        CALL  read
+L201:
+        LD    DE,(05001H)
+        OR    A
+        SBC   HL,DE
+L202:
+        CALL  writeHL
+L203:
+        ;;test7.j(72)   write(i - read);   // 0 - 1069 = -1069
+L204:
+        LD    HL,(05001H)
 L205:
-        ;;test7.j(71)   write(read * i);   // 1070 * 1 = 1070
+        PUSH HL
 L206:
         CALL  read
 L207:
-        LD    DE,(05001H)
-        CALL  mul16
+        POP   DE
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L208:
         CALL  writeHL
 L209:
-        ;;test7.j(72)   write(i * read);   // 1 * 1071 = 1071
+        ;;test7.j(73)   i = 1;
 L210:
-        LD    HL,(05001H)
+        LD    A,1
 L211:
-        PUSH HL
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L212:
-        CALL  read
+        ;;test7.j(74)   write(read * i);   // 1070 * 1 = 1070
 L213:
+        CALL  read
+L214:
+        LD    DE,(05001H)
+        CALL  mul16
+L215:
+        CALL  writeHL
+L216:
+        ;;test7.j(75)   write(i * read);   // 1 * 1071 = 1071
+L217:
+        LD    HL,(05001H)
+L218:
+        PUSH HL
+L219:
+        CALL  read
+L220:
         POP   DE
         CALL  mul16
-L214:
+L221:
         CALL  writeHL
-L215:
-        ;;test7.j(73)   write(read / i);   // 1072 / 1 = 1072
-L216:
+L222:
+        ;;test7.j(76)   write(read / i);   // 1072 / 1 = 1072
+L223:
         CALL  read
-L217:
+L224:
         LD    DE,(05001H)
         CALL  div16
-L218:
-        CALL  writeHL
-L219:
-        ;;test7.j(74)   i = 3219;
-L220:
-        LD    HL,3219
-L221:
-        LD    (05001H),HL
-L222:
-        ;;test7.j(75)   write(3);
-L223:
-        LD    A,3
-L224:
-        CALL  writeA
 L225:
-        ;;test7.j(76)   write(i / read);   // 3219 / 3 = 1073  
+        CALL  writeHL
 L226:
-        LD    HL,(05001H)
+        ;;test7.j(77)   i = 3219;
 L227:
-        PUSH HL
+        LD    HL,3219
 L228:
-        CALL  read
+        LD    (05001H),HL
 L229:
+        ;;test7.j(78)   write("Type 3");
+L230:
+        LD    HL,247
+L231:
+        CALL  putStr
+L232:
+        ;;test7.j(79)   write(i / read);   // 3219 / 3 = 1073  
+L233:
+        LD    HL,(05001H)
+L234:
+        PUSH HL
+L235:
+        CALL  read
+L236:
         POP   DE
         EX    DE,HL
         CALL  div16
-L230:
+L237:
         CALL  writeHL
-L231:
-        ;;test7.j(77) }
-L232:
+L238:
+        ;;test7.j(80)   write("Klaar");
+L239:
+        LD    HL,248
+L240:
+        CALL  putStr
+L241:
+        ;;test7.j(81) }
+L242:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L243:
+        .ASCIZ  "Type 2, 3, 4 etc"
+L244:
+        .ASCIZ  "Type 1048 etc"
+L245:
+        .ASCIZ  "Type 3 etc"
+L246:
+        .ASCIZ  "Type 1066 etc"
+L247:
+        .ASCIZ  "Type 3"
+L248:
+        .ASCIZ  "Klaar"

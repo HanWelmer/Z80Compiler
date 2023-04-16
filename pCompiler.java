@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+//TODO shuffle tests within test*.j
+//TODO refactor StringConstants.
+//TODO fix runtime error: too many variables
+//TODO fix stackedDatatypes (see test11.log)
 //TODO add string expression (+).
 //TODO add logical AND.
 //TODO add logical OR.
@@ -103,9 +107,10 @@ public class pCompiler {
       init();
       prog();
       plant(new Instruction(FunctionType.stop));
+      debug("\n");
       optimize();
+      updateReferencesToStringConstants(instructions.size());
       plantStringConstants();
-      logStringReferences();
     } catch (FatalError e) {
       error(e.getErrorNumber());
       System.exit(1);
@@ -183,9 +188,9 @@ public class pCompiler {
   private StringConstants stringConstants = new StringConstants();
  
   /* Constants and class member variables for code generation phase */
+  private static final String LINE_NR_FORMAT = "%4d ";
   private static final int NULL_OP = 0;
   private static final int MAX_M_CODE = 10000;
-  private static final String LINE_NR_FORMAT = "%4d ";
   private Accumulator acc16 = new Accumulator();
   private Accumulator acc8 = new Accumulator();
   private Stack<Datatype> stackedDatatypes = new Stack<Datatype>();
@@ -344,6 +349,7 @@ public class pCompiler {
         debug("\nlexeme = " + lexeme.makeString(null));
         /* part of semantic analysis */
         int constantId = stringConstants.add(lexeme.stringVal, instructions.size() + 1);
+        debug("\nfactor: string constant " + constantId + " = \"" + lexeme.stringVal + "\"");
         /* part of code generation */
         operand.opType = OperandType.constant;
         operand.datatype = Datatype.string;
@@ -1439,7 +1445,7 @@ public class pCompiler {
   }
   
   private void optimize() {
-    debug("\noptimize: start m-code optimization.");
+    debug("\noptimize: start m-code optimization. Number of instructions before optimization = " + instructions.size());
     int pos = 0;
     while (pos < instructions.size()-2) {
       if ((instructions.get(pos).function == FunctionType.stackAcc16) && (instructions.get(pos+1).function == FunctionType.unstackAcc16)) {
@@ -1453,8 +1459,27 @@ public class pCompiler {
       }
       pos++;
     }
-    debug("\noptimize: end.");
+    debug("\noptimize: end. Number of instructions after optimization = " + instructions.size());
+    debug("\n");
   } //optimize
+  
+  // remove 'number' instructions, starting at position 'pos', and relocate branch addresses and references to string constants.
+  private void relocate(int pos, int number) {
+    //remove #number instructions.
+    for (int i = 0; i<number; i++) {
+      instructions.remove(pos);
+    }
+
+    //adjust branch instructions.
+    int idx = pos;
+    Instruction instruction;
+    do {
+      instruction = instructions.get(idx++);
+      if (brFunctions.contains(instruction.function) && (instruction.operand.intValue > pos)) {
+        instruction.operand.intValue -= number;
+      }
+    } while (instruction.function != FunctionType.stop);
+  } //relocate
   
   /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
@@ -1581,13 +1606,6 @@ public class pCompiler {
 
   private void plantStringConstants() {
     for (int id = 0; id < stringConstants.size(); id++) {
-      //Update references to this string constant.
-      for(Integer lineNumber : stringConstants.getReferences(id)) {
-        debug("\nUpdating string constant " + id + " at " + lineNumber + " to " + instructions.size());
-        Instruction updatedInstruction = instructions.get(lineNumber);
-        updatedInstruction.operand.intValue = instructions.size();
-        instructions.set(lineNumber, updatedInstruction);
-      }
       //plant string constant.
       Operand operand = new Operand(OperandType.constant, Datatype.string, stringConstants.get(id));
       operand.intValue = id;
@@ -1595,19 +1613,44 @@ public class pCompiler {
     }
   }
   
-  private void logStringReferences() {
-    if (debugMode) {
-      debug("\nString constants cross reference list:\n");
-      for (int id = 0; id < stringConstants.size(); id++) {
-        debug(String.format("%03d : ", id));
-        for(Integer lineNumber : stringConstants.getReferences(id)) {
-          debug(String.format("%05d ", lineNumber));
+  private void updateReferencesToStringConstants(int offset) {
+    Map<Integer, ArrayList<Integer>> stringReferences = new HashMap<Integer, ArrayList<Integer>>();
+    int lineNumber = 0;
+    Instruction instruction;
+    do {
+      instruction = instructions.get(lineNumber);
+      if (instruction.function != FunctionType.comment
+       && instruction.operand != null 
+       && instruction.operand.opType == OperandType.constant 
+       && instruction.operand.datatype == Datatype.string) {
+        if (instruction.operand.intValue == null) {
+          throw new RuntimeException(String.format("operand.intValue is null at instruction %d: instruction: %s operand: %s", + lineNumber, instruction, instruction.operand));
         }
-        debug("\n");
+        int oldAddress = instruction.operand.intValue;
+        int newAddress = instruction.operand.intValue + offset;
+        debug("\nUpdating reference to string constant at " + lineNumber + " from " + oldAddress + " to " + newAddress);
+        instruction.operand.intValue = newAddress;
+        if (debugMode) {
+          // add index of string constant to the cross references list.
+          if (stringReferences.get(newAddress) == null) {
+            stringReferences.put(newAddress, new ArrayList<Integer>());
+          }
+          // add reference to the list of references to the string constant.
+          stringReferences.get(newAddress).add(lineNumber);
+        }
+      }
+      lineNumber++;
+    } while (instruction.function != FunctionType.stop);
+
+    // log string constants and references to them.
+    if (debugMode) {
+      debug("\n\nString constants cross reference list:\n");
+      for(Map.Entry entry: stringReferences.entrySet()){
+          debug(entry.getKey() + " : " + entry.getValue() + "\n");
       }
     }
   }
-        
+  
   private int saveLabel() {
     //address of next object code.
     int address = instructions.size();
@@ -1631,21 +1674,5 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
     }
   } //popStackedDatatype()
-  
-  private void relocate(int pos, int number) {
-    //remove #number instructions.
-    for (int i = 0; i<number; i++) {
-      instructions.remove(pos);
-    }
-
-    //adjust branch instructions.
-    int start = pos;
-    while (pos < instructions.size()-1) {
-      if (brFunctions.contains(instructions.get(pos).function) && (instructions.get(pos).operand.intValue > start)) {
-        instructions.get(pos).operand.intValue -= number;
-      }
-      pos++;
-    }
-  } //relocate
 
 }

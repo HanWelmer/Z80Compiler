@@ -1341,5 +1341,9 @@
 1340 brne 1344
 1341 acc8= constant 0
 1342 call writeAcc8
-1343 ;test5.j(166) }
-1344 stop
+1343 ;test5.j(166)   write("Klaar");
+1344 acc16= constant 1348
+1345 writeString
+1346 ;test5.j(167) }
+1347 stop
+1348 stringConstant 0 = "Klaar"

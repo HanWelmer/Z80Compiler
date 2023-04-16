@@ -12,4 +12,5 @@ class TestMultiplyDivide {
   write(4 / 2);
   write(1 * 1);
   write(0 * 1);
+  write("Klaar");
 }

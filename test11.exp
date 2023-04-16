@@ -927,8 +927,9 @@
  926 acc16= variable 6
  927 call writeAcc16
  928 br 924
- 929 ;test11.j(258)   write(0);
- 930 acc8= constant 0
- 931 call writeAcc8
+ 929 ;test11.j(258)   write("Klaar.");
+ 930 acc16= constant 934
+ 931 writeString
  932 ;test11.j(259) }
  933 stop
+ 934 stringConstant 0 = "Klaar."

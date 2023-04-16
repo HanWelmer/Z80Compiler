@@ -164,5 +164,6 @@ class TestIf {
   if (3 != 12/(1+2)) write(2);
   if (4 == 4) write(1);
   if (4 == 12/(1+2)) write(0);
+  write("Klaar");
 }
 //comment after final }.

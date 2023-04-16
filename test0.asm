@@ -150,7 +150,7 @@ putSpace:
 ;Send one character to ASCI0.
 ;  IN:  A = character
 ;  OUT: none.
-;  USES:AF
+;  USES:none.
 ;****************
 putChar:
         PUSH  AF          ;send the character via ASCI0
@@ -456,24 +456,24 @@ mul16S2:
 ;  Size   32 bytes
 ;  Time   between 1073 en 1121 cycles
 ;pseudo code:
-;T = dividend
-;D = divisor
-;Q = quotient = 0
-;R = remainder = 0
+;T = AC = dividend
+;D = DE = divisor
+;Q = AC = quotient = 0
+;R = HL = remainder = 0
 ;invariante betrekking:
 ; D/T\Q     
 ;   R       
 ; T = QD + R
 ; T <= 2^N  
 ;
-; D/T'.RT\Q'        
-;   R'              
-; RT <= 2^N         
-; 0<=k<=N           
-; RT = T % 10^k     
-; T' = (T-RT) / 10^k
-; Q' = T' / D       
-; R' = T' % D       
+; D/T'.RT\Q'      
+;   R'             
+; RT <= 2^N        
+; 0<=k<=N          
+; RT = T % 2^k     
+; T' = (T-RT) / 2^k
+; Q' = T' / D      
+; R' = T' % D      
 ;
 ;for (i=16; i>0; i--) {
 ;  T = T * 2 (remember MSB in carry)
@@ -524,7 +524,7 @@ div16_3:
 ;  Time between 601 en 697 cycles
 ;****************
 div16_8:
-        PUSH  BC          ;11  11 save registers used
+        PUSH  BC          ;11 11 save registers used
         LD    B,16        ; 6 17 the length of the dividend (16 bits)
         LD    C,A         ; 4 21 move divisor to C
         XOR   A           ; 4 25 clear upper 8 bits of AHL
@@ -539,6 +539,115 @@ div16_83:
         DJNZ  div16_82    ;15*9+7=142 583 679
         POP   BC          ;9 592 688
         RET               ;9 601 697
+;****************
+;div8
+;8 by 8 bit unsigned division.
+;  IN:  A = dividend
+;       C = divisor
+;  OUT: A = quotient
+;       C = remainder
+;  USES:F(lags)
+;  Size 26 bytes
+;  Time between 411 and 459 cycles
+;****************
+;pseudo code:
+;T = dividend
+;D = divisor
+;Q = quotient = 0
+;R = remainder = 0
+;invariante betrekking:
+; T = QD + R
+; T <= 2^8  
+;
+; D/T'.RT\Q'      
+;   R'             
+; RT <= 2^8        
+; 0<=k<=8          
+; RT = T % 2^k     
+; T' = (T-RT) / 2^k
+; Q' = T' / D      
+; R' = T' % D      
+;
+;for (i=8; i>0; i--) {
+;  T = T * 2 (remember MSB in carry)
+;  R = R * 2 + carry
+;  Q = Q * 2
+;  if (R >= D) {
+;    R = R - D;
+;    Q++;
+;  }
+;}
+;return Q (in A) and R (in C)
+;****************
+;E = T = dividend
+;C = D = divisor
+;D = Q = quotient
+;A = R = remainder
+;****************
+;  IN:  A = dividend
+;       C  = divisor
+div8:
+        PUSH  DE          ;11 11 save registers used
+        PUSH  BC          ;11 22 save registers used
+        LD    B,8         ; 6 28 the length of the dividend (8 bits)
+        LD    D,0         ; 6 34 D = Q = quotient = 0
+        LD    E,A         ; 4 38 E = T = dividend
+        XOR   A           ; 4 42 A = R = remainder = 0
+div8_1:
+        SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
+        RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
+        SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
+        CP    C           ;8*4=32 242            if (R[A] - D[C] >= 0) {
+        JR    C,div8_2    ;8*8=64 306 8*6=48 290
+        SUB   C           ;           8*4=32 322   R[A] = R[A] - D[C];
+        INC   D           ;           8*4=32 354   Q[D]++;
+div8_2:           ;                      }
+        DJNZ  div8_1      ;7*9+7=70 376 424      }
+        POP   BC          ;9        385 433
+        LD    C,A         ;4        389 437      return Remainder[A] in C
+        LD    A,D         ;4        393 441      return Quotient[D] in A
+        POP   DE          ;9        402 450
+        RET               ;9        411 459
+;****************
+;div8_16
+;8 by 16 bit unsigned division.
+;  IN:  A = dividend
+;       HL = divisor
+;  OUT: A = quotient
+;       C = remainder
+;  USES:F(lags)
+;  Size 13 bytes (plus dependency on div8)
+;  Time 31 or between 436 and 484 cycles
+;****************
+;invariante betrekking:
+; T = dividend
+; D = divisor
+; Q = quotient
+; R = remainder
+; T = QD + R
+;pseudo code:
+; if D >= 256 {
+;   R = T
+;   Q = 0
+; } else {
+;   R = T/D (using div8)
+;   Q = T%D (using div8)
+; }
+;****************
+
+
+div8_16:
+        LD    C,A         ;  4  4         save dividend(A) in C
+        LD    A,H         ;  4  8         if D >= 256 {
+        OR    A           ;  4 12
+        JR    Z,div8_161  ;  6 18  8  20
+        XOR   A           ;  4 22           R = T;
+        RET               ;  9 31           Q = 0;
+div8_161:                     ;               } else {
+        LD    A,C         ;        4  24    restore dividend into A
+        LD    C,L         ;        4  28    load divisor (HL) into C
+        CALL  div8        ; 16+411/16+459               R = T/D; Q = T%D;
+        RET               ; 9  436/484    }
 ;****************
 ;read
 ;read a 16 bit unsigned number from the input
@@ -632,9 +741,9 @@ L7:
         LD    H,0
         LD    (05001H),HL
 L8:
-        ;;test0.j(4)   write(b);
+        ;;test0.j(4)   write(0);
 L9:
-        LD    A,(05000H)
+        LD    A,0
 L10:
         CALL  writeA
 L11:
@@ -644,12 +753,20 @@ L12:
 L13:
         CALL  writeHL
 L14:
-        ;;test0.j(6)   write(0);
+        ;;test0.j(6)   write(b);
 L15:
-        LD    A,0
+        LD    A,(05000H)
 L16:
         CALL  writeA
 L17:
-        ;;test0.j(7) }
+        ;;test0.j(7)   write("Klaar");
 L18:
+        LD    HL,22
+L19:
+        CALL  putStr
+L20:
+        ;;test0.j(8) }
+L21:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L22:
+        .ASCIZ  "Klaar"

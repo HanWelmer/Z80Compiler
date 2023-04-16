@@ -241,5 +241,9 @@
  240 ;test9.j(26)   write(0);
  241 acc8= constant 0
  242 call writeAcc8
- 243 ;test9.j(27) }
- 244 stop
+ 243 ;test9.j(27)   write("Klaar");
+ 244 acc16= constant 248
+ 245 writeString
+ 246 ;test9.j(28) }
+ 247 stop
+ 248 stringConstant 0 = "Klaar"

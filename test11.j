@@ -256,5 +256,5 @@ class TestFor {
   for(word i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
   for(word i = 4; 1002 <  i+1000; i--) { write(i); }
   for(word i = 2; 1001 <= i+1000; i--) { write(i); }
-  write(0);
+  write("Klaar.");
 }

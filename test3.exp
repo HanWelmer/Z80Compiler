@@ -108,5 +108,9 @@
  107 acc8= constant 1
  108 acc8* constant 0
  109 call writeAcc8
- 110 ;test3.j(24) }
- 111 stop
+ 110 ;test3.j(24)   write("Klaar");
+ 111 acc16= constant 115
+ 112 writeString
+ 113 ;test3.j(25) }
+ 114 stop
+ 115 stringConstant 0 = "Klaar"
