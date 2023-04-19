@@ -1471,7 +1471,7 @@ public class pCompiler {
     }
 
     //adjust branch instructions.
-    int idx = pos;
+    int idx = 0;
     Instruction instruction;
     do {
       instruction = instructions.get(idx++);
