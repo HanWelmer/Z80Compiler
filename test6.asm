@@ -1629,1005 +1629,1045 @@ L401:
 L402:
         ;;test6.j(151)   /*************************/
 L403:
-        ;;test6.j(152)   b = 507;
+        ;;test6.j(152)   write("Nu komen 251 en 252");
 L404:
-        LD    HL,507
+        LD    HL,872
 L405:
-        LD    A,L
-        LD    (05000H),A
+        CALL  putStr
 L406:
-        ;;test6.j(153)   write(b);         // 251
+        ;;test6.j(153)   b = 507;
 L407:
-        LD    A,(05000H)
+        LD    HL,507
 L408:
-        CALL  writeA
-L409:
-        ;;test6.j(154)   i = 508;
-L410:
-        LD    HL,508
-L411:
-        LD    (05002H),HL
-L412:
-        ;;test6.j(155)   b = i;
-L413:
-        LD    HL,(05002H)
-L414:
         LD    A,L
         LD    (05000H),A
-L415:
-        ;;test6.j(156)   write(b);         // 252
-L416:
+L409:
+        ;;test6.j(154)   write(b);         // 251
+L410:
         LD    A,(05000H)
-L417:
+L411:
         CALL  writeA
+L412:
+        ;;test6.j(155)   i = 508;
+L413:
+        LD    HL,508
+L414:
+        LD    (05002H),HL
+L415:
+        ;;test6.j(156)   b = i;
+L416:
+        LD    HL,(05002H)
+L417:
+        LD    A,L
+        LD    (05000H),A
 L418:
-        ;;test6.j(157) 
+        ;;test6.j(157)   write(b);         // 252
 L419:
-        ;;test6.j(158)   b = b - 505;
-L420:
         LD    A,(05000H)
+L420:
+        CALL  writeA
 L421:
+        ;;test6.j(158) 
+L422:
+        ;;test6.j(159)   write("Nu komen -253 en -254");
+L423:
+        LD    HL,873
+L424:
+        CALL  putStr
+L425:
+        ;;test6.j(160)   b = b - 505;
+L426:
+        LD    A,(05000H)
+L427:
         LD    L,A
         LD    H,0
-L422:
+L428:
         LD    DE,505
         OR    A
         SBC   HL,DE
-L423:
+L429:
         LD    A,L
         LD    (05000H),A
-L424:
-        ;;test6.j(159)   write(b);         // 252 - 505 = -253
-L425:
+L430:
+        ;;test6.j(161)   write(b);         // 252 - 505 = -253
+L431:
         LD    A,(05000H)
-L426:
+L432:
         CALL  writeA
-L427:
-        ;;test6.j(160)   i = i + 5;
-L428:
+L433:
+        ;;test6.j(162)   i = i + 5;
+L434:
         LD    HL,(05002H)
-L429:
+L435:
         LD    DE,5
         ADD   HL,DE
-L430:
+L436:
         LD    (05002H),HL
-L431:
-        ;;test6.j(161)   b = b - i;
-L432:
+L437:
+        ;;test6.j(163)   b = b - i;
+L438:
         LD    A,(05000H)
-L433:
+L439:
         LD    L,A
         LD    H,0
-L434:
+L440:
         LD    DE,(05002H)
         OR    A
         SBC   HL,DE
-L435:
+L441:
         LD    A,L
         LD    (05000H),A
-L436:
-        ;;test6.j(162)   write(b);         // -233 - 11 = -254
-L437:
-        LD    A,(05000H)
-L438:
-        CALL  writeA
-L439:
-        ;;test6.j(163)   
-L440:
-        ;;test6.j(164)   b = 255;
-L441:
-        LD    A,255
 L442:
-        LD    (05000H),A
+        ;;test6.j(164)   write(b);         // -233 - 11 = -254
 L443:
-        ;;test6.j(165)   write(b);         // 255
-L444:
         LD    A,(05000H)
-L445:
+L444:
         CALL  writeA
+L445:
+        ;;test6.j(165)   
 L446:
-        ;;test6.j(166)   //LD    A,255
+        ;;test6.j(166)   write("Nu komen 255 en 256");
 L447:
-        ;;test6.j(167)   //LD    (04001H),A
+        LD    HL,874
 L448:
-        ;;test6.j(168)   //LD    A,(04001H)
+        CALL  putStr
 L449:
-        ;;test6.j(169)   //CALL  writeA
+        ;;test6.j(167)   b = 255;
 L450:
-        ;;test6.j(170)   //OK
+        LD    A,255
 L451:
-        ;;test6.j(171) 
+        LD    (05000H),A
 L452:
-        ;;test6.j(172)   /**********************/
+        ;;test6.j(168)   write(b);         // 255
 L453:
-        ;;test6.j(173)   /* Single term 16-bit */
+        LD    A,(05000H)
 L454:
-        ;;test6.j(174)   /**********************/
+        CALL  writeA
 L455:
-        ;;test6.j(175)   i = 256;
+        ;;test6.j(169)   //LD    A,255
 L456:
-        LD    HL,256
+        ;;test6.j(170)   //LD    (04001H),A
 L457:
-        LD    (05002H),HL
+        ;;test6.j(171)   //LD    A,(04001H)
 L458:
-        ;;test6.j(176)   write(i);         // 256
+        ;;test6.j(172)   //CALL  writeA
 L459:
-        LD    HL,(05002H)
+        ;;test6.j(173)   //OK
 L460:
-        CALL  writeHL
+        ;;test6.j(174) 
 L461:
-        ;;test6.j(177)   //LD    HL,256
+        ;;test6.j(175)   /**********************/
 L462:
-        ;;test6.j(178)   //LD    (04006H),HL
+        ;;test6.j(176)   /* Single term 16-bit */
 L463:
-        ;;test6.j(179)   //LD    HL,(04006H)
+        ;;test6.j(177)   /**********************/
 L464:
-        ;;test6.j(180)   //CALL  writeHL
+        ;;test6.j(178)   i = 256;
 L465:
-        ;;test6.j(181)   //OK
+        LD    HL,256
 L466:
-        ;;test6.j(182) 
+        LD    (05002H),HL
 L467:
-        ;;test6.j(183)   write(1000);      // 1000
+        ;;test6.j(179)   write(i);         // 256
 L468:
-        LD    HL,1000
+        LD    HL,(05002H)
 L469:
         CALL  writeHL
 L470:
-        ;;test6.j(184)   j = 1001;
+        ;;test6.j(180)   //LD    HL,256
 L471:
-        LD    HL,1001
+        ;;test6.j(181)   //LD    (04006H),HL
 L472:
-        LD    (05004H),HL
+        ;;test6.j(182)   //LD    HL,(04006H)
 L473:
-        ;;test6.j(185)   write(j);         // 1001
+        ;;test6.j(183)   //CALL  writeHL
 L474:
-        LD    HL,(05004H)
+        ;;test6.j(184)   //OK
 L475:
-        CALL  writeHL
+        ;;test6.j(185) 
 L476:
-        ;;test6.j(186) 
+        ;;test6.j(186)   write("Nu komen 1000..1047");
 L477:
-        ;;test6.j(187)   /************************/
+        LD    HL,875
 L478:
-        ;;test6.j(188)   /* Dual term addition   */
+        CALL  putStr
 L479:
-        ;;test6.j(189)   /************************/
+        ;;test6.j(187)   write(1000);      // 1000
 L480:
-        ;;test6.j(190)   write(1000 + 2);  // 1002
-L481:
         LD    HL,1000
+L481:
+        CALL  writeHL
 L482:
+        ;;test6.j(188)   j = 1001;
+L483:
+        LD    HL,1001
+L484:
+        LD    (05004H),HL
+L485:
+        ;;test6.j(189)   write(j);         // 1001
+L486:
+        LD    HL,(05004H)
+L487:
+        CALL  writeHL
+L488:
+        ;;test6.j(190) 
+L489:
+        ;;test6.j(191)   /************************/
+L490:
+        ;;test6.j(192)   /* Dual term addition   */
+L491:
+        ;;test6.j(193)   /************************/
+L492:
+        ;;test6.j(194)   write(1000 + 2);  // 1002
+L493:
+        LD    HL,1000
+L494:
         LD    DE,2
         ADD   HL,DE
-L483:
+L495:
         CALL  writeHL
-L484:
-        ;;test6.j(191)   write(3 + 1000);  // 1003
-L485:
+L496:
+        ;;test6.j(195)   write(3 + 1000);  // 1003
+L497:
         LD    A,3
-L486:
+L498:
         LD    L,A
         LD    H,0
-L487:
+L499:
         LD    DE,1000
         ADD   HL,DE
-L488:
+L500:
         CALL  writeHL
-L489:
-        ;;test6.j(192)   write(500 + 504); // 1004
-L490:
+L501:
+        ;;test6.j(196)   write(500 + 504); // 1004
+L502:
         LD    HL,500
-L491:
+L503:
         LD    DE,504
         ADD   HL,DE
-L492:
+L504:
         CALL  writeHL
-L493:
-        ;;test6.j(193)   i = 1000 + 5;
-L494:
+L505:
+        ;;test6.j(197)   i = 1000 + 5;
+L506:
         LD    HL,1000
-L495:
+L507:
         LD    DE,5
         ADD   HL,DE
-L496:
+L508:
         LD    (05002H),HL
-L497:
-        ;;test6.j(194)   write(i);         // 1005
-L498:
+L509:
+        ;;test6.j(198)   write(i);         // 1005
+L510:
         LD    HL,(05002H)
-L499:
+L511:
         CALL  writeHL
-L500:
-        ;;test6.j(195)   i = 6 + 1000;
-L501:
+L512:
+        ;;test6.j(199)   i = 6 + 1000;
+L513:
         LD    A,6
-L502:
+L514:
         LD    L,A
         LD    H,0
-L503:
+L515:
         LD    DE,1000
         ADD   HL,DE
-L504:
+L516:
         LD    (05002H),HL
-L505:
-        ;;test6.j(196)   write(i);         // 1006
-L506:
+L517:
+        ;;test6.j(200)   write(i);         // 1006
+L518:
         LD    HL,(05002H)
-L507:
+L519:
         CALL  writeHL
-L508:
-        ;;test6.j(197)   i = 500 + 507;
-L509:
+L520:
+        ;;test6.j(201)   i = 500 + 507;
+L521:
         LD    HL,500
-L510:
+L522:
         LD    DE,507
         ADD   HL,DE
-L511:
-        LD    (05002H),HL
-L512:
-        ;;test6.j(198)   write(i);         // 1007
-L513:
-        LD    HL,(05002H)
-L514:
-        CALL  writeHL
-L515:
-        ;;test6.j(199)   
-L516:
-        ;;test6.j(200)   j = 1000;
-L517:
-        LD    HL,1000
-L518:
-        LD    (05004H),HL
-L519:
-        ;;test6.j(201)   b = 10;
-L520:
-        LD    A,10
-L521:
-        LD    (05000H),A
-L522:
-        ;;test6.j(202)   i = 514;
 L523:
-        LD    HL,514
-L524:
         LD    (05002H),HL
+L524:
+        ;;test6.j(202)   write(i);         // 1007
 L525:
-        ;;test6.j(203)   write(j + 8);     // 1008
+        LD    HL,(05002H)
 L526:
-        LD    HL,(05004H)
+        CALL  writeHL
 L527:
+        ;;test6.j(203)   
+L528:
+        ;;test6.j(204)   j = 1000;
+L529:
+        LD    HL,1000
+L530:
+        LD    (05004H),HL
+L531:
+        ;;test6.j(205)   b = 10;
+L532:
+        LD    A,10
+L533:
+        LD    (05000H),A
+L534:
+        ;;test6.j(206)   i = 514;
+L535:
+        LD    HL,514
+L536:
+        LD    (05002H),HL
+L537:
+        ;;test6.j(207)   write(j + 8);     // 1008
+L538:
+        LD    HL,(05004H)
+L539:
         LD    DE,8
         ADD   HL,DE
-L528:
+L540:
         CALL  writeHL
-L529:
-        ;;test6.j(204)   write(9 + j);     // 1009
-L530:
+L541:
+        ;;test6.j(208)   write(9 + j);     // 1009
+L542:
         LD    A,9
-L531:
+L543:
         LD    L,A
         LD    H,0
-L532:
+L544:
         LD    DE,(05004H)
         ADD   HL,DE
-L533:
+L545:
         CALL  writeHL
-L534:
-        ;;test6.j(205)   write(j + b);     // 1010
-L535:
+L546:
+        ;;test6.j(209)   write(j + b);     // 1010
+L547:
         LD    HL,(05004H)
-L536:
+L548:
         LD    DE,(05000H)
         ADD   HL,DE
-L537:
+L549:
         CALL  writeHL
-L538:
-        ;;test6.j(206)   b++;
-L539:
+L550:
+        ;;test6.j(210)   b++;
+L551:
         LD    HL,(05000H)
         INC   (HL)
-L540:
-        ;;test6.j(207)   write(b + j);     // 1011
-L541:
+L552:
+        ;;test6.j(211)   write(b + j);     // 1011
+L553:
         LD    A,(05000H)
-L542:
+L554:
         LD    L,A
         LD    H,0
-L543:
+L555:
         LD    DE,(05004H)
         ADD   HL,DE
-L544:
+L556:
         CALL  writeHL
-L545:
-        ;;test6.j(208)   j = 500;
-L546:
+L557:
+        ;;test6.j(212)   j = 500;
+L558:
         LD    HL,500
-L547:
+L559:
         LD    (05004H),HL
-L548:
-        ;;test6.j(209)   write(j + 512);   // 1012
-L549:
+L560:
+        ;;test6.j(213)   write(j + 512);   // 1012
+L561:
         LD    HL,(05004H)
-L550:
+L562:
         LD    DE,512
         ADD   HL,DE
-L551:
-        CALL  writeHL
-L552:
-        ;;test6.j(210)   write(513 + j);   // 1013
-L553:
-        LD    HL,513
-L554:
-        LD    DE,(05004H)
-        ADD   HL,DE
-L555:
-        CALL  writeHL
-L556:
-        ;;test6.j(211)   write(i + j);     // 1014
-L557:
-        LD    HL,(05002H)
-L558:
-        LD    DE,(05004H)
-        ADD   HL,DE
-L559:
-        CALL  writeHL
-L560:
-        ;;test6.j(212)   
-L561:
-        ;;test6.j(213)   j = 1000;
-L562:
-        LD    HL,1000
 L563:
-        LD    (05004H),HL
+        CALL  writeHL
 L564:
-        ;;test6.j(214)   b = 17;
+        ;;test6.j(214)   write(513 + j);   // 1013
 L565:
-        LD    A,17
+        LD    HL,513
 L566:
-        LD    (05000H),A
+        LD    DE,(05004H)
+        ADD   HL,DE
 L567:
-        ;;test6.j(215)   i = j + 15;
+        CALL  writeHL
 L568:
-        LD    HL,(05004H)
+        ;;test6.j(215)   write(i + j);     // 1014
 L569:
+        LD    HL,(05002H)
+L570:
+        LD    DE,(05004H)
+        ADD   HL,DE
+L571:
+        CALL  writeHL
+L572:
+        ;;test6.j(216)   
+L573:
+        ;;test6.j(217)   j = 1000;
+L574:
+        LD    HL,1000
+L575:
+        LD    (05004H),HL
+L576:
+        ;;test6.j(218)   b = 17;
+L577:
+        LD    A,17
+L578:
+        LD    (05000H),A
+L579:
+        ;;test6.j(219)   i = j + 15;
+L580:
+        LD    HL,(05004H)
+L581:
         LD    DE,15
         ADD   HL,DE
-L570:
+L582:
         LD    (05002H),HL
-L571:
-        ;;test6.j(216)   write(i);         // 1015
-L572:
+L583:
+        ;;test6.j(220)   write(i);         // 1015
+L584:
         LD    HL,(05002H)
-L573:
+L585:
         CALL  writeHL
-L574:
-        ;;test6.j(217)   i = 16 + j;
-L575:
+L586:
+        ;;test6.j(221)   i = 16 + j;
+L587:
         LD    A,16
-L576:
+L588:
         LD    L,A
         LD    H,0
-L577:
+L589:
         LD    DE,(05004H)
         ADD   HL,DE
-L578:
+L590:
         LD    (05002H),HL
-L579:
-        ;;test6.j(218)   write(i);         // 1016
-L580:
+L591:
+        ;;test6.j(222)   write(i);         // 1016
+L592:
         LD    HL,(05002H)
-L581:
+L593:
         CALL  writeHL
-L582:
-        ;;test6.j(219)   i = j + b;
-L583:
+L594:
+        ;;test6.j(223)   i = j + b;
+L595:
         LD    HL,(05004H)
-L584:
+L596:
         LD    DE,(05000H)
         ADD   HL,DE
-L585:
+L597:
         LD    (05002H),HL
-L586:
-        ;;test6.j(220)   write(i);         // 1017
-L587:
+L598:
+        ;;test6.j(224)   write(i);         // 1017
+L599:
         LD    HL,(05002H)
-L588:
+L600:
         CALL  writeHL
-L589:
-        ;;test6.j(221)   b++;
-L590:
+L601:
+        ;;test6.j(225)   b++;
+L602:
         LD    HL,(05000H)
         INC   (HL)
-L591:
-        ;;test6.j(222)   i = b + j;
-L592:
+L603:
+        ;;test6.j(226)   i = b + j;
+L604:
         LD    A,(05000H)
-L593:
+L605:
         LD    L,A
         LD    H,0
-L594:
+L606:
         LD    DE,(05004H)
         ADD   HL,DE
-L595:
+L607:
         LD    (05002H),HL
-L596:
-        ;;test6.j(223)   write(i);         // 1018
-L597:
+L608:
+        ;;test6.j(227)   write(i);         // 1018
+L609:
         LD    HL,(05002H)
-L598:
+L610:
         CALL  writeHL
-L599:
-        ;;test6.j(224)   j = 500;
-L600:
+L611:
+        ;;test6.j(228)   j = 500;
+L612:
         LD    HL,500
-L601:
+L613:
         LD    (05004H),HL
-L602:
-        ;;test6.j(225)   i = j + 519;
-L603:
+L614:
+        ;;test6.j(229)   i = j + 519;
+L615:
         LD    HL,(05004H)
-L604:
+L616:
         LD    DE,519
         ADD   HL,DE
-L605:
-        LD    (05002H),HL
-L606:
-        ;;test6.j(226)   write(i);         // 1019
-L607:
-        LD    HL,(05002H)
-L608:
-        CALL  writeHL
-L609:
-        ;;test6.j(227)   i = 520 + j;
-L610:
-        LD    HL,520
-L611:
-        LD    DE,(05004H)
-        ADD   HL,DE
-L612:
-        LD    (05002H),HL
-L613:
-        ;;test6.j(228)   write(i);         // 1020
-L614:
-        LD    HL,(05002H)
-L615:
-        CALL  writeHL
-L616:
-        ;;test6.j(229)   i = 521;
 L617:
-        LD    HL,521
-L618:
         LD    (05002H),HL
+L618:
+        ;;test6.j(230)   write(i);         // 1019
 L619:
-        ;;test6.j(230)   i = i + j;
-L620:
         LD    HL,(05002H)
+L620:
+        CALL  writeHL
 L621:
+        ;;test6.j(231)   i = 520 + j;
+L622:
+        LD    HL,520
+L623:
         LD    DE,(05004H)
         ADD   HL,DE
-L622:
-        LD    (05002H),HL
-L623:
-        ;;test6.j(231)   write(i);         // 1021
 L624:
-        LD    HL,(05002H)
+        LD    (05002H),HL
 L625:
-        CALL  writeHL
+        ;;test6.j(232)   write(i);         // 1020
 L626:
-        ;;test6.j(232)   
+        LD    HL,(05002H)
 L627:
-        ;;test6.j(233)   /*************************/
-L628:
-        ;;test6.j(234)   /* Dual term subtraction */
-L629:
-        ;;test6.j(235)   /*************************/
-L630:
-        ;;test6.j(236)   write(1024 - 2);  // 1022
-L631:
-        LD    HL,1024
-L632:
-        LD    DE,2
-        OR    A
-        SBC   HL,DE
-L633:
         CALL  writeHL
+L628:
+        ;;test6.j(233)   i = 521;
+L629:
+        LD    HL,521
+L630:
+        LD    (05002H),HL
+L631:
+        ;;test6.j(234)   i = i + j;
+L632:
+        LD    HL,(05002H)
+L633:
+        LD    DE,(05004H)
+        ADD   HL,DE
 L634:
-        ;;test6.j(237)   write(1523 - 500);// 1023
+        LD    (05002H),HL
 L635:
-        LD    HL,1523
+        ;;test6.j(235)   write(i);         // 1021
 L636:
-        LD    DE,500
-        OR    A
-        SBC   HL,DE
+        LD    HL,(05002H)
 L637:
         CALL  writeHL
 L638:
-        ;;test6.j(238)   i = 1030 - 6;
+        ;;test6.j(236)   
 L639:
-        LD    HL,1030
+        ;;test6.j(237)   /*************************/
 L640:
-        LD    DE,6
+        ;;test6.j(238)   /* Dual term subtraction */
+L641:
+        ;;test6.j(239)   /*************************/
+L642:
+        ;;test6.j(240)   write(1024 - 2);  // 1022
+L643:
+        LD    HL,1024
+L644:
+        LD    DE,2
         OR    A
         SBC   HL,DE
-L641:
-        LD    (05002H),HL
-L642:
-        ;;test6.j(239)   write(i);         // 1024
-L643:
-        LD    HL,(05002H)
-L644:
-        CALL  writeHL
 L645:
-        ;;test6.j(240)   i = 1525 - 500;
+        CALL  writeHL
 L646:
-        LD    HL,1525
+        ;;test6.j(241)   write(1523 - 500);// 1023
 L647:
+        LD    HL,1523
+L648:
         LD    DE,500
         OR    A
         SBC   HL,DE
-L648:
-        LD    (05002H),HL
 L649:
-        ;;test6.j(241)   write(i);         // 1025
-L650:
-        LD    HL,(05002H)
-L651:
         CALL  writeHL
+L650:
+        ;;test6.j(242)   i = 1030 - 6;
+L651:
+        LD    HL,1030
 L652:
-        ;;test6.j(242)   
+        LD    DE,6
+        OR    A
+        SBC   HL,DE
 L653:
-        ;;test6.j(243)   j = 1040;
-L654:
-        LD    HL,1040
-L655:
-        LD    (05004H),HL
-L656:
-        ;;test6.j(244)   b = 13;
-L657:
-        LD    A,13
-L658:
-        LD    (05000H),A
-L659:
-        ;;test6.j(245)   i = 3030;
-L660:
-        LD    HL,3030
-L661:
         LD    (05002H),HL
+L654:
+        ;;test6.j(243)   write(i);         // 1024
+L655:
+        LD    HL,(05002H)
+L656:
+        CALL  writeHL
+L657:
+        ;;test6.j(244)   i = 1525 - 500;
+L658:
+        LD    HL,1525
+L659:
+        LD    DE,500
+        OR    A
+        SBC   HL,DE
+L660:
+        LD    (05002H),HL
+L661:
+        ;;test6.j(245)   write(i);         // 1025
 L662:
-        ;;test6.j(246)   write(j - 14);    // 1026
+        LD    HL,(05002H)
 L663:
-        LD    HL,(05004H)
+        CALL  writeHL
 L664:
+        ;;test6.j(246)   
+L665:
+        ;;test6.j(247)   j = 1040;
+L666:
+        LD    HL,1040
+L667:
+        LD    (05004H),HL
+L668:
+        ;;test6.j(248)   b = 13;
+L669:
+        LD    A,13
+L670:
+        LD    (05000H),A
+L671:
+        ;;test6.j(249)   i = 3030;
+L672:
+        LD    HL,3030
+L673:
+        LD    (05002H),HL
+L674:
+        ;;test6.j(250)   write(j - 14);    // 1026
+L675:
+        LD    HL,(05004H)
+L676:
         LD    DE,14
         OR    A
         SBC   HL,DE
-L665:
+L677:
         CALL  writeHL
-L666:
-        ;;test6.j(247)   write(j - b);     // 1027
-L667:
+L678:
+        ;;test6.j(251)   write(j - b);     // 1027
+L679:
         LD    HL,(05004H)
-L668:
+L680:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-L669:
+L681:
         CALL  writeHL
-L670:
-        ;;test6.j(248)   j = 2000;
-L671:
+L682:
+        ;;test6.j(252)   j = 2000;
+L683:
         LD    HL,2000
-L672:
+L684:
         LD    (05004H),HL
-L673:
-        ;;test6.j(249)   write(j - 972);   // 1028
-L674:
+L685:
+        ;;test6.j(253)   write(j - 972);   // 1028
+L686:
         LD    HL,(05004H)
-L675:
+L687:
         LD    DE,972
         OR    A
         SBC   HL,DE
-L676:
-        CALL  writeHL
-L677:
-        ;;test6.j(250)   write(3029 - j);  // 1029
-L678:
-        LD    HL,3029
-L679:
-        LD    DE,(05004H)
-        OR    A
-        SBC   HL,DE
-L680:
-        CALL  writeHL
-L681:
-        ;;test6.j(251)   write(i - j);     // 1030
-L682:
-        LD    HL,(05002H)
-L683:
-        LD    DE,(05004H)
-        OR    A
-        SBC   HL,DE
-L684:
-        CALL  writeHL
-L685:
-        ;;test6.j(252)   
-L686:
-        ;;test6.j(253)   j = 1050;
-L687:
-        LD    HL,1050
 L688:
-        LD    (05004H),HL
+        CALL  writeHL
 L689:
-        ;;test6.j(254)   b = 18;
+        ;;test6.j(254)   write(3029 - j);  // 1029
 L690:
-        LD    A,18
+        LD    HL,3029
 L691:
-        LD    (05000H),A
+        LD    DE,(05004H)
+        OR    A
+        SBC   HL,DE
 L692:
-        ;;test6.j(255)   i = j - 19;
+        CALL  writeHL
 L693:
-        LD    HL,(05004H)
+        ;;test6.j(255)   write(i - j);     // 1030
 L694:
+        LD    HL,(05002H)
+L695:
+        LD    DE,(05004H)
+        OR    A
+        SBC   HL,DE
+L696:
+        CALL  writeHL
+L697:
+        ;;test6.j(256)   
+L698:
+        ;;test6.j(257)   j = 1050;
+L699:
+        LD    HL,1050
+L700:
+        LD    (05004H),HL
+L701:
+        ;;test6.j(258)   b = 18;
+L702:
+        LD    A,18
+L703:
+        LD    (05000H),A
+L704:
+        ;;test6.j(259)   i = j - 19;
+L705:
+        LD    HL,(05004H)
+L706:
         LD    DE,19
         OR    A
         SBC   HL,DE
-L695:
+L707:
         LD    (05002H),HL
-L696:
-        ;;test6.j(256)   write(i);         // 1031
-L697:
+L708:
+        ;;test6.j(260)   write(i);         // 1031
+L709:
         LD    HL,(05002H)
-L698:
+L710:
         CALL  writeHL
-L699:
-        ;;test6.j(257)   i = j - b;
-L700:
+L711:
+        ;;test6.j(261)   i = j - b;
+L712:
         LD    HL,(05004H)
-L701:
+L713:
         LD    DE,(05000H)
         OR    A
         SBC   HL,DE
-L702:
+L714:
         LD    (05002H),HL
-L703:
-        ;;test6.j(258)   write(i);         // 1032
-L704:
+L715:
+        ;;test6.j(262)   write(i);         // 1032
+L716:
         LD    HL,(05002H)
-L705:
+L717:
         CALL  writeHL
-L706:
-        ;;test6.j(259)   j = 2000;
-L707:
+L718:
+        ;;test6.j(263)   j = 2000;
+L719:
         LD    HL,2000
-L708:
+L720:
         LD    (05004H),HL
-L709:
-        ;;test6.j(260)   i = j - 967;
-L710:
+L721:
+        ;;test6.j(264)   i = j - 967;
+L722:
         LD    HL,(05004H)
-L711:
+L723:
         LD    DE,967
         OR    A
         SBC   HL,DE
-L712:
-        LD    (05002H),HL
-L713:
-        ;;test6.j(261)   write(i);         // 1033
-L714:
-        LD    HL,(05002H)
-L715:
-        CALL  writeHL
-L716:
-        ;;test6.j(262)   i = 3034 - j;
-L717:
-        LD    HL,3034
-L718:
-        LD    DE,(05004H)
-        OR    A
-        SBC   HL,DE
-L719:
-        LD    (05002H),HL
-L720:
-        ;;test6.j(263)   write(i);         // 1034
-L721:
-        LD    HL,(05002H)
-L722:
-        CALL  writeHL
-L723:
-        ;;test6.j(264)   i = 3035;
 L724:
-        LD    HL,3035
-L725:
         LD    (05002H),HL
+L725:
+        ;;test6.j(265)   write(i);         // 1033
 L726:
-        ;;test6.j(265)   i = i - j;
-L727:
         LD    HL,(05002H)
+L727:
+        CALL  writeHL
 L728:
+        ;;test6.j(266)   i = 3034 - j;
+L729:
+        LD    HL,3034
+L730:
         LD    DE,(05004H)
         OR    A
         SBC   HL,DE
-L729:
-        LD    (05002H),HL
-L730:
-        ;;test6.j(266)   write(i);         // 1035
 L731:
-        LD    HL,(05002H)
+        LD    (05002H),HL
 L732:
-        CALL  writeHL
+        ;;test6.j(267)   write(i);         // 1034
 L733:
-        ;;test6.j(267)   
+        LD    HL,(05002H)
 L734:
-        ;;test6.j(268)   /****************************/
+        CALL  writeHL
 L735:
-        ;;test6.j(269)   /* Dual term multiplication */
+        ;;test6.j(268)   i = 3035;
 L736:
-        ;;test6.j(270)   /****************************/
+        LD    HL,3035
 L737:
-        ;;test6.j(271)   write(518 * 2);   // 1036
+        LD    (05002H),HL
 L738:
-        LD    HL,518
+        ;;test6.j(269)   i = i - j;
 L739:
+        LD    HL,(05002H)
+L740:
+        LD    DE,(05004H)
+        OR    A
+        SBC   HL,DE
+L741:
+        LD    (05002H),HL
+L742:
+        ;;test6.j(270)   write(i);         // 1035
+L743:
+        LD    HL,(05002H)
+L744:
+        CALL  writeHL
+L745:
+        ;;test6.j(271)   
+L746:
+        ;;test6.j(272)   /****************************/
+L747:
+        ;;test6.j(273)   /* Dual term multiplication */
+L748:
+        ;;test6.j(274)   /****************************/
+L749:
+        ;;test6.j(275)   write(518 * 2);   // 1036
+L750:
+        LD    HL,518
+L751:
         LD    DE,2
         CALL  mul16
-L740:
+L752:
         CALL  writeHL
-L741:
-        ;;test6.j(272)   write(1 * 1037);  // 1037
-L742:
+L753:
+        ;;test6.j(276)   write(1 * 1037);  // 1037
+L754:
         LD    A,1
-L743:
+L755:
         LD    L,A
         LD    H,0
-L744:
+L756:
         LD    DE,1037
         CALL  mul16
-L745:
+L757:
         CALL  writeHL
-L746:
-        ;;test6.j(273)   write(500 * 504 - 54354); // 1038 = 55392 - 54354
-L747:
+L758:
+        ;;test6.j(277)   write(500 * 504 - 54354); // 1038 = 55392 - 54354
+L759:
         LD    HL,500
-L748:
+L760:
         LD    DE,504
         CALL  mul16
-L749:
+L761:
         LD    DE,54354
         OR    A
         SBC   HL,DE
-L750:
+L762:
         CALL  writeHL
-L751:
-        ;;test6.j(274) 
-L752:
-        ;;test6.j(275)   i = 1039 * 1;
-L753:
+L763:
+        ;;test6.j(278) 
+L764:
+        ;;test6.j(279)   i = 1039 * 1;
+L765:
         LD    HL,1039
-L754:
+L766:
         LD    DE,1
         CALL  mul16
-L755:
+L767:
         LD    (05002H),HL
-L756:
-        ;;test6.j(276)   write(i);         // 1039
-L757:
+L768:
+        ;;test6.j(280)   write(i);         // 1039
+L769:
         LD    HL,(05002H)
-L758:
+L770:
         CALL  writeHL
-L759:
-        ;;test6.j(277)   i = 2 * 520;
-L760:
+L771:
+        ;;test6.j(281)   i = 2 * 520;
+L772:
         LD    A,2
-L761:
+L773:
         LD    L,A
         LD    H,0
-L762:
+L774:
         LD    DE,520
         CALL  mul16
-L763:
-        LD    (05002H),HL
-L764:
-        ;;test6.j(278)   write(i);         // 1040
-L765:
-        LD    HL,(05002H)
-L766:
-        CALL  writeHL
-L767:
-        ;;test6.j(279) 
-L768:
-        ;;test6.j(280)   i = 1041;
-L769:
-        LD    HL,1041
-L770:
-        LD    (05002H),HL
-L771:
-        ;;test6.j(281)   write(i * 1);     // 1041
-L772:
-        LD    HL,(05002H)
-L773:
-        LD    DE,1
-        CALL  mul16
-L774:
-        CALL  writeHL
 L775:
-        ;;test6.j(282)   i = 521;
+        LD    (05002H),HL
 L776:
-        LD    HL,521
+        ;;test6.j(282)   write(i);         // 1040
 L777:
-        LD    (05002H),HL
-L778:
-        ;;test6.j(283)   write(2 * i);     // 1042
-L779:
-        LD    A,2
-L780:
-        LD    L,A
-        LD    H,0
-L781:
-        LD    DE,(05002H)
-        CALL  mul16
-L782:
-        CALL  writeHL
-L783:
-        ;;test6.j(284) 
-L784:
-        ;;test6.j(285)   i = 1043;
-L785:
-        LD    HL,1043
-L786:
-        LD    (05002H),HL
-L787:
-        ;;test6.j(286)   i = i * 1;
-L788:
         LD    HL,(05002H)
-L789:
+L778:
+        CALL  writeHL
+L779:
+        ;;test6.j(283) 
+L780:
+        ;;test6.j(284)   i = 1041;
+L781:
+        LD    HL,1041
+L782:
+        LD    (05002H),HL
+L783:
+        ;;test6.j(285)   write(i * 1);     // 1041
+L784:
+        LD    HL,(05002H)
+L785:
         LD    DE,1
         CALL  mul16
-L790:
-        LD    (05002H),HL
-L791:
-        ;;test6.j(287)   write(i);         // 1043
-L792:
-        LD    HL,(05002H)
-L793:
+L786:
         CALL  writeHL
-L794:
-        ;;test6.j(288)   i = 522;
-L795:
-        LD    HL,522
-L796:
+L787:
+        ;;test6.j(286)   i = 521;
+L788:
+        LD    HL,521
+L789:
         LD    (05002H),HL
-L797:
-        ;;test6.j(289)   i = 2 * i;
-L798:
+L790:
+        ;;test6.j(287)   write(2 * i);     // 1042
+L791:
         LD    A,2
-L799:
+L792:
         LD    L,A
         LD    H,0
-L800:
+L793:
         LD    DE,(05002H)
         CALL  mul16
-L801:
-        LD    (05002H),HL
-L802:
-        ;;test6.j(290)   write(i);         // 1044
-L803:
-        LD    HL,(05002H)
-L804:
+L794:
         CALL  writeHL
+L795:
+        ;;test6.j(288) 
+L796:
+        ;;test6.j(289)   i = 1043;
+L797:
+        LD    HL,1043
+L798:
+        LD    (05002H),HL
+L799:
+        ;;test6.j(290)   i = i * 1;
+L800:
+        LD    HL,(05002H)
+L801:
+        LD    DE,1
+        CALL  mul16
+L802:
+        LD    (05002H),HL
+L803:
+        ;;test6.j(291)   write(i);         // 1043
+L804:
+        LD    HL,(05002H)
 L805:
-        ;;test6.j(291) 
+        CALL  writeHL
 L806:
-        ;;test6.j(292)   i = 500 * 504 - 54347; // 1045 = 55392 - 54347
+        ;;test6.j(292)   i = 522;
 L807:
-        LD    HL,500
+        LD    HL,522
 L808:
+        LD    (05002H),HL
+L809:
+        ;;test6.j(293)   i = 2 * i;
+L810:
+        LD    A,2
+L811:
+        LD    L,A
+        LD    H,0
+L812:
+        LD    DE,(05002H)
+        CALL  mul16
+L813:
+        LD    (05002H),HL
+L814:
+        ;;test6.j(294)   write(i);         // 1044
+L815:
+        LD    HL,(05002H)
+L816:
+        CALL  writeHL
+L817:
+        ;;test6.j(295) 
+L818:
+        ;;test6.j(296)   i = 500 * 504 - 54347; // 1045 = 55392 - 54347
+L819:
+        LD    HL,500
+L820:
         LD    DE,504
         CALL  mul16
-L809:
+L821:
         LD    DE,54347
         OR    A
         SBC   HL,DE
-L810:
+L822:
         LD    (05002H),HL
-L811:
-        ;;test6.j(293)   write(i);         // 1045
-L812:
+L823:
+        ;;test6.j(297)   write(i);         // 1045
+L824:
         LD    HL,(05002H)
-L813:
+L825:
         CALL  writeHL
-L814:
-        ;;test6.j(294)   i = 500;
-L815:
+L826:
+        ;;test6.j(298)   i = 500;
+L827:
         LD    HL,500
-L816:
+L828:
         LD    (05002H),HL
-L817:
-        ;;test6.j(295)   i = i * 504 - 54346;
-L818:
+L829:
+        ;;test6.j(299)   i = i * 504 - 54346;
+L830:
         LD    HL,(05002H)
-L819:
+L831:
         LD    DE,504
         CALL  mul16
-L820:
+L832:
         LD    DE,54346
         OR    A
         SBC   HL,DE
-L821:
+L833:
         LD    (05002H),HL
-L822:
-        ;;test6.j(296)   write(i);         // 1046
-L823:
+L834:
+        ;;test6.j(300)   write(i);         // 1046
+L835:
         LD    HL,(05002H)
-L824:
+L836:
         CALL  writeHL
-L825:
-        ;;test6.j(297)   i = 504;
-L826:
+L837:
+        ;;test6.j(301)   i = 504;
+L838:
         LD    HL,504
-L827:
+L839:
         LD    (05002H),HL
-L828:
-        ;;test6.j(298)   i = 500 * i - 54345;
-L829:
+L840:
+        ;;test6.j(302)   i = 500 * i - 54345;
+L841:
         LD    HL,500
-L830:
+L842:
         LD    DE,(05002H)
         CALL  mul16
-L831:
+L843:
         LD    DE,54345
         OR    A
         SBC   HL,DE
-L832:
-        LD    (05002H),HL
-L833:
-        ;;test6.j(299)   write(i);         // 1047
-L834:
-        LD    HL,(05002H)
-L835:
-        CALL  writeHL
-L836:
-        ;;test6.j(300)   
-L837:
-        ;;test6.j(301)   /************/
-L838:
-        ;;test6.j(302)   /* Overflow */
-L839:
-        ;;test6.j(303)   /************/
-L840:
-        ;;test6.j(304)   write(300 * 301); // 90.300 % 65536 = 24.764
-L841:
-        LD    HL,300
-L842:
-        LD    DE,301
-        CALL  mul16
-L843:
-        CALL  writeHL
 L844:
-        ;;test6.j(305)   i = 300 * 302;
-L845:
-        LD    HL,300
-L846:
-        LD    DE,302
-        CALL  mul16
-L847:
         LD    (05002H),HL
-L848:
-        ;;test6.j(306)   write(i);         // 90.600 % 65536 = 25.064
-L849:
+L845:
+        ;;test6.j(303)   write(i);         // 1047
+L846:
         LD    HL,(05002H)
-L850:
+L847:
         CALL  writeHL
+L848:
+        ;;test6.j(304)   
+L849:
+        ;;test6.j(305)   /************/
+L850:
+        ;;test6.j(306)   /* Overflow */
 L851:
-        ;;test6.j(307) 
+        ;;test6.j(307)   /************/
 L852:
-        ;;test6.j(308)   write("Klaar");
+        ;;test6.j(308)   write("Nu komen 24.764 en 25.064");
 L853:
-        LD    HL,857
+        LD    HL,876
 L854:
         CALL  putStr
 L855:
-        ;;test6.j(309) }
+        ;;test6.j(309)   write(300 * 301); // 90.300 % 65536 = 24.764
 L856:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        LD    HL,300
 L857:
+        LD    DE,301
+        CALL  mul16
+L858:
+        CALL  writeHL
+L859:
+        ;;test6.j(310)   i = 300 * 302;
+L860:
+        LD    HL,300
+L861:
+        LD    DE,302
+        CALL  mul16
+L862:
+        LD    (05002H),HL
+L863:
+        ;;test6.j(311)   write(i);         // 90.600 % 65536 = 25.064
+L864:
+        LD    HL,(05002H)
+L865:
+        CALL  writeHL
+L866:
+        ;;test6.j(312) 
+L867:
+        ;;test6.j(313)   write("Klaar");
+L868:
+        LD    HL,877
+L869:
+        CALL  putStr
+L870:
+        ;;test6.j(314) }
+L871:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L872:
+        .ASCIZ  "Nu komen 251 en 252"
+L873:
+        .ASCIZ  "Nu komen -253 en -254"
+L874:
+        .ASCIZ  "Nu komen 255 en 256"
+L875:
+        .ASCIZ  "Nu komen 1000..1047"
+L876:
+        .ASCIZ  "Nu komen 24.764 en 25.064"
+L877:
         .ASCIZ  "Klaar"

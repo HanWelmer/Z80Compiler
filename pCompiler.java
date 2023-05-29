@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO shuffle tests within test*.j
 //TODO refactor StringConstants.
 //TODO fix runtime error: too many variables
 //TODO fix stackedDatatypes (see test11.log)

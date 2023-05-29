@@ -1,22 +1,269 @@
 /* Program to test generated Z80 assembler code */
 class TestDo {
-  byte b = 115;
-  
+  byte b = 1;
+  word i = 12;
+  word p = 12;
+
+  write(0);
+
   /************************/
   // global variable within do scope
   write (b);
-  b--;
+  b++;
   do {
     word j = 1001;
     byte c = b;
     byte d = c;
-    b--;
+    b++;
     write (c);
-  } while (b>112);
+  } while (b<2);
 
-  word i = 12;
-  word p = 12;
-  b = 24;
+  /************************/
+  // constant - constant
+  // not relevant
+
+  /************************/
+  // constant - acc
+  // byte - byte
+  do { write (b); b++; } while (103 == b+100);
+  do { write (b); b++; } while (106 != b+100);
+  do { write (b); b++; } while (108 >  b+100);
+  do { write (b); b++; } while (109 >= b+100);
+  p=10;
+  do { write (p); p++; b--; } while (108 <  b+100);
+  do { write (p); p++; b--; } while (107 <= b+100);
+
+  // constant - acc
+  // byte - integer
+  i=14;
+  do { write (i); i++; } while (15 == i+0);
+  do { write (i); i++; } while (18 != i+0);
+  do { write (i); i++; } while (20 >  i+0);
+  do { write (i); i++; } while (21 >= i+0);
+  p=22;
+  do { write (p); p++; i--; } while (20 <  i+0);
+  do { write (p); p++; i--; } while (19 <= i+0);
+
+  // constant - acc
+  // integer - byte
+  // not relevant
+
+  // constant - acc
+  // integer - integer
+  i=p;
+  do { write (i); i++; } while (1027 == i+1000);
+  do { write (i); i++; } while (1029 != i+1000);
+  do { write (i); i++; } while (1031 >  i+1000);
+  do { write (i); i++; } while (1032 >= i+1000);
+  p=i;
+  do { write (p); p++; i--; } while (1031 <  i+1000);
+  do { write (p); p++; i--; } while (1030 <= i+1000);
+
+  /************************/
+  // constant - var
+  // byte - byte
+  b=37;
+  do { write (b); b++; } while (38 >= b);
+  // byte - integer
+  i=39;
+  do { write (i); i++; } while (40 >= i);
+  // integer - byte
+  // not relevant
+  // integer - integer
+  i=1038;
+  b=41;
+  do { write (b); b++; i--; } while (1037 <= i);
+
+  /************************/
+  // constant - stack8
+  // byte - byte
+  //TODO
+  write(43);
+  // constant - stack8
+  // byte - integer
+  //TODO
+  write(44);
+  // constant - stack8
+  // integer - byte
+  //TODO
+  write(45);
+  // constant - stack88
+  // integer - integer
+  //TODO
+  write(46);
+
+  /************************/
+  // constant - stack16
+  // byte - byte
+  //TODO
+  write(47);
+  // constant - stack16
+  // byte - integer
+  //TODO
+  write(48);
+  // constant - stack16
+  // integer - byte
+  //TODO
+  write(49);
+  // constant - stack16
+  // integer - integer
+  //TODO
+  write(50);
+
+  /************************/
+  // acc - constant
+  // byte - byte
+  b=51;
+  do { write (b); b++; } while (b+0 <= 52);
+  // byte - integer
+  //not relevant
+  // integer - byte
+  i=53;
+  do { write (i); i++; } while (i+0 <= 54);
+
+  b=55;
+  i=1055;
+  // integer - integer
+  do { write (b); b++; i++; } while (i+0 <= 1056);
+
+  /************************/
+  // acc - acc
+  // byte - byte
+  b=57;
+  do { write (b); b++; } while (b+0 <= 58+0);
+  // byte - integer
+  i=61;
+  do { write (b); b++; i--; } while (60+0 <= i+0);
+  // integer - byte
+  i=61;
+  b=62;
+  do { write (i); i++; } while (i+0 <= b+0);
+  // integer - integer
+  b=63;
+  i=1063;
+  do { write (b); b++; i--; } while (1000+62 <= i+0);
+
+  /************************/
+  // acc - var
+  // byte - byte
+  b=65;
+  i=65;
+  do { write (i); i++; b--; } while (64+0 <= b);
+  // byte - integer
+  b=67;
+  i=67;
+  do { write (b); b++; i--; } while (66+0 <= i);
+  // integer - byte
+  i=69;
+  b=69;
+  do { write (i); i++; b--; } while (1000+68 <= b);
+  // integer - integer
+  i=1071;
+  b=70;
+  do { write (b); b++; i--; } while (1000+70 <= i);
+
+  /************************/
+  // acc - stack16
+  // byte - byte
+  //TODO
+  write(72);
+  write(73);
+  // byte - integer
+  //TODO
+  write(74);
+  write(75);
+  // integer - byte
+  //TODO
+  write(76);
+  write(77);
+  // integer - integer
+  //TODO
+  write(78);
+  write(79);
+
+  /************************/
+  // acc - stack8
+  // byte - byte
+  //TODO
+  write(80);
+  write(81);
+  // byte - integer
+  //TODO
+  write(82);
+  write(83);
+  // integer - byte
+  //TODO
+  write(84);
+  write(85);
+  // integer - integer
+  //TODO
+  write(86);
+  write(87);
+
+  /************************/
+  // var - constant
+  // byte - byte
+  b=88;
+  do { write (b); b++; } while (b <= 89);
+  // byte - integer
+  //not relevant
+  write(90);
+  write(91);
+  // integer - byte
+  i=92;
+  do { write (i); i++; } while (i <= 93);
+  // integer - integer
+  i=1094;
+  b=94;
+  do { write (b); b++; i++; } while (i <= 1095  );
+
+  /************************/
+  // var - acc
+  // byte - byte
+  do { write (b); b++; } while (b <= 97+0);
+  // byte - integer
+  //not relevant
+  i=99;
+  do { write (b); b++; } while (b <= i+0);
+  // integer - byte
+  i=100;
+  do { write (i); i++; } while (i <= 101+0);
+  // integer - integer
+  i=1102;
+  b=102;
+  do { write (b); b++; i++; } while (i <= 1103+0);
+
+  /************************/
+  // var - var
+  // byte - byte
+  byte b2 = 105;
+  do { write (b); b++; } while (b <= b2);
+  // byte - integer
+  i=107;
+  do { write (b); b++; } while (b <= i);
+  // integer - byte
+  i=b;
+  b=109;
+  do { write (i); i++; } while (i <= b);
+  // integer - integer
+  word i2 = 111;
+  do { write (i); i++; } while (i <= i2);
+
+  /************************/
+  // var - stack8
+  // byte - byte
+  // byte - integer
+  // integer - byte
+  // integer - integer
+  //TODO
+
+  /************************/
+  // var - stack16
+  // byte - byte
+  // byte - integer
+  // integer - byte
+  // integer - integer
+  //TODO
 
   /************************/
   // stack8 - constant
@@ -34,267 +281,5 @@ class TestDo {
   // stack16 - stack16
   //TODO
 
-  /************************/
-  // var - stack16
-  // byte - byte
-  // byte - integer
-  // integer - byte
-  // integer - integer
-  //TODO
-
-  /************************/
-  // var - stack8
-  // byte - byte
-  // byte - integer
-  // integer - byte
-  // integer - integer
-  //TODO
-
-  /************************/
-  // var - var
-  // byte - byte
-  b=112;
-  byte b2 = 111;
-  do { write (b); b--; } while (b2 <= b);
-  // byte - integer
-  i=110;
-  b2 = 109;
-  do { write (i); i--; } while (b2 <= i);
-  // integer - byte
-  b=108;
-  i=107;
-  do { write (b); b--; } while (i <= b);
-  // integer - integer
-  i=106;
-  word i2 = 105;
-  do { write (i); i--; } while (i2 <= i);
-
-  /************************/
-  // var - acc
-  // byte - byte
-  i=104;
-  b=104;
-  do { write (i); i--; b++; } while (b <= 105+0);
-  // byte - integer
-  //not relevant
-  i=103;
-  b=102;
-  do { write (b); b--; i=i-2; } while (b <= i+0);
-  // integer - byte
-  i=100;
-  do { write (b); b--; i++; } while (i <= 101+0);
-  // integer - integer
-  i=1098;
-  do { write (b); b--; i++; } while (i <= 1099+0);
-
-  /************************/
-  // var - constant
-  // byte - byte
-  i=96;
-  b=96;
-  do { write (i); i--; b++; } while (b <= 97);
-  // byte - integer
-  //not relevant
-  write(94);
-  write(93);
-  // integer - byte
-  i=92;
-  b=92;
-  do { write (b); b--; i++; } while (i <= 93);
-  // integer - integer
-  i=1090;
-  do { write (b); b--; i++; } while (i <= 1091);
-
-  /************************/
-  // acc - stack8
-  // byte - byte
-  //TODO
-  write(88);
-  write(87);
-  // byte - integer
-  //TODO
-  write(86);
-  write(85);
-  // integer - byte
-  //TODO
-  write(84);
-  write(83);
-  // integer - integer
-  //TODO
-  write(82);
-  write(81);
-
-  /************************/
-  // acc - stack16
-  // byte - byte
-  //TODO
-  write(80);
-  write(79);
-  // byte - integer
-  //TODO
-  write(78);
-  write(77);
-  // integer - byte
-  //TODO
-  write(76);
-  write(75);
-  // integer - integer
-  //TODO
-  write(74);
-  write(73);
-
-  /************************/
-  // acc - var
-  // byte - byte
-  b=72;
-  do { write (b); b--; } while (71+0 <= b);
-  // byte - integer
-  i=70;
-  do { write (i); i--; } while (69+0 <= i);
-  // integer - byte
-  i=67;
-  b=68;
-  do { write (b); b--; } while (i+0 <= b);
-  // integer - integer
-  i=1066;
-  do { write (b); b--; i--; } while (1000+65 <= i);
-
-  /************************/
-  // acc - acc
-  // byte - byte
-  b=64;
-  do { write (b); b--; } while (63+0 <= b+0);
-  // byte - integer
-  i=62;
-  do { write (i); i--; } while (61+0 <= i+0);
-  // integer - byte
-  i=59;
-  b=60;
-  do { write (b); b--; } while (i+0 <= b+0);
-  // integer - integer
-  i=1058;
-  do { write (b); b--; i--; } while (1000+57 <= i+0);
-
-  /************************/
-  // acc - constant
-  // byte - byte
-  i=56;
-  b=56;
-  do { write (i); i--; b++; } while (b+0 <= 57);
-  // byte - integer
-  //not relevant
-  // integer - byte
-  i=54;
-  b=54;
-  do { write (b); b--; i++; } while (i+0 <= 55);
-  i=1052;
-  // integer - integer
-  do { write (b); b--; i++; } while (i+0 <= 1053);
-
-  /************************/
-  // constant - stack8
-  // byte - byte
-  //TODO
-  write(50);
-  // constant - stack8
-  // byte - integer
-  //TODO
-  write(49);
-  // constant - stack8
-  // integer - byte
-  //TODO
-  write(48);
-  // constant - stack88
-  // integer - integer
-  //TODO
-  write(47);
-
-  /************************/
-  // constant - stack16
-  // byte - byte
-  //TODO
-  write(46);
-  // constant - stack16
-  // byte - integer
-  //TODO
-  write(45);
-  // constant - stack16
-  // integer - byte
-  //TODO
-  write(44);
-  // constant - stack16
-  // integer - integer
-  //TODO
-  write(43);
-
-  /************************/
-  // constant - var
-  // byte - byte
-  b=42;
-  do { write (b); b--; } while (41 <= b);
-
-  // constant - var
-  // byte - integer
-  i=40;
-  do { write (i); i--; } while (39 <= i);
-
-  // constant - var
-  // integer - byte
-  // not relevant
-
-  // constant - var
-  // integer - integer
-  i=1038;
-  b=38;
-  do { write (b); b--; i--; } while (1037 <= i);
-
-  /************************/
-  // constant - acc
-  // byte - byte
-  b=36;
-  do { write (b); b--; } while (135 == b+100);
-  do { write (b); b--; } while (132 != b+100);
-  p=32;
-  do { write (p); p--; b++; } while (134 > b+100);
-  do { write (p); p--; b++; } while (135 >= b+100);
-  b=28;
-  do { write (b); b--; } while (126 <  b+100);
-  do { write (b); b--; } while (125 <= b+100);
-  // constant - acc
-  // byte - integer
-  i=24;
-  b=23;
-  do { write (i); i--; } while (23 == i+0);
-  do { write (i); i--; } while (120 != i+100);
-  p=20;
-  do { write (p); p--; i++; } while (122 > i+100);
-  do { write (p); p--; i++; } while (123 >= i+100);
-  i=16;
-  do { write (i); i--; } while (114 <  i+100);
-  do { write (i); i--; } while (113 <= i+100);
-  // constant - acc
-  // integer - byte
-  // not relevant
-
-  // constant - acc
-  // integer - integer
-  i=12;
-  do { write (i); i--; } while (1011 == i+1000);
-  //i=10
-  do { write (i); i--; } while (1008 != i+1000);
-  //i=8
-  p=8;
-  do { write (p); p--; i++; } while (1010 > i+1000);
-  //i=10; p=6
-  do { write (p); p--; i++; } while (1011 >= i+1000);
-  i=4;
-  do { write (i); i--; } while (1002 <  i+1000);
-  //i=2;
-  do { write (i); i--; } while (1001 <= i+1000);
-
-  /************************/
-  // constant - constant
-  // not relevant
-  write(0);
   write("Klaar");
 }

@@ -5,10 +5,11 @@
 class TestWrite {
   word zero = 0;
   byte one = 1;
-  write(4);
-  write("Hallo wereld");
-  String str = "Hello too.";
-  write(str);
+  write(0);
   write(one);
-  write(zero);
+  write("2 Hallo wereld");
+  String str = "3 Hello too.";
+  write(str);
+  write(4);
+  write("Klaar");
 }

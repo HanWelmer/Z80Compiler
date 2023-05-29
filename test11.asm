@@ -727,2157 +727,2165 @@ L0:
 L1:
         ;;test11.j(1) class TestFor {
 L2:
-        ;;test11.j(2)   byte b1 = 115;
+        ;;test11.j(2)   byte b1 = 1;
 L3:
-        LD    A,115
+        LD    A,1
 L4:
         LD    (05000H),A
 L5:
-        ;;test11.j(3)   
+        ;;test11.j(3)   byte b2 = 1;
 L6:
-        ;;test11.j(4)   /************************/
+        LD    A,1
 L7:
-        ;;test11.j(5)   // global variable within for scope
+        LD    (05001H),A
 L8:
-        ;;test11.j(6)   write (b1);
+        ;;test11.j(4)   word i2 = 1;
 L9:
-        LD    A,(05000H)
+        LD    A,1
 L10:
-        CALL  writeA
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
 L11:
-        ;;test11.j(7)   b1--;
+        ;;test11.j(5)   word p = 1;
 L12:
-        LD    HL,(05000H)
-        DEC   (HL)
+        LD    A,1
 L13:
-        ;;test11.j(8)   do {
+        LD    L,A
+        LD    H,0
+        LD    (05004H),HL
 L14:
-        ;;test11.j(9)     word j = 1001;
+        ;;test11.j(6) 
 L15:
-        LD    HL,1001
+        ;;test11.j(7)   write(0);
 L16:
-        LD    (05001H),HL
+        LD    A,0
 L17:
-        ;;test11.j(10)     byte c = b1;
-L18:
-        LD    A,(05000H)
-L19:
-        LD    (05003H),A
-L20:
-        ;;test11.j(11)     byte d = c;
-L21:
-        LD    A,(05003H)
-L22:
-        LD    (05004H),A
-L23:
-        ;;test11.j(12)     b1--;
-L24:
-        LD    HL,(05000H)
-        DEC   (HL)
-L25:
-        ;;test11.j(13)     write (c);
-L26:
-        LD    A,(05003H)
-L27:
         CALL  writeA
-L28:
-        ;;test11.j(14)   } while (b1>112);
-L29:
-        LD    A,(05000H)
-L30:
-        SUB   A,112
-L31:
-        JR    Z,$+5
-        JP    C,L14
-L32:
-        ;;test11.j(15) 
-L33:
-        ;;test11.j(16)   /************************/
-L34:
-        ;;test11.j(17)   word i2 = 105;
-L35:
-        LD    A,105
-L36:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L37:
-        ;;test11.j(18)   word p = 12;
-L38:
-        LD    A,12
-L39:
-        LD    L,A
-        LD    H,0
-        LD    (05003H),HL
-L40:
-        ;;test11.j(19)   byte b2 = 111;
-L41:
-        LD    A,111
-L42:
-        LD    (05005H),A
-L43:
-        ;;test11.j(20) 
-L44:
-        ;;test11.j(21)   /************************/
-L45:
-        ;;test11.j(22)   // stack8 - constant
-L46:
-        ;;test11.j(23)   // stack8 - acc
-L47:
-        ;;test11.j(24)   // stack8 - var
-L48:
-        ;;test11.j(25)   // stack8 - stack8
-L49:
-        ;;test11.j(26)   // stack8 - stack16
-L50:
-        ;;test11.j(27)   //TODO
-L51:
-        ;;test11.j(28) 
-L52:
-        ;;test11.j(29)   /************************/
-L53:
-        ;;test11.j(30)   // stack16 - constant
-L54:
-        ;;test11.j(31)   // stack16 - acc
-L55:
-        ;;test11.j(32)   // stack16 - var
-L56:
-        ;;test11.j(33)   // stack16 - stack8
-L57:
-        ;;test11.j(34)   // stack16 - stack16
-L58:
-        ;;test11.j(35)   //TODO
-L59:
-        ;;test11.j(36) 
-L60:
-        ;;test11.j(37)   /************************/
-L61:
-        ;;test11.j(38)   // var - stack16
-L62:
-        ;;test11.j(39)   // byte - byte
-L63:
-        ;;test11.j(40)   // byte - integer
-L64:
-        ;;test11.j(41)   // integer - byte
-L65:
-        ;;test11.j(42)   // integer - integer
-L66:
-        ;;test11.j(43)   //TODO
-L67:
-        ;;test11.j(44) 
-L68:
-        ;;test11.j(45)   /************************/
-L69:
-        ;;test11.j(46)   // var - stack8
-L70:
-        ;;test11.j(47)   // byte - byte
-L71:
-        ;;test11.j(48)   // byte - integer
-L72:
-        ;;test11.j(49)   // integer - byte
-L73:
-        ;;test11.j(50)   // integer - integer
-L74:
-        ;;test11.j(51)   //TODO
-L75:
-        ;;test11.j(52) 
-L76:
-        ;;test11.j(53)   /************************/
-L77:
-        ;;test11.j(54)   // var - var
-L78:
-        ;;test11.j(55)   // byte - byte
-L79:
-        ;;test11.j(56)   b2 = 111;
-L80:
-        LD    A,111
-L81:
-        LD    (05005H),A
-L82:
-        ;;test11.j(57)   for (byte b = 112; b2 <= b; b--) { write (b); }
-L83:
-        LD    A,112
-L84:
+L18:
+        ;;test11.j(8) 
+L19:
+        ;;test11.j(9)   /************************/
+L20:
+        ;;test11.j(10)   // global variable within for scope
+L21:
+        ;;test11.j(11)   for (byte b = 1; b <= 2; b++) {
+L22:
+        LD    A,1
+L23:
         LD    (05006H),A
-L85:
-        LD    A,(05005H)
-L86:
-        LD    B,A
+L24:
         LD    A,(05006H)
-        SUB   A,B
-L87:
+L25:
+        SUB   A,2
+L26:
         JR    Z,$+5
-        JP    C,L96
-L88:
-        JP    L91
-L89:
+        JP    C,L49
+L27:
+        JP    L30
+L28:
         LD    HL,(05006H)
-        DEC   (HL)
+        INC   (HL)
+L29:
+        JP    L24
+L30:
+        ;;test11.j(12)     byte c = b1;
+L31:
+        LD    A,(05000H)
+L32:
+        LD    (05007H),A
+L33:
+        ;;test11.j(13)     write (c);
+L34:
+        LD    A,(05007H)
+L35:
+        CALL  writeA
+L36:
+        ;;test11.j(14)     b1++;
+L37:
+        LD    HL,(05000H)
+        INC   (HL)
+L38:
+        ;;test11.j(15)   }
+L39:
+        JP    L28
+L40:
+        ;;test11.j(16) 
+L41:
+        ;;test11.j(17)   /************************/
+L42:
+        ;;test11.j(18)   // constant - constant
+L43:
+        ;;test11.j(19)   // not relevant
+L44:
+        ;;test11.j(20) 
+L45:
+        ;;test11.j(21)   /************************/
+L46:
+        ;;test11.j(22)   // constant - acc
+L47:
+        ;;test11.j(23)   // byte - byte
+L48:
+        ;;test11.j(24)   for (byte b = 3; 103 == b+100; b++) { write (b); }
+L49:
+        LD    A,3
+L50:
+        LD    (05006H),A
+L51:
+        LD    A,(05006H)
+L52:
+        ADD   A,100
+L53:
+        SUB   A,103
+L54:
+        JP    NZ,L62
+L55:
+        JP    L58
+L56:
+        LD    HL,(05006H)
+        INC   (HL)
+L57:
+        JP    L51
+L58:
+        LD    A,(05006H)
+L59:
+        CALL  writeA
+L60:
+        JP    L56
+L61:
+        ;;test11.j(25)   for (byte b = 4; 105 != b+100; b++) { write (b); }
+L62:
+        LD    A,4
+L63:
+        LD    (05006H),A
+L64:
+        LD    A,(05006H)
+L65:
+        ADD   A,100
+L66:
+        SUB   A,105
+L67:
+        JP    Z,L75
+L68:
+        JP    L71
+L69:
+        LD    HL,(05006H)
+        INC   (HL)
+L70:
+        JP    L64
+L71:
+        LD    A,(05006H)
+L72:
+        CALL  writeA
+L73:
+        JP    L69
+L74:
+        ;;test11.j(26)   b2=5;
+L75:
+        LD    A,5
+L76:
+        LD    (05001H),A
+L77:
+        ;;test11.j(27)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2++; }
+L78:
+        LD    A,32
+L79:
+        LD    (05006H),A
+L80:
+        LD    A,(05006H)
+L81:
+        ADD   A,100
+L82:
+        SUB   A,134
+L83:
+        JP    NC,L92
+L84:
+        JP    L87
+L85:
+        LD    HL,(05006H)
+        INC   (HL)
+L86:
+        JP    L80
+L87:
+        LD    A,(05001H)
+L88:
+        CALL  writeA
+L89:
+        LD    HL,(05001H)
+        INC   (HL)
 L90:
         JP    L85
 L91:
-        LD    A,(05006H)
+        ;;test11.j(28)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2++; }
 L92:
-        CALL  writeA
-L93:
-        JP    L89
-L94:
-        ;;test11.j(58)   // byte - integer
-L95:
-        ;;test11.j(59)   b2 = 109;
-L96:
-        LD    A,109
-L97:
-        LD    (05005H),A
-L98:
-        ;;test11.j(60)   for(word i = 110; b2 <= i; i--) { write(i); }
-L99:
-        LD    A,110
-L100:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L101:
-        LD    A,(05005H)
-L102:
-        LD    HL,(05006H)
-L103:
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-L104:
-        JR    Z,$+5
-        JP    C,L113
-L105:
-        JP    L108
-L106:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L107:
-        JP    L101
-L108:
-        LD    HL,(05006H)
-L109:
-        CALL  writeHL
-L110:
-        JP    L106
-L111:
-        ;;test11.j(61)   // integer - byte
-L112:
-        ;;test11.j(62)   i2=107;
-L113:
-        LD    A,107
-L114:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L115:
-        ;;test11.j(63)   for (byte b = 108; i2 <= b; b--) { write (b); }
-L116:
-        LD    A,108
-L117:
-        LD    (05006H),A
-L118:
-        LD    HL,(05001H)
-L119:
-        LD    A,(05006H)
-L120:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L121:
-        JR    Z,$+5
-        JP    C,L130
-L122:
-        JP    L125
-L123:
-        LD    HL,(05006H)
-        DEC   (HL)
-L124:
-        JP    L118
-L125:
-        LD    A,(05006H)
-L126:
-        CALL  writeA
-L127:
-        JP    L123
-L128:
-        ;;test11.j(64)   // integer - integer
-L129:
-        ;;test11.j(65)   i2=105;
-L130:
-        LD    A,105
-L131:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L132:
-        ;;test11.j(66)   for(word i = 106; i2 <= i; i--) { write(i); }
-L133:
-        LD    A,106
-L134:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L135:
-        LD    HL,(05001H)
-L136:
-        LD    DE,(05006H)
-        OR    A
-        SBC   HL,DE
-L137:
-        JR    Z,$+5
-        JP    C,L149
-L138:
-        JP    L141
-L139:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L140:
-        JP    L135
-L141:
-        LD    HL,(05006H)
-L142:
-        CALL  writeHL
-L143:
-        JP    L139
-L144:
-        ;;test11.j(67) 
-L145:
-        ;;test11.j(68)   /************************/
-L146:
-        ;;test11.j(69)   // var - acc
-L147:
-        ;;test11.j(70)   // byte - byte
-L148:
-        ;;test11.j(71)   i2=104;
-L149:
-        LD    A,104
-L150:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L151:
-        ;;test11.j(72)   for (byte b = 104; b <= 105+0; b++) { write (i2); i2--; }
-L152:
-        LD    A,104
-L153:
-        LD    (05006H),A
-L154:
-        LD    A,105
-L155:
-        ADD   A,0
-L156:
-        LD    B,A
-        LD    A,(05006H)
-        SUB   A,B
-L157:
-        JP    C,L167
-L158:
-        JP    L161
-L159:
-        LD    HL,(05006H)
-        INC   (HL)
-L160:
-        JP    L154
-L161:
-        LD    HL,(05001H)
-L162:
-        CALL  writeHL
-L163:
-        LD    HL,(05001H)
-        DEC   HL
-        LD    (05001H),HL
-L164:
-        JP    L159
-L165:
-        ;;test11.j(73)   // byte - integer
-L166:
-        ;;test11.j(74)   i2=103;
-L167:
-        LD    A,103
-L168:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L169:
-        ;;test11.j(75)   for (byte b = 102; b <= i2+0; b--) { write (b); i2=i2-2; }
-L170:
-        LD    A,102
-L171:
-        LD    (05006H),A
-L172:
-        LD    HL,(05001H)
-L173:
-        LD    DE,0
-        ADD   HL,DE
-L174:
-        LD    A,(05006H)
-L175:
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-L176:
-        JR    Z,$+5
-        JP    C,L188
-L177:
-        JP    L180
-L178:
-        LD    HL,(05006H)
-        DEC   (HL)
-L179:
-        JP    L172
-L180:
-        LD    A,(05006H)
-L181:
-        CALL  writeA
-L182:
-        LD    HL,(05001H)
-L183:
-        LD    DE,2
-        OR    A
-        SBC   HL,DE
-L184:
-        LD    (05001H),HL
-L185:
-        JP    L178
-L186:
-        ;;test11.j(76)   // integer - byte
-L187:
-        ;;test11.j(77)   b2=100;
-L188:
-        LD    A,100
-L189:
-        LD    (05005H),A
-L190:
-        ;;test11.j(78)   for(word i = 100; i <= 101+0; i++) { write(b2); b2--; }
-L191:
-        LD    A,100
-L192:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L193:
-        LD    A,101
-L194:
-        ADD   A,0
-L195:
-        LD    HL,(05006H)
-L196:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L197:
-        JR    Z,$+5
-        JP    C,L207
-L198:
-        JP    L201
-L199:
-        LD    HL,(05006H)
-        INC   HL
-        LD    (05006H),HL
-L200:
-        JP    L193
-L201:
-        LD    A,(05005H)
-L202:
-        CALL  writeA
-L203:
-        LD    HL,(05005H)
-        DEC   (HL)
-L204:
-        JP    L199
-L205:
-        ;;test11.j(79)   // integer - integer
-L206:
-        ;;test11.j(80)   for(word i = 1098; i <= 1099+0; i++) { write(b2); b2--; }
-L207:
-        LD    HL,1098
-L208:
-        LD    (05006H),HL
-L209:
-        LD    HL,1099
-L210:
-        LD    DE,0
-        ADD   HL,DE
-L211:
-        LD    DE,(05006H)
-        OR    A
-        SBC   HL,DE
-L212:
-        JP    C,L225
-L213:
-        JP    L216
-L214:
-        LD    HL,(05006H)
-        INC   HL
-        LD    (05006H),HL
-L215:
-        JP    L209
-L216:
-        LD    A,(05005H)
-L217:
-        CALL  writeA
-L218:
-        LD    HL,(05005H)
-        DEC   (HL)
-L219:
-        JP    L214
-L220:
-        ;;test11.j(81) 
-L221:
-        ;;test11.j(82)   /************************/
-L222:
-        ;;test11.j(83)   // var - constant
-L223:
-        ;;test11.j(84)   // byte - byte
-L224:
-        ;;test11.j(85)   i2=96;
-L225:
-        LD    A,96
-L226:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L227:
-        ;;test11.j(86)   for (byte b = 96; b <= 97; b++) { write (i2); i2--; }
-L228:
-        LD    A,96
-L229:
-        LD    (05006H),A
-L230:
-        LD    A,(05006H)
-L231:
-        SUB   A,97
-L232:
-        JR    Z,$+5
-        JP    C,L243
-L233:
-        JP    L236
-L234:
-        LD    HL,(05006H)
-        INC   (HL)
-L235:
-        JP    L230
-L236:
-        LD    HL,(05001H)
-L237:
-        CALL  writeHL
-L238:
-        LD    HL,(05001H)
-        DEC   HL
-        LD    (05001H),HL
-L239:
-        JP    L234
-L240:
-        ;;test11.j(87)   // byte - integer
-L241:
-        ;;test11.j(88)   //not relevant
-L242:
-        ;;test11.j(89)   write(94);
-L243:
-        LD    A,94
-L244:
-        CALL  writeA
-L245:
-        ;;test11.j(90)   write(93);
-L246:
-        LD    A,93
-L247:
-        CALL  writeA
-L248:
-        ;;test11.j(91)   // integer - byte
-L249:
-        ;;test11.j(92)   b2=92;
-L250:
-        LD    A,92
-L251:
-        LD    (05005H),A
-L252:
-        ;;test11.j(93)   for(word i = 92; i <= 93; i++) { write(b2); b2--; }
-L253:
-        LD    A,92
-L254:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L255:
-        LD    HL,(05006H)
-L256:
-        LD    A,93
-L257:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L258:
-        JR    Z,$+5
-        JP    C,L268
-L259:
-        JP    L262
-L260:
-        LD    HL,(05006H)
-        INC   HL
-        LD    (05006H),HL
-L261:
-        JP    L255
-L262:
-        LD    A,(05005H)
-L263:
-        CALL  writeA
-L264:
-        LD    HL,(05005H)
-        DEC   (HL)
-L265:
-        JP    L260
-L266:
-        ;;test11.j(94)   // integer - integer
-L267:
-        ;;test11.j(95)   for(word i = 1090; i <= 1091; i++) { write(b2); b2--; }
-L268:
-        LD    HL,1090
-L269:
-        LD    (05006H),HL
-L270:
-        LD    HL,(05006H)
-L271:
-        LD    DE,1091
-        OR    A
-        SBC   HL,DE
-L272:
-        JR    Z,$+5
-        JP    C,L286
-L273:
-        JP    L276
-L274:
-        LD    HL,(05006H)
-        INC   HL
-        LD    (05006H),HL
-L275:
-        JP    L270
-L276:
-        LD    A,(05005H)
-L277:
-        CALL  writeA
-L278:
-        LD    HL,(05005H)
-        DEC   (HL)
-L279:
-        JP    L274
-L280:
-        ;;test11.j(96) 
-L281:
-        ;;test11.j(97)   /************************/
-L282:
-        ;;test11.j(98)   // acc - stack8
-L283:
-        ;;test11.j(99)   // byte - byte
-L284:
-        ;;test11.j(100)   //TODO
-L285:
-        ;;test11.j(101)   write(88);
-L286:
-        LD    A,88
-L287:
-        CALL  writeA
-L288:
-        ;;test11.j(102)   write(87);
-L289:
-        LD    A,87
-L290:
-        CALL  writeA
-L291:
-        ;;test11.j(103)   // byte - integer
-L292:
-        ;;test11.j(104)   //TODO
-L293:
-        ;;test11.j(105)   write(86);
-L294:
-        LD    A,86
-L295:
-        CALL  writeA
-L296:
-        ;;test11.j(106)   write(85);
-L297:
-        LD    A,85
-L298:
-        CALL  writeA
-L299:
-        ;;test11.j(107)   // integer - byte
-L300:
-        ;;test11.j(108)   //TODO
-L301:
-        ;;test11.j(109)   write(84);
-L302:
-        LD    A,84
-L303:
-        CALL  writeA
-L304:
-        ;;test11.j(110)   write(83);
-L305:
-        LD    A,83
-L306:
-        CALL  writeA
-L307:
-        ;;test11.j(111)   // integer - integer
-L308:
-        ;;test11.j(112)   //TODO
-L309:
-        ;;test11.j(113)   write(82);
-L310:
-        LD    A,82
-L311:
-        CALL  writeA
-L312:
-        ;;test11.j(114)   write(81);
-L313:
-        LD    A,81
-L314:
-        CALL  writeA
-L315:
-        ;;test11.j(115) 
-L316:
-        ;;test11.j(116)   /************************/
-L317:
-        ;;test11.j(117)   // acc - stack16
-L318:
-        ;;test11.j(118)   // byte - byte
-L319:
-        ;;test11.j(119)   //TODO
-L320:
-        ;;test11.j(120)   write(80);
-L321:
-        LD    A,80
-L322:
-        CALL  writeA
-L323:
-        ;;test11.j(121)   write(79);
-L324:
-        LD    A,79
-L325:
-        CALL  writeA
-L326:
-        ;;test11.j(122)   // byte - integer
-L327:
-        ;;test11.j(123)   //TODO
-L328:
-        ;;test11.j(124)   write(78);
-L329:
-        LD    A,78
-L330:
-        CALL  writeA
-L331:
-        ;;test11.j(125)   write(77);
-L332:
-        LD    A,77
-L333:
-        CALL  writeA
-L334:
-        ;;test11.j(126)   // integer - byte
-L335:
-        ;;test11.j(127)   //TODO
-L336:
-        ;;test11.j(128)   write(76);
-L337:
-        LD    A,76
-L338:
-        CALL  writeA
-L339:
-        ;;test11.j(129)   write(75);
-L340:
-        LD    A,75
-L341:
-        CALL  writeA
-L342:
-        ;;test11.j(130)   // integer - integer
-L343:
-        ;;test11.j(131)   //TODO
-L344:
-        ;;test11.j(132)   write(74);
-L345:
-        LD    A,74
-L346:
-        CALL  writeA
-L347:
-        ;;test11.j(133)   write(73);
-L348:
-        LD    A,73
-L349:
-        CALL  writeA
-L350:
-        ;;test11.j(134) 
-L351:
-        ;;test11.j(135)   /************************/
-L352:
-        ;;test11.j(136)   // acc - var
-L353:
-        ;;test11.j(137)   // byte - byte
-L354:
-        ;;test11.j(138)   for (byte b = 72; 71+0 <= b; b--) { write (b); }
-L355:
-        LD    A,72
-L356:
-        LD    (05006H),A
-L357:
-        LD    A,71
-L358:
-        ADD   A,0
-L359:
-        LD    B,A
-        LD    A,(05006H)
-        SUB   A,B
-L360:
-        JR    Z,$+5
-        JP    C,L369
-L361:
-        JP    L364
-L362:
-        LD    HL,(05006H)
-        DEC   (HL)
-L363:
-        JP    L357
-L364:
-        LD    A,(05006H)
-L365:
-        CALL  writeA
-L366:
-        JP    L362
-L367:
-        ;;test11.j(139)   // byte - integer
-L368:
-        ;;test11.j(140)   for(word i = 70; 69+0 <= i; i--) { write(i); }
-L369:
-        LD    A,70
-L370:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L371:
-        LD    A,69
-L372:
-        ADD   A,0
-L373:
-        LD    HL,(05006H)
-L374:
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-L375:
-        JR    Z,$+5
-        JP    C,L384
-L376:
-        JP    L379
-L377:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L378:
-        JP    L371
-L379:
-        LD    HL,(05006H)
-L380:
-        CALL  writeHL
-L381:
-        JP    L377
-L382:
-        ;;test11.j(141)   // integer - byte
-L383:
-        ;;test11.j(142)   i2=67;
-L384:
-        LD    A,67
-L385:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L386:
-        ;;test11.j(143)   for (byte b = 68; i2+0 <= b; b--) { write (b); }
-L387:
-        LD    A,68
-L388:
-        LD    (05006H),A
-L389:
-        LD    HL,(05001H)
-L390:
-        LD    DE,0
-        ADD   HL,DE
-L391:
-        LD    A,(05006H)
-L392:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L393:
-        JR    Z,$+5
-        JP    C,L402
-L394:
-        JP    L397
-L395:
-        LD    HL,(05006H)
-        DEC   (HL)
-L396:
-        JP    L389
-L397:
-        LD    A,(05006H)
-L398:
-        CALL  writeA
-L399:
-        JP    L395
-L400:
-        ;;test11.j(144)   // integer - integer
-L401:
-        ;;test11.j(145)   b2 = 66;
-L402:
-        LD    A,66
-L403:
-        LD    (05005H),A
-L404:
-        ;;test11.j(146)   for(word i = 1066; 1000+65 <= i; i--) { write (b2); b2--; }
-L405:
-        LD    HL,1066
-L406:
-        LD    (05006H),HL
-L407:
-        LD    HL,1000
-L408:
-        LD    DE,65
-        ADD   HL,DE
-L409:
-        LD    DE,(05006H)
-        OR    A
-        SBC   HL,DE
-L410:
-        JR    Z,$+5
-        JP    C,L423
-L411:
-        JP    L414
-L412:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L413:
-        JP    L407
-L414:
-        LD    A,(05005H)
-L415:
-        CALL  writeA
-L416:
-        LD    HL,(05005H)
-        DEC   (HL)
-L417:
-        JP    L412
-L418:
-        ;;test11.j(147) 
-L419:
-        ;;test11.j(148)   /************************/
-L420:
-        ;;test11.j(149)   // acc - acc
-L421:
-        ;;test11.j(150)   // byte - byte
-L422:
-        ;;test11.j(151)   for (byte b = 64; 63+0 <= b+0; b--) { write (b); }
-L423:
-        LD    A,64
-L424:
-        LD    (05006H),A
-L425:
-        LD    A,63
-L426:
-        ADD   A,0
-L427:
-        PUSH AF
-L428:
-        LD    A,(05006H)
-L429:
-        ADD   A,0
-L430:
-        POP   BC
-        SUB   A,B
-L431:
-        JP    C,L440
-L432:
-        JP    L435
-L433:
-        LD    HL,(05006H)
-        DEC   (HL)
-L434:
-        JP    L425
-L435:
-        LD    A,(05006H)
-L436:
-        CALL  writeA
-L437:
-        JP    L433
-L438:
-        ;;test11.j(152)   // byte - integer
-L439:
-        ;;test11.j(153)   for(word i = 62; 61+0 <= i+0; i--) { write(i); }
-L440:
-        LD    A,62
-L441:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L442:
-        LD    A,61
-L443:
-        ADD   A,0
-L444:
-        PUSH AF
-L445:
-        LD    HL,(05006H)
-L446:
-        LD    DE,0
-        ADD   HL,DE
-L447:
-        POP  AF
-L448:
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-L449:
-        JR    Z,$+5
-        JP    C,L458
-L450:
-        JP    L453
-L451:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L452:
-        JP    L442
-L453:
-        LD    HL,(05006H)
-L454:
-        CALL  writeHL
-L455:
-        JP    L451
-L456:
-        ;;test11.j(154)   // integer - byte
-L457:
-        ;;test11.j(155)   i2=59;
-L458:
-        LD    A,59
-L459:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L460:
-        ;;test11.j(156)   for (byte b = 60; i2+0 <= b+0; b--) { write (b); }
-L461:
-        LD    A,60
-L462:
-        LD    (05006H),A
-L463:
-        LD    HL,(05001H)
-L464:
-        LD    DE,0
-        ADD   HL,DE
-L465:
-        PUSH HL
-L466:
-        LD    A,(05006H)
-L467:
-        ADD   A,0
-L468:
-        POP  HL
-L469:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L470:
-        JR    Z,$+5
-        JP    C,L479
-L471:
-        JP    L474
-L472:
-        LD    HL,(05006H)
-        DEC   (HL)
-L473:
-        JP    L463
-L474:
-        LD    A,(05006H)
-L475:
-        CALL  writeA
-L476:
-        JP    L472
-L477:
-        ;;test11.j(157)   // integer - integer
-L478:
-        ;;test11.j(158)   b2=58;
-L479:
-        LD    A,58
-L480:
-        LD    (05005H),A
-L481:
-        ;;test11.j(159)   for(word i = 1058; 1000+57 <= i+0; i--) { write(b2); b2--; }
-L482:
-        LD    HL,1058
-L483:
-        LD    (05006H),HL
-L484:
-        LD    HL,1000
-L485:
-        LD    DE,57
-        ADD   HL,DE
-L486:
-        PUSH HL
-L487:
-        LD    HL,(05006H)
-L488:
-        LD    DE,0
-        ADD   HL,DE
-L489:
-        POP   DE
-        OR    A
-        SBC   HL,DE
-L490:
-        JP    C,L503
-L491:
-        JP    L494
-L492:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L493:
-        JP    L484
-L494:
-        LD    A,(05005H)
-L495:
-        CALL  writeA
-L496:
-        LD    HL,(05005H)
-        DEC   (HL)
-L497:
-        JP    L492
-L498:
-        ;;test11.j(160) 
-L499:
-        ;;test11.j(161)   /************************/
-L500:
-        ;;test11.j(162)   // acc - constant
-L501:
-        ;;test11.j(163)   // byte - byte
-L502:
-        ;;test11.j(164)   i2=56;
-L503:
-        LD    A,56
-L504:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
-L505:
-        ;;test11.j(165)   for (byte b = 56; b+0 <= 57; b++) { write (i2); i2--; }
-L506:
-        LD    A,56
-L507:
-        LD    (05006H),A
-L508:
-        LD    A,(05006H)
-L509:
-        ADD   A,0
-L510:
-        SUB   A,57
-L511:
-        JR    Z,$+5
-        JP    C,L523
-L512:
-        JP    L515
-L513:
-        LD    HL,(05006H)
-        INC   (HL)
-L514:
-        JP    L508
-L515:
-        LD    HL,(05001H)
-L516:
-        CALL  writeHL
-L517:
-        LD    HL,(05001H)
-        DEC   HL
-        LD    (05001H),HL
-L518:
-        JP    L513
-L519:
-        ;;test11.j(166)   // byte - integer
-L520:
-        ;;test11.j(167)   //not relevant
-L521:
-        ;;test11.j(168)   // integer - byte
-L522:
-        ;;test11.j(169)   b2=54;
-L523:
-        LD    A,54
-L524:
-        LD    (05005H),A
-L525:
-        ;;test11.j(170)   for (word i = 54; i+0 <= 55; i++) { write (b2); b2--;}
-L526:
-        LD    A,54
-L527:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L528:
-        LD    HL,(05006H)
-L529:
-        LD    DE,0
-        ADD   HL,DE
-L530:
-        LD    A,55
-L531:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L532:
-        JR    Z,$+5
-        JP    C,L542
-L533:
-        JP    L536
-L534:
-        LD    HL,(05006H)
-        INC   HL
-        LD    (05006H),HL
-L535:
-        JP    L528
-L536:
-        LD    A,(05005H)
-L537:
-        CALL  writeA
-L538:
-        LD    HL,(05005H)
-        DEC   (HL)
-L539:
-        JP    L534
-L540:
-        ;;test11.j(171)   // integer - integer
-L541:
-        ;;test11.j(172)   b2=52;
-L542:
-        LD    A,52
-L543:
-        LD    (05005H),A
-L544:
-        ;;test11.j(173)   for(word i = 1052; i+0 <= 1053; i++) { write(b2); b2--; }
-L545:
-        LD    HL,1052
-L546:
-        LD    (05006H),HL
-L547:
-        LD    HL,(05006H)
-L548:
-        LD    DE,0
-        ADD   HL,DE
-L549:
-        LD    DE,1053
-        OR    A
-        SBC   HL,DE
-L550:
-        JR    Z,$+5
-        JP    C,L564
-L551:
-        JP    L554
-L552:
-        LD    HL,(05006H)
-        INC   HL
-        LD    (05006H),HL
-L553:
-        JP    L547
-L554:
-        LD    A,(05005H)
-L555:
-        CALL  writeA
-L556:
-        LD    HL,(05005H)
-        DEC   (HL)
-L557:
-        JP    L552
-L558:
-        ;;test11.j(174) 
-L559:
-        ;;test11.j(175)   /************************/
-L560:
-        ;;test11.j(176)   // constant - stack8
-L561:
-        ;;test11.j(177)   // byte - byte
-L562:
-        ;;test11.j(178)   //TODO
-L563:
-        ;;test11.j(179)   write(50);
-L564:
-        LD    A,50
-L565:
-        CALL  writeA
-L566:
-        ;;test11.j(180)   // constant - stack8
-L567:
-        ;;test11.j(181)   // byte - integer
-L568:
-        ;;test11.j(182)   //TODO
-L569:
-        ;;test11.j(183)   write(49);
-L570:
-        LD    A,49
-L571:
-        CALL  writeA
-L572:
-        ;;test11.j(184)   // constant - stack8
-L573:
-        ;;test11.j(185)   // integer - byte
-L574:
-        ;;test11.j(186)   //TODO
-L575:
-        ;;test11.j(187)   write(48);
-L576:
-        LD    A,48
-L577:
-        CALL  writeA
-L578:
-        ;;test11.j(188)   // constant - stack88
-L579:
-        ;;test11.j(189)   // integer - integer
-L580:
-        ;;test11.j(190)   //TODO
-L581:
-        ;;test11.j(191)   write(47);
-L582:
-        LD    A,47
-L583:
-        CALL  writeA
-L584:
-        ;;test11.j(192) 
-L585:
-        ;;test11.j(193)   /************************/
-L586:
-        ;;test11.j(194)   // constant - stack16
-L587:
-        ;;test11.j(195)   // byte - byte
-L588:
-        ;;test11.j(196)   //TODO
-L589:
-        ;;test11.j(197)   write(46);
-L590:
-        LD    A,46
-L591:
-        CALL  writeA
-L592:
-        ;;test11.j(198)   // constant - stack16
-L593:
-        ;;test11.j(199)   // byte - integer
-L594:
-        ;;test11.j(200)   //TODO
-L595:
-        ;;test11.j(201)   write(45);
-L596:
-        LD    A,45
-L597:
-        CALL  writeA
-L598:
-        ;;test11.j(202)   // constant - stack16
-L599:
-        ;;test11.j(203)   // integer - byte
-L600:
-        ;;test11.j(204)   //TODO
-L601:
-        ;;test11.j(205)   write(44);
-L602:
-        LD    A,44
-L603:
-        CALL  writeA
-L604:
-        ;;test11.j(206)   // constant - stack16
-L605:
-        ;;test11.j(207)   // integer - integer
-L606:
-        ;;test11.j(208)   //TODO
-L607:
-        ;;test11.j(209)   write(43);
-L608:
-        LD    A,43
-L609:
-        CALL  writeA
-L610:
-        ;;test11.j(210) 
-L611:
-        ;;test11.j(211)   /************************/
-L612:
-        ;;test11.j(212)   // constant - var
-L613:
-        ;;test11.j(213)   // byte - byte
-L614:
-        ;;test11.j(214)   for (byte b = 42; 41 <= b; b--) { write (b); }
-L615:
-        LD    A,42
-L616:
-        LD    (05006H),A
-L617:
-        LD    A,(05006H)
-L618:
-        SUB   A,41
-L619:
-        JP    C,L629
-L620:
-        JP    L623
-L621:
-        LD    HL,(05006H)
-        DEC   (HL)
-L622:
-        JP    L617
-L623:
-        LD    A,(05006H)
-L624:
-        CALL  writeA
-L625:
-        JP    L621
-L626:
-        ;;test11.j(215)   // constant - var
-L627:
-        ;;test11.j(216)   // byte - integer
-L628:
-        ;;test11.j(217)   for(word i = 40; 39 <= i; i--) { write(i); }
-L629:
-        LD    A,40
-L630:
-        LD    L,A
-        LD    H,0
-        LD    (05006H),HL
-L631:
-        LD    HL,(05006H)
-L632:
-        LD    A,39
-L633:
-        LD    E,A
-        LD    D,0
-        OR    A
-        SBC   HL,DE
-L634:
-        JR    Z,$+5
-        JP    C,L647
-L635:
-        JP    L638
-L636:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L637:
-        JP    L631
-L638:
-        LD    HL,(05006H)
-L639:
-        CALL  writeHL
-L640:
-        JP    L636
-L641:
-        ;;test11.j(218)   // constant - var
-L642:
-        ;;test11.j(219)   // integer - byte
-L643:
-        ;;test11.j(220)   // not relevant
-L644:
-        ;;test11.j(221)   // constant - var
-L645:
-        ;;test11.j(222)   // integer - integer
-L646:
-        ;;test11.j(223)   b2=38;
-L647:
-        LD    A,38
-L648:
-        LD    (05005H),A
-L649:
-        ;;test11.j(224)   for(word i = 1038; 1037 <= i; i--) { write(b2); b2--; }
-L650:
-        LD    HL,1038
-L651:
-        LD    (05006H),HL
-L652:
-        LD    HL,(05006H)
-L653:
-        LD    DE,1037
-        OR    A
-        SBC   HL,DE
-L654:
-        JP    C,L667
-L655:
-        JP    L658
-L656:
-        LD    HL,(05006H)
-        DEC   HL
-        LD    (05006H),HL
-L657:
-        JP    L652
-L658:
-        LD    A,(05005H)
-L659:
-        CALL  writeA
-L660:
-        LD    HL,(05005H)
-        DEC   (HL)
-L661:
-        JP    L656
-L662:
-        ;;test11.j(225) 
-L663:
-        ;;test11.j(226)   /************************/
-L664:
-        ;;test11.j(227)   // constant - acc
-L665:
-        ;;test11.j(228)   // byte - byte
-L666:
-        ;;test11.j(229)   for (byte b = 36; 136 == b+100; b--) { write (b); }
-L667:
-        LD    A,36
-L668:
-        LD    (05006H),A
-L669:
-        LD    A,(05006H)
-L670:
-        ADD   A,100
-L671:
-        SUB   A,136
-L672:
-        JP    NZ,L680
-L673:
-        JP    L676
-L674:
-        LD    HL,(05006H)
-        DEC   (HL)
-L675:
-        JP    L669
-L676:
-        LD    A,(05006H)
-L677:
-        CALL  writeA
-L678:
-        JP    L674
-L679:
-        ;;test11.j(230)   for (byte b = 35; 132 != b+100; b--) { write (b); }
-L680:
-        LD    A,35
-L681:
-        LD    (05006H),A
-L682:
-        LD    A,(05006H)
-L683:
-        ADD   A,100
-L684:
-        SUB   A,132
-L685:
-        JP    Z,L693
-L686:
-        JP    L689
-L687:
-        LD    HL,(05006H)
-        DEC   (HL)
-L688:
-        JP    L682
-L689:
-        LD    A,(05006H)
-L690:
-        CALL  writeA
-L691:
-        JP    L687
-L692:
-        ;;test11.j(231)   b2=32;
-L693:
-        LD    A,32
-L694:
-        LD    (05005H),A
-L695:
-        ;;test11.j(232)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2--; }
-L696:
-        LD    A,32
-L697:
-        LD    (05006H),A
-L698:
-        LD    A,(05006H)
-L699:
-        ADD   A,100
-L700:
-        SUB   A,134
-L701:
-        JP    NC,L710
-L702:
-        JP    L705
-L703:
-        LD    HL,(05006H)
-        INC   (HL)
-L704:
-        JP    L698
-L705:
-        LD    A,(05005H)
-L706:
-        CALL  writeA
-L707:
-        LD    HL,(05005H)
-        DEC   (HL)
-L708:
-        JP    L703
-L709:
-        ;;test11.j(233)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2--; }
-L710:
         LD    A,34
-L711:
+L93:
         LD    (05006H),A
-L712:
+L94:
         LD    A,(05006H)
-L713:
+L95:
         ADD   A,100
-L714:
+L96:
         SUB   A,135
-L715:
+L97:
         JR    Z,$+5
-        JP    C,L724
-L716:
-        JP    L719
-L717:
+        JP    C,L106
+L98:
+        JP    L101
+L99:
         LD    HL,(05006H)
         INC   (HL)
-L718:
-        JP    L712
-L719:
-        LD    A,(05005H)
-L720:
+L100:
+        JP    L94
+L101:
+        LD    A,(05001H)
+L102:
         CALL  writeA
-L721:
-        LD    HL,(05005H)
-        DEC   (HL)
-L722:
-        JP    L717
-L723:
-        ;;test11.j(234)   for (byte b = 28; 126 <  b+100; b--) { write (b); }
-L724:
+L103:
+        LD    HL,(05001H)
+        INC   (HL)
+L104:
+        JP    L99
+L105:
+        ;;test11.j(29)   for (byte b = 28; 126 <  b+100; b--) { write (b2); b2++; }
+L106:
         LD    A,28
-L725:
+L107:
         LD    (05006H),A
-L726:
+L108:
         LD    A,(05006H)
-L727:
+L109:
         ADD   A,100
-L728:
+L110:
         SUB   A,126
-L729:
-        JP    Z,L737
-L730:
-        JP    L733
-L731:
+L111:
+        JP    Z,L120
+L112:
+        JP    L115
+L113:
         LD    HL,(05006H)
         DEC   (HL)
-L732:
-        JP    L726
-L733:
-        LD    A,(05006H)
-L734:
+L114:
+        JP    L108
+L115:
+        LD    A,(05001H)
+L116:
         CALL  writeA
-L735:
-        JP    L731
-L736:
-        ;;test11.j(235)   for (byte b = 26; 125 <= b+100; b--) { write (b); }
-L737:
+L117:
+        LD    HL,(05001H)
+        INC   (HL)
+L118:
+        JP    L113
+L119:
+        ;;test11.j(30)   for (byte b = 26; 125 <= b+100; b--) { write (b2); b2++; }
+L120:
         LD    A,26
-L738:
+L121:
         LD    (05006H),A
-L739:
+L122:
         LD    A,(05006H)
-L740:
+L123:
         ADD   A,100
-L741:
+L124:
         SUB   A,125
-L742:
-        JP    C,L752
-L743:
-        JP    L746
-L744:
+L125:
+        JP    C,L135
+L126:
+        JP    L129
+L127:
         LD    HL,(05006H)
         DEC   (HL)
-L745:
-        JP    L739
-L746:
-        LD    A,(05006H)
-L747:
+L128:
+        JP    L122
+L129:
+        LD    A,(05001H)
+L130:
         CALL  writeA
-L748:
-        JP    L744
-L749:
-        ;;test11.j(236)   // constant - acc
-L750:
-        ;;test11.j(237)   // byte - integer
-L751:
-        ;;test11.j(238)   for(word i = 24; 24 == i+0; i--) { write(i); }
-L752:
+L131:
+        LD    HL,(05001H)
+        INC   (HL)
+L132:
+        JP    L127
+L133:
+        ;;test11.j(31)   // byte - integer
+L134:
+        ;;test11.j(32)   for(word i = 24; 24  == i+0; i--) { write (b2); b2++; }
+L135:
         LD    A,24
-L753:
+L136:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L754:
+L137:
         LD    HL,(05006H)
-L755:
+L138:
         LD    DE,0
         ADD   HL,DE
-L756:
+L139:
         LD    A,24
-L757:
+L140:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-L758:
-        JP    NZ,L766
-L759:
-        JP    L762
-L760:
+L141:
+        JP    NZ,L150
+L142:
+        JP    L145
+L143:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L761:
-        JP    L754
-L762:
-        LD    HL,(05006H)
-L763:
-        CALL  writeHL
-L764:
-        JP    L760
-L765:
-        ;;test11.j(239)   for(word i = 23; 120 != i+100; i--) { write(i); }
-L766:
+L144:
+        JP    L137
+L145:
+        LD    A,(05001H)
+L146:
+        CALL  writeA
+L147:
+        LD    HL,(05001H)
+        INC   (HL)
+L148:
+        JP    L143
+L149:
+        ;;test11.j(33)   for(word i = 23; 120 != i+100; i--) { write (b2); b2++; }
+L150:
         LD    A,23
-L767:
+L151:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L768:
+L152:
         LD    HL,(05006H)
-L769:
+L153:
         LD    DE,100
         ADD   HL,DE
-L770:
+L154:
         LD    A,120
-L771:
+L155:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-L772:
-        JP    Z,L780
-L773:
-        JP    L776
-L774:
+L156:
+        JP    Z,L165
+L157:
+        JP    L160
+L158:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L775:
-        JP    L768
-L776:
-        LD    HL,(05006H)
-L777:
-        CALL  writeHL
-L778:
-        JP    L774
-L779:
-        ;;test11.j(240)   b2=20;
-L780:
+L159:
+        JP    L152
+L160:
+        LD    A,(05001H)
+L161:
+        CALL  writeA
+L162:
+        LD    HL,(05001H)
+        INC   (HL)
+L163:
+        JP    L158
+L164:
+        ;;test11.j(34)   for(word i = 20; 122 > i+100; i++) { write (b2); b2++; }
+L165:
         LD    A,20
-L781:
-        LD    (05005H),A
-L782:
-        ;;test11.j(241)   for(word i = 20; 122 > i+100; i++) { write (b2); b2--; }
-L783:
-        LD    A,20
-L784:
+L166:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L785:
+L167:
         LD    HL,(05006H)
-L786:
+L168:
         LD    DE,100
         ADD   HL,DE
-L787:
+L169:
         LD    A,122
-L788:
+L170:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-L789:
-        JP    Z,L798
-L790:
-        JP    L793
-L791:
+L171:
+        JP    Z,L180
+L172:
+        JP    L175
+L173:
         LD    HL,(05006H)
         INC   HL
         LD    (05006H),HL
-L792:
-        JP    L785
-L793:
-        LD    A,(05005H)
-L794:
+L174:
+        JP    L167
+L175:
+        LD    A,(05001H)
+L176:
         CALL  writeA
-L795:
-        LD    HL,(05005H)
-        DEC   (HL)
-L796:
-        JP    L791
-L797:
-        ;;test11.j(242)   for(word i = 22; 123 >= i+100; i++) { write (b2); b2--; }
-L798:
+L177:
+        LD    HL,(05001H)
+        INC   (HL)
+L178:
+        JP    L173
+L179:
+        ;;test11.j(35)   for(word i = 22; 123 >= i+100; i++) { write (b2); b2++; }
+L180:
         LD    A,22
-L799:
+L181:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L800:
+L182:
         LD    HL,(05006H)
-L801:
+L183:
         LD    DE,100
         ADD   HL,DE
-L802:
+L184:
         LD    A,123
-L803:
+L185:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-L804:
-        JP    C,L813
-L805:
-        JP    L808
-L806:
+L186:
+        JP    C,L195
+L187:
+        JP    L190
+L188:
         LD    HL,(05006H)
         INC   HL
         LD    (05006H),HL
-L807:
-        JP    L800
-L808:
-        LD    A,(05005H)
-L809:
+L189:
+        JP    L182
+L190:
+        LD    A,(05001H)
+L191:
         CALL  writeA
-L810:
-        LD    HL,(05005H)
-        DEC   (HL)
-L811:
-        JP    L806
-L812:
-        ;;test11.j(243)   for(word i = 16; 114 <  i+100; i--) { write(i); }
-L813:
+L192:
+        LD    HL,(05001H)
+        INC   (HL)
+L193:
+        JP    L188
+L194:
+        ;;test11.j(36)   for(word i = 16; 114 <  i+100; i--) { write (b2); b2++; }
+L195:
         LD    A,16
-L814:
+L196:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L815:
+L197:
         LD    HL,(05006H)
-L816:
+L198:
         LD    DE,100
         ADD   HL,DE
-L817:
+L199:
         LD    A,114
-L818:
+L200:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-L819:
-        JP    NC,L827
-L820:
-        JP    L823
-L821:
+L201:
+        JP    NC,L210
+L202:
+        JP    L205
+L203:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L822:
-        JP    L815
-L823:
-        LD    HL,(05006H)
-L824:
-        CALL  writeHL
-L825:
-        JP    L821
-L826:
-        ;;test11.j(244)   for(word i = 14; 113 <= i+100; i--) { write(i); }
-L827:
+L204:
+        JP    L197
+L205:
+        LD    A,(05001H)
+L206:
+        CALL  writeA
+L207:
+        LD    HL,(05001H)
+        INC   (HL)
+L208:
+        JP    L203
+L209:
+        ;;test11.j(37)   for(word i = 14; 113 <= i+100; i--) { write (b2); b2++; }
+L210:
         LD    A,14
-L828:
+L211:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L829:
+L212:
         LD    HL,(05006H)
-L830:
+L213:
         LD    DE,100
         ADD   HL,DE
-L831:
+L214:
         LD    A,113
-L832:
+L215:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-L833:
+L216:
         JR    Z,$+5
-        JP    C,L847
-L834:
-        JP    L837
-L835:
+        JP    C,L228
+L217:
+        JP    L220
+L218:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L836:
-        JP    L829
-L837:
-        LD    HL,(05006H)
-L838:
-        CALL  writeHL
-L839:
-        JP    L835
-L840:
-        ;;test11.j(245)   // constant - acc
-L841:
-        ;;test11.j(246)   // integer - byte
-L842:
-        ;;test11.j(247)   // not relevant
-L843:
-        ;;test11.j(248) 
-L844:
-        ;;test11.j(249)   // constant - acc
-L845:
-        ;;test11.j(250)   // integer - integer
-L846:
-        ;;test11.j(251)   for(word i = 12; 1012 == i+1000; i--) { write(i); }
-L847:
+L219:
+        JP    L212
+L220:
+        LD    A,(05001H)
+L221:
+        CALL  writeA
+L222:
+        LD    HL,(05001H)
+        INC   (HL)
+L223:
+        JP    L218
+L224:
+        ;;test11.j(38)   // integer - byte
+L225:
+        ;;test11.j(39)   // not relevant
+L226:
+        ;;test11.j(40)   // integer - integer
+L227:
+        ;;test11.j(41)   for(word i = 12; 1012 == i+1000; i--) { write (b2); b2++; }
+L228:
         LD    A,12
-L848:
+L229:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L849:
+L230:
         LD    HL,(05006H)
-L850:
+L231:
         LD    DE,1000
         ADD   HL,DE
-L851:
+L232:
         LD    DE,1012
         OR    A
         SBC   HL,DE
-L852:
-        JP    NZ,L860
-L853:
-        JP    L856
-L854:
+L233:
+        JP    NZ,L242
+L234:
+        JP    L237
+L235:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L855:
-        JP    L849
-L856:
-        LD    HL,(05006H)
-L857:
-        CALL  writeHL
-L858:
-        JP    L854
-L859:
-        ;;test11.j(252)   for(word i = 11; 1008 != i+1000; i--) { write(i); }
-L860:
+L236:
+        JP    L230
+L237:
+        LD    A,(05001H)
+L238:
+        CALL  writeA
+L239:
+        LD    HL,(05001H)
+        INC   (HL)
+L240:
+        JP    L235
+L241:
+        ;;test11.j(42)   for(word i = 11; 1008 != i+1000; i--) { write (b2); b2++; }
+L242:
         LD    A,11
-L861:
+L243:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L862:
+L244:
         LD    HL,(05006H)
-L863:
+L245:
         LD    DE,1000
         ADD   HL,DE
-L864:
+L246:
         LD    DE,1008
         OR    A
         SBC   HL,DE
-L865:
-        JP    Z,L873
-L866:
-        JP    L869
-L867:
+L247:
+        JP    Z,L256
+L248:
+        JP    L251
+L249:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L868:
-        JP    L862
-L869:
-        LD    HL,(05006H)
-L870:
-        CALL  writeHL
-L871:
-        JP    L867
-L872:
-        ;;test11.j(253)   b2=8;
-L873:
+L250:
+        JP    L244
+L251:
+        LD    A,(05001H)
+L252:
+        CALL  writeA
+L253:
+        LD    HL,(05001H)
+        INC   (HL)
+L254:
+        JP    L249
+L255:
+        ;;test11.j(43)   for(word i = 8; 1010 > i+1000; i++) { write (b2); b2++; }
+L256:
         LD    A,8
-L874:
-        LD    (05005H),A
-L875:
-        ;;test11.j(254)   for(word i = 8; 1010 > i+1000; i++) { write (b2); b2--; }
-L876:
-        LD    A,8
-L877:
+L257:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L878:
+L258:
         LD    HL,(05006H)
-L879:
+L259:
         LD    DE,1000
         ADD   HL,DE
-L880:
+L260:
         LD    DE,1010
         OR    A
         SBC   HL,DE
-L881:
-        JP    NC,L890
-L882:
-        JP    L885
-L883:
+L261:
+        JP    NC,L270
+L262:
+        JP    L265
+L263:
         LD    HL,(05006H)
         INC   HL
         LD    (05006H),HL
-L884:
-        JP    L878
-L885:
-        LD    A,(05005H)
-L886:
+L264:
+        JP    L258
+L265:
+        LD    A,(05001H)
+L266:
         CALL  writeA
-L887:
-        LD    HL,(05005H)
-        DEC   (HL)
-L888:
-        JP    L883
-L889:
-        ;;test11.j(255)   for(word i = 10; 1011 >= i+1000; i++) { write (b2); b2--; }
-L890:
+L267:
+        LD    HL,(05001H)
+        INC   (HL)
+L268:
+        JP    L263
+L269:
+        ;;test11.j(44)   for(word i = 10; 1011 >= i+1000; i++) { write (b2); b2++; }
+L270:
         LD    A,10
-L891:
+L271:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L892:
+L272:
         LD    HL,(05006H)
-L893:
+L273:
         LD    DE,1000
         ADD   HL,DE
-L894:
+L274:
         LD    DE,1011
         OR    A
         SBC   HL,DE
-L895:
+L275:
         JR    Z,$+5
-        JP    C,L904
-L896:
-        JP    L899
-L897:
+        JP    C,L284
+L276:
+        JP    L279
+L277:
         LD    HL,(05006H)
         INC   HL
         LD    (05006H),HL
-L898:
-        JP    L892
-L899:
-        LD    A,(05005H)
-L900:
+L278:
+        JP    L272
+L279:
+        LD    A,(05001H)
+L280:
         CALL  writeA
-L901:
-        LD    HL,(05005H)
-        DEC   (HL)
-L902:
-        JP    L897
-L903:
-        ;;test11.j(256)   for(word i = 4; 1002 <  i+1000; i--) { write(i); }
-L904:
+L281:
+        LD    HL,(05001H)
+        INC   (HL)
+L282:
+        JP    L277
+L283:
+        ;;test11.j(45)   for(word i = 4; 1002 <  i+1000; i--) { write (b2); b2++; }
+L284:
         LD    A,4
-L905:
+L285:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L906:
+L286:
         LD    HL,(05006H)
-L907:
+L287:
         LD    DE,1000
         ADD   HL,DE
-L908:
+L288:
         LD    DE,1002
         OR    A
         SBC   HL,DE
-L909:
-        JP    Z,L917
-L910:
-        JP    L913
-L911:
+L289:
+        JP    Z,L298
+L290:
+        JP    L293
+L291:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L912:
-        JP    L906
-L913:
-        LD    HL,(05006H)
-L914:
-        CALL  writeHL
-L915:
-        JP    L911
-L916:
-        ;;test11.j(257)   for(word i = 2; 1001 <= i+1000; i--) { write(i); }
-L917:
+L292:
+        JP    L286
+L293:
+        LD    A,(05001H)
+L294:
+        CALL  writeA
+L295:
+        LD    HL,(05001H)
+        INC   (HL)
+L296:
+        JP    L291
+L297:
+        ;;test11.j(46)   for(word i = 2; 1001 <= i+1000; i--) { write (b2); b2++; }
+L298:
         LD    A,2
-L918:
+L299:
         LD    L,A
         LD    H,0
         LD    (05006H),HL
-L919:
+L300:
         LD    HL,(05006H)
-L920:
+L301:
         LD    DE,1000
         ADD   HL,DE
-L921:
+L302:
         LD    DE,1001
         OR    A
         SBC   HL,DE
-L922:
-        JP    C,L930
-L923:
-        JP    L926
-L924:
+L303:
+        JP    C,L316
+L304:
+        JP    L307
+L305:
         LD    HL,(05006H)
         DEC   HL
         LD    (05006H),HL
-L925:
-        JP    L919
-L926:
+L306:
+        JP    L300
+L307:
+        LD    A,(05001H)
+L308:
+        CALL  writeA
+L309:
+        LD    HL,(05001H)
+        INC   (HL)
+L310:
+        JP    L305
+L311:
+        ;;test11.j(47) 
+L312:
+        ;;test11.j(48)   /************************/
+L313:
+        ;;test11.j(49)   // constant - var
+L314:
+        ;;test11.j(50)   // byte - byte
+L315:
+        ;;test11.j(51)   for (byte b = 42; 41 <= b; b--) { write (b2); b2++; }
+L316:
+        LD    A,42
+L317:
+        LD    (05006H),A
+L318:
+        LD    A,(05006H)
+L319:
+        SUB   A,41
+L320:
+        JP    C,L330
+L321:
+        JP    L324
+L322:
         LD    HL,(05006H)
+        DEC   (HL)
+L323:
+        JP    L318
+L324:
+        LD    A,(05001H)
+L325:
+        CALL  writeA
+L326:
+        LD    HL,(05001H)
+        INC   (HL)
+L327:
+        JP    L322
+L328:
+        ;;test11.j(52)   // byte - integer
+L329:
+        ;;test11.j(53)   for(word i = 40; 39 <= i; i--) { write (b2); b2++; }
+L330:
+        LD    A,40
+L331:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L332:
+        LD    HL,(05006H)
+L333:
+        LD    A,39
+L334:
+        LD    E,A
+        LD    D,0
+        OR    A
+        SBC   HL,DE
+L335:
+        JR    Z,$+5
+        JP    C,L347
+L336:
+        JP    L339
+L337:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L338:
+        JP    L332
+L339:
+        LD    A,(05001H)
+L340:
+        CALL  writeA
+L341:
+        LD    HL,(05001H)
+        INC   (HL)
+L342:
+        JP    L337
+L343:
+        ;;test11.j(54)   // integer - byte
+L344:
+        ;;test11.j(55)   // not relevant
+L345:
+        ;;test11.j(56)   // integer - integer
+L346:
+        ;;test11.j(57)   for(word i = 1038; 1037 <= i; i--) { write (b2); b2++; }
+L347:
+        LD    HL,1038
+L348:
+        LD    (05006H),HL
+L349:
+        LD    HL,(05006H)
+L350:
+        LD    DE,1037
+        OR    A
+        SBC   HL,DE
+L351:
+        JP    C,L365
+L352:
+        JP    L355
+L353:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L354:
+        JP    L349
+L355:
+        LD    A,(05001H)
+L356:
+        CALL  writeA
+L357:
+        LD    HL,(05001H)
+        INC   (HL)
+L358:
+        JP    L353
+L359:
+        ;;test11.j(58) 
+L360:
+        ;;test11.j(59)   /************************/
+L361:
+        ;;test11.j(60)   // constant - stack8
+L362:
+        ;;test11.j(61)   // byte - byte
+L363:
+        ;;test11.j(62)   //TODO
+L364:
+        ;;test11.j(63)   write(43);
+L365:
+        LD    A,43
+L366:
+        CALL  writeA
+L367:
+        ;;test11.j(64)   write(44);
+L368:
+        LD    A,44
+L369:
+        CALL  writeA
+L370:
+        ;;test11.j(65)   // constant - stack8
+L371:
+        ;;test11.j(66)   // byte - integer
+L372:
+        ;;test11.j(67)   //TODO
+L373:
+        ;;test11.j(68)   write(45);
+L374:
+        LD    A,45
+L375:
+        CALL  writeA
+L376:
+        ;;test11.j(69)   write(46);
+L377:
+        LD    A,46
+L378:
+        CALL  writeA
+L379:
+        ;;test11.j(70)   // constant - stack8
+L380:
+        ;;test11.j(71)   // integer - byte
+L381:
+        ;;test11.j(72)   //TODO
+L382:
+        ;;test11.j(73)   write(47);
+L383:
+        LD    A,47
+L384:
+        CALL  writeA
+L385:
+        ;;test11.j(74)   write(48);
+L386:
+        LD    A,48
+L387:
+        CALL  writeA
+L388:
+        ;;test11.j(75)   // constant - stack88
+L389:
+        ;;test11.j(76)   // integer - integer
+L390:
+        ;;test11.j(77)   //TODO
+L391:
+        ;;test11.j(78)   write(49);
+L392:
+        LD    A,49
+L393:
+        CALL  writeA
+L394:
+        ;;test11.j(79)   write(50);
+L395:
+        LD    A,50
+L396:
+        CALL  writeA
+L397:
+        ;;test11.j(80) 
+L398:
+        ;;test11.j(81)   /************************/
+L399:
+        ;;test11.j(82)   // constant - stack16
+L400:
+        ;;test11.j(83)   // byte - byte
+L401:
+        ;;test11.j(84)   //TODO
+L402:
+        ;;test11.j(85)   write(51);
+L403:
+        LD    A,51
+L404:
+        CALL  writeA
+L405:
+        ;;test11.j(86)   write(52);
+L406:
+        LD    A,52
+L407:
+        CALL  writeA
+L408:
+        ;;test11.j(87)   // constant - stack16
+L409:
+        ;;test11.j(88)   // byte - integer
+L410:
+        ;;test11.j(89)   //TODO
+L411:
+        ;;test11.j(90)   write(53);
+L412:
+        LD    A,53
+L413:
+        CALL  writeA
+L414:
+        ;;test11.j(91)   write(54);
+L415:
+        LD    A,54
+L416:
+        CALL  writeA
+L417:
+        ;;test11.j(92)   // constant - stack16
+L418:
+        ;;test11.j(93)   // integer - byte
+L419:
+        ;;test11.j(94)   //TODO
+L420:
+        ;;test11.j(95)   write(55);
+L421:
+        LD    A,55
+L422:
+        CALL  writeA
+L423:
+        ;;test11.j(96)   write(56);
+L424:
+        LD    A,56
+L425:
+        CALL  writeA
+L426:
+        ;;test11.j(97)   // constant - stack16
+L427:
+        ;;test11.j(98)   // integer - integer
+L428:
+        ;;test11.j(99)   //TODO
+L429:
+        ;;test11.j(100)   write(57);
+L430:
+        LD    A,57
+L431:
+        CALL  writeA
+L432:
+        ;;test11.j(101)   write(58);
+L433:
+        LD    A,58
+L434:
+        CALL  writeA
+L435:
+        ;;test11.j(102) 
+L436:
+        ;;test11.j(103)   /************************/
+L437:
+        ;;test11.j(104)   // acc - constant
+L438:
+        ;;test11.j(105)   // byte - byte
+L439:
+        ;;test11.j(106)   b2 = 59;
+L440:
+        LD    A,59
+L441:
+        LD    (05001H),A
+L442:
+        ;;test11.j(107)   for (byte b = 56; b+0 <= 57; b++) { write (b2); b2++; }
+L443:
+        LD    A,56
+L444:
+        LD    (05006H),A
+L445:
+        LD    A,(05006H)
+L446:
+        ADD   A,0
+L447:
+        SUB   A,57
+L448:
+        JR    Z,$+5
+        JP    C,L460
+L449:
+        JP    L452
+L450:
+        LD    HL,(05006H)
+        INC   (HL)
+L451:
+        JP    L445
+L452:
+        LD    A,(05001H)
+L453:
+        CALL  writeA
+L454:
+        LD    HL,(05001H)
+        INC   (HL)
+L455:
+        JP    L450
+L456:
+        ;;test11.j(108)   // byte - integer
+L457:
+        ;;test11.j(109)   //not relevant
+L458:
+        ;;test11.j(110)   // integer - byte
+L459:
+        ;;test11.j(111)   for (word i = 54; i+0 <= 55; i++) { write (b2); b2++;}
+L460:
+        LD    A,54
+L461:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L462:
+        LD    HL,(05006H)
+L463:
+        LD    DE,0
+        ADD   HL,DE
+L464:
+        LD    A,55
+L465:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L466:
+        JR    Z,$+5
+        JP    C,L476
+L467:
+        JP    L470
+L468:
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+L469:
+        JP    L462
+L470:
+        LD    A,(05001H)
+L471:
+        CALL  writeA
+L472:
+        LD    HL,(05001H)
+        INC   (HL)
+L473:
+        JP    L468
+L474:
+        ;;test11.j(112)   // integer - integer
+L475:
+        ;;test11.j(113)   for(word i = 1052; i+0 <= 1053; i++) { write (b2); b2++; }
+L476:
+        LD    HL,1052
+L477:
+        LD    (05006H),HL
+L478:
+        LD    HL,(05006H)
+L479:
+        LD    DE,0
+        ADD   HL,DE
+L480:
+        LD    DE,1053
+        OR    A
+        SBC   HL,DE
+L481:
+        JR    Z,$+5
+        JP    C,L494
+L482:
+        JP    L485
+L483:
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+L484:
+        JP    L478
+L485:
+        LD    A,(05001H)
+L486:
+        CALL  writeA
+L487:
+        LD    HL,(05001H)
+        INC   (HL)
+L488:
+        JP    L483
+L489:
+        ;;test11.j(114) 
+L490:
+        ;;test11.j(115)   /************************/
+L491:
+        ;;test11.j(116)   // acc - acc
+L492:
+        ;;test11.j(117)   // byte - byte
+L493:
+        ;;test11.j(118)   for (byte b = 64; 63+0 <= b+0; b--) { write (b2); b2++; }
+L494:
+        LD    A,64
+L495:
+        LD    (05006H),A
+L496:
+        LD    A,63
+L497:
+        ADD   A,0
+L498:
+        PUSH AF
+L499:
+        LD    A,(05006H)
+L500:
+        ADD   A,0
+L501:
+        POP   BC
+        SUB   A,B
+L502:
+        JP    C,L512
+L503:
+        JP    L506
+L504:
+        LD    HL,(05006H)
+        DEC   (HL)
+L505:
+        JP    L496
+L506:
+        LD    A,(05001H)
+L507:
+        CALL  writeA
+L508:
+        LD    HL,(05001H)
+        INC   (HL)
+L509:
+        JP    L504
+L510:
+        ;;test11.j(119)   // byte - integer
+L511:
+        ;;test11.j(120)   for(word i = 62; 61+0 <= i+0; i--) { write (b2); b2++; }
+L512:
+        LD    A,62
+L513:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L514:
+        LD    A,61
+L515:
+        ADD   A,0
+L516:
+        PUSH AF
+L517:
+        LD    HL,(05006H)
+L518:
+        LD    DE,0
+        ADD   HL,DE
+L519:
+        POP  AF
+L520:
+        LD    E,A
+        LD    D,0
+        OR    A
+        SBC   HL,DE
+L521:
+        JR    Z,$+5
+        JP    C,L531
+L522:
+        JP    L525
+L523:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L524:
+        JP    L514
+L525:
+        LD    A,(05001H)
+L526:
+        CALL  writeA
+L527:
+        LD    HL,(05001H)
+        INC   (HL)
+L528:
+        JP    L523
+L529:
+        ;;test11.j(121)   // integer - byte
+L530:
+        ;;test11.j(122)   i2=59;
+L531:
+        LD    A,59
+L532:
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
+L533:
+        ;;test11.j(123)   for (byte b = 60; i2+0 <= b+0; b--) { write (b2); b2++; }
+L534:
+        LD    A,60
+L535:
+        LD    (05006H),A
+L536:
+        LD    HL,(05002H)
+L537:
+        LD    DE,0
+        ADD   HL,DE
+L538:
+        PUSH HL
+L539:
+        LD    A,(05006H)
+L540:
+        ADD   A,0
+L541:
+        POP  HL
+L542:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L543:
+        JR    Z,$+5
+        JP    C,L553
+L544:
+        JP    L547
+L545:
+        LD    HL,(05006H)
+        DEC   (HL)
+L546:
+        JP    L536
+L547:
+        LD    A,(05001H)
+L548:
+        CALL  writeA
+L549:
+        LD    HL,(05001H)
+        INC   (HL)
+L550:
+        JP    L545
+L551:
+        ;;test11.j(124)   // integer - integer
+L552:
+        ;;test11.j(125)   for(word i = 1058; 1000+57 <= i+0; i--) { write (b2); b2++; }
+L553:
+        LD    HL,1058
+L554:
+        LD    (05006H),HL
+L555:
+        LD    HL,1000
+L556:
+        LD    DE,57
+        ADD   HL,DE
+L557:
+        PUSH HL
+L558:
+        LD    HL,(05006H)
+L559:
+        LD    DE,0
+        ADD   HL,DE
+L560:
+        POP   DE
+        OR    A
+        SBC   HL,DE
+L561:
+        JP    C,L574
+L562:
+        JP    L565
+L563:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L564:
+        JP    L555
+L565:
+        LD    A,(05001H)
+L566:
+        CALL  writeA
+L567:
+        LD    HL,(05001H)
+        INC   (HL)
+L568:
+        JP    L563
+L569:
+        ;;test11.j(126) 
+L570:
+        ;;test11.j(127)   /************************/
+L571:
+        ;;test11.j(128)   // acc - var
+L572:
+        ;;test11.j(129)   // byte - byte
+L573:
+        ;;test11.j(130)   for (byte b = 72; 71+0 <= b; b--) { write (b2); b2++; }
+L574:
+        LD    A,72
+L575:
+        LD    (05006H),A
+L576:
+        LD    A,71
+L577:
+        ADD   A,0
+L578:
+        LD    B,A
+        LD    A,(05006H)
+        SUB   A,B
+L579:
+        JR    Z,$+5
+        JP    C,L589
+L580:
+        JP    L583
+L581:
+        LD    HL,(05006H)
+        DEC   (HL)
+L582:
+        JP    L576
+L583:
+        LD    A,(05001H)
+L584:
+        CALL  writeA
+L585:
+        LD    HL,(05001H)
+        INC   (HL)
+L586:
+        JP    L581
+L587:
+        ;;test11.j(131)   // byte - integer
+L588:
+        ;;test11.j(132)   for(word i = 70; 69+0 <= i; i--) { write (b2); b2++; }
+L589:
+        LD    A,70
+L590:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L591:
+        LD    A,69
+L592:
+        ADD   A,0
+L593:
+        LD    HL,(05006H)
+L594:
+        LD    E,A
+        LD    D,0
+        OR    A
+        SBC   HL,DE
+L595:
+        JR    Z,$+5
+        JP    C,L605
+L596:
+        JP    L599
+L597:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L598:
+        JP    L591
+L599:
+        LD    A,(05001H)
+L600:
+        CALL  writeA
+L601:
+        LD    HL,(05001H)
+        INC   (HL)
+L602:
+        JP    L597
+L603:
+        ;;test11.j(133)   // integer - byte
+L604:
+        ;;test11.j(134)   i2=67;
+L605:
+        LD    A,67
+L606:
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
+L607:
+        ;;test11.j(135)   for (byte b = 68; i2+0 <= b; b--) { write (b2); b2++; }
+L608:
+        LD    A,68
+L609:
+        LD    (05006H),A
+L610:
+        LD    HL,(05002H)
+L611:
+        LD    DE,0
+        ADD   HL,DE
+L612:
+        LD    A,(05006H)
+L613:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L614:
+        JR    Z,$+5
+        JP    C,L624
+L615:
+        JP    L618
+L616:
+        LD    HL,(05006H)
+        DEC   (HL)
+L617:
+        JP    L610
+L618:
+        LD    A,(05001H)
+L619:
+        CALL  writeA
+L620:
+        LD    HL,(05001H)
+        INC   (HL)
+L621:
+        JP    L616
+L622:
+        ;;test11.j(136)   // integer - integer
+L623:
+        ;;test11.j(137)   for(word i = 1066; 1000+65 <= i; i--) { write (b2); b2++; }
+L624:
+        LD    HL,1066
+L625:
+        LD    (05006H),HL
+L626:
+        LD    HL,1000
+L627:
+        LD    DE,65
+        ADD   HL,DE
+L628:
+        LD    DE,(05006H)
+        OR    A
+        SBC   HL,DE
+L629:
+        JR    Z,$+5
+        JP    C,L643
+L630:
+        JP    L633
+L631:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L632:
+        JP    L626
+L633:
+        LD    A,(05001H)
+L634:
+        CALL  writeA
+L635:
+        LD    HL,(05001H)
+        INC   (HL)
+L636:
+        JP    L631
+L637:
+        ;;test11.j(138) 
+L638:
+        ;;test11.j(139)   /************************/
+L639:
+        ;;test11.j(140)   // acc - stack8
+L640:
+        ;;test11.j(141)   // byte - byte
+L641:
+        ;;test11.j(142)   //TODO
+L642:
+        ;;test11.j(143)   write(81);
+L643:
+        LD    A,81
+L644:
+        CALL  writeA
+L645:
+        ;;test11.j(144)   write(82);
+L646:
+        LD    A,82
+L647:
+        CALL  writeA
+L648:
+        ;;test11.j(145)   // byte - integer
+L649:
+        ;;test11.j(146)   //TODO
+L650:
+        ;;test11.j(147)   write(83);
+L651:
+        LD    A,83
+L652:
+        CALL  writeA
+L653:
+        ;;test11.j(148)   write(84);
+L654:
+        LD    A,84
+L655:
+        CALL  writeA
+L656:
+        ;;test11.j(149)   // integer - byte
+L657:
+        ;;test11.j(150)   //TODO
+L658:
+        ;;test11.j(151)   write(85);
+L659:
+        LD    A,85
+L660:
+        CALL  writeA
+L661:
+        ;;test11.j(152)   write(86);
+L662:
+        LD    A,86
+L663:
+        CALL  writeA
+L664:
+        ;;test11.j(153)   // integer - integer
+L665:
+        ;;test11.j(154)   //TODO
+L666:
+        ;;test11.j(155)   write(87);
+L667:
+        LD    A,87
+L668:
+        CALL  writeA
+L669:
+        ;;test11.j(156)   write(88);
+L670:
+        LD    A,88
+L671:
+        CALL  writeA
+L672:
+        ;;test11.j(157) 
+L673:
+        ;;test11.j(158)   /************************/
+L674:
+        ;;test11.j(159)   // acc - stack16
+L675:
+        ;;test11.j(160)   // byte - byte
+L676:
+        ;;test11.j(161)   //TODO
+L677:
+        ;;test11.j(162)   write(89);
+L678:
+        LD    A,89
+L679:
+        CALL  writeA
+L680:
+        ;;test11.j(163)   write(90);
+L681:
+        LD    A,90
+L682:
+        CALL  writeA
+L683:
+        ;;test11.j(164)   // byte - integer
+L684:
+        ;;test11.j(165)   //TODO
+L685:
+        ;;test11.j(166)   write(91);
+L686:
+        LD    A,91
+L687:
+        CALL  writeA
+L688:
+        ;;test11.j(167)   write(92);
+L689:
+        LD    A,92
+L690:
+        CALL  writeA
+L691:
+        ;;test11.j(168)   // integer - byte
+L692:
+        ;;test11.j(169)   //TODO
+L693:
+        ;;test11.j(170)   write(93);
+L694:
+        LD    A,93
+L695:
+        CALL  writeA
+L696:
+        ;;test11.j(171)   write(94);
+L697:
+        LD    A,94
+L698:
+        CALL  writeA
+L699:
+        ;;test11.j(172)   // integer - integer
+L700:
+        ;;test11.j(173)   //TODO
+L701:
+        ;;test11.j(174)   write(95);
+L702:
+        LD    A,95
+L703:
+        CALL  writeA
+L704:
+        ;;test11.j(175)   write(96);
+L705:
+        LD    A,96
+L706:
+        CALL  writeA
+L707:
+        ;;test11.j(176) 
+L708:
+        ;;test11.j(177)   /************************/
+L709:
+        ;;test11.j(178)   // var - constant
+L710:
+        ;;test11.j(179)   // byte - byte
+L711:
+        ;;test11.j(180)   b2=97;
+L712:
+        LD    A,97
+L713:
+        LD    (05001H),A
+L714:
+        ;;test11.j(181)   for (byte b = 96; b <= 97; b++) { write (b2); b2++; }
+L715:
+        LD    A,96
+L716:
+        LD    (05006H),A
+L717:
+        LD    A,(05006H)
+L718:
+        SUB   A,97
+L719:
+        JR    Z,$+5
+        JP    C,L731
+L720:
+        JP    L723
+L721:
+        LD    HL,(05006H)
+        INC   (HL)
+L722:
+        JP    L717
+L723:
+        LD    A,(05001H)
+L724:
+        CALL  writeA
+L725:
+        LD    HL,(05001H)
+        INC   (HL)
+L726:
+        JP    L721
+L727:
+        ;;test11.j(182)   // byte - integer
+L728:
+        ;;test11.j(183)   //not relevant
+L729:
+        ;;test11.j(184)   // integer - byte
+L730:
+        ;;test11.j(185)   for(word i = 92; i <= 93; i++) { write (b2); b2++; }
+L731:
+        LD    A,92
+L732:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L733:
+        LD    HL,(05006H)
+L734:
+        LD    A,93
+L735:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L736:
+        JR    Z,$+5
+        JP    C,L746
+L737:
+        JP    L740
+L738:
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+L739:
+        JP    L733
+L740:
+        LD    A,(05001H)
+L741:
+        CALL  writeA
+L742:
+        LD    HL,(05001H)
+        INC   (HL)
+L743:
+        JP    L738
+L744:
+        ;;test11.j(186)   // integer - integer
+L745:
+        ;;test11.j(187)   for(word i = 1090; i <= 1091; i++) { write (b2); b2++; }
+L746:
+        LD    HL,1090
+L747:
+        LD    (05006H),HL
+L748:
+        LD    HL,(05006H)
+L749:
+        LD    DE,1091
+        OR    A
+        SBC   HL,DE
+L750:
+        JR    Z,$+5
+        JP    C,L763
+L751:
+        JP    L754
+L752:
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+L753:
+        JP    L748
+L754:
+        LD    A,(05001H)
+L755:
+        CALL  writeA
+L756:
+        LD    HL,(05001H)
+        INC   (HL)
+L757:
+        JP    L752
+L758:
+        ;;test11.j(188) 
+L759:
+        ;;test11.j(189)   /************************/
+L760:
+        ;;test11.j(190)   // var - acc
+L761:
+        ;;test11.j(191)   // byte - byte
+L762:
+        ;;test11.j(192)   for (byte b = 104; b <= 105+0; b++) { write (b2); b2++; }
+L763:
+        LD    A,104
+L764:
+        LD    (05006H),A
+L765:
+        LD    A,105
+L766:
+        ADD   A,0
+L767:
+        LD    B,A
+        LD    A,(05006H)
+        SUB   A,B
+L768:
+        JP    C,L778
+L769:
+        JP    L772
+L770:
+        LD    HL,(05006H)
+        INC   (HL)
+L771:
+        JP    L765
+L772:
+        LD    A,(05001H)
+L773:
+        CALL  writeA
+L774:
+        LD    HL,(05001H)
+        INC   (HL)
+L775:
+        JP    L770
+L776:
+        ;;test11.j(193)   // byte - integer
+L777:
+        ;;test11.j(194)   i2=103;
+L778:
+        LD    A,103
+L779:
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
+L780:
+        ;;test11.j(195)   for (byte b = 102; b <= i2+0; b++) { write (b2); b2++; }
+L781:
+        LD    A,102
+L782:
+        LD    (05006H),A
+L783:
+        LD    HL,(05002H)
+L784:
+        LD    DE,0
+        ADD   HL,DE
+L785:
+        LD    A,(05006H)
+L786:
+        LD    E,A
+        LD    D,0
+        OR    A
+        SBC   HL,DE
+L787:
+        JR    Z,$+5
+        JP    C,L797
+L788:
+        JP    L791
+L789:
+        LD    HL,(05006H)
+        INC   (HL)
+L790:
+        JP    L783
+L791:
+        LD    A,(05001H)
+L792:
+        CALL  writeA
+L793:
+        LD    HL,(05001H)
+        INC   (HL)
+L794:
+        JP    L789
+L795:
+        ;;test11.j(196)   // integer - byte
+L796:
+        ;;test11.j(197)   for(word i = 100; i <= 101+0; i++) { write (b2); b2++; }
+L797:
+        LD    A,100
+L798:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L799:
+        LD    A,101
+L800:
+        ADD   A,0
+L801:
+        LD    HL,(05006H)
+L802:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L803:
+        JR    Z,$+5
+        JP    C,L813
+L804:
+        JP    L807
+L805:
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+L806:
+        JP    L799
+L807:
+        LD    A,(05001H)
+L808:
+        CALL  writeA
+L809:
+        LD    HL,(05001H)
+        INC   (HL)
+L810:
+        JP    L805
+L811:
+        ;;test11.j(198)   // integer - integer
+L812:
+        ;;test11.j(199)   for(word i = 1098; i <= 1099+0; i++) { write (b2); b2++; }
+L813:
+        LD    HL,1098
+L814:
+        LD    (05006H),HL
+L815:
+        LD    HL,1099
+L816:
+        LD    DE,0
+        ADD   HL,DE
+L817:
+        LD    DE,(05006H)
+        OR    A
+        SBC   HL,DE
+L818:
+        JP    C,L831
+L819:
+        JP    L822
+L820:
+        LD    HL,(05006H)
+        INC   HL
+        LD    (05006H),HL
+L821:
+        JP    L815
+L822:
+        LD    A,(05001H)
+L823:
+        CALL  writeA
+L824:
+        LD    HL,(05001H)
+        INC   (HL)
+L825:
+        JP    L820
+L826:
+        ;;test11.j(200) 
+L827:
+        ;;test11.j(201)   /************************/
+L828:
+        ;;test11.j(202)   // var - var
+L829:
+        ;;test11.j(203)   // byte - byte
+L830:
+        ;;test11.j(204)   for (byte b = 112; b2 <= b; b--) { write (b2); b2++; }
+L831:
+        LD    A,112
+L832:
+        LD    (05006H),A
+L833:
+        LD    A,(05001H)
+L834:
+        LD    B,A
+        LD    A,(05006H)
+        SUB   A,B
+L835:
+        JR    Z,$+5
+        JP    C,L845
+L836:
+        JP    L839
+L837:
+        LD    HL,(05006H)
+        DEC   (HL)
+L838:
+        JP    L833
+L839:
+        LD    A,(05001H)
+L840:
+        CALL  writeA
+L841:
+        LD    HL,(05001H)
+        INC   (HL)
+L842:
+        JP    L837
+L843:
+        ;;test11.j(205)   // byte - integer
+L844:
+        ;;test11.j(206)   for(word i = 116; b2 <= i; i--) { write (b2); b2++; }
+L845:
+        LD    A,116
+L846:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L847:
+        LD    A,(05001H)
+L848:
+        LD    HL,(05006H)
+L849:
+        LD    E,A
+        LD    D,0
+        OR    A
+        SBC   HL,DE
+L850:
+        JR    Z,$+5
+        JP    C,L860
+L851:
+        JP    L854
+L852:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L853:
+        JP    L847
+L854:
+        LD    A,(05001H)
+L855:
+        CALL  writeA
+L856:
+        LD    HL,(05001H)
+        INC   (HL)
+L857:
+        JP    L852
+L858:
+        ;;test11.j(207)   // integer - byte
+L859:
+        ;;test11.j(208)   i2=b2;
+L860:
+        LD    A,(05001H)
+L861:
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
+L862:
+        ;;test11.j(209)   for (byte b = 118; i2 <= b; b--) { write (b2); b2++; }
+L863:
+        LD    A,118
+L864:
+        LD    (05006H),A
+L865:
+        LD    HL,(05002H)
+L866:
+        LD    A,(05006H)
+L867:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L868:
+        JR    Z,$+5
+        JP    C,L878
+L869:
+        JP    L872
+L870:
+        LD    HL,(05006H)
+        DEC   (HL)
+L871:
+        JP    L865
+L872:
+        LD    A,(05001H)
+L873:
+        CALL  writeA
+L874:
+        LD    HL,(05001H)
+        INC   (HL)
+L875:
+        JP    L870
+L876:
+        ;;test11.j(210)   // integer - integer
+L877:
+        ;;test11.j(211)   i2=120;
+L878:
+        LD    A,120
+L879:
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
+L880:
+        ;;test11.j(212)   for(word i = b2+4; i2 <= i; i--) { write (b2); b2++; }
+L881:
+        LD    A,(05001H)
+L882:
+        ADD   A,4
+L883:
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
+L884:
+        LD    HL,(05002H)
+L885:
+        LD    DE,(05006H)
+        OR    A
+        SBC   HL,DE
+L886:
+        JR    Z,$+5
+        JP    C,L928
+L887:
+        JP    L890
+L888:
+        LD    HL,(05006H)
+        DEC   HL
+        LD    (05006H),HL
+L889:
+        JP    L884
+L890:
+        LD    A,(05001H)
+L891:
+        CALL  writeA
+L892:
+        LD    HL,(05001H)
+        INC   (HL)
+L893:
+        JP    L888
+L894:
+        ;;test11.j(213) 
+L895:
+        ;;test11.j(214)   /************************/
+L896:
+        ;;test11.j(215)   // var - stack8
+L897:
+        ;;test11.j(216)   // byte - byte
+L898:
+        ;;test11.j(217)   // byte - integer
+L899:
+        ;;test11.j(218)   // integer - byte
+L900:
+        ;;test11.j(219)   // integer - integer
+L901:
+        ;;test11.j(220)   //TODO
+L902:
+        ;;test11.j(221) 
+L903:
+        ;;test11.j(222)   /************************/
+L904:
+        ;;test11.j(223)   // var - stack16
+L905:
+        ;;test11.j(224)   // byte - byte
+L906:
+        ;;test11.j(225)   // byte - integer
+L907:
+        ;;test11.j(226)   // integer - byte
+L908:
+        ;;test11.j(227)   // integer - integer
+L909:
+        ;;test11.j(228)   //TODO
+L910:
+        ;;test11.j(229) 
+L911:
+        ;;test11.j(230)   /************************/
+L912:
+        ;;test11.j(231)   // stack8 - constant
+L913:
+        ;;test11.j(232)   // stack8 - acc
+L914:
+        ;;test11.j(233)   // stack8 - var
+L915:
+        ;;test11.j(234)   // stack8 - stack8
+L916:
+        ;;test11.j(235)   // stack8 - stack16
+L917:
+        ;;test11.j(236)   //TODO
+L918:
+        ;;test11.j(237) 
+L919:
+        ;;test11.j(238)   /************************/
+L920:
+        ;;test11.j(239)   // stack16 - constant
+L921:
+        ;;test11.j(240)   // stack16 - acc
+L922:
+        ;;test11.j(241)   // stack16 - var
+L923:
+        ;;test11.j(242)   // stack16 - stack8
+L924:
+        ;;test11.j(243)   // stack16 - stack16
+L925:
+        ;;test11.j(244)   //TODO
+L926:
+        ;;test11.j(245) 
 L927:
-        CALL  writeHL
+        ;;test11.j(246)   write("Klaar.");
 L928:
-        JP    L924
+        LD    HL,932
 L929:
-        ;;test11.j(258)   write("Klaar.");
-L930:
-        LD    HL,934
-L931:
         CALL  putStr
-L932:
-        ;;test11.j(259) }
-L933:
+L930:
+        ;;test11.j(247) }
+L931:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L934:
+L932:
         .ASCIZ  "Klaar."

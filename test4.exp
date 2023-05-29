@@ -1,62 +1,63 @@
    0 ;test4.j(0) /* Program to test division */
    1 ;test4.j(1) class TestMultiplyDivide {
-   2 ;test4.j(2)   write(11);
-   3 acc8= constant 11
-   4 call writeAcc8
-   5 ;test4.j(3)   write((4 * 5) / 2);
-   6 acc8= constant 4
-   7 acc8* constant 5
-   8 acc8/ constant 2
+   2 ;test4.j(2)   write(0 * 1);
+   3 acc8= constant 0
+   4 acc8* constant 1
+   5 call writeAcc8
+   6 ;test4.j(3)   write(1 * 1);
+   7 acc8= constant 1
+   8 acc8* constant 1
    9 call writeAcc8
-  10 ;test4.j(4)   write((7 * 7 + 5) / 6);
-  11 acc8= constant 7
-  12 acc8* constant 7
-  13 acc8+ constant 5
-  14 acc8/ constant 6
-  15 call writeAcc8
-  16 ;test4.j(5)   write((4 * 5 * 2) / 5);
-  17 acc8= constant 4
-  18 acc8* constant 5
-  19 acc8* constant 2
-  20 acc8/ constant 5
+  10 ;test4.j(4)   write(4 / 2);
+  11 acc8= constant 4
+  12 acc8/ constant 2
+  13 call writeAcc8
+  14 ;test4.j(5)   write(9 / 3);
+  15 acc8= constant 9
+  16 acc8/ constant 3
+  17 call writeAcc8
+  18 ;test4.j(6)   write(8 / 2);
+  19 acc8= constant 8
+  20 acc8/ constant 2
   21 call writeAcc8
-  22 ;test4.j(6)   write((7 * 7) / 7);
-  23 acc8= constant 7
-  24 acc8* constant 7
-  25 acc8/ constant 7
-  26 call writeAcc8
-  27 ;test4.j(7)   write((3 * 8) / 4);
-  28 acc8= constant 3
-  29 acc8* constant 8
-  30 acc8/ constant 4
-  31 call writeAcc8
-  32 ;test4.j(8)   write(5 / 1);
-  33 acc8= constant 5
-  34 acc8/ constant 1
+  22 ;test4.j(7)   write(5 / 1);
+  23 acc8= constant 5
+  24 acc8/ constant 1
+  25 call writeAcc8
+  26 ;test4.j(8)   write((3 * 8) / 4);
+  27 acc8= constant 3
+  28 acc8* constant 8
+  29 acc8/ constant 4
+  30 call writeAcc8
+  31 ;test4.j(9)   write((7 * 7) / 7);
+  32 acc8= constant 7
+  33 acc8* constant 7
+  34 acc8/ constant 7
   35 call writeAcc8
-  36 ;test4.j(9)   write(8 / 2);
-  37 acc8= constant 8
-  38 acc8/ constant 2
-  39 call writeAcc8
-  40 ;test4.j(10)   write(9 / 3);
-  41 acc8= constant 9
-  42 acc8/ constant 3
-  43 call writeAcc8
-  44 ;test4.j(11)   write(4 / 2);
-  45 acc8= constant 4
-  46 acc8/ constant 2
-  47 call writeAcc8
-  48 ;test4.j(12)   write(1 * 1);
-  49 acc8= constant 1
-  50 acc8* constant 1
-  51 call writeAcc8
-  52 ;test4.j(13)   write(0 * 1);
-  53 acc8= constant 0
-  54 acc8* constant 1
-  55 call writeAcc8
-  56 ;test4.j(14)   write("Klaar");
-  57 acc16= constant 61
-  58 writeString
-  59 ;test4.j(15) }
-  60 stop
-  61 stringConstant 0 = "Klaar"
+  36 ;test4.j(10)   write((4 * 5 * 2) / 5);
+  37 acc8= constant 4
+  38 acc8* constant 5
+  39 acc8* constant 2
+  40 acc8/ constant 5
+  41 call writeAcc8
+  42 ;test4.j(11)   write(6561 / 729);
+  43 acc16= constant 6561
+  44 acc16/ constant 729
+  45 call writeAcc16
+  46 ;test4.j(12)   write(60 / 6);
+  47 acc8= constant 60
+  48 acc8/ constant 6
+  49 call writeAcc8
+  50 ;test4.j(13)   write(22 / 2);
+  51 acc8= constant 22
+  52 acc8/ constant 2
+  53 call writeAcc8
+  54 ;test4.j(14)   write(12);
+  55 acc8= constant 12
+  56 call writeAcc8
+  57 ;test4.j(15)   write("Klaar");
+  58 acc16= constant 62
+  59 writeString
+  60 ;test4.j(16) }
+  61 stop
+  62 stringConstant 0 = "Klaar"

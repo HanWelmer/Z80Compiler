@@ -3,6 +3,7 @@
  * Test 8-bit and 16-bit expressions.
  */
 class Test8And16BitExpressions {
+  write(0);
   /*************************/
   /* reverse subtract byte */
   /*************************/

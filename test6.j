@@ -150,18 +150,21 @@ class Test8And16BitExpressions {
   /*************************/
   /* possible loss of data */
   /*************************/
+  write("Nu komen 251 en 252");
   b = 507;
   write(b);         // 251
   i = 508;
   b = i;
   write(b);         // 252
 
+  write("Nu komen -253 en -254");
   b = b - 505;
   write(b);         // 252 - 505 = -253
   i = i + 5;
   b = b - i;
   write(b);         // -233 - 11 = -254
   
+  write("Nu komen 255 en 256");
   b = 255;
   write(b);         // 255
   //LD    A,255
@@ -181,6 +184,7 @@ class Test8And16BitExpressions {
   //CALL  writeHL
   //OK
 
+  write("Nu komen 1000..1047");
   write(1000);      // 1000
   j = 1001;
   write(j);         // 1001
@@ -302,6 +306,7 @@ class Test8And16BitExpressions {
   /************/
   /* Overflow */
   /************/
+  write("Nu komen 24.764 en 25.064");
   write(300 * 301); // 90.300 % 65536 = 24.764
   i = 300 * 302;
   write(i);         // 90.600 % 65536 = 25.064

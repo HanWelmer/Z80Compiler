@@ -401,458 +401,478 @@
  400 ;test6.j(149)   /*************************/
  401 ;test6.j(150)   /* possible loss of data */
  402 ;test6.j(151)   /*************************/
- 403 ;test6.j(152)   b = 507;
- 404 acc16= constant 507
- 405 acc16=> variable 0
- 406 ;test6.j(153)   write(b);         // 251
- 407 acc8= variable 0
- 408 call writeAcc8
- 409 ;test6.j(154)   i = 508;
- 410 acc16= constant 508
- 411 acc16=> variable 2
- 412 ;test6.j(155)   b = i;
- 413 acc16= variable 2
- 414 acc16=> variable 0
- 415 ;test6.j(156)   write(b);         // 252
- 416 acc8= variable 0
- 417 call writeAcc8
- 418 ;test6.j(157) 
- 419 ;test6.j(158)   b = b - 505;
- 420 acc8= variable 0
- 421 acc8ToAcc16
- 422 acc16- constant 505
- 423 acc16=> variable 0
- 424 ;test6.j(159)   write(b);         // 252 - 505 = -253
- 425 acc8= variable 0
- 426 call writeAcc8
- 427 ;test6.j(160)   i = i + 5;
- 428 acc16= variable 2
- 429 acc16+ constant 5
- 430 acc16=> variable 2
- 431 ;test6.j(161)   b = b - i;
- 432 acc8= variable 0
- 433 acc8ToAcc16
- 434 acc16- variable 2
- 435 acc16=> variable 0
- 436 ;test6.j(162)   write(b);         // -233 - 11 = -254
- 437 acc8= variable 0
- 438 call writeAcc8
- 439 ;test6.j(163)   
- 440 ;test6.j(164)   b = 255;
- 441 acc8= constant 255
- 442 acc8=> variable 0
- 443 ;test6.j(165)   write(b);         // 255
- 444 acc8= variable 0
- 445 call writeAcc8
- 446 ;test6.j(166)   //LD    A,255
- 447 ;test6.j(167)   //LD    (04001H),A
- 448 ;test6.j(168)   //LD    A,(04001H)
- 449 ;test6.j(169)   //CALL  writeA
- 450 ;test6.j(170)   //OK
- 451 ;test6.j(171) 
- 452 ;test6.j(172)   /**********************/
- 453 ;test6.j(173)   /* Single term 16-bit */
- 454 ;test6.j(174)   /**********************/
- 455 ;test6.j(175)   i = 256;
- 456 acc16= constant 256
- 457 acc16=> variable 2
- 458 ;test6.j(176)   write(i);         // 256
- 459 acc16= variable 2
- 460 call writeAcc16
- 461 ;test6.j(177)   //LD    HL,256
- 462 ;test6.j(178)   //LD    (04006H),HL
- 463 ;test6.j(179)   //LD    HL,(04006H)
- 464 ;test6.j(180)   //CALL  writeHL
- 465 ;test6.j(181)   //OK
- 466 ;test6.j(182) 
- 467 ;test6.j(183)   write(1000);      // 1000
- 468 acc16= constant 1000
+ 403 ;test6.j(152)   write("Nu komen 251 en 252");
+ 404 acc16= constant 872
+ 405 writeString
+ 406 ;test6.j(153)   b = 507;
+ 407 acc16= constant 507
+ 408 acc16=> variable 0
+ 409 ;test6.j(154)   write(b);         // 251
+ 410 acc8= variable 0
+ 411 call writeAcc8
+ 412 ;test6.j(155)   i = 508;
+ 413 acc16= constant 508
+ 414 acc16=> variable 2
+ 415 ;test6.j(156)   b = i;
+ 416 acc16= variable 2
+ 417 acc16=> variable 0
+ 418 ;test6.j(157)   write(b);         // 252
+ 419 acc8= variable 0
+ 420 call writeAcc8
+ 421 ;test6.j(158) 
+ 422 ;test6.j(159)   write("Nu komen -253 en -254");
+ 423 acc16= constant 873
+ 424 writeString
+ 425 ;test6.j(160)   b = b - 505;
+ 426 acc8= variable 0
+ 427 acc8ToAcc16
+ 428 acc16- constant 505
+ 429 acc16=> variable 0
+ 430 ;test6.j(161)   write(b);         // 252 - 505 = -253
+ 431 acc8= variable 0
+ 432 call writeAcc8
+ 433 ;test6.j(162)   i = i + 5;
+ 434 acc16= variable 2
+ 435 acc16+ constant 5
+ 436 acc16=> variable 2
+ 437 ;test6.j(163)   b = b - i;
+ 438 acc8= variable 0
+ 439 acc8ToAcc16
+ 440 acc16- variable 2
+ 441 acc16=> variable 0
+ 442 ;test6.j(164)   write(b);         // -233 - 11 = -254
+ 443 acc8= variable 0
+ 444 call writeAcc8
+ 445 ;test6.j(165)   
+ 446 ;test6.j(166)   write("Nu komen 255 en 256");
+ 447 acc16= constant 874
+ 448 writeString
+ 449 ;test6.j(167)   b = 255;
+ 450 acc8= constant 255
+ 451 acc8=> variable 0
+ 452 ;test6.j(168)   write(b);         // 255
+ 453 acc8= variable 0
+ 454 call writeAcc8
+ 455 ;test6.j(169)   //LD    A,255
+ 456 ;test6.j(170)   //LD    (04001H),A
+ 457 ;test6.j(171)   //LD    A,(04001H)
+ 458 ;test6.j(172)   //CALL  writeA
+ 459 ;test6.j(173)   //OK
+ 460 ;test6.j(174) 
+ 461 ;test6.j(175)   /**********************/
+ 462 ;test6.j(176)   /* Single term 16-bit */
+ 463 ;test6.j(177)   /**********************/
+ 464 ;test6.j(178)   i = 256;
+ 465 acc16= constant 256
+ 466 acc16=> variable 2
+ 467 ;test6.j(179)   write(i);         // 256
+ 468 acc16= variable 2
  469 call writeAcc16
- 470 ;test6.j(184)   j = 1001;
- 471 acc16= constant 1001
- 472 acc16=> variable 4
- 473 ;test6.j(185)   write(j);         // 1001
- 474 acc16= variable 4
- 475 call writeAcc16
- 476 ;test6.j(186) 
- 477 ;test6.j(187)   /************************/
- 478 ;test6.j(188)   /* Dual term addition   */
- 479 ;test6.j(189)   /************************/
- 480 ;test6.j(190)   write(1000 + 2);  // 1002
- 481 acc16= constant 1000
- 482 acc16+ constant 2
- 483 call writeAcc16
- 484 ;test6.j(191)   write(3 + 1000);  // 1003
- 485 acc8= constant 3
- 486 acc8ToAcc16
- 487 acc16+ constant 1000
- 488 call writeAcc16
- 489 ;test6.j(192)   write(500 + 504); // 1004
- 490 acc16= constant 500
- 491 acc16+ constant 504
- 492 call writeAcc16
- 493 ;test6.j(193)   i = 1000 + 5;
- 494 acc16= constant 1000
- 495 acc16+ constant 5
- 496 acc16=> variable 2
- 497 ;test6.j(194)   write(i);         // 1005
- 498 acc16= variable 2
- 499 call writeAcc16
- 500 ;test6.j(195)   i = 6 + 1000;
- 501 acc8= constant 6
- 502 acc8ToAcc16
- 503 acc16+ constant 1000
- 504 acc16=> variable 2
- 505 ;test6.j(196)   write(i);         // 1006
- 506 acc16= variable 2
- 507 call writeAcc16
- 508 ;test6.j(197)   i = 500 + 507;
- 509 acc16= constant 500
- 510 acc16+ constant 507
- 511 acc16=> variable 2
- 512 ;test6.j(198)   write(i);         // 1007
- 513 acc16= variable 2
- 514 call writeAcc16
- 515 ;test6.j(199)   
- 516 ;test6.j(200)   j = 1000;
- 517 acc16= constant 1000
- 518 acc16=> variable 4
- 519 ;test6.j(201)   b = 10;
- 520 acc8= constant 10
- 521 acc8=> variable 0
- 522 ;test6.j(202)   i = 514;
- 523 acc16= constant 514
- 524 acc16=> variable 2
- 525 ;test6.j(203)   write(j + 8);     // 1008
- 526 acc16= variable 4
- 527 acc16+ constant 8
- 528 call writeAcc16
- 529 ;test6.j(204)   write(9 + j);     // 1009
- 530 acc8= constant 9
- 531 acc8ToAcc16
- 532 acc16+ variable 4
- 533 call writeAcc16
- 534 ;test6.j(205)   write(j + b);     // 1010
- 535 acc16= variable 4
- 536 acc16+ variable 0
- 537 call writeAcc16
- 538 ;test6.j(206)   b++;
- 539 incr8 variable 0
- 540 ;test6.j(207)   write(b + j);     // 1011
- 541 acc8= variable 0
- 542 acc8ToAcc16
- 543 acc16+ variable 4
- 544 call writeAcc16
- 545 ;test6.j(208)   j = 500;
- 546 acc16= constant 500
- 547 acc16=> variable 4
- 548 ;test6.j(209)   write(j + 512);   // 1012
- 549 acc16= variable 4
- 550 acc16+ constant 512
- 551 call writeAcc16
- 552 ;test6.j(210)   write(513 + j);   // 1013
- 553 acc16= constant 513
- 554 acc16+ variable 4
- 555 call writeAcc16
- 556 ;test6.j(211)   write(i + j);     // 1014
- 557 acc16= variable 2
- 558 acc16+ variable 4
- 559 call writeAcc16
- 560 ;test6.j(212)   
- 561 ;test6.j(213)   j = 1000;
- 562 acc16= constant 1000
- 563 acc16=> variable 4
- 564 ;test6.j(214)   b = 17;
- 565 acc8= constant 17
- 566 acc8=> variable 0
- 567 ;test6.j(215)   i = j + 15;
- 568 acc16= variable 4
- 569 acc16+ constant 15
- 570 acc16=> variable 2
- 571 ;test6.j(216)   write(i);         // 1015
- 572 acc16= variable 2
- 573 call writeAcc16
- 574 ;test6.j(217)   i = 16 + j;
- 575 acc8= constant 16
- 576 acc8ToAcc16
- 577 acc16+ variable 4
- 578 acc16=> variable 2
- 579 ;test6.j(218)   write(i);         // 1016
- 580 acc16= variable 2
- 581 call writeAcc16
- 582 ;test6.j(219)   i = j + b;
- 583 acc16= variable 4
- 584 acc16+ variable 0
- 585 acc16=> variable 2
- 586 ;test6.j(220)   write(i);         // 1017
- 587 acc16= variable 2
- 588 call writeAcc16
- 589 ;test6.j(221)   b++;
- 590 incr8 variable 0
- 591 ;test6.j(222)   i = b + j;
- 592 acc8= variable 0
- 593 acc8ToAcc16
- 594 acc16+ variable 4
- 595 acc16=> variable 2
- 596 ;test6.j(223)   write(i);         // 1018
- 597 acc16= variable 2
- 598 call writeAcc16
- 599 ;test6.j(224)   j = 500;
- 600 acc16= constant 500
- 601 acc16=> variable 4
- 602 ;test6.j(225)   i = j + 519;
- 603 acc16= variable 4
- 604 acc16+ constant 519
- 605 acc16=> variable 2
- 606 ;test6.j(226)   write(i);         // 1019
- 607 acc16= variable 2
- 608 call writeAcc16
- 609 ;test6.j(227)   i = 520 + j;
- 610 acc16= constant 520
- 611 acc16+ variable 4
- 612 acc16=> variable 2
- 613 ;test6.j(228)   write(i);         // 1020
- 614 acc16= variable 2
- 615 call writeAcc16
- 616 ;test6.j(229)   i = 521;
- 617 acc16= constant 521
- 618 acc16=> variable 2
- 619 ;test6.j(230)   i = i + j;
- 620 acc16= variable 2
- 621 acc16+ variable 4
- 622 acc16=> variable 2
- 623 ;test6.j(231)   write(i);         // 1021
- 624 acc16= variable 2
- 625 call writeAcc16
- 626 ;test6.j(232)   
- 627 ;test6.j(233)   /*************************/
- 628 ;test6.j(234)   /* Dual term subtraction */
- 629 ;test6.j(235)   /*************************/
- 630 ;test6.j(236)   write(1024 - 2);  // 1022
- 631 acc16= constant 1024
- 632 acc16- constant 2
- 633 call writeAcc16
- 634 ;test6.j(237)   write(1523 - 500);// 1023
- 635 acc16= constant 1523
- 636 acc16- constant 500
+ 470 ;test6.j(180)   //LD    HL,256
+ 471 ;test6.j(181)   //LD    (04006H),HL
+ 472 ;test6.j(182)   //LD    HL,(04006H)
+ 473 ;test6.j(183)   //CALL  writeHL
+ 474 ;test6.j(184)   //OK
+ 475 ;test6.j(185) 
+ 476 ;test6.j(186)   write("Nu komen 1000..1047");
+ 477 acc16= constant 875
+ 478 writeString
+ 479 ;test6.j(187)   write(1000);      // 1000
+ 480 acc16= constant 1000
+ 481 call writeAcc16
+ 482 ;test6.j(188)   j = 1001;
+ 483 acc16= constant 1001
+ 484 acc16=> variable 4
+ 485 ;test6.j(189)   write(j);         // 1001
+ 486 acc16= variable 4
+ 487 call writeAcc16
+ 488 ;test6.j(190) 
+ 489 ;test6.j(191)   /************************/
+ 490 ;test6.j(192)   /* Dual term addition   */
+ 491 ;test6.j(193)   /************************/
+ 492 ;test6.j(194)   write(1000 + 2);  // 1002
+ 493 acc16= constant 1000
+ 494 acc16+ constant 2
+ 495 call writeAcc16
+ 496 ;test6.j(195)   write(3 + 1000);  // 1003
+ 497 acc8= constant 3
+ 498 acc8ToAcc16
+ 499 acc16+ constant 1000
+ 500 call writeAcc16
+ 501 ;test6.j(196)   write(500 + 504); // 1004
+ 502 acc16= constant 500
+ 503 acc16+ constant 504
+ 504 call writeAcc16
+ 505 ;test6.j(197)   i = 1000 + 5;
+ 506 acc16= constant 1000
+ 507 acc16+ constant 5
+ 508 acc16=> variable 2
+ 509 ;test6.j(198)   write(i);         // 1005
+ 510 acc16= variable 2
+ 511 call writeAcc16
+ 512 ;test6.j(199)   i = 6 + 1000;
+ 513 acc8= constant 6
+ 514 acc8ToAcc16
+ 515 acc16+ constant 1000
+ 516 acc16=> variable 2
+ 517 ;test6.j(200)   write(i);         // 1006
+ 518 acc16= variable 2
+ 519 call writeAcc16
+ 520 ;test6.j(201)   i = 500 + 507;
+ 521 acc16= constant 500
+ 522 acc16+ constant 507
+ 523 acc16=> variable 2
+ 524 ;test6.j(202)   write(i);         // 1007
+ 525 acc16= variable 2
+ 526 call writeAcc16
+ 527 ;test6.j(203)   
+ 528 ;test6.j(204)   j = 1000;
+ 529 acc16= constant 1000
+ 530 acc16=> variable 4
+ 531 ;test6.j(205)   b = 10;
+ 532 acc8= constant 10
+ 533 acc8=> variable 0
+ 534 ;test6.j(206)   i = 514;
+ 535 acc16= constant 514
+ 536 acc16=> variable 2
+ 537 ;test6.j(207)   write(j + 8);     // 1008
+ 538 acc16= variable 4
+ 539 acc16+ constant 8
+ 540 call writeAcc16
+ 541 ;test6.j(208)   write(9 + j);     // 1009
+ 542 acc8= constant 9
+ 543 acc8ToAcc16
+ 544 acc16+ variable 4
+ 545 call writeAcc16
+ 546 ;test6.j(209)   write(j + b);     // 1010
+ 547 acc16= variable 4
+ 548 acc16+ variable 0
+ 549 call writeAcc16
+ 550 ;test6.j(210)   b++;
+ 551 incr8 variable 0
+ 552 ;test6.j(211)   write(b + j);     // 1011
+ 553 acc8= variable 0
+ 554 acc8ToAcc16
+ 555 acc16+ variable 4
+ 556 call writeAcc16
+ 557 ;test6.j(212)   j = 500;
+ 558 acc16= constant 500
+ 559 acc16=> variable 4
+ 560 ;test6.j(213)   write(j + 512);   // 1012
+ 561 acc16= variable 4
+ 562 acc16+ constant 512
+ 563 call writeAcc16
+ 564 ;test6.j(214)   write(513 + j);   // 1013
+ 565 acc16= constant 513
+ 566 acc16+ variable 4
+ 567 call writeAcc16
+ 568 ;test6.j(215)   write(i + j);     // 1014
+ 569 acc16= variable 2
+ 570 acc16+ variable 4
+ 571 call writeAcc16
+ 572 ;test6.j(216)   
+ 573 ;test6.j(217)   j = 1000;
+ 574 acc16= constant 1000
+ 575 acc16=> variable 4
+ 576 ;test6.j(218)   b = 17;
+ 577 acc8= constant 17
+ 578 acc8=> variable 0
+ 579 ;test6.j(219)   i = j + 15;
+ 580 acc16= variable 4
+ 581 acc16+ constant 15
+ 582 acc16=> variable 2
+ 583 ;test6.j(220)   write(i);         // 1015
+ 584 acc16= variable 2
+ 585 call writeAcc16
+ 586 ;test6.j(221)   i = 16 + j;
+ 587 acc8= constant 16
+ 588 acc8ToAcc16
+ 589 acc16+ variable 4
+ 590 acc16=> variable 2
+ 591 ;test6.j(222)   write(i);         // 1016
+ 592 acc16= variable 2
+ 593 call writeAcc16
+ 594 ;test6.j(223)   i = j + b;
+ 595 acc16= variable 4
+ 596 acc16+ variable 0
+ 597 acc16=> variable 2
+ 598 ;test6.j(224)   write(i);         // 1017
+ 599 acc16= variable 2
+ 600 call writeAcc16
+ 601 ;test6.j(225)   b++;
+ 602 incr8 variable 0
+ 603 ;test6.j(226)   i = b + j;
+ 604 acc8= variable 0
+ 605 acc8ToAcc16
+ 606 acc16+ variable 4
+ 607 acc16=> variable 2
+ 608 ;test6.j(227)   write(i);         // 1018
+ 609 acc16= variable 2
+ 610 call writeAcc16
+ 611 ;test6.j(228)   j = 500;
+ 612 acc16= constant 500
+ 613 acc16=> variable 4
+ 614 ;test6.j(229)   i = j + 519;
+ 615 acc16= variable 4
+ 616 acc16+ constant 519
+ 617 acc16=> variable 2
+ 618 ;test6.j(230)   write(i);         // 1019
+ 619 acc16= variable 2
+ 620 call writeAcc16
+ 621 ;test6.j(231)   i = 520 + j;
+ 622 acc16= constant 520
+ 623 acc16+ variable 4
+ 624 acc16=> variable 2
+ 625 ;test6.j(232)   write(i);         // 1020
+ 626 acc16= variable 2
+ 627 call writeAcc16
+ 628 ;test6.j(233)   i = 521;
+ 629 acc16= constant 521
+ 630 acc16=> variable 2
+ 631 ;test6.j(234)   i = i + j;
+ 632 acc16= variable 2
+ 633 acc16+ variable 4
+ 634 acc16=> variable 2
+ 635 ;test6.j(235)   write(i);         // 1021
+ 636 acc16= variable 2
  637 call writeAcc16
- 638 ;test6.j(238)   i = 1030 - 6;
- 639 acc16= constant 1030
- 640 acc16- constant 6
- 641 acc16=> variable 2
- 642 ;test6.j(239)   write(i);         // 1024
- 643 acc16= variable 2
- 644 call writeAcc16
- 645 ;test6.j(240)   i = 1525 - 500;
- 646 acc16= constant 1525
- 647 acc16- constant 500
- 648 acc16=> variable 2
- 649 ;test6.j(241)   write(i);         // 1025
- 650 acc16= variable 2
- 651 call writeAcc16
- 652 ;test6.j(242)   
- 653 ;test6.j(243)   j = 1040;
- 654 acc16= constant 1040
- 655 acc16=> variable 4
- 656 ;test6.j(244)   b = 13;
- 657 acc8= constant 13
- 658 acc8=> variable 0
- 659 ;test6.j(245)   i = 3030;
- 660 acc16= constant 3030
- 661 acc16=> variable 2
- 662 ;test6.j(246)   write(j - 14);    // 1026
- 663 acc16= variable 4
- 664 acc16- constant 14
- 665 call writeAcc16
- 666 ;test6.j(247)   write(j - b);     // 1027
- 667 acc16= variable 4
- 668 acc16- variable 0
- 669 call writeAcc16
- 670 ;test6.j(248)   j = 2000;
- 671 acc16= constant 2000
- 672 acc16=> variable 4
- 673 ;test6.j(249)   write(j - 972);   // 1028
- 674 acc16= variable 4
- 675 acc16- constant 972
- 676 call writeAcc16
- 677 ;test6.j(250)   write(3029 - j);  // 1029
- 678 acc16= constant 3029
- 679 acc16- variable 4
- 680 call writeAcc16
- 681 ;test6.j(251)   write(i - j);     // 1030
- 682 acc16= variable 2
- 683 acc16- variable 4
- 684 call writeAcc16
- 685 ;test6.j(252)   
- 686 ;test6.j(253)   j = 1050;
- 687 acc16= constant 1050
- 688 acc16=> variable 4
- 689 ;test6.j(254)   b = 18;
- 690 acc8= constant 18
- 691 acc8=> variable 0
- 692 ;test6.j(255)   i = j - 19;
- 693 acc16= variable 4
- 694 acc16- constant 19
- 695 acc16=> variable 2
- 696 ;test6.j(256)   write(i);         // 1031
- 697 acc16= variable 2
- 698 call writeAcc16
- 699 ;test6.j(257)   i = j - b;
- 700 acc16= variable 4
- 701 acc16- variable 0
- 702 acc16=> variable 2
- 703 ;test6.j(258)   write(i);         // 1032
- 704 acc16= variable 2
- 705 call writeAcc16
- 706 ;test6.j(259)   j = 2000;
- 707 acc16= constant 2000
- 708 acc16=> variable 4
- 709 ;test6.j(260)   i = j - 967;
- 710 acc16= variable 4
- 711 acc16- constant 967
- 712 acc16=> variable 2
- 713 ;test6.j(261)   write(i);         // 1033
- 714 acc16= variable 2
- 715 call writeAcc16
- 716 ;test6.j(262)   i = 3034 - j;
- 717 acc16= constant 3034
- 718 acc16- variable 4
- 719 acc16=> variable 2
- 720 ;test6.j(263)   write(i);         // 1034
- 721 acc16= variable 2
- 722 call writeAcc16
- 723 ;test6.j(264)   i = 3035;
- 724 acc16= constant 3035
- 725 acc16=> variable 2
- 726 ;test6.j(265)   i = i - j;
- 727 acc16= variable 2
- 728 acc16- variable 4
- 729 acc16=> variable 2
- 730 ;test6.j(266)   write(i);         // 1035
- 731 acc16= variable 2
- 732 call writeAcc16
- 733 ;test6.j(267)   
- 734 ;test6.j(268)   /****************************/
- 735 ;test6.j(269)   /* Dual term multiplication */
- 736 ;test6.j(270)   /****************************/
- 737 ;test6.j(271)   write(518 * 2);   // 1036
- 738 acc16= constant 518
- 739 acc16* constant 2
- 740 call writeAcc16
- 741 ;test6.j(272)   write(1 * 1037);  // 1037
- 742 acc8= constant 1
- 743 acc8ToAcc16
- 744 acc16* constant 1037
- 745 call writeAcc16
- 746 ;test6.j(273)   write(500 * 504 - 54354); // 1038 = 55392 - 54354
- 747 acc16= constant 500
- 748 acc16* constant 504
- 749 acc16- constant 54354
- 750 call writeAcc16
- 751 ;test6.j(274) 
- 752 ;test6.j(275)   i = 1039 * 1;
- 753 acc16= constant 1039
- 754 acc16* constant 1
- 755 acc16=> variable 2
- 756 ;test6.j(276)   write(i);         // 1039
- 757 acc16= variable 2
- 758 call writeAcc16
- 759 ;test6.j(277)   i = 2 * 520;
- 760 acc8= constant 2
- 761 acc8ToAcc16
- 762 acc16* constant 520
- 763 acc16=> variable 2
- 764 ;test6.j(278)   write(i);         // 1040
- 765 acc16= variable 2
- 766 call writeAcc16
- 767 ;test6.j(279) 
- 768 ;test6.j(280)   i = 1041;
- 769 acc16= constant 1041
- 770 acc16=> variable 2
- 771 ;test6.j(281)   write(i * 1);     // 1041
- 772 acc16= variable 2
- 773 acc16* constant 1
- 774 call writeAcc16
- 775 ;test6.j(282)   i = 521;
- 776 acc16= constant 521
- 777 acc16=> variable 2
- 778 ;test6.j(283)   write(2 * i);     // 1042
- 779 acc8= constant 2
- 780 acc8ToAcc16
- 781 acc16* variable 2
- 782 call writeAcc16
- 783 ;test6.j(284) 
- 784 ;test6.j(285)   i = 1043;
- 785 acc16= constant 1043
- 786 acc16=> variable 2
- 787 ;test6.j(286)   i = i * 1;
- 788 acc16= variable 2
- 789 acc16* constant 1
- 790 acc16=> variable 2
- 791 ;test6.j(287)   write(i);         // 1043
- 792 acc16= variable 2
- 793 call writeAcc16
- 794 ;test6.j(288)   i = 522;
- 795 acc16= constant 522
- 796 acc16=> variable 2
- 797 ;test6.j(289)   i = 2 * i;
- 798 acc8= constant 2
- 799 acc8ToAcc16
- 800 acc16* variable 2
- 801 acc16=> variable 2
- 802 ;test6.j(290)   write(i);         // 1044
- 803 acc16= variable 2
- 804 call writeAcc16
- 805 ;test6.j(291) 
- 806 ;test6.j(292)   i = 500 * 504 - 54347; // 1045 = 55392 - 54347
- 807 acc16= constant 500
- 808 acc16* constant 504
- 809 acc16- constant 54347
- 810 acc16=> variable 2
- 811 ;test6.j(293)   write(i);         // 1045
- 812 acc16= variable 2
- 813 call writeAcc16
- 814 ;test6.j(294)   i = 500;
- 815 acc16= constant 500
- 816 acc16=> variable 2
- 817 ;test6.j(295)   i = i * 504 - 54346;
- 818 acc16= variable 2
- 819 acc16* constant 504
- 820 acc16- constant 54346
- 821 acc16=> variable 2
- 822 ;test6.j(296)   write(i);         // 1046
- 823 acc16= variable 2
- 824 call writeAcc16
- 825 ;test6.j(297)   i = 504;
- 826 acc16= constant 504
- 827 acc16=> variable 2
- 828 ;test6.j(298)   i = 500 * i - 54345;
- 829 acc16= constant 500
- 830 acc16* variable 2
- 831 acc16- constant 54345
- 832 acc16=> variable 2
- 833 ;test6.j(299)   write(i);         // 1047
- 834 acc16= variable 2
- 835 call writeAcc16
- 836 ;test6.j(300)   
- 837 ;test6.j(301)   /************/
- 838 ;test6.j(302)   /* Overflow */
- 839 ;test6.j(303)   /************/
- 840 ;test6.j(304)   write(300 * 301); // 90.300 % 65536 = 24.764
- 841 acc16= constant 300
- 842 acc16* constant 301
- 843 call writeAcc16
- 844 ;test6.j(305)   i = 300 * 302;
- 845 acc16= constant 300
- 846 acc16* constant 302
- 847 acc16=> variable 2
- 848 ;test6.j(306)   write(i);         // 90.600 % 65536 = 25.064
- 849 acc16= variable 2
- 850 call writeAcc16
- 851 ;test6.j(307) 
- 852 ;test6.j(308)   write("Klaar");
- 853 acc16= constant 857
+ 638 ;test6.j(236)   
+ 639 ;test6.j(237)   /*************************/
+ 640 ;test6.j(238)   /* Dual term subtraction */
+ 641 ;test6.j(239)   /*************************/
+ 642 ;test6.j(240)   write(1024 - 2);  // 1022
+ 643 acc16= constant 1024
+ 644 acc16- constant 2
+ 645 call writeAcc16
+ 646 ;test6.j(241)   write(1523 - 500);// 1023
+ 647 acc16= constant 1523
+ 648 acc16- constant 500
+ 649 call writeAcc16
+ 650 ;test6.j(242)   i = 1030 - 6;
+ 651 acc16= constant 1030
+ 652 acc16- constant 6
+ 653 acc16=> variable 2
+ 654 ;test6.j(243)   write(i);         // 1024
+ 655 acc16= variable 2
+ 656 call writeAcc16
+ 657 ;test6.j(244)   i = 1525 - 500;
+ 658 acc16= constant 1525
+ 659 acc16- constant 500
+ 660 acc16=> variable 2
+ 661 ;test6.j(245)   write(i);         // 1025
+ 662 acc16= variable 2
+ 663 call writeAcc16
+ 664 ;test6.j(246)   
+ 665 ;test6.j(247)   j = 1040;
+ 666 acc16= constant 1040
+ 667 acc16=> variable 4
+ 668 ;test6.j(248)   b = 13;
+ 669 acc8= constant 13
+ 670 acc8=> variable 0
+ 671 ;test6.j(249)   i = 3030;
+ 672 acc16= constant 3030
+ 673 acc16=> variable 2
+ 674 ;test6.j(250)   write(j - 14);    // 1026
+ 675 acc16= variable 4
+ 676 acc16- constant 14
+ 677 call writeAcc16
+ 678 ;test6.j(251)   write(j - b);     // 1027
+ 679 acc16= variable 4
+ 680 acc16- variable 0
+ 681 call writeAcc16
+ 682 ;test6.j(252)   j = 2000;
+ 683 acc16= constant 2000
+ 684 acc16=> variable 4
+ 685 ;test6.j(253)   write(j - 972);   // 1028
+ 686 acc16= variable 4
+ 687 acc16- constant 972
+ 688 call writeAcc16
+ 689 ;test6.j(254)   write(3029 - j);  // 1029
+ 690 acc16= constant 3029
+ 691 acc16- variable 4
+ 692 call writeAcc16
+ 693 ;test6.j(255)   write(i - j);     // 1030
+ 694 acc16= variable 2
+ 695 acc16- variable 4
+ 696 call writeAcc16
+ 697 ;test6.j(256)   
+ 698 ;test6.j(257)   j = 1050;
+ 699 acc16= constant 1050
+ 700 acc16=> variable 4
+ 701 ;test6.j(258)   b = 18;
+ 702 acc8= constant 18
+ 703 acc8=> variable 0
+ 704 ;test6.j(259)   i = j - 19;
+ 705 acc16= variable 4
+ 706 acc16- constant 19
+ 707 acc16=> variable 2
+ 708 ;test6.j(260)   write(i);         // 1031
+ 709 acc16= variable 2
+ 710 call writeAcc16
+ 711 ;test6.j(261)   i = j - b;
+ 712 acc16= variable 4
+ 713 acc16- variable 0
+ 714 acc16=> variable 2
+ 715 ;test6.j(262)   write(i);         // 1032
+ 716 acc16= variable 2
+ 717 call writeAcc16
+ 718 ;test6.j(263)   j = 2000;
+ 719 acc16= constant 2000
+ 720 acc16=> variable 4
+ 721 ;test6.j(264)   i = j - 967;
+ 722 acc16= variable 4
+ 723 acc16- constant 967
+ 724 acc16=> variable 2
+ 725 ;test6.j(265)   write(i);         // 1033
+ 726 acc16= variable 2
+ 727 call writeAcc16
+ 728 ;test6.j(266)   i = 3034 - j;
+ 729 acc16= constant 3034
+ 730 acc16- variable 4
+ 731 acc16=> variable 2
+ 732 ;test6.j(267)   write(i);         // 1034
+ 733 acc16= variable 2
+ 734 call writeAcc16
+ 735 ;test6.j(268)   i = 3035;
+ 736 acc16= constant 3035
+ 737 acc16=> variable 2
+ 738 ;test6.j(269)   i = i - j;
+ 739 acc16= variable 2
+ 740 acc16- variable 4
+ 741 acc16=> variable 2
+ 742 ;test6.j(270)   write(i);         // 1035
+ 743 acc16= variable 2
+ 744 call writeAcc16
+ 745 ;test6.j(271)   
+ 746 ;test6.j(272)   /****************************/
+ 747 ;test6.j(273)   /* Dual term multiplication */
+ 748 ;test6.j(274)   /****************************/
+ 749 ;test6.j(275)   write(518 * 2);   // 1036
+ 750 acc16= constant 518
+ 751 acc16* constant 2
+ 752 call writeAcc16
+ 753 ;test6.j(276)   write(1 * 1037);  // 1037
+ 754 acc8= constant 1
+ 755 acc8ToAcc16
+ 756 acc16* constant 1037
+ 757 call writeAcc16
+ 758 ;test6.j(277)   write(500 * 504 - 54354); // 1038 = 55392 - 54354
+ 759 acc16= constant 500
+ 760 acc16* constant 504
+ 761 acc16- constant 54354
+ 762 call writeAcc16
+ 763 ;test6.j(278) 
+ 764 ;test6.j(279)   i = 1039 * 1;
+ 765 acc16= constant 1039
+ 766 acc16* constant 1
+ 767 acc16=> variable 2
+ 768 ;test6.j(280)   write(i);         // 1039
+ 769 acc16= variable 2
+ 770 call writeAcc16
+ 771 ;test6.j(281)   i = 2 * 520;
+ 772 acc8= constant 2
+ 773 acc8ToAcc16
+ 774 acc16* constant 520
+ 775 acc16=> variable 2
+ 776 ;test6.j(282)   write(i);         // 1040
+ 777 acc16= variable 2
+ 778 call writeAcc16
+ 779 ;test6.j(283) 
+ 780 ;test6.j(284)   i = 1041;
+ 781 acc16= constant 1041
+ 782 acc16=> variable 2
+ 783 ;test6.j(285)   write(i * 1);     // 1041
+ 784 acc16= variable 2
+ 785 acc16* constant 1
+ 786 call writeAcc16
+ 787 ;test6.j(286)   i = 521;
+ 788 acc16= constant 521
+ 789 acc16=> variable 2
+ 790 ;test6.j(287)   write(2 * i);     // 1042
+ 791 acc8= constant 2
+ 792 acc8ToAcc16
+ 793 acc16* variable 2
+ 794 call writeAcc16
+ 795 ;test6.j(288) 
+ 796 ;test6.j(289)   i = 1043;
+ 797 acc16= constant 1043
+ 798 acc16=> variable 2
+ 799 ;test6.j(290)   i = i * 1;
+ 800 acc16= variable 2
+ 801 acc16* constant 1
+ 802 acc16=> variable 2
+ 803 ;test6.j(291)   write(i);         // 1043
+ 804 acc16= variable 2
+ 805 call writeAcc16
+ 806 ;test6.j(292)   i = 522;
+ 807 acc16= constant 522
+ 808 acc16=> variable 2
+ 809 ;test6.j(293)   i = 2 * i;
+ 810 acc8= constant 2
+ 811 acc8ToAcc16
+ 812 acc16* variable 2
+ 813 acc16=> variable 2
+ 814 ;test6.j(294)   write(i);         // 1044
+ 815 acc16= variable 2
+ 816 call writeAcc16
+ 817 ;test6.j(295) 
+ 818 ;test6.j(296)   i = 500 * 504 - 54347; // 1045 = 55392 - 54347
+ 819 acc16= constant 500
+ 820 acc16* constant 504
+ 821 acc16- constant 54347
+ 822 acc16=> variable 2
+ 823 ;test6.j(297)   write(i);         // 1045
+ 824 acc16= variable 2
+ 825 call writeAcc16
+ 826 ;test6.j(298)   i = 500;
+ 827 acc16= constant 500
+ 828 acc16=> variable 2
+ 829 ;test6.j(299)   i = i * 504 - 54346;
+ 830 acc16= variable 2
+ 831 acc16* constant 504
+ 832 acc16- constant 54346
+ 833 acc16=> variable 2
+ 834 ;test6.j(300)   write(i);         // 1046
+ 835 acc16= variable 2
+ 836 call writeAcc16
+ 837 ;test6.j(301)   i = 504;
+ 838 acc16= constant 504
+ 839 acc16=> variable 2
+ 840 ;test6.j(302)   i = 500 * i - 54345;
+ 841 acc16= constant 500
+ 842 acc16* variable 2
+ 843 acc16- constant 54345
+ 844 acc16=> variable 2
+ 845 ;test6.j(303)   write(i);         // 1047
+ 846 acc16= variable 2
+ 847 call writeAcc16
+ 848 ;test6.j(304)   
+ 849 ;test6.j(305)   /************/
+ 850 ;test6.j(306)   /* Overflow */
+ 851 ;test6.j(307)   /************/
+ 852 ;test6.j(308)   write("Nu komen 24.764 en 25.064");
+ 853 acc16= constant 876
  854 writeString
- 855 ;test6.j(309) }
- 856 stop
- 857 stringConstant 0 = "Klaar"
+ 855 ;test6.j(309)   write(300 * 301); // 90.300 % 65536 = 24.764
+ 856 acc16= constant 300
+ 857 acc16* constant 301
+ 858 call writeAcc16
+ 859 ;test6.j(310)   i = 300 * 302;
+ 860 acc16= constant 300
+ 861 acc16* constant 302
+ 862 acc16=> variable 2
+ 863 ;test6.j(311)   write(i);         // 90.600 % 65536 = 25.064
+ 864 acc16= variable 2
+ 865 call writeAcc16
+ 866 ;test6.j(312) 
+ 867 ;test6.j(313)   write("Klaar");
+ 868 acc16= constant 877
+ 869 writeString
+ 870 ;test6.j(314) }
+ 871 stop
+ 872 stringConstant 0 = "Nu komen 251 en 252"
+ 873 stringConstant 1 = "Nu komen -253 en -254"
+ 874 stringConstant 2 = "Nu komen 255 en 256"
+ 875 stringConstant 3 = "Nu komen 1000..1047"
+ 876 stringConstant 4 = "Nu komen 24.764 en 25.064"
+ 877 stringConstant 5 = "Klaar"

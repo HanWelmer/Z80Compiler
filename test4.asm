@@ -727,155 +727,152 @@ L0:
 L1:
         ;;test4.j(1) class TestMultiplyDivide {
 L2:
-        ;;test4.j(2)   write(11);
+        ;;test4.j(2)   write(0 * 1);
 L3:
-        LD    A,11
+        LD    A,0
 L4:
-        CALL  writeA
-L5:
-        ;;test4.j(3)   write((4 * 5) / 2);
-L6:
-        LD    A,4
-L7:
         LD    B,A
-        LD    C,5
+        LD    C,1
         MLT   BC
         LD    A,C
+L5:
+        CALL  writeA
+L6:
+        ;;test4.j(3)   write(1 * 1);
+L7:
+        LD    A,1
 L8:
-        LD    C,2
-        CALL  div8
+        LD    B,A
+        LD    C,1
+        MLT   BC
+        LD    A,C
 L9:
         CALL  writeA
 L10:
-        ;;test4.j(4)   write((7 * 7 + 5) / 6);
+        ;;test4.j(4)   write(4 / 2);
 L11:
-        LD    A,7
-L12:
-        LD    B,A
-        LD    C,7
-        MLT   BC
-        LD    A,C
-L13:
-        ADD   A,5
-L14:
-        LD    C,6
-        CALL  div8
-L15:
-        CALL  writeA
-L16:
-        ;;test4.j(5)   write((4 * 5 * 2) / 5);
-L17:
         LD    A,4
-L18:
-        LD    B,A
-        LD    C,5
-        MLT   BC
-        LD    A,C
-L19:
-        LD    B,A
+L12:
         LD    C,2
-        MLT   BC
-        LD    A,C
+        CALL  div8
+L13:
+        CALL  writeA
+L14:
+        ;;test4.j(5)   write(9 / 3);
+L15:
+        LD    A,9
+L16:
+        LD    C,3
+        CALL  div8
+L17:
+        CALL  writeA
+L18:
+        ;;test4.j(6)   write(8 / 2);
+L19:
+        LD    A,8
 L20:
-        LD    C,5
+        LD    C,2
         CALL  div8
 L21:
         CALL  writeA
 L22:
-        ;;test4.j(6)   write((7 * 7) / 7);
+        ;;test4.j(7)   write(5 / 1);
 L23:
-        LD    A,7
+        LD    A,5
 L24:
-        LD    B,A
-        LD    C,7
-        MLT   BC
-        LD    A,C
-L25:
-        LD    C,7
+        LD    C,1
         CALL  div8
-L26:
+L25:
         CALL  writeA
+L26:
+        ;;test4.j(8)   write((3 * 8) / 4);
 L27:
-        ;;test4.j(7)   write((3 * 8) / 4);
-L28:
         LD    A,3
-L29:
+L28:
         LD    B,A
         LD    C,8
         MLT   BC
         LD    A,C
-L30:
+L29:
         LD    C,4
         CALL  div8
-L31:
+L30:
         CALL  writeA
+L31:
+        ;;test4.j(9)   write((7 * 7) / 7);
 L32:
-        ;;test4.j(8)   write(5 / 1);
+        LD    A,7
 L33:
-        LD    A,5
+        LD    B,A
+        LD    C,7
+        MLT   BC
+        LD    A,C
 L34:
-        LD    C,1
+        LD    C,7
         CALL  div8
 L35:
         CALL  writeA
 L36:
-        ;;test4.j(9)   write(8 / 2);
+        ;;test4.j(10)   write((4 * 5 * 2) / 5);
 L37:
-        LD    A,8
-L38:
-        LD    C,2
-        CALL  div8
-L39:
-        CALL  writeA
-L40:
-        ;;test4.j(10)   write(9 / 3);
-L41:
-        LD    A,9
-L42:
-        LD    C,3
-        CALL  div8
-L43:
-        CALL  writeA
-L44:
-        ;;test4.j(11)   write(4 / 2);
-L45:
         LD    A,4
+L38:
+        LD    B,A
+        LD    C,5
+        MLT   BC
+        LD    A,C
+L39:
+        LD    B,A
+        LD    C,2
+        MLT   BC
+        LD    A,C
+L40:
+        LD    C,5
+        CALL  div8
+L41:
+        CALL  writeA
+L42:
+        ;;test4.j(11)   write(6561 / 729);
+L43:
+        LD    HL,6561
+L44:
+        LD    DE,729
+        CALL  div16
+L45:
+        CALL  writeHL
 L46:
+        ;;test4.j(12)   write(60 / 6);
+L47:
+        LD    A,60
+L48:
+        LD    C,6
+        CALL  div8
+L49:
+        CALL  writeA
+L50:
+        ;;test4.j(13)   write(22 / 2);
+L51:
+        LD    A,22
+L52:
         LD    C,2
         CALL  div8
-L47:
-        CALL  writeA
-L48:
-        ;;test4.j(12)   write(1 * 1);
-L49:
-        LD    A,1
-L50:
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-L51:
-        CALL  writeA
-L52:
-        ;;test4.j(13)   write(0 * 1);
 L53:
-        LD    A,0
-L54:
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-L55:
         CALL  writeA
+L54:
+        ;;test4.j(14)   write(12);
+L55:
+        LD    A,12
 L56:
-        ;;test4.j(14)   write("Klaar");
+        CALL  writeA
 L57:
-        LD    HL,61
+        ;;test4.j(15)   write("Klaar");
 L58:
-        CALL  putStr
+        LD    HL,62
 L59:
-        ;;test4.j(15) }
+        CALL  putStr
 L60:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        ;;test4.j(16) }
 L61:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L62:
         .ASCIZ  "Klaar"

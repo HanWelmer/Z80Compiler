@@ -733,569 +733,575 @@ L3:
 L4:
         ;;test8.j(4) class Test8And16BitExpressions {
 L5:
-        ;;test8.j(5)   /*************************/
+        ;;test8.j(5)   write(0);
 L6:
-        ;;test8.j(6)   /* reverse subtract byte */
+        LD    A,0
 L7:
-        ;;test8.j(7)   /*************************/
+        CALL  writeA
 L8:
-        ;;test8.j(8)   write(10 - 3*3);         // 1
+        ;;test8.j(6)   /*************************/
 L9:
-        LD    A,10
+        ;;test8.j(7)   /* reverse subtract byte */
 L10:
-        PUSH  AF
-        LD    A,3
+        ;;test8.j(8)   /*************************/
 L11:
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
+        ;;test8.j(9)   write(10 - 3*3);         // 1
 L12:
-        POP   BC
-        SUB   A,B
-        NEG
+        LD    A,10
 L13:
-        CALL  writeA
-L14:
-        ;;test8.j(9)   byte b = 11;
-L15:
-        LD    A,11
-L16:
-        LD    (05000H),A
-L17:
-        ;;test8.j(10)   write(b - 3*3);          // 2
-L18:
-        LD    A,(05000H)
-L19:
         PUSH  AF
         LD    A,3
-L20:
+L14:
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
-L21:
+L15:
         POP   BC
         SUB   A,B
         NEG
-L22:
+L16:
         CALL  writeA
-L23:
-        ;;test8.j(11)   byte c = 3;
-L24:
+L17:
+        ;;test8.j(10)   byte b = 11;
+L18:
+        LD    A,11
+L19:
+        LD    (05000H),A
+L20:
+        ;;test8.j(11)   write(b - 3*3);          // 2
+L21:
+        LD    A,(05000H)
+L22:
+        PUSH  AF
         LD    A,3
+L23:
+        LD    B,A
+        LD    C,3
+        MLT   BC
+        LD    A,C
+L24:
+        POP   BC
+        SUB   A,B
+        NEG
 L25:
-        LD    (05001H),A
+        CALL  writeA
 L26:
-        ;;test8.j(12)   byte d = 3;
+        ;;test8.j(12)   byte c = 3;
 L27:
         LD    A,3
 L28:
-        LD    (05002H),A
+        LD    (05001H),A
 L29:
-        ;;test8.j(13)   write(12 - c*d);         // 3
+        ;;test8.j(13)   byte d = 3;
 L30:
-        LD    A,12
+        LD    A,3
 L31:
-        PUSH  AF
-        LD    A,(05001H)
+        LD    (05002H),A
 L32:
-        LD    B,A
-        LD    A,(05002H)
-        LD    C,A
-        MLT   BC
-        LD    A,C
+        ;;test8.j(14)   write(12 - c*d);         // 3
 L33:
-        POP   BC
-        SUB   A,B
-        NEG
+        LD    A,12
 L34:
-        CALL  writeA
-L35:
-        ;;test8.j(14)   b = 13;
-L36:
-        LD    A,13
-L37:
-        LD    (05000H),A
-L38:
-        ;;test8.j(15)   write(b - c*d);          // 4
-L39:
-        LD    A,(05000H)
-L40:
         PUSH  AF
         LD    A,(05001H)
-L41:
+L35:
         LD    B,A
         LD    A,(05002H)
         LD    C,A
         MLT   BC
         LD    A,C
-L42:
+L36:
         POP   BC
         SUB   A,B
         NEG
+L37:
+        CALL  writeA
+L38:
+        ;;test8.j(15)   b = 13;
+L39:
+        LD    A,13
+L40:
+        LD    (05000H),A
+L41:
+        ;;test8.j(16)   write(b - c*d);          // 4
+L42:
+        LD    A,(05000H)
 L43:
-        CALL  writeA
+        PUSH  AF
+        LD    A,(05001H)
 L44:
-        ;;test8.j(16) 
+        LD    B,A
+        LD    A,(05002H)
+        LD    C,A
+        MLT   BC
+        LD    A,C
 L45:
-        ;;test8.j(17)   /**************************/
+        POP   BC
+        SUB   A,B
+        NEG
 L46:
-        ;;test8.j(18)   /* reverse subtract word  */
+        CALL  writeA
 L47:
-        ;;test8.j(19)   /**************************/
+        ;;test8.j(17) 
 L48:
-        ;;test8.j(20)   write(1005 - 1000*1);    // 5
+        ;;test8.j(18)   /**************************/
 L49:
-        LD    HL,1005
+        ;;test8.j(19)   /* reverse subtract word  */
 L50:
-        PUSH  HL
-        LD    HL,1000
+        ;;test8.j(20)   /**************************/
 L51:
-        LD    DE,1
-        CALL  mul16
+        ;;test8.j(21)   write(1005 - 1000*1);    // 5
 L52:
-        POP   DE
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    HL,1005
 L53:
-        CALL  writeHL
+        PUSH  HL
+        LD    HL,1000
 L54:
-        ;;test8.j(21)   word i = 1006;
+        LD    DE,1
+        CALL  mul16
 L55:
-        LD    HL,1006
+        POP   DE
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L56:
-        LD    (05003H),HL
+        CALL  writeHL
 L57:
-        ;;test8.j(22)   write(i - 1000*1);       // 6
+        ;;test8.j(22)   word i = 1006;
 L58:
-        LD    HL,(05003H)
+        LD    HL,1006
 L59:
-        PUSH  HL
-        LD    HL,1000
+        LD    (05003H),HL
 L60:
-        LD    DE,1
-        CALL  mul16
+        ;;test8.j(23)   write(i - 1000*1);       // 6
 L61:
-        POP   DE
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    HL,(05003H)
 L62:
-        CALL  writeHL
-L63:
-        ;;test8.j(23)   word j = 1000;
-L64:
+        PUSH  HL
         LD    HL,1000
+L63:
+        LD    DE,1
+        CALL  mul16
+L64:
+        POP   DE
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L65:
-        LD    (05005H),HL
+        CALL  writeHL
 L66:
-        ;;test8.j(24)   word k = 1;
+        ;;test8.j(24)   word j = 1000;
 L67:
-        LD    A,1
+        LD    HL,1000
 L68:
-        LD    L,A
-        LD    H,0
-        LD    (05007H),HL
-L69:
-        ;;test8.j(25)   write(1007 - j*k);       // 7
-L70:
-        LD    HL,1007
-L71:
-        PUSH  HL
-        LD    HL,(05005H)
-L72:
-        LD    DE,(05007H)
-        CALL  mul16
-L73:
-        POP   DE
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L74:
-        CALL  writeHL
-L75:
-        ;;test8.j(26)   i = 1008;
-L76:
-        LD    HL,1008
-L77:
-        LD    (05003H),HL
-L78:
-        ;;test8.j(27)   write(i - j*k);          // 8
-L79:
-        LD    HL,(05003H)
-L80:
-        PUSH  HL
-        LD    HL,(05005H)
-L81:
-        LD    DE,(05007H)
-        CALL  mul16
-L82:
-        POP   DE
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L83:
-        CALL  writeHL
-L84:
-        ;;test8.j(28) 
-L85:
-        ;;test8.j(29)   /***********************/
-L86:
-        ;;test8.j(30)   /* reverse divide byte */
-L87:
-        ;;test8.j(31)   /***********************/
-L88:
-        ;;test8.j(32)   write(36 / (4*1));     // 9
-L89:
-        LD    A,36
-L90:
-        PUSH  AF
-        LD    A,4
-L91:
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-L92:
-        LD    C,A
-        POP   AF
-        CALL  div8
-L93:
-        CALL  writeA
-L94:
-        ;;test8.j(33)   b = 40;
-L95:
-        LD    A,40
-L96:
-        LD    (05000H),A
-L97:
-        ;;test8.j(34)   write(b / (4*1));      // 10
-L98:
-        LD    A,(05000H)
-L99:
-        PUSH  AF
-        LD    A,4
-L100:
-        LD    B,A
-        LD    C,1
-        MLT   BC
-        LD    A,C
-L101:
-        LD    C,A
-        POP   AF
-        CALL  div8
-L102:
-        CALL  writeA
-L103:
-        ;;test8.j(35)   c = 4;
-L104:
-        LD    A,4
-L105:
-        LD    (05001H),A
-L106:
-        ;;test8.j(36)   d = 1;
-L107:
-        LD    A,1
-L108:
-        LD    (05002H),A
-L109:
-        ;;test8.j(37)   write(44 / (c*d));     // 11
-L110:
-        LD    A,44
-L111:
-        PUSH  AF
-        LD    A,(05001H)
-L112:
-        LD    B,A
-        LD    A,(05002H)
-        LD    C,A
-        MLT   BC
-        LD    A,C
-L113:
-        LD    C,A
-        POP   AF
-        CALL  div8
-L114:
-        CALL  writeA
-L115:
-        ;;test8.j(38)   b = 48;
-L116:
-        LD    A,48
-L117:
-        LD    (05000H),A
-L118:
-        ;;test8.j(39)   write(b / (c*d));      // 12
-L119:
-        LD    A,(05000H)
-L120:
-        PUSH  AF
-        LD    A,(05001H)
-L121:
-        LD    B,A
-        LD    A,(05002H)
-        LD    C,A
-        MLT   BC
-        LD    A,C
-L122:
-        LD    C,A
-        POP   AF
-        CALL  div8
-L123:
-        CALL  writeA
-L124:
-        ;;test8.j(40) 
-L125:
-        ;;test8.j(41)   /************************/
-L126:
-        ;;test8.j(42)   /* reverse divide word  */
-L127:
-        ;;test8.j(43)   /************************/
-L128:
-        ;;test8.j(44)   write(3900 / (300*1)); // 13
-L129:
-        LD    HL,3900
-L130:
-        PUSH  HL
-        LD    HL,300
-L131:
-        LD    DE,1
-        CALL  mul16
-L132:
-        POP   DE
-        EX    DE,HL
-        CALL  div16
-L133:
-        CALL  writeHL
-L134:
-        ;;test8.j(45)   i = 4200;
-L135:
-        LD    HL,4200
-L136:
-        LD    (05003H),HL
-L137:
-        ;;test8.j(46)   write(i / (300*1));    // 14
-L138:
-        LD    HL,(05003H)
-L139:
-        PUSH  HL
-        LD    HL,300
-L140:
-        LD    DE,1
-        CALL  mul16
-L141:
-        POP   DE
-        EX    DE,HL
-        CALL  div16
-L142:
-        CALL  writeHL
-L143:
-        ;;test8.j(47)   j = 300;
-L144:
-        LD    HL,300
-L145:
         LD    (05005H),HL
-L146:
-        ;;test8.j(48)   k = 1;
-L147:
+L69:
+        ;;test8.j(25)   word k = 1;
+L70:
         LD    A,1
-L148:
+L71:
         LD    L,A
         LD    H,0
         LD    (05007H),HL
-L149:
-        ;;test8.j(49)   write(4500 / (j*k));   // 15
-L150:
-        LD    HL,4500
-L151:
+L72:
+        ;;test8.j(26)   write(1007 - j*k);       // 7
+L73:
+        LD    HL,1007
+L74:
         PUSH  HL
         LD    HL,(05005H)
-L152:
+L75:
         LD    DE,(05007H)
         CALL  mul16
-L153:
+L76:
         POP   DE
         EX    DE,HL
-        CALL  div16
-L154:
+        OR    A
+        SBC   HL,DE
+L77:
         CALL  writeHL
-L155:
-        ;;test8.j(50)   i = 4800;
-L156:
-        LD    HL,4800
-L157:
+L78:
+        ;;test8.j(27)   i = 1008;
+L79:
+        LD    HL,1008
+L80:
         LD    (05003H),HL
-L158:
-        ;;test8.j(51)   write(i / (j*k));      // 16
-L159:
+L81:
+        ;;test8.j(28)   write(i - j*k);          // 8
+L82:
         LD    HL,(05003H)
-L160:
+L83:
         PUSH  HL
         LD    HL,(05005H)
-L161:
+L84:
         LD    DE,(05007H)
         CALL  mul16
-L162:
+L85:
         POP   DE
         EX    DE,HL
-        CALL  div16
-L163:
+        OR    A
+        SBC   HL,DE
+L86:
         CALL  writeHL
-L164:
-        ;;test8.j(52) 
-L165:
-        ;;test8.j(53)   /**************************/
-L166:
-        ;;test8.j(54)   /* reverse subtract mixed */
-L167:
-        ;;test8.j(55)   /**************************/
-L168:
-        ;;test8.j(56)   i = 21;
-L169:
-        LD    A,21
-L170:
-        LD    L,A
-        LD    H,0
-        LD    (05003H),HL
-L171:
-        ;;test8.j(57)   c = 4;
-L172:
+L87:
+        ;;test8.j(29) 
+L88:
+        ;;test8.j(30)   /***********************/
+L89:
+        ;;test8.j(31)   /* reverse divide byte */
+L90:
+        ;;test8.j(32)   /***********************/
+L91:
+        ;;test8.j(33)   write(36 / (4*1));     // 9
+L92:
+        LD    A,36
+L93:
+        PUSH  AF
         LD    A,4
-L173:
+L94:
+        LD    B,A
+        LD    C,1
+        MLT   BC
+        LD    A,C
+L95:
+        LD    C,A
+        POP   AF
+        CALL  div8
+L96:
+        CALL  writeA
+L97:
+        ;;test8.j(34)   b = 40;
+L98:
+        LD    A,40
+L99:
+        LD    (05000H),A
+L100:
+        ;;test8.j(35)   write(b / (4*1));      // 10
+L101:
+        LD    A,(05000H)
+L102:
+        PUSH  AF
+        LD    A,4
+L103:
+        LD    B,A
+        LD    C,1
+        MLT   BC
+        LD    A,C
+L104:
+        LD    C,A
+        POP   AF
+        CALL  div8
+L105:
+        CALL  writeA
+L106:
+        ;;test8.j(36)   c = 4;
+L107:
+        LD    A,4
+L108:
         LD    (05001H),A
-L174:
-        ;;test8.j(58)   d = 1;
-L175:
+L109:
+        ;;test8.j(37)   d = 1;
+L110:
         LD    A,1
-L176:
+L111:
         LD    (05002H),A
-L177:
-        ;;test8.j(59)   write(i - c*d);           // 17
-L178:
-        LD    HL,(05003H)
-L179:
+L112:
+        ;;test8.j(38)   write(44 / (c*d));     // 11
+L113:
+        LD    A,44
+L114:
+        PUSH  AF
         LD    A,(05001H)
-L180:
+L115:
         LD    B,A
         LD    A,(05002H)
         LD    C,A
         MLT   BC
         LD    A,C
+L116:
+        LD    C,A
+        POP   AF
+        CALL  div8
+L117:
+        CALL  writeA
+L118:
+        ;;test8.j(39)   b = 48;
+L119:
+        LD    A,48
+L120:
+        LD    (05000H),A
+L121:
+        ;;test8.j(40)   write(b / (c*d));      // 12
+L122:
+        LD    A,(05000H)
+L123:
+        PUSH  AF
+        LD    A,(05001H)
+L124:
+        LD    B,A
+        LD    A,(05002H)
+        LD    C,A
+        MLT   BC
+        LD    A,C
+L125:
+        LD    C,A
+        POP   AF
+        CALL  div8
+L126:
+        CALL  writeA
+L127:
+        ;;test8.j(41) 
+L128:
+        ;;test8.j(42)   /************************/
+L129:
+        ;;test8.j(43)   /* reverse divide word  */
+L130:
+        ;;test8.j(44)   /************************/
+L131:
+        ;;test8.j(45)   write(3900 / (300*1)); // 13
+L132:
+        LD    HL,3900
+L133:
+        PUSH  HL
+        LD    HL,300
+L134:
+        LD    DE,1
+        CALL  mul16
+L135:
+        POP   DE
+        EX    DE,HL
+        CALL  div16
+L136:
+        CALL  writeHL
+L137:
+        ;;test8.j(46)   i = 4200;
+L138:
+        LD    HL,4200
+L139:
+        LD    (05003H),HL
+L140:
+        ;;test8.j(47)   write(i / (300*1));    // 14
+L141:
+        LD    HL,(05003H)
+L142:
+        PUSH  HL
+        LD    HL,300
+L143:
+        LD    DE,1
+        CALL  mul16
+L144:
+        POP   DE
+        EX    DE,HL
+        CALL  div16
+L145:
+        CALL  writeHL
+L146:
+        ;;test8.j(48)   j = 300;
+L147:
+        LD    HL,300
+L148:
+        LD    (05005H),HL
+L149:
+        ;;test8.j(49)   k = 1;
+L150:
+        LD    A,1
+L151:
+        LD    L,A
+        LD    H,0
+        LD    (05007H),HL
+L152:
+        ;;test8.j(50)   write(4500 / (j*k));   // 15
+L153:
+        LD    HL,4500
+L154:
+        PUSH  HL
+        LD    HL,(05005H)
+L155:
+        LD    DE,(05007H)
+        CALL  mul16
+L156:
+        POP   DE
+        EX    DE,HL
+        CALL  div16
+L157:
+        CALL  writeHL
+L158:
+        ;;test8.j(51)   i = 4800;
+L159:
+        LD    HL,4800
+L160:
+        LD    (05003H),HL
+L161:
+        ;;test8.j(52)   write(i / (j*k));      // 16
+L162:
+        LD    HL,(05003H)
+L163:
+        PUSH  HL
+        LD    HL,(05005H)
+L164:
+        LD    DE,(05007H)
+        CALL  mul16
+L165:
+        POP   DE
+        EX    DE,HL
+        CALL  div16
+L166:
+        CALL  writeHL
+L167:
+        ;;test8.j(53) 
+L168:
+        ;;test8.j(54)   /**************************/
+L169:
+        ;;test8.j(55)   /* reverse subtract mixed */
+L170:
+        ;;test8.j(56)   /**************************/
+L171:
+        ;;test8.j(57)   i = 21;
+L172:
+        LD    A,21
+L173:
+        LD    L,A
+        LD    H,0
+        LD    (05003H),HL
+L174:
+        ;;test8.j(58)   c = 4;
+L175:
+        LD    A,4
+L176:
+        LD    (05001H),A
+L177:
+        ;;test8.j(59)   d = 1;
+L178:
+        LD    A,1
+L179:
+        LD    (05002H),A
+L180:
+        ;;test8.j(60)   write(i - c*d);           // 17
 L181:
+        LD    HL,(05003H)
+L182:
+        LD    A,(05001H)
+L183:
+        LD    B,A
+        LD    A,(05002H)
+        LD    C,A
+        MLT   BC
+        LD    A,C
+L184:
         LD    E,A
         LD    D,0
         OR    A
         SBC   HL,DE
-L182:
-        CALL  writeHL
-L183:
-        ;;test8.j(60)   b = 22;
-L184:
-        LD    A,22
 L185:
-        LD    (05000H),A
+        CALL  writeHL
 L186:
-        ;;test8.j(61)   j = 4;
+        ;;test8.j(61)   b = 22;
 L187:
-        LD    A,4
+        LD    A,22
 L188:
-        LD    L,A
-        LD    H,0
-        LD    (05005H),HL
+        LD    (05000H),A
 L189:
-        ;;test8.j(62)   k = 1;
+        ;;test8.j(62)   j = 4;
 L190:
-        LD    A,1
+        LD    A,4
 L191:
         LD    L,A
         LD    H,0
-        LD    (05007H),HL
+        LD    (05005H),HL
 L192:
-        ;;test8.j(63)   write(b - j*k);           // 18
+        ;;test8.j(63)   k = 1;
 L193:
-        LD    A,(05000H)
+        LD    A,1
 L194:
-        LD    HL,(05005H)
+        LD    L,A
+        LD    H,0
+        LD    (05007H),HL
 L195:
+        ;;test8.j(64)   write(b - j*k);           // 18
+L196:
+        LD    A,(05000H)
+L197:
+        LD    HL,(05005H)
+L198:
         LD    DE,(05007H)
         CALL  mul16
-L196:
+L199:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L197:
-        CALL  writeHL
-L198:
-        ;;test8.j(64) 
-L199:
-        ;;test8.j(65)   /**************************/
 L200:
-        ;;test8.j(66)   /* reverse divide mixed   */
+        CALL  writeHL
 L201:
-        ;;test8.j(67)   /**************************/
+        ;;test8.j(65) 
 L202:
-        ;;test8.j(68) 
+        ;;test8.j(66)   /**************************/
 L203:
-        ;;test8.j(69)   /**************************/
+        ;;test8.j(67)   /* reverse divide mixed   */
 L204:
-        ;;test8.j(70)   /* forward divide mixed   */
+        ;;test8.j(68)   /**************************/
 L205:
-        ;;test8.j(71)   /**************************/
+        ;;test8.j(69) 
 L206:
-        ;;test8.j(72)   i = 19;
+        ;;test8.j(70)   /**************************/
 L207:
-        LD    A,19
+        ;;test8.j(71)   /* forward divide mixed   */
 L208:
+        ;;test8.j(72)   /**************************/
+L209:
+        ;;test8.j(73)   i = 19;
+L210:
+        LD    A,19
+L211:
         LD    L,A
         LD    H,0
         LD    (05003H),HL
-L209:
-        ;;test8.j(73)   write(i / (1+0));         // 19
-L210:
-        LD    HL,(05003H)
-L211:
-        LD    A,1
 L212:
-        ADD   A,0
+        ;;test8.j(74)   write(i / (1+0));         // 19
 L213:
-        CALL  div16_8
-L214:
-        CALL  writeHL
-L215:
-        ;;test8.j(74)   
-L216:
-        ;;test8.j(75)   write(i + 1);             // 20
-L217:
         LD    HL,(05003H)
+L214:
+        LD    A,1
+L215:
+        ADD   A,0
+L216:
+        CALL  div16_8
+L217:
+        CALL  writeHL
 L218:
+        ;;test8.j(75)   
+L219:
+        ;;test8.j(76)   write(i + 1);             // 20
+L220:
+        LD    HL,(05003H)
+L221:
         LD    DE,1
         ADD   HL,DE
-L219:
-        CALL  writeHL
-L220:
-        ;;test8.j(76)   write(2 + i);             // 21
-L221:
-        LD    A,2
 L222:
+        CALL  writeHL
+L223:
+        ;;test8.j(77)   write(2 + i);             // 21
+L224:
+        LD    A,2
+L225:
         LD    L,A
         LD    H,0
-L223:
+L226:
         LD    DE,(05003H)
         ADD   HL,DE
-L224:
-        CALL  writeHL
-L225:
-        ;;test8.j(77)   write("Klaar");
-L226:
-        LD    HL,230
 L227:
-        CALL  putStr
+        CALL  writeHL
 L228:
-        ;;test8.j(78) }
+        ;;test8.j(78)   write("Klaar");
 L229:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        LD    HL,233
 L230:
+        CALL  putStr
+L231:
+        ;;test8.j(79) }
+L232:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L233:
         .ASCIZ  "Klaar"

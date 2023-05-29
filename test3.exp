@@ -1,116 +1,113 @@
    0 ;test3.j(0) /* Program to test multiplication */
    1 ;test3.j(1) class TestMultiply {
-   2 ;test3.j(2)   write(14);
-   3 acc8= constant 14
-   4 call writeAcc8
-   5 ;test3.j(3)   word a = 14;
-   6 acc8= constant 14
-   7 acc8=> variable 0
-   8 ;test3.j(4)   a--;
-   9 decr16 variable 0
-  10 ;test3.j(5)   write(a);
-  11 acc16= variable 0
-  12 call writeAcc16
-  13 ;test3.j(6)   a = 11;
-  14 acc8= constant 11
-  15 acc8=> variable 0
-  16 ;test3.j(7)   a++;
-  17 incr16 variable 0
-  18 ;test3.j(8)   write(a);
-  19 acc16= variable 0
-  20 call writeAcc16
-  21 ;test3.j(9)   if (6561 / 729 == 9) write (11); else write (0);
-  22 acc16= constant 6561
-  23 acc16/ constant 729
-  24 acc8= constant 9
-  25 acc16CompareAcc8
-  26 brne 30
-  27 acc8= constant 11
-  28 call writeAcc8
-  29 br 33
-  30 acc8= constant 0
-  31 call writeAcc8
-  32 ;test3.j(10)   if (729 * 9 == 6561) write (10); else write (0);
-  33 acc16= constant 729
-  34 acc16* constant 9
-  35 acc16Comp constant 6561
-  36 brne 40
-  37 acc8= constant 10
-  38 call writeAcc8
-  39 br 43
-  40 acc8= constant 0
-  41 call writeAcc8
-  42 ;test3.j(11)   if (729 == 729) write (9); else write (0);
-  43 acc16= constant 729
-  44 acc16Comp constant 729
-  45 brne 49
-  46 acc8= constant 9
-  47 call writeAcc8
-  48 br 52
-  49 acc8= constant 0
-  50 call writeAcc8
-  51 ;test3.j(12)   if (2 * 9 * 9 == 162) write (8); else write (0);
-  52 acc8= constant 2
+   2 ;test3.j(2)   write(1 * 0);
+   3 acc8= constant 1
+   4 acc8* constant 0
+   5 call writeAcc8
+   6 ;test3.j(3)   write(1 * 1);
+   7 acc8= constant 1
+   8 acc8* constant 1
+   9 call writeAcc8
+  10 ;test3.j(4)   write(2 * 1);
+  11 acc8= constant 2
+  12 acc8* constant 1
+  13 call writeAcc8
+  14 ;test3.j(5)   write(1 * 3);
+  15 acc8= constant 1
+  16 acc8* constant 3
+  17 call writeAcc8
+  18 ;test3.j(6)   word a = 2 * 2;
+  19 acc8= constant 2
+  20 acc8* constant 2
+  21 acc8=> variable 0
+  22 ;test3.j(7)   write(a);
+  23 acc16= variable 0
+  24 call writeAcc16
+  25 ;test3.j(8)   a = 1;
+  26 acc8= constant 1
+  27 acc8=> variable 0
+  28 ;test3.j(9)   write(a * 5);
+  29 acc16= variable 0
+  30 acc16* constant 5
+  31 call writeAcc16
+  32 ;test3.j(10)   a = 2;
+  33 acc8= constant 2
+  34 acc8=> variable 0
+  35 ;test3.j(11)   write(3 * a);
+  36 acc8= constant 3
+  37 acc8ToAcc16
+  38 acc16* variable 0
+  39 call writeAcc16
+  40 ;test3.j(12)   if (7 * 5 == 35) write (7); else write (999);
+  41 acc8= constant 7
+  42 acc8* constant 5
+  43 acc8Comp constant 35
+  44 brne 48
+  45 acc8= constant 7
+  46 call writeAcc8
+  47 br 51
+  48 acc16= constant 999
+  49 call writeAcc16
+  50 ;test3.j(13)   if (2 * 9 * 9 == 162) write (8); else write (999);
+  51 acc8= constant 2
+  52 acc8* constant 9
   53 acc8* constant 9
-  54 acc8* constant 9
-  55 acc8Comp constant 162
-  56 brne 60
-  57 acc8= constant 8
-  58 call writeAcc8
-  59 br 63
-  60 acc8= constant 0
-  61 call writeAcc8
-  62 ;test3.j(13)   if (7 * 5 == 35) write (7); else write (0);
-  63 acc8= constant 7
-  64 acc8* constant 5
-  65 acc8Comp constant 35
-  66 brne 70
-  67 acc8= constant 7
-  68 call writeAcc8
-  69 br 73
-  70 acc8= constant 0
-  71 call writeAcc8
-  72 ;test3.j(14)   a = 2;
-  73 acc8= constant 2
-  74 acc8=> variable 0
-  75 ;test3.j(15)   write(3 * a);
-  76 acc8= constant 3
-  77 acc8ToAcc16
-  78 acc16* variable 0
+  54 acc8Comp constant 162
+  55 brne 59
+  56 acc8= constant 8
+  57 call writeAcc8
+  58 br 62
+  59 acc16= constant 999
+  60 call writeAcc16
+  61 ;test3.j(14)   if (729 == 729) write (9); else write (999);
+  62 acc16= constant 729
+  63 acc16Comp constant 729
+  64 brne 68
+  65 acc8= constant 9
+  66 call writeAcc8
+  67 br 71
+  68 acc16= constant 999
+  69 call writeAcc16
+  70 ;test3.j(15)   if (729 * 9 == 6561) write (10); else write (999);
+  71 acc16= constant 729
+  72 acc16* constant 9
+  73 acc16Comp constant 6561
+  74 brne 78
+  75 acc8= constant 10
+  76 call writeAcc8
+  77 br 81
+  78 acc16= constant 999
   79 call writeAcc16
-  80 ;test3.j(16)   a = 1;
-  81 acc8= constant 1
-  82 acc8=> variable 0
-  83 ;test3.j(17)   write(a * 5);
-  84 acc16= variable 0
-  85 acc16* constant 5
-  86 call writeAcc16
-  87 ;test3.j(18)   a = 2 * 2;
-  88 acc8= constant 2
-  89 acc8* constant 2
-  90 acc8=> variable 0
-  91 ;test3.j(19)   write(a);
-  92 acc16= variable 0
-  93 call writeAcc16
-  94 ;test3.j(20)   write(1 * 3);
-  95 acc8= constant 1
-  96 acc8* constant 3
-  97 call writeAcc8
-  98 ;test3.j(21)   write(2 * 1);
-  99 acc8= constant 2
- 100 acc8* constant 1
- 101 call writeAcc8
- 102 ;test3.j(22)   write(1 * 1);
- 103 acc8= constant 1
- 104 acc8* constant 1
- 105 call writeAcc8
- 106 ;test3.j(23)   write(1 * 0);
- 107 acc8= constant 1
- 108 acc8* constant 0
- 109 call writeAcc8
- 110 ;test3.j(24)   write("Klaar");
- 111 acc16= constant 115
- 112 writeString
- 113 ;test3.j(25) }
- 114 stop
- 115 stringConstant 0 = "Klaar"
+  80 ;test3.j(16)   if (6561 / 729 == 9) write (11); else write (999);
+  81 acc16= constant 6561
+  82 acc16/ constant 729
+  83 acc8= constant 9
+  84 acc16CompareAcc8
+  85 brne 89
+  86 acc8= constant 11
+  87 call writeAcc8
+  88 br 92
+  89 acc16= constant 999
+  90 call writeAcc16
+  91 ;test3.j(17)   a = 13;
+  92 acc8= constant 13
+  93 acc8=> variable 0
+  94 ;test3.j(18)   a--;
+  95 decr16 variable 0
+  96 ;test3.j(19)   write(a);
+  97 acc16= variable 0
+  98 call writeAcc16
+  99 ;test3.j(20)   a++;
+ 100 incr16 variable 0
+ 101 ;test3.j(21)   write(a);
+ 102 acc16= variable 0
+ 103 call writeAcc16
+ 104 ;test3.j(22)   write(14);
+ 105 acc8= constant 14
+ 106 call writeAcc8
+ 107 ;test3.j(23)   write("Klaar");
+ 108 acc16= constant 112
+ 109 writeString
+ 110 ;test3.j(24) }
+ 111 stop
+ 112 stringConstant 0 = "Klaar"

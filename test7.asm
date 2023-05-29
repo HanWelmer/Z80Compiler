@@ -733,543 +733,655 @@ L3:
 L4:
         ;;test7.j(4) class Test8And16BitExpressions {
 L5:
-        ;;test7.j(5)   /**************************/
+        ;;test7.j(5)   write(0);
 L6:
-        ;;test7.j(6)   /* Single term read: byte */
+        LD    A,0
 L7:
-        ;;test7.j(7)   /**************************/
-L8:
-        ;;test7.j(8)   write(1);          // 1
-L9:
-        LD    A,1
-L10:
         CALL  writeA
+L8:
+        ;;test7.j(6) 
+L9:
+        ;;test7.j(7)   /**************************/
+L10:
+        ;;test7.j(8)   /* Single term read: byte */
 L11:
-        ;;test7.j(9) 
+        ;;test7.j(9)   /**************************/
 L12:
-        ;;test7.j(10)   write("Type 2, 3, 4 etc");
+        ;;test7.j(10)   write(1);          // 1
 L13:
-        LD    HL,243
+        LD    A,1
 L14:
-        CALL  putStr
+        CALL  writeA
 L15:
-        ;;test7.j(11)   write(read);       // 2
+        ;;test7.j(11) 
 L16:
-        CALL  read
+        ;;test7.j(12)   write("\nType 2, 3, 4 etc");
 L17:
-        CALL  writeHL
+        LD    HL,286
 L18:
-        ;;test7.j(12)   byte b = read;
+        CALL  putStr
 L19:
-        CALL  read
+        ;;test7.j(13)   write(read);       // 2
 L20:
+        CALL  read
+L21:
+        CALL  writeHL
+L22:
+        ;;test7.j(14)   byte b = read;
+L23:
+        CALL  read
+L24:
         LD    A,L
         LD    (05000H),A
-L21:
-        ;;test7.j(13)   write(b);       // 3
-L22:
-        LD    A,(05000H)
-L23:
-        CALL  writeA
-L24:
-        ;;test7.j(14) 
 L25:
-        ;;test7.j(15)   /**********************************/
+        ;;test7.j(15)   write(b);       // 3
 L26:
-        ;;test7.j(16)   /* Dual term read: byte constants */
+        LD    A,(05000H)
 L27:
-        ;;test7.j(17)   /**********************************/
+        CALL  writeA
 L28:
-        ;;test7.j(18)   write(read + 0);   // 4 + 0 = 4
+        ;;test7.j(16) 
 L29:
-        CALL  read
+        ;;test7.j(17)   /**********************************/
 L30:
+        ;;test7.j(18)   /* Dual term read: byte constants */
+L31:
+        ;;test7.j(19)   /**********************************/
+L32:
+        ;;test7.j(20)   write(read + 0);   // 4 + 0 = 4
+L33:
+        CALL  read
+L34:
         LD    DE,0
         ADD   HL,DE
-L31:
-        CALL  writeHL
-L32:
-        ;;test7.j(19)   write(0 + read);   // 0 + 5 = 5
-L33:
-        LD    A,0
-L34:
-        CALL  read
 L35:
-        LD    E,A
-        LD    D,0
-        ADD   HL,DE
-L36:
         CALL  writeHL
+L36:
+        ;;test7.j(21)   write(0 + read);   // 0 + 5 = 5
 L37:
-        ;;test7.j(20)   write(read - 0);   // 6 - 0 = 6
+        LD    A,0
 L38:
         CALL  read
 L39:
-        LD    DE,0
-        OR    A
-        SBC   HL,DE
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
 L40:
         CALL  writeHL
 L41:
-        ;;test7.j(21)   write(14 - read);  // 14 - 7 = 7
+        ;;test7.j(22)   write(read - 0);   // 6 - 0 = 6
 L42:
-        LD    A,14
-L43:
         CALL  read
+L43:
+        LD    DE,0
+        OR    A
+        SBC   HL,DE
 L44:
+        CALL  writeHL
+L45:
+        ;;test7.j(23)   write(14 - read);  // 14 - 7 = 7
+L46:
+        LD    A,14
+L47:
+        CALL  read
+L48:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L45:
-        CALL  writeHL
-L46:
-        ;;test7.j(22)   write(read * 1);   // 8 * 1 = 8
-L47:
-        CALL  read
-L48:
-        LD    DE,1
-        CALL  mul16
 L49:
         CALL  writeHL
 L50:
-        ;;test7.j(23)   write(1 * read);   // 1 * 9 = 9
+        ;;test7.j(24)   write(read * 1);   // 8 * 1 = 8
 L51:
-        LD    A,1
-L52:
         CALL  read
+L52:
+        LD    DE,1
+        CALL  mul16
 L53:
-        CALL  mul16_8
-L54:
         CALL  writeHL
+L54:
+        ;;test7.j(25)   write(1 * read);   // 1 * 9 = 9
 L55:
-        ;;test7.j(24)   write(read / 1);   // 10 / 1 = 10
+        LD    A,1
 L56:
         CALL  read
 L57:
-        LD    DE,1
-        CALL  div16
+        CALL  mul16_8
 L58:
         CALL  writeHL
 L59:
-        ;;test7.j(25)   write(121 / read); // 121 / 11 = 11
+        ;;test7.j(26)   write(read / 1);   // 10 / 1 = 10
 L60:
-        LD    A,121
-L61:
         CALL  read
+L61:
+        LD    DE,1
+        CALL  div16
 L62:
+        CALL  writeHL
+L63:
+        ;;test7.j(27)   write(121 / read); // 121 / 11 = 11
+L64:
+        LD    A,121
+L65:
+        CALL  read
+L66:
         EX    DE,HL
         CALL  div8_16
-L63:
-        CALL  writeHL
-L64:
-        ;;test7.j(26)   
-L65:
-        ;;test7.j(27)   write("Type 1048 etc");
-L66:
-        LD    HL,244
 L67:
-        CALL  putStr
+        CALL  writeHL
 L68:
-        ;;test7.j(28)   /**************************/
+        ;;test7.j(28)   
 L69:
-        ;;test7.j(29)   /* Single term read: word */
+        ;;test7.j(29)   write("\nType 1048 etc");
 L70:
-        ;;test7.j(30)   /**************************/
+        LD    HL,287
 L71:
-        ;;test7.j(31)   write(read);      // 1048
+        CALL  putStr
 L72:
-        CALL  read
+        ;;test7.j(30)   /**************************/
 L73:
-        CALL  writeHL
+        ;;test7.j(31)   /* Single term read: word */
 L74:
-        ;;test7.j(32)   word i = read;
+        ;;test7.j(32)   /**************************/
 L75:
-        CALL  read
+        ;;test7.j(33)   write(read);      // 1048
 L76:
-        LD    (05001H),HL
+        CALL  read
 L77:
-        ;;test7.j(33)   write(i);         // 1049
+        CALL  writeHL
 L78:
-        LD    HL,(05001H)
+        ;;test7.j(34)   word i = read;
 L79:
-        CALL  writeHL
+        CALL  read
 L80:
-        ;;test7.j(34) 
+        LD    (05001H),HL
 L81:
-        ;;test7.j(35)   /**********************************/
+        ;;test7.j(35)   write(i);         // 1049
 L82:
-        ;;test7.j(36)   /* Dual term read: word constants */
+        LD    HL,(05001H)
 L83:
-        ;;test7.j(37)   /**********************************/
+        CALL  writeHL
 L84:
-        ;;test7.j(38)   write(read + 1000);   // 1050 + 1000 = 2050
+        ;;test7.j(36) 
 L85:
-        CALL  read
+        ;;test7.j(37)   /**********************************/
 L86:
-        LD    DE,1000
-        ADD   HL,DE
+        ;;test7.j(38)   /* Dual term read: word constants */
 L87:
-        CALL  writeHL
+        ;;test7.j(39)   /**********************************/
 L88:
-        ;;test7.j(39)   write(1000 + read);   // 1000 + 1051 = 2051
+        ;;test7.j(40)   write("\nType 1050 expect 2050");
 L89:
-        LD    HL,1000
+        LD    HL,288
 L90:
-        PUSH HL
+        CALL  putStr
 L91:
-        CALL  read
+        ;;test7.j(41)   write(read + 1000);   // 1050 + 1000 = 2050
 L92:
-        POP   DE
-        ADD   HL,DE
-L93:
-        CALL  writeHL
-L94:
-        ;;test7.j(40)   write(read - 1000);   // 1052 - 1000 =   52
-L95:
         CALL  read
-L96:
+L93:
         LD    DE,1000
-        OR    A
-        SBC   HL,DE
-L97:
+        ADD   HL,DE
+L94:
         CALL  writeHL
+L95:
+        ;;test7.j(42)   write("\nType 1051 expect 2051");
+L96:
+        LD    HL,289
+L97:
+        CALL  putStr
 L98:
-        ;;test7.j(41)   write(2106 - read);   // 2106 - 1053 = 1053
+        ;;test7.j(43)   write(1000 + read);   // 1000 + 1051 = 2051
 L99:
-        LD    HL,2106
+        LD    HL,1000
 L100:
         PUSH HL
 L101:
         CALL  read
 L102:
         POP   DE
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ADD   HL,DE
 L103:
         CALL  writeHL
 L104:
-        ;;test7.j(42)   write(read * 1000);   // 1054 * 1000 = 5254
+        ;;test7.j(44)   write("\nType 1052 expect 52");
 L105:
-        CALL  read
+        LD    HL,290
 L106:
-        LD    DE,1000
-        CALL  mul16
-L107:
-        CALL  writeHL
-L108:
-        ;;test7.j(43)   write(1000 * read);   // 1000 * 1055 = 1.055.000 = 6424
-L109:
-        LD    HL,1000
-L110:
-        PUSH HL
-L111:
-        CALL  read
-L112:
-        POP   DE
-        CALL  mul16
-L113:
-        CALL  writeHL
-L114:
-        ;;test7.j(44)   write(read / 1000);   // 1056 / 1000 = 1
-L115:
-        CALL  read
-L116:
-        LD    DE,1000
-        CALL  div16
-L117:
-        CALL  writeHL
-L118:
-        ;;test7.j(45)   write(2114 / read);   // 2114 / 1057 = 2
-L119:
-        LD    HL,2114
-L120:
-        PUSH HL
-L121:
-        CALL  read
-L122:
-        POP   DE
-        EX    DE,HL
-        CALL  div16
-L123:
-        CALL  writeHL
-L124:
-        ;;test7.j(46)   
-L125:
-        ;;test7.j(47)   /****************************************/
-L126:
-        ;;test7.j(48)   /* Dual term read: word + byte variable */
-L127:
-        ;;test7.j(49)   /****************************************/
-L128:
-        ;;test7.j(50)   b = 0;
-L129:
-        LD    A,0
-L130:
-        LD    (05000H),A
-L131:
-        ;;test7.j(51)   write(read + b);   // 1058 + 0 = 1058
-L132:
-        CALL  read
-L133:
-        LD    DE,(05000H)
-        ADD   HL,DE
-L134:
-        CALL  writeHL
-L135:
-        ;;test7.j(52)   write(b + read);   // 0 + 1059 = 1059
-L136:
-        LD    A,(05000H)
-L137:
-        CALL  read
-L138:
-        LD    E,A
-        LD    D,0
-        ADD   HL,DE
-L139:
-        CALL  writeHL
-L140:
-        ;;test7.j(53)   write(read - b);   // 1060 - 0 = 1060
-L141:
-        CALL  read
-L142:
-        LD    DE,(05000H)
-        OR    A
-        SBC   HL,DE
-L143:
-        CALL  writeHL
-L144:
-        ;;test7.j(54)   write(b - read);   // 0 - 1061 = -1061
-L145:
-        LD    A,(05000H)
-L146:
-        CALL  read
-L147:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L148:
-        CALL  writeHL
-L149:
-        ;;test7.j(55)   b = 1;
-L150:
-        LD    A,1
-L151:
-        LD    (05000H),A
-L152:
-        ;;test7.j(56)   write(read * b);   // 1062 * 1 = 1062
-L153:
-        CALL  read
-L154:
-        LD    DE,(05000H)
-        CALL  mul16
-L155:
-        CALL  writeHL
-L156:
-        ;;test7.j(57)   write(b * read);   // 1 * 1063 = 1063
-L157:
-        LD    A,(05000H)
-L158:
-        CALL  read
-L159:
-        CALL  mul16_8
-L160:
-        CALL  writeHL
-L161:
-        ;;test7.j(58)   write(read / b);   // 1064 / 1 = 1064
-L162:
-        CALL  read
-L163:
-        LD    DE,(05000H)
-        CALL  div16
-L164:
-        CALL  writeHL
-L165:
-        ;;test7.j(59)   b = 12;
-L166:
-        LD    A,12
-L167:
-        LD    (05000H),A
-L168:
-        ;;test7.j(60)   write("Type 3 etc");
-L169:
-        LD    HL,245
-L170:
         CALL  putStr
-L171:
-        ;;test7.j(61)   write(3);
-L172:
-        LD    A,3
-L173:
-        CALL  writeA
-L174:
-        ;;test7.j(62)   write(b / read);   // 12 / 3 = 4
-L175:
-        LD    A,(05000H)
-L176:
+L107:
+        ;;test7.j(45)   write(read - 1000);   // 1052 - 1000 =   52
+L108:
         CALL  read
-L177:
-        EX    DE,HL
-        CALL  div8_16
-L178:
+L109:
+        LD    DE,1000
+        OR    A
+        SBC   HL,DE
+L110:
         CALL  writeHL
-L179:
-        ;;test7.j(63)   
-L180:
-        ;;test7.j(64)   /****************************************/
-L181:
-        ;;test7.j(65)   /* Dual term read: word + word variable */
-L182:
-        ;;test7.j(66)   /****************************************/
-L183:
-        ;;test7.j(67)   i = 0;
-L184:
+L111:
+        ;;test7.j(46)   write("\nType 1053 expect 1053");
+L112:
+        LD    HL,291
+L113:
+        CALL  putStr
+L114:
+        ;;test7.j(47)   write(2106 - read);   // 2106 - 1053 = 1053
+L115:
+        LD    HL,2106
+L116:
+        PUSH HL
+L117:
+        CALL  read
+L118:
+        POP   DE
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L119:
+        CALL  writeHL
+L120:
+        ;;test7.j(48)   write("\nType 1054 expect 5254");
+L121:
+        LD    HL,292
+L122:
+        CALL  putStr
+L123:
+        ;;test7.j(49)   write(read * 1000);   // 1054 * 1000 = 5254
+L124:
+        CALL  read
+L125:
+        LD    DE,1000
+        CALL  mul16
+L126:
+        CALL  writeHL
+L127:
+        ;;test7.j(50)   write("\nType 1055 expect 6424");
+L128:
+        LD    HL,293
+L129:
+        CALL  putStr
+L130:
+        ;;test7.j(51)   write(1000 * read);   // 1000 * 1055 = 1.055.000 = 6424
+L131:
+        LD    HL,1000
+L132:
+        PUSH HL
+L133:
+        CALL  read
+L134:
+        POP   DE
+        CALL  mul16
+L135:
+        CALL  writeHL
+L136:
+        ;;test7.j(52)   write("\nType 1056 expect 1");
+L137:
+        LD    HL,294
+L138:
+        CALL  putStr
+L139:
+        ;;test7.j(53)   write(read / 1000);   // 1056 / 1000 = 1
+L140:
+        CALL  read
+L141:
+        LD    DE,1000
+        CALL  div16
+L142:
+        CALL  writeHL
+L143:
+        ;;test7.j(54)   write("\nType 1057 expect 2");
+L144:
+        LD    HL,295
+L145:
+        CALL  putStr
+L146:
+        ;;test7.j(55)   write(2114 / read);   // 2114 / 1057 = 2
+L147:
+        LD    HL,2114
+L148:
+        PUSH HL
+L149:
+        CALL  read
+L150:
+        POP   DE
+        EX    DE,HL
+        CALL  div16
+L151:
+        CALL  writeHL
+L152:
+        ;;test7.j(56)   
+L153:
+        ;;test7.j(57)   /****************************************/
+L154:
+        ;;test7.j(58)   /* Dual term read: word + byte variable */
+L155:
+        ;;test7.j(59)   /****************************************/
+L156:
+        ;;test7.j(60)   write("\nType 1058 etc");
+L157:
+        LD    HL,296
+L158:
+        CALL  putStr
+L159:
+        ;;test7.j(61)   b = 0;
+L160:
         LD    A,0
+L161:
+        LD    (05000H),A
+L162:
+        ;;test7.j(62)   write(read + b);   // 1058 + 0 = 1058
+L163:
+        CALL  read
+L164:
+        LD    DE,(05000H)
+        ADD   HL,DE
+L165:
+        CALL  writeHL
+L166:
+        ;;test7.j(63)   write(b + read);   // 0 + 1059 = 1059
+L167:
+        LD    A,(05000H)
+L168:
+        CALL  read
+L169:
+        LD    E,A
+        LD    D,0
+        ADD   HL,DE
+L170:
+        CALL  writeHL
+L171:
+        ;;test7.j(64)   write(read - b);   // 1060 - 0 = 1060
+L172:
+        CALL  read
+L173:
+        LD    DE,(05000H)
+        OR    A
+        SBC   HL,DE
+L174:
+        CALL  writeHL
+L175:
+        ;;test7.j(65)   write("\nType 1061 expect -1061");
+L176:
+        LD    HL,297
+L177:
+        CALL  putStr
+L178:
+        ;;test7.j(66)   write(b - read);   // 0 - 1061 = -1061
+L179:
+        LD    A,(05000H)
+L180:
+        CALL  read
+L181:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L182:
+        CALL  writeHL
+L183:
+        ;;test7.j(67)   b = 1;
+L184:
+        LD    A,1
 L185:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
+        LD    (05000H),A
 L186:
-        ;;test7.j(68)   write("Type 1066 etc");
+        ;;test7.j(68)   write("\nType 1062 etc");
 L187:
-        LD    HL,246
+        LD    HL,298
 L188:
         CALL  putStr
 L189:
-        ;;test7.j(69)   write(read + i);   // 1066 + 0 = 1066
+        ;;test7.j(69)   write(read * b);   // 1062 * 1 = 1062
 L190:
         CALL  read
 L191:
-        LD    DE,(05001H)
-        ADD   HL,DE
+        LD    DE,(05000H)
+        CALL  mul16
 L192:
         CALL  writeHL
 L193:
-        ;;test7.j(70)   write(i + read);   // 0 + 1067 = 1067
+        ;;test7.j(70)   write(b * read);   // 1 * 1063 = 1063
 L194:
-        LD    HL,(05001H)
+        LD    A,(05000H)
 L195:
-        PUSH HL
+        CALL  read
 L196:
-        CALL  read
+        CALL  mul16_8
 L197:
-        POP   DE
-        ADD   HL,DE
+        CALL  writeHL
 L198:
-        CALL  writeHL
+        ;;test7.j(71)   write(read / b);   // 1064 / 1 = 1064
 L199:
-        ;;test7.j(71)   write(read - i);   // 1068 - 0 = 1068
+        CALL  read
 L200:
-        CALL  read
+        LD    DE,(05000H)
+        CALL  div16
 L201:
-        LD    DE,(05001H)
-        OR    A
-        SBC   HL,DE
+        CALL  writeHL
 L202:
-        CALL  writeHL
+        ;;test7.j(72)   b = 12;
 L203:
-        ;;test7.j(72)   write(i - read);   // 0 - 1069 = -1069
+        LD    A,12
 L204:
-        LD    HL,(05001H)
+        LD    (05000H),A
 L205:
-        PUSH HL
+        ;;test7.j(73)   write("\nType 3 expect 4");
 L206:
-        CALL  read
+        LD    HL,299
 L207:
-        POP   DE
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        CALL  putStr
 L208:
-        CALL  writeHL
+        ;;test7.j(74)   write(3);
 L209:
-        ;;test7.j(73)   i = 1;
+        LD    A,3
 L210:
-        LD    A,1
+        CALL  writeA
 L211:
-        LD    L,A
-        LD    H,0
-        LD    (05001H),HL
+        ;;test7.j(75)   write(b / read);   // 12 / 3 = 4
 L212:
-        ;;test7.j(74)   write(read * i);   // 1070 * 1 = 1070
+        LD    A,(05000H)
 L213:
         CALL  read
 L214:
-        LD    DE,(05001H)
-        CALL  mul16
+        EX    DE,HL
+        CALL  div8_16
 L215:
         CALL  writeHL
 L216:
-        ;;test7.j(75)   write(i * read);   // 1 * 1071 = 1071
+        ;;test7.j(76)   
 L217:
-        LD    HL,(05001H)
+        ;;test7.j(77)   /****************************************/
 L218:
-        PUSH HL
+        ;;test7.j(78)   /* Dual term read: word + word variable */
 L219:
-        CALL  read
+        ;;test7.j(79)   /****************************************/
 L220:
+        ;;test7.j(80)   i = 0;
+L221:
+        LD    A,0
+L222:
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
+L223:
+        ;;test7.j(81)   write("\nType 1066 etc");
+L224:
+        LD    HL,300
+L225:
+        CALL  putStr
+L226:
+        ;;test7.j(82)   write(read + i);   // 1066 + 0 = 1066
+L227:
+        CALL  read
+L228:
+        LD    DE,(05001H)
+        ADD   HL,DE
+L229:
+        CALL  writeHL
+L230:
+        ;;test7.j(83)   write(i + read);   // 0 + 1067 = 1067
+L231:
+        LD    HL,(05001H)
+L232:
+        PUSH HL
+L233:
+        CALL  read
+L234:
+        POP   DE
+        ADD   HL,DE
+L235:
+        CALL  writeHL
+L236:
+        ;;test7.j(84)   write(read - i);   // 1068 - 0 = 1068
+L237:
+        CALL  read
+L238:
+        LD    DE,(05001H)
+        OR    A
+        SBC   HL,DE
+L239:
+        CALL  writeHL
+L240:
+        ;;test7.j(85)   write("\nType 1069 expect -1069");
+L241:
+        LD    HL,301
+L242:
+        CALL  putStr
+L243:
+        ;;test7.j(86)   write(i - read);   // 0 - 1069 = -1069
+L244:
+        LD    HL,(05001H)
+L245:
+        PUSH HL
+L246:
+        CALL  read
+L247:
+        POP   DE
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L248:
+        CALL  writeHL
+L249:
+        ;;test7.j(87)   i = 1;
+L250:
+        LD    A,1
+L251:
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
+L252:
+        ;;test7.j(88)   write("\nType 1070 etc");
+L253:
+        LD    HL,302
+L254:
+        CALL  putStr
+L255:
+        ;;test7.j(89)   write(read * i);   // 1070 * 1 = 1070
+L256:
+        CALL  read
+L257:
+        LD    DE,(05001H)
+        CALL  mul16
+L258:
+        CALL  writeHL
+L259:
+        ;;test7.j(90)   write(i * read);   // 1 * 1071 = 1071
+L260:
+        LD    HL,(05001H)
+L261:
+        PUSH HL
+L262:
+        CALL  read
+L263:
         POP   DE
         CALL  mul16
-L221:
+L264:
         CALL  writeHL
-L222:
-        ;;test7.j(76)   write(read / i);   // 1072 / 1 = 1072
-L223:
+L265:
+        ;;test7.j(91)   write(read / i);   // 1072 / 1 = 1072
+L266:
         CALL  read
-L224:
+L267:
         LD    DE,(05001H)
         CALL  div16
-L225:
+L268:
         CALL  writeHL
-L226:
-        ;;test7.j(77)   i = 3219;
-L227:
+L269:
+        ;;test7.j(92)   i = 3219;
+L270:
         LD    HL,3219
-L228:
+L271:
         LD    (05001H),HL
-L229:
-        ;;test7.j(78)   write("Type 3");
-L230:
-        LD    HL,247
-L231:
+L272:
+        ;;test7.j(93)   write("\nType 3 expect 1073");
+L273:
+        LD    HL,303
+L274:
         CALL  putStr
-L232:
-        ;;test7.j(79)   write(i / read);   // 3219 / 3 = 1073  
-L233:
+L275:
+        ;;test7.j(94)   write(i / read);   // 3219 / 3 = 1073  
+L276:
         LD    HL,(05001H)
-L234:
+L277:
         PUSH HL
-L235:
+L278:
         CALL  read
-L236:
+L279:
         POP   DE
         EX    DE,HL
         CALL  div16
-L237:
+L280:
         CALL  writeHL
-L238:
-        ;;test7.j(80)   write("Klaar");
-L239:
-        LD    HL,248
-L240:
+L281:
+        ;;test7.j(95)   write("Klaar");
+L282:
+        LD    HL,304
+L283:
         CALL  putStr
-L241:
-        ;;test7.j(81) }
-L242:
+L284:
+        ;;test7.j(96) }
+L285:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L243:
-        .ASCIZ  "Type 2, 3, 4 etc"
-L244:
-        .ASCIZ  "Type 1048 etc"
-L245:
-        .ASCIZ  "Type 3 etc"
-L246:
-        .ASCIZ  "Type 1066 etc"
-L247:
-        .ASCIZ  "Type 3"
-L248:
+L286:
+        .ASCIZ  "\nType 2, 3, 4 etc"
+L287:
+        .ASCIZ  "\nType 1048 etc"
+L288:
+        .ASCIZ  "\nType 1050 expect 2050"
+L289:
+        .ASCIZ  "\nType 1051 expect 2051"
+L290:
+        .ASCIZ  "\nType 1052 expect 52"
+L291:
+        .ASCIZ  "\nType 1053 expect 1053"
+L292:
+        .ASCIZ  "\nType 1054 expect 5254"
+L293:
+        .ASCIZ  "\nType 1055 expect 6424"
+L294:
+        .ASCIZ  "\nType 1056 expect 1"
+L295:
+        .ASCIZ  "\nType 1057 expect 2"
+L296:
+        .ASCIZ  "\nType 1058 etc"
+L297:
+        .ASCIZ  "\nType 1061 expect -1061"
+L298:
+        .ASCIZ  "\nType 1062 etc"
+L299:
+        .ASCIZ  "\nType 3 expect 4"
+L300:
+        .ASCIZ  "\nType 1066 etc"
+L301:
+        .ASCIZ  "\nType 1069 expect -1069"
+L302:
+        .ASCIZ  "\nType 1070 etc"
+L303:
+        .ASCIZ  "\nType 3 expect 1073"
+L304:
         .ASCIZ  "Klaar"
