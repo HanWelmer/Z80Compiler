@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO refactor StringConstants.
-//TODO fix runtime error: too many variables
-//TODO fix stackedDatatypes (see test11.log)
 //TODO add string expression (+).
 //TODO add logical AND.
 //TODO add logical OR.
@@ -18,6 +15,8 @@ import java.util.Stack;
 //TODO add local parameter to function.
 //TODO add import
 //TODO introduce built in function malloc() (see test1, test5, test10, test11).
+//TODO refactor StringConstants.
+//TODO fix runtime error: too many variables
 
 /**
  * Compiler for the miniJava programming language.
@@ -361,7 +360,7 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
         /* 
          * Part of code generation.
-         * The read() function always returns an word value.
+         * The read() function always returns a word value.
          */
         if (acc16.inUse()) {
           plant(new Instruction(FunctionType.stackAcc16));
@@ -424,19 +423,6 @@ public class pCompiler {
       debug("\nterm loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
       /* leftOperand:  constant, acc, var, stack16, stack8
        * rOperand:     constant, acc, var, stack16, stack8
-       *
-       * term loop: lOperand=operand(acc, type=word),                rOperand=operand(constant, type=word, ...), acc16InUse = true, acc8InUse = false
-       * term loop: lOperand=operand(acc, type=word, intValue=1),    rOperand=operand(constant, type=byt, intValue=1), acc16InUse = true, acc8InUse = false
-       * term loop: lOperand=operand(acc, type=byt, intValue=12),    rOperand=operand(constant, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=byt, intValue=1),     rOperand=operand(constant, type=word, ...), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=word, intValue=3),    rOperand=operand(acc, type=byt, intValue=1), acc16InUse = true, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=byt, intValue=12),    rOperand=operand(acc, type=word, intValue=2), acc16InUse = true, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=word, intValue=5),    rOperand=operand(var, type=word, intValue=7), acc16InUse = true, acc8InUse = false
-       * term loop: lOperand=operand(acc, type=word),                rOperand=operand(var, type=byt, intValue=0), acc16InUse = true, acc8InUse = false
-       * term loop: lOperand=operand(acc, type=byt, intValue=1),     rOperand=operand(var, type=byt, intValue=2), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(acc, type=byt, intValue=2),     rOperand=operand(var, type=word, intValue=2), acc16InUse = false, acc8InUse = true
-       * term loop: lOperand=operand(stack16, type=word, ...),       rOperand=operand(acc, type=word, ...), acc16InUse = true, acc8InUse = false
-       * term loop: lOperand=operand(stack8, type=byt, intValue=12), rOperand=operand(acc, type=byt, intValue=1), acc16InUse = false, acc8InUse = true
        */
       if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.constant)) {
         if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.word) {
@@ -748,11 +734,11 @@ public class pCompiler {
       }
     }
 
-    debug("\ncomparison: end");
+    debug("\ncomparisonInDoStatement: end");
   } //comparisonInDoStatement(stopSet, doLabel)
 
   private boolean plantComparisonCode(Operand leftOperand, Operand rightOperand) {
-    debug("\ncomparison: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    debug("\nplantComparisonCode: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     /*Possible operand types: 
      * leftOperand:  constant, acc, var, stack16, stack8; NB: var is loaded into acc and acc is pushed onto stack prior to evaluating right hand expression into rightOperand.
      * rightOperand: constant, acc, var, stack16, stack8
@@ -930,6 +916,7 @@ public class pCompiler {
     } else {
       throw new RuntimeException("Internal compiler error: abort.");
     }
+    debug("\nplantComparisonCode: end");
     return reverseCompare;
   } //plantComparisonCode()
   
@@ -1586,6 +1573,17 @@ public class pCompiler {
       acc8.operand().opType = OperandType.stack8;
       acc8.clear();
     }
+    
+    /* update stack metadata */
+    if (instruction.function == FunctionType.unstackAcc8) {
+      popStackedDatatype(Datatype.byt);
+    } else if (instruction.function == FunctionType.unstackAcc16) {
+      popStackedDatatype(Datatype.word);
+    } else if (instruction.operand != null && instruction.operand.opType == OperandType.stack8) {
+      popStackedDatatype(Datatype.byt);
+    } else if (instruction.operand != null && instruction.operand.opType == OperandType.stack16) {
+      popStackedDatatype(Datatype.word);
+    }
 
     /* for debugging purposes */
     debug(" ;" + " stackedDatatypes=" + stackedDatatypes);
@@ -1663,13 +1661,15 @@ public class pCompiler {
     return compensatedAddress;
   }
 
-  private OperandType popStackedDatatype() {
+  private void popStackedDatatype(Datatype expectedDataType) {
     Datatype datatype = stackedDatatypes.pop();
-    if (datatype == Datatype.byt) {
-      return OperandType.stack8;
-    } else if (datatype == Datatype.word) {
-      return OperandType.stack16;
-    } else {
+    if (!(datatype == Datatype.byt || datatype == Datatype.word)) {
+        debug("\npopStackedDatatype: unsupported data type popped from stack: " + datatype);
+        throw new RuntimeException("Internal compiler error: abort.");
+    }
+
+    if (datatype != expectedDataType) {
+        debug("\npopStackedDatatype: unexpected data type popped from stack: popped " + datatype + "; expected "+ expectedDataType);
         throw new RuntimeException("Internal compiler error: abort.");
     }
   } //popStackedDatatype()
