@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO rename writeStatement to printlnStatement.
 //TODO fix bug in printlnStatement: all but last terms should be printed without line break.
 //TODO printlnStatement: only accept + symbol (not addop or - symbol)
 //TODO printlnStatement: test *, / and (expression)
@@ -1337,29 +1336,31 @@ public class pCompiler {
     
     //handle string expression or algorithmic expression.
     if (operand.datatype == Datatype.string) {
-      debug("\nwriteStatement: " + operand + ", lexeme: " + lexeme.makeString(null));
-
-      //part of code generation.
-      if (operand.opType != OperandType.acc) {
-        plantAccLoad(operand);
-      }
-      plant(new Instruction(FunctionType.writeString));
-        
       do {
         //part of lexical analysis.
         if (lexeme.type == LexemeType.addop) {
-          //skip addop symbol.
-          lexeme = lexemeReader.getLexeme(sourceCode);
-          operand = term(followSet);
-
+          debug("\nwriteStatement: " + operand);
           //part of code generation.
           if (operand.opType != OperandType.acc) {
             plantAccLoad(operand);
           }
           plant(new Instruction(FunctionType.writeString));
+
+          //part of lexical analysis.
+          //skip addop symbol.
+          lexeme = lexemeReader.getLexeme(sourceCode);
+
+          //read next term.
+          operand = term(followSet);
         }
-        debug("\nwriteStatement: " + operand + ", lexeme: " + lexeme.makeString(null));
       } while (lexeme.type != LexemeType.rbracket);
+
+      //part of code generation.
+      debug("\nwriteStatement: " + operand);
+      if (operand.opType != OperandType.acc) {
+        plantAccLoad(operand);
+      }
+      plant(new Instruction(FunctionType.writeString));
     } else {
       operand = expressionWithOperand(operand, followSet);
       debug("\nwriteStatement: " + operand);
