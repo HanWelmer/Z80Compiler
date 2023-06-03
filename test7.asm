@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -737,7 +769,7 @@ L5:
 L6:
         LD    A,0
 L7:
-        CALL  writeA
+        CALL  writeLineA
 L8:
         ;;test7.j(6) 
 L9:
@@ -751,7 +783,7 @@ L12:
 L13:
         LD    A,1
 L14:
-        CALL  writeA
+        CALL  writeLineA
 L15:
         ;;test7.j(11) 
 L16:
@@ -759,13 +791,13 @@ L16:
 L17:
         LD    HL,286
 L18:
-        CALL  putStr
+        CALL  writeLineStr
 L19:
         ;;test7.j(13)   println(read);       // 2
 L20:
         CALL  read
 L21:
-        CALL  writeHL
+        CALL  writeLineHL
 L22:
         ;;test7.j(14)   byte b = read;
 L23:
@@ -778,7 +810,7 @@ L25:
 L26:
         LD    A,(05000H)
 L27:
-        CALL  writeA
+        CALL  writeLineA
 L28:
         ;;test7.j(16) 
 L29:
@@ -795,7 +827,7 @@ L34:
         LD    DE,0
         ADD   HL,DE
 L35:
-        CALL  writeHL
+        CALL  writeLineHL
 L36:
         ;;test7.j(21)   println(0 + read);   // 0 + 5 = 5
 L37:
@@ -807,7 +839,7 @@ L39:
         LD    D,0
         ADD   HL,DE
 L40:
-        CALL  writeHL
+        CALL  writeLineHL
 L41:
         ;;test7.j(22)   println(read - 0);   // 6 - 0 = 6
 L42:
@@ -817,7 +849,7 @@ L43:
         OR    A
         SBC   HL,DE
 L44:
-        CALL  writeHL
+        CALL  writeLineHL
 L45:
         ;;test7.j(23)   println(14 - read);  // 14 - 7 = 7
 L46:
@@ -831,7 +863,7 @@ L48:
         OR    A
         SBC   HL,DE
 L49:
-        CALL  writeHL
+        CALL  writeLineHL
 L50:
         ;;test7.j(24)   println(read * 1);   // 8 * 1 = 8
 L51:
@@ -840,7 +872,7 @@ L52:
         LD    DE,1
         CALL  mul16
 L53:
-        CALL  writeHL
+        CALL  writeLineHL
 L54:
         ;;test7.j(25)   println(1 * read);   // 1 * 9 = 9
 L55:
@@ -850,7 +882,7 @@ L56:
 L57:
         CALL  mul16_8
 L58:
-        CALL  writeHL
+        CALL  writeLineHL
 L59:
         ;;test7.j(26)   println(read / 1);   // 10 / 1 = 10
 L60:
@@ -859,7 +891,7 @@ L61:
         LD    DE,1
         CALL  div16
 L62:
-        CALL  writeHL
+        CALL  writeLineHL
 L63:
         ;;test7.j(27)   println(121 / read); // 121 / 11 = 11
 L64:
@@ -870,7 +902,7 @@ L66:
         EX    DE,HL
         CALL  div8_16
 L67:
-        CALL  writeHL
+        CALL  writeLineHL
 L68:
         ;;test7.j(28)   
 L69:
@@ -878,7 +910,7 @@ L69:
 L70:
         LD    HL,287
 L71:
-        CALL  putStr
+        CALL  writeLineStr
 L72:
         ;;test7.j(30)   /**************************/
 L73:
@@ -890,7 +922,7 @@ L75:
 L76:
         CALL  read
 L77:
-        CALL  writeHL
+        CALL  writeLineHL
 L78:
         ;;test7.j(34)   word i = read;
 L79:
@@ -902,7 +934,7 @@ L81:
 L82:
         LD    HL,(05001H)
 L83:
-        CALL  writeHL
+        CALL  writeLineHL
 L84:
         ;;test7.j(36) 
 L85:
@@ -916,7 +948,7 @@ L88:
 L89:
         LD    HL,288
 L90:
-        CALL  putStr
+        CALL  writeLineStr
 L91:
         ;;test7.j(41)   println(read + 1000);   // 1050 + 1000 = 2050
 L92:
@@ -925,13 +957,13 @@ L93:
         LD    DE,1000
         ADD   HL,DE
 L94:
-        CALL  writeHL
+        CALL  writeLineHL
 L95:
         ;;test7.j(42)   println("\nType 1051 expect 2051");
 L96:
         LD    HL,289
 L97:
-        CALL  putStr
+        CALL  writeLineStr
 L98:
         ;;test7.j(43)   println(1000 + read);   // 1000 + 1051 = 2051
 L99:
@@ -944,13 +976,13 @@ L102:
         POP   DE
         ADD   HL,DE
 L103:
-        CALL  writeHL
+        CALL  writeLineHL
 L104:
         ;;test7.j(44)   println("\nType 1052 expect 52");
 L105:
         LD    HL,290
 L106:
-        CALL  putStr
+        CALL  writeLineStr
 L107:
         ;;test7.j(45)   println(read - 1000);   // 1052 - 1000 =   52
 L108:
@@ -960,13 +992,13 @@ L109:
         OR    A
         SBC   HL,DE
 L110:
-        CALL  writeHL
+        CALL  writeLineHL
 L111:
         ;;test7.j(46)   println("\nType 1053 expect 1053");
 L112:
         LD    HL,291
 L113:
-        CALL  putStr
+        CALL  writeLineStr
 L114:
         ;;test7.j(47)   println(2106 - read);   // 2106 - 1053 = 1053
 L115:
@@ -981,13 +1013,13 @@ L118:
         OR    A
         SBC   HL,DE
 L119:
-        CALL  writeHL
+        CALL  writeLineHL
 L120:
         ;;test7.j(48)   println("\nType 1054 expect 5254");
 L121:
         LD    HL,292
 L122:
-        CALL  putStr
+        CALL  writeLineStr
 L123:
         ;;test7.j(49)   println(read * 1000);   // 1054 * 1000 = 5254
 L124:
@@ -996,13 +1028,13 @@ L125:
         LD    DE,1000
         CALL  mul16
 L126:
-        CALL  writeHL
+        CALL  writeLineHL
 L127:
         ;;test7.j(50)   println("\nType 1055 expect 6424");
 L128:
         LD    HL,293
 L129:
-        CALL  putStr
+        CALL  writeLineStr
 L130:
         ;;test7.j(51)   println(1000 * read);   // 1000 * 1055 = 1.055.000 = 6424
 L131:
@@ -1015,13 +1047,13 @@ L134:
         POP   DE
         CALL  mul16
 L135:
-        CALL  writeHL
+        CALL  writeLineHL
 L136:
         ;;test7.j(52)   println("\nType 1056 expect 1");
 L137:
         LD    HL,294
 L138:
-        CALL  putStr
+        CALL  writeLineStr
 L139:
         ;;test7.j(53)   println(read / 1000);   // 1056 / 1000 = 1
 L140:
@@ -1030,13 +1062,13 @@ L141:
         LD    DE,1000
         CALL  div16
 L142:
-        CALL  writeHL
+        CALL  writeLineHL
 L143:
         ;;test7.j(54)   println("\nType 1057 expect 2");
 L144:
         LD    HL,295
 L145:
-        CALL  putStr
+        CALL  writeLineStr
 L146:
         ;;test7.j(55)   println(2114 / read);   // 2114 / 1057 = 2
 L147:
@@ -1050,7 +1082,7 @@ L150:
         EX    DE,HL
         CALL  div16
 L151:
-        CALL  writeHL
+        CALL  writeLineHL
 L152:
         ;;test7.j(56)   
 L153:
@@ -1064,7 +1096,7 @@ L156:
 L157:
         LD    HL,296
 L158:
-        CALL  putStr
+        CALL  writeLineStr
 L159:
         ;;test7.j(61)   b = 0;
 L160:
@@ -1079,7 +1111,7 @@ L164:
         LD    DE,(05000H)
         ADD   HL,DE
 L165:
-        CALL  writeHL
+        CALL  writeLineHL
 L166:
         ;;test7.j(63)   println(b + read);   // 0 + 1059 = 1059
 L167:
@@ -1091,7 +1123,7 @@ L169:
         LD    D,0
         ADD   HL,DE
 L170:
-        CALL  writeHL
+        CALL  writeLineHL
 L171:
         ;;test7.j(64)   println(read - b);   // 1060 - 0 = 1060
 L172:
@@ -1101,13 +1133,13 @@ L173:
         OR    A
         SBC   HL,DE
 L174:
-        CALL  writeHL
+        CALL  writeLineHL
 L175:
         ;;test7.j(65)   println("\nType 1061 expect -1061");
 L176:
         LD    HL,297
 L177:
-        CALL  putStr
+        CALL  writeLineStr
 L178:
         ;;test7.j(66)   println(b - read);   // 0 - 1061 = -1061
 L179:
@@ -1121,7 +1153,7 @@ L181:
         OR    A
         SBC   HL,DE
 L182:
-        CALL  writeHL
+        CALL  writeLineHL
 L183:
         ;;test7.j(67)   b = 1;
 L184:
@@ -1133,7 +1165,7 @@ L186:
 L187:
         LD    HL,298
 L188:
-        CALL  putStr
+        CALL  writeLineStr
 L189:
         ;;test7.j(69)   println(read * b);   // 1062 * 1 = 1062
 L190:
@@ -1142,7 +1174,7 @@ L191:
         LD    DE,(05000H)
         CALL  mul16
 L192:
-        CALL  writeHL
+        CALL  writeLineHL
 L193:
         ;;test7.j(70)   println(b * read);   // 1 * 1063 = 1063
 L194:
@@ -1152,7 +1184,7 @@ L195:
 L196:
         CALL  mul16_8
 L197:
-        CALL  writeHL
+        CALL  writeLineHL
 L198:
         ;;test7.j(71)   println(read / b);   // 1064 / 1 = 1064
 L199:
@@ -1161,7 +1193,7 @@ L200:
         LD    DE,(05000H)
         CALL  div16
 L201:
-        CALL  writeHL
+        CALL  writeLineHL
 L202:
         ;;test7.j(72)   b = 12;
 L203:
@@ -1173,13 +1205,13 @@ L205:
 L206:
         LD    HL,299
 L207:
-        CALL  putStr
+        CALL  writeLineStr
 L208:
         ;;test7.j(74)   println(3);
 L209:
         LD    A,3
 L210:
-        CALL  writeA
+        CALL  writeLineA
 L211:
         ;;test7.j(75)   println(b / read);   // 12 / 3 = 4
 L212:
@@ -1190,7 +1222,7 @@ L214:
         EX    DE,HL
         CALL  div8_16
 L215:
-        CALL  writeHL
+        CALL  writeLineHL
 L216:
         ;;test7.j(76)   
 L217:
@@ -1212,7 +1244,7 @@ L223:
 L224:
         LD    HL,300
 L225:
-        CALL  putStr
+        CALL  writeLineStr
 L226:
         ;;test7.j(82)   println(read + i);   // 1066 + 0 = 1066
 L227:
@@ -1221,7 +1253,7 @@ L228:
         LD    DE,(05001H)
         ADD   HL,DE
 L229:
-        CALL  writeHL
+        CALL  writeLineHL
 L230:
         ;;test7.j(83)   println(i + read);   // 0 + 1067 = 1067
 L231:
@@ -1234,7 +1266,7 @@ L234:
         POP   DE
         ADD   HL,DE
 L235:
-        CALL  writeHL
+        CALL  writeLineHL
 L236:
         ;;test7.j(84)   println(read - i);   // 1068 - 0 = 1068
 L237:
@@ -1244,13 +1276,13 @@ L238:
         OR    A
         SBC   HL,DE
 L239:
-        CALL  writeHL
+        CALL  writeLineHL
 L240:
         ;;test7.j(85)   println("\nType 1069 expect -1069");
 L241:
         LD    HL,301
 L242:
-        CALL  putStr
+        CALL  writeLineStr
 L243:
         ;;test7.j(86)   println(i - read);   // 0 - 1069 = -1069
 L244:
@@ -1265,7 +1297,7 @@ L247:
         OR    A
         SBC   HL,DE
 L248:
-        CALL  writeHL
+        CALL  writeLineHL
 L249:
         ;;test7.j(87)   i = 1;
 L250:
@@ -1279,7 +1311,7 @@ L252:
 L253:
         LD    HL,302
 L254:
-        CALL  putStr
+        CALL  writeLineStr
 L255:
         ;;test7.j(89)   println(read * i);   // 1070 * 1 = 1070
 L256:
@@ -1288,7 +1320,7 @@ L257:
         LD    DE,(05001H)
         CALL  mul16
 L258:
-        CALL  writeHL
+        CALL  writeLineHL
 L259:
         ;;test7.j(90)   println(i * read);   // 1 * 1071 = 1071
 L260:
@@ -1301,7 +1333,7 @@ L263:
         POP   DE
         CALL  mul16
 L264:
-        CALL  writeHL
+        CALL  writeLineHL
 L265:
         ;;test7.j(91)   println(read / i);   // 1072 / 1 = 1072
 L266:
@@ -1310,7 +1342,7 @@ L267:
         LD    DE,(05001H)
         CALL  div16
 L268:
-        CALL  writeHL
+        CALL  writeLineHL
 L269:
         ;;test7.j(92)   i = 3219;
 L270:
@@ -1322,7 +1354,7 @@ L272:
 L273:
         LD    HL,303
 L274:
-        CALL  putStr
+        CALL  writeLineStr
 L275:
         ;;test7.j(94)   println(i / read);   // 3219 / 3 = 1073  
 L276:
@@ -1336,13 +1368,13 @@ L279:
         EX    DE,HL
         CALL  div16
 L280:
-        CALL  writeHL
+        CALL  writeLineHL
 L281:
         ;;test7.j(95)   println("Klaar");
 L282:
         LD    HL,304
 L283:
-        CALL  putStr
+        CALL  writeLineStr
 L284:
         ;;test7.j(96) }
 L285:

@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -787,7 +819,7 @@ L30:
 L31:
         LD    A,0
 L32:
-        CALL  writeA
+        CALL  writeLineA
 L33:
         ;;test2.j(19) 
 L34:
@@ -807,13 +839,13 @@ L40:
 L41:
         LD    A,1
 L42:
-        CALL  writeA
+        CALL  writeLineA
 L43:
         JP    L47
 L44:
         LD    HL,999
 L45:
-        CALL  writeHL
+        CALL  writeLineHL
 L46:
         ;;test2.j(24)   if (1 != 0) println(2); else println(999);
 L47:
@@ -825,13 +857,13 @@ L49:
 L50:
         LD    A,2
 L51:
-        CALL  writeA
+        CALL  writeLineA
 L52:
         JP    L56
 L53:
         LD    HL,999
 L54:
-        CALL  writeHL
+        CALL  writeLineHL
 L55:
         ;;test2.j(25)   if (1 >  0) println(3); else println(999);
 L56:
@@ -843,13 +875,13 @@ L58:
 L59:
         LD    A,3
 L60:
-        CALL  writeA
+        CALL  writeLineA
 L61:
         JP    L65
 L62:
         LD    HL,999
 L63:
-        CALL  writeHL
+        CALL  writeLineHL
 L64:
         ;;test2.j(26)   if (1 >= 0) println(4); else println(999);
 L65:
@@ -861,13 +893,13 @@ L67:
 L68:
         LD    A,4
 L69:
-        CALL  writeA
+        CALL  writeLineA
 L70:
         JP    L74
 L71:
         LD    HL,999
 L72:
-        CALL  writeHL
+        CALL  writeLineHL
 L73:
         ;;test2.j(27)   if (1 >= 1) println(5); else println(999);
 L74:
@@ -879,13 +911,13 @@ L76:
 L77:
         LD    A,5
 L78:
-        CALL  writeA
+        CALL  writeLineA
 L79:
         JP    L83
 L80:
         LD    HL,999
 L81:
-        CALL  writeHL
+        CALL  writeLineHL
 L82:
         ;;test2.j(28)   if (1 <  2) println(6); else println(999);
 L83:
@@ -897,13 +929,13 @@ L85:
 L86:
         LD    A,6
 L87:
-        CALL  writeA
+        CALL  writeLineA
 L88:
         JP    L92
 L89:
         LD    HL,999
 L90:
-        CALL  writeHL
+        CALL  writeLineHL
 L91:
         ;;test2.j(29)   if (1 <= 2) println(7); else println(999);
 L92:
@@ -916,13 +948,13 @@ L94:
 L95:
         LD    A,7
 L96:
-        CALL  writeA
+        CALL  writeLineA
 L97:
         JP    L101
 L98:
         LD    HL,999
 L99:
-        CALL  writeHL
+        CALL  writeLineHL
 L100:
         ;;test2.j(30)   if (1 <= 1) println(8); else println(999);
 L101:
@@ -935,19 +967,19 @@ L103:
 L104:
         LD    A,8
 L105:
-        CALL  writeA
+        CALL  writeLineA
 L106:
         JP    L110
 L107:
         LD    HL,999
 L108:
-        CALL  writeHL
+        CALL  writeLineHL
 L109:
         ;;test2.j(31)   println(9);
 L110:
         LD    A,9
 L111:
-        CALL  writeA
+        CALL  writeLineA
 L112:
         ;;test2.j(32) 
 L113:
@@ -970,13 +1002,13 @@ L119:
 L120:
         LD    HL,999
 L121:
-        CALL  writeHL
+        CALL  writeLineHL
 L122:
         JP    L126
 L123:
         LD    A,10
 L124:
-        CALL  writeA
+        CALL  writeLineA
 L125:
         ;;test2.j(36)   if (1 != 1000) println(11);  else println(999);
 L126:
@@ -993,13 +1025,13 @@ L129:
 L130:
         LD    A,11
 L131:
-        CALL  writeA
+        CALL  writeLineA
 L132:
         JP    L136
 L133:
         LD    HL,999
 L134:
-        CALL  writeHL
+        CALL  writeLineHL
 L135:
         ;;test2.j(37)   if (1 >  1000) println(999); else println(12);
 L136:
@@ -1016,13 +1048,13 @@ L139:
 L140:
         LD    HL,999
 L141:
-        CALL  writeHL
+        CALL  writeLineHL
 L142:
         JP    L146
 L143:
         LD    A,12
 L144:
-        CALL  writeA
+        CALL  writeLineA
 L145:
         ;;test2.j(38)   if (1 >= 1000) println(999); else println(13);
 L146:
@@ -1039,13 +1071,13 @@ L149:
 L150:
         LD    HL,999
 L151:
-        CALL  writeHL
+        CALL  writeLineHL
 L152:
         JP    L156
 L153:
         LD    A,13
 L154:
-        CALL  writeA
+        CALL  writeLineA
 L155:
         ;;test2.j(39)   if (1 >= 1000) println(999); else println(14);
 L156:
@@ -1062,13 +1094,13 @@ L159:
 L160:
         LD    HL,999
 L161:
-        CALL  writeHL
+        CALL  writeLineHL
 L162:
         JP    L166
 L163:
         LD    A,14
 L164:
-        CALL  writeA
+        CALL  writeLineA
 L165:
         ;;test2.j(40)   if (1 <  2000) println(15);  else println(999);
 L166:
@@ -1085,13 +1117,13 @@ L169:
 L170:
         LD    A,15
 L171:
-        CALL  writeA
+        CALL  writeLineA
 L172:
         JP    L176
 L173:
         LD    HL,999
 L174:
-        CALL  writeHL
+        CALL  writeLineHL
 L175:
         ;;test2.j(41)   if (1 <= 2000) println(16);  else println(999);
 L176:
@@ -1109,13 +1141,13 @@ L179:
 L180:
         LD    A,16
 L181:
-        CALL  writeA
+        CALL  writeLineA
 L182:
         JP    L186
 L183:
         LD    HL,999
 L184:
-        CALL  writeHL
+        CALL  writeLineHL
 L185:
         ;;test2.j(42)   if (1 <= 1000) println(17);  else println(999);
 L186:
@@ -1133,25 +1165,25 @@ L189:
 L190:
         LD    A,17
 L191:
-        CALL  writeA
+        CALL  writeLineA
 L192:
         JP    L196
 L193:
         LD    HL,999
 L194:
-        CALL  writeHL
+        CALL  writeLineHL
 L195:
         ;;test2.j(43)   println(18);
 L196:
         LD    A,18
 L197:
-        CALL  writeA
+        CALL  writeLineA
 L198:
         ;;test2.j(44)   println(19);
 L199:
         LD    A,19
 L200:
-        CALL  writeA
+        CALL  writeLineA
 L201:
         ;;test2.j(45) 
 L202:
@@ -1175,13 +1207,13 @@ L208:
 L209:
         LD    HL,999
 L210:
-        CALL  writeHL
+        CALL  writeLineHL
 L211:
         JP    L215
 L212:
         LD    A,20
 L213:
-        CALL  writeA
+        CALL  writeLineA
 L214:
         ;;test2.j(49)   if (1000 != 0) println(21);  else println(999);
 L215:
@@ -1199,13 +1231,13 @@ L218:
 L219:
         LD    A,21
 L220:
-        CALL  writeA
+        CALL  writeLineA
 L221:
         JP    L225
 L222:
         LD    HL,999
 L223:
-        CALL  writeHL
+        CALL  writeLineHL
 L224:
         ;;test2.j(50)   if (1000 >  0) println(22);  else println(999);
 L225:
@@ -1223,13 +1255,13 @@ L228:
 L229:
         LD    A,22
 L230:
-        CALL  writeA
+        CALL  writeLineA
 L231:
         JP    L235
 L232:
         LD    HL,999
 L233:
-        CALL  writeHL
+        CALL  writeLineHL
 L234:
         ;;test2.j(51)   if (1000 >= 0) println(23);  else println(999);
 L235:
@@ -1247,13 +1279,13 @@ L238:
 L239:
         LD    A,23
 L240:
-        CALL  writeA
+        CALL  writeLineA
 L241:
         JP    L245
 L242:
         LD    HL,999
 L243:
-        CALL  writeHL
+        CALL  writeLineHL
 L244:
         ;;test2.j(52)   if (1000 >= 1) println(24);  else println(999);
 L245:
@@ -1271,13 +1303,13 @@ L248:
 L249:
         LD    A,24
 L250:
-        CALL  writeA
+        CALL  writeLineA
 L251:
         JP    L255
 L252:
         LD    HL,999
 L253:
-        CALL  writeHL
+        CALL  writeLineHL
 L254:
         ;;test2.j(53)   if (1 <  2000) println(25);  else println(999);
 L255:
@@ -1294,13 +1326,13 @@ L258:
 L259:
         LD    A,25
 L260:
-        CALL  writeA
+        CALL  writeLineA
 L261:
         JP    L265
 L262:
         LD    HL,999
 L263:
-        CALL  writeHL
+        CALL  writeLineHL
 L264:
         ;;test2.j(54)   if (1 <= 2000) println(26);  else println(999);
 L265:
@@ -1318,13 +1350,13 @@ L268:
 L269:
         LD    A,26
 L270:
-        CALL  writeA
+        CALL  writeLineA
 L271:
         JP    L275
 L272:
         LD    HL,999
 L273:
-        CALL  writeHL
+        CALL  writeLineHL
 L274:
         ;;test2.j(55)   if (1 <= 1000) println(27);  else println(999);
 L275:
@@ -1342,25 +1374,25 @@ L278:
 L279:
         LD    A,27
 L280:
-        CALL  writeA
+        CALL  writeLineA
 L281:
         JP    L285
 L282:
         LD    HL,999
 L283:
-        CALL  writeHL
+        CALL  writeLineHL
 L284:
         ;;test2.j(56)   println(28);
 L285:
         LD    A,28
 L286:
-        CALL  writeA
+        CALL  writeLineA
 L287:
         ;;test2.j(57)   println(29);
 L288:
         LD    A,29
 L289:
-        CALL  writeA
+        CALL  writeLineA
 L290:
         ;;test2.j(58) 
 L291:
@@ -1380,13 +1412,13 @@ L296:
 L297:
         LD    A,30
 L298:
-        CALL  writeA
+        CALL  writeLineA
 L299:
         JP    L303
 L300:
         LD    HL,999
 L301:
-        CALL  writeHL
+        CALL  writeLineHL
 L302:
         ;;test2.j(62)   if (1000 != 2000) println(31); else println(999);
 L303:
@@ -1400,13 +1432,13 @@ L305:
 L306:
         LD    A,31
 L307:
-        CALL  writeA
+        CALL  writeLineA
 L308:
         JP    L312
 L309:
         LD    HL,999
 L310:
-        CALL  writeHL
+        CALL  writeLineHL
 L311:
         ;;test2.j(63)   if (2000 >  1000) println(32); else println(999);
 L312:
@@ -1420,13 +1452,13 @@ L314:
 L315:
         LD    A,32
 L316:
-        CALL  writeA
+        CALL  writeLineA
 L317:
         JP    L321
 L318:
         LD    HL,999
 L319:
-        CALL  writeHL
+        CALL  writeLineHL
 L320:
         ;;test2.j(64)   if (2000 >= 1000) println(33); else println(999);
 L321:
@@ -1440,13 +1472,13 @@ L323:
 L324:
         LD    A,33
 L325:
-        CALL  writeA
+        CALL  writeLineA
 L326:
         JP    L330
 L327:
         LD    HL,999
 L328:
-        CALL  writeHL
+        CALL  writeLineHL
 L329:
         ;;test2.j(65)   if (1000 >= 1000) println(34); else println(999);
 L330:
@@ -1460,13 +1492,13 @@ L332:
 L333:
         LD    A,34
 L334:
-        CALL  writeA
+        CALL  writeLineA
 L335:
         JP    L339
 L336:
         LD    HL,999
 L337:
-        CALL  writeHL
+        CALL  writeLineHL
 L338:
         ;;test2.j(66)   if (1000 <  2000) println(35); else println(999);
 L339:
@@ -1480,13 +1512,13 @@ L341:
 L342:
         LD    A,35
 L343:
-        CALL  writeA
+        CALL  writeLineA
 L344:
         JP    L348
 L345:
         LD    HL,999
 L346:
-        CALL  writeHL
+        CALL  writeLineHL
 L347:
         ;;test2.j(67)   if (1000 <= 2000) println(36); else println(999);
 L348:
@@ -1501,13 +1533,13 @@ L350:
 L351:
         LD    A,36
 L352:
-        CALL  writeA
+        CALL  writeLineA
 L353:
         JP    L357
 L354:
         LD    HL,999
 L355:
-        CALL  writeHL
+        CALL  writeLineHL
 L356:
         ;;test2.j(68)   if (1000 <= 1000) println(37); else println(999);
 L357:
@@ -1522,25 +1554,25 @@ L359:
 L360:
         LD    A,37
 L361:
-        CALL  writeA
+        CALL  writeLineA
 L362:
         JP    L366
 L363:
         LD    HL,999
 L364:
-        CALL  writeHL
+        CALL  writeLineHL
 L365:
         ;;test2.j(69)   println(38);
 L366:
         LD    A,38
 L367:
-        CALL  writeA
+        CALL  writeLineA
 L368:
         ;;test2.j(70)   println(39);
 L369:
         LD    A,39
 L370:
-        CALL  writeA
+        CALL  writeLineA
 L371:
         ;;test2.j(71) 
 L372:
@@ -1562,13 +1594,13 @@ L379:
 L380:
         LD    A,40
 L381:
-        CALL  writeA
+        CALL  writeLineA
 L382:
         JP    L386
 L383:
         LD    HL,999
 L384:
-        CALL  writeHL
+        CALL  writeLineHL
 L385:
         ;;test2.j(76)   if (1 < 2+0) println(41); else println(999);
 L386:
@@ -1582,13 +1614,13 @@ L389:
 L390:
         LD    A,41
 L391:
-        CALL  writeA
+        CALL  writeLineA
 L392:
         JP    L398
 L393:
         LD    HL,999
 L394:
-        CALL  writeHL
+        CALL  writeLineHL
 L395:
         ;;test2.j(77)   // constant - acc
 L396:
@@ -1612,13 +1644,13 @@ L402:
 L403:
         LD    HL,999
 L404:
-        CALL  writeHL
+        CALL  writeLineHL
 L405:
         JP    L409
 L406:
         LD    A,42
 L407:
-        CALL  writeA
+        CALL  writeLineA
 L408:
         ;;test2.j(80)   if (1 < 1000+0) println(43);  else println(999);
 L409:
@@ -1638,13 +1670,13 @@ L413:
 L414:
         LD    A,43
 L415:
-        CALL  writeA
+        CALL  writeLineA
 L416:
         JP    L422
 L417:
         LD    HL,999
 L418:
-        CALL  writeHL
+        CALL  writeLineHL
 L419:
         ;;test2.j(81)   // constant - acc
 L420:
@@ -1668,13 +1700,13 @@ L426:
 L427:
         LD    A,44
 L428:
-        CALL  writeA
+        CALL  writeLineA
 L429:
         JP    L433
 L430:
         LD    HL,999
 L431:
-        CALL  writeHL
+        CALL  writeLineHL
 L432:
         ;;test2.j(84)   if (1000 < 0+0) println(999); else println(45);
 L433:
@@ -1694,13 +1726,13 @@ L437:
 L438:
         LD    HL,999
 L439:
-        CALL  writeHL
+        CALL  writeLineHL
 L440:
         JP    L446
 L441:
         LD    A,45
 L442:
-        CALL  writeA
+        CALL  writeLineA
 L443:
         ;;test2.j(85)   // constant - acc
 L444:
@@ -1721,13 +1753,13 @@ L449:
 L450:
         LD    A,46
 L451:
-        CALL  writeA
+        CALL  writeLineA
 L452:
         JP    L456
 L453:
         LD    HL,999
 L454:
-        CALL  writeHL
+        CALL  writeLineHL
 L455:
         ;;test2.j(88)   if (1000 < 2000+0) println(47); else println(999);
 L456:
@@ -1744,25 +1776,25 @@ L459:
 L460:
         LD    A,47
 L461:
-        CALL  writeA
+        CALL  writeLineA
 L462:
         JP    L466
 L463:
         LD    HL,999
 L464:
-        CALL  writeHL
+        CALL  writeLineHL
 L465:
         ;;test2.j(89)   println(48);
 L466:
         LD    A,48
 L467:
-        CALL  writeA
+        CALL  writeLineA
 L468:
         ;;test2.j(90)   println(49);
 L469:
         LD    A,49
 L470:
-        CALL  writeA
+        CALL  writeLineA
 L471:
         ;;test2.j(91) 
 L472:
@@ -1782,13 +1814,13 @@ L478:
 L479:
         LD    A,50
 L480:
-        CALL  writeA
+        CALL  writeLineA
 L481:
         JP    L485
 L482:
         LD    HL,999
 L483:
-        CALL  writeHL
+        CALL  writeLineHL
 L484:
         ;;test2.j(96)   if (10 < b) println(51); else println(999);
 L485:
@@ -1800,13 +1832,13 @@ L487:
 L488:
         LD    A,51
 L489:
-        CALL  writeA
+        CALL  writeLineA
 L490:
         JP    L496
 L491:
         LD    HL,999
 L492:
-        CALL  writeHL
+        CALL  writeLineHL
 L493:
         ;;test2.j(97)   // constant - var
 L494:
@@ -1827,13 +1859,13 @@ L499:
 L500:
         LD    HL,999
 L501:
-        CALL  writeHL
+        CALL  writeLineHL
 L502:
         JP    L506
 L503:
         LD    A,52
 L504:
-        CALL  writeA
+        CALL  writeLineA
 L505:
         ;;test2.j(100)   if (10 < i) println(53); else println(999);
 L506:
@@ -1850,13 +1882,13 @@ L509:
 L510:
         LD    A,53
 L511:
-        CALL  writeA
+        CALL  writeLineA
 L512:
         JP    L518
 L513:
         LD    HL,999
 L514:
-        CALL  writeHL
+        CALL  writeLineHL
 L515:
         ;;test2.j(101)   // constant - var
 L516:
@@ -1878,13 +1910,13 @@ L521:
 L522:
         LD    A,54
 L523:
-        CALL  writeA
+        CALL  writeLineA
 L524:
         JP    L528
 L525:
         LD    HL,999
 L526:
-        CALL  writeHL
+        CALL  writeLineHL
 L527:
         ;;test2.j(104)   if (1000 < b) println(999); else println(55);
 L528:
@@ -1902,13 +1934,13 @@ L531:
 L532:
         LD    HL,999
 L533:
-        CALL  writeHL
+        CALL  writeLineHL
 L534:
         JP    L540
 L535:
         LD    A,55
 L536:
-        CALL  writeA
+        CALL  writeLineA
 L537:
         ;;test2.j(105)   // constant - var
 L538:
@@ -1926,13 +1958,13 @@ L542:
 L543:
         LD    A,56
 L544:
-        CALL  writeA
+        CALL  writeLineA
 L545:
         JP    L549
 L546:
         LD    HL,999
 L547:
-        CALL  writeHL
+        CALL  writeLineHL
 L548:
         ;;test2.j(108)   if (1000 < i) println(57); else println(999);
 L549:
@@ -1946,25 +1978,25 @@ L551:
 L552:
         LD    A,57
 L553:
-        CALL  writeA
+        CALL  writeLineA
 L554:
         JP    L558
 L555:
         LD    HL,999
 L556:
-        CALL  writeHL
+        CALL  writeLineHL
 L557:
         ;;test2.j(109)   println(58);
 L558:
         LD    A,58
 L559:
-        CALL  writeA
+        CALL  writeLineA
 L560:
         ;;test2.j(110)   println(59);
 L561:
         LD    A,59
 L562:
-        CALL  writeA
+        CALL  writeLineA
 L563:
         ;;test2.j(111) 
 L564:
@@ -1978,13 +2010,13 @@ L567:
 L568:
         LD    A,60
 L569:
-        CALL  writeA
+        CALL  writeLineA
 L570:
         ;;test2.j(116)   println(61);
 L571:
         LD    A,61
 L572:
-        CALL  writeA
+        CALL  writeLineA
 L573:
         ;;test2.j(117)   // constant - stack8
 L574:
@@ -1994,13 +2026,13 @@ L575:
 L576:
         LD    A,62
 L577:
-        CALL  writeA
+        CALL  writeLineA
 L578:
         ;;test2.j(120)   println(63);
 L579:
         LD    A,63
 L580:
-        CALL  writeA
+        CALL  writeLineA
 L581:
         ;;test2.j(121)   // constant - stack8
 L582:
@@ -2010,13 +2042,13 @@ L583:
 L584:
         LD    A,64
 L585:
-        CALL  writeA
+        CALL  writeLineA
 L586:
         ;;test2.j(124)   println(65);
 L587:
         LD    A,65
 L588:
-        CALL  writeA
+        CALL  writeLineA
 L589:
         ;;test2.j(125)   // constant - stack8
 L590:
@@ -2026,25 +2058,25 @@ L591:
 L592:
         LD    A,66
 L593:
-        CALL  writeA
+        CALL  writeLineA
 L594:
         ;;test2.j(128)   println(67);
 L595:
         LD    A,67
 L596:
-        CALL  writeA
+        CALL  writeLineA
 L597:
         ;;test2.j(129)   println(68);
 L598:
         LD    A,68
 L599:
-        CALL  writeA
+        CALL  writeLineA
 L600:
         ;;test2.j(130)   println(69);
 L601:
         LD    A,69
 L602:
-        CALL  writeA
+        CALL  writeLineA
 L603:
         ;;test2.j(131) 
 L604:
@@ -2058,13 +2090,13 @@ L607:
 L608:
         LD    A,70
 L609:
-        CALL  writeA
+        CALL  writeLineA
 L610:
         ;;test2.j(136)   println(71);
 L611:
         LD    A,71
 L612:
-        CALL  writeA
+        CALL  writeLineA
 L613:
         ;;test2.j(137)   // constant - stack16
 L614:
@@ -2074,13 +2106,13 @@ L615:
 L616:
         LD    A,72
 L617:
-        CALL  writeA
+        CALL  writeLineA
 L618:
         ;;test2.j(140)   println(73);
 L619:
         LD    A,73
 L620:
-        CALL  writeA
+        CALL  writeLineA
 L621:
         ;;test2.j(141)   // constant - stack16
 L622:
@@ -2090,13 +2122,13 @@ L623:
 L624:
         LD    A,74
 L625:
-        CALL  writeA
+        CALL  writeLineA
 L626:
         ;;test2.j(144)   println(75);
 L627:
         LD    A,75
 L628:
-        CALL  writeA
+        CALL  writeLineA
 L629:
         ;;test2.j(145)   // constant - stack16
 L630:
@@ -2106,25 +2138,25 @@ L631:
 L632:
         LD    A,76
 L633:
-        CALL  writeA
+        CALL  writeLineA
 L634:
         ;;test2.j(148)   println(77);
 L635:
         LD    A,77
 L636:
-        CALL  writeA
+        CALL  writeLineA
 L637:
         ;;test2.j(149)   println(78);
 L638:
         LD    A,78
 L639:
-        CALL  writeA
+        CALL  writeLineA
 L640:
         ;;test2.j(150)   println(79);
 L641:
         LD    A,79
 L642:
-        CALL  writeA
+        CALL  writeLineA
 L643:
         ;;test2.j(151) 
 L644:
@@ -2146,13 +2178,13 @@ L651:
 L652:
         LD    A,80
 L653:
-        CALL  writeA
+        CALL  writeLineA
 L654:
         JP    L658
 L655:
         LD    HL,999
 L656:
-        CALL  writeHL
+        CALL  writeLineHL
 L657:
         ;;test2.j(156)   if (10+0 < 20) println(81); else println(999);
 L658:
@@ -2166,13 +2198,13 @@ L661:
 L662:
         LD    A,81
 L663:
-        CALL  writeA
+        CALL  writeLineA
 L664:
         JP    L670
 L665:
         LD    HL,999
 L666:
-        CALL  writeHL
+        CALL  writeLineHL
 L667:
         ;;test2.j(157)   // acc - constant
 L668:
@@ -2195,13 +2227,13 @@ L674:
 L675:
         LD    HL,999
 L676:
-        CALL  writeHL
+        CALL  writeLineHL
 L677:
         JP    L681
 L678:
         LD    A,82
 L679:
-        CALL  writeA
+        CALL  writeLineA
 L680:
         ;;test2.j(160)   if (10+0 < 2000) println(83); else println(999);
 L681:
@@ -2220,13 +2252,13 @@ L685:
 L686:
         LD    A,83
 L687:
-        CALL  writeA
+        CALL  writeLineA
 L688:
         JP    L694
 L689:
         LD    HL,999
 L690:
-        CALL  writeHL
+        CALL  writeLineHL
 L691:
         ;;test2.j(161)   // acc - constant
 L692:
@@ -2251,13 +2283,13 @@ L698:
 L699:
         LD    A,84
 L700:
-        CALL  writeA
+        CALL  writeLineA
 L701:
         JP    L705
 L702:
         LD    HL,999
 L703:
-        CALL  writeHL
+        CALL  writeLineHL
 L704:
         ;;test2.j(164)   if (1000+0 < 20) println(999); else println(85);
 L705:
@@ -2278,13 +2310,13 @@ L709:
 L710:
         LD    HL,999
 L711:
-        CALL  writeHL
+        CALL  writeLineHL
 L712:
         JP    L718
 L713:
         LD    A,85
 L714:
-        CALL  writeA
+        CALL  writeLineA
 L715:
         ;;test2.j(165)   // acc - constant
 L716:
@@ -2305,13 +2337,13 @@ L721:
 L722:
         LD    A,86
 L723:
-        CALL  writeA
+        CALL  writeLineA
 L724:
         JP    L728
 L725:
         LD    HL,999
 L726:
-        CALL  writeHL
+        CALL  writeLineHL
 L727:
         ;;test2.j(168)   if (1000+0 < 2000) println(87); else println(999);
 L728:
@@ -2328,25 +2360,25 @@ L731:
 L732:
         LD    A,87
 L733:
-        CALL  writeA
+        CALL  writeLineA
 L734:
         JP    L738
 L735:
         LD    HL,999
 L736:
-        CALL  writeHL
+        CALL  writeLineHL
 L737:
         ;;test2.j(169)   println(88);
 L738:
         LD    A,88
 L739:
-        CALL  writeA
+        CALL  writeLineA
 L740:
         ;;test2.j(170)   println(89);
 L741:
         LD    A,89
 L742:
-        CALL  writeA
+        CALL  writeLineA
 L743:
         ;;test2.j(171) 
 L744:
@@ -2375,13 +2407,13 @@ L754:
 L755:
         LD    A,90
 L756:
-        CALL  writeA
+        CALL  writeLineA
 L757:
         JP    L761
 L758:
         LD    HL,999
 L759:
-        CALL  writeHL
+        CALL  writeLineHL
 L760:
         ;;test2.j(176)   if (10+0 < 20+0) println(91); else println(999);
 L761:
@@ -2402,13 +2434,13 @@ L767:
 L768:
         LD    A,91
 L769:
-        CALL  writeA
+        CALL  writeLineA
 L770:
         JP    L776
 L771:
         LD    HL,999
 L772:
-        CALL  writeHL
+        CALL  writeLineHL
 L773:
         ;;test2.j(177)   // acc - acc
 L774:
@@ -2438,13 +2470,13 @@ L783:
 L784:
         LD    HL,999
 L785:
-        CALL  writeHL
+        CALL  writeLineHL
 L786:
         JP    L790
 L787:
         LD    A,92
 L788:
-        CALL  writeA
+        CALL  writeLineA
 L789:
         ;;test2.j(180)   if (10+0 < 2000+0) println(93); else println(999);
 L790:
@@ -2470,13 +2502,13 @@ L797:
 L798:
         LD    A,93
 L799:
-        CALL  writeA
+        CALL  writeLineA
 L800:
         JP    L806
 L801:
         LD    HL,999
 L802:
-        CALL  writeHL
+        CALL  writeLineHL
 L803:
         ;;test2.j(181)   // acc - acc
 L804:
@@ -2507,13 +2539,13 @@ L813:
 L814:
         LD    A,94
 L815:
-        CALL  writeA
+        CALL  writeLineA
 L816:
         JP    L820
 L817:
         LD    HL,999
 L818:
-        CALL  writeHL
+        CALL  writeLineHL
 L819:
         ;;test2.j(184)   if (1000+0 < 20+0) println(999); else println(95);
 L820:
@@ -2540,13 +2572,13 @@ L827:
 L828:
         LD    HL,999
 L829:
-        CALL  writeHL
+        CALL  writeLineHL
 L830:
         JP    L836
 L831:
         LD    A,95
 L832:
-        CALL  writeA
+        CALL  writeLineA
 L833:
         ;;test2.j(185)   // acc - acc
 L834:
@@ -2574,13 +2606,13 @@ L842:
 L843:
         LD    A,96
 L844:
-        CALL  writeA
+        CALL  writeLineA
 L845:
         JP    L849
 L846:
         LD    HL,999
 L847:
-        CALL  writeHL
+        CALL  writeLineHL
 L848:
         ;;test2.j(188)   if (1000+0 < 2000+0) println(97); else println(999);
 L849:
@@ -2604,25 +2636,25 @@ L855:
 L856:
         LD    A,97
 L857:
-        CALL  writeA
+        CALL  writeLineA
 L858:
         JP    L862
 L859:
         LD    HL,999
 L860:
-        CALL  writeHL
+        CALL  writeLineHL
 L861:
         ;;test2.j(189)   println(98);
 L862:
         LD    A,98
 L863:
-        CALL  writeA
+        CALL  writeLineA
 L864:
         ;;test2.j(190)   println(99);
 L865:
         LD    A,99
 L866:
-        CALL  writeA
+        CALL  writeLineA
 L867:
         ;;test2.j(191) 
 L868:
@@ -2646,13 +2678,13 @@ L875:
 L876:
         LD    A,100
 L877:
-        CALL  writeA
+        CALL  writeLineA
 L878:
         JP    L882
 L879:
         LD    HL,999
 L880:
-        CALL  writeHL
+        CALL  writeLineHL
 L881:
         ;;test2.j(196)   if (10+0 < b) println(101); else println(999);
 L882:
@@ -2668,13 +2700,13 @@ L885:
 L886:
         LD    A,101
 L887:
-        CALL  writeA
+        CALL  writeLineA
 L888:
         JP    L894
 L889:
         LD    HL,999
 L890:
-        CALL  writeHL
+        CALL  writeLineHL
 L891:
         ;;test2.j(197)   // acc - var
 L892:
@@ -2697,13 +2729,13 @@ L898:
 L899:
         LD    HL,999
 L900:
-        CALL  writeHL
+        CALL  writeLineHL
 L901:
         JP    L905
 L902:
         LD    A,102
 L903:
-        CALL  writeA
+        CALL  writeLineA
 L904:
         ;;test2.j(200)   if (10+0 < i) println(103); else println(999);
 L905:
@@ -2722,13 +2754,13 @@ L909:
 L910:
         LD    A,103
 L911:
-        CALL  writeA
+        CALL  writeLineA
 L912:
         JP    L918
 L913:
         LD    HL,999
 L914:
-        CALL  writeHL
+        CALL  writeLineHL
 L915:
         ;;test2.j(201)   // acc - var
 L916:
@@ -2753,13 +2785,13 @@ L922:
 L923:
         LD    A,104
 L924:
-        CALL  writeA
+        CALL  writeLineA
 L925:
         JP    L929
 L926:
         LD    HL,999
 L927:
-        CALL  writeHL
+        CALL  writeLineHL
 L928:
         ;;test2.j(204)   if (1000+0 < b) println(999); else println(105);
 L929:
@@ -2780,13 +2812,13 @@ L933:
 L934:
         LD    HL,999
 L935:
-        CALL  writeHL
+        CALL  writeLineHL
 L936:
         JP    L942
 L937:
         LD    A,105
 L938:
-        CALL  writeA
+        CALL  writeLineA
 L939:
         ;;test2.j(205)   // acc - var
 L940:
@@ -2807,13 +2839,13 @@ L945:
 L946:
         LD    A,106
 L947:
-        CALL  writeA
+        CALL  writeLineA
 L948:
         JP    L952
 L949:
         LD    HL,999
 L950:
-        CALL  writeHL
+        CALL  writeLineHL
 L951:
         ;;test2.j(208)   if (1000+0 < i) println(107); else println(999);
 L952:
@@ -2830,25 +2862,25 @@ L955:
 L956:
         LD    A,107
 L957:
-        CALL  writeA
+        CALL  writeLineA
 L958:
         JP    L962
 L959:
         LD    HL,999
 L960:
-        CALL  writeHL
+        CALL  writeLineHL
 L961:
         ;;test2.j(209)   println(108);
 L962:
         LD    A,108
 L963:
-        CALL  writeA
+        CALL  writeLineA
 L964:
         ;;test2.j(210)   println(109);
 L965:
         LD    A,109
 L966:
-        CALL  writeA
+        CALL  writeLineA
 L967:
         ;;test2.j(211) 
 L968:
@@ -2862,13 +2894,13 @@ L971:
 L972:
         LD    A,110
 L973:
-        CALL  writeA
+        CALL  writeLineA
 L974:
         ;;test2.j(216)   println(111);
 L975:
         LD    A,111
 L976:
-        CALL  writeA
+        CALL  writeLineA
 L977:
         ;;test2.j(217)   // acc - stack8
 L978:
@@ -2878,13 +2910,13 @@ L979:
 L980:
         LD    A,112
 L981:
-        CALL  writeA
+        CALL  writeLineA
 L982:
         ;;test2.j(220)   println(113);
 L983:
         LD    A,113
 L984:
-        CALL  writeA
+        CALL  writeLineA
 L985:
         ;;test2.j(221)   // acc - stack8
 L986:
@@ -2894,13 +2926,13 @@ L987:
 L988:
         LD    A,114
 L989:
-        CALL  writeA
+        CALL  writeLineA
 L990:
         ;;test2.j(224)   println(115);
 L991:
         LD    A,115
 L992:
-        CALL  writeA
+        CALL  writeLineA
 L993:
         ;;test2.j(225)   // acc - stack8
 L994:
@@ -2910,25 +2942,25 @@ L995:
 L996:
         LD    A,116
 L997:
-        CALL  writeA
+        CALL  writeLineA
 L998:
         ;;test2.j(228)   println(117);
 L999:
         LD    A,117
 L1000:
-        CALL  writeA
+        CALL  writeLineA
 L1001:
         ;;test2.j(229)   println(118);
 L1002:
         LD    A,118
 L1003:
-        CALL  writeA
+        CALL  writeLineA
 L1004:
         ;;test2.j(230)   println(119);
 L1005:
         LD    A,119
 L1006:
-        CALL  writeA
+        CALL  writeLineA
 L1007:
         ;;test2.j(231) 
 L1008:
@@ -2942,13 +2974,13 @@ L1011:
 L1012:
         LD    A,120
 L1013:
-        CALL  writeA
+        CALL  writeLineA
 L1014:
         ;;test2.j(236)   println(121);
 L1015:
         LD    A,121
 L1016:
-        CALL  writeA
+        CALL  writeLineA
 L1017:
         ;;test2.j(237)   // acc - stack16
 L1018:
@@ -2958,13 +2990,13 @@ L1019:
 L1020:
         LD    A,122
 L1021:
-        CALL  writeA
+        CALL  writeLineA
 L1022:
         ;;test2.j(240)   println(123);
 L1023:
         LD    A,123
 L1024:
-        CALL  writeA
+        CALL  writeLineA
 L1025:
         ;;test2.j(241)   // acc - stack16
 L1026:
@@ -2974,13 +3006,13 @@ L1027:
 L1028:
         LD    A,124
 L1029:
-        CALL  writeA
+        CALL  writeLineA
 L1030:
         ;;test2.j(244)   println(125);
 L1031:
         LD    A,125
 L1032:
-        CALL  writeA
+        CALL  writeLineA
 L1033:
         ;;test2.j(245)   // acc - stack16
 L1034:
@@ -2990,25 +3022,25 @@ L1035:
 L1036:
         LD    A,126
 L1037:
-        CALL  writeA
+        CALL  writeLineA
 L1038:
         ;;test2.j(248)   println(127);
 L1039:
         LD    A,127
 L1040:
-        CALL  writeA
+        CALL  writeLineA
 L1041:
         ;;test2.j(249)   println(128);
 L1042:
         LD    A,128
 L1043:
-        CALL  writeA
+        CALL  writeLineA
 L1044:
         ;;test2.j(250)   println(129);
 L1045:
         LD    A,129
 L1046:
-        CALL  writeA
+        CALL  writeLineA
 L1047:
         ;;test2.j(251) 
 L1048:
@@ -3028,13 +3060,13 @@ L1054:
 L1055:
         LD    A,130
 L1056:
-        CALL  writeA
+        CALL  writeLineA
 L1057:
         JP    L1061
 L1058:
         LD    HL,999
 L1059:
-        CALL  writeHL
+        CALL  writeLineHL
 L1060:
         ;;test2.j(256)   if (b < 30) println(131); else println(999);
 L1061:
@@ -3046,13 +3078,13 @@ L1063:
 L1064:
         LD    A,131
 L1065:
-        CALL  writeA
+        CALL  writeLineA
 L1066:
         JP    L1072
 L1067:
         LD    HL,999
 L1068:
-        CALL  writeHL
+        CALL  writeLineHL
 L1069:
         ;;test2.j(257)   // var - constant
 L1070:
@@ -3073,13 +3105,13 @@ L1075:
 L1076:
         LD    HL,999
 L1077:
-        CALL  writeHL
+        CALL  writeLineHL
 L1078:
         JP    L1082
 L1079:
         LD    A,132
 L1080:
-        CALL  writeA
+        CALL  writeLineA
 L1081:
         ;;test2.j(260)   if (b < 1000) println(133); else println(999);
 L1082:
@@ -3096,13 +3128,13 @@ L1085:
 L1086:
         LD    A,133
 L1087:
-        CALL  writeA
+        CALL  writeLineA
 L1088:
         JP    L1094
 L1089:
         LD    HL,999
 L1090:
-        CALL  writeHL
+        CALL  writeLineHL
 L1091:
         ;;test2.j(261)   // var - constant
 L1092:
@@ -3120,13 +3152,13 @@ L1096:
 L1097:
         LD    A,134
 L1098:
-        CALL  writeA
+        CALL  writeLineA
 L1099:
         JP    L1103
 L1100:
         LD    HL,999
 L1101:
-        CALL  writeHL
+        CALL  writeLineHL
 L1102:
         ;;test2.j(264)   if (i < 3000) println(135); else println(999);
 L1103:
@@ -3140,13 +3172,13 @@ L1105:
 L1106:
         LD    A,135
 L1107:
-        CALL  writeA
+        CALL  writeLineA
 L1108:
         JP    L1114
 L1109:
         LD    HL,999
 L1110:
-        CALL  writeHL
+        CALL  writeLineHL
 L1111:
         ;;test2.j(265)   // var - constant
 L1112:
@@ -3164,13 +3196,13 @@ L1116:
 L1117:
         LD    A,136
 L1118:
-        CALL  writeA
+        CALL  writeLineA
 L1119:
         JP    L1123
 L1120:
         LD    HL,999
 L1121:
-        CALL  writeHL
+        CALL  writeLineHL
 L1122:
         ;;test2.j(268)   if (i < 3000) println(137); else println(999);
 L1123:
@@ -3184,25 +3216,25 @@ L1125:
 L1126:
         LD    A,137
 L1127:
-        CALL  writeA
+        CALL  writeLineA
 L1128:
         JP    L1132
 L1129:
         LD    HL,999
 L1130:
-        CALL  writeHL
+        CALL  writeLineHL
 L1131:
         ;;test2.j(269)   println(138);
 L1132:
         LD    A,138
 L1133:
-        CALL  writeA
+        CALL  writeLineA
 L1134:
         ;;test2.j(270)   println(139);
 L1135:
         LD    A,139
 L1136:
-        CALL  writeA
+        CALL  writeLineA
 L1137:
         ;;test2.j(271) 
 L1138:
@@ -3226,13 +3258,13 @@ L1145:
 L1146:
         LD    A,140
 L1147:
-        CALL  writeA
+        CALL  writeLineA
 L1148:
         JP    L1152
 L1149:
         LD    HL,999
 L1150:
-        CALL  writeHL
+        CALL  writeLineHL
 L1151:
         ;;test2.j(276)   if (b < 30+0) println(141); else println(999);
 L1152:
@@ -3248,13 +3280,13 @@ L1155:
 L1156:
         LD    A,141
 L1157:
-        CALL  writeA
+        CALL  writeLineA
 L1158:
         JP    L1164
 L1159:
         LD    HL,999
 L1160:
-        CALL  writeHL
+        CALL  writeLineHL
 L1161:
         ;;test2.j(277)   // var - acc
 L1162:
@@ -3278,13 +3310,13 @@ L1168:
 L1169:
         LD    HL,999
 L1170:
-        CALL  writeHL
+        CALL  writeLineHL
 L1171:
         JP    L1175
 L1172:
         LD    A,142
 L1173:
-        CALL  writeA
+        CALL  writeLineA
 L1174:
         ;;test2.j(280)   if (b < 1000+0) println(143); else println(999);
 L1175:
@@ -3304,13 +3336,13 @@ L1179:
 L1180:
         LD    A,143
 L1181:
-        CALL  writeA
+        CALL  writeLineA
 L1182:
         JP    L1188
 L1183:
         LD    HL,999
 L1184:
-        CALL  writeHL
+        CALL  writeLineHL
 L1185:
         ;;test2.j(281)   // var - acc
 L1186:
@@ -3331,13 +3363,13 @@ L1191:
 L1192:
         LD    A,144
 L1193:
-        CALL  writeA
+        CALL  writeLineA
 L1194:
         JP    L1198
 L1195:
         LD    HL,999
 L1196:
-        CALL  writeHL
+        CALL  writeLineHL
 L1197:
         ;;test2.j(284)   if (i < 3000+0) println(145); else println(999);
 L1198:
@@ -3354,13 +3386,13 @@ L1201:
 L1202:
         LD    A,145
 L1203:
-        CALL  writeA
+        CALL  writeLineA
 L1204:
         JP    L1210
 L1205:
         LD    HL,999
 L1206:
-        CALL  writeHL
+        CALL  writeLineHL
 L1207:
         ;;test2.j(285)   // var - acc
 L1208:
@@ -3381,13 +3413,13 @@ L1213:
 L1214:
         LD    A,146
 L1215:
-        CALL  writeA
+        CALL  writeLineA
 L1216:
         JP    L1220
 L1217:
         LD    HL,999
 L1218:
-        CALL  writeHL
+        CALL  writeLineHL
 L1219:
         ;;test2.j(288)   if (i < 3000+0) println(147); else println(999);
 L1220:
@@ -3404,25 +3436,25 @@ L1223:
 L1224:
         LD    A,147
 L1225:
-        CALL  writeA
+        CALL  writeLineA
 L1226:
         JP    L1230
 L1227:
         LD    HL,999
 L1228:
-        CALL  writeHL
+        CALL  writeLineHL
 L1229:
         ;;test2.j(289)   println(148);
 L1230:
         LD    A,148
 L1231:
-        CALL  writeA
+        CALL  writeLineA
 L1232:
         ;;test2.j(290)   println(149);
 L1233:
         LD    A,149
 L1234:
-        CALL  writeA
+        CALL  writeLineA
 L1235:
         ;;test2.j(291) 
 L1236:
@@ -3444,7 +3476,7 @@ L1242:
 L1243:
         LD    A,150
 L1244:
-        CALL  writeA
+        CALL  writeLineA
 L1245:
         ;;test2.j(296)   if (b < b3) println(151);
 L1246:
@@ -3458,7 +3490,7 @@ L1248:
 L1249:
         LD    A,151
 L1250:
-        CALL  writeA
+        CALL  writeLineA
 L1251:
         ;;test2.j(297)   // var - var
 L1252:
@@ -3479,13 +3511,13 @@ L1257:
 L1258:
         LD    HL,999
 L1259:
-        CALL  writeHL
+        CALL  writeLineHL
 L1260:
         JP    L1264
 L1261:
         LD    A,152
 L1262:
-        CALL  writeA
+        CALL  writeLineA
 L1263:
         ;;test2.j(300)   if (b < i3) println(153);
 L1264:
@@ -3502,7 +3534,7 @@ L1267:
 L1268:
         LD    A,153
 L1269:
-        CALL  writeA
+        CALL  writeLineA
 L1270:
         ;;test2.j(301)   // var - var
 L1271:
@@ -3520,7 +3552,7 @@ L1275:
 L1276:
         LD    A,154
 L1277:
-        CALL  writeA
+        CALL  writeLineA
 L1278:
         ;;test2.j(304)   if (i < i3) println(155);
 L1279:
@@ -3534,7 +3566,7 @@ L1281:
 L1282:
         LD    A,155
 L1283:
-        CALL  writeA
+        CALL  writeLineA
 L1284:
         ;;test2.j(305)   // var - var
 L1285:
@@ -3552,7 +3584,7 @@ L1289:
 L1290:
         LD    A,156
 L1291:
-        CALL  writeA
+        CALL  writeLineA
 L1292:
         ;;test2.j(308)   if (i < i3) println(157);
 L1293:
@@ -3566,19 +3598,19 @@ L1295:
 L1296:
         LD    A,157
 L1297:
-        CALL  writeA
+        CALL  writeLineA
 L1298:
         ;;test2.j(309)   println(158);
 L1299:
         LD    A,158
 L1300:
-        CALL  writeA
+        CALL  writeLineA
 L1301:
         ;;test2.j(310)   println(159);
 L1302:
         LD    A,159
 L1303:
-        CALL  writeA
+        CALL  writeLineA
 L1304:
         ;;test2.j(311) 
 L1305:
@@ -3666,7 +3698,7 @@ L1345:
 L1346:
         LD    HL,1350
 L1347:
-        CALL  putStr
+        CALL  writeLineStr
 L1348:
         ;;test2.j(353) }
 L1349:

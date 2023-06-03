@@ -49,6 +49,7 @@ public class Interpreter {
     Instruction instr = instructions.get(pc);
     //execute instruction
     int operand;
+    String str;
     switch(instr.function){
       // single line comment
       case comment : break;
@@ -284,8 +285,7 @@ public class Interpreter {
           boolean consoleInput = true;
           if (consoleInput) {
             try {
-              String str =  System.console().readLine();
-              acc16 = Integer.parseInt(str);
+              acc16 = Integer.parseInt(System.console().readLine());
             } catch (RuntimeException e) {
               runError("read exception:" + e.getMessage());
               acc16 = 0;
@@ -302,20 +302,42 @@ public class Interpreter {
           break;
       case writeAcc8:
           if (debugMode) {
+            debug("" + acc8);
+          } else {
+            System.out.print(acc8);
+          }
+          break;
+      case writeAcc16:
+          if (debugMode) {
+            debug("" + acc16);
+          } else {
+            System.out.print(acc16);
+          }
+          break;
+      case writeString:
+          str = instructions.get(acc16).operand.strValue;
+          if (debugMode) {
+            debug(str);
+          } else {
+            System.out.print(str);
+          }
+          break;
+      case writeLineAcc8:
+          if (debugMode) {
             debug(acc8 + "\n");
           } else {
             System.out.println(acc8);
           }
           break;
-      case writeAcc16:
+      case writeLineAcc16:
           if (debugMode) {
             debug(acc16 + "\n");
           } else {
             System.out.println(acc16);
           }
           break;
-      case writeString:
-          String str = instructions.get(acc16).operand.strValue;
+      case writeLineString:
+          str = instructions.get(acc16).operand.strValue;
           if (debugMode) {
             debug(str + "\n");
           } else {

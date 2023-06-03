@@ -8,10 +8,14 @@ public enum FunctionType {
   comment(";"),
   stop("stop"),
   call("call"),
+  //Input and output instructions:
   read("read"),
   writeAcc16("writeAcc16"),
   writeAcc8("writeAcc8"),
   writeString("writeString"),
+  writeLineAcc16("writeLineAcc16"),
+  writeLineAcc8("writeLineAcc8"),
+  writeLineString("writeLineString"),
   //16-bit instructions:
   acc16Store("acc16=>"),
   acc16Load("acc16="),

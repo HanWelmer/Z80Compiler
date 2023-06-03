@@ -16,6 +16,9 @@ public class Instruction {
       && function != FunctionType.writeAcc8
       && function != FunctionType.writeAcc16
       && function != FunctionType.writeString
+      && function != FunctionType.writeLineAcc8
+      && function != FunctionType.writeLineAcc16
+      && function != FunctionType.writeLineString
       && function != FunctionType.acc16CompareAcc8
       && function != FunctionType.acc8CompareAcc16
       && function != FunctionType.acc8ToAcc16
@@ -38,6 +41,9 @@ public class Instruction {
       case writeAcc8:
       case writeAcc16:
       case writeString:
+      case writeLineAcc8:
+      case writeLineAcc16:
+      case writeLineString:
       case acc16CompareAcc8:
       case acc8CompareAcc16:
       case acc8ToAcc16:
@@ -324,6 +330,15 @@ public class Instruction {
         break;
       case writeString:
         result = "writeString";
+        break;
+      case writeLineAcc8:
+        result = "call writeLineAcc8";
+        break;
+      case writeLineAcc16:
+        result = "call writeLineAcc16";
+        break;
+      case writeLineString:
+        result = "writeLineString";
         break;
       case stop:
       case acc16CompareAcc8:

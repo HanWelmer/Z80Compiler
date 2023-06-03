@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -751,91 +783,91 @@ L11:
 L12:
         LD    HL,(05000H)
 L13:
-        CALL  writeHL
+        CALL  writeLineHL
 L14:
         ;;test12.j(8)   println(one);
 L15:
         LD    A,(05002H)
 L16:
-        CALL  writeA
+        CALL  writeLineA
 L17:
         ;;test12.j(9)   println(2);
 L18:
         LD    A,2
 L19:
-        CALL  writeA
+        CALL  writeLineA
 L20:
         ;;test12.j(10)   println("3  Drie keer.");
 L21:
         LD    HL,67
 L22:
-        CALL  putStr
+        CALL  writeLineStr
 L23:
         ;;test12.j(11)   println("3  Drie keer.");
 L24:
         LD    HL,67
 L25:
-        CALL  putStr
+        CALL  writeLineStr
 L26:
         ;;test12.j(12)   println("3  Drie keer.");
 L27:
         LD    HL,67
 L28:
-        CALL  putStr
+        CALL  writeLineStr
 L29:
         ;;test12.j(13)   println("4  Hier klinkt een bel\a en dan gaan we door.");
 L30:
         LD    HL,68
 L31:
-        CALL  putStr
+        CALL  writeLineStr
 L32:
         ;;test12.j(14)   println("5  Dit is pagina 1.\f   En dit is pagina 2.");
 L33:
         LD    HL,69
 L34:
-        CALL  putStr
+        CALL  writeLineStr
 L35:
         ;;test12.j(15)   println("6  Dit is gu\boed.");
 L36:
         LD    HL,70
 L37:
-        CALL  putStr
+        CALL  writeLineStr
 L38:
         ;;test12.j(16)   println("7  Getal na een tab\t1.");
 L39:
         LD    HL,71
 L40:
-        CALL  putStr
+        CALL  writeLineStr
 L41:
         ;;test12.j(17)   println("8  Dit zie je niet\r8  Dit zie je wel.");
 L42:
         LD    HL,72
 L43:
-        CALL  putStr
+        CALL  writeLineStr
 L44:
         ;;test12.j(18)   println("9  Dit is regel 1.\n   En dit regel 2.");
 L45:
         LD    HL,73
 L46:
-        CALL  putStr
+        CALL  writeLineStr
 L47:
         ;;test12.j(19)   println("10 Hier komt een dubbele quote \".");
 L48:
         LD    HL,74
 L49:
-        CALL  putStr
+        CALL  writeLineStr
 L50:
         ;;test12.j(20)   println("11 Hier komt een single quote \'.");
 L51:
         LD    HL,75
 L52:
-        CALL  putStr
+        CALL  writeLineStr
 L53:
         ;;test12.j(21)   println("12 Hier komt een backslash \\.");
 L54:
         LD    HL,76
 L55:
-        CALL  putStr
+        CALL  writeLineStr
 L56:
         ;;test12.j(22)   String str = "13 Hallo wereld.";
 L57:
@@ -847,13 +879,13 @@ L59:
 L60:
         LD    HL,(05003H)
 L61:
-        CALL  putStr
+        CALL  writeLineStr
 L62:
         ;;test12.j(24)   println("Klaar");
 L63:
         LD    HL,78
 L64:
-        CALL  putStr
+        CALL  writeLineStr
 L65:
         ;;test12.j(25) }
 L66:

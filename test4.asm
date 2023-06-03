@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -736,7 +768,7 @@ L4:
         MLT   BC
         LD    A,C
 L5:
-        CALL  writeA
+        CALL  writeLineA
 L6:
         ;;test4.j(3)   println(1 * 1);
 L7:
@@ -747,7 +779,7 @@ L8:
         MLT   BC
         LD    A,C
 L9:
-        CALL  writeA
+        CALL  writeLineA
 L10:
         ;;test4.j(4)   println(4 / 2);
 L11:
@@ -756,7 +788,7 @@ L12:
         LD    C,2
         CALL  div8
 L13:
-        CALL  writeA
+        CALL  writeLineA
 L14:
         ;;test4.j(5)   println(9 / 3);
 L15:
@@ -765,7 +797,7 @@ L16:
         LD    C,3
         CALL  div8
 L17:
-        CALL  writeA
+        CALL  writeLineA
 L18:
         ;;test4.j(6)   println(8 / 2);
 L19:
@@ -774,7 +806,7 @@ L20:
         LD    C,2
         CALL  div8
 L21:
-        CALL  writeA
+        CALL  writeLineA
 L22:
         ;;test4.j(7)   println(5 / 1);
 L23:
@@ -783,7 +815,7 @@ L24:
         LD    C,1
         CALL  div8
 L25:
-        CALL  writeA
+        CALL  writeLineA
 L26:
         ;;test4.j(8)   println((3 * 8) / 4);
 L27:
@@ -797,7 +829,7 @@ L29:
         LD    C,4
         CALL  div8
 L30:
-        CALL  writeA
+        CALL  writeLineA
 L31:
         ;;test4.j(9)   println((7 * 7) / 7);
 L32:
@@ -811,7 +843,7 @@ L34:
         LD    C,7
         CALL  div8
 L35:
-        CALL  writeA
+        CALL  writeLineA
 L36:
         ;;test4.j(10)   println((4 * 5 * 2) / 5);
 L37:
@@ -830,7 +862,7 @@ L40:
         LD    C,5
         CALL  div8
 L41:
-        CALL  writeA
+        CALL  writeLineA
 L42:
         ;;test4.j(11)   println(6561 / 729);
 L43:
@@ -839,7 +871,7 @@ L44:
         LD    DE,729
         CALL  div16
 L45:
-        CALL  writeHL
+        CALL  writeLineHL
 L46:
         ;;test4.j(12)   println(60 / 6);
 L47:
@@ -848,7 +880,7 @@ L48:
         LD    C,6
         CALL  div8
 L49:
-        CALL  writeA
+        CALL  writeLineA
 L50:
         ;;test4.j(13)   println(22 / 2);
 L51:
@@ -857,19 +889,19 @@ L52:
         LD    C,2
         CALL  div8
 L53:
-        CALL  writeA
+        CALL  writeLineA
 L54:
         ;;test4.j(14)   println(12);
 L55:
         LD    A,12
 L56:
-        CALL  writeA
+        CALL  writeLineA
 L57:
         ;;test4.j(15)   println("Klaar");
 L58:
         LD    HL,62
 L59:
-        CALL  putStr
+        CALL  writeLineStr
 L60:
         ;;test4.j(16) }
 L61:

@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -745,13 +777,13 @@ L9:
 L10:
         LD    A,0
 L11:
-        CALL  writeA
+        CALL  writeLineA
 L12:
         ;;test9.j(6)   println(1);
 L13:
         LD    A,1
 L14:
-        CALL  writeA
+        CALL  writeLineA
 L15:
         ;;test9.j(7)   if (6561 > 9) println (2); else println (999);
 L16:
@@ -769,13 +801,13 @@ L19:
 L20:
         LD    A,2
 L21:
-        CALL  writeA
+        CALL  writeLineA
 L22:
         JP    L26
 L23:
         LD    HL,999
 L24:
-        CALL  writeHL
+        CALL  writeLineHL
 L25:
         ;;test9.j(8)   if (9 < 6561) println (3); else println (999);
 L26:
@@ -792,13 +824,13 @@ L29:
 L30:
         LD    A,3
 L31:
-        CALL  writeA
+        CALL  writeLineA
 L32:
         JP    L36
 L33:
         LD    HL,999
 L34:
-        CALL  writeHL
+        CALL  writeLineHL
 L35:
         ;;test9.j(9)   if (3 * 3 < 6561) println (4); else println (999);
 L36:
@@ -820,13 +852,13 @@ L40:
 L41:
         LD    A,4
 L42:
-        CALL  writeA
+        CALL  writeLineA
 L43:
         JP    L47
 L44:
         LD    HL,999
 L45:
-        CALL  writeHL
+        CALL  writeLineHL
 L46:
         ;;test9.j(10)   if (6561 > 3 * 3) println (5); else println (999);
 L47:
@@ -849,13 +881,13 @@ L51:
 L52:
         LD    A,5
 L53:
-        CALL  writeA
+        CALL  writeLineA
 L54:
         JP    L58
 L55:
         LD    HL,999
 L56:
-        CALL  writeHL
+        CALL  writeLineHL
 L57:
         ;;test9.j(11)   if (6561 * 1 > 9) println (6); else println (999);
 L58:
@@ -876,13 +908,13 @@ L62:
 L63:
         LD    A,6
 L64:
-        CALL  writeA
+        CALL  writeLineA
 L65:
         JP    L69
 L66:
         LD    HL,999
 L67:
-        CALL  writeHL
+        CALL  writeLineHL
 L68:
         ;;test9.j(12)   if (9 < 6561 * 1) println (7); else println (999);
 L69:
@@ -902,13 +934,13 @@ L73:
 L74:
         LD    A,7
 L75:
-        CALL  writeA
+        CALL  writeLineA
 L76:
         JP    L80
 L77:
         LD    HL,999
 L78:
-        CALL  writeHL
+        CALL  writeLineHL
 L79:
         ;;test9.j(13)   if (6561 * 1 > 3 * 3) println (8); else println (999);
 L80:
@@ -938,13 +970,13 @@ L87:
 L88:
         LD    A,8
 L89:
-        CALL  writeA
+        CALL  writeLineA
 L90:
         JP    L94
 L91:
         LD    HL,999
 L92:
-        CALL  writeHL
+        CALL  writeLineHL
 L93:
         ;;test9.j(14)   if (3 * 3 < 6561 * 1) println (9); else println (999);
 L94:
@@ -973,13 +1005,13 @@ L101:
 L102:
         LD    A,9
 L103:
-        CALL  writeA
+        CALL  writeLineA
 L104:
         JP    L109
 L105:
         LD    HL,999
 L106:
-        CALL  writeHL
+        CALL  writeLineHL
 L107:
         ;;test9.j(15) 
 L108:
@@ -998,13 +1030,13 @@ L112:
 L113:
         LD    A,10
 L114:
-        CALL  writeA
+        CALL  writeLineA
 L115:
         JP    L119
 L116:
         LD    HL,999
 L117:
-        CALL  writeHL
+        CALL  writeLineHL
 L118:
         ;;test9.j(17)   if (i > b) println (11); else println (999);
 L119:
@@ -1022,13 +1054,13 @@ L122:
 L123:
         LD    A,11
 L124:
-        CALL  writeA
+        CALL  writeLineA
 L125:
         JP    L129
 L126:
         LD    HL,999
 L127:
-        CALL  writeHL
+        CALL  writeLineHL
 L128:
         ;;test9.j(18)   if (b < 6561 * 1) println (12); else println (999);
 L129:
@@ -1048,13 +1080,13 @@ L133:
 L134:
         LD    A,12
 L135:
-        CALL  writeA
+        CALL  writeLineA
 L136:
         JP    L140
 L137:
         LD    HL,999
 L138:
-        CALL  writeHL
+        CALL  writeLineHL
 L139:
         ;;test9.j(19)   if (i > 3 * 3) println (13); else println (999);
 L140:
@@ -1077,13 +1109,13 @@ L144:
 L145:
         LD    A,13
 L146:
-        CALL  writeA
+        CALL  writeLineA
 L147:
         JP    L151
 L148:
         LD    HL,999
 L149:
-        CALL  writeHL
+        CALL  writeLineHL
 L150:
         ;;test9.j(20)   if (6561 * 1 > b) println (14); else println (999);
 L151:
@@ -1104,13 +1136,13 @@ L155:
 L156:
         LD    A,14
 L157:
-        CALL  writeA
+        CALL  writeLineA
 L158:
         JP    L162
 L159:
         LD    HL,999
 L160:
-        CALL  writeHL
+        CALL  writeLineHL
 L161:
         ;;test9.j(21)   if (3 * 3 < i) println (15); else println (999);
 L162:
@@ -1132,13 +1164,13 @@ L166:
 L167:
         LD    A,15
 L168:
-        CALL  writeA
+        CALL  writeLineA
 L169:
         JP    L173
 L170:
         LD    HL,999
 L171:
-        CALL  writeHL
+        CALL  writeLineHL
 L172:
         ;;test9.j(22)   if (b < i * 1) println (16); else println (999);
 L173:
@@ -1158,13 +1190,13 @@ L177:
 L178:
         LD    A,16
 L179:
-        CALL  writeA
+        CALL  writeLineA
 L180:
         JP    L184
 L181:
         LD    HL,999
 L182:
-        CALL  writeHL
+        CALL  writeLineHL
 L183:
         ;;test9.j(23)   if (i > b * 1) println (17); else println (999);
 L184:
@@ -1187,13 +1219,13 @@ L188:
 L189:
         LD    A,17
 L190:
-        CALL  writeA
+        CALL  writeLineA
 L191:
         JP    L195
 L192:
         LD    HL,999
 L193:
-        CALL  writeHL
+        CALL  writeLineHL
 L194:
         ;;test9.j(24)   if (b * 1 < i) println (18); else println (999);
 L195:
@@ -1215,13 +1247,13 @@ L199:
 L200:
         LD    A,18
 L201:
-        CALL  writeA
+        CALL  writeLineA
 L202:
         JP    L206
 L203:
         LD    HL,999
 L204:
-        CALL  writeHL
+        CALL  writeLineHL
 L205:
         ;;test9.j(25)   if (i * 1 > b) println (19); else println (999);
 L206:
@@ -1242,13 +1274,13 @@ L210:
 L211:
         LD    A,19
 L212:
-        CALL  writeA
+        CALL  writeLineA
 L213:
         JP    L217
 L214:
         LD    HL,999
 L215:
-        CALL  writeHL
+        CALL  writeLineHL
 L216:
         ;;test9.j(26)   if (b * 1 < i * 1) println (20); else println (999);
 L217:
@@ -1277,13 +1309,13 @@ L224:
 L225:
         LD    A,20
 L226:
-        CALL  writeA
+        CALL  writeLineA
 L227:
         JP    L231
 L228:
         LD    HL,999
 L229:
-        CALL  writeHL
+        CALL  writeLineHL
 L230:
         ;;test9.j(27)   if (i * 1 > b * 1) println (21); else println (999);
 L231:
@@ -1313,13 +1345,13 @@ L238:
 L239:
         LD    A,21
 L240:
-        CALL  writeA
+        CALL  writeLineA
 L241:
         JP    L246
 L242:
         LD    HL,999
 L243:
-        CALL  writeHL
+        CALL  writeLineHL
 L244:
         ;;test9.j(28) 
 L245:
@@ -1327,7 +1359,7 @@ L245:
 L246:
         LD    HL,250
 L247:
-        CALL  putStr
+        CALL  writeLineStr
 L248:
         ;;test9.j(30) }
 L249:

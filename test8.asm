@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -737,7 +769,7 @@ L5:
 L6:
         LD    A,0
 L7:
-        CALL  writeA
+        CALL  writeLineA
 L8:
         ;;test8.j(6)   /*************************/
 L9:
@@ -761,7 +793,7 @@ L15:
         SUB   A,B
         NEG
 L16:
-        CALL  writeA
+        CALL  writeLineA
 L17:
         ;;test8.j(10)   byte b = 11;
 L18:
@@ -785,7 +817,7 @@ L24:
         SUB   A,B
         NEG
 L25:
-        CALL  writeA
+        CALL  writeLineA
 L26:
         ;;test8.j(12)   byte c = 3;
 L27:
@@ -816,7 +848,7 @@ L36:
         SUB   A,B
         NEG
 L37:
-        CALL  writeA
+        CALL  writeLineA
 L38:
         ;;test8.j(15)   b = 13;
 L39:
@@ -841,7 +873,7 @@ L45:
         SUB   A,B
         NEG
 L46:
-        CALL  writeA
+        CALL  writeLineA
 L47:
         ;;test8.j(17) 
 L48:
@@ -866,7 +898,7 @@ L55:
         OR    A
         SBC   HL,DE
 L56:
-        CALL  writeHL
+        CALL  writeLineHL
 L57:
         ;;test8.j(22)   word i = 1006;
 L58:
@@ -889,7 +921,7 @@ L64:
         OR    A
         SBC   HL,DE
 L65:
-        CALL  writeHL
+        CALL  writeLineHL
 L66:
         ;;test8.j(24)   word j = 1000;
 L67:
@@ -920,7 +952,7 @@ L76:
         OR    A
         SBC   HL,DE
 L77:
-        CALL  writeHL
+        CALL  writeLineHL
 L78:
         ;;test8.j(27)   i = 1008;
 L79:
@@ -943,7 +975,7 @@ L85:
         OR    A
         SBC   HL,DE
 L86:
-        CALL  writeHL
+        CALL  writeLineHL
 L87:
         ;;test8.j(29) 
 L88:
@@ -969,7 +1001,7 @@ L95:
         POP   AF
         CALL  div8
 L96:
-        CALL  writeA
+        CALL  writeLineA
 L97:
         ;;test8.j(34)   b = 40;
 L98:
@@ -993,7 +1025,7 @@ L104:
         POP   AF
         CALL  div8
 L105:
-        CALL  writeA
+        CALL  writeLineA
 L106:
         ;;test8.j(36)   c = 4;
 L107:
@@ -1024,7 +1056,7 @@ L116:
         POP   AF
         CALL  div8
 L117:
-        CALL  writeA
+        CALL  writeLineA
 L118:
         ;;test8.j(39)   b = 48;
 L119:
@@ -1049,7 +1081,7 @@ L125:
         POP   AF
         CALL  div8
 L126:
-        CALL  writeA
+        CALL  writeLineA
 L127:
         ;;test8.j(41) 
 L128:
@@ -1073,7 +1105,7 @@ L135:
         EX    DE,HL
         CALL  div16
 L136:
-        CALL  writeHL
+        CALL  writeLineHL
 L137:
         ;;test8.j(46)   i = 4200;
 L138:
@@ -1095,7 +1127,7 @@ L144:
         EX    DE,HL
         CALL  div16
 L145:
-        CALL  writeHL
+        CALL  writeLineHL
 L146:
         ;;test8.j(48)   j = 300;
 L147:
@@ -1125,7 +1157,7 @@ L156:
         EX    DE,HL
         CALL  div16
 L157:
-        CALL  writeHL
+        CALL  writeLineHL
 L158:
         ;;test8.j(51)   i = 4800;
 L159:
@@ -1147,7 +1179,7 @@ L165:
         EX    DE,HL
         CALL  div16
 L166:
-        CALL  writeHL
+        CALL  writeLineHL
 L167:
         ;;test8.j(53) 
 L168:
@@ -1194,7 +1226,7 @@ L184:
         OR    A
         SBC   HL,DE
 L185:
-        CALL  writeHL
+        CALL  writeLineHL
 L186:
         ;;test8.j(61)   b = 22;
 L187:
@@ -1233,7 +1265,7 @@ L199:
         OR    A
         SBC   HL,DE
 L200:
-        CALL  writeHL
+        CALL  writeLineHL
 L201:
         ;;test8.j(65) 
 L202:
@@ -1269,7 +1301,7 @@ L215:
 L216:
         CALL  div16_8
 L217:
-        CALL  writeHL
+        CALL  writeLineHL
 L218:
         ;;test8.j(75)   
 L219:
@@ -1280,7 +1312,7 @@ L221:
         LD    DE,1
         ADD   HL,DE
 L222:
-        CALL  writeHL
+        CALL  writeLineHL
 L223:
         ;;test8.j(77)   println(2 + i);             // 21
 L224:
@@ -1292,13 +1324,13 @@ L226:
         LD    DE,(05003H)
         ADD   HL,DE
 L227:
-        CALL  writeHL
+        CALL  writeLineHL
 L228:
         ;;test8.j(78)   println("Klaar");
 L229:
         LD    HL,233
 L230:
-        CALL  putStr
+        CALL  writeLineStr
 L231:
         ;;test8.j(79) }
 L232:

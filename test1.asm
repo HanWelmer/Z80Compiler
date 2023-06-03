@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -787,7 +819,7 @@ L27:
 L28:
         LD    A,0
 L29:
-        CALL  writeA
+        CALL  writeLineA
 L30:
         ;;test1.j(18) 
 L31:
@@ -804,7 +836,7 @@ L35:
 L36:
         LD    A,(05000H)
 L37:
-        CALL  writeA
+        CALL  writeLineA
 L38:
         ;;test1.j(23)   while (b < 2) {
 L39:
@@ -841,7 +873,7 @@ L53:
 L54:
         LD    A,(0500AH)
 L55:
-        CALL  writeA
+        CALL  writeLineA
 L56:
         ;;test1.j(29)   }
 L57:
@@ -881,7 +913,7 @@ L73:
 L74:
         LD    A,(05000H)
 L75:
-        CALL  writeA
+        CALL  writeLineA
 L76:
         LD    HL,(05000H)
         INC   (HL)
@@ -900,7 +932,7 @@ L82:
 L83:
         LD    A,(05000H)
 L84:
-        CALL  writeA
+        CALL  writeLineA
 L85:
         LD    HL,(05000H)
         INC   (HL)
@@ -919,7 +951,7 @@ L91:
 L92:
         LD    A,(05000H)
 L93:
-        CALL  writeA
+        CALL  writeLineA
 L94:
         LD    HL,(05000H)
         INC   (HL)
@@ -939,7 +971,7 @@ L100:
 L101:
         LD    A,(05000H)
 L102:
-        CALL  writeA
+        CALL  writeLineA
 L103:
         LD    HL,(05000H)
         INC   (HL)
@@ -966,7 +998,7 @@ L112:
 L113:
         LD    HL,(05006H)
 L114:
-        CALL  writeHL
+        CALL  writeLineHL
 L115:
         LD    HL,(05006H)
         INC   HL
@@ -989,7 +1021,7 @@ L122:
 L123:
         LD    HL,(05006H)
 L124:
-        CALL  writeHL
+        CALL  writeLineHL
 L125:
         LD    HL,(05006H)
         INC   HL
@@ -1032,7 +1064,7 @@ L139:
 L140:
         LD    HL,(05002H)
 L141:
-        CALL  writeHL
+        CALL  writeLineHL
 L142:
         LD    HL,(05002H)
         INC   HL
@@ -1058,7 +1090,7 @@ L149:
 L150:
         LD    HL,(05002H)
 L151:
-        CALL  writeHL
+        CALL  writeLineHL
 L152:
         LD    HL,(05002H)
         INC   HL
@@ -1084,7 +1116,7 @@ L159:
 L160:
         LD    HL,(05002H)
 L161:
-        CALL  writeHL
+        CALL  writeLineHL
 L162:
         LD    HL,(05002H)
         INC   HL
@@ -1110,7 +1142,7 @@ L169:
 L170:
         LD    HL,(05002H)
 L171:
-        CALL  writeHL
+        CALL  writeLineHL
 L172:
         LD    HL,(05002H)
         INC   HL
@@ -1142,7 +1174,7 @@ L182:
 L183:
         LD    HL,(05006H)
 L184:
-        CALL  writeHL
+        CALL  writeLineHL
 L185:
         LD    HL,(05002H)
         DEC   HL
@@ -1173,7 +1205,7 @@ L193:
 L194:
         LD    HL,(05006H)
 L195:
-        CALL  writeHL
+        CALL  writeLineHL
 L196:
         LD    HL,(05002H)
         DEC   HL
@@ -1225,7 +1257,7 @@ L214:
 L215:
         LD    HL,(05002H)
 L216:
-        CALL  writeHL
+        CALL  writeLineHL
 L217:
         LD    HL,(05002H)
         INC   HL
@@ -1251,7 +1283,7 @@ L224:
 L225:
         LD    HL,(05002H)
 L226:
-        CALL  writeHL
+        CALL  writeLineHL
 L227:
         LD    HL,(05002H)
         INC   HL
@@ -1277,7 +1309,7 @@ L234:
 L235:
         LD    HL,(05002H)
 L236:
-        CALL  writeHL
+        CALL  writeLineHL
 L237:
         LD    HL,(05002H)
         INC   HL
@@ -1303,7 +1335,7 @@ L244:
 L245:
         LD    HL,(05002H)
 L246:
-        CALL  writeHL
+        CALL  writeLineHL
 L247:
         LD    HL,(05002H)
         INC   HL
@@ -1335,7 +1367,7 @@ L257:
 L258:
         LD    HL,(05006H)
 L259:
-        CALL  writeHL
+        CALL  writeLineHL
 L260:
         LD    HL,(05006H)
         INC   HL
@@ -1366,7 +1398,7 @@ L268:
 L269:
         LD    HL,(05006H)
 L270:
-        CALL  writeHL
+        CALL  writeLineHL
 L271:
         LD    HL,(05006H)
         INC   HL
@@ -1402,7 +1434,7 @@ L284:
 L285:
         LD    HL,(05006H)
 L286:
-        CALL  writeHL
+        CALL  writeLineHL
 L287:
         LD    HL,(05006H)
         INC   HL
@@ -1441,7 +1473,7 @@ L299:
 L300:
         LD    HL,(05006H)
 L301:
-        CALL  writeHL
+        CALL  writeLineHL
 L302:
         LD    HL,(05006H)
         INC   HL
@@ -1481,7 +1513,7 @@ L315:
 L316:
         LD    HL,(05006H)
 L317:
-        CALL  writeHL
+        CALL  writeLineHL
 L318:
         LD    HL,(05006H)
         INC   HL
@@ -1584,7 +1616,7 @@ L363:
 L364:
         LD    HL,(05006H)
 L365:
-        CALL  writeHL
+        CALL  writeLineHL
 L366:
         LD    HL,(05006H)
         INC   HL
@@ -1621,7 +1653,7 @@ L377:
 L378:
         LD    HL,(05006H)
 L379:
-        CALL  writeHL
+        CALL  writeLineHL
 L380:
         LD    HL,(05006H)
         INC   HL
@@ -1666,7 +1698,7 @@ L394:
 L395:
         LD    HL,(05006H)
 L396:
-        CALL  writeHL
+        CALL  writeLineHL
 L397:
         LD    HL,(05006H)
         INC   HL
@@ -1708,7 +1740,7 @@ L410:
 L411:
         LD    HL,(05006H)
 L412:
-        CALL  writeHL
+        CALL  writeLineHL
 L413:
         LD    HL,(05006H)
         INC   HL
@@ -1748,7 +1780,7 @@ L427:
 L428:
         LD    A,(05000H)
 L429:
-        CALL  writeA
+        CALL  writeLineA
 L430:
         LD    HL,(05000H)
         INC   (HL)
@@ -1784,7 +1816,7 @@ L441:
 L442:
         LD    A,(05000H)
 L443:
-        CALL  writeA
+        CALL  writeLineA
 L444:
         LD    HL,(05000H)
         INC   (HL)
@@ -1820,7 +1852,7 @@ L455:
 L456:
         LD    HL,(05002H)
 L457:
-        CALL  writeHL
+        CALL  writeLineHL
 L458:
         LD    HL,(05002H)
         INC   HL
@@ -1858,7 +1890,7 @@ L471:
 L472:
         LD    A,(05000H)
 L473:
-        CALL  writeA
+        CALL  writeLineA
 L474:
         LD    HL,(05000H)
         INC   (HL)
@@ -1888,7 +1920,7 @@ L484:
 L485:
         LD    A,(05000H)
 L486:
-        CALL  writeA
+        CALL  writeLineA
 L487:
         LD    HL,(05000H)
         INC   (HL)
@@ -1928,7 +1960,7 @@ L500:
 L501:
         LD    HL,(05002H)
 L502:
-        CALL  writeHL
+        CALL  writeLineHL
 L503:
         LD    HL,(05002H)
         INC   HL
@@ -1957,7 +1989,7 @@ L512:
 L513:
         LD    HL,(05002H)
 L514:
-        CALL  writeHL
+        CALL  writeLineHL
 L515:
         LD    HL,(05002H)
         INC   HL
@@ -1983,13 +2015,13 @@ L523:
 L524:
         LD    A,63
 L525:
-        CALL  writeA
+        CALL  writeLineA
 L526:
         ;;test1.j(174)   println(64);
 L527:
         LD    A,64
 L528:
-        CALL  writeA
+        CALL  writeLineA
 L529:
         ;;test1.j(175)   // byte - integer
 L530:
@@ -1999,13 +2031,13 @@ L531:
 L532:
         LD    A,65
 L533:
-        CALL  writeA
+        CALL  writeLineA
 L534:
         ;;test1.j(178)   println(66);
 L535:
         LD    A,66
 L536:
-        CALL  writeA
+        CALL  writeLineA
 L537:
         ;;test1.j(179)   // integer - byte
 L538:
@@ -2015,13 +2047,13 @@ L539:
 L540:
         LD    A,67
 L541:
-        CALL  writeA
+        CALL  writeLineA
 L542:
         ;;test1.j(182)   println(68);
 L543:
         LD    A,68
 L544:
-        CALL  writeA
+        CALL  writeLineA
 L545:
         ;;test1.j(183)   // integer - integer
 L546:
@@ -2031,13 +2063,13 @@ L547:
 L548:
         LD    A,69
 L549:
-        CALL  writeA
+        CALL  writeLineA
 L550:
         ;;test1.j(186)   println(70);
 L551:
         LD    A,70
 L552:
-        CALL  writeA
+        CALL  writeLineA
 L553:
         ;;test1.j(187) 
 L554:
@@ -2053,13 +2085,13 @@ L558:
 L559:
         LD    A,71
 L560:
-        CALL  writeA
+        CALL  writeLineA
 L561:
         ;;test1.j(193)   println(72);
 L562:
         LD    A,72
 L563:
-        CALL  writeA
+        CALL  writeLineA
 L564:
         ;;test1.j(194)   // byte - integer
 L565:
@@ -2069,13 +2101,13 @@ L566:
 L567:
         LD    A,73
 L568:
-        CALL  writeA
+        CALL  writeLineA
 L569:
         ;;test1.j(197)   println(74);
 L570:
         LD    A,74
 L571:
-        CALL  writeA
+        CALL  writeLineA
 L572:
         ;;test1.j(198)   // integer - byte
 L573:
@@ -2085,13 +2117,13 @@ L574:
 L575:
         LD    A,75
 L576:
-        CALL  writeA
+        CALL  writeLineA
 L577:
         ;;test1.j(201)   println(76);
 L578:
         LD    A,76
 L579:
-        CALL  writeA
+        CALL  writeLineA
 L580:
         ;;test1.j(202)   // integer - integer
 L581:
@@ -2101,13 +2133,13 @@ L582:
 L583:
         LD    A,77
 L584:
-        CALL  writeA
+        CALL  writeLineA
 L585:
         ;;test1.j(205)   println(78);
 L586:
         LD    A,78
 L587:
-        CALL  writeA
+        CALL  writeLineA
 L588:
         ;;test1.j(206) 
 L589:
@@ -2144,7 +2176,7 @@ L602:
 L603:
         LD    A,(05000H)
 L604:
-        CALL  writeA
+        CALL  writeLineA
 L605:
         LD    HL,(05000H)
         INC   (HL)
@@ -2182,7 +2214,7 @@ L617:
 L618:
         LD    A,(05000H)
 L619:
-        CALL  writeA
+        CALL  writeLineA
 L620:
         LD    HL,(05000H)
         INC   (HL)
@@ -2229,7 +2261,7 @@ L635:
 L636:
         LD    A,(05000H)
 L637:
-        CALL  writeA
+        CALL  writeLineA
 L638:
         LD    HL,(05000H)
         INC   (HL)
@@ -2263,7 +2295,7 @@ L649:
 L650:
         LD    A,(05000H)
 L651:
-        CALL  writeA
+        CALL  writeLineA
 L652:
         LD    HL,(05000H)
         INC   (HL)
@@ -2313,7 +2345,7 @@ L672:
 L673:
         LD    A,(05000H)
 L674:
-        CALL  writeA
+        CALL  writeLineA
 L675:
         LD    HL,(05000H)
         INC   (HL)
@@ -2358,7 +2390,7 @@ L690:
 L691:
         LD    A,(05000H)
 L692:
-        CALL  writeA
+        CALL  writeLineA
 L693:
         LD    HL,(05000H)
         INC   (HL)
@@ -2411,7 +2443,7 @@ L711:
 L712:
         LD    A,(05000H)
 L713:
-        CALL  writeA
+        CALL  writeLineA
 L714:
         LD    HL,(05000H)
         INC   (HL)
@@ -2451,7 +2483,7 @@ L728:
 L729:
         LD    A,(05000H)
 L730:
-        CALL  writeA
+        CALL  writeLineA
 L731:
         LD    HL,(05000H)
         INC   (HL)
@@ -2483,7 +2515,7 @@ L742:
 L743:
         LD    A,(05000H)
 L744:
-        CALL  writeA
+        CALL  writeLineA
 L745:
         LD    HL,(05000H)
         INC   (HL)
@@ -2524,7 +2556,7 @@ L758:
 L759:
         LD    HL,(05002H)
 L760:
-        CALL  writeHL
+        CALL  writeLineHL
 L761:
         LD    HL,(05002H)
         INC   HL
@@ -2563,7 +2595,7 @@ L774:
 L775:
         LD    A,(05000H)
 L776:
-        CALL  writeA
+        CALL  writeLineA
 L777:
         LD    HL,(05000H)
         INC   (HL)
@@ -2588,13 +2620,13 @@ L785:
 L786:
         LD    A,101
 L787:
-        CALL  writeA
+        CALL  writeLineA
 L788:
         ;;test1.j(260)   println(102);
 L789:
         LD    A,102
 L790:
-        CALL  writeA
+        CALL  writeLineA
 L791:
         ;;test1.j(261)   // constant - stack8
 L792:
@@ -2606,13 +2638,13 @@ L794:
 L795:
         LD    A,103
 L796:
-        CALL  writeA
+        CALL  writeLineA
 L797:
         ;;test1.j(265)   println(104);
 L798:
         LD    A,104
 L799:
-        CALL  writeA
+        CALL  writeLineA
 L800:
         ;;test1.j(266)   // constant - stack8
 L801:
@@ -2624,13 +2656,13 @@ L803:
 L804:
         LD    A,105
 L805:
-        CALL  writeA
+        CALL  writeLineA
 L806:
         ;;test1.j(270)   println(106);
 L807:
         LD    A,106
 L808:
-        CALL  writeA
+        CALL  writeLineA
 L809:
         ;;test1.j(271)   // constant - stack88
 L810:
@@ -2642,13 +2674,13 @@ L812:
 L813:
         LD    A,107
 L814:
-        CALL  writeA
+        CALL  writeLineA
 L815:
         ;;test1.j(275)   println(108);
 L816:
         LD    A,108
 L817:
-        CALL  writeA
+        CALL  writeLineA
 L818:
         ;;test1.j(276) 
 L819:
@@ -2664,13 +2696,13 @@ L823:
 L824:
         LD    A,109
 L825:
-        CALL  writeA
+        CALL  writeLineA
 L826:
         ;;test1.j(282)   println(110);
 L827:
         LD    A,110
 L828:
-        CALL  writeA
+        CALL  writeLineA
 L829:
         ;;test1.j(283)   // constant - stack16
 L830:
@@ -2682,13 +2714,13 @@ L832:
 L833:
         LD    A,111
 L834:
-        CALL  writeA
+        CALL  writeLineA
 L835:
         ;;test1.j(287)   println(112);
 L836:
         LD    A,112
 L837:
-        CALL  writeA
+        CALL  writeLineA
 L838:
         ;;test1.j(288)   // constant - stack16
 L839:
@@ -2700,13 +2732,13 @@ L841:
 L842:
         LD    A,113
 L843:
-        CALL  writeA
+        CALL  writeLineA
 L844:
         ;;test1.j(292)   println(114);
 L845:
         LD    A,114
 L846:
-        CALL  writeA
+        CALL  writeLineA
 L847:
         ;;test1.j(293)   // constant - stack16
 L848:
@@ -2718,13 +2750,13 @@ L850:
 L851:
         LD    A,115
 L852:
-        CALL  writeA
+        CALL  writeLineA
 L853:
         ;;test1.j(297)   println(116);
 L854:
         LD    A,116
 L855:
-        CALL  writeA
+        CALL  writeLineA
 L856:
         ;;test1.j(298) 
 L857:
@@ -2732,7 +2764,7 @@ L857:
 L858:
         LD    HL,862
 L859:
-        CALL  putStr
+        CALL  writeLineStr
 L860:
         ;;test1.j(300) }
 L861:

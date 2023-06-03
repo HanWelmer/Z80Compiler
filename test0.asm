@@ -114,17 +114,28 @@ getChar1:
 ;****************
 putMsg:
         EX    (SP),HL     ;save HL and load return address into HL.
-        CALL  putStr
+        CALL  writeStr
         EX    (SP),HL     ;put return address onto stack and restore HL.
         RET
 ;****************
-;putStr
+;writeLineStr
+;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+;  IN:  HL:address of zero terminated string to be printed.
+;  OUT: none.
+;  USES:HL (point to byte after zero terminated string)
+;****************
+writeLineStr:
+        CALL  writeStr
+        CALL  putCRLF
+        RET
+;****************
+;writeStr
 ;Print via ASCI0 a zero terminated string, pointed to by HL.
 ;  IN:  HL:address of zero terminated string to be printed.
 ;  OUT: none.
 ;  USES:HL (point to byte after zero terminated string)
 ;****************
-putStr:
+writeStr:
         PUSH  AF          ;save registers
 putStr1:
         LD    A,(HL)      ;get next character
@@ -674,6 +685,17 @@ read2:
         POP   AF
         RET
 ;****************
+;writeLineHL
+;write a 16 bit unsigned number to the output, followed by a carriage return
+;  IN:  HL = 16 bit unsigned number
+;  OUT: none
+;  USES:HL
+;****************
+writeLineHL:
+        CALL  writeHL
+        CALL  putCRLF
+        RET
+;****************
 ;writeHL
 ;write a 16 bit unsigned number to the output
 ;  IN:  HL = 16 bit unsigned number
@@ -705,6 +727,16 @@ writeHL3:
         DJNZ  writeHL2
         POP   AF          ;restore registers used
         POP   BC
+        RET
+;****************
+;writeLineA
+;write an 8-bit unsigned number to the output, followed by a carriage return
+;  IN:  A = 8-bit unsigned number
+;  OUT: none
+;  USES:none
+;****************
+writeLineA:
+        CALL  writeA
         CALL  putCRLF
         RET
 ;****************
@@ -745,49 +777,49 @@ L8:
 L9:
         LD    A,0
 L10:
-        CALL  writeA
+        CALL  writeLineA
 L11:
         ;;test0.j(5)   println(i);
 L12:
         LD    HL,(05000H)
 L13:
-        CALL  writeHL
+        CALL  writeLineHL
 L14:
         ;;test0.j(6)   println(b);
 L15:
         LD    A,(05002H)
 L16:
-        CALL  writeA
+        CALL  writeLineA
 L17:
-        ;;test0.j(7)   println("Hallo" + "Wereld.");
+        ;;test0.j(7)   println("Hallo" + " wereld.");
 L18:
         LD    HL,34
 L19:
-        CALL  putStr
+        CALL  writeStr
 L20:
         LD    HL,35
 L21:
-        CALL  putStr
+        CALL  writeLineStr
 L22:
         ;;test0.j(8)   println("Nog" + " een" + " bericht.");
 L23:
         LD    HL,36
 L24:
-        CALL  putStr
+        CALL  writeStr
 L25:
         LD    HL,37
 L26:
-        CALL  putStr
+        CALL  writeStr
 L27:
         LD    HL,38
 L28:
-        CALL  putStr
+        CALL  writeLineStr
 L29:
         ;;test0.j(9)   println("Klaar.");
 L30:
         LD    HL,39
 L31:
-        CALL  putStr
+        CALL  writeLineStr
 L32:
         ;;test0.j(10) }
 L33:
@@ -795,7 +827,7 @@ L33:
 L34:
         .ASCIZ  "Hallo"
 L35:
-        .ASCIZ  "Wereld."
+        .ASCIZ  " wereld."
 L36:
         .ASCIZ  "Nog"
 L37:

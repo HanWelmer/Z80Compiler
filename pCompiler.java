@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO fix bug in printlnStatement: all but last terms should be printed without line break.
 //TODO printlnStatement: only accept + symbol (not addop or - symbol)
 //TODO printlnStatement: test *, / and (expression)
 //TODO add logical AND.
@@ -1360,7 +1359,7 @@ public class pCompiler {
       if (operand.opType != OperandType.acc) {
         plantAccLoad(operand);
       }
-      plant(new Instruction(FunctionType.writeString));
+      plant(new Instruction(FunctionType.writeLineString));
     } else {
       operand = expressionWithOperand(operand, followSet);
       debug("\nwriteStatement: " + operand);
@@ -1371,13 +1370,13 @@ public class pCompiler {
       }
       switch (operand.datatype) {
         case word :
-          plant(new Instruction(FunctionType.writeAcc16));
+          plant(new Instruction(FunctionType.writeLineAcc16));
           break;
         case byt :
-          plant(new Instruction(FunctionType.writeAcc8));
+          plant(new Instruction(FunctionType.writeLineAcc8));
           break;
         case string :
-          plant(new Instruction(FunctionType.writeString));
+          plant(new Instruction(FunctionType.writeLineString));
           break;
         default: error(15);
       }
