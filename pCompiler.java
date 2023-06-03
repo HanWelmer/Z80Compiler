@@ -1330,27 +1330,51 @@ public class pCompiler {
     EnumSet<LexemeType> followSet = stopExpressionSet.clone();
     followSet.add(LexemeType.addop);
     Operand operand = term(followSet);
-
-    operand = expressionWithOperand(operand, followSet);
-
-    //ODOT
-    debug("\nwriteStatement: " + operand);
     
-    /* part of code generation */
-    if (operand.opType != OperandType.acc) {
-      plantAccLoad(operand);
-    }
-    switch (operand.datatype) {
-      case word :
-        plant(new Instruction(FunctionType.writeAcc16));
-        break;
-      case byt :
-        plant(new Instruction(FunctionType.writeAcc8));
-        break;
-      case string :
-        plant(new Instruction(FunctionType.writeString));
-        break;
-      default: error(15);
+    if (operand.datatype == Datatype.string) {
+      operand = expressionWithOperand(operand, followSet);
+
+      //ODOT
+      debug("\nwriteStatement: " + operand);
+      
+      /* part of code generation */
+      if (operand.opType != OperandType.acc) {
+        plantAccLoad(operand);
+      }
+      switch (operand.datatype) {
+        case word :
+          plant(new Instruction(FunctionType.writeAcc16));
+          break;
+        case byt :
+          plant(new Instruction(FunctionType.writeAcc8));
+          break;
+        case string :
+          plant(new Instruction(FunctionType.writeString));
+          break;
+        default: error(15);
+      }
+    } else {
+      operand = expressionWithOperand(operand, followSet);
+
+      //ODOT
+      debug("\nwriteStatement: " + operand);
+      
+      /* part of code generation */
+      if (operand.opType != OperandType.acc) {
+        plantAccLoad(operand);
+      }
+      switch (operand.datatype) {
+        case word :
+          plant(new Instruction(FunctionType.writeAcc16));
+          break;
+        case byt :
+          plant(new Instruction(FunctionType.writeAcc8));
+          break;
+        case string :
+          plant(new Instruction(FunctionType.writeString));
+          break;
+        default: error(15);
+      }
     }
 
     /* part of lexical analysis */
