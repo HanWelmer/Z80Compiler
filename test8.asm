@@ -733,7 +733,7 @@ L3:
 L4:
         ;;test8.j(4) class Test8And16BitExpressions {
 L5:
-        ;;test8.j(5)   write(0);
+        ;;test8.j(5)   println(0);
 L6:
         LD    A,0
 L7:
@@ -745,7 +745,7 @@ L9:
 L10:
         ;;test8.j(8)   /*************************/
 L11:
-        ;;test8.j(9)   write(10 - 3*3);         // 1
+        ;;test8.j(9)   println(10 - 3*3);         // 1
 L12:
         LD    A,10
 L13:
@@ -769,7 +769,7 @@ L18:
 L19:
         LD    (05000H),A
 L20:
-        ;;test8.j(11)   write(b - 3*3);          // 2
+        ;;test8.j(11)   println(b - 3*3);          // 2
 L21:
         LD    A,(05000H)
 L22:
@@ -799,7 +799,7 @@ L30:
 L31:
         LD    (05002H),A
 L32:
-        ;;test8.j(14)   write(12 - c*d);         // 3
+        ;;test8.j(14)   println(12 - c*d);         // 3
 L33:
         LD    A,12
 L34:
@@ -824,7 +824,7 @@ L39:
 L40:
         LD    (05000H),A
 L41:
-        ;;test8.j(16)   write(b - c*d);          // 4
+        ;;test8.j(16)   println(b - c*d);          // 4
 L42:
         LD    A,(05000H)
 L43:
@@ -851,7 +851,7 @@ L49:
 L50:
         ;;test8.j(20)   /**************************/
 L51:
-        ;;test8.j(21)   write(1005 - 1000*1);    // 5
+        ;;test8.j(21)   println(1005 - 1000*1);    // 5
 L52:
         LD    HL,1005
 L53:
@@ -874,7 +874,7 @@ L58:
 L59:
         LD    (05003H),HL
 L60:
-        ;;test8.j(23)   write(i - 1000*1);       // 6
+        ;;test8.j(23)   println(i - 1000*1);       // 6
 L61:
         LD    HL,(05003H)
 L62:
@@ -905,7 +905,7 @@ L71:
         LD    H,0
         LD    (05007H),HL
 L72:
-        ;;test8.j(26)   write(1007 - j*k);       // 7
+        ;;test8.j(26)   println(1007 - j*k);       // 7
 L73:
         LD    HL,1007
 L74:
@@ -928,7 +928,7 @@ L79:
 L80:
         LD    (05003H),HL
 L81:
-        ;;test8.j(28)   write(i - j*k);          // 8
+        ;;test8.j(28)   println(i - j*k);          // 8
 L82:
         LD    HL,(05003H)
 L83:
@@ -953,7 +953,7 @@ L89:
 L90:
         ;;test8.j(32)   /***********************/
 L91:
-        ;;test8.j(33)   write(36 / (4*1));     // 9
+        ;;test8.j(33)   println(36 / (4*1));     // 9
 L92:
         LD    A,36
 L93:
@@ -977,7 +977,7 @@ L98:
 L99:
         LD    (05000H),A
 L100:
-        ;;test8.j(35)   write(b / (4*1));      // 10
+        ;;test8.j(35)   println(b / (4*1));      // 10
 L101:
         LD    A,(05000H)
 L102:
@@ -1007,7 +1007,7 @@ L110:
 L111:
         LD    (05002H),A
 L112:
-        ;;test8.j(38)   write(44 / (c*d));     // 11
+        ;;test8.j(38)   println(44 / (c*d));     // 11
 L113:
         LD    A,44
 L114:
@@ -1032,7 +1032,7 @@ L119:
 L120:
         LD    (05000H),A
 L121:
-        ;;test8.j(40)   write(b / (c*d));      // 12
+        ;;test8.j(40)   println(b / (c*d));      // 12
 L122:
         LD    A,(05000H)
 L123:
@@ -1059,7 +1059,7 @@ L129:
 L130:
         ;;test8.j(44)   /************************/
 L131:
-        ;;test8.j(45)   write(3900 / (300*1)); // 13
+        ;;test8.j(45)   println(3900 / (300*1)); // 13
 L132:
         LD    HL,3900
 L133:
@@ -1081,7 +1081,7 @@ L138:
 L139:
         LD    (05003H),HL
 L140:
-        ;;test8.j(47)   write(i / (300*1));    // 14
+        ;;test8.j(47)   println(i / (300*1));    // 14
 L141:
         LD    HL,(05003H)
 L142:
@@ -1111,7 +1111,7 @@ L151:
         LD    H,0
         LD    (05007H),HL
 L152:
-        ;;test8.j(50)   write(4500 / (j*k));   // 15
+        ;;test8.j(50)   println(4500 / (j*k));   // 15
 L153:
         LD    HL,4500
 L154:
@@ -1133,7 +1133,7 @@ L159:
 L160:
         LD    (05003H),HL
 L161:
-        ;;test8.j(52)   write(i / (j*k));      // 16
+        ;;test8.j(52)   println(i / (j*k));      // 16
 L162:
         LD    HL,(05003H)
 L163:
@@ -1177,7 +1177,7 @@ L178:
 L179:
         LD    (05002H),A
 L180:
-        ;;test8.j(60)   write(i - c*d);           // 17
+        ;;test8.j(60)   println(i - c*d);           // 17
 L181:
         LD    HL,(05003H)
 L182:
@@ -1218,7 +1218,7 @@ L194:
         LD    H,0
         LD    (05007H),HL
 L195:
-        ;;test8.j(64)   write(b - j*k);           // 18
+        ;;test8.j(64)   println(b - j*k);           // 18
 L196:
         LD    A,(05000H)
 L197:
@@ -1259,7 +1259,7 @@ L211:
         LD    H,0
         LD    (05003H),HL
 L212:
-        ;;test8.j(74)   write(i / (1+0));         // 19
+        ;;test8.j(74)   println(i / (1+0));         // 19
 L213:
         LD    HL,(05003H)
 L214:
@@ -1273,7 +1273,7 @@ L217:
 L218:
         ;;test8.j(75)   
 L219:
-        ;;test8.j(76)   write(i + 1);             // 20
+        ;;test8.j(76)   println(i + 1);             // 20
 L220:
         LD    HL,(05003H)
 L221:
@@ -1282,7 +1282,7 @@ L221:
 L222:
         CALL  writeHL
 L223:
-        ;;test8.j(77)   write(2 + i);             // 21
+        ;;test8.j(77)   println(2 + i);             // 21
 L224:
         LD    A,2
 L225:
@@ -1294,7 +1294,7 @@ L226:
 L227:
         CALL  writeHL
 L228:
-        ;;test8.j(78)   write("Klaar");
+        ;;test8.j(78)   println("Klaar");
 L229:
         LD    HL,233
 L230:

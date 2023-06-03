@@ -727,7 +727,7 @@ L0:
 L1:
         ;;test3.j(1) class TestMultiply {
 L2:
-        ;;test3.j(2)   write(1 * 0);
+        ;;test3.j(2)   println(1 * 0);
 L3:
         LD    A,1
 L4:
@@ -738,7 +738,7 @@ L4:
 L5:
         CALL  writeA
 L6:
-        ;;test3.j(3)   write(1 * 1);
+        ;;test3.j(3)   println(1 * 1);
 L7:
         LD    A,1
 L8:
@@ -749,7 +749,7 @@ L8:
 L9:
         CALL  writeA
 L10:
-        ;;test3.j(4)   write(2 * 1);
+        ;;test3.j(4)   println(2 * 1);
 L11:
         LD    A,2
 L12:
@@ -760,7 +760,7 @@ L12:
 L13:
         CALL  writeA
 L14:
-        ;;test3.j(5)   write(1 * 3);
+        ;;test3.j(5)   println(1 * 3);
 L15:
         LD    A,1
 L16:
@@ -784,7 +784,7 @@ L21:
         LD    H,0
         LD    (05000H),HL
 L22:
-        ;;test3.j(7)   write(a);
+        ;;test3.j(7)   println(a);
 L23:
         LD    HL,(05000H)
 L24:
@@ -798,7 +798,7 @@ L27:
         LD    H,0
         LD    (05000H),HL
 L28:
-        ;;test3.j(9)   write(a * 5);
+        ;;test3.j(9)   println(a * 5);
 L29:
         LD    HL,(05000H)
 L30:
@@ -815,7 +815,7 @@ L34:
         LD    H,0
         LD    (05000H),HL
 L35:
-        ;;test3.j(11)   write(3 * a);
+        ;;test3.j(11)   println(3 * a);
 L36:
         LD    A,3
 L37:
@@ -827,7 +827,7 @@ L38:
 L39:
         CALL  writeHL
 L40:
-        ;;test3.j(12)   if (7 * 5 == 35) write (7); else write (999);
+        ;;test3.j(12)   if (7 * 5 == 35) println (7); else println (999);
 L41:
         LD    A,7
 L42:
@@ -850,7 +850,7 @@ L48:
 L49:
         CALL  writeHL
 L50:
-        ;;test3.j(13)   if (2 * 9 * 9 == 162) write (8); else write (999);
+        ;;test3.j(13)   if (2 * 9 * 9 == 162) println (8); else println (999);
 L51:
         LD    A,2
 L52:
@@ -878,7 +878,7 @@ L59:
 L60:
         CALL  writeHL
 L61:
-        ;;test3.j(14)   if (729 == 729) write (9); else write (999);
+        ;;test3.j(14)   if (729 == 729) println (9); else println (999);
 L62:
         LD    HL,729
 L63:
@@ -898,7 +898,7 @@ L68:
 L69:
         CALL  writeHL
 L70:
-        ;;test3.j(15)   if (729 * 9 == 6561) write (10); else write (999);
+        ;;test3.j(15)   if (729 * 9 == 6561) println (10); else println (999);
 L71:
         LD    HL,729
 L72:
@@ -921,7 +921,7 @@ L78:
 L79:
         CALL  writeHL
 L80:
-        ;;test3.j(16)   if (6561 / 729 == 9) write (11); else write (999);
+        ;;test3.j(16)   if (6561 / 729 == 9) println (11); else println (999);
 L81:
         LD    HL,6561
 L82:
@@ -962,7 +962,7 @@ L95:
         DEC   HL
         LD    (05000H),HL
 L96:
-        ;;test3.j(19)   write(a);
+        ;;test3.j(19)   println(a);
 L97:
         LD    HL,(05000H)
 L98:
@@ -974,19 +974,19 @@ L100:
         INC   HL
         LD    (05000H),HL
 L101:
-        ;;test3.j(21)   write(a);
+        ;;test3.j(21)   println(a);
 L102:
         LD    HL,(05000H)
 L103:
         CALL  writeHL
 L104:
-        ;;test3.j(22)   write(14);
+        ;;test3.j(22)   println(14);
 L105:
         LD    A,14
 L106:
         CALL  writeA
 L107:
-        ;;test3.j(23)   write("Klaar");
+        ;;test3.j(23)   println("Klaar");
 L108:
         LD    HL,112
 L109:

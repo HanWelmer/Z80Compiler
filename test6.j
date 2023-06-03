@@ -3,7 +3,7 @@
  * Test 8-bit and 16-bit expressions.
  */
 class Test8And16BitExpressions {
-  write(0);         // 0
+  println(0);         // 0
   //LD    A,0
   //CALL  writeA
   //OK
@@ -13,7 +13,7 @@ class Test8And16BitExpressions {
   /*********************/
   byte b = 1;
   byte c = 4;
-  write(b);         // 1
+  println(b);         // 1
   //LD    A,1
   //LD    (04000H),A
   //LD    A,(04000H)
@@ -23,150 +23,150 @@ class Test8And16BitExpressions {
   /************************/
   /* Dual term addition   */
   /************************/
-  write(0 + 2);     // 2
-  write(b + 2);     // 3
-  write(3 + b);     // 4
-  write(b + c);     // 5
+  println(0 + 2);     // 2
+  println(b + 2);     // 3
+  println(3 + b);     // 4
+  println(b + c);     // 5
 
   c = 4 + 2;
-  write(c);         // 6
+  println(c);         // 6
   c = b + 6;
-  write(c);         // 7
+  println(c);         // 7
   c = 7 + b;
-  write(c);         // 8
+  println(c);         // 8
   c = b + c;
-  write(c);         // 9
+  println(c);         // 9
 
 
   word i = 10;
-  write(i);         // 10
+  println(i);         // 10
   //LD    A,10
   //LD    L,A
   //LD    H,0
   //LD    (04004H),HL
   //OK
   
-  write(i + 1);     // 11
-  write(2 + i);     // 12
+  println(i + 1);     // 11
+  println(2 + i);     // 12
   b = 3;
-  write(i + b);     // 13
+  println(i + b);     // 13
   b++; //4
-  write(b + i);     // 14
+  println(b + i);     // 14
 
   word j = i + 5;    // 15
-  write(j);
+  println(j);
   j = 6 + i;        // 16
-  write(j);
+  println(j);
   j = 7;
   j = i + j;        // 17
-  write(j);
+  println(j);
 
   /*************************/
   /* Dual term subtraction */
   /*************************/
   b = 33;
   c = 12;
-  write(19 - 1);    // 18
-  write(b - 14);    // 19
-  write(53 - b);    // 20
-  write(b - c);     // 21
+  println(19 - 1);    // 18
+  println(b - 14);    // 19
+  println(53 - b);    // 20
+  println(b - c);     // 21
 
   c = 24 - 2;
-  write(c);         // 22
+  println(c);         // 22
   c = b - 10;
-  write(c);         // 23
+  println(c);         // 23
   c = 57 - b;
-  write(c);         // 24
+  println(c);         // 24
   c = 8;
   c = b - c;
-  write(c);         // 25
+  println(c);         // 25
 
   i = 40;
-  write(i - 14);    // 26
-  write(67 - i);    // 27
+  println(i - 14);    // 26
+  println(67 - i);    // 27
   b = 12;
-  write(i - b);     // 28
+  println(i - b);     // 28
   b = 69;
-  write(b - i);     // 29
+  println(b - i);     // 29
 
   j = i - 10;
-  write(j);         // 30
+  println(j);         // 30
   j = 71 - i;
-  write(j);         // 31
+  println(j);         // 31
   j = 8;
   j = i - j;
-  write(j);         // 32
+  println(j);         // 32
   
   /****************************/
   /* Dual term multiplication */
   /****************************/
-  write(3 * 11);    // 33
+  println(3 * 11);    // 33
   b = 17;
-  write(b * 2);     // 34
+  println(b * 2);     // 34
   b = 7;
-  write(5 * b);     // 35
+  println(5 * b);     // 35
   b = 2;
   c = 18;
-  write(b * c);     // 36
+  println(b * c);     // 36
   
   c = 37 * 1;
-  write(c);         // 37
+  println(c);         // 37
   b = 2;
   c = b * 19;
-  write(c);         // 38
+  println(c);         // 38
   b = 3;
   c = 13 * b;
-  write(c);         // 39
+  println(c);         // 39
   b = 5;
   c = 8;
   c = b * c;
-  write(c);         // 40
+  println(c);         // 40
 
   /**********************/
   /* Dual term division */
   /**********************/
-  write(123 / 3);   // 41
+  println(123 / 3);   // 41
   b = 126;
-  write(b / 3);     // 42
+  println(b / 3);     // 42
   b = 3;
-  write(129 / b);   // 43
+  println(129 / b);   // 43
   b = 132;
   c = 3;
-  write(b / c);     // 44
+  println(b / c);     // 44
   
   c = 135 / 3;
-  write(c);         // 45
+  println(c);         // 45
   b = 138;
   c = b / 3;
-  write(c);         // 46
+  println(c);         // 46
   b = 3;
   c = 141 / b;
-  write(c);         // 47
+  println(c);         // 47
   b = 144;
   c = 3;
   c = b / c;
-  write(c);         // 48
+  println(c);         // 48
 
   /*************************/
   /* possible loss of data */
   /*************************/
-  write("Nu komen 251 en 252");
+  println("Nu komen 251 en 252");
   b = 507;
-  write(b);         // 251
+  println(b);         // 251
   i = 508;
   b = i;
-  write(b);         // 252
+  println(b);         // 252
 
-  write("Nu komen -253 en -254");
+  println("Nu komen -253 en -254");
   b = b - 505;
-  write(b);         // 252 - 505 = -253
+  println(b);         // 252 - 505 = -253
   i = i + 5;
   b = b - i;
-  write(b);         // -233 - 11 = -254
+  println(b);         // -233 - 11 = -254
   
-  write("Nu komen 255 en 256");
+  println("Nu komen 255 en 256");
   b = 255;
-  write(b);         // 255
+  println(b);         // 255
   //LD    A,255
   //LD    (04001H),A
   //LD    A,(04001H)
@@ -177,139 +177,139 @@ class Test8And16BitExpressions {
   /* Single term 16-bit */
   /**********************/
   i = 256;
-  write(i);         // 256
+  println(i);         // 256
   //LD    HL,256
   //LD    (04006H),HL
   //LD    HL,(04006H)
   //CALL  writeHL
   //OK
 
-  write("Nu komen 1000..1047");
-  write(1000);      // 1000
+  println("Nu komen 1000..1047");
+  println(1000);      // 1000
   j = 1001;
-  write(j);         // 1001
+  println(j);         // 1001
 
   /************************/
   /* Dual term addition   */
   /************************/
-  write(1000 + 2);  // 1002
-  write(3 + 1000);  // 1003
-  write(500 + 504); // 1004
+  println(1000 + 2);  // 1002
+  println(3 + 1000);  // 1003
+  println(500 + 504); // 1004
   i = 1000 + 5;
-  write(i);         // 1005
+  println(i);         // 1005
   i = 6 + 1000;
-  write(i);         // 1006
+  println(i);         // 1006
   i = 500 + 507;
-  write(i);         // 1007
+  println(i);         // 1007
   
   j = 1000;
   b = 10;
   i = 514;
-  write(j + 8);     // 1008
-  write(9 + j);     // 1009
-  write(j + b);     // 1010
+  println(j + 8);     // 1008
+  println(9 + j);     // 1009
+  println(j + b);     // 1010
   b++;
-  write(b + j);     // 1011
+  println(b + j);     // 1011
   j = 500;
-  write(j + 512);   // 1012
-  write(513 + j);   // 1013
-  write(i + j);     // 1014
+  println(j + 512);   // 1012
+  println(513 + j);   // 1013
+  println(i + j);     // 1014
   
   j = 1000;
   b = 17;
   i = j + 15;
-  write(i);         // 1015
+  println(i);         // 1015
   i = 16 + j;
-  write(i);         // 1016
+  println(i);         // 1016
   i = j + b;
-  write(i);         // 1017
+  println(i);         // 1017
   b++;
   i = b + j;
-  write(i);         // 1018
+  println(i);         // 1018
   j = 500;
   i = j + 519;
-  write(i);         // 1019
+  println(i);         // 1019
   i = 520 + j;
-  write(i);         // 1020
+  println(i);         // 1020
   i = 521;
   i = i + j;
-  write(i);         // 1021
+  println(i);         // 1021
   
   /*************************/
   /* Dual term subtraction */
   /*************************/
-  write(1024 - 2);  // 1022
-  write(1523 - 500);// 1023
+  println(1024 - 2);  // 1022
+  println(1523 - 500);// 1023
   i = 1030 - 6;
-  write(i);         // 1024
+  println(i);         // 1024
   i = 1525 - 500;
-  write(i);         // 1025
+  println(i);         // 1025
   
   j = 1040;
   b = 13;
   i = 3030;
-  write(j - 14);    // 1026
-  write(j - b);     // 1027
+  println(j - 14);    // 1026
+  println(j - b);     // 1027
   j = 2000;
-  write(j - 972);   // 1028
-  write(3029 - j);  // 1029
-  write(i - j);     // 1030
+  println(j - 972);   // 1028
+  println(3029 - j);  // 1029
+  println(i - j);     // 1030
   
   j = 1050;
   b = 18;
   i = j - 19;
-  write(i);         // 1031
+  println(i);         // 1031
   i = j - b;
-  write(i);         // 1032
+  println(i);         // 1032
   j = 2000;
   i = j - 967;
-  write(i);         // 1033
+  println(i);         // 1033
   i = 3034 - j;
-  write(i);         // 1034
+  println(i);         // 1034
   i = 3035;
   i = i - j;
-  write(i);         // 1035
+  println(i);         // 1035
   
   /****************************/
   /* Dual term multiplication */
   /****************************/
-  write(518 * 2);   // 1036
-  write(1 * 1037);  // 1037
-  write(500 * 504 - 54354); // 1038 = 55392 - 54354
+  println(518 * 2);   // 1036
+  println(1 * 1037);  // 1037
+  println(500 * 504 - 54354); // 1038 = 55392 - 54354
 
   i = 1039 * 1;
-  write(i);         // 1039
+  println(i);         // 1039
   i = 2 * 520;
-  write(i);         // 1040
+  println(i);         // 1040
 
   i = 1041;
-  write(i * 1);     // 1041
+  println(i * 1);     // 1041
   i = 521;
-  write(2 * i);     // 1042
+  println(2 * i);     // 1042
 
   i = 1043;
   i = i * 1;
-  write(i);         // 1043
+  println(i);         // 1043
   i = 522;
   i = 2 * i;
-  write(i);         // 1044
+  println(i);         // 1044
 
   i = 500 * 504 - 54347; // 1045 = 55392 - 54347
-  write(i);         // 1045
+  println(i);         // 1045
   i = 500;
   i = i * 504 - 54346;
-  write(i);         // 1046
+  println(i);         // 1046
   i = 504;
   i = 500 * i - 54345;
-  write(i);         // 1047
+  println(i);         // 1047
   
   /************/
   /* Overflow */
   /************/
-  write("Nu komen 24.764 en 25.064");
-  write(300 * 301); // 90.300 % 65536 = 24.764
+  println("Nu komen 24.764 en 25.064");
+  println(300 * 301); // 90.300 % 65536 = 24.764
   i = 300 * 302;
-  write(i);         // 90.600 % 65536 = 25.064
+  println(i);         // 90.600 % 65536 = 25.064
 
-  write("Klaar");
+  println("Klaar");
 }

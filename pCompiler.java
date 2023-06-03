@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO fix bug in writeStatement: all but last terms should be printed without line break.
-//TODO rename writeStatement to println statement.
-//TODO println statement: only accept + symbol (not addop or - symbol)
-//TODO println statement: test *, / and (expression)
+//TODO rename writeStatement to printlnStatement.
+//TODO fix bug in printlnStatement: all but last terms should be printed without line break.
+//TODO printlnStatement: only accept + symbol (not addop or - symbol)
+//TODO printlnStatement: test *, / and (expression)
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
@@ -26,29 +26,29 @@ import java.util.Stack;
  * Inspired by the book Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks
  * and of course Java as developed by Sun.
  *
- * program        = "class" identifier "{" statements "}".
- * identifier     = "(_A-Za-z)(_A-Za-z0-9)+".
- * statements     = (statement)*.
- * statement      = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
- * assignment     = [datatype] update ";".
- * datatype       = "byte" | "word" | "String".
- * update         = identifier++ | identifier-- | identifier "=" expression.
- * writeStatement = "write" "(" expression ")" ";".
- * ifStatement    = "if" "(" comparison ")" block [ "else" block].
- * forStatement   = "for" "(" initialization ";" comparison ";" update ")" block.
- * initialization = "word" identifier "=" expression.
- * doStatement    = "do" block "while" "(" comparison ")" ";".
- * whileStatement = "while" "(" comparison ")" block.
- * block          = statement | "{" statements "}".
- * comparison     = expression relop expression.
- * expression     = term {addop term}.
- * term           = factor {mulop factor}.
- * factor         = identifier | constant | stringConstant | "read" | "(" expression ")".
- * addop          = "+" | "-".
- * mulop          = "*" | "/".
- * relop          = "==" | "!=" | ">" | ">=" | "<" | "<=".
- * constant       = "(0-9)*".
- * stringConstant = "\"" ((char - ["\"\\"]) | ("\\" ["\\\'\"nrtbfa"]))* "\"".
+ * program          = "class" identifier "{" statements "}".
+ * identifier       = "(_A-Za-z)(_A-Za-z0-9)+".
+ * statements       = (statement)*.
+ * statement        = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement.
+ * assignment       = [datatype] update ";".
+ * datatype         = "byte" | "word" | "String".
+ * update           = identifier++ | identifier-- | identifier "=" expression.
+ * printlnStatement = "write" "(" expression ")" ";".
+ * ifStatement      = "if" "(" comparison ")" block [ "else" block].
+ * forStatement     = "for" "(" initialization ";" comparison ";" update ")" block.
+ * initialization   = "word" identifier "=" expression.
+ * doStatement      = "do" block "while" "(" comparison ")" ";".
+ * whileStatement   = "while" "(" comparison ")" block.
+ * block            = statement | "{" statements "}".
+ * comparison       = expression relop expression.
+ * expression       = term {addop term}.
+ * term             = factor {mulop factor}.
+ * factor           = identifier | constant | stringConstant | "read" | "(" expression ")".
+ * addop            = "+" | "-".
+ * mulop            = "*" | "/".
+ * relop            = "==" | "!=" | ">" | ">=" | "<" | "<=".
+ * constant         = "(0-9)*".
+ * stringConstant   = "\"" ((char - ["\"\\"]) | ("\\" ["\\\'\"nrtbfa"]))* "\"".
  *
  * Java style end of line comment.
  * Java style multi-line comment.
@@ -169,7 +169,7 @@ public class pCompiler {
     , LexemeType.bytelexeme
     , LexemeType.wordlexeme
     , LexemeType.stringlexeme
-    , LexemeType.writelexeme
+    , LexemeType.printlnlexeme
     , LexemeType.iflexeme
     , LexemeType.forlexeme
     , LexemeType.dolexeme
@@ -1303,13 +1303,13 @@ public class pCompiler {
     debug("\nupdate: end");
   } //update()
 
-  // writeStatement = "write" "(" expression ")" ";".
+  // printlnStatement = "write" "(" expression ")" ";".
   // The write statement makes a distinction between a string expression and an algorithmic expression.
   // An expression is a string expression if the first term is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
   // In a write statement with a string expression, the subsequent terms may be added; other operators are not allowed.
   // However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
   // Terms in a string expression are converted to string and then printed.
-  private void writeStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+  private void printlnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwriteStatement: start with stopSet = " + stopSet);
 
     //part of lexical analysis.
@@ -1396,7 +1396,7 @@ public class pCompiler {
   }
 
   //parse a statement, and return the address of the first object code in the statement.
-  //statement = assignment | writeStatement | ifStatement | forStatement | doStatement | whileStatement.
+  //statement = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement.
   private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     int firstAddress = 0;
@@ -1411,8 +1411,8 @@ public class pCompiler {
       firstAddress = saveLabel();
       if (startAssignment.contains(lexeme.type)) {
         assignment(stopSet);
-      } else if (lexeme.type == LexemeType.writelexeme) {
-        writeStatement(stopSet);
+      } else if (lexeme.type == LexemeType.printlnlexeme) {
+        printlnStatement(stopSet);
       } else if (lexeme.type == LexemeType.iflexeme) {
         ifStatement(stopSet);
       } else if (lexeme.type == LexemeType.forlexeme) {

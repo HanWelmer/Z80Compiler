@@ -25,7 +25,7 @@
   24 ;test1.j(14)    * integer - integer
   25 ;test1.j(15)   */
   26 ;test1.j(16) 
-  27 ;test1.j(17)   write(0);
+  27 ;test1.j(17)   println(0);
   28 acc8= constant 0
   29 call writeAcc8
   30 ;test1.j(18) 
@@ -33,7 +33,7 @@
   32 ;test1.j(20)   // global variable within while scope
   33 ;test1.j(21)   b++;
   34 incr8 variable 0
-  35 ;test1.j(22)   write (b);
+  35 ;test1.j(22)   println (b);
   36 acc8= variable 0
   37 call writeAcc8
   38 ;test1.j(23)   while (b < 2) {
@@ -51,7 +51,7 @@
   50 ;test1.j(27)     byte d = c;
   51 acc8= variable 10
   52 acc8=> variable 11
-  53 ;test1.j(28)     write (c);
+  53 ;test1.j(28)     println (c);
   54 acc8= variable 10
   55 call writeAcc8
   56 ;test1.j(29)   }
@@ -67,7 +67,7 @@
   66 ;test1.j(38)   b = 3;
   67 acc8= constant 3
   68 acc8=> variable 0
-  69 ;test1.j(39)   while (3 == b+0) { write (b); b++; }
+  69 ;test1.j(39)   while (3 == b+0) { println (b); b++; }
   70 acc8= variable 0
   71 acc8+ constant 0
   72 acc8Comp constant 3
@@ -76,7 +76,7 @@
   75 call writeAcc8
   76 incr8 variable 0
   77 br 70
-  78 ;test1.j(40)   while (4 != b+0) { write (b); b++; }
+  78 ;test1.j(40)   while (4 != b+0) { println (b); b++; }
   79 acc8= variable 0
   80 acc8+ constant 0
   81 acc8Comp constant 4
@@ -85,7 +85,7 @@
   84 call writeAcc8
   85 incr8 variable 0
   86 br 79
-  87 ;test1.j(41)   while (6 > b+0) { write (b); b++; }
+  87 ;test1.j(41)   while (6 > b+0) { println (b); b++; }
   88 acc8= variable 0
   89 acc8+ constant 0
   90 acc8Comp constant 6
@@ -94,7 +94,7 @@
   93 call writeAcc8
   94 incr8 variable 0
   95 br 88
-  96 ;test1.j(42)   while (7 >= b+0) { write (b); b++; }
+  96 ;test1.j(42)   while (7 >= b+0) { println (b); b++; }
   97 acc8= variable 0
   98 acc8+ constant 0
   99 acc8Comp constant 7
@@ -106,7 +106,7 @@
  105 ;test1.j(43)   p=8;
  106 acc8= constant 8
  107 acc8=> variable 6
- 108 ;test1.j(44)   while (6 <  b+0) { write (p); p++; b--; }
+ 108 ;test1.j(44)   while (6 <  b+0) { println (p); p++; b--; }
  109 acc8= variable 0
  110 acc8+ constant 0
  111 acc8Comp constant 6
@@ -116,7 +116,7 @@
  115 incr16 variable 6
  116 decr8 variable 0
  117 br 109
- 118 ;test1.j(45)   while (5 <= b+0) { write (p); p++; b--; }
+ 118 ;test1.j(45)   while (5 <= b+0) { println (p); p++; b--; }
  119 acc8= variable 0
  120 acc8+ constant 0
  121 acc8Comp constant 5
@@ -132,7 +132,7 @@
  131 ;test1.j(49)   i=12;
  132 acc8= constant 12
  133 acc8=> variable 2
- 134 ;test1.j(50)   while (12 == i+0) { write (i); i++; }
+ 134 ;test1.j(50)   while (12 == i+0) { println (i); i++; }
  135 acc16= variable 2
  136 acc16+ constant 0
  137 acc8= constant 12
@@ -142,7 +142,7 @@
  141 call writeAcc16
  142 incr16 variable 2
  143 br 135
- 144 ;test1.j(51)   while (15 != i+0) { write (i); i++; }
+ 144 ;test1.j(51)   while (15 != i+0) { println (i); i++; }
  145 acc16= variable 2
  146 acc16+ constant 0
  147 acc8= constant 15
@@ -152,7 +152,7 @@
  151 call writeAcc16
  152 incr16 variable 2
  153 br 145
- 154 ;test1.j(52)   while (17 > i+0) { write (i); i++; }
+ 154 ;test1.j(52)   while (17 > i+0) { println (i); i++; }
  155 acc16= variable 2
  156 acc16+ constant 0
  157 acc8= constant 17
@@ -162,7 +162,7 @@
  161 call writeAcc16
  162 incr16 variable 2
  163 br 155
- 164 ;test1.j(53)   while (18 >= i+0) { write (i); i++; }
+ 164 ;test1.j(53)   while (18 >= i+0) { println (i); i++; }
  165 acc16= variable 2
  166 acc16+ constant 0
  167 acc8= constant 18
@@ -175,7 +175,7 @@
  174 ;test1.j(54)   p=i;
  175 acc16= variable 2
  176 acc16=> variable 6
- 177 ;test1.j(55)   while (17 <  i+0) { write (p); i--; p++; }
+ 177 ;test1.j(55)   while (17 <  i+0) { println (p); i--; p++; }
  178 acc16= variable 2
  179 acc16+ constant 0
  180 acc8= constant 17
@@ -186,7 +186,7 @@
  185 decr16 variable 2
  186 incr16 variable 6
  187 br 178
- 188 ;test1.j(56)   while (16 <= i+0) { write (p); i--; p++; }
+ 188 ;test1.j(56)   while (16 <= i+0) { println (p); i--; p++; }
  189 acc16= variable 2
  190 acc16+ constant 0
  191 acc8= constant 16
@@ -207,7 +207,7 @@
  206 ;test1.j(64)   i=23;
  207 acc8= constant 23
  208 acc8=> variable 2
- 209 ;test1.j(65)   while (23 == i+0) { write (i); i++; }
+ 209 ;test1.j(65)   while (23 == i+0) { println (i); i++; }
  210 acc16= variable 2
  211 acc16+ constant 0
  212 acc8= constant 23
@@ -217,7 +217,7 @@
  216 call writeAcc16
  217 incr16 variable 2
  218 br 210
- 219 ;test1.j(66)   while (26 != i+0) { write (i); i++; }
+ 219 ;test1.j(66)   while (26 != i+0) { println (i); i++; }
  220 acc16= variable 2
  221 acc16+ constant 0
  222 acc8= constant 26
@@ -227,7 +227,7 @@
  226 call writeAcc16
  227 incr16 variable 2
  228 br 220
- 229 ;test1.j(67)   while (28 > i+0) { write (i); i++; }
+ 229 ;test1.j(67)   while (28 > i+0) { println (i); i++; }
  230 acc16= variable 2
  231 acc16+ constant 0
  232 acc8= constant 28
@@ -237,7 +237,7 @@
  236 call writeAcc16
  237 incr16 variable 2
  238 br 230
- 239 ;test1.j(68)   while (29 >= i+0) { write (i); i++; }
+ 239 ;test1.j(68)   while (29 >= i+0) { println (i); i++; }
  240 acc16= variable 2
  241 acc16+ constant 0
  242 acc8= constant 29
@@ -250,7 +250,7 @@
  249 ;test1.j(69)   p=i;
  250 acc16= variable 2
  251 acc16=> variable 6
- 252 ;test1.j(70)   while (28 <  i+0) { write (p); p++; i--; }
+ 252 ;test1.j(70)   while (28 <  i+0) { println (p); p++; i--; }
  253 acc16= variable 2
  254 acc16+ constant 0
  255 acc8= constant 28
@@ -261,7 +261,7 @@
  260 incr16 variable 6
  261 decr16 variable 2
  262 br 253
- 263 ;test1.j(71)   while (27 <= i+0) { write (p); p++; i--; }
+ 263 ;test1.j(71)   while (27 <= i+0) { println (p); p++; i--; }
  264 acc16= variable 2
  265 acc16+ constant 0
  266 acc8= constant 27
@@ -279,7 +279,7 @@
  278 ;test1.j(76)   b=35;
  279 acc8= constant 35
  280 acc8=> variable 0
- 281 ;test1.j(77)   while (33 <= b) { write (p); p++; b--; }
+ 281 ;test1.j(77)   while (33 <= b) { println (p); p++; b--; }
  282 acc8= variable 0
  283 acc8Comp constant 33
  284 brlt 293
@@ -293,7 +293,7 @@
  292 ;test1.j(80)   i=37;
  293 acc8= constant 37
  294 acc8=> variable 2
- 295 ;test1.j(81)   while (36 <= i) { write (p); p++; i--; }
+ 295 ;test1.j(81)   while (36 <= i) { println (p); p++; i--; }
  296 acc16= variable 2
  297 acc8= constant 36
  298 acc8CompareAcc16
@@ -309,7 +309,7 @@
  308 ;test1.j(85) 
  309 ;test1.j(86)   // constant - var
  310 ;test1.j(87)   // integer - integer
- 311 ;test1.j(88)   while (34 <= i) { write (p); p++; i--; }
+ 311 ;test1.j(88)   while (34 <= i) { println (p); p++; i--; }
  312 acc16= variable 2
  313 acc8= constant 34
  314 acc8CompareAcc16
@@ -358,7 +358,7 @@
  357 ;test1.j(125)   b=33;
  358 acc8= constant 33
  359 acc8=> variable 0
- 360 ;test1.j(126)   while (b2 <= b) { write (p); p++; b--; }
+ 360 ;test1.j(126)   while (b2 <= b) { println (p); p++; b--; }
  361 acc8= variable 1
  362 acc8Comp variable 0
  363 brgt 371
@@ -371,7 +371,7 @@
  370 ;test1.j(128)   i = 33;
  371 acc8= constant 33
  372 acc8=> variable 2
- 373 ;test1.j(129)   while (b2 <= i) { write (p); p++; i--; }
+ 373 ;test1.j(129)   while (b2 <= i) { println (p); p++; i--; }
  374 acc8= variable 1
  375 acc16= variable 2
  376 acc8CompareAcc16
@@ -388,7 +388,7 @@
  387 ;test1.j(132)   i=b2;
  388 acc8= variable 1
  389 acc8=> variable 2
- 390 ;test1.j(133)   while (i <= b) { write (p); p++; b--; }
+ 390 ;test1.j(133)   while (i <= b) { println (p); p++; b--; }
  391 acc16= variable 2
  392 acc8= variable 0
  393 acc16CompareAcc8
@@ -405,7 +405,7 @@
  404 ;test1.j(136)   i2=b2;
  405 acc8= variable 1
  406 acc8=> variable 4
- 407 ;test1.j(137)   while (i2 <= i) { write (p); p++; i--; }
+ 407 ;test1.j(137)   while (i2 <= i) { println (p); p++; i--; }
  408 acc16= variable 4
  409 acc16Comp variable 2
  410 brgt 421
@@ -421,7 +421,7 @@
  420 ;test1.j(142)   b=49;
  421 acc8= constant 49
  422 acc8=> variable 0
- 423 ;test1.j(143)   while (b <= 50+0) { write (b); b++; }
+ 423 ;test1.j(143)   while (b <= 50+0) { println (b); b++; }
  424 acc8= constant 50
  425 acc8+ constant 0
  426 acc8Comp variable 0
@@ -434,7 +434,7 @@
  433 ;test1.j(145)   i=52;
  434 acc8= constant 52
  435 acc8=> variable 2
- 436 ;test1.j(146)   while (b <= i+0) { write (b); b++; }
+ 436 ;test1.j(146)   while (b <= i+0) { println (b); b++; }
  437 acc16= variable 2
  438 acc16+ constant 0
  439 acc8= variable 0
@@ -448,7 +448,7 @@
  447 ;test1.j(148)   i=b;
  448 acc8= variable 0
  449 acc8=> variable 2
- 450 ;test1.j(149)   while (i <= 54+0) { write (i); i++; }
+ 450 ;test1.j(149)   while (i <= 54+0) { println (i); i++; }
  451 acc8= constant 54
  452 acc8+ constant 0
  453 acc16= variable 2
@@ -465,7 +465,7 @@
  464 ;test1.j(152)   i=1098;
  465 acc16= constant 1098
  466 acc16=> variable 2
- 467 ;test1.j(153)   while (i <= 1099+0) { write (b); b++; i++; }
+ 467 ;test1.j(153)   while (i <= 1099+0) { println (b); b++; i++; }
  468 acc16= constant 1099
  469 acc16+ constant 0
  470 acc16Comp variable 2
@@ -479,7 +479,7 @@
  478 ;test1.j(155)   /************************/
  479 ;test1.j(156)   // var - constant
  480 ;test1.j(157)   // byte - byte
- 481 ;test1.j(158)   while (b <= 58) { write (b); b++; }
+ 481 ;test1.j(158)   while (b <= 58) { println (b); b++; }
  482 acc8= variable 0
  483 acc8Comp constant 58
  484 brgt 494
@@ -494,7 +494,7 @@
  493 ;test1.j(163)   i=b;
  494 acc8= variable 0
  495 acc8=> variable 2
- 496 ;test1.j(164)   while (i <= 60) { write (i); i++; }
+ 496 ;test1.j(164)   while (i <= 60) { println (i); i++; }
  497 acc16= variable 2
  498 acc8= constant 60
  499 acc16CompareAcc8
@@ -507,7 +507,7 @@
  506 ;test1.j(166)   i2=1090;
  507 acc16= constant 1090
  508 acc16=> variable 4
- 509 ;test1.j(167)   while (i2 <= 1091) { write (i); i++; i2++; }
+ 509 ;test1.j(167)   while (i2 <= 1091) { println (i); i++; i2++; }
  510 acc16= variable 4
  511 acc16Comp constant 1091
  512 brgt 524
@@ -521,34 +521,34 @@
  520 ;test1.j(170)   // acc - stack8
  521 ;test1.j(171)   // byte - byte
  522 ;test1.j(172)   //TODO
- 523 ;test1.j(173)   write(63);
+ 523 ;test1.j(173)   println(63);
  524 acc8= constant 63
  525 call writeAcc8
- 526 ;test1.j(174)   write(64);
+ 526 ;test1.j(174)   println(64);
  527 acc8= constant 64
  528 call writeAcc8
  529 ;test1.j(175)   // byte - integer
  530 ;test1.j(176)   //TODO
- 531 ;test1.j(177)   write(65);
+ 531 ;test1.j(177)   println(65);
  532 acc8= constant 65
  533 call writeAcc8
- 534 ;test1.j(178)   write(66);
+ 534 ;test1.j(178)   println(66);
  535 acc8= constant 66
  536 call writeAcc8
  537 ;test1.j(179)   // integer - byte
  538 ;test1.j(180)   //TODO
- 539 ;test1.j(181)   write(67);
+ 539 ;test1.j(181)   println(67);
  540 acc8= constant 67
  541 call writeAcc8
- 542 ;test1.j(182)   write(68);
+ 542 ;test1.j(182)   println(68);
  543 acc8= constant 68
  544 call writeAcc8
  545 ;test1.j(183)   // integer - integer
  546 ;test1.j(184)   //TODO
- 547 ;test1.j(185)   write(69);
+ 547 ;test1.j(185)   println(69);
  548 acc8= constant 69
  549 call writeAcc8
- 550 ;test1.j(186)   write(70);
+ 550 ;test1.j(186)   println(70);
  551 acc8= constant 70
  552 call writeAcc8
  553 ;test1.j(187) 
@@ -556,34 +556,34 @@
  555 ;test1.j(189)   // acc - stack16
  556 ;test1.j(190)   // byte - byte
  557 ;test1.j(191)   //TODO
- 558 ;test1.j(192)   write(71);
+ 558 ;test1.j(192)   println(71);
  559 acc8= constant 71
  560 call writeAcc8
- 561 ;test1.j(193)   write(72);
+ 561 ;test1.j(193)   println(72);
  562 acc8= constant 72
  563 call writeAcc8
  564 ;test1.j(194)   // byte - integer
  565 ;test1.j(195)   //TODO
- 566 ;test1.j(196)   write(73);
+ 566 ;test1.j(196)   println(73);
  567 acc8= constant 73
  568 call writeAcc8
- 569 ;test1.j(197)   write(74);
+ 569 ;test1.j(197)   println(74);
  570 acc8= constant 74
  571 call writeAcc8
  572 ;test1.j(198)   // integer - byte
  573 ;test1.j(199)   //TODO
- 574 ;test1.j(200)   write(75);
+ 574 ;test1.j(200)   println(75);
  575 acc8= constant 75
  576 call writeAcc8
- 577 ;test1.j(201)   write(76);
+ 577 ;test1.j(201)   println(76);
  578 acc8= constant 76
  579 call writeAcc8
  580 ;test1.j(202)   // integer - integer
  581 ;test1.j(203)   //TODO
- 582 ;test1.j(204)   write(77);
+ 582 ;test1.j(204)   println(77);
  583 acc8= constant 77
  584 call writeAcc8
- 585 ;test1.j(205)   write(78);
+ 585 ;test1.j(205)   println(78);
  586 acc8= constant 78
  587 call writeAcc8
  588 ;test1.j(206) 
@@ -596,7 +596,7 @@
  595 ;test1.j(211)   b2=79;
  596 acc8= constant 79
  597 acc8=> variable 1
- 598 ;test1.j(212)   while (78+0 <= b2) { write (b); b++; b2--; }
+ 598 ;test1.j(212)   while (78+0 <= b2) { println (b); b++; b2--; }
  599 acc8= constant 78
  600 acc8+ constant 0
  601 acc8Comp variable 1
@@ -610,7 +610,7 @@
  609 ;test1.j(214)   i=79;
  610 acc8= constant 79
  611 acc8=> variable 2
- 612 ;test1.j(215)   while (78+0 <= i) { write (b); b++; i--; }
+ 612 ;test1.j(215)   while (78+0 <= i) { println (b); b++; i--; }
  613 acc8= constant 78
  614 acc8+ constant 0
  615 acc16= variable 2
@@ -628,7 +628,7 @@
  627 ;test1.j(218)   b2=79;
  628 acc8= constant 79
  629 acc8=> variable 1
- 630 ;test1.j(219)   while (i+0 <= b2) { write (b); b++; b2--; } 
+ 630 ;test1.j(219)   while (i+0 <= b2) { println (b); b++; b2--; } 
  631 acc16= variable 2
  632 acc16+ constant 0
  633 acc8= variable 1
@@ -643,7 +643,7 @@
  642 ;test1.j(221)   i=1066;
  643 acc16= constant 1066
  644 acc16=> variable 2
- 645 ;test1.j(222)   while (1000+65 <= i) { write (b); b++; i--; }
+ 645 ;test1.j(222)   while (1000+65 <= i) { println (b); b++; i--; }
  646 acc16= constant 1000
  647 acc16+ constant 65
  648 acc16Comp variable 2
@@ -663,7 +663,7 @@
  662 ;test1.j(228)   b2=64;
  663 acc8= constant 64
  664 acc8=> variable 1
- 665 ;test1.j(229)   while (63+0 <= b2+0) { write (b); b++; b2--; }
+ 665 ;test1.j(229)   while (63+0 <= b2+0) { println (b); b++; b2--; }
  666 acc8= constant 63
  667 acc8+ constant 0
  668 <acc8
@@ -680,7 +680,7 @@
  679 ;test1.j(231)   i=62;
  680 acc8= constant 62
  681 acc8=> variable 2
- 682 ;test1.j(232)   while (61+0 <= i+0) { write (b); b++; i--; }
+ 682 ;test1.j(232)   while (61+0 <= i+0) { println (b); b++; i--; }
  683 acc8= constant 61
  684 acc8+ constant 0
  685 <acc8
@@ -701,7 +701,7 @@
  700 ;test1.j(235)   b2=60;
  701 acc8= constant 60
  702 acc8=> variable 1
- 703 ;test1.j(236)   while (i+0 <= b2+0) { write (b); b++; b2--; }
+ 703 ;test1.j(236)   while (i+0 <= b2+0) { println (b); b++; b2--; }
  704 acc16= variable 2
  705 acc16+ constant 0
  706 <acc16
@@ -719,7 +719,7 @@
  718 ;test1.j(238)   i=1058;
  719 acc16= constant 1058
  720 acc16=> variable 2
- 721 ;test1.j(239)   while (1000+57 <= i+0) { write (b); b++; i--; }
+ 721 ;test1.j(239)   while (1000+57 <= i+0) { println (b); b++; i--; }
  722 acc16= constant 1000
  723 acc16+ constant 57
  724 <acc16
@@ -736,7 +736,7 @@
  735 ;test1.j(241)   /************************/
  736 ;test1.j(242)   // acc - constant
  737 ;test1.j(243)   // byte - byte
- 738 ;test1.j(244)   while (b+0 <= 96) { write (b); b++; }
+ 738 ;test1.j(244)   while (b+0 <= 96) { println (b); b++; }
  739 acc8= variable 0
  740 acc8+ constant 0
  741 acc8Comp constant 96
@@ -751,7 +751,7 @@
  750 ;test1.j(248)   i=b;
  751 acc8= variable 0
  752 acc8=> variable 2
- 753 ;test1.j(249)   while (i+0 <= 98) { write (i); i++; }
+ 753 ;test1.j(249)   while (i+0 <= 98) { println (i); i++; }
  754 acc16= variable 2
  755 acc16+ constant 0
  756 acc8= constant 98
@@ -768,7 +768,7 @@
  767 acc16= constant 1052
  768 acc16=> variable 2
  769 ;test1.j(252)   // integer - integer
- 770 ;test1.j(253)   while (i+0 <= 1053) { write (b); b++; i++; }
+ 770 ;test1.j(253)   while (i+0 <= 1053) { println (b); b++; i++; }
  771 acc16= variable 2
  772 acc16+ constant 0
  773 acc16Comp constant 1053
@@ -783,37 +783,37 @@
  782 ;test1.j(256)   // constant - stack8
  783 ;test1.j(257)   // byte - byte
  784 ;test1.j(258)   //TODO
- 785 ;test1.j(259)   write(101);
+ 785 ;test1.j(259)   println(101);
  786 acc8= constant 101
  787 call writeAcc8
- 788 ;test1.j(260)   write(102);
+ 788 ;test1.j(260)   println(102);
  789 acc8= constant 102
  790 call writeAcc8
  791 ;test1.j(261)   // constant - stack8
  792 ;test1.j(262)   // byte - integer
  793 ;test1.j(263)   //TODO
- 794 ;test1.j(264)   write(103);
+ 794 ;test1.j(264)   println(103);
  795 acc8= constant 103
  796 call writeAcc8
- 797 ;test1.j(265)   write(104);
+ 797 ;test1.j(265)   println(104);
  798 acc8= constant 104
  799 call writeAcc8
  800 ;test1.j(266)   // constant - stack8
  801 ;test1.j(267)   // integer - byte
  802 ;test1.j(268)   //TODO
- 803 ;test1.j(269)   write(105);
+ 803 ;test1.j(269)   println(105);
  804 acc8= constant 105
  805 call writeAcc8
- 806 ;test1.j(270)   write(106);
+ 806 ;test1.j(270)   println(106);
  807 acc8= constant 106
  808 call writeAcc8
  809 ;test1.j(271)   // constant - stack88
  810 ;test1.j(272)   // integer - integer
  811 ;test1.j(273)   //TODO
- 812 ;test1.j(274)   write(107);
+ 812 ;test1.j(274)   println(107);
  813 acc8= constant 107
  814 call writeAcc8
- 815 ;test1.j(275)   write(108);
+ 815 ;test1.j(275)   println(108);
  816 acc8= constant 108
  817 call writeAcc8
  818 ;test1.j(276) 
@@ -821,41 +821,41 @@
  820 ;test1.j(278)   // constant - stack16
  821 ;test1.j(279)   // byte - byte
  822 ;test1.j(280)   //TODO
- 823 ;test1.j(281)   write(109);
+ 823 ;test1.j(281)   println(109);
  824 acc8= constant 109
  825 call writeAcc8
- 826 ;test1.j(282)   write(110);
+ 826 ;test1.j(282)   println(110);
  827 acc8= constant 110
  828 call writeAcc8
  829 ;test1.j(283)   // constant - stack16
  830 ;test1.j(284)   // byte - integer
  831 ;test1.j(285)   //TODO
- 832 ;test1.j(286)   write(111);
+ 832 ;test1.j(286)   println(111);
  833 acc8= constant 111
  834 call writeAcc8
- 835 ;test1.j(287)   write(112);
+ 835 ;test1.j(287)   println(112);
  836 acc8= constant 112
  837 call writeAcc8
  838 ;test1.j(288)   // constant - stack16
  839 ;test1.j(289)   // integer - byte
  840 ;test1.j(290)   //TODO
- 841 ;test1.j(291)   write(113);
+ 841 ;test1.j(291)   println(113);
  842 acc8= constant 113
  843 call writeAcc8
- 844 ;test1.j(292)   write(114);
+ 844 ;test1.j(292)   println(114);
  845 acc8= constant 114
  846 call writeAcc8
  847 ;test1.j(293)   // constant - stack16
  848 ;test1.j(294)   // integer - integer
  849 ;test1.j(295)   //TODO
- 850 ;test1.j(296)   write(115);
+ 850 ;test1.j(296)   println(115);
  851 acc8= constant 115
  852 call writeAcc8
- 853 ;test1.j(297)   write(116);
+ 853 ;test1.j(297)   println(116);
  854 acc8= constant 116
  855 call writeAcc8
  856 ;test1.j(298) 
- 857 ;test1.j(299)   write("Klaar");
+ 857 ;test1.j(299)   println("Klaar");
  858 acc16= constant 862
  859 writeString
  860 ;test1.j(300) }

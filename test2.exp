@@ -28,14 +28,14 @@
   27 ;test2.j(15)    * integer - integer
   28 ;test2.j(16)   */
   29 ;test2.j(17) 
-  30 ;test2.j(18)   write(0);
+  30 ;test2.j(18)   println(0);
   31 acc8= constant 0
   32 call writeAcc8
   33 ;test2.j(19) 
   34 ;test2.j(20)   /************************/
   35 ;test2.j(21)   // constant - constant
   36 ;test2.j(22)   // byte - byte
-  37 ;test2.j(23)   if (1 == 1) write(1); else write(999);
+  37 ;test2.j(23)   if (1 == 1) println(1); else println(999);
   38 acc8= constant 1
   39 acc8Comp constant 1
   40 brne 44
@@ -44,7 +44,7 @@
   43 br 47
   44 acc16= constant 999
   45 call writeAcc16
-  46 ;test2.j(24)   if (1 != 0) write(2); else write(999);
+  46 ;test2.j(24)   if (1 != 0) println(2); else println(999);
   47 acc8= constant 1
   48 acc8Comp constant 0
   49 breq 53
@@ -53,7 +53,7 @@
   52 br 56
   53 acc16= constant 999
   54 call writeAcc16
-  55 ;test2.j(25)   if (1 >  0) write(3); else write(999);
+  55 ;test2.j(25)   if (1 >  0) println(3); else println(999);
   56 acc8= constant 1
   57 acc8Comp constant 0
   58 brle 62
@@ -62,7 +62,7 @@
   61 br 65
   62 acc16= constant 999
   63 call writeAcc16
-  64 ;test2.j(26)   if (1 >= 0) write(4); else write(999);
+  64 ;test2.j(26)   if (1 >= 0) println(4); else println(999);
   65 acc8= constant 1
   66 acc8Comp constant 0
   67 brlt 71
@@ -71,7 +71,7 @@
   70 br 74
   71 acc16= constant 999
   72 call writeAcc16
-  73 ;test2.j(27)   if (1 >= 1) write(5); else write(999);
+  73 ;test2.j(27)   if (1 >= 1) println(5); else println(999);
   74 acc8= constant 1
   75 acc8Comp constant 1
   76 brlt 80
@@ -80,7 +80,7 @@
   79 br 83
   80 acc16= constant 999
   81 call writeAcc16
-  82 ;test2.j(28)   if (1 <  2) write(6); else write(999);
+  82 ;test2.j(28)   if (1 <  2) println(6); else println(999);
   83 acc8= constant 1
   84 acc8Comp constant 2
   85 brge 89
@@ -89,7 +89,7 @@
   88 br 92
   89 acc16= constant 999
   90 call writeAcc16
-  91 ;test2.j(29)   if (1 <= 2) write(7); else write(999);
+  91 ;test2.j(29)   if (1 <= 2) println(7); else println(999);
   92 acc8= constant 1
   93 acc8Comp constant 2
   94 brgt 98
@@ -98,7 +98,7 @@
   97 br 101
   98 acc16= constant 999
   99 call writeAcc16
- 100 ;test2.j(30)   if (1 <= 1) write(8); else write(999);
+ 100 ;test2.j(30)   if (1 <= 1) println(8); else println(999);
  101 acc8= constant 1
  102 acc8Comp constant 1
  103 brgt 107
@@ -107,13 +107,13 @@
  106 br 110
  107 acc16= constant 999
  108 call writeAcc16
- 109 ;test2.j(31)   write(9);
+ 109 ;test2.j(31)   println(9);
  110 acc8= constant 9
  111 call writeAcc8
  112 ;test2.j(32) 
  113 ;test2.j(33)   // constant - constant
  114 ;test2.j(34)   // byte - integer
- 115 ;test2.j(35)   if (1 == 1000) write(999); else write(10);
+ 115 ;test2.j(35)   if (1 == 1000) println(999); else println(10);
  116 acc8= constant 1
  117 acc16= constant 1000
  118 acc8CompareAcc16
@@ -123,7 +123,7 @@
  122 br 126
  123 acc8= constant 10
  124 call writeAcc8
- 125 ;test2.j(36)   if (1 != 1000) write(11);  else write(999);
+ 125 ;test2.j(36)   if (1 != 1000) println(11);  else println(999);
  126 acc8= constant 1
  127 acc16= constant 1000
  128 acc8CompareAcc16
@@ -133,7 +133,7 @@
  132 br 136
  133 acc16= constant 999
  134 call writeAcc16
- 135 ;test2.j(37)   if (1 >  1000) write(999); else write(12);
+ 135 ;test2.j(37)   if (1 >  1000) println(999); else println(12);
  136 acc8= constant 1
  137 acc16= constant 1000
  138 acc8CompareAcc16
@@ -143,7 +143,7 @@
  142 br 146
  143 acc8= constant 12
  144 call writeAcc8
- 145 ;test2.j(38)   if (1 >= 1000) write(999); else write(13);
+ 145 ;test2.j(38)   if (1 >= 1000) println(999); else println(13);
  146 acc8= constant 1
  147 acc16= constant 1000
  148 acc8CompareAcc16
@@ -153,7 +153,7 @@
  152 br 156
  153 acc8= constant 13
  154 call writeAcc8
- 155 ;test2.j(39)   if (1 >= 1000) write(999); else write(14);
+ 155 ;test2.j(39)   if (1 >= 1000) println(999); else println(14);
  156 acc8= constant 1
  157 acc16= constant 1000
  158 acc8CompareAcc16
@@ -163,7 +163,7 @@
  162 br 166
  163 acc8= constant 14
  164 call writeAcc8
- 165 ;test2.j(40)   if (1 <  2000) write(15);  else write(999);
+ 165 ;test2.j(40)   if (1 <  2000) println(15);  else println(999);
  166 acc8= constant 1
  167 acc16= constant 2000
  168 acc8CompareAcc16
@@ -173,7 +173,7 @@
  172 br 176
  173 acc16= constant 999
  174 call writeAcc16
- 175 ;test2.j(41)   if (1 <= 2000) write(16);  else write(999);
+ 175 ;test2.j(41)   if (1 <= 2000) println(16);  else println(999);
  176 acc8= constant 1
  177 acc16= constant 2000
  178 acc8CompareAcc16
@@ -183,7 +183,7 @@
  182 br 186
  183 acc16= constant 999
  184 call writeAcc16
- 185 ;test2.j(42)   if (1 <= 1000) write(17);  else write(999);
+ 185 ;test2.j(42)   if (1 <= 1000) println(17);  else println(999);
  186 acc8= constant 1
  187 acc16= constant 1000
  188 acc8CompareAcc16
@@ -193,16 +193,16 @@
  192 br 196
  193 acc16= constant 999
  194 call writeAcc16
- 195 ;test2.j(43)   write(18);
+ 195 ;test2.j(43)   println(18);
  196 acc8= constant 18
  197 call writeAcc8
- 198 ;test2.j(44)   write(19);
+ 198 ;test2.j(44)   println(19);
  199 acc8= constant 19
  200 call writeAcc8
  201 ;test2.j(45) 
  202 ;test2.j(46)   // constant - constant
  203 ;test2.j(47)   // integer - byte
- 204 ;test2.j(48)   if (1000 == 1) write(999); else write(20);
+ 204 ;test2.j(48)   if (1000 == 1) println(999); else println(20);
  205 acc16= constant 1000
  206 acc8= constant 1
  207 acc16CompareAcc8
@@ -212,7 +212,7 @@
  211 br 215
  212 acc8= constant 20
  213 call writeAcc8
- 214 ;test2.j(49)   if (1000 != 0) write(21);  else write(999);
+ 214 ;test2.j(49)   if (1000 != 0) println(21);  else println(999);
  215 acc16= constant 1000
  216 acc8= constant 0
  217 acc16CompareAcc8
@@ -222,7 +222,7 @@
  221 br 225
  222 acc16= constant 999
  223 call writeAcc16
- 224 ;test2.j(50)   if (1000 >  0) write(22);  else write(999);
+ 224 ;test2.j(50)   if (1000 >  0) println(22);  else println(999);
  225 acc16= constant 1000
  226 acc8= constant 0
  227 acc16CompareAcc8
@@ -232,7 +232,7 @@
  231 br 235
  232 acc16= constant 999
  233 call writeAcc16
- 234 ;test2.j(51)   if (1000 >= 0) write(23);  else write(999);
+ 234 ;test2.j(51)   if (1000 >= 0) println(23);  else println(999);
  235 acc16= constant 1000
  236 acc8= constant 0
  237 acc16CompareAcc8
@@ -242,7 +242,7 @@
  241 br 245
  242 acc16= constant 999
  243 call writeAcc16
- 244 ;test2.j(52)   if (1000 >= 1) write(24);  else write(999);
+ 244 ;test2.j(52)   if (1000 >= 1) println(24);  else println(999);
  245 acc16= constant 1000
  246 acc8= constant 1
  247 acc16CompareAcc8
@@ -252,7 +252,7 @@
  251 br 255
  252 acc16= constant 999
  253 call writeAcc16
- 254 ;test2.j(53)   if (1 <  2000) write(25);  else write(999);
+ 254 ;test2.j(53)   if (1 <  2000) println(25);  else println(999);
  255 acc8= constant 1
  256 acc16= constant 2000
  257 acc8CompareAcc16
@@ -262,7 +262,7 @@
  261 br 265
  262 acc16= constant 999
  263 call writeAcc16
- 264 ;test2.j(54)   if (1 <= 2000) write(26);  else write(999);
+ 264 ;test2.j(54)   if (1 <= 2000) println(26);  else println(999);
  265 acc8= constant 1
  266 acc16= constant 2000
  267 acc8CompareAcc16
@@ -272,7 +272,7 @@
  271 br 275
  272 acc16= constant 999
  273 call writeAcc16
- 274 ;test2.j(55)   if (1 <= 1000) write(27);  else write(999);
+ 274 ;test2.j(55)   if (1 <= 1000) println(27);  else println(999);
  275 acc8= constant 1
  276 acc16= constant 1000
  277 acc8CompareAcc16
@@ -282,16 +282,16 @@
  281 br 285
  282 acc16= constant 999
  283 call writeAcc16
- 284 ;test2.j(56)   write(28);
+ 284 ;test2.j(56)   println(28);
  285 acc8= constant 28
  286 call writeAcc8
- 287 ;test2.j(57)   write(29);
+ 287 ;test2.j(57)   println(29);
  288 acc8= constant 29
  289 call writeAcc8
  290 ;test2.j(58) 
  291 ;test2.j(59)   // constant - constant
  292 ;test2.j(60)   // integer - integer
- 293 ;test2.j(61)   if (1000 == 1000) write(30); else write(999);
+ 293 ;test2.j(61)   if (1000 == 1000) println(30); else println(999);
  294 acc16= constant 1000
  295 acc16Comp constant 1000
  296 brne 300
@@ -300,7 +300,7 @@
  299 br 303
  300 acc16= constant 999
  301 call writeAcc16
- 302 ;test2.j(62)   if (1000 != 2000) write(31); else write(999);
+ 302 ;test2.j(62)   if (1000 != 2000) println(31); else println(999);
  303 acc16= constant 1000
  304 acc16Comp constant 2000
  305 breq 309
@@ -309,7 +309,7 @@
  308 br 312
  309 acc16= constant 999
  310 call writeAcc16
- 311 ;test2.j(63)   if (2000 >  1000) write(32); else write(999);
+ 311 ;test2.j(63)   if (2000 >  1000) println(32); else println(999);
  312 acc16= constant 2000
  313 acc16Comp constant 1000
  314 brle 318
@@ -318,7 +318,7 @@
  317 br 321
  318 acc16= constant 999
  319 call writeAcc16
- 320 ;test2.j(64)   if (2000 >= 1000) write(33); else write(999);
+ 320 ;test2.j(64)   if (2000 >= 1000) println(33); else println(999);
  321 acc16= constant 2000
  322 acc16Comp constant 1000
  323 brlt 327
@@ -327,7 +327,7 @@
  326 br 330
  327 acc16= constant 999
  328 call writeAcc16
- 329 ;test2.j(65)   if (1000 >= 1000) write(34); else write(999);
+ 329 ;test2.j(65)   if (1000 >= 1000) println(34); else println(999);
  330 acc16= constant 1000
  331 acc16Comp constant 1000
  332 brlt 336
@@ -336,7 +336,7 @@
  335 br 339
  336 acc16= constant 999
  337 call writeAcc16
- 338 ;test2.j(66)   if (1000 <  2000) write(35); else write(999);
+ 338 ;test2.j(66)   if (1000 <  2000) println(35); else println(999);
  339 acc16= constant 1000
  340 acc16Comp constant 2000
  341 brge 345
@@ -345,7 +345,7 @@
  344 br 348
  345 acc16= constant 999
  346 call writeAcc16
- 347 ;test2.j(67)   if (1000 <= 2000) write(36); else write(999);
+ 347 ;test2.j(67)   if (1000 <= 2000) println(36); else println(999);
  348 acc16= constant 1000
  349 acc16Comp constant 2000
  350 brgt 354
@@ -354,7 +354,7 @@
  353 br 357
  354 acc16= constant 999
  355 call writeAcc16
- 356 ;test2.j(68)   if (1000 <= 1000) write(37); else write(999);
+ 356 ;test2.j(68)   if (1000 <= 1000) println(37); else println(999);
  357 acc16= constant 1000
  358 acc16Comp constant 1000
  359 brgt 363
@@ -363,17 +363,17 @@
  362 br 366
  363 acc16= constant 999
  364 call writeAcc16
- 365 ;test2.j(69)   write(38);
+ 365 ;test2.j(69)   println(38);
  366 acc8= constant 38
  367 call writeAcc8
- 368 ;test2.j(70)   write(39);
+ 368 ;test2.j(70)   println(39);
  369 acc8= constant 39
  370 call writeAcc8
  371 ;test2.j(71) 
  372 ;test2.j(72)   /************************/
  373 ;test2.j(73)   // constant - acc
  374 ;test2.j(74)   // byte - byte
- 375 ;test2.j(75)   if (1 > 0+0) write(40); else write(999);
+ 375 ;test2.j(75)   if (1 > 0+0) println(40); else println(999);
  376 acc8= constant 0
  377 acc8+ constant 0
  378 acc8Comp constant 1
@@ -383,7 +383,7 @@
  382 br 386
  383 acc16= constant 999
  384 call writeAcc16
- 385 ;test2.j(76)   if (1 < 2+0) write(41); else write(999);
+ 385 ;test2.j(76)   if (1 < 2+0) println(41); else println(999);
  386 acc8= constant 2
  387 acc8+ constant 0
  388 acc8Comp constant 1
@@ -395,7 +395,7 @@
  394 call writeAcc16
  395 ;test2.j(77)   // constant - acc
  396 ;test2.j(78)   // byte - integer
- 397 ;test2.j(79)   if (1 > 1000+0) write(999); else write(42);
+ 397 ;test2.j(79)   if (1 > 1000+0) println(999); else println(42);
  398 acc16= constant 1000
  399 acc16+ constant 0
  400 acc8= constant 1
@@ -406,7 +406,7 @@
  405 br 409
  406 acc8= constant 42
  407 call writeAcc8
- 408 ;test2.j(80)   if (1 < 1000+0) write(43);  else write(999);
+ 408 ;test2.j(80)   if (1 < 1000+0) println(43);  else println(999);
  409 acc16= constant 1000
  410 acc16+ constant 0
  411 acc8= constant 1
@@ -419,7 +419,7 @@
  418 call writeAcc16
  419 ;test2.j(81)   // constant - acc
  420 ;test2.j(82)   // integer - byte
- 421 ;test2.j(83)   if (1000 > 0+0) write(44);  else write(999);
+ 421 ;test2.j(83)   if (1000 > 0+0) println(44);  else println(999);
  422 acc8= constant 0
  423 acc8+ constant 0
  424 acc16= constant 1000
@@ -430,7 +430,7 @@
  429 br 433
  430 acc16= constant 999
  431 call writeAcc16
- 432 ;test2.j(84)   if (1000 < 0+0) write(999); else write(45);
+ 432 ;test2.j(84)   if (1000 < 0+0) println(999); else println(45);
  433 acc8= constant 0
  434 acc8+ constant 0
  435 acc16= constant 1000
@@ -443,7 +443,7 @@
  442 call writeAcc8
  443 ;test2.j(85)   // constant - acc
  444 ;test2.j(86)   // integer - integer
- 445 ;test2.j(87)   if (2000 > 1000+0) write(46); else write(999);
+ 445 ;test2.j(87)   if (2000 > 1000+0) println(46); else println(999);
  446 acc16= constant 1000
  447 acc16+ constant 0
  448 acc16Comp constant 2000
@@ -453,7 +453,7 @@
  452 br 456
  453 acc16= constant 999
  454 call writeAcc16
- 455 ;test2.j(88)   if (1000 < 2000+0) write(47); else write(999);
+ 455 ;test2.j(88)   if (1000 < 2000+0) println(47); else println(999);
  456 acc16= constant 2000
  457 acc16+ constant 0
  458 acc16Comp constant 1000
@@ -463,17 +463,17 @@
  462 br 466
  463 acc16= constant 999
  464 call writeAcc16
- 465 ;test2.j(89)   write(48);
+ 465 ;test2.j(89)   println(48);
  466 acc8= constant 48
  467 call writeAcc8
- 468 ;test2.j(90)   write(49);
+ 468 ;test2.j(90)   println(49);
  469 acc8= constant 49
  470 call writeAcc8
  471 ;test2.j(91) 
  472 ;test2.j(92)   /************************/
  473 ;test2.j(93)   // constant - var
  474 ;test2.j(94)   // byte - byte
- 475 ;test2.j(95)   if (30 > b) write(50); else write(999);
+ 475 ;test2.j(95)   if (30 > b) println(50); else println(999);
  476 acc8= variable 6
  477 acc8Comp constant 30
  478 brge 482
@@ -482,7 +482,7 @@
  481 br 485
  482 acc16= constant 999
  483 call writeAcc16
- 484 ;test2.j(96)   if (10 < b) write(51); else write(999);
+ 484 ;test2.j(96)   if (10 < b) println(51); else println(999);
  485 acc8= variable 6
  486 acc8Comp constant 10
  487 brle 491
@@ -493,7 +493,7 @@
  492 call writeAcc16
  493 ;test2.j(97)   // constant - var
  494 ;test2.j(98)   // byte - integer
- 495 ;test2.j(99)   if (30 > i) write(999); else write(52);
+ 495 ;test2.j(99)   if (30 > i) println(999); else println(52);
  496 acc16= variable 0
  497 acc8= constant 30
  498 acc8CompareAcc16
@@ -503,7 +503,7 @@
  502 br 506
  503 acc8= constant 52
  504 call writeAcc8
- 505 ;test2.j(100)   if (10 < i) write(53); else write(999);
+ 505 ;test2.j(100)   if (10 < i) println(53); else println(999);
  506 acc16= variable 0
  507 acc8= constant 10
  508 acc8CompareAcc16
@@ -515,7 +515,7 @@
  514 call writeAcc16
  515 ;test2.j(101)   // constant - var
  516 ;test2.j(102)   // integer - byte
- 517 ;test2.j(103)   if (3000 > b) write(54); else write(999);
+ 517 ;test2.j(103)   if (3000 > b) println(54); else println(999);
  518 acc8= variable 6
  519 acc16= constant 3000
  520 acc16CompareAcc8
@@ -525,7 +525,7 @@
  524 br 528
  525 acc16= constant 999
  526 call writeAcc16
- 527 ;test2.j(104)   if (1000 < b) write(999); else write(55);
+ 527 ;test2.j(104)   if (1000 < b) println(999); else println(55);
  528 acc8= variable 6
  529 acc16= constant 1000
  530 acc16CompareAcc8
@@ -537,7 +537,7 @@
  536 call writeAcc8
  537 ;test2.j(105)   // constant - var
  538 ;test2.j(106)   // integer - integer
- 539 ;test2.j(107)   if (3000 > i) write(56); else write(999);
+ 539 ;test2.j(107)   if (3000 > i) println(56); else println(999);
  540 acc16= variable 0
  541 acc16Comp constant 3000
  542 brge 546
@@ -546,7 +546,7 @@
  545 br 549
  546 acc16= constant 999
  547 call writeAcc16
- 548 ;test2.j(108)   if (1000 < i) write(57); else write(999);
+ 548 ;test2.j(108)   if (1000 < i) println(57); else println(999);
  549 acc16= variable 0
  550 acc16Comp constant 1000
  551 brle 555
@@ -555,97 +555,97 @@
  554 br 558
  555 acc16= constant 999
  556 call writeAcc16
- 557 ;test2.j(109)   write(58);
+ 557 ;test2.j(109)   println(58);
  558 acc8= constant 58
  559 call writeAcc8
- 560 ;test2.j(110)   write(59);
+ 560 ;test2.j(110)   println(59);
  561 acc8= constant 59
  562 call writeAcc8
  563 ;test2.j(111) 
  564 ;test2.j(112)   /************************/
  565 ;test2.j(113)   // constant - stack8
  566 ;test2.j(114)   // byte - byte
- 567 ;test2.j(115)   write(60);
+ 567 ;test2.j(115)   println(60);
  568 acc8= constant 60
  569 call writeAcc8
- 570 ;test2.j(116)   write(61);
+ 570 ;test2.j(116)   println(61);
  571 acc8= constant 61
  572 call writeAcc8
  573 ;test2.j(117)   // constant - stack8
  574 ;test2.j(118)   // byte - integer
- 575 ;test2.j(119)   write(62);
+ 575 ;test2.j(119)   println(62);
  576 acc8= constant 62
  577 call writeAcc8
- 578 ;test2.j(120)   write(63);
+ 578 ;test2.j(120)   println(63);
  579 acc8= constant 63
  580 call writeAcc8
  581 ;test2.j(121)   // constant - stack8
  582 ;test2.j(122)   // integer - byte
- 583 ;test2.j(123)   write(64);
+ 583 ;test2.j(123)   println(64);
  584 acc8= constant 64
  585 call writeAcc8
- 586 ;test2.j(124)   write(65);
+ 586 ;test2.j(124)   println(65);
  587 acc8= constant 65
  588 call writeAcc8
  589 ;test2.j(125)   // constant - stack8
  590 ;test2.j(126)   // integer - integer
- 591 ;test2.j(127)   write(66);
+ 591 ;test2.j(127)   println(66);
  592 acc8= constant 66
  593 call writeAcc8
- 594 ;test2.j(128)   write(67);
+ 594 ;test2.j(128)   println(67);
  595 acc8= constant 67
  596 call writeAcc8
- 597 ;test2.j(129)   write(68);
+ 597 ;test2.j(129)   println(68);
  598 acc8= constant 68
  599 call writeAcc8
- 600 ;test2.j(130)   write(69);
+ 600 ;test2.j(130)   println(69);
  601 acc8= constant 69
  602 call writeAcc8
  603 ;test2.j(131) 
  604 ;test2.j(132)   /************************/
  605 ;test2.j(133)   // constant - stack16
  606 ;test2.j(134)   // byte - byte
- 607 ;test2.j(135)   write(70);
+ 607 ;test2.j(135)   println(70);
  608 acc8= constant 70
  609 call writeAcc8
- 610 ;test2.j(136)   write(71);
+ 610 ;test2.j(136)   println(71);
  611 acc8= constant 71
  612 call writeAcc8
  613 ;test2.j(137)   // constant - stack16
  614 ;test2.j(138)   // byte - integer
- 615 ;test2.j(139)   write(72);
+ 615 ;test2.j(139)   println(72);
  616 acc8= constant 72
  617 call writeAcc8
- 618 ;test2.j(140)   write(73);
+ 618 ;test2.j(140)   println(73);
  619 acc8= constant 73
  620 call writeAcc8
  621 ;test2.j(141)   // constant - stack16
  622 ;test2.j(142)   // integer - byte
- 623 ;test2.j(143)   write(74);
+ 623 ;test2.j(143)   println(74);
  624 acc8= constant 74
  625 call writeAcc8
- 626 ;test2.j(144)   write(75);
+ 626 ;test2.j(144)   println(75);
  627 acc8= constant 75
  628 call writeAcc8
  629 ;test2.j(145)   // constant - stack16
  630 ;test2.j(146)   // integer - integer
- 631 ;test2.j(147)   write(76);
+ 631 ;test2.j(147)   println(76);
  632 acc8= constant 76
  633 call writeAcc8
- 634 ;test2.j(148)   write(77);
+ 634 ;test2.j(148)   println(77);
  635 acc8= constant 77
  636 call writeAcc8
- 637 ;test2.j(149)   write(78);
+ 637 ;test2.j(149)   println(78);
  638 acc8= constant 78
  639 call writeAcc8
- 640 ;test2.j(150)   write(79);
+ 640 ;test2.j(150)   println(79);
  641 acc8= constant 79
  642 call writeAcc8
  643 ;test2.j(151) 
  644 ;test2.j(152)   /************************/
  645 ;test2.j(153)   // acc - constant
  646 ;test2.j(154)   // byte - byte
- 647 ;test2.j(155)   if (30+0 > 20) write(80); else write(999);
+ 647 ;test2.j(155)   if (30+0 > 20) println(80); else println(999);
  648 acc8= constant 30
  649 acc8+ constant 0
  650 acc8Comp constant 20
@@ -655,7 +655,7 @@
  654 br 658
  655 acc16= constant 999
  656 call writeAcc16
- 657 ;test2.j(156)   if (10+0 < 20) write(81); else write(999);
+ 657 ;test2.j(156)   if (10+0 < 20) println(81); else println(999);
  658 acc8= constant 10
  659 acc8+ constant 0
  660 acc8Comp constant 20
@@ -667,7 +667,7 @@
  666 call writeAcc16
  667 ;test2.j(157)   // acc - constant
  668 ;test2.j(158)   // byte - integer
- 669 ;test2.j(159)   if (30+0 > 2000) write(999); else write(82);
+ 669 ;test2.j(159)   if (30+0 > 2000) println(999); else println(82);
  670 acc8= constant 30
  671 acc8+ constant 0
  672 acc16= constant 2000
@@ -678,7 +678,7 @@
  677 br 681
  678 acc8= constant 82
  679 call writeAcc8
- 680 ;test2.j(160)   if (10+0 < 2000) write(83); else write(999);
+ 680 ;test2.j(160)   if (10+0 < 2000) println(83); else println(999);
  681 acc8= constant 10
  682 acc8+ constant 0
  683 acc16= constant 2000
@@ -691,7 +691,7 @@
  690 call writeAcc16
  691 ;test2.j(161)   // acc - constant
  692 ;test2.j(162)   // integer - byte
- 693 ;test2.j(163)   if (3000+0 > 20) write(84); else write(999);
+ 693 ;test2.j(163)   if (3000+0 > 20) println(84); else println(999);
  694 acc16= constant 3000
  695 acc16+ constant 0
  696 acc8= constant 20
@@ -702,7 +702,7 @@
  701 br 705
  702 acc16= constant 999
  703 call writeAcc16
- 704 ;test2.j(164)   if (1000+0 < 20) write(999); else write(85);
+ 704 ;test2.j(164)   if (1000+0 < 20) println(999); else println(85);
  705 acc16= constant 1000
  706 acc16+ constant 0
  707 acc8= constant 20
@@ -715,7 +715,7 @@
  714 call writeAcc8
  715 ;test2.j(165)   // acc - constant
  716 ;test2.j(166)   // integer - integer
- 717 ;test2.j(167)   if (3000+0 > 2000) write(86); else write(999);
+ 717 ;test2.j(167)   if (3000+0 > 2000) println(86); else println(999);
  718 acc16= constant 3000
  719 acc16+ constant 0
  720 acc16Comp constant 2000
@@ -725,7 +725,7 @@
  724 br 728
  725 acc16= constant 999
  726 call writeAcc16
- 727 ;test2.j(168)   if (1000+0 < 2000) write(87); else write(999);
+ 727 ;test2.j(168)   if (1000+0 < 2000) println(87); else println(999);
  728 acc16= constant 1000
  729 acc16+ constant 0
  730 acc16Comp constant 2000
@@ -735,17 +735,17 @@
  734 br 738
  735 acc16= constant 999
  736 call writeAcc16
- 737 ;test2.j(169)   write(88);
+ 737 ;test2.j(169)   println(88);
  738 acc8= constant 88
  739 call writeAcc8
- 740 ;test2.j(170)   write(89);
+ 740 ;test2.j(170)   println(89);
  741 acc8= constant 89
  742 call writeAcc8
  743 ;test2.j(171) 
  744 ;test2.j(172)   /************************/
  745 ;test2.j(173)   // acc - acc
  746 ;test2.j(174)   // byte - byte
- 747 ;test2.j(175)   if (30+0 > 20+0) write(90); else write(999);
+ 747 ;test2.j(175)   if (30+0 > 20+0) println(90); else println(999);
  748 acc8= constant 30
  749 acc8+ constant 0
  750 <acc8
@@ -758,7 +758,7 @@
  757 br 761
  758 acc16= constant 999
  759 call writeAcc16
- 760 ;test2.j(176)   if (10+0 < 20+0) write(91); else write(999);
+ 760 ;test2.j(176)   if (10+0 < 20+0) println(91); else println(999);
  761 acc8= constant 10
  762 acc8+ constant 0
  763 <acc8
@@ -773,7 +773,7 @@
  772 call writeAcc16
  773 ;test2.j(177)   // acc - acc
  774 ;test2.j(178)   // byte - integer
- 775 ;test2.j(179)   if (30+0 > 2000+0) write(999); else write(92);
+ 775 ;test2.j(179)   if (30+0 > 2000+0) println(999); else println(92);
  776 acc8= constant 30
  777 acc8+ constant 0
  778 <acc8
@@ -787,7 +787,7 @@
  786 br 790
  787 acc8= constant 92
  788 call writeAcc8
- 789 ;test2.j(180)   if (10+0 < 2000+0) write(93); else write(999);
+ 789 ;test2.j(180)   if (10+0 < 2000+0) println(93); else println(999);
  790 acc8= constant 10
  791 acc8+ constant 0
  792 <acc8
@@ -803,7 +803,7 @@
  802 call writeAcc16
  803 ;test2.j(181)   // acc - acc
  804 ;test2.j(182)   // integer - byte
- 805 ;test2.j(183)   if (3000+0 > 20+0) write(94); else write(999);
+ 805 ;test2.j(183)   if (3000+0 > 20+0) println(94); else println(999);
  806 acc16= constant 3000
  807 acc16+ constant 0
  808 <acc16
@@ -817,7 +817,7 @@
  816 br 820
  817 acc16= constant 999
  818 call writeAcc16
- 819 ;test2.j(184)   if (1000+0 < 20+0) write(999); else write(95);
+ 819 ;test2.j(184)   if (1000+0 < 20+0) println(999); else println(95);
  820 acc16= constant 1000
  821 acc16+ constant 0
  822 <acc16
@@ -833,7 +833,7 @@
  832 call writeAcc8
  833 ;test2.j(185)   // acc - acc
  834 ;test2.j(186)   // integer - integer
- 835 ;test2.j(187)   if (3000+0 > 2000+0) write(96); else write(999);
+ 835 ;test2.j(187)   if (3000+0 > 2000+0) println(96); else println(999);
  836 acc16= constant 3000
  837 acc16+ constant 0
  838 <acc16
@@ -846,7 +846,7 @@
  845 br 849
  846 acc16= constant 999
  847 call writeAcc16
- 848 ;test2.j(188)   if (1000+0 < 2000+0) write(97); else write(999);
+ 848 ;test2.j(188)   if (1000+0 < 2000+0) println(97); else println(999);
  849 acc16= constant 1000
  850 acc16+ constant 0
  851 <acc16
@@ -859,17 +859,17 @@
  858 br 862
  859 acc16= constant 999
  860 call writeAcc16
- 861 ;test2.j(189)   write(98);
+ 861 ;test2.j(189)   println(98);
  862 acc8= constant 98
  863 call writeAcc8
- 864 ;test2.j(190)   write(99);
+ 864 ;test2.j(190)   println(99);
  865 acc8= constant 99
  866 call writeAcc8
  867 ;test2.j(191) 
  868 ;test2.j(192)   /************************/
  869 ;test2.j(193)   // acc - var
  870 ;test2.j(194)   // byte - byte
- 871 ;test2.j(195)   if (30+0 > b) write(100); else write(999);
+ 871 ;test2.j(195)   if (30+0 > b) println(100); else println(999);
  872 acc8= constant 30
  873 acc8+ constant 0
  874 acc8Comp variable 6
@@ -879,7 +879,7 @@
  878 br 882
  879 acc16= constant 999
  880 call writeAcc16
- 881 ;test2.j(196)   if (10+0 < b) write(101); else write(999);
+ 881 ;test2.j(196)   if (10+0 < b) println(101); else println(999);
  882 acc8= constant 10
  883 acc8+ constant 0
  884 acc8Comp variable 6
@@ -891,7 +891,7 @@
  890 call writeAcc16
  891 ;test2.j(197)   // acc - var
  892 ;test2.j(198)   // byte - integer
- 893 ;test2.j(199)   if (30+0 > i) write(999); else write(102);
+ 893 ;test2.j(199)   if (30+0 > i) println(999); else println(102);
  894 acc8= constant 30
  895 acc8+ constant 0
  896 acc16= variable 0
@@ -902,7 +902,7 @@
  901 br 905
  902 acc8= constant 102
  903 call writeAcc8
- 904 ;test2.j(200)   if (10+0 < i) write(103); else write(999);
+ 904 ;test2.j(200)   if (10+0 < i) println(103); else println(999);
  905 acc8= constant 10
  906 acc8+ constant 0
  907 acc16= variable 0
@@ -915,7 +915,7 @@
  914 call writeAcc16
  915 ;test2.j(201)   // acc - var
  916 ;test2.j(202)   // integer - byte
- 917 ;test2.j(203)   if (3000+0 > b) write(104); else write(999);
+ 917 ;test2.j(203)   if (3000+0 > b) println(104); else println(999);
  918 acc16= constant 3000
  919 acc16+ constant 0
  920 acc8= variable 6
@@ -926,7 +926,7 @@
  925 br 929
  926 acc16= constant 999
  927 call writeAcc16
- 928 ;test2.j(204)   if (1000+0 < b) write(999); else write(105);
+ 928 ;test2.j(204)   if (1000+0 < b) println(999); else println(105);
  929 acc16= constant 1000
  930 acc16+ constant 0
  931 acc8= variable 6
@@ -939,7 +939,7 @@
  938 call writeAcc8
  939 ;test2.j(205)   // acc - var
  940 ;test2.j(206)   // integer - integer
- 941 ;test2.j(207)   if (3000+0 > i) write(106); else write(999);
+ 941 ;test2.j(207)   if (3000+0 > i) println(106); else println(999);
  942 acc16= constant 3000
  943 acc16+ constant 0
  944 acc16Comp variable 0
@@ -949,7 +949,7 @@
  948 br 952
  949 acc16= constant 999
  950 call writeAcc16
- 951 ;test2.j(208)   if (1000+0 < i) write(107); else write(999);
+ 951 ;test2.j(208)   if (1000+0 < i) println(107); else println(999);
  952 acc16= constant 1000
  953 acc16+ constant 0
  954 acc16Comp variable 0
@@ -959,97 +959,97 @@
  958 br 962
  959 acc16= constant 999
  960 call writeAcc16
- 961 ;test2.j(209)   write(108);
+ 961 ;test2.j(209)   println(108);
  962 acc8= constant 108
  963 call writeAcc8
- 964 ;test2.j(210)   write(109);
+ 964 ;test2.j(210)   println(109);
  965 acc8= constant 109
  966 call writeAcc8
  967 ;test2.j(211) 
  968 ;test2.j(212)   /************************/
  969 ;test2.j(213)   // acc - stack8
  970 ;test2.j(214)   // byte - byte
- 971 ;test2.j(215)   write(110);
+ 971 ;test2.j(215)   println(110);
  972 acc8= constant 110
  973 call writeAcc8
- 974 ;test2.j(216)   write(111);
+ 974 ;test2.j(216)   println(111);
  975 acc8= constant 111
  976 call writeAcc8
  977 ;test2.j(217)   // acc - stack8
  978 ;test2.j(218)   // byte - integer
- 979 ;test2.j(219)   write(112);
+ 979 ;test2.j(219)   println(112);
  980 acc8= constant 112
  981 call writeAcc8
- 982 ;test2.j(220)   write(113);
+ 982 ;test2.j(220)   println(113);
  983 acc8= constant 113
  984 call writeAcc8
  985 ;test2.j(221)   // acc - stack8
  986 ;test2.j(222)   // integer - byte
- 987 ;test2.j(223)   write(114);
+ 987 ;test2.j(223)   println(114);
  988 acc8= constant 114
  989 call writeAcc8
- 990 ;test2.j(224)   write(115);
+ 990 ;test2.j(224)   println(115);
  991 acc8= constant 115
  992 call writeAcc8
  993 ;test2.j(225)   // acc - stack8
  994 ;test2.j(226)   // integer - integer
- 995 ;test2.j(227)   write(116);
+ 995 ;test2.j(227)   println(116);
  996 acc8= constant 116
  997 call writeAcc8
- 998 ;test2.j(228)   write(117);
+ 998 ;test2.j(228)   println(117);
  999 acc8= constant 117
 1000 call writeAcc8
-1001 ;test2.j(229)   write(118);
+1001 ;test2.j(229)   println(118);
 1002 acc8= constant 118
 1003 call writeAcc8
-1004 ;test2.j(230)   write(119);
+1004 ;test2.j(230)   println(119);
 1005 acc8= constant 119
 1006 call writeAcc8
 1007 ;test2.j(231) 
 1008 ;test2.j(232)   /************************/
 1009 ;test2.j(233)   // acc - stack16
 1010 ;test2.j(234)   // byte - byte
-1011 ;test2.j(235)   write(120);
+1011 ;test2.j(235)   println(120);
 1012 acc8= constant 120
 1013 call writeAcc8
-1014 ;test2.j(236)   write(121);
+1014 ;test2.j(236)   println(121);
 1015 acc8= constant 121
 1016 call writeAcc8
 1017 ;test2.j(237)   // acc - stack16
 1018 ;test2.j(238)   // byte - integer
-1019 ;test2.j(239)   write(122);
+1019 ;test2.j(239)   println(122);
 1020 acc8= constant 122
 1021 call writeAcc8
-1022 ;test2.j(240)   write(123);
+1022 ;test2.j(240)   println(123);
 1023 acc8= constant 123
 1024 call writeAcc8
 1025 ;test2.j(241)   // acc - stack16
 1026 ;test2.j(242)   // integer - byte
-1027 ;test2.j(243)   write(124);
+1027 ;test2.j(243)   println(124);
 1028 acc8= constant 124
 1029 call writeAcc8
-1030 ;test2.j(244)   write(125);
+1030 ;test2.j(244)   println(125);
 1031 acc8= constant 125
 1032 call writeAcc8
 1033 ;test2.j(245)   // acc - stack16
 1034 ;test2.j(246)   // integer - integer
-1035 ;test2.j(247)   write(126);
+1035 ;test2.j(247)   println(126);
 1036 acc8= constant 126
 1037 call writeAcc8
-1038 ;test2.j(248)   write(127);
+1038 ;test2.j(248)   println(127);
 1039 acc8= constant 127
 1040 call writeAcc8
-1041 ;test2.j(249)   write(128);
+1041 ;test2.j(249)   println(128);
 1042 acc8= constant 128
 1043 call writeAcc8
-1044 ;test2.j(250)   write(129);
+1044 ;test2.j(250)   println(129);
 1045 acc8= constant 129
 1046 call writeAcc8
 1047 ;test2.j(251) 
 1048 ;test2.j(252)   /************************/
 1049 ;test2.j(253)   // var - constant
 1050 ;test2.j(254)   // byte - byte
-1051 ;test2.j(255)   if (b > 10) write(130); else write(999);
+1051 ;test2.j(255)   if (b > 10) println(130); else println(999);
 1052 acc8= variable 6
 1053 acc8Comp constant 10
 1054 brle 1058
@@ -1058,7 +1058,7 @@
 1057 br 1061
 1058 acc16= constant 999
 1059 call writeAcc16
-1060 ;test2.j(256)   if (b < 30) write(131); else write(999);
+1060 ;test2.j(256)   if (b < 30) println(131); else println(999);
 1061 acc8= variable 6
 1062 acc8Comp constant 30
 1063 brge 1067
@@ -1069,7 +1069,7 @@
 1068 call writeAcc16
 1069 ;test2.j(257)   // var - constant
 1070 ;test2.j(258)   // byte - integer
-1071 ;test2.j(259)   if (b > 1000) write(999); else write(132);
+1071 ;test2.j(259)   if (b > 1000) println(999); else println(132);
 1072 acc8= variable 6
 1073 acc16= constant 1000
 1074 acc8CompareAcc16
@@ -1079,7 +1079,7 @@
 1078 br 1082
 1079 acc8= constant 132
 1080 call writeAcc8
-1081 ;test2.j(260)   if (b < 1000) write(133); else write(999);
+1081 ;test2.j(260)   if (b < 1000) println(133); else println(999);
 1082 acc8= variable 6
 1083 acc16= constant 1000
 1084 acc8CompareAcc16
@@ -1091,7 +1091,7 @@
 1090 call writeAcc16
 1091 ;test2.j(261)   // var - constant
 1092 ;test2.j(262)   // integer - byte
-1093 ;test2.j(263)   if (i > 1000) write(134); else write(999);
+1093 ;test2.j(263)   if (i > 1000) println(134); else println(999);
 1094 acc16= variable 0
 1095 acc16Comp constant 1000
 1096 brle 1100
@@ -1100,7 +1100,7 @@
 1099 br 1103
 1100 acc16= constant 999
 1101 call writeAcc16
-1102 ;test2.j(264)   if (i < 3000) write(135); else write(999);
+1102 ;test2.j(264)   if (i < 3000) println(135); else println(999);
 1103 acc16= variable 0
 1104 acc16Comp constant 3000
 1105 brge 1109
@@ -1111,7 +1111,7 @@
 1110 call writeAcc16
 1111 ;test2.j(265)   // var - constant
 1112 ;test2.j(266)   // integer - integer
-1113 ;test2.j(267)   if (i > 1000) write(136); else write(999);
+1113 ;test2.j(267)   if (i > 1000) println(136); else println(999);
 1114 acc16= variable 0
 1115 acc16Comp constant 1000
 1116 brle 1120
@@ -1120,7 +1120,7 @@
 1119 br 1123
 1120 acc16= constant 999
 1121 call writeAcc16
-1122 ;test2.j(268)   if (i < 3000) write(137); else write(999);
+1122 ;test2.j(268)   if (i < 3000) println(137); else println(999);
 1123 acc16= variable 0
 1124 acc16Comp constant 3000
 1125 brge 1129
@@ -1129,17 +1129,17 @@
 1128 br 1132
 1129 acc16= constant 999
 1130 call writeAcc16
-1131 ;test2.j(269)   write(138);
+1131 ;test2.j(269)   println(138);
 1132 acc8= constant 138
 1133 call writeAcc8
-1134 ;test2.j(270)   write(139);
+1134 ;test2.j(270)   println(139);
 1135 acc8= constant 139
 1136 call writeAcc8
 1137 ;test2.j(271) 
 1138 ;test2.j(272)   /************************/
 1139 ;test2.j(273)   // var - acc
 1140 ;test2.j(274)   // byte - byte
-1141 ;test2.j(275)   if (b > 10+0) write(140); else write(999);
+1141 ;test2.j(275)   if (b > 10+0) println(140); else println(999);
 1142 acc8= constant 10
 1143 acc8+ constant 0
 1144 acc8Comp variable 6
@@ -1149,7 +1149,7 @@
 1148 br 1152
 1149 acc16= constant 999
 1150 call writeAcc16
-1151 ;test2.j(276)   if (b < 30+0) write(141); else write(999);
+1151 ;test2.j(276)   if (b < 30+0) println(141); else println(999);
 1152 acc8= constant 30
 1153 acc8+ constant 0
 1154 acc8Comp variable 6
@@ -1161,7 +1161,7 @@
 1160 call writeAcc16
 1161 ;test2.j(277)   // var - acc
 1162 ;test2.j(278)   // byte - integer
-1163 ;test2.j(279)   if (b > 1000+0) write(999); else write(142);
+1163 ;test2.j(279)   if (b > 1000+0) println(999); else println(142);
 1164 acc16= constant 1000
 1165 acc16+ constant 0
 1166 acc8= variable 6
@@ -1172,7 +1172,7 @@
 1171 br 1175
 1172 acc8= constant 142
 1173 call writeAcc8
-1174 ;test2.j(280)   if (b < 1000+0) write(143); else write(999);
+1174 ;test2.j(280)   if (b < 1000+0) println(143); else println(999);
 1175 acc16= constant 1000
 1176 acc16+ constant 0
 1177 acc8= variable 6
@@ -1185,7 +1185,7 @@
 1184 call writeAcc16
 1185 ;test2.j(281)   // var - acc
 1186 ;test2.j(282)   // integer - byte
-1187 ;test2.j(283)   if (i > 1000+0) write(144); else write(999);
+1187 ;test2.j(283)   if (i > 1000+0) println(144); else println(999);
 1188 acc16= constant 1000
 1189 acc16+ constant 0
 1190 acc16Comp variable 0
@@ -1195,7 +1195,7 @@
 1194 br 1198
 1195 acc16= constant 999
 1196 call writeAcc16
-1197 ;test2.j(284)   if (i < 3000+0) write(145); else write(999);
+1197 ;test2.j(284)   if (i < 3000+0) println(145); else println(999);
 1198 acc16= constant 3000
 1199 acc16+ constant 0
 1200 acc16Comp variable 0
@@ -1207,7 +1207,7 @@
 1206 call writeAcc16
 1207 ;test2.j(285)   // var - acc
 1208 ;test2.j(286)   // integer - integer
-1209 ;test2.j(287)   if (i > 1000+0) write(146); else write(999);
+1209 ;test2.j(287)   if (i > 1000+0) println(146); else println(999);
 1210 acc16= constant 1000
 1211 acc16+ constant 0
 1212 acc16Comp variable 0
@@ -1217,7 +1217,7 @@
 1216 br 1220
 1217 acc16= constant 999
 1218 call writeAcc16
-1219 ;test2.j(288)   if (i < 3000+0) write(147); else write(999);
+1219 ;test2.j(288)   if (i < 3000+0) println(147); else println(999);
 1220 acc16= constant 3000
 1221 acc16+ constant 0
 1222 acc16Comp variable 0
@@ -1227,23 +1227,23 @@
 1226 br 1230
 1227 acc16= constant 999
 1228 call writeAcc16
-1229 ;test2.j(289)   write(148);
+1229 ;test2.j(289)   println(148);
 1230 acc8= constant 148
 1231 call writeAcc8
-1232 ;test2.j(290)   write(149);
+1232 ;test2.j(290)   println(149);
 1233 acc8= constant 149
 1234 call writeAcc8
 1235 ;test2.j(291) 
 1236 ;test2.j(292)   /************************/
 1237 ;test2.j(293)   // var - var
 1238 ;test2.j(294)   // byte - byte
-1239 ;test2.j(295)   if (b > b1) write(150);
+1239 ;test2.j(295)   if (b > b1) println(150);
 1240 acc8= variable 6
 1241 acc8Comp variable 7
 1242 brle 1246
 1243 acc8= constant 150
 1244 call writeAcc8
-1245 ;test2.j(296)   if (b < b3) write(151);
+1245 ;test2.j(296)   if (b < b3) println(151);
 1246 acc8= variable 6
 1247 acc8Comp variable 8
 1248 brge 1254
@@ -1251,7 +1251,7 @@
 1250 call writeAcc8
 1251 ;test2.j(297)   // var - var
 1252 ;test2.j(298)   // byte - integer
-1253 ;test2.j(299)   if (b > i1) write(999); else write(152);
+1253 ;test2.j(299)   if (b > i1) println(999); else println(152);
 1254 acc8= variable 6
 1255 acc16= variable 2
 1256 acc8CompareAcc16
@@ -1261,7 +1261,7 @@
 1260 br 1264
 1261 acc8= constant 152
 1262 call writeAcc8
-1263 ;test2.j(300)   if (b < i3) write(153);
+1263 ;test2.j(300)   if (b < i3) println(153);
 1264 acc8= variable 6
 1265 acc16= variable 4
 1266 acc8CompareAcc16
@@ -1270,13 +1270,13 @@
 1269 call writeAcc8
 1270 ;test2.j(301)   // var - var
 1271 ;test2.j(302)   // integer - byte
-1272 ;test2.j(303)   if (i > i1) write(154);
+1272 ;test2.j(303)   if (i > i1) println(154);
 1273 acc16= variable 0
 1274 acc16Comp variable 2
 1275 brle 1279
 1276 acc8= constant 154
 1277 call writeAcc8
-1278 ;test2.j(304)   if (i < i3) write(155);
+1278 ;test2.j(304)   if (i < i3) println(155);
 1279 acc16= variable 0
 1280 acc16Comp variable 4
 1281 brge 1287
@@ -1284,22 +1284,22 @@
 1283 call writeAcc8
 1284 ;test2.j(305)   // var - var
 1285 ;test2.j(306)   // integer - integer
-1286 ;test2.j(307)   if (i > i1) write(156);
+1286 ;test2.j(307)   if (i > i1) println(156);
 1287 acc16= variable 0
 1288 acc16Comp variable 2
 1289 brle 1293
 1290 acc8= constant 156
 1291 call writeAcc8
-1292 ;test2.j(308)   if (i < i3) write(157);
+1292 ;test2.j(308)   if (i < i3) println(157);
 1293 acc16= variable 0
 1294 acc16Comp variable 4
 1295 brge 1299
 1296 acc8= constant 157
 1297 call writeAcc8
-1298 ;test2.j(309)   write(158);
+1298 ;test2.j(309)   println(158);
 1299 acc8= constant 158
 1300 call writeAcc8
-1301 ;test2.j(310)   write(159);
+1301 ;test2.j(310)   println(159);
 1302 acc8= constant 159
 1303 call writeAcc8
 1304 ;test2.j(311) 
@@ -1343,7 +1343,7 @@
 1342 ;test2.j(349)   // stack16 - stack8
 1343 ;test2.j(350)   // stack16 - stack16
 1344 ;test2.j(351) 
-1345 ;test2.j(352)   write("Klaar");
+1345 ;test2.j(352)   println("Klaar");
 1346 acc16= constant 1350
 1347 writeString
 1348 ;test2.j(353) }

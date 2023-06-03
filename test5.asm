@@ -800,7 +800,7 @@ L30:
 L31:
         ;;test5.j(15)   //byte-byte
 L32:
-        ;;test5.j(16)   if (4 == 12/(1+2)) write(0);
+        ;;test5.j(16)   if (4 == 12/(1+2)) println(0);
 L33:
         LD    A,12
 L34:
@@ -821,7 +821,7 @@ L39:
 L40:
         CALL  writeA
 L41:
-        ;;test5.j(17)   if (4 == 4) write(1);
+        ;;test5.j(17)   if (4 == 4) println(1);
 L42:
         LD    A,4
 L43:
@@ -833,7 +833,7 @@ L45:
 L46:
         CALL  writeA
 L47:
-        ;;test5.j(18)   if (3 != 12/(1+2)) write(2);
+        ;;test5.j(18)   if (3 != 12/(1+2)) println(2);
 L48:
         LD    A,12
 L49:
@@ -854,7 +854,7 @@ L54:
 L55:
         CALL  writeA
 L56:
-        ;;test5.j(19)   if (3 != 4) write(3);
+        ;;test5.j(19)   if (3 != 4) println(3);
 L57:
         LD    A,3
 L58:
@@ -866,7 +866,7 @@ L60:
 L61:
         CALL  writeA
 L62:
-        ;;test5.j(20)   if (3 < 12/(1+2)) write(4);
+        ;;test5.j(20)   if (3 < 12/(1+2)) println(4);
 L63:
         LD    A,12
 L64:
@@ -887,7 +887,7 @@ L69:
 L70:
         CALL  writeA
 L71:
-        ;;test5.j(21)   if (3 < 4) write(5);
+        ;;test5.j(21)   if (3 < 4) println(5);
 L72:
         LD    A,3
 L73:
@@ -899,7 +899,7 @@ L75:
 L76:
         CALL  writeA
 L77:
-        ;;test5.j(22)   if (5 > 12/(1+2)) write(6);
+        ;;test5.j(22)   if (5 > 12/(1+2)) println(6);
 L78:
         LD    A,12
 L79:
@@ -920,7 +920,7 @@ L84:
 L85:
         CALL  writeA
 L86:
-        ;;test5.j(23)   if (5 > 4) write(7);
+        ;;test5.j(23)   if (5 > 4) println(7);
 L87:
         LD    A,5
 L88:
@@ -932,7 +932,7 @@ L90:
 L91:
         CALL  writeA
 L92:
-        ;;test5.j(24)   if (3 <= 12/(1+2)) write(8);
+        ;;test5.j(24)   if (3 <= 12/(1+2)) println(8);
 L93:
         LD    A,12
 L94:
@@ -953,7 +953,7 @@ L99:
 L100:
         CALL  writeA
 L101:
-        ;;test5.j(25)   if (3 <= 4) write(9);
+        ;;test5.j(25)   if (3 <= 4) println(9);
 L102:
         LD    A,3
 L103:
@@ -966,7 +966,7 @@ L105:
 L106:
         CALL  writeA
 L107:
-        ;;test5.j(26)   if (4 <= 12/(1+2)) write(10);
+        ;;test5.j(26)   if (4 <= 12/(1+2)) println(10);
 L108:
         LD    A,12
 L109:
@@ -987,7 +987,7 @@ L114:
 L115:
         CALL  writeA
 L116:
-        ;;test5.j(27)   if (4 <= 4) write(11);
+        ;;test5.j(27)   if (4 <= 4) println(11);
 L117:
         LD    A,4
 L118:
@@ -1000,7 +1000,7 @@ L120:
 L121:
         CALL  writeA
 L122:
-        ;;test5.j(28)   if (5 >= 12/(1+2)) write(12);
+        ;;test5.j(28)   if (5 >= 12/(1+2)) println(12);
 L123:
         LD    A,12
 L124:
@@ -1022,7 +1022,7 @@ L129:
 L130:
         CALL  writeA
 L131:
-        ;;test5.j(29)   if (5 >= 4) write(13);
+        ;;test5.j(29)   if (5 >= 4) println(13);
 L132:
         LD    A,5
 L133:
@@ -1034,7 +1034,7 @@ L135:
 L136:
         CALL  writeA
 L137:
-        ;;test5.j(30)   if (4 >= 12/(1+2)) write(14);
+        ;;test5.j(30)   if (4 >= 12/(1+2)) println(14);
 L138:
         LD    A,12
 L139:
@@ -1056,7 +1056,7 @@ L144:
 L145:
         CALL  writeA
 L146:
-        ;;test5.j(31)   if (4 >= 4) write(15);
+        ;;test5.j(31)   if (4 >= 4) println(15);
 L147:
         LD    A,4
 L148:
@@ -1072,7 +1072,7 @@ L152:
 L153:
         ;;test5.j(33)   //byte-integer
 L154:
-        ;;test5.j(34)   if (4 == twelve/(1+2)) write(16);
+        ;;test5.j(34)   if (4 == twelve/(1+2)) println(16);
 L155:
         LD    HL,(0500AH)
 L156:
@@ -1095,7 +1095,7 @@ L162:
 L163:
         CALL  writeA
 L164:
-        ;;test5.j(35)   if (4 == four) write(17);
+        ;;test5.j(35)   if (4 == four) println(17);
 L165:
         LD    HL,(05006H)
 L166:
@@ -1112,7 +1112,7 @@ L169:
 L170:
         CALL  writeA
 L171:
-        ;;test5.j(36)   if (3 != twelve/(1+2)) write(18);
+        ;;test5.j(36)   if (3 != twelve/(1+2)) println(18);
 L172:
         LD    HL,(0500AH)
 L173:
@@ -1135,7 +1135,7 @@ L179:
 L180:
         CALL  writeA
 L181:
-        ;;test5.j(37)   if (3 != four) write(19);
+        ;;test5.j(37)   if (3 != four) println(19);
 L182:
         LD    HL,(05006H)
 L183:
@@ -1152,7 +1152,7 @@ L186:
 L187:
         CALL  writeA
 L188:
-        ;;test5.j(38)   if (3 < twelve/(1+2)) write(20);
+        ;;test5.j(38)   if (3 < twelve/(1+2)) println(20);
 L189:
         LD    HL,(0500AH)
 L190:
@@ -1175,7 +1175,7 @@ L196:
 L197:
         CALL  writeA
 L198:
-        ;;test5.j(39)   if (3 < four) write(21);
+        ;;test5.j(39)   if (3 < four) println(21);
 L199:
         LD    HL,(05006H)
 L200:
@@ -1192,7 +1192,7 @@ L203:
 L204:
         CALL  writeA
 L205:
-        ;;test5.j(40)   if (5 > twelve/(1+2)) write(22);
+        ;;test5.j(40)   if (5 > twelve/(1+2)) println(22);
 L206:
         LD    HL,(0500AH)
 L207:
@@ -1215,7 +1215,7 @@ L213:
 L214:
         CALL  writeA
 L215:
-        ;;test5.j(41)   if (5 > four) write(23);
+        ;;test5.j(41)   if (5 > four) println(23);
 L216:
         LD    HL,(05006H)
 L217:
@@ -1232,7 +1232,7 @@ L220:
 L221:
         CALL  writeA
 L222:
-        ;;test5.j(42)   if (3 <= twelve/(1+2)) write(24);
+        ;;test5.j(42)   if (3 <= twelve/(1+2)) println(24);
 L223:
         LD    HL,(0500AH)
 L224:
@@ -1256,7 +1256,7 @@ L230:
 L231:
         CALL  writeA
 L232:
-        ;;test5.j(43)   if (3 <= four) write(25);
+        ;;test5.j(43)   if (3 <= four) println(25);
 L233:
         LD    HL,(05006H)
 L234:
@@ -1274,7 +1274,7 @@ L237:
 L238:
         CALL  writeA
 L239:
-        ;;test5.j(44)   if (4 <= twelve/(1+2)) write(26);
+        ;;test5.j(44)   if (4 <= twelve/(1+2)) println(26);
 L240:
         LD    HL,(0500AH)
 L241:
@@ -1298,7 +1298,7 @@ L247:
 L248:
         CALL  writeA
 L249:
-        ;;test5.j(45)   if (4 <= four) write(27);
+        ;;test5.j(45)   if (4 <= four) println(27);
 L250:
         LD    HL,(05006H)
 L251:
@@ -1316,7 +1316,7 @@ L254:
 L255:
         CALL  writeA
 L256:
-        ;;test5.j(46)   if (5 >= twelve/(1+2)) write(28);
+        ;;test5.j(46)   if (5 >= twelve/(1+2)) println(28);
 L257:
         LD    HL,(0500AH)
 L258:
@@ -1339,7 +1339,7 @@ L264:
 L265:
         CALL  writeA
 L266:
-        ;;test5.j(47)   if (5 >= four) write(29);
+        ;;test5.j(47)   if (5 >= four) println(29);
 L267:
         LD    HL,(05006H)
 L268:
@@ -1356,7 +1356,7 @@ L271:
 L272:
         CALL  writeA
 L273:
-        ;;test5.j(48)   if (4 >= twelve/(1+2)) write(30);
+        ;;test5.j(48)   if (4 >= twelve/(1+2)) println(30);
 L274:
         LD    HL,(0500AH)
 L275:
@@ -1379,7 +1379,7 @@ L281:
 L282:
         CALL  writeA
 L283:
-        ;;test5.j(49)   if (4 >= four) write(31);
+        ;;test5.j(49)   if (4 >= four) println(31);
 L284:
         LD    HL,(05006H)
 L285:
@@ -1400,7 +1400,7 @@ L290:
 L291:
         ;;test5.j(51)   //integer-byte
 L292:
-        ;;test5.j(52)   if (four == 12/(1+2)) write(32);
+        ;;test5.j(52)   if (four == 12/(1+2)) println(32);
 L293:
         LD    A,12
 L294:
@@ -1427,7 +1427,7 @@ L300:
 L301:
         CALL  writeA
 L302:
-        ;;test5.j(53)   if (four == 4) write(33);
+        ;;test5.j(53)   if (four == 4) println(33);
 L303:
         LD    HL,(05006H)
 L304:
@@ -1445,7 +1445,7 @@ L307:
 L308:
         CALL  writeA
 L309:
-        ;;test5.j(54)   if (three != 12/(1+2)) write(34);
+        ;;test5.j(54)   if (three != 12/(1+2)) println(34);
 L310:
         LD    A,12
 L311:
@@ -1472,7 +1472,7 @@ L317:
 L318:
         CALL  writeA
 L319:
-        ;;test5.j(55)   if (three != 4) write(35);
+        ;;test5.j(55)   if (three != 4) println(35);
 L320:
         LD    HL,(05004H)
 L321:
@@ -1490,7 +1490,7 @@ L324:
 L325:
         CALL  writeA
 L326:
-        ;;test5.j(56)   if (three < 12/(1+2)) write(36);
+        ;;test5.j(56)   if (three < 12/(1+2)) println(36);
 L327:
         LD    A,12
 L328:
@@ -1517,7 +1517,7 @@ L334:
 L335:
         CALL  writeA
 L336:
-        ;;test5.j(57)   if (three < 4) write(37);
+        ;;test5.j(57)   if (three < 4) println(37);
 L337:
         LD    HL,(05004H)
 L338:
@@ -1535,7 +1535,7 @@ L341:
 L342:
         CALL  writeA
 L343:
-        ;;test5.j(58)   if (five > 12/(1+2)) write(38);
+        ;;test5.j(58)   if (five > 12/(1+2)) println(38);
 L344:
         LD    A,12
 L345:
@@ -1562,7 +1562,7 @@ L351:
 L352:
         CALL  writeA
 L353:
-        ;;test5.j(59)   if (five > 4) write(39);
+        ;;test5.j(59)   if (five > 4) println(39);
 L354:
         LD    HL,(05008H)
 L355:
@@ -1580,7 +1580,7 @@ L358:
 L359:
         CALL  writeA
 L360:
-        ;;test5.j(60)   if (three <= 12/(1+2)) write(40);
+        ;;test5.j(60)   if (three <= 12/(1+2)) println(40);
 L361:
         LD    A,12
 L362:
@@ -1608,7 +1608,7 @@ L368:
 L369:
         CALL  writeA
 L370:
-        ;;test5.j(61)   if (three <= 4) write(41);
+        ;;test5.j(61)   if (three <= 4) println(41);
 L371:
         LD    HL,(05004H)
 L372:
@@ -1627,7 +1627,7 @@ L375:
 L376:
         CALL  writeA
 L377:
-        ;;test5.j(62)   if (four <= 12/(1+2)) write(42);
+        ;;test5.j(62)   if (four <= 12/(1+2)) println(42);
 L378:
         LD    A,12
 L379:
@@ -1655,7 +1655,7 @@ L385:
 L386:
         CALL  writeA
 L387:
-        ;;test5.j(63)   if (four <= 4) write(43);
+        ;;test5.j(63)   if (four <= 4) println(43);
 L388:
         LD    HL,(05006H)
 L389:
@@ -1674,7 +1674,7 @@ L392:
 L393:
         CALL  writeA
 L394:
-        ;;test5.j(64)   if (five >= 12/(1+2)) write(44);
+        ;;test5.j(64)   if (five >= 12/(1+2)) println(44);
 L395:
         LD    A,12
 L396:
@@ -1701,7 +1701,7 @@ L402:
 L403:
         CALL  writeA
 L404:
-        ;;test5.j(65)   if (five >= 4) write(45);
+        ;;test5.j(65)   if (five >= 4) println(45);
 L405:
         LD    HL,(05008H)
 L406:
@@ -1719,7 +1719,7 @@ L409:
 L410:
         CALL  writeA
 L411:
-        ;;test5.j(66)   if (four >= 12/(1+2)) write(46);
+        ;;test5.j(66)   if (four >= 12/(1+2)) println(46);
 L412:
         LD    A,12
 L413:
@@ -1746,7 +1746,7 @@ L419:
 L420:
         CALL  writeA
 L421:
-        ;;test5.j(67)   if (four >= 4) write(47);
+        ;;test5.j(67)   if (four >= 4) println(47);
 L422:
         LD    HL,(05006H)
 L423:
@@ -1768,7 +1768,7 @@ L428:
 L429:
         ;;test5.j(69)   //integer-integer
 L430:
-        ;;test5.j(70)   if (400 == 1200/(1+2)) write(48);
+        ;;test5.j(70)   if (400 == 1200/(1+2)) println(48);
 L431:
         LD    HL,1200
 L432:
@@ -1788,7 +1788,7 @@ L437:
 L438:
         CALL  writeA
 L439:
-        ;;test5.j(71)   if (400 == 400) write(49);
+        ;;test5.j(71)   if (400 == 400) println(49);
 L440:
         LD    HL,400
 L441:
@@ -1802,7 +1802,7 @@ L443:
 L444:
         CALL  writeA
 L445:
-        ;;test5.j(72)   if (300 != 1200/(1+2)) write(50);
+        ;;test5.j(72)   if (300 != 1200/(1+2)) println(50);
 L446:
         LD    HL,1200
 L447:
@@ -1822,7 +1822,7 @@ L452:
 L453:
         CALL  writeA
 L454:
-        ;;test5.j(73)   if (300 != 400) write(51);
+        ;;test5.j(73)   if (300 != 400) println(51);
 L455:
         LD    HL,300
 L456:
@@ -1836,7 +1836,7 @@ L458:
 L459:
         CALL  writeA
 L460:
-        ;;test5.j(74)   if (300 < 1200/(1+2)) write(52);
+        ;;test5.j(74)   if (300 < 1200/(1+2)) println(52);
 L461:
         LD    HL,1200
 L462:
@@ -1856,7 +1856,7 @@ L467:
 L468:
         CALL  writeA
 L469:
-        ;;test5.j(75)   if (300 < 400) write(53);
+        ;;test5.j(75)   if (300 < 400) println(53);
 L470:
         LD    HL,300
 L471:
@@ -1870,7 +1870,7 @@ L473:
 L474:
         CALL  writeA
 L475:
-        ;;test5.j(76)   if (500 > 1200/(1+2)) write(54);
+        ;;test5.j(76)   if (500 > 1200/(1+2)) println(54);
 L476:
         LD    HL,1200
 L477:
@@ -1890,7 +1890,7 @@ L482:
 L483:
         CALL  writeA
 L484:
-        ;;test5.j(77)   if (500 > 400) write(55);
+        ;;test5.j(77)   if (500 > 400) println(55);
 L485:
         LD    HL,500
 L486:
@@ -1904,7 +1904,7 @@ L488:
 L489:
         CALL  writeA
 L490:
-        ;;test5.j(78)   if (300 <= 1200/(1+2)) write(56);
+        ;;test5.j(78)   if (300 <= 1200/(1+2)) println(56);
 L491:
         LD    HL,1200
 L492:
@@ -1924,7 +1924,7 @@ L497:
 L498:
         CALL  writeA
 L499:
-        ;;test5.j(79)   if (300 <= 400) write(57);
+        ;;test5.j(79)   if (300 <= 400) println(57);
 L500:
         LD    HL,300
 L501:
@@ -1939,7 +1939,7 @@ L503:
 L504:
         CALL  writeA
 L505:
-        ;;test5.j(80)   if (400 <= 1200/(1+2)) write(58);
+        ;;test5.j(80)   if (400 <= 1200/(1+2)) println(58);
 L506:
         LD    HL,1200
 L507:
@@ -1959,7 +1959,7 @@ L512:
 L513:
         CALL  writeA
 L514:
-        ;;test5.j(81)   if (400 <= 400) write(59);
+        ;;test5.j(81)   if (400 <= 400) println(59);
 L515:
         LD    HL,400
 L516:
@@ -1974,7 +1974,7 @@ L518:
 L519:
         CALL  writeA
 L520:
-        ;;test5.j(82)   if (500 >= 1200/(1+2)) write(60);
+        ;;test5.j(82)   if (500 >= 1200/(1+2)) println(60);
 L521:
         LD    HL,1200
 L522:
@@ -1995,7 +1995,7 @@ L527:
 L528:
         CALL  writeA
 L529:
-        ;;test5.j(83)   if (500 >= 400) write(61);
+        ;;test5.j(83)   if (500 >= 400) println(61);
 L530:
         LD    HL,500
 L531:
@@ -2009,7 +2009,7 @@ L533:
 L534:
         CALL  writeA
 L535:
-        ;;test5.j(84)   if (400 >= 1200/(1+2)) write(62);
+        ;;test5.j(84)   if (400 >= 1200/(1+2)) println(62);
 L536:
         LD    HL,1200
 L537:
@@ -2030,7 +2030,7 @@ L542:
 L543:
         CALL  writeA
 L544:
-        ;;test5.j(85)   if (400 >= 400) write(63);
+        ;;test5.j(85)   if (400 >= 400) println(63);
 L545:
         LD    HL,400
 L546:
@@ -2048,7 +2048,7 @@ L550:
 L551:
         ;;test5.j(87)   //stack level 2
 L552:
-        ;;test5.j(88)   if (one+three == 12/(1+2)) write(64);
+        ;;test5.j(88)   if (one+three == 12/(1+2)) println(64);
 L553:
         LD    HL,(05002H)
 L554:
@@ -2082,7 +2082,7 @@ L563:
 L564:
         CALL  writeA
 L565:
-        ;;test5.j(89)   if (one+four  != 12/(1+2)) write(65);
+        ;;test5.j(89)   if (one+four  != 12/(1+2)) println(65);
 L566:
         LD    HL,(05002H)
 L567:
@@ -2116,7 +2116,7 @@ L576:
 L577:
         CALL  writeA
 L578:
-        ;;test5.j(90)   if (one+one < 12/(1+2)) write(66);
+        ;;test5.j(90)   if (one+one < 12/(1+2)) println(66);
 L579:
         LD    HL,(05002H)
 L580:
@@ -2150,7 +2150,7 @@ L589:
 L590:
         CALL  writeA
 L591:
-        ;;test5.j(91)   if (one+four > 12/(1+2)) write(67);
+        ;;test5.j(91)   if (one+four > 12/(1+2)) println(67);
 L592:
         LD    HL,(05002H)
 L593:
@@ -2184,7 +2184,7 @@ L602:
 L603:
         CALL  writeA
 L604:
-        ;;test5.j(92)   if (one+one <= 12/(1+2)) write(68);
+        ;;test5.j(92)   if (one+one <= 12/(1+2)) println(68);
 L605:
         LD    HL,(05002H)
 L606:
@@ -2219,7 +2219,7 @@ L615:
 L616:
         CALL  writeA
 L617:
-        ;;test5.j(93)   if (one+three <= 12/(1+2)) write(69);
+        ;;test5.j(93)   if (one+three <= 12/(1+2)) println(69);
 L618:
         LD    HL,(05002H)
 L619:
@@ -2254,7 +2254,7 @@ L628:
 L629:
         CALL  writeA
 L630:
-        ;;test5.j(94)   if (one+three >= 12/(1+2)) write(70);
+        ;;test5.j(94)   if (one+three >= 12/(1+2)) println(70);
 L631:
         LD    HL,(05002H)
 L632:
@@ -2288,7 +2288,7 @@ L641:
 L642:
         CALL  writeA
 L643:
-        ;;test5.j(95)   if (one+four >= 12/(1+2)) write(71);
+        ;;test5.j(95)   if (one+four >= 12/(1+2)) println(71);
 L644:
         LD    HL,(05002H)
 L645:
@@ -2322,7 +2322,7 @@ L654:
 L655:
         CALL  writeA
 L656:
-        ;;test5.j(96)   if (one+three == twelve/(one+2)) write(72);
+        ;;test5.j(96)   if (one+three == twelve/(one+2)) println(72);
 L657:
         LD    HL,(05002H)
 L658:
@@ -2353,7 +2353,7 @@ L666:
 L667:
         CALL  writeA
 L668:
-        ;;test5.j(97)   if (one+four  != twelve/(one+2)) write(73);
+        ;;test5.j(97)   if (one+four  != twelve/(one+2)) println(73);
 L669:
         LD    HL,(05002H)
 L670:
@@ -2384,7 +2384,7 @@ L678:
 L679:
         CALL  writeA
 L680:
-        ;;test5.j(98)   if (one+one < twelve/(one+2)) write(74);
+        ;;test5.j(98)   if (one+one < twelve/(one+2)) println(74);
 L681:
         LD    HL,(05002H)
 L682:
@@ -2415,7 +2415,7 @@ L690:
 L691:
         CALL  writeA
 L692:
-        ;;test5.j(99)   if (one+four > twelve/(one+2)) write(75);
+        ;;test5.j(99)   if (one+four > twelve/(one+2)) println(75);
 L693:
         LD    HL,(05002H)
 L694:
@@ -2446,7 +2446,7 @@ L702:
 L703:
         CALL  writeA
 L704:
-        ;;test5.j(100)   if (one+one <= twelve/(one+2)) write(76);
+        ;;test5.j(100)   if (one+one <= twelve/(one+2)) println(76);
 L705:
         LD    HL,(05002H)
 L706:
@@ -2477,7 +2477,7 @@ L714:
 L715:
         CALL  writeA
 L716:
-        ;;test5.j(101)   if (one+three <= twelve/(one+2)) write(77);
+        ;;test5.j(101)   if (one+three <= twelve/(one+2)) println(77);
 L717:
         LD    HL,(05002H)
 L718:
@@ -2508,7 +2508,7 @@ L726:
 L727:
         CALL  writeA
 L728:
-        ;;test5.j(102)   if (one+three >= twelve/(one+2)) write(78);
+        ;;test5.j(102)   if (one+three >= twelve/(one+2)) println(78);
 L729:
         LD    HL,(05002H)
 L730:
@@ -2540,7 +2540,7 @@ L738:
 L739:
         CALL  writeA
 L740:
-        ;;test5.j(103)   if (one+four >= twelve/(one+2)) write(79);
+        ;;test5.j(103)   if (one+four >= twelve/(one+2)) println(79);
 L741:
         LD    HL,(05002H)
 L742:
@@ -2572,7 +2572,7 @@ L750:
 L751:
         CALL  writeA
 L752:
-        ;;test5.j(104)   if (four == 12/(1+2)) write(80);
+        ;;test5.j(104)   if (four == 12/(1+2)) println(80);
 L753:
         LD    A,12
 L754:
@@ -2599,7 +2599,7 @@ L760:
 L761:
         CALL  writeA
 L762:
-        ;;test5.j(105)   if (three != 12/(1+2)) write(81);
+        ;;test5.j(105)   if (three != 12/(1+2)) println(81);
 L763:
         LD    A,12
 L764:
@@ -2626,7 +2626,7 @@ L770:
 L771:
         CALL  writeA
 L772:
-        ;;test5.j(106)   if (three < 12/(1+2)) write(82);
+        ;;test5.j(106)   if (three < 12/(1+2)) println(82);
 L773:
         LD    A,12
 L774:
@@ -2653,7 +2653,7 @@ L780:
 L781:
         CALL  writeA
 L782:
-        ;;test5.j(107)   if (twelve > 12/(1+2)) write(83);
+        ;;test5.j(107)   if (twelve > 12/(1+2)) println(83);
 L783:
         LD    A,12
 L784:
@@ -2680,7 +2680,7 @@ L790:
 L791:
         CALL  writeA
 L792:
-        ;;test5.j(108)   if (four <= 12/(1+2)) write(84);
+        ;;test5.j(108)   if (four <= 12/(1+2)) println(84);
 L793:
         LD    A,12
 L794:
@@ -2708,7 +2708,7 @@ L800:
 L801:
         CALL  writeA
 L802:
-        ;;test5.j(109)   if (three <= 12/(1+2)) write(85);
+        ;;test5.j(109)   if (three <= 12/(1+2)) println(85);
 L803:
         LD    A,12
 L804:
@@ -2736,7 +2736,7 @@ L810:
 L811:
         CALL  writeA
 L812:
-        ;;test5.j(110)   if (four >= 12/(1+2)) write(86);
+        ;;test5.j(110)   if (four >= 12/(1+2)) println(86);
 L813:
         LD    A,12
 L814:
@@ -2763,7 +2763,7 @@ L820:
 L821:
         CALL  writeA
 L822:
-        ;;test5.j(111)   if (twelve >= 12/(1+2)) write(87);
+        ;;test5.j(111)   if (twelve >= 12/(1+2)) println(87);
 L823:
         LD    A,12
 L824:
@@ -2790,7 +2790,7 @@ L830:
 L831:
         CALL  writeA
 L832:
-        ;;test5.j(112)   if (four == twelve/(one+2)) write(88);
+        ;;test5.j(112)   if (four == twelve/(one+2)) println(88);
 L833:
         LD    HL,(0500AH)
 L834:
@@ -2814,7 +2814,7 @@ L839:
 L840:
         CALL  writeA
 L841:
-        ;;test5.j(113)   if (three != twelve/(one+2)) write(89);
+        ;;test5.j(113)   if (three != twelve/(one+2)) println(89);
 L842:
         LD    HL,(0500AH)
 L843:
@@ -2838,7 +2838,7 @@ L848:
 L849:
         CALL  writeA
 L850:
-        ;;test5.j(114)   if (three < twelve/(one+2)) write(90);
+        ;;test5.j(114)   if (three < twelve/(one+2)) println(90);
 L851:
         LD    HL,(0500AH)
 L852:
@@ -2862,7 +2862,7 @@ L857:
 L858:
         CALL  writeA
 L859:
-        ;;test5.j(115)   if (twelve > twelve/(one+2)) write(91);
+        ;;test5.j(115)   if (twelve > twelve/(one+2)) println(91);
 L860:
         LD    HL,(0500AH)
 L861:
@@ -2886,7 +2886,7 @@ L866:
 L867:
         CALL  writeA
 L868:
-        ;;test5.j(116)   if (four <= twelve/(one+2)) write(92);
+        ;;test5.j(116)   if (four <= twelve/(one+2)) println(92);
 L869:
         LD    HL,(0500AH)
 L870:
@@ -2910,7 +2910,7 @@ L875:
 L876:
         CALL  writeA
 L877:
-        ;;test5.j(117)   if (three <= twelve/(one+2)) write(93);
+        ;;test5.j(117)   if (three <= twelve/(one+2)) println(93);
 L878:
         LD    HL,(0500AH)
 L879:
@@ -2934,7 +2934,7 @@ L884:
 L885:
         CALL  writeA
 L886:
-        ;;test5.j(118)   if (four >= twelve/(one+2)) write(94);
+        ;;test5.j(118)   if (four >= twelve/(one+2)) println(94);
 L887:
         LD    HL,(0500AH)
 L888:
@@ -2959,7 +2959,7 @@ L893:
 L894:
         CALL  writeA
 L895:
-        ;;test5.j(119)   if (twelve >= twelve/(one+2)) write(95);
+        ;;test5.j(119)   if (twelve >= twelve/(one+2)) println(95);
 L896:
         LD    HL,(0500AH)
 L897:
@@ -2984,7 +2984,7 @@ L902:
 L903:
         CALL  writeA
 L904:
-        ;;test5.j(120)   if (1+3 == 12/(1+2)) write(96);
+        ;;test5.j(120)   if (1+3 == 12/(1+2)) println(96);
 L905:
         LD    A,1
 L906:
@@ -3012,7 +3012,7 @@ L914:
 L915:
         CALL  writeA
 L916:
-        ;;test5.j(121)   if (1+2 != 12/(1+2)) write(97);
+        ;;test5.j(121)   if (1+2 != 12/(1+2)) println(97);
 L917:
         LD    A,1
 L918:
@@ -3040,7 +3040,7 @@ L926:
 L927:
         CALL  writeA
 L928:
-        ;;test5.j(122)   if (1+2 < 12/(1+2)) write(98);
+        ;;test5.j(122)   if (1+2 < 12/(1+2)) println(98);
 L929:
         LD    A,1
 L930:
@@ -3068,7 +3068,7 @@ L938:
 L939:
         CALL  writeA
 L940:
-        ;;test5.j(123)   if (1+4 > 12/(1+2)) write(99);
+        ;;test5.j(123)   if (1+4 > 12/(1+2)) println(99);
 L941:
         LD    A,1
 L942:
@@ -3096,7 +3096,7 @@ L950:
 L951:
         CALL  writeA
 L952:
-        ;;test5.j(124)   if (1+2 <= 12/(1+2)) write(100);
+        ;;test5.j(124)   if (1+2 <= 12/(1+2)) println(100);
 L953:
         LD    A,1
 L954:
@@ -3124,7 +3124,7 @@ L962:
 L963:
         CALL  writeA
 L964:
-        ;;test5.j(125)   if (1+3 <= 12/(1+2)) write(101);
+        ;;test5.j(125)   if (1+3 <= 12/(1+2)) println(101);
 L965:
         LD    A,1
 L966:
@@ -3152,7 +3152,7 @@ L974:
 L975:
         CALL  writeA
 L976:
-        ;;test5.j(126)   if (1+3 >= 12/(1+2)) write(102);
+        ;;test5.j(126)   if (1+3 >= 12/(1+2)) println(102);
 L977:
         LD    A,1
 L978:
@@ -3181,7 +3181,7 @@ L986:
 L987:
         CALL  writeA
 L988:
-        ;;test5.j(127)   if (1+4 >= 12/(1+2)) write(103);
+        ;;test5.j(127)   if (1+4 >= 12/(1+2)) println(103);
 L989:
         LD    A,1
 L990:
@@ -3210,7 +3210,7 @@ L998:
 L999:
         CALL  writeA
 L1000:
-        ;;test5.j(128)   if (1+3 == twelve/(one+2)) write(104);
+        ;;test5.j(128)   if (1+3 == twelve/(one+2)) println(104);
 L1001:
         LD    A,1
 L1002:
@@ -3243,7 +3243,7 @@ L1011:
 L1012:
         CALL  writeA
 L1013:
-        ;;test5.j(129)   if (1+2 != twelve/(one+2)) write(105);
+        ;;test5.j(129)   if (1+2 != twelve/(one+2)) println(105);
 L1014:
         LD    A,1
 L1015:
@@ -3276,7 +3276,7 @@ L1024:
 L1025:
         CALL  writeA
 L1026:
-        ;;test5.j(130)   if (1+2 < twelve/(one+2)) write(106);
+        ;;test5.j(130)   if (1+2 < twelve/(one+2)) println(106);
 L1027:
         LD    A,1
 L1028:
@@ -3309,7 +3309,7 @@ L1037:
 L1038:
         CALL  writeA
 L1039:
-        ;;test5.j(131)   if (1+4 > twelve/(one+2)) write(107);
+        ;;test5.j(131)   if (1+4 > twelve/(one+2)) println(107);
 L1040:
         LD    A,1
 L1041:
@@ -3342,7 +3342,7 @@ L1050:
 L1051:
         CALL  writeA
 L1052:
-        ;;test5.j(132)   if (1+2 <= twelve/(one+2)) write(108);
+        ;;test5.j(132)   if (1+2 <= twelve/(one+2)) println(108);
 L1053:
         LD    A,1
 L1054:
@@ -3376,7 +3376,7 @@ L1063:
 L1064:
         CALL  writeA
 L1065:
-        ;;test5.j(133)   if (1+3 <= twelve/(one+2)) write(109);
+        ;;test5.j(133)   if (1+3 <= twelve/(one+2)) println(109);
 L1066:
         LD    A,1
 L1067:
@@ -3410,7 +3410,7 @@ L1076:
 L1077:
         CALL  writeA
 L1078:
-        ;;test5.j(134)   if (1+3 >= twelve/(one+2)) write(110);
+        ;;test5.j(134)   if (1+3 >= twelve/(one+2)) println(110);
 L1079:
         LD    A,1
 L1080:
@@ -3443,7 +3443,7 @@ L1089:
 L1090:
         CALL  writeA
 L1091:
-        ;;test5.j(135)   if (1+4 >= twelve/(one+2)) write(111);
+        ;;test5.j(135)   if (1+4 >= twelve/(one+2)) println(111);
 L1092:
         LD    A,1
 L1093:
@@ -3476,7 +3476,7 @@ L1102:
 L1103:
         CALL  writeA
 L1104:
-        ;;test5.j(136)   if (4 == 12/(1+2)) write(112);
+        ;;test5.j(136)   if (4 == 12/(1+2)) println(112);
 L1105:
         LD    A,12
 L1106:
@@ -3497,7 +3497,7 @@ L1111:
 L1112:
         CALL  writeA
 L1113:
-        ;;test5.j(137)   if (3 != 12/(1+2)) write(113);
+        ;;test5.j(137)   if (3 != 12/(1+2)) println(113);
 L1114:
         LD    A,12
 L1115:
@@ -3518,7 +3518,7 @@ L1120:
 L1121:
         CALL  writeA
 L1122:
-        ;;test5.j(138)   if (3 < 12/(1+2)) write(114);
+        ;;test5.j(138)   if (3 < 12/(1+2)) println(114);
 L1123:
         LD    A,12
 L1124:
@@ -3539,7 +3539,7 @@ L1129:
 L1130:
         CALL  writeA
 L1131:
-        ;;test5.j(139)   if (5 > 12/(1+2)) write(115);
+        ;;test5.j(139)   if (5 > 12/(1+2)) println(115);
 L1132:
         LD    A,12
 L1133:
@@ -3560,7 +3560,7 @@ L1138:
 L1139:
         CALL  writeA
 L1140:
-        ;;test5.j(140)   if (3 <= 12/(1+2)) write(116);
+        ;;test5.j(140)   if (3 <= 12/(1+2)) println(116);
 L1141:
         LD    A,12
 L1142:
@@ -3581,7 +3581,7 @@ L1147:
 L1148:
         CALL  writeA
 L1149:
-        ;;test5.j(141)   if (4 <= 12/(1+2)) write(117);
+        ;;test5.j(141)   if (4 <= 12/(1+2)) println(117);
 L1150:
         LD    A,12
 L1151:
@@ -3602,7 +3602,7 @@ L1156:
 L1157:
         CALL  writeA
 L1158:
-        ;;test5.j(142)   if (4 >= 12/(1+2)) write(118);
+        ;;test5.j(142)   if (4 >= 12/(1+2)) println(118);
 L1159:
         LD    A,12
 L1160:
@@ -3624,7 +3624,7 @@ L1165:
 L1166:
         CALL  writeA
 L1167:
-        ;;test5.j(143)   if (5 >= 12/(1+2)) write(119);
+        ;;test5.j(143)   if (5 >= 12/(1+2)) println(119);
 L1168:
         LD    A,12
 L1169:
@@ -3646,7 +3646,7 @@ L1174:
 L1175:
         CALL  writeA
 L1176:
-        ;;test5.j(144)   if (4 == twelve/(one+2)) write(120);
+        ;;test5.j(144)   if (4 == twelve/(one+2)) println(120);
 L1177:
         LD    HL,(0500AH)
 L1178:
@@ -3673,7 +3673,7 @@ L1184:
 L1185:
         CALL  writeA
 L1186:
-        ;;test5.j(145)   if (3 != twelve/(one+2)) write(121);
+        ;;test5.j(145)   if (3 != twelve/(one+2)) println(121);
 L1187:
         LD    HL,(0500AH)
 L1188:
@@ -3700,7 +3700,7 @@ L1194:
 L1195:
         CALL  writeA
 L1196:
-        ;;test5.j(146)   if (2 < twelve/(one+2)) write(122);
+        ;;test5.j(146)   if (2 < twelve/(one+2)) println(122);
 L1197:
         LD    HL,(0500AH)
 L1198:
@@ -3727,7 +3727,7 @@ L1204:
 L1205:
         CALL  writeA
 L1206:
-        ;;test5.j(147)   if (5 > twelve/(one+2)) write(123);
+        ;;test5.j(147)   if (5 > twelve/(one+2)) println(123);
 L1207:
         LD    HL,(0500AH)
 L1208:
@@ -3754,7 +3754,7 @@ L1214:
 L1215:
         CALL  writeA
 L1216:
-        ;;test5.j(148)   if (3 <= twelve/(one+2)) write(124);
+        ;;test5.j(148)   if (3 <= twelve/(one+2)) println(124);
 L1217:
         LD    HL,(0500AH)
 L1218:
@@ -3782,7 +3782,7 @@ L1224:
 L1225:
         CALL  writeA
 L1226:
-        ;;test5.j(149)   if (4 <= twelve/(one+2)) write(125);
+        ;;test5.j(149)   if (4 <= twelve/(one+2)) println(125);
 L1227:
         LD    HL,(0500AH)
 L1228:
@@ -3810,7 +3810,7 @@ L1234:
 L1235:
         CALL  writeA
 L1236:
-        ;;test5.j(150)   if (4 >= twelve/(one+2)) write(126);
+        ;;test5.j(150)   if (4 >= twelve/(one+2)) println(126);
 L1237:
         LD    HL,(0500AH)
 L1238:
@@ -3837,7 +3837,7 @@ L1244:
 L1245:
         CALL  writeA
 L1246:
-        ;;test5.j(151)   if (5 >= twelve/(one+2)) write(127);
+        ;;test5.j(151)   if (5 >= twelve/(one+2)) println(127);
 L1247:
         LD    HL,(0500AH)
 L1248:
@@ -3864,7 +3864,7 @@ L1254:
 L1255:
         CALL  writeA
 L1256:
-        ;;test5.j(152)   if (four == 0 + 12/(1 + 2)) write(128);
+        ;;test5.j(152)   if (four == 0 + 12/(1 + 2)) println(128);
 L1257:
         LD    A,0
 L1258:
@@ -3897,7 +3897,7 @@ L1266:
 L1267:
         CALL  writeA
 L1268:
-        ;;test5.j(153)   if (four == 0 + 12/(1 + 2)) write(129);
+        ;;test5.j(153)   if (four == 0 + 12/(1 + 2)) println(129);
 L1269:
         LD    A,0
 L1270:
@@ -3930,7 +3930,7 @@ L1278:
 L1279:
         CALL  writeA
 L1280:
-        ;;test5.j(154)   if (four == 0 + 12/(byteOne + 2)) write(130);
+        ;;test5.j(154)   if (four == 0 + 12/(byteOne + 2)) println(130);
 L1281:
         LD    A,0
 L1282:
@@ -3963,7 +3963,7 @@ L1290:
 L1291:
         CALL  writeA
 L1292:
-        ;;test5.j(155)   if (four == 0 + 12/(one + 2)) write(131);
+        ;;test5.j(155)   if (four == 0 + 12/(one + 2)) println(131);
 L1293:
         LD    A,0
 L1294:
@@ -3992,7 +3992,7 @@ L1301:
 L1302:
         CALL  writeA
 L1303:
-        ;;test5.j(156)   if (4 == zero + twelve/(1+2)) write(132);
+        ;;test5.j(156)   if (4 == zero + twelve/(1+2)) println(132);
 L1304:
         LD    HL,(05000H)
 L1305:
@@ -4064,7 +4064,7 @@ L1335:
         LD    HL,(0500EH)
         DEC   (HL)
 L1336:
-        ;;test5.j(166)     write (c);
+        ;;test5.j(166)     println (c);
 L1337:
         LD    A,(05011H)
 L1338:
@@ -4074,7 +4074,7 @@ L1339:
 L1340:
         JP    L1348
 L1341:
-        ;;test5.j(168)     write(999);
+        ;;test5.j(168)     println(999);
 L1342:
         LD    HL,999
 L1343:
@@ -4086,13 +4086,13 @@ L1345:
 L1346:
         ;;test5.j(171)   /************************/
 L1347:
-        ;;test5.j(172)   write (134);
+        ;;test5.j(172)   println (134);
 L1348:
         LD    A,134
 L1349:
         CALL  writeA
 L1350:
-        ;;test5.j(173)   write("Klaar");
+        ;;test5.j(173)   println("Klaar");
 L1351:
         LD    HL,1355
 L1352:

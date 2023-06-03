@@ -733,7 +733,7 @@ L3:
 L4:
         ;;test6.j(4) class Test8And16BitExpressions {
 L5:
-        ;;test6.j(5)   write(0);         // 0
+        ;;test6.j(5)   println(0);         // 0
 L6:
         LD    A,0
 L7:
@@ -765,7 +765,7 @@ L19:
 L20:
         LD    (05001H),A
 L21:
-        ;;test6.j(15)   write(b);         // 1
+        ;;test6.j(15)   println(b);         // 1
 L22:
         LD    A,(05000H)
 L23:
@@ -789,7 +789,7 @@ L31:
 L32:
         ;;test6.j(24)   /************************/
 L33:
-        ;;test6.j(25)   write(0 + 2);     // 2
+        ;;test6.j(25)   println(0 + 2);     // 2
 L34:
         LD    A,0
 L35:
@@ -797,7 +797,7 @@ L35:
 L36:
         CALL  writeA
 L37:
-        ;;test6.j(26)   write(b + 2);     // 3
+        ;;test6.j(26)   println(b + 2);     // 3
 L38:
         LD    A,(05000H)
 L39:
@@ -805,7 +805,7 @@ L39:
 L40:
         CALL  writeA
 L41:
-        ;;test6.j(27)   write(3 + b);     // 4
+        ;;test6.j(27)   println(3 + b);     // 4
 L42:
         LD    A,3
 L43:
@@ -815,7 +815,7 @@ L43:
 L44:
         CALL  writeA
 L45:
-        ;;test6.j(28)   write(b + c);     // 5
+        ;;test6.j(28)   println(b + c);     // 5
 L46:
         LD    A,(05000H)
 L47:
@@ -835,7 +835,7 @@ L52:
 L53:
         LD    (05001H),A
 L54:
-        ;;test6.j(31)   write(c);         // 6
+        ;;test6.j(31)   println(c);         // 6
 L55:
         LD    A,(05001H)
 L56:
@@ -849,7 +849,7 @@ L59:
 L60:
         LD    (05001H),A
 L61:
-        ;;test6.j(33)   write(c);         // 7
+        ;;test6.j(33)   println(c);         // 7
 L62:
         LD    A,(05001H)
 L63:
@@ -865,7 +865,7 @@ L66:
 L67:
         LD    (05001H),A
 L68:
-        ;;test6.j(35)   write(c);         // 8
+        ;;test6.j(35)   println(c);         // 8
 L69:
         LD    A,(05001H)
 L70:
@@ -881,7 +881,7 @@ L73:
 L74:
         LD    (05001H),A
 L75:
-        ;;test6.j(37)   write(c);         // 9
+        ;;test6.j(37)   println(c);         // 9
 L76:
         LD    A,(05001H)
 L77:
@@ -899,7 +899,7 @@ L82:
         LD    H,0
         LD    (05002H),HL
 L83:
-        ;;test6.j(41)   write(i);         // 10
+        ;;test6.j(41)   println(i);         // 10
 L84:
         LD    HL,(05002H)
 L85:
@@ -917,7 +917,7 @@ L90:
 L91:
         ;;test6.j(47)   
 L92:
-        ;;test6.j(48)   write(i + 1);     // 11
+        ;;test6.j(48)   println(i + 1);     // 11
 L93:
         LD    HL,(05002H)
 L94:
@@ -926,7 +926,7 @@ L94:
 L95:
         CALL  writeHL
 L96:
-        ;;test6.j(49)   write(2 + i);     // 12
+        ;;test6.j(49)   println(2 + i);     // 12
 L97:
         LD    A,2
 L98:
@@ -944,7 +944,7 @@ L102:
 L103:
         LD    (05000H),A
 L104:
-        ;;test6.j(51)   write(i + b);     // 13
+        ;;test6.j(51)   println(i + b);     // 13
 L105:
         LD    HL,(05002H)
 L106:
@@ -958,7 +958,7 @@ L109:
         LD    HL,(05000H)
         INC   (HL)
 L110:
-        ;;test6.j(53)   write(b + i);     // 14
+        ;;test6.j(53)   println(b + i);     // 14
 L111:
         LD    A,(05000H)
 L112:
@@ -981,7 +981,7 @@ L118:
 L119:
         LD    (05004H),HL
 L120:
-        ;;test6.j(56)   write(j);
+        ;;test6.j(56)   println(j);
 L121:
         LD    HL,(05004H)
 L122:
@@ -999,7 +999,7 @@ L126:
 L127:
         LD    (05004H),HL
 L128:
-        ;;test6.j(58)   write(j);
+        ;;test6.j(58)   println(j);
 L129:
         LD    HL,(05004H)
 L130:
@@ -1022,7 +1022,7 @@ L136:
 L137:
         LD    (05004H),HL
 L138:
-        ;;test6.j(61)   write(j);
+        ;;test6.j(61)   println(j);
 L139:
         LD    HL,(05004H)
 L140:
@@ -1048,7 +1048,7 @@ L149:
 L150:
         LD    (05001H),A
 L151:
-        ;;test6.j(68)   write(19 - 1);    // 18
+        ;;test6.j(68)   println(19 - 1);    // 18
 L152:
         LD    A,19
 L153:
@@ -1056,7 +1056,7 @@ L153:
 L154:
         CALL  writeA
 L155:
-        ;;test6.j(69)   write(b - 14);    // 19
+        ;;test6.j(69)   println(b - 14);    // 19
 L156:
         LD    A,(05000H)
 L157:
@@ -1064,7 +1064,7 @@ L157:
 L158:
         CALL  writeA
 L159:
-        ;;test6.j(70)   write(53 - b);    // 20
+        ;;test6.j(70)   println(53 - b);    // 20
 L160:
         LD    A,53
 L161:
@@ -1074,7 +1074,7 @@ L161:
 L162:
         CALL  writeA
 L163:
-        ;;test6.j(71)   write(b - c);     // 21
+        ;;test6.j(71)   println(b - c);     // 21
 L164:
         LD    A,(05000H)
 L165:
@@ -1094,7 +1094,7 @@ L170:
 L171:
         LD    (05001H),A
 L172:
-        ;;test6.j(74)   write(c);         // 22
+        ;;test6.j(74)   println(c);         // 22
 L173:
         LD    A,(05001H)
 L174:
@@ -1108,7 +1108,7 @@ L177:
 L178:
         LD    (05001H),A
 L179:
-        ;;test6.j(76)   write(c);         // 23
+        ;;test6.j(76)   println(c);         // 23
 L180:
         LD    A,(05001H)
 L181:
@@ -1124,7 +1124,7 @@ L184:
 L185:
         LD    (05001H),A
 L186:
-        ;;test6.j(78)   write(c);         // 24
+        ;;test6.j(78)   println(c);         // 24
 L187:
         LD    A,(05001H)
 L188:
@@ -1146,7 +1146,7 @@ L194:
 L195:
         LD    (05001H),A
 L196:
-        ;;test6.j(81)   write(c);         // 25
+        ;;test6.j(81)   println(c);         // 25
 L197:
         LD    A,(05001H)
 L198:
@@ -1162,7 +1162,7 @@ L202:
         LD    H,0
         LD    (05002H),HL
 L203:
-        ;;test6.j(84)   write(i - 14);    // 26
+        ;;test6.j(84)   println(i - 14);    // 26
 L204:
         LD    HL,(05002H)
 L205:
@@ -1172,7 +1172,7 @@ L205:
 L206:
         CALL  writeHL
 L207:
-        ;;test6.j(85)   write(67 - i);    // 27
+        ;;test6.j(85)   println(67 - i);    // 27
 L208:
         LD    A,67
 L209:
@@ -1191,7 +1191,7 @@ L213:
 L214:
         LD    (05000H),A
 L215:
-        ;;test6.j(87)   write(i - b);     // 28
+        ;;test6.j(87)   println(i - b);     // 28
 L216:
         LD    HL,(05002H)
 L217:
@@ -1207,7 +1207,7 @@ L220:
 L221:
         LD    (05000H),A
 L222:
-        ;;test6.j(89)   write(b - i);     // 29
+        ;;test6.j(89)   println(b - i);     // 29
 L223:
         LD    A,(05000H)
 L224:
@@ -1232,7 +1232,7 @@ L230:
 L231:
         LD    (05004H),HL
 L232:
-        ;;test6.j(92)   write(j);         // 30
+        ;;test6.j(92)   println(j);         // 30
 L233:
         LD    HL,(05004H)
 L234:
@@ -1251,7 +1251,7 @@ L238:
 L239:
         LD    (05004H),HL
 L240:
-        ;;test6.j(94)   write(j);         // 31
+        ;;test6.j(94)   println(j);         // 31
 L241:
         LD    HL,(05004H)
 L242:
@@ -1275,7 +1275,7 @@ L248:
 L249:
         LD    (05004H),HL
 L250:
-        ;;test6.j(97)   write(j);         // 32
+        ;;test6.j(97)   println(j);         // 32
 L251:
         LD    HL,(05004H)
 L252:
@@ -1289,7 +1289,7 @@ L255:
 L256:
         ;;test6.j(101)   /****************************/
 L257:
-        ;;test6.j(102)   write(3 * 11);    // 33
+        ;;test6.j(102)   println(3 * 11);    // 33
 L258:
         LD    A,3
 L259:
@@ -1306,7 +1306,7 @@ L262:
 L263:
         LD    (05000H),A
 L264:
-        ;;test6.j(104)   write(b * 2);     // 34
+        ;;test6.j(104)   println(b * 2);     // 34
 L265:
         LD    A,(05000H)
 L266:
@@ -1323,7 +1323,7 @@ L269:
 L270:
         LD    (05000H),A
 L271:
-        ;;test6.j(106)   write(5 * b);     // 35
+        ;;test6.j(106)   println(5 * b);     // 35
 L272:
         LD    A,5
 L273:
@@ -1347,7 +1347,7 @@ L279:
 L280:
         LD    (05001H),A
 L281:
-        ;;test6.j(109)   write(b * c);     // 36
+        ;;test6.j(109)   println(b * c);     // 36
 L282:
         LD    A,(05000H)
 L283:
@@ -1372,7 +1372,7 @@ L288:
 L289:
         LD    (05001H),A
 L290:
-        ;;test6.j(112)   write(c);         // 37
+        ;;test6.j(112)   println(c);         // 37
 L291:
         LD    A,(05001H)
 L292:
@@ -1395,7 +1395,7 @@ L298:
 L299:
         LD    (05001H),A
 L300:
-        ;;test6.j(115)   write(c);         // 38
+        ;;test6.j(115)   println(c);         // 38
 L301:
         LD    A,(05001H)
 L302:
@@ -1419,7 +1419,7 @@ L308:
 L309:
         LD    (05001H),A
 L310:
-        ;;test6.j(118)   write(c);         // 39
+        ;;test6.j(118)   println(c);         // 39
 L311:
         LD    A,(05001H)
 L312:
@@ -1449,7 +1449,7 @@ L321:
 L322:
         LD    (05001H),A
 L323:
-        ;;test6.j(122)   write(c);         // 40
+        ;;test6.j(122)   println(c);         // 40
 L324:
         LD    A,(05001H)
 L325:
@@ -1463,7 +1463,7 @@ L328:
 L329:
         ;;test6.j(126)   /**********************/
 L330:
-        ;;test6.j(127)   write(123 / 3);   // 41
+        ;;test6.j(127)   println(123 / 3);   // 41
 L331:
         LD    A,123
 L332:
@@ -1478,7 +1478,7 @@ L335:
 L336:
         LD    (05000H),A
 L337:
-        ;;test6.j(129)   write(b / 3);     // 42
+        ;;test6.j(129)   println(b / 3);     // 42
 L338:
         LD    A,(05000H)
 L339:
@@ -1493,7 +1493,7 @@ L342:
 L343:
         LD    (05000H),A
 L344:
-        ;;test6.j(131)   write(129 / b);   // 43
+        ;;test6.j(131)   println(129 / b);   // 43
 L345:
         LD    A,129
 L346:
@@ -1517,7 +1517,7 @@ L352:
 L353:
         LD    (05001H),A
 L354:
-        ;;test6.j(134)   write(b / c);     // 44
+        ;;test6.j(134)   println(b / c);     // 44
 L355:
         LD    A,(05000H)
 L356:
@@ -1540,7 +1540,7 @@ L361:
 L362:
         LD    (05001H),A
 L363:
-        ;;test6.j(137)   write(c);         // 45
+        ;;test6.j(137)   println(c);         // 45
 L364:
         LD    A,(05001H)
 L365:
@@ -1561,7 +1561,7 @@ L371:
 L372:
         LD    (05001H),A
 L373:
-        ;;test6.j(140)   write(c);         // 46
+        ;;test6.j(140)   println(c);         // 46
 L374:
         LD    A,(05001H)
 L375:
@@ -1585,7 +1585,7 @@ L381:
 L382:
         LD    (05001H),A
 L383:
-        ;;test6.j(143)   write(c);         // 47
+        ;;test6.j(143)   println(c);         // 47
 L384:
         LD    A,(05001H)
 L385:
@@ -1615,7 +1615,7 @@ L394:
 L395:
         LD    (05001H),A
 L396:
-        ;;test6.j(147)   write(c);         // 48
+        ;;test6.j(147)   println(c);         // 48
 L397:
         LD    A,(05001H)
 L398:
@@ -1629,7 +1629,7 @@ L401:
 L402:
         ;;test6.j(151)   /*************************/
 L403:
-        ;;test6.j(152)   write("Nu komen 251 en 252");
+        ;;test6.j(152)   println("Nu komen 251 en 252");
 L404:
         LD    HL,872
 L405:
@@ -1642,7 +1642,7 @@ L408:
         LD    A,L
         LD    (05000H),A
 L409:
-        ;;test6.j(154)   write(b);         // 251
+        ;;test6.j(154)   println(b);         // 251
 L410:
         LD    A,(05000H)
 L411:
@@ -1661,7 +1661,7 @@ L417:
         LD    A,L
         LD    (05000H),A
 L418:
-        ;;test6.j(157)   write(b);         // 252
+        ;;test6.j(157)   println(b);         // 252
 L419:
         LD    A,(05000H)
 L420:
@@ -1669,7 +1669,7 @@ L420:
 L421:
         ;;test6.j(158) 
 L422:
-        ;;test6.j(159)   write("Nu komen -253 en -254");
+        ;;test6.j(159)   println("Nu komen -253 en -254");
 L423:
         LD    HL,873
 L424:
@@ -1689,7 +1689,7 @@ L429:
         LD    A,L
         LD    (05000H),A
 L430:
-        ;;test6.j(161)   write(b);         // 252 - 505 = -253
+        ;;test6.j(161)   println(b);         // 252 - 505 = -253
 L431:
         LD    A,(05000H)
 L432:
@@ -1718,7 +1718,7 @@ L441:
         LD    A,L
         LD    (05000H),A
 L442:
-        ;;test6.j(164)   write(b);         // -233 - 11 = -254
+        ;;test6.j(164)   println(b);         // -233 - 11 = -254
 L443:
         LD    A,(05000H)
 L444:
@@ -1726,7 +1726,7 @@ L444:
 L445:
         ;;test6.j(165)   
 L446:
-        ;;test6.j(166)   write("Nu komen 255 en 256");
+        ;;test6.j(166)   println("Nu komen 255 en 256");
 L447:
         LD    HL,874
 L448:
@@ -1738,7 +1738,7 @@ L450:
 L451:
         LD    (05000H),A
 L452:
-        ;;test6.j(168)   write(b);         // 255
+        ;;test6.j(168)   println(b);         // 255
 L453:
         LD    A,(05000H)
 L454:
@@ -1768,7 +1768,7 @@ L465:
 L466:
         LD    (05002H),HL
 L467:
-        ;;test6.j(179)   write(i);         // 256
+        ;;test6.j(179)   println(i);         // 256
 L468:
         LD    HL,(05002H)
 L469:
@@ -1786,13 +1786,13 @@ L474:
 L475:
         ;;test6.j(185) 
 L476:
-        ;;test6.j(186)   write("Nu komen 1000..1047");
+        ;;test6.j(186)   println("Nu komen 1000..1047");
 L477:
         LD    HL,875
 L478:
         CALL  putStr
 L479:
-        ;;test6.j(187)   write(1000);      // 1000
+        ;;test6.j(187)   println(1000);      // 1000
 L480:
         LD    HL,1000
 L481:
@@ -1804,7 +1804,7 @@ L483:
 L484:
         LD    (05004H),HL
 L485:
-        ;;test6.j(189)   write(j);         // 1001
+        ;;test6.j(189)   println(j);         // 1001
 L486:
         LD    HL,(05004H)
 L487:
@@ -1818,7 +1818,7 @@ L490:
 L491:
         ;;test6.j(193)   /************************/
 L492:
-        ;;test6.j(194)   write(1000 + 2);  // 1002
+        ;;test6.j(194)   println(1000 + 2);  // 1002
 L493:
         LD    HL,1000
 L494:
@@ -1827,7 +1827,7 @@ L494:
 L495:
         CALL  writeHL
 L496:
-        ;;test6.j(195)   write(3 + 1000);  // 1003
+        ;;test6.j(195)   println(3 + 1000);  // 1003
 L497:
         LD    A,3
 L498:
@@ -1839,7 +1839,7 @@ L499:
 L500:
         CALL  writeHL
 L501:
-        ;;test6.j(196)   write(500 + 504); // 1004
+        ;;test6.j(196)   println(500 + 504); // 1004
 L502:
         LD    HL,500
 L503:
@@ -1857,7 +1857,7 @@ L507:
 L508:
         LD    (05002H),HL
 L509:
-        ;;test6.j(198)   write(i);         // 1005
+        ;;test6.j(198)   println(i);         // 1005
 L510:
         LD    HL,(05002H)
 L511:
@@ -1875,7 +1875,7 @@ L515:
 L516:
         LD    (05002H),HL
 L517:
-        ;;test6.j(200)   write(i);         // 1006
+        ;;test6.j(200)   println(i);         // 1006
 L518:
         LD    HL,(05002H)
 L519:
@@ -1890,7 +1890,7 @@ L522:
 L523:
         LD    (05002H),HL
 L524:
-        ;;test6.j(202)   write(i);         // 1007
+        ;;test6.j(202)   println(i);         // 1007
 L525:
         LD    HL,(05002H)
 L526:
@@ -1916,7 +1916,7 @@ L535:
 L536:
         LD    (05002H),HL
 L537:
-        ;;test6.j(207)   write(j + 8);     // 1008
+        ;;test6.j(207)   println(j + 8);     // 1008
 L538:
         LD    HL,(05004H)
 L539:
@@ -1925,7 +1925,7 @@ L539:
 L540:
         CALL  writeHL
 L541:
-        ;;test6.j(208)   write(9 + j);     // 1009
+        ;;test6.j(208)   println(9 + j);     // 1009
 L542:
         LD    A,9
 L543:
@@ -1937,7 +1937,7 @@ L544:
 L545:
         CALL  writeHL
 L546:
-        ;;test6.j(209)   write(j + b);     // 1010
+        ;;test6.j(209)   println(j + b);     // 1010
 L547:
         LD    HL,(05004H)
 L548:
@@ -1951,7 +1951,7 @@ L551:
         LD    HL,(05000H)
         INC   (HL)
 L552:
-        ;;test6.j(211)   write(b + j);     // 1011
+        ;;test6.j(211)   println(b + j);     // 1011
 L553:
         LD    A,(05000H)
 L554:
@@ -1969,7 +1969,7 @@ L558:
 L559:
         LD    (05004H),HL
 L560:
-        ;;test6.j(213)   write(j + 512);   // 1012
+        ;;test6.j(213)   println(j + 512);   // 1012
 L561:
         LD    HL,(05004H)
 L562:
@@ -1978,7 +1978,7 @@ L562:
 L563:
         CALL  writeHL
 L564:
-        ;;test6.j(214)   write(513 + j);   // 1013
+        ;;test6.j(214)   println(513 + j);   // 1013
 L565:
         LD    HL,513
 L566:
@@ -1987,7 +1987,7 @@ L566:
 L567:
         CALL  writeHL
 L568:
-        ;;test6.j(215)   write(i + j);     // 1014
+        ;;test6.j(215)   println(i + j);     // 1014
 L569:
         LD    HL,(05002H)
 L570:
@@ -2019,7 +2019,7 @@ L581:
 L582:
         LD    (05002H),HL
 L583:
-        ;;test6.j(220)   write(i);         // 1015
+        ;;test6.j(220)   println(i);         // 1015
 L584:
         LD    HL,(05002H)
 L585:
@@ -2037,7 +2037,7 @@ L589:
 L590:
         LD    (05002H),HL
 L591:
-        ;;test6.j(222)   write(i);         // 1016
+        ;;test6.j(222)   println(i);         // 1016
 L592:
         LD    HL,(05002H)
 L593:
@@ -2052,7 +2052,7 @@ L596:
 L597:
         LD    (05002H),HL
 L598:
-        ;;test6.j(224)   write(i);         // 1017
+        ;;test6.j(224)   println(i);         // 1017
 L599:
         LD    HL,(05002H)
 L600:
@@ -2075,7 +2075,7 @@ L606:
 L607:
         LD    (05002H),HL
 L608:
-        ;;test6.j(227)   write(i);         // 1018
+        ;;test6.j(227)   println(i);         // 1018
 L609:
         LD    HL,(05002H)
 L610:
@@ -2096,7 +2096,7 @@ L616:
 L617:
         LD    (05002H),HL
 L618:
-        ;;test6.j(230)   write(i);         // 1019
+        ;;test6.j(230)   println(i);         // 1019
 L619:
         LD    HL,(05002H)
 L620:
@@ -2111,7 +2111,7 @@ L623:
 L624:
         LD    (05002H),HL
 L625:
-        ;;test6.j(232)   write(i);         // 1020
+        ;;test6.j(232)   println(i);         // 1020
 L626:
         LD    HL,(05002H)
 L627:
@@ -2132,7 +2132,7 @@ L633:
 L634:
         LD    (05002H),HL
 L635:
-        ;;test6.j(235)   write(i);         // 1021
+        ;;test6.j(235)   println(i);         // 1021
 L636:
         LD    HL,(05002H)
 L637:
@@ -2146,7 +2146,7 @@ L640:
 L641:
         ;;test6.j(239)   /*************************/
 L642:
-        ;;test6.j(240)   write(1024 - 2);  // 1022
+        ;;test6.j(240)   println(1024 - 2);  // 1022
 L643:
         LD    HL,1024
 L644:
@@ -2156,7 +2156,7 @@ L644:
 L645:
         CALL  writeHL
 L646:
-        ;;test6.j(241)   write(1523 - 500);// 1023
+        ;;test6.j(241)   println(1523 - 500);// 1023
 L647:
         LD    HL,1523
 L648:
@@ -2176,7 +2176,7 @@ L652:
 L653:
         LD    (05002H),HL
 L654:
-        ;;test6.j(243)   write(i);         // 1024
+        ;;test6.j(243)   println(i);         // 1024
 L655:
         LD    HL,(05002H)
 L656:
@@ -2192,7 +2192,7 @@ L659:
 L660:
         LD    (05002H),HL
 L661:
-        ;;test6.j(245)   write(i);         // 1025
+        ;;test6.j(245)   println(i);         // 1025
 L662:
         LD    HL,(05002H)
 L663:
@@ -2218,7 +2218,7 @@ L672:
 L673:
         LD    (05002H),HL
 L674:
-        ;;test6.j(250)   write(j - 14);    // 1026
+        ;;test6.j(250)   println(j - 14);    // 1026
 L675:
         LD    HL,(05004H)
 L676:
@@ -2228,7 +2228,7 @@ L676:
 L677:
         CALL  writeHL
 L678:
-        ;;test6.j(251)   write(j - b);     // 1027
+        ;;test6.j(251)   println(j - b);     // 1027
 L679:
         LD    HL,(05004H)
 L680:
@@ -2244,7 +2244,7 @@ L683:
 L684:
         LD    (05004H),HL
 L685:
-        ;;test6.j(253)   write(j - 972);   // 1028
+        ;;test6.j(253)   println(j - 972);   // 1028
 L686:
         LD    HL,(05004H)
 L687:
@@ -2254,7 +2254,7 @@ L687:
 L688:
         CALL  writeHL
 L689:
-        ;;test6.j(254)   write(3029 - j);  // 1029
+        ;;test6.j(254)   println(3029 - j);  // 1029
 L690:
         LD    HL,3029
 L691:
@@ -2264,7 +2264,7 @@ L691:
 L692:
         CALL  writeHL
 L693:
-        ;;test6.j(255)   write(i - j);     // 1030
+        ;;test6.j(255)   println(i - j);     // 1030
 L694:
         LD    HL,(05002H)
 L695:
@@ -2298,7 +2298,7 @@ L706:
 L707:
         LD    (05002H),HL
 L708:
-        ;;test6.j(260)   write(i);         // 1031
+        ;;test6.j(260)   println(i);         // 1031
 L709:
         LD    HL,(05002H)
 L710:
@@ -2314,7 +2314,7 @@ L713:
 L714:
         LD    (05002H),HL
 L715:
-        ;;test6.j(262)   write(i);         // 1032
+        ;;test6.j(262)   println(i);         // 1032
 L716:
         LD    HL,(05002H)
 L717:
@@ -2336,7 +2336,7 @@ L723:
 L724:
         LD    (05002H),HL
 L725:
-        ;;test6.j(265)   write(i);         // 1033
+        ;;test6.j(265)   println(i);         // 1033
 L726:
         LD    HL,(05002H)
 L727:
@@ -2352,7 +2352,7 @@ L730:
 L731:
         LD    (05002H),HL
 L732:
-        ;;test6.j(267)   write(i);         // 1034
+        ;;test6.j(267)   println(i);         // 1034
 L733:
         LD    HL,(05002H)
 L734:
@@ -2374,7 +2374,7 @@ L740:
 L741:
         LD    (05002H),HL
 L742:
-        ;;test6.j(270)   write(i);         // 1035
+        ;;test6.j(270)   println(i);         // 1035
 L743:
         LD    HL,(05002H)
 L744:
@@ -2388,7 +2388,7 @@ L747:
 L748:
         ;;test6.j(274)   /****************************/
 L749:
-        ;;test6.j(275)   write(518 * 2);   // 1036
+        ;;test6.j(275)   println(518 * 2);   // 1036
 L750:
         LD    HL,518
 L751:
@@ -2397,7 +2397,7 @@ L751:
 L752:
         CALL  writeHL
 L753:
-        ;;test6.j(276)   write(1 * 1037);  // 1037
+        ;;test6.j(276)   println(1 * 1037);  // 1037
 L754:
         LD    A,1
 L755:
@@ -2409,7 +2409,7 @@ L756:
 L757:
         CALL  writeHL
 L758:
-        ;;test6.j(277)   write(500 * 504 - 54354); // 1038 = 55392 - 54354
+        ;;test6.j(277)   println(500 * 504 - 54354); // 1038 = 55392 - 54354
 L759:
         LD    HL,500
 L760:
@@ -2433,7 +2433,7 @@ L766:
 L767:
         LD    (05002H),HL
 L768:
-        ;;test6.j(280)   write(i);         // 1039
+        ;;test6.j(280)   println(i);         // 1039
 L769:
         LD    HL,(05002H)
 L770:
@@ -2451,7 +2451,7 @@ L774:
 L775:
         LD    (05002H),HL
 L776:
-        ;;test6.j(282)   write(i);         // 1040
+        ;;test6.j(282)   println(i);         // 1040
 L777:
         LD    HL,(05002H)
 L778:
@@ -2465,7 +2465,7 @@ L781:
 L782:
         LD    (05002H),HL
 L783:
-        ;;test6.j(285)   write(i * 1);     // 1041
+        ;;test6.j(285)   println(i * 1);     // 1041
 L784:
         LD    HL,(05002H)
 L785:
@@ -2480,7 +2480,7 @@ L788:
 L789:
         LD    (05002H),HL
 L790:
-        ;;test6.j(287)   write(2 * i);     // 1042
+        ;;test6.j(287)   println(2 * i);     // 1042
 L791:
         LD    A,2
 L792:
@@ -2509,7 +2509,7 @@ L801:
 L802:
         LD    (05002H),HL
 L803:
-        ;;test6.j(291)   write(i);         // 1043
+        ;;test6.j(291)   println(i);         // 1043
 L804:
         LD    HL,(05002H)
 L805:
@@ -2533,7 +2533,7 @@ L812:
 L813:
         LD    (05002H),HL
 L814:
-        ;;test6.j(294)   write(i);         // 1044
+        ;;test6.j(294)   println(i);         // 1044
 L815:
         LD    HL,(05002H)
 L816:
@@ -2554,7 +2554,7 @@ L821:
 L822:
         LD    (05002H),HL
 L823:
-        ;;test6.j(297)   write(i);         // 1045
+        ;;test6.j(297)   println(i);         // 1045
 L824:
         LD    HL,(05002H)
 L825:
@@ -2579,7 +2579,7 @@ L832:
 L833:
         LD    (05002H),HL
 L834:
-        ;;test6.j(300)   write(i);         // 1046
+        ;;test6.j(300)   println(i);         // 1046
 L835:
         LD    HL,(05002H)
 L836:
@@ -2604,7 +2604,7 @@ L843:
 L844:
         LD    (05002H),HL
 L845:
-        ;;test6.j(303)   write(i);         // 1047
+        ;;test6.j(303)   println(i);         // 1047
 L846:
         LD    HL,(05002H)
 L847:
@@ -2618,13 +2618,13 @@ L850:
 L851:
         ;;test6.j(307)   /************/
 L852:
-        ;;test6.j(308)   write("Nu komen 24.764 en 25.064");
+        ;;test6.j(308)   println("Nu komen 24.764 en 25.064");
 L853:
         LD    HL,876
 L854:
         CALL  putStr
 L855:
-        ;;test6.j(309)   write(300 * 301); // 90.300 % 65536 = 24.764
+        ;;test6.j(309)   println(300 * 301); // 90.300 % 65536 = 24.764
 L856:
         LD    HL,300
 L857:
@@ -2642,7 +2642,7 @@ L861:
 L862:
         LD    (05002H),HL
 L863:
-        ;;test6.j(311)   write(i);         // 90.600 % 65536 = 25.064
+        ;;test6.j(311)   println(i);         // 90.600 % 65536 = 25.064
 L864:
         LD    HL,(05002H)
 L865:
@@ -2650,7 +2650,7 @@ L865:
 L866:
         ;;test6.j(312) 
 L867:
-        ;;test6.j(313)   write("Klaar");
+        ;;test6.j(313)   println("Klaar");
 L868:
         LD    HL,877
 L869:

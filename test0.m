@@ -6,28 +6,28 @@
    5 ;test0.j(3)   byte b = 2;
    6 acc8= constant 2
    7 acc8=> variable 2
-   8 ;test0.j(4)   write(0);
+   8 ;test0.j(4)   println(0);
    9 acc8= constant 0
   10 call writeAcc8
-  11 ;test0.j(5)   write(i);
+  11 ;test0.j(5)   println(i);
   12 acc16= variable 0
   13 call writeAcc16
-  14 ;test0.j(6)   write(b);
+  14 ;test0.j(6)   println(b);
   15 acc8= variable 2
   16 call writeAcc8
-  17 ;test0.j(7)   write("Hallo" + "Wereld.");
+  17 ;test0.j(7)   println("Hallo" + "Wereld.");
   18 acc16= constant 34
   19 writeString
   20 acc16= constant 35
   21 writeString
-  22 ;test0.j(8)   write("Nog" + " een" + " bericht.");
+  22 ;test0.j(8)   println("Nog" + " een" + " bericht.");
   23 acc16= constant 36
   24 writeString
   25 acc16= constant 37
   26 writeString
   27 acc16= constant 38
   28 writeString
-  29 ;test0.j(9)   write("Klaar.");
+  29 ;test0.j(9)   println("Klaar.");
   30 acc16= constant 39
   31 writeString
   32 ;test0.j(10) }

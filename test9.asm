@@ -741,19 +741,19 @@ L7:
 L8:
         ;;test9.j(4) 
 L9:
-        ;;test9.j(5)   write(0);
+        ;;test9.j(5)   println(0);
 L10:
         LD    A,0
 L11:
         CALL  writeA
 L12:
-        ;;test9.j(6)   write(1);
+        ;;test9.j(6)   println(1);
 L13:
         LD    A,1
 L14:
         CALL  writeA
 L15:
-        ;;test9.j(7)   if (6561 > 9) write (2); else write (999);
+        ;;test9.j(7)   if (6561 > 9) println (2); else println (999);
 L16:
         LD    HL,6561
 L17:
@@ -777,7 +777,7 @@ L23:
 L24:
         CALL  writeHL
 L25:
-        ;;test9.j(8)   if (9 < 6561) write (3); else write (999);
+        ;;test9.j(8)   if (9 < 6561) println (3); else println (999);
 L26:
         LD    A,9
 L27:
@@ -800,7 +800,7 @@ L33:
 L34:
         CALL  writeHL
 L35:
-        ;;test9.j(9)   if (3 * 3 < 6561) write (4); else write (999);
+        ;;test9.j(9)   if (3 * 3 < 6561) println (4); else println (999);
 L36:
         LD    A,3
 L37:
@@ -828,7 +828,7 @@ L44:
 L45:
         CALL  writeHL
 L46:
-        ;;test9.j(10)   if (6561 > 3 * 3) write (5); else write (999);
+        ;;test9.j(10)   if (6561 > 3 * 3) println (5); else println (999);
 L47:
         LD    A,3
 L48:
@@ -857,7 +857,7 @@ L55:
 L56:
         CALL  writeHL
 L57:
-        ;;test9.j(11)   if (6561 * 1 > 9) write (6); else write (999);
+        ;;test9.j(11)   if (6561 * 1 > 9) println (6); else println (999);
 L58:
         LD    HL,6561
 L59:
@@ -884,7 +884,7 @@ L66:
 L67:
         CALL  writeHL
 L68:
-        ;;test9.j(12)   if (9 < 6561 * 1) write (7); else write (999);
+        ;;test9.j(12)   if (9 < 6561 * 1) println (7); else println (999);
 L69:
         LD    HL,6561
 L70:
@@ -910,7 +910,7 @@ L77:
 L78:
         CALL  writeHL
 L79:
-        ;;test9.j(13)   if (6561 * 1 > 3 * 3) write (8); else write (999);
+        ;;test9.j(13)   if (6561 * 1 > 3 * 3) println (8); else println (999);
 L80:
         LD    HL,6561
 L81:
@@ -946,7 +946,7 @@ L91:
 L92:
         CALL  writeHL
 L93:
-        ;;test9.j(14)   if (3 * 3 < 6561 * 1) write (9); else write (999);
+        ;;test9.j(14)   if (3 * 3 < 6561 * 1) println (9); else println (999);
 L94:
         LD    A,3
 L95:
@@ -983,7 +983,7 @@ L106:
 L107:
         ;;test9.j(15) 
 L108:
-        ;;test9.j(16)   if (b < i) write (10); else write (999);
+        ;;test9.j(16)   if (b < i) println (10); else println (999);
 L109:
         LD    A,(05000H)
 L110:
@@ -1006,7 +1006,7 @@ L116:
 L117:
         CALL  writeHL
 L118:
-        ;;test9.j(17)   if (i > b) write (11); else write (999);
+        ;;test9.j(17)   if (i > b) println (11); else println (999);
 L119:
         LD    HL,(05001H)
 L120:
@@ -1030,7 +1030,7 @@ L126:
 L127:
         CALL  writeHL
 L128:
-        ;;test9.j(18)   if (b < 6561 * 1) write (12); else write (999);
+        ;;test9.j(18)   if (b < 6561 * 1) println (12); else println (999);
 L129:
         LD    HL,6561
 L130:
@@ -1056,7 +1056,7 @@ L137:
 L138:
         CALL  writeHL
 L139:
-        ;;test9.j(19)   if (i > 3 * 3) write (13); else write (999);
+        ;;test9.j(19)   if (i > 3 * 3) println (13); else println (999);
 L140:
         LD    A,3
 L141:
@@ -1085,7 +1085,7 @@ L148:
 L149:
         CALL  writeHL
 L150:
-        ;;test9.j(20)   if (6561 * 1 > b) write (14); else write (999);
+        ;;test9.j(20)   if (6561 * 1 > b) println (14); else println (999);
 L151:
         LD    HL,6561
 L152:
@@ -1112,7 +1112,7 @@ L159:
 L160:
         CALL  writeHL
 L161:
-        ;;test9.j(21)   if (3 * 3 < i) write (15); else write (999);
+        ;;test9.j(21)   if (3 * 3 < i) println (15); else println (999);
 L162:
         LD    A,3
 L163:
@@ -1140,7 +1140,7 @@ L170:
 L171:
         CALL  writeHL
 L172:
-        ;;test9.j(22)   if (b < i * 1) write (16); else write (999);
+        ;;test9.j(22)   if (b < i * 1) println (16); else println (999);
 L173:
         LD    HL,(05001H)
 L174:
@@ -1166,7 +1166,7 @@ L181:
 L182:
         CALL  writeHL
 L183:
-        ;;test9.j(23)   if (i > b * 1) write (17); else write (999);
+        ;;test9.j(23)   if (i > b * 1) println (17); else println (999);
 L184:
         LD    A,(05000H)
 L185:
@@ -1195,7 +1195,7 @@ L192:
 L193:
         CALL  writeHL
 L194:
-        ;;test9.j(24)   if (b * 1 < i) write (18); else write (999);
+        ;;test9.j(24)   if (b * 1 < i) println (18); else println (999);
 L195:
         LD    A,(05000H)
 L196:
@@ -1223,7 +1223,7 @@ L203:
 L204:
         CALL  writeHL
 L205:
-        ;;test9.j(25)   if (i * 1 > b) write (19); else write (999);
+        ;;test9.j(25)   if (i * 1 > b) println (19); else println (999);
 L206:
         LD    HL,(05001H)
 L207:
@@ -1250,7 +1250,7 @@ L214:
 L215:
         CALL  writeHL
 L216:
-        ;;test9.j(26)   if (b * 1 < i * 1) write (20); else write (999);
+        ;;test9.j(26)   if (b * 1 < i * 1) println (20); else println (999);
 L217:
         LD    A,(05000H)
 L218:
@@ -1285,7 +1285,7 @@ L228:
 L229:
         CALL  writeHL
 L230:
-        ;;test9.j(27)   if (i * 1 > b * 1) write (21); else write (999);
+        ;;test9.j(27)   if (i * 1 > b * 1) println (21); else println (999);
 L231:
         LD    HL,(05001H)
 L232:
@@ -1323,7 +1323,7 @@ L243:
 L244:
         ;;test9.j(28) 
 L245:
-        ;;test9.j(29)   write("Klaar");
+        ;;test9.j(29)   println("Klaar");
 L246:
         LD    HL,250
 L247:

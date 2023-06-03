@@ -727,7 +727,7 @@ L0:
 L1:
         ;;test4.j(1) class TestMultiplyDivide {
 L2:
-        ;;test4.j(2)   write(0 * 1);
+        ;;test4.j(2)   println(0 * 1);
 L3:
         LD    A,0
 L4:
@@ -738,7 +738,7 @@ L4:
 L5:
         CALL  writeA
 L6:
-        ;;test4.j(3)   write(1 * 1);
+        ;;test4.j(3)   println(1 * 1);
 L7:
         LD    A,1
 L8:
@@ -749,7 +749,7 @@ L8:
 L9:
         CALL  writeA
 L10:
-        ;;test4.j(4)   write(4 / 2);
+        ;;test4.j(4)   println(4 / 2);
 L11:
         LD    A,4
 L12:
@@ -758,7 +758,7 @@ L12:
 L13:
         CALL  writeA
 L14:
-        ;;test4.j(5)   write(9 / 3);
+        ;;test4.j(5)   println(9 / 3);
 L15:
         LD    A,9
 L16:
@@ -767,7 +767,7 @@ L16:
 L17:
         CALL  writeA
 L18:
-        ;;test4.j(6)   write(8 / 2);
+        ;;test4.j(6)   println(8 / 2);
 L19:
         LD    A,8
 L20:
@@ -776,7 +776,7 @@ L20:
 L21:
         CALL  writeA
 L22:
-        ;;test4.j(7)   write(5 / 1);
+        ;;test4.j(7)   println(5 / 1);
 L23:
         LD    A,5
 L24:
@@ -785,7 +785,7 @@ L24:
 L25:
         CALL  writeA
 L26:
-        ;;test4.j(8)   write((3 * 8) / 4);
+        ;;test4.j(8)   println((3 * 8) / 4);
 L27:
         LD    A,3
 L28:
@@ -799,7 +799,7 @@ L29:
 L30:
         CALL  writeA
 L31:
-        ;;test4.j(9)   write((7 * 7) / 7);
+        ;;test4.j(9)   println((7 * 7) / 7);
 L32:
         LD    A,7
 L33:
@@ -813,7 +813,7 @@ L34:
 L35:
         CALL  writeA
 L36:
-        ;;test4.j(10)   write((4 * 5 * 2) / 5);
+        ;;test4.j(10)   println((4 * 5 * 2) / 5);
 L37:
         LD    A,4
 L38:
@@ -832,7 +832,7 @@ L40:
 L41:
         CALL  writeA
 L42:
-        ;;test4.j(11)   write(6561 / 729);
+        ;;test4.j(11)   println(6561 / 729);
 L43:
         LD    HL,6561
 L44:
@@ -841,7 +841,7 @@ L44:
 L45:
         CALL  writeHL
 L46:
-        ;;test4.j(12)   write(60 / 6);
+        ;;test4.j(12)   println(60 / 6);
 L47:
         LD    A,60
 L48:
@@ -850,7 +850,7 @@ L48:
 L49:
         CALL  writeA
 L50:
-        ;;test4.j(13)   write(22 / 2);
+        ;;test4.j(13)   println(22 / 2);
 L51:
         LD    A,22
 L52:
@@ -859,13 +859,13 @@ L52:
 L53:
         CALL  writeA
 L54:
-        ;;test4.j(14)   write(12);
+        ;;test4.j(14)   println(12);
 L55:
         LD    A,12
 L56:
         CALL  writeA
 L57:
-        ;;test4.j(15)   write("Klaar");
+        ;;test4.j(15)   println("Klaar");
 L58:
         LD    HL,62
 L59:

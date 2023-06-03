@@ -757,7 +757,7 @@ L13:
 L14:
         ;;test11.j(6) 
 L15:
-        ;;test11.j(7)   write(0);
+        ;;test11.j(7)   println(0);
 L16:
         LD    A,0
 L17:
@@ -795,7 +795,7 @@ L31:
 L32:
         LD    (05007H),A
 L33:
-        ;;test11.j(13)     write (c);
+        ;;test11.j(13)     println (c);
 L34:
         LD    A,(05007H)
 L35:
@@ -826,7 +826,7 @@ L46:
 L47:
         ;;test11.j(23)   // byte - byte
 L48:
-        ;;test11.j(24)   for (byte b = 3; 103 == b+100; b++) { write (b); }
+        ;;test11.j(24)   for (byte b = 3; 103 == b+100; b++) { println (b); }
 L49:
         LD    A,3
 L50:
@@ -853,7 +853,7 @@ L59:
 L60:
         JP    L56
 L61:
-        ;;test11.j(25)   for (byte b = 4; 105 != b+100; b++) { write (b); }
+        ;;test11.j(25)   for (byte b = 4; 105 != b+100; b++) { println (b); }
 L62:
         LD    A,4
 L63:
@@ -886,7 +886,7 @@ L75:
 L76:
         LD    (05001H),A
 L77:
-        ;;test11.j(27)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2++; }
+        ;;test11.j(27)   for (byte b = 32; 134 > b+100; b++) { println (b2); b2++; }
 L78:
         LD    A,32
 L79:
@@ -916,7 +916,7 @@ L89:
 L90:
         JP    L85
 L91:
-        ;;test11.j(28)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2++; }
+        ;;test11.j(28)   for (byte b = 34; 135 >= b+100; b++) { println (b2); b2++; }
 L92:
         LD    A,34
 L93:
@@ -947,7 +947,7 @@ L103:
 L104:
         JP    L99
 L105:
-        ;;test11.j(29)   for (byte b = 28; 126 <  b+100; b--) { write (b2); b2++; }
+        ;;test11.j(29)   for (byte b = 28; 126 <  b+100; b--) { println (b2); b2++; }
 L106:
         LD    A,28
 L107:
@@ -977,7 +977,7 @@ L117:
 L118:
         JP    L113
 L119:
-        ;;test11.j(30)   for (byte b = 26; 125 <= b+100; b--) { write (b2); b2++; }
+        ;;test11.j(30)   for (byte b = 26; 125 <= b+100; b--) { println (b2); b2++; }
 L120:
         LD    A,26
 L121:
@@ -1009,7 +1009,7 @@ L132:
 L133:
         ;;test11.j(31)   // byte - integer
 L134:
-        ;;test11.j(32)   for(word i = 24; 24  == i+0; i--) { write (b2); b2++; }
+        ;;test11.j(32)   for(word i = 24; 24  == i+0; i--) { println (b2); b2++; }
 L135:
         LD    A,24
 L136:
@@ -1048,7 +1048,7 @@ L147:
 L148:
         JP    L143
 L149:
-        ;;test11.j(33)   for(word i = 23; 120 != i+100; i--) { write (b2); b2++; }
+        ;;test11.j(33)   for(word i = 23; 120 != i+100; i--) { println (b2); b2++; }
 L150:
         LD    A,23
 L151:
@@ -1087,7 +1087,7 @@ L162:
 L163:
         JP    L158
 L164:
-        ;;test11.j(34)   for(word i = 20; 122 > i+100; i++) { write (b2); b2++; }
+        ;;test11.j(34)   for(word i = 20; 122 > i+100; i++) { println (b2); b2++; }
 L165:
         LD    A,20
 L166:
@@ -1126,7 +1126,7 @@ L177:
 L178:
         JP    L173
 L179:
-        ;;test11.j(35)   for(word i = 22; 123 >= i+100; i++) { write (b2); b2++; }
+        ;;test11.j(35)   for(word i = 22; 123 >= i+100; i++) { println (b2); b2++; }
 L180:
         LD    A,22
 L181:
@@ -1165,7 +1165,7 @@ L192:
 L193:
         JP    L188
 L194:
-        ;;test11.j(36)   for(word i = 16; 114 <  i+100; i--) { write (b2); b2++; }
+        ;;test11.j(36)   for(word i = 16; 114 <  i+100; i--) { println (b2); b2++; }
 L195:
         LD    A,16
 L196:
@@ -1204,7 +1204,7 @@ L207:
 L208:
         JP    L203
 L209:
-        ;;test11.j(37)   for(word i = 14; 113 <= i+100; i--) { write (b2); b2++; }
+        ;;test11.j(37)   for(word i = 14; 113 <= i+100; i--) { println (b2); b2++; }
 L210:
         LD    A,14
 L211:
@@ -1250,7 +1250,7 @@ L225:
 L226:
         ;;test11.j(40)   // integer - integer
 L227:
-        ;;test11.j(41)   for(word i = 12; 1012 == i+1000; i--) { write (b2); b2++; }
+        ;;test11.j(41)   for(word i = 12; 1012 == i+1000; i--) { println (b2); b2++; }
 L228:
         LD    A,12
 L229:
@@ -1286,7 +1286,7 @@ L239:
 L240:
         JP    L235
 L241:
-        ;;test11.j(42)   for(word i = 11; 1008 != i+1000; i--) { write (b2); b2++; }
+        ;;test11.j(42)   for(word i = 11; 1008 != i+1000; i--) { println (b2); b2++; }
 L242:
         LD    A,11
 L243:
@@ -1322,7 +1322,7 @@ L253:
 L254:
         JP    L249
 L255:
-        ;;test11.j(43)   for(word i = 8; 1010 > i+1000; i++) { write (b2); b2++; }
+        ;;test11.j(43)   for(word i = 8; 1010 > i+1000; i++) { println (b2); b2++; }
 L256:
         LD    A,8
 L257:
@@ -1358,7 +1358,7 @@ L267:
 L268:
         JP    L263
 L269:
-        ;;test11.j(44)   for(word i = 10; 1011 >= i+1000; i++) { write (b2); b2++; }
+        ;;test11.j(44)   for(word i = 10; 1011 >= i+1000; i++) { println (b2); b2++; }
 L270:
         LD    A,10
 L271:
@@ -1395,7 +1395,7 @@ L281:
 L282:
         JP    L277
 L283:
-        ;;test11.j(45)   for(word i = 4; 1002 <  i+1000; i--) { write (b2); b2++; }
+        ;;test11.j(45)   for(word i = 4; 1002 <  i+1000; i--) { println (b2); b2++; }
 L284:
         LD    A,4
 L285:
@@ -1431,7 +1431,7 @@ L295:
 L296:
         JP    L291
 L297:
-        ;;test11.j(46)   for(word i = 2; 1001 <= i+1000; i--) { write (b2); b2++; }
+        ;;test11.j(46)   for(word i = 2; 1001 <= i+1000; i--) { println (b2); b2++; }
 L298:
         LD    A,2
 L299:
@@ -1475,7 +1475,7 @@ L313:
 L314:
         ;;test11.j(50)   // byte - byte
 L315:
-        ;;test11.j(51)   for (byte b = 42; 41 <= b; b--) { write (b2); b2++; }
+        ;;test11.j(51)   for (byte b = 42; 41 <= b; b--) { println (b2); b2++; }
 L316:
         LD    A,42
 L317:
@@ -1505,7 +1505,7 @@ L327:
 L328:
         ;;test11.j(52)   // byte - integer
 L329:
-        ;;test11.j(53)   for(word i = 40; 39 <= i; i--) { write (b2); b2++; }
+        ;;test11.j(53)   for(word i = 40; 39 <= i; i--) { println (b2); b2++; }
 L330:
         LD    A,40
 L331:
@@ -1548,7 +1548,7 @@ L344:
 L345:
         ;;test11.j(56)   // integer - integer
 L346:
-        ;;test11.j(57)   for(word i = 1038; 1037 <= i; i--) { write (b2); b2++; }
+        ;;test11.j(57)   for(word i = 1038; 1037 <= i; i--) { println (b2); b2++; }
 L347:
         LD    HL,1038
 L348:
@@ -1589,13 +1589,13 @@ L362:
 L363:
         ;;test11.j(62)   //TODO
 L364:
-        ;;test11.j(63)   write(43);
+        ;;test11.j(63)   println(43);
 L365:
         LD    A,43
 L366:
         CALL  writeA
 L367:
-        ;;test11.j(64)   write(44);
+        ;;test11.j(64)   println(44);
 L368:
         LD    A,44
 L369:
@@ -1607,13 +1607,13 @@ L371:
 L372:
         ;;test11.j(67)   //TODO
 L373:
-        ;;test11.j(68)   write(45);
+        ;;test11.j(68)   println(45);
 L374:
         LD    A,45
 L375:
         CALL  writeA
 L376:
-        ;;test11.j(69)   write(46);
+        ;;test11.j(69)   println(46);
 L377:
         LD    A,46
 L378:
@@ -1625,13 +1625,13 @@ L380:
 L381:
         ;;test11.j(72)   //TODO
 L382:
-        ;;test11.j(73)   write(47);
+        ;;test11.j(73)   println(47);
 L383:
         LD    A,47
 L384:
         CALL  writeA
 L385:
-        ;;test11.j(74)   write(48);
+        ;;test11.j(74)   println(48);
 L386:
         LD    A,48
 L387:
@@ -1643,13 +1643,13 @@ L389:
 L390:
         ;;test11.j(77)   //TODO
 L391:
-        ;;test11.j(78)   write(49);
+        ;;test11.j(78)   println(49);
 L392:
         LD    A,49
 L393:
         CALL  writeA
 L394:
-        ;;test11.j(79)   write(50);
+        ;;test11.j(79)   println(50);
 L395:
         LD    A,50
 L396:
@@ -1665,13 +1665,13 @@ L400:
 L401:
         ;;test11.j(84)   //TODO
 L402:
-        ;;test11.j(85)   write(51);
+        ;;test11.j(85)   println(51);
 L403:
         LD    A,51
 L404:
         CALL  writeA
 L405:
-        ;;test11.j(86)   write(52);
+        ;;test11.j(86)   println(52);
 L406:
         LD    A,52
 L407:
@@ -1683,13 +1683,13 @@ L409:
 L410:
         ;;test11.j(89)   //TODO
 L411:
-        ;;test11.j(90)   write(53);
+        ;;test11.j(90)   println(53);
 L412:
         LD    A,53
 L413:
         CALL  writeA
 L414:
-        ;;test11.j(91)   write(54);
+        ;;test11.j(91)   println(54);
 L415:
         LD    A,54
 L416:
@@ -1701,13 +1701,13 @@ L418:
 L419:
         ;;test11.j(94)   //TODO
 L420:
-        ;;test11.j(95)   write(55);
+        ;;test11.j(95)   println(55);
 L421:
         LD    A,55
 L422:
         CALL  writeA
 L423:
-        ;;test11.j(96)   write(56);
+        ;;test11.j(96)   println(56);
 L424:
         LD    A,56
 L425:
@@ -1719,13 +1719,13 @@ L427:
 L428:
         ;;test11.j(99)   //TODO
 L429:
-        ;;test11.j(100)   write(57);
+        ;;test11.j(100)   println(57);
 L430:
         LD    A,57
 L431:
         CALL  writeA
 L432:
-        ;;test11.j(101)   write(58);
+        ;;test11.j(101)   println(58);
 L433:
         LD    A,58
 L434:
@@ -1745,7 +1745,7 @@ L440:
 L441:
         LD    (05001H),A
 L442:
-        ;;test11.j(107)   for (byte b = 56; b+0 <= 57; b++) { write (b2); b2++; }
+        ;;test11.j(107)   for (byte b = 56; b+0 <= 57; b++) { println (b2); b2++; }
 L443:
         LD    A,56
 L444:
@@ -1782,7 +1782,7 @@ L457:
 L458:
         ;;test11.j(110)   // integer - byte
 L459:
-        ;;test11.j(111)   for (word i = 54; i+0 <= 55; i++) { write (b2); b2++;}
+        ;;test11.j(111)   for (word i = 54; i+0 <= 55; i++) { println (b2); b2++;}
 L460:
         LD    A,54
 L461:
@@ -1825,7 +1825,7 @@ L473:
 L474:
         ;;test11.j(112)   // integer - integer
 L475:
-        ;;test11.j(113)   for(word i = 1052; i+0 <= 1053; i++) { write (b2); b2++; }
+        ;;test11.j(113)   for(word i = 1052; i+0 <= 1053; i++) { println (b2); b2++; }
 L476:
         LD    HL,1052
 L477:
@@ -1868,7 +1868,7 @@ L491:
 L492:
         ;;test11.j(117)   // byte - byte
 L493:
-        ;;test11.j(118)   for (byte b = 64; 63+0 <= b+0; b--) { write (b2); b2++; }
+        ;;test11.j(118)   for (byte b = 64; 63+0 <= b+0; b--) { println (b2); b2++; }
 L494:
         LD    A,64
 L495:
@@ -1907,7 +1907,7 @@ L509:
 L510:
         ;;test11.j(119)   // byte - integer
 L511:
-        ;;test11.j(120)   for(word i = 62; 61+0 <= i+0; i--) { write (b2); b2++; }
+        ;;test11.j(120)   for(word i = 62; 61+0 <= i+0; i--) { println (b2); b2++; }
 L512:
         LD    A,62
 L513:
@@ -1963,7 +1963,7 @@ L532:
         LD    H,0
         LD    (05002H),HL
 L533:
-        ;;test11.j(123)   for (byte b = 60; i2+0 <= b+0; b--) { write (b2); b2++; }
+        ;;test11.j(123)   for (byte b = 60; i2+0 <= b+0; b--) { println (b2); b2++; }
 L534:
         LD    A,60
 L535:
@@ -2009,7 +2009,7 @@ L550:
 L551:
         ;;test11.j(124)   // integer - integer
 L552:
-        ;;test11.j(125)   for(word i = 1058; 1000+57 <= i+0; i--) { write (b2); b2++; }
+        ;;test11.j(125)   for(word i = 1058; 1000+57 <= i+0; i--) { println (b2); b2++; }
 L553:
         LD    HL,1058
 L554:
@@ -2058,7 +2058,7 @@ L571:
 L572:
         ;;test11.j(129)   // byte - byte
 L573:
-        ;;test11.j(130)   for (byte b = 72; 71+0 <= b; b--) { write (b2); b2++; }
+        ;;test11.j(130)   for (byte b = 72; 71+0 <= b; b--) { println (b2); b2++; }
 L574:
         LD    A,72
 L575:
@@ -2093,7 +2093,7 @@ L586:
 L587:
         ;;test11.j(131)   // byte - integer
 L588:
-        ;;test11.j(132)   for(word i = 70; 69+0 <= i; i--) { write (b2); b2++; }
+        ;;test11.j(132)   for(word i = 70; 69+0 <= i; i--) { println (b2); b2++; }
 L589:
         LD    A,70
 L590:
@@ -2142,7 +2142,7 @@ L606:
         LD    H,0
         LD    (05002H),HL
 L607:
-        ;;test11.j(135)   for (byte b = 68; i2+0 <= b; b--) { write (b2); b2++; }
+        ;;test11.j(135)   for (byte b = 68; i2+0 <= b; b--) { println (b2); b2++; }
 L608:
         LD    A,68
 L609:
@@ -2182,7 +2182,7 @@ L621:
 L622:
         ;;test11.j(136)   // integer - integer
 L623:
-        ;;test11.j(137)   for(word i = 1066; 1000+65 <= i; i--) { write (b2); b2++; }
+        ;;test11.j(137)   for(word i = 1066; 1000+65 <= i; i--) { println (b2); b2++; }
 L624:
         LD    HL,1066
 L625:
@@ -2227,13 +2227,13 @@ L640:
 L641:
         ;;test11.j(142)   //TODO
 L642:
-        ;;test11.j(143)   write(81);
+        ;;test11.j(143)   println(81);
 L643:
         LD    A,81
 L644:
         CALL  writeA
 L645:
-        ;;test11.j(144)   write(82);
+        ;;test11.j(144)   println(82);
 L646:
         LD    A,82
 L647:
@@ -2243,13 +2243,13 @@ L648:
 L649:
         ;;test11.j(146)   //TODO
 L650:
-        ;;test11.j(147)   write(83);
+        ;;test11.j(147)   println(83);
 L651:
         LD    A,83
 L652:
         CALL  writeA
 L653:
-        ;;test11.j(148)   write(84);
+        ;;test11.j(148)   println(84);
 L654:
         LD    A,84
 L655:
@@ -2259,13 +2259,13 @@ L656:
 L657:
         ;;test11.j(150)   //TODO
 L658:
-        ;;test11.j(151)   write(85);
+        ;;test11.j(151)   println(85);
 L659:
         LD    A,85
 L660:
         CALL  writeA
 L661:
-        ;;test11.j(152)   write(86);
+        ;;test11.j(152)   println(86);
 L662:
         LD    A,86
 L663:
@@ -2275,13 +2275,13 @@ L664:
 L665:
         ;;test11.j(154)   //TODO
 L666:
-        ;;test11.j(155)   write(87);
+        ;;test11.j(155)   println(87);
 L667:
         LD    A,87
 L668:
         CALL  writeA
 L669:
-        ;;test11.j(156)   write(88);
+        ;;test11.j(156)   println(88);
 L670:
         LD    A,88
 L671:
@@ -2297,13 +2297,13 @@ L675:
 L676:
         ;;test11.j(161)   //TODO
 L677:
-        ;;test11.j(162)   write(89);
+        ;;test11.j(162)   println(89);
 L678:
         LD    A,89
 L679:
         CALL  writeA
 L680:
-        ;;test11.j(163)   write(90);
+        ;;test11.j(163)   println(90);
 L681:
         LD    A,90
 L682:
@@ -2313,13 +2313,13 @@ L683:
 L684:
         ;;test11.j(165)   //TODO
 L685:
-        ;;test11.j(166)   write(91);
+        ;;test11.j(166)   println(91);
 L686:
         LD    A,91
 L687:
         CALL  writeA
 L688:
-        ;;test11.j(167)   write(92);
+        ;;test11.j(167)   println(92);
 L689:
         LD    A,92
 L690:
@@ -2329,13 +2329,13 @@ L691:
 L692:
         ;;test11.j(169)   //TODO
 L693:
-        ;;test11.j(170)   write(93);
+        ;;test11.j(170)   println(93);
 L694:
         LD    A,93
 L695:
         CALL  writeA
 L696:
-        ;;test11.j(171)   write(94);
+        ;;test11.j(171)   println(94);
 L697:
         LD    A,94
 L698:
@@ -2345,13 +2345,13 @@ L699:
 L700:
         ;;test11.j(173)   //TODO
 L701:
-        ;;test11.j(174)   write(95);
+        ;;test11.j(174)   println(95);
 L702:
         LD    A,95
 L703:
         CALL  writeA
 L704:
-        ;;test11.j(175)   write(96);
+        ;;test11.j(175)   println(96);
 L705:
         LD    A,96
 L706:
@@ -2371,7 +2371,7 @@ L712:
 L713:
         LD    (05001H),A
 L714:
-        ;;test11.j(181)   for (byte b = 96; b <= 97; b++) { write (b2); b2++; }
+        ;;test11.j(181)   for (byte b = 96; b <= 97; b++) { println (b2); b2++; }
 L715:
         LD    A,96
 L716:
@@ -2406,7 +2406,7 @@ L728:
 L729:
         ;;test11.j(184)   // integer - byte
 L730:
-        ;;test11.j(185)   for(word i = 92; i <= 93; i++) { write (b2); b2++; }
+        ;;test11.j(185)   for(word i = 92; i <= 93; i++) { println (b2); b2++; }
 L731:
         LD    A,92
 L732:
@@ -2446,7 +2446,7 @@ L743:
 L744:
         ;;test11.j(186)   // integer - integer
 L745:
-        ;;test11.j(187)   for(word i = 1090; i <= 1091; i++) { write (b2); b2++; }
+        ;;test11.j(187)   for(word i = 1090; i <= 1091; i++) { println (b2); b2++; }
 L746:
         LD    HL,1090
 L747:
@@ -2486,7 +2486,7 @@ L760:
 L761:
         ;;test11.j(191)   // byte - byte
 L762:
-        ;;test11.j(192)   for (byte b = 104; b <= 105+0; b++) { write (b2); b2++; }
+        ;;test11.j(192)   for (byte b = 104; b <= 105+0; b++) { println (b2); b2++; }
 L763:
         LD    A,104
 L764:
@@ -2528,7 +2528,7 @@ L779:
         LD    H,0
         LD    (05002H),HL
 L780:
-        ;;test11.j(195)   for (byte b = 102; b <= i2+0; b++) { write (b2); b2++; }
+        ;;test11.j(195)   for (byte b = 102; b <= i2+0; b++) { println (b2); b2++; }
 L781:
         LD    A,102
 L782:
@@ -2567,7 +2567,7 @@ L794:
 L795:
         ;;test11.j(196)   // integer - byte
 L796:
-        ;;test11.j(197)   for(word i = 100; i <= 101+0; i++) { write (b2); b2++; }
+        ;;test11.j(197)   for(word i = 100; i <= 101+0; i++) { println (b2); b2++; }
 L797:
         LD    A,100
 L798:
@@ -2609,7 +2609,7 @@ L810:
 L811:
         ;;test11.j(198)   // integer - integer
 L812:
-        ;;test11.j(199)   for(word i = 1098; i <= 1099+0; i++) { write (b2); b2++; }
+        ;;test11.j(199)   for(word i = 1098; i <= 1099+0; i++) { println (b2); b2++; }
 L813:
         LD    HL,1098
 L814:
@@ -2651,7 +2651,7 @@ L828:
 L829:
         ;;test11.j(203)   // byte - byte
 L830:
-        ;;test11.j(204)   for (byte b = 112; b2 <= b; b--) { write (b2); b2++; }
+        ;;test11.j(204)   for (byte b = 112; b2 <= b; b--) { println (b2); b2++; }
 L831:
         LD    A,112
 L832:
@@ -2684,7 +2684,7 @@ L842:
 L843:
         ;;test11.j(205)   // byte - integer
 L844:
-        ;;test11.j(206)   for(word i = 116; b2 <= i; i--) { write (b2); b2++; }
+        ;;test11.j(206)   for(word i = 116; b2 <= i; i--) { println (b2); b2++; }
 L845:
         LD    A,116
 L846:
@@ -2731,7 +2731,7 @@ L861:
         LD    H,0
         LD    (05002H),HL
 L862:
-        ;;test11.j(209)   for (byte b = 118; i2 <= b; b--) { write (b2); b2++; }
+        ;;test11.j(209)   for (byte b = 118; i2 <= b; b--) { println (b2); b2++; }
 L863:
         LD    A,118
 L864:
@@ -2776,7 +2776,7 @@ L879:
         LD    H,0
         LD    (05002H),HL
 L880:
-        ;;test11.j(212)   for(word i = b2+4; i2 <= i; i--) { write (b2); b2++; }
+        ;;test11.j(212)   for(word i = b2+4; i2 <= i; i--) { println (b2); b2++; }
 L881:
         LD    A,(05001H)
 L882:
@@ -2878,7 +2878,7 @@ L925:
 L926:
         ;;test11.j(245) 
 L927:
-        ;;test11.j(246)   write("Klaar.");
+        ;;test11.j(246)   println("Klaar.");
 L928:
         LD    HL,932
 L929:

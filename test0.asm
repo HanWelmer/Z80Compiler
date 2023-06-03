@@ -741,25 +741,25 @@ L6:
 L7:
         LD    (05002H),A
 L8:
-        ;;test0.j(4)   write(0);
+        ;;test0.j(4)   println(0);
 L9:
         LD    A,0
 L10:
         CALL  writeA
 L11:
-        ;;test0.j(5)   write(i);
+        ;;test0.j(5)   println(i);
 L12:
         LD    HL,(05000H)
 L13:
         CALL  writeHL
 L14:
-        ;;test0.j(6)   write(b);
+        ;;test0.j(6)   println(b);
 L15:
         LD    A,(05002H)
 L16:
         CALL  writeA
 L17:
-        ;;test0.j(7)   write("Hallo" + "Wereld.");
+        ;;test0.j(7)   println("Hallo" + "Wereld.");
 L18:
         LD    HL,34
 L19:
@@ -769,7 +769,7 @@ L20:
 L21:
         CALL  putStr
 L22:
-        ;;test0.j(8)   write("Nog" + " een" + " bericht.");
+        ;;test0.j(8)   println("Nog" + " een" + " bericht.");
 L23:
         LD    HL,36
 L24:
@@ -783,7 +783,7 @@ L27:
 L28:
         CALL  putStr
 L29:
-        ;;test0.j(9)   write("Klaar.");
+        ;;test0.j(9)   println("Klaar.");
 L30:
         LD    HL,39
 L31:

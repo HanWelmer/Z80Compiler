@@ -747,91 +747,91 @@ L9:
 L10:
         LD    (05002H),A
 L11:
-        ;;test12.j(7)   write(zero);
+        ;;test12.j(7)   println(zero);
 L12:
         LD    HL,(05000H)
 L13:
         CALL  writeHL
 L14:
-        ;;test12.j(8)   write(one);
+        ;;test12.j(8)   println(one);
 L15:
         LD    A,(05002H)
 L16:
         CALL  writeA
 L17:
-        ;;test12.j(9)   write(2);
+        ;;test12.j(9)   println(2);
 L18:
         LD    A,2
 L19:
         CALL  writeA
 L20:
-        ;;test12.j(10)   write("3  Drie keer.");
+        ;;test12.j(10)   println("3  Drie keer.");
 L21:
         LD    HL,67
 L22:
         CALL  putStr
 L23:
-        ;;test12.j(11)   write("3  Drie keer.");
+        ;;test12.j(11)   println("3  Drie keer.");
 L24:
         LD    HL,67
 L25:
         CALL  putStr
 L26:
-        ;;test12.j(12)   write("3  Drie keer.");
+        ;;test12.j(12)   println("3  Drie keer.");
 L27:
         LD    HL,67
 L28:
         CALL  putStr
 L29:
-        ;;test12.j(13)   write("4  Hier klinkt een bel\a en dan gaan we door.");
+        ;;test12.j(13)   println("4  Hier klinkt een bel\a en dan gaan we door.");
 L30:
         LD    HL,68
 L31:
         CALL  putStr
 L32:
-        ;;test12.j(14)   write("5  Dit is pagina 1.\f   En dit is pagina 2.");
+        ;;test12.j(14)   println("5  Dit is pagina 1.\f   En dit is pagina 2.");
 L33:
         LD    HL,69
 L34:
         CALL  putStr
 L35:
-        ;;test12.j(15)   write("6  Dit is gu\boed.");
+        ;;test12.j(15)   println("6  Dit is gu\boed.");
 L36:
         LD    HL,70
 L37:
         CALL  putStr
 L38:
-        ;;test12.j(16)   write("7  Getal na een tab\t1.");
+        ;;test12.j(16)   println("7  Getal na een tab\t1.");
 L39:
         LD    HL,71
 L40:
         CALL  putStr
 L41:
-        ;;test12.j(17)   write("8  Dit zie je niet\r8  Dit zie je wel.");
+        ;;test12.j(17)   println("8  Dit zie je niet\r8  Dit zie je wel.");
 L42:
         LD    HL,72
 L43:
         CALL  putStr
 L44:
-        ;;test12.j(18)   write("9  Dit is regel 1.\n   En dit regel 2.");
+        ;;test12.j(18)   println("9  Dit is regel 1.\n   En dit regel 2.");
 L45:
         LD    HL,73
 L46:
         CALL  putStr
 L47:
-        ;;test12.j(19)   write("10 Hier komt een dubbele quote \".");
+        ;;test12.j(19)   println("10 Hier komt een dubbele quote \".");
 L48:
         LD    HL,74
 L49:
         CALL  putStr
 L50:
-        ;;test12.j(20)   write("11 Hier komt een single quote \'.");
+        ;;test12.j(20)   println("11 Hier komt een single quote \'.");
 L51:
         LD    HL,75
 L52:
         CALL  putStr
 L53:
-        ;;test12.j(21)   write("12 Hier komt een backslash \\.");
+        ;;test12.j(21)   println("12 Hier komt een backslash \\.");
 L54:
         LD    HL,76
 L55:
@@ -843,13 +843,13 @@ L57:
 L58:
         LD    (05003H),HL
 L59:
-        ;;test12.j(23)   write(str);
+        ;;test12.j(23)   println(str);
 L60:
         LD    HL,(05003H)
 L61:
         CALL  putStr
 L62:
-        ;;test12.j(24)   write("Klaar");
+        ;;test12.j(24)   println("Klaar");
 L63:
         LD    HL,78
 L64:

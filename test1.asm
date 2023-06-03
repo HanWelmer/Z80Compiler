@@ -783,7 +783,7 @@ L25:
 L26:
         ;;test1.j(16) 
 L27:
-        ;;test1.j(17)   write(0);
+        ;;test1.j(17)   println(0);
 L28:
         LD    A,0
 L29:
@@ -800,7 +800,7 @@ L34:
         LD    HL,(05000H)
         INC   (HL)
 L35:
-        ;;test1.j(22)   write (b);
+        ;;test1.j(22)   println (b);
 L36:
         LD    A,(05000H)
 L37:
@@ -837,7 +837,7 @@ L51:
 L52:
         LD    (0500BH),A
 L53:
-        ;;test1.j(28)     write (c);
+        ;;test1.j(28)     println (c);
 L54:
         LD    A,(0500AH)
 L55:
@@ -869,7 +869,7 @@ L67:
 L68:
         LD    (05000H),A
 L69:
-        ;;test1.j(39)   while (3 == b+0) { write (b); b++; }
+        ;;test1.j(39)   while (3 == b+0) { println (b); b++; }
 L70:
         LD    A,(05000H)
 L71:
@@ -888,7 +888,7 @@ L76:
 L77:
         JP    L70
 L78:
-        ;;test1.j(40)   while (4 != b+0) { write (b); b++; }
+        ;;test1.j(40)   while (4 != b+0) { println (b); b++; }
 L79:
         LD    A,(05000H)
 L80:
@@ -907,7 +907,7 @@ L85:
 L86:
         JP    L79
 L87:
-        ;;test1.j(41)   while (6 > b+0) { write (b); b++; }
+        ;;test1.j(41)   while (6 > b+0) { println (b); b++; }
 L88:
         LD    A,(05000H)
 L89:
@@ -926,7 +926,7 @@ L94:
 L95:
         JP    L88
 L96:
-        ;;test1.j(42)   while (7 >= b+0) { write (b); b++; }
+        ;;test1.j(42)   while (7 >= b+0) { println (b); b++; }
 L97:
         LD    A,(05000H)
 L98:
@@ -954,7 +954,7 @@ L107:
         LD    H,0
         LD    (05006H),HL
 L108:
-        ;;test1.j(44)   while (6 <  b+0) { write (p); p++; b--; }
+        ;;test1.j(44)   while (6 <  b+0) { println (p); p++; b--; }
 L109:
         LD    A,(05000H)
 L110:
@@ -977,7 +977,7 @@ L116:
 L117:
         JP    L109
 L118:
-        ;;test1.j(45)   while (5 <= b+0) { write (p); p++; b--; }
+        ;;test1.j(45)   while (5 <= b+0) { println (p); p++; b--; }
 L119:
         LD    A,(05000H)
 L120:
@@ -1014,7 +1014,7 @@ L133:
         LD    H,0
         LD    (05002H),HL
 L134:
-        ;;test1.j(50)   while (12 == i+0) { write (i); i++; }
+        ;;test1.j(50)   while (12 == i+0) { println (i); i++; }
 L135:
         LD    HL,(05002H)
 L136:
@@ -1040,7 +1040,7 @@ L142:
 L143:
         JP    L135
 L144:
-        ;;test1.j(51)   while (15 != i+0) { write (i); i++; }
+        ;;test1.j(51)   while (15 != i+0) { println (i); i++; }
 L145:
         LD    HL,(05002H)
 L146:
@@ -1066,7 +1066,7 @@ L152:
 L153:
         JP    L145
 L154:
-        ;;test1.j(52)   while (17 > i+0) { write (i); i++; }
+        ;;test1.j(52)   while (17 > i+0) { println (i); i++; }
 L155:
         LD    HL,(05002H)
 L156:
@@ -1092,7 +1092,7 @@ L162:
 L163:
         JP    L155
 L164:
-        ;;test1.j(53)   while (18 >= i+0) { write (i); i++; }
+        ;;test1.j(53)   while (18 >= i+0) { println (i); i++; }
 L165:
         LD    HL,(05002H)
 L166:
@@ -1124,7 +1124,7 @@ L175:
 L176:
         LD    (05006H),HL
 L177:
-        ;;test1.j(55)   while (17 <  i+0) { write (p); i--; p++; }
+        ;;test1.j(55)   while (17 <  i+0) { println (p); i--; p++; }
 L178:
         LD    HL,(05002H)
 L179:
@@ -1154,7 +1154,7 @@ L186:
 L187:
         JP    L178
 L188:
-        ;;test1.j(56)   while (16 <= i+0) { write (p); i--; p++; }
+        ;;test1.j(56)   while (16 <= i+0) { println (p); i--; p++; }
 L189:
         LD    HL,(05002H)
 L190:
@@ -1207,7 +1207,7 @@ L208:
         LD    H,0
         LD    (05002H),HL
 L209:
-        ;;test1.j(65)   while (23 == i+0) { write (i); i++; }
+        ;;test1.j(65)   while (23 == i+0) { println (i); i++; }
 L210:
         LD    HL,(05002H)
 L211:
@@ -1233,7 +1233,7 @@ L217:
 L218:
         JP    L210
 L219:
-        ;;test1.j(66)   while (26 != i+0) { write (i); i++; }
+        ;;test1.j(66)   while (26 != i+0) { println (i); i++; }
 L220:
         LD    HL,(05002H)
 L221:
@@ -1259,7 +1259,7 @@ L227:
 L228:
         JP    L220
 L229:
-        ;;test1.j(67)   while (28 > i+0) { write (i); i++; }
+        ;;test1.j(67)   while (28 > i+0) { println (i); i++; }
 L230:
         LD    HL,(05002H)
 L231:
@@ -1285,7 +1285,7 @@ L237:
 L238:
         JP    L230
 L239:
-        ;;test1.j(68)   while (29 >= i+0) { write (i); i++; }
+        ;;test1.j(68)   while (29 >= i+0) { println (i); i++; }
 L240:
         LD    HL,(05002H)
 L241:
@@ -1317,7 +1317,7 @@ L250:
 L251:
         LD    (05006H),HL
 L252:
-        ;;test1.j(70)   while (28 <  i+0) { write (p); p++; i--; }
+        ;;test1.j(70)   while (28 <  i+0) { println (p); p++; i--; }
 L253:
         LD    HL,(05002H)
 L254:
@@ -1347,7 +1347,7 @@ L261:
 L262:
         JP    L253
 L263:
-        ;;test1.j(71)   while (27 <= i+0) { write (p); p++; i--; }
+        ;;test1.j(71)   while (27 <= i+0) { println (p); p++; i--; }
 L264:
         LD    HL,(05002H)
 L265:
@@ -1392,7 +1392,7 @@ L279:
 L280:
         LD    (05000H),A
 L281:
-        ;;test1.j(77)   while (33 <= b) { write (p); p++; b--; }
+        ;;test1.j(77)   while (33 <= b) { println (p); p++; b--; }
 L282:
         LD    A,(05000H)
 L283:
@@ -1425,7 +1425,7 @@ L294:
         LD    H,0
         LD    (05002H),HL
 L295:
-        ;;test1.j(81)   while (36 <= i) { write (p); p++; i--; }
+        ;;test1.j(81)   while (36 <= i) { println (p); p++; i--; }
 L296:
         LD    HL,(05002H)
 L297:
@@ -1465,7 +1465,7 @@ L309:
 L310:
         ;;test1.j(87)   // integer - integer
 L311:
-        ;;test1.j(88)   while (34 <= i) { write (p); p++; i--; }
+        ;;test1.j(88)   while (34 <= i) { println (p); p++; i--; }
 L312:
         LD    HL,(05002H)
 L313:
@@ -1571,7 +1571,7 @@ L358:
 L359:
         LD    (05000H),A
 L360:
-        ;;test1.j(126)   while (b2 <= b) { write (p); p++; b--; }
+        ;;test1.j(126)   while (b2 <= b) { println (p); p++; b--; }
 L361:
         LD    A,(05001H)
 L362:
@@ -1605,7 +1605,7 @@ L372:
         LD    H,0
         LD    (05002H),HL
 L373:
-        ;;test1.j(129)   while (b2 <= i) { write (p); p++; i--; }
+        ;;test1.j(129)   while (b2 <= i) { println (p); p++; i--; }
 L374:
         LD    A,(05001H)
 L375:
@@ -1649,7 +1649,7 @@ L389:
         LD    H,0
         LD    (05002H),HL
 L390:
-        ;;test1.j(133)   while (i <= b) { write (p); p++; b--; }
+        ;;test1.j(133)   while (i <= b) { println (p); p++; b--; }
 L391:
         LD    HL,(05002H)
 L392:
@@ -1695,7 +1695,7 @@ L406:
         LD    H,0
         LD    (05004H),HL
 L407:
-        ;;test1.j(137)   while (i2 <= i) { write (p); p++; i--; }
+        ;;test1.j(137)   while (i2 <= i) { println (p); p++; i--; }
 L408:
         LD    HL,(05004H)
 L409:
@@ -1734,7 +1734,7 @@ L421:
 L422:
         LD    (05000H),A
 L423:
-        ;;test1.j(143)   while (b <= 50+0) { write (b); b++; }
+        ;;test1.j(143)   while (b <= 50+0) { println (b); b++; }
 L424:
         LD    A,50
 L425:
@@ -1765,7 +1765,7 @@ L435:
         LD    H,0
         LD    (05002H),HL
 L436:
-        ;;test1.j(146)   while (b <= i+0) { write (b); b++; }
+        ;;test1.j(146)   while (b <= i+0) { println (b); b++; }
 L437:
         LD    HL,(05002H)
 L438:
@@ -1801,7 +1801,7 @@ L449:
         LD    H,0
         LD    (05002H),HL
 L450:
-        ;;test1.j(149)   while (i <= 54+0) { write (i); i++; }
+        ;;test1.j(149)   while (i <= 54+0) { println (i); i++; }
 L451:
         LD    A,54
 L452:
@@ -1843,7 +1843,7 @@ L465:
 L466:
         LD    (05002H),HL
 L467:
-        ;;test1.j(153)   while (i <= 1099+0) { write (b); b++; i++; }
+        ;;test1.j(153)   while (i <= 1099+0) { println (b); b++; i++; }
 L468:
         LD    HL,1099
 L469:
@@ -1877,7 +1877,7 @@ L479:
 L480:
         ;;test1.j(157)   // byte - byte
 L481:
-        ;;test1.j(158)   while (b <= 58) { write (b); b++; }
+        ;;test1.j(158)   while (b <= 58) { println (b); b++; }
 L482:
         LD    A,(05000H)
 L483:
@@ -1911,7 +1911,7 @@ L495:
         LD    H,0
         LD    (05002H),HL
 L496:
-        ;;test1.j(164)   while (i <= 60) { write (i); i++; }
+        ;;test1.j(164)   while (i <= 60) { println (i); i++; }
 L497:
         LD    HL,(05002H)
 L498:
@@ -1944,7 +1944,7 @@ L507:
 L508:
         LD    (05004H),HL
 L509:
-        ;;test1.j(167)   while (i2 <= 1091) { write (i); i++; i2++; }
+        ;;test1.j(167)   while (i2 <= 1091) { println (i); i++; i2++; }
 L510:
         LD    HL,(05004H)
 L511:
@@ -1979,13 +1979,13 @@ L521:
 L522:
         ;;test1.j(172)   //TODO
 L523:
-        ;;test1.j(173)   write(63);
+        ;;test1.j(173)   println(63);
 L524:
         LD    A,63
 L525:
         CALL  writeA
 L526:
-        ;;test1.j(174)   write(64);
+        ;;test1.j(174)   println(64);
 L527:
         LD    A,64
 L528:
@@ -1995,13 +1995,13 @@ L529:
 L530:
         ;;test1.j(176)   //TODO
 L531:
-        ;;test1.j(177)   write(65);
+        ;;test1.j(177)   println(65);
 L532:
         LD    A,65
 L533:
         CALL  writeA
 L534:
-        ;;test1.j(178)   write(66);
+        ;;test1.j(178)   println(66);
 L535:
         LD    A,66
 L536:
@@ -2011,13 +2011,13 @@ L537:
 L538:
         ;;test1.j(180)   //TODO
 L539:
-        ;;test1.j(181)   write(67);
+        ;;test1.j(181)   println(67);
 L540:
         LD    A,67
 L541:
         CALL  writeA
 L542:
-        ;;test1.j(182)   write(68);
+        ;;test1.j(182)   println(68);
 L543:
         LD    A,68
 L544:
@@ -2027,13 +2027,13 @@ L545:
 L546:
         ;;test1.j(184)   //TODO
 L547:
-        ;;test1.j(185)   write(69);
+        ;;test1.j(185)   println(69);
 L548:
         LD    A,69
 L549:
         CALL  writeA
 L550:
-        ;;test1.j(186)   write(70);
+        ;;test1.j(186)   println(70);
 L551:
         LD    A,70
 L552:
@@ -2049,13 +2049,13 @@ L556:
 L557:
         ;;test1.j(191)   //TODO
 L558:
-        ;;test1.j(192)   write(71);
+        ;;test1.j(192)   println(71);
 L559:
         LD    A,71
 L560:
         CALL  writeA
 L561:
-        ;;test1.j(193)   write(72);
+        ;;test1.j(193)   println(72);
 L562:
         LD    A,72
 L563:
@@ -2065,13 +2065,13 @@ L564:
 L565:
         ;;test1.j(195)   //TODO
 L566:
-        ;;test1.j(196)   write(73);
+        ;;test1.j(196)   println(73);
 L567:
         LD    A,73
 L568:
         CALL  writeA
 L569:
-        ;;test1.j(197)   write(74);
+        ;;test1.j(197)   println(74);
 L570:
         LD    A,74
 L571:
@@ -2081,13 +2081,13 @@ L572:
 L573:
         ;;test1.j(199)   //TODO
 L574:
-        ;;test1.j(200)   write(75);
+        ;;test1.j(200)   println(75);
 L575:
         LD    A,75
 L576:
         CALL  writeA
 L577:
-        ;;test1.j(201)   write(76);
+        ;;test1.j(201)   println(76);
 L578:
         LD    A,76
 L579:
@@ -2097,13 +2097,13 @@ L580:
 L581:
         ;;test1.j(203)   //TODO
 L582:
-        ;;test1.j(204)   write(77);
+        ;;test1.j(204)   println(77);
 L583:
         LD    A,77
 L584:
         CALL  writeA
 L585:
-        ;;test1.j(205)   write(78);
+        ;;test1.j(205)   println(78);
 L586:
         LD    A,78
 L587:
@@ -2129,7 +2129,7 @@ L596:
 L597:
         LD    (05001H),A
 L598:
-        ;;test1.j(212)   while (78+0 <= b2) { write (b); b++; b2--; }
+        ;;test1.j(212)   while (78+0 <= b2) { println (b); b++; b2--; }
 L599:
         LD    A,78
 L600:
@@ -2164,7 +2164,7 @@ L611:
         LD    H,0
         LD    (05002H),HL
 L612:
-        ;;test1.j(215)   while (78+0 <= i) { write (b); b++; i--; }
+        ;;test1.j(215)   while (78+0 <= i) { println (b); b++; i--; }
 L613:
         LD    A,78
 L614:
@@ -2209,7 +2209,7 @@ L628:
 L629:
         LD    (05001H),A
 L630:
-        ;;test1.j(219)   while (i+0 <= b2) { write (b); b++; b2--; } 
+        ;;test1.j(219)   while (i+0 <= b2) { println (b); b++; b2--; } 
 L631:
         LD    HL,(05002H)
 L632:
@@ -2247,7 +2247,7 @@ L643:
 L644:
         LD    (05002H),HL
 L645:
-        ;;test1.j(222)   while (1000+65 <= i) { write (b); b++; i--; }
+        ;;test1.j(222)   while (1000+65 <= i) { println (b); b++; i--; }
 L646:
         LD    HL,1000
 L647:
@@ -2294,7 +2294,7 @@ L663:
 L664:
         LD    (05001H),A
 L665:
-        ;;test1.j(229)   while (63+0 <= b2+0) { write (b); b++; b2--; }
+        ;;test1.j(229)   while (63+0 <= b2+0) { println (b); b++; b2--; }
 L666:
         LD    A,63
 L667:
@@ -2333,7 +2333,7 @@ L681:
         LD    H,0
         LD    (05002H),HL
 L682:
-        ;;test1.j(232)   while (61+0 <= i+0) { write (b); b++; i--; }
+        ;;test1.j(232)   while (61+0 <= i+0) { println (b); b++; i--; }
 L683:
         LD    A,61
 L684:
@@ -2385,7 +2385,7 @@ L701:
 L702:
         LD    (05001H),A
 L703:
-        ;;test1.j(236)   while (i+0 <= b2+0) { write (b); b++; b2--; }
+        ;;test1.j(236)   while (i+0 <= b2+0) { println (b); b++; b2--; }
 L704:
         LD    HL,(05002H)
 L705:
@@ -2429,7 +2429,7 @@ L719:
 L720:
         LD    (05002H),HL
 L721:
-        ;;test1.j(239)   while (1000+57 <= i+0) { write (b); b++; i--; }
+        ;;test1.j(239)   while (1000+57 <= i+0) { println (b); b++; i--; }
 L722:
         LD    HL,1000
 L723:
@@ -2470,7 +2470,7 @@ L736:
 L737:
         ;;test1.j(243)   // byte - byte
 L738:
-        ;;test1.j(244)   while (b+0 <= 96) { write (b); b++; }
+        ;;test1.j(244)   while (b+0 <= 96) { println (b); b++; }
 L739:
         LD    A,(05000H)
 L740:
@@ -2504,7 +2504,7 @@ L752:
         LD    H,0
         LD    (05002H),HL
 L753:
-        ;;test1.j(249)   while (i+0 <= 98) { write (i); i++; }
+        ;;test1.j(249)   while (i+0 <= 98) { println (i); i++; }
 L754:
         LD    HL,(05002H)
 L755:
@@ -2547,7 +2547,7 @@ L768:
 L769:
         ;;test1.j(252)   // integer - integer
 L770:
-        ;;test1.j(253)   while (i+0 <= 1053) { write (b); b++; i++; }
+        ;;test1.j(253)   while (i+0 <= 1053) { println (b); b++; i++; }
 L771:
         LD    HL,(05002H)
 L772:
@@ -2584,13 +2584,13 @@ L783:
 L784:
         ;;test1.j(258)   //TODO
 L785:
-        ;;test1.j(259)   write(101);
+        ;;test1.j(259)   println(101);
 L786:
         LD    A,101
 L787:
         CALL  writeA
 L788:
-        ;;test1.j(260)   write(102);
+        ;;test1.j(260)   println(102);
 L789:
         LD    A,102
 L790:
@@ -2602,13 +2602,13 @@ L792:
 L793:
         ;;test1.j(263)   //TODO
 L794:
-        ;;test1.j(264)   write(103);
+        ;;test1.j(264)   println(103);
 L795:
         LD    A,103
 L796:
         CALL  writeA
 L797:
-        ;;test1.j(265)   write(104);
+        ;;test1.j(265)   println(104);
 L798:
         LD    A,104
 L799:
@@ -2620,13 +2620,13 @@ L801:
 L802:
         ;;test1.j(268)   //TODO
 L803:
-        ;;test1.j(269)   write(105);
+        ;;test1.j(269)   println(105);
 L804:
         LD    A,105
 L805:
         CALL  writeA
 L806:
-        ;;test1.j(270)   write(106);
+        ;;test1.j(270)   println(106);
 L807:
         LD    A,106
 L808:
@@ -2638,13 +2638,13 @@ L810:
 L811:
         ;;test1.j(273)   //TODO
 L812:
-        ;;test1.j(274)   write(107);
+        ;;test1.j(274)   println(107);
 L813:
         LD    A,107
 L814:
         CALL  writeA
 L815:
-        ;;test1.j(275)   write(108);
+        ;;test1.j(275)   println(108);
 L816:
         LD    A,108
 L817:
@@ -2660,13 +2660,13 @@ L821:
 L822:
         ;;test1.j(280)   //TODO
 L823:
-        ;;test1.j(281)   write(109);
+        ;;test1.j(281)   println(109);
 L824:
         LD    A,109
 L825:
         CALL  writeA
 L826:
-        ;;test1.j(282)   write(110);
+        ;;test1.j(282)   println(110);
 L827:
         LD    A,110
 L828:
@@ -2678,13 +2678,13 @@ L830:
 L831:
         ;;test1.j(285)   //TODO
 L832:
-        ;;test1.j(286)   write(111);
+        ;;test1.j(286)   println(111);
 L833:
         LD    A,111
 L834:
         CALL  writeA
 L835:
-        ;;test1.j(287)   write(112);
+        ;;test1.j(287)   println(112);
 L836:
         LD    A,112
 L837:
@@ -2696,13 +2696,13 @@ L839:
 L840:
         ;;test1.j(290)   //TODO
 L841:
-        ;;test1.j(291)   write(113);
+        ;;test1.j(291)   println(113);
 L842:
         LD    A,113
 L843:
         CALL  writeA
 L844:
-        ;;test1.j(292)   write(114);
+        ;;test1.j(292)   println(114);
 L845:
         LD    A,114
 L846:
@@ -2714,13 +2714,13 @@ L848:
 L849:
         ;;test1.j(295)   //TODO
 L850:
-        ;;test1.j(296)   write(115);
+        ;;test1.j(296)   println(115);
 L851:
         LD    A,115
 L852:
         CALL  writeA
 L853:
-        ;;test1.j(297)   write(116);
+        ;;test1.j(297)   println(116);
 L854:
         LD    A,116
 L855:
@@ -2728,7 +2728,7 @@ L855:
 L856:
         ;;test1.j(298) 
 L857:
-        ;;test1.j(299)   write("Klaar");
+        ;;test1.j(299)   println("Klaar");
 L858:
         LD    HL,862
 L859:

@@ -13,7 +13,7 @@
   12 acc8= constant 1
   13 acc8=> variable 4
   14 ;test11.j(6) 
-  15 ;test11.j(7)   write(0);
+  15 ;test11.j(7)   println(0);
   16 acc8= constant 0
   17 call writeAcc8
   18 ;test11.j(8) 
@@ -31,7 +31,7 @@
   30 ;test11.j(12)     byte c = b1;
   31 acc8= variable 0
   32 acc8=> variable 7
-  33 ;test11.j(13)     write (c);
+  33 ;test11.j(13)     println (c);
   34 acc8= variable 7
   35 call writeAcc8
   36 ;test11.j(14)     b1++;
@@ -46,7 +46,7 @@
   45 ;test11.j(21)   /************************/
   46 ;test11.j(22)   // constant - acc
   47 ;test11.j(23)   // byte - byte
-  48 ;test11.j(24)   for (byte b = 3; 103 == b+100; b++) { write (b); }
+  48 ;test11.j(24)   for (byte b = 3; 103 == b+100; b++) { println (b); }
   49 acc8= constant 3
   50 acc8=> variable 6
   51 acc8= variable 6
@@ -59,7 +59,7 @@
   58 acc8= variable 6
   59 call writeAcc8
   60 br 56
-  61 ;test11.j(25)   for (byte b = 4; 105 != b+100; b++) { write (b); }
+  61 ;test11.j(25)   for (byte b = 4; 105 != b+100; b++) { println (b); }
   62 acc8= constant 4
   63 acc8=> variable 6
   64 acc8= variable 6
@@ -75,7 +75,7 @@
   74 ;test11.j(26)   b2=5;
   75 acc8= constant 5
   76 acc8=> variable 1
-  77 ;test11.j(27)   for (byte b = 32; 134 > b+100; b++) { write (b2); b2++; }
+  77 ;test11.j(27)   for (byte b = 32; 134 > b+100; b++) { println (b2); b2++; }
   78 acc8= constant 32
   79 acc8=> variable 6
   80 acc8= variable 6
@@ -89,7 +89,7 @@
   88 call writeAcc8
   89 incr8 variable 1
   90 br 85
-  91 ;test11.j(28)   for (byte b = 34; 135 >= b+100; b++) { write (b2); b2++; }
+  91 ;test11.j(28)   for (byte b = 34; 135 >= b+100; b++) { println (b2); b2++; }
   92 acc8= constant 34
   93 acc8=> variable 6
   94 acc8= variable 6
@@ -103,7 +103,7 @@
  102 call writeAcc8
  103 incr8 variable 1
  104 br 99
- 105 ;test11.j(29)   for (byte b = 28; 126 <  b+100; b--) { write (b2); b2++; }
+ 105 ;test11.j(29)   for (byte b = 28; 126 <  b+100; b--) { println (b2); b2++; }
  106 acc8= constant 28
  107 acc8=> variable 6
  108 acc8= variable 6
@@ -117,7 +117,7 @@
  116 call writeAcc8
  117 incr8 variable 1
  118 br 113
- 119 ;test11.j(30)   for (byte b = 26; 125 <= b+100; b--) { write (b2); b2++; }
+ 119 ;test11.j(30)   for (byte b = 26; 125 <= b+100; b--) { println (b2); b2++; }
  120 acc8= constant 26
  121 acc8=> variable 6
  122 acc8= variable 6
@@ -132,7 +132,7 @@
  131 incr8 variable 1
  132 br 127
  133 ;test11.j(31)   // byte - integer
- 134 ;test11.j(32)   for(word i = 24; 24  == i+0; i--) { write (b2); b2++; }
+ 134 ;test11.j(32)   for(word i = 24; 24  == i+0; i--) { println (b2); b2++; }
  135 acc8= constant 24
  136 acc8=> variable 6
  137 acc16= variable 6
@@ -147,7 +147,7 @@
  146 call writeAcc8
  147 incr8 variable 1
  148 br 143
- 149 ;test11.j(33)   for(word i = 23; 120 != i+100; i--) { write (b2); b2++; }
+ 149 ;test11.j(33)   for(word i = 23; 120 != i+100; i--) { println (b2); b2++; }
  150 acc8= constant 23
  151 acc8=> variable 6
  152 acc16= variable 6
@@ -162,7 +162,7 @@
  161 call writeAcc8
  162 incr8 variable 1
  163 br 158
- 164 ;test11.j(34)   for(word i = 20; 122 > i+100; i++) { write (b2); b2++; }
+ 164 ;test11.j(34)   for(word i = 20; 122 > i+100; i++) { println (b2); b2++; }
  165 acc8= constant 20
  166 acc8=> variable 6
  167 acc16= variable 6
@@ -177,7 +177,7 @@
  176 call writeAcc8
  177 incr8 variable 1
  178 br 173
- 179 ;test11.j(35)   for(word i = 22; 123 >= i+100; i++) { write (b2); b2++; }
+ 179 ;test11.j(35)   for(word i = 22; 123 >= i+100; i++) { println (b2); b2++; }
  180 acc8= constant 22
  181 acc8=> variable 6
  182 acc16= variable 6
@@ -192,7 +192,7 @@
  191 call writeAcc8
  192 incr8 variable 1
  193 br 188
- 194 ;test11.j(36)   for(word i = 16; 114 <  i+100; i--) { write (b2); b2++; }
+ 194 ;test11.j(36)   for(word i = 16; 114 <  i+100; i--) { println (b2); b2++; }
  195 acc8= constant 16
  196 acc8=> variable 6
  197 acc16= variable 6
@@ -207,7 +207,7 @@
  206 call writeAcc8
  207 incr8 variable 1
  208 br 203
- 209 ;test11.j(37)   for(word i = 14; 113 <= i+100; i--) { write (b2); b2++; }
+ 209 ;test11.j(37)   for(word i = 14; 113 <= i+100; i--) { println (b2); b2++; }
  210 acc8= constant 14
  211 acc8=> variable 6
  212 acc16= variable 6
@@ -225,7 +225,7 @@
  224 ;test11.j(38)   // integer - byte
  225 ;test11.j(39)   // not relevant
  226 ;test11.j(40)   // integer - integer
- 227 ;test11.j(41)   for(word i = 12; 1012 == i+1000; i--) { write (b2); b2++; }
+ 227 ;test11.j(41)   for(word i = 12; 1012 == i+1000; i--) { println (b2); b2++; }
  228 acc8= constant 12
  229 acc8=> variable 6
  230 acc16= variable 6
@@ -239,7 +239,7 @@
  238 call writeAcc8
  239 incr8 variable 1
  240 br 235
- 241 ;test11.j(42)   for(word i = 11; 1008 != i+1000; i--) { write (b2); b2++; }
+ 241 ;test11.j(42)   for(word i = 11; 1008 != i+1000; i--) { println (b2); b2++; }
  242 acc8= constant 11
  243 acc8=> variable 6
  244 acc16= variable 6
@@ -253,7 +253,7 @@
  252 call writeAcc8
  253 incr8 variable 1
  254 br 249
- 255 ;test11.j(43)   for(word i = 8; 1010 > i+1000; i++) { write (b2); b2++; }
+ 255 ;test11.j(43)   for(word i = 8; 1010 > i+1000; i++) { println (b2); b2++; }
  256 acc8= constant 8
  257 acc8=> variable 6
  258 acc16= variable 6
@@ -267,7 +267,7 @@
  266 call writeAcc8
  267 incr8 variable 1
  268 br 263
- 269 ;test11.j(44)   for(word i = 10; 1011 >= i+1000; i++) { write (b2); b2++; }
+ 269 ;test11.j(44)   for(word i = 10; 1011 >= i+1000; i++) { println (b2); b2++; }
  270 acc8= constant 10
  271 acc8=> variable 6
  272 acc16= variable 6
@@ -281,7 +281,7 @@
  280 call writeAcc8
  281 incr8 variable 1
  282 br 277
- 283 ;test11.j(45)   for(word i = 4; 1002 <  i+1000; i--) { write (b2); b2++; }
+ 283 ;test11.j(45)   for(word i = 4; 1002 <  i+1000; i--) { println (b2); b2++; }
  284 acc8= constant 4
  285 acc8=> variable 6
  286 acc16= variable 6
@@ -295,7 +295,7 @@
  294 call writeAcc8
  295 incr8 variable 1
  296 br 291
- 297 ;test11.j(46)   for(word i = 2; 1001 <= i+1000; i--) { write (b2); b2++; }
+ 297 ;test11.j(46)   for(word i = 2; 1001 <= i+1000; i--) { println (b2); b2++; }
  298 acc8= constant 2
  299 acc8=> variable 6
  300 acc16= variable 6
@@ -313,7 +313,7 @@
  312 ;test11.j(48)   /************************/
  313 ;test11.j(49)   // constant - var
  314 ;test11.j(50)   // byte - byte
- 315 ;test11.j(51)   for (byte b = 42; 41 <= b; b--) { write (b2); b2++; }
+ 315 ;test11.j(51)   for (byte b = 42; 41 <= b; b--) { println (b2); b2++; }
  316 acc8= constant 42
  317 acc8=> variable 6
  318 acc8= variable 6
@@ -327,7 +327,7 @@
  326 incr8 variable 1
  327 br 322
  328 ;test11.j(52)   // byte - integer
- 329 ;test11.j(53)   for(word i = 40; 39 <= i; i--) { write (b2); b2++; }
+ 329 ;test11.j(53)   for(word i = 40; 39 <= i; i--) { println (b2); b2++; }
  330 acc8= constant 40
  331 acc8=> variable 6
  332 acc16= variable 6
@@ -344,7 +344,7 @@
  343 ;test11.j(54)   // integer - byte
  344 ;test11.j(55)   // not relevant
  345 ;test11.j(56)   // integer - integer
- 346 ;test11.j(57)   for(word i = 1038; 1037 <= i; i--) { write (b2); b2++; }
+ 346 ;test11.j(57)   for(word i = 1038; 1037 <= i; i--) { println (b2); b2++; }
  347 acc16= constant 1038
  348 acc16=> variable 6
  349 acc16= variable 6
@@ -362,37 +362,37 @@
  361 ;test11.j(60)   // constant - stack8
  362 ;test11.j(61)   // byte - byte
  363 ;test11.j(62)   //TODO
- 364 ;test11.j(63)   write(43);
+ 364 ;test11.j(63)   println(43);
  365 acc8= constant 43
  366 call writeAcc8
- 367 ;test11.j(64)   write(44);
+ 367 ;test11.j(64)   println(44);
  368 acc8= constant 44
  369 call writeAcc8
  370 ;test11.j(65)   // constant - stack8
  371 ;test11.j(66)   // byte - integer
  372 ;test11.j(67)   //TODO
- 373 ;test11.j(68)   write(45);
+ 373 ;test11.j(68)   println(45);
  374 acc8= constant 45
  375 call writeAcc8
- 376 ;test11.j(69)   write(46);
+ 376 ;test11.j(69)   println(46);
  377 acc8= constant 46
  378 call writeAcc8
  379 ;test11.j(70)   // constant - stack8
  380 ;test11.j(71)   // integer - byte
  381 ;test11.j(72)   //TODO
- 382 ;test11.j(73)   write(47);
+ 382 ;test11.j(73)   println(47);
  383 acc8= constant 47
  384 call writeAcc8
- 385 ;test11.j(74)   write(48);
+ 385 ;test11.j(74)   println(48);
  386 acc8= constant 48
  387 call writeAcc8
  388 ;test11.j(75)   // constant - stack88
  389 ;test11.j(76)   // integer - integer
  390 ;test11.j(77)   //TODO
- 391 ;test11.j(78)   write(49);
+ 391 ;test11.j(78)   println(49);
  392 acc8= constant 49
  393 call writeAcc8
- 394 ;test11.j(79)   write(50);
+ 394 ;test11.j(79)   println(50);
  395 acc8= constant 50
  396 call writeAcc8
  397 ;test11.j(80) 
@@ -400,37 +400,37 @@
  399 ;test11.j(82)   // constant - stack16
  400 ;test11.j(83)   // byte - byte
  401 ;test11.j(84)   //TODO
- 402 ;test11.j(85)   write(51);
+ 402 ;test11.j(85)   println(51);
  403 acc8= constant 51
  404 call writeAcc8
- 405 ;test11.j(86)   write(52);
+ 405 ;test11.j(86)   println(52);
  406 acc8= constant 52
  407 call writeAcc8
  408 ;test11.j(87)   // constant - stack16
  409 ;test11.j(88)   // byte - integer
  410 ;test11.j(89)   //TODO
- 411 ;test11.j(90)   write(53);
+ 411 ;test11.j(90)   println(53);
  412 acc8= constant 53
  413 call writeAcc8
- 414 ;test11.j(91)   write(54);
+ 414 ;test11.j(91)   println(54);
  415 acc8= constant 54
  416 call writeAcc8
  417 ;test11.j(92)   // constant - stack16
  418 ;test11.j(93)   // integer - byte
  419 ;test11.j(94)   //TODO
- 420 ;test11.j(95)   write(55);
+ 420 ;test11.j(95)   println(55);
  421 acc8= constant 55
  422 call writeAcc8
- 423 ;test11.j(96)   write(56);
+ 423 ;test11.j(96)   println(56);
  424 acc8= constant 56
  425 call writeAcc8
  426 ;test11.j(97)   // constant - stack16
  427 ;test11.j(98)   // integer - integer
  428 ;test11.j(99)   //TODO
- 429 ;test11.j(100)   write(57);
+ 429 ;test11.j(100)   println(57);
  430 acc8= constant 57
  431 call writeAcc8
- 432 ;test11.j(101)   write(58);
+ 432 ;test11.j(101)   println(58);
  433 acc8= constant 58
  434 call writeAcc8
  435 ;test11.j(102) 
@@ -440,7 +440,7 @@
  439 ;test11.j(106)   b2 = 59;
  440 acc8= constant 59
  441 acc8=> variable 1
- 442 ;test11.j(107)   for (byte b = 56; b+0 <= 57; b++) { write (b2); b2++; }
+ 442 ;test11.j(107)   for (byte b = 56; b+0 <= 57; b++) { println (b2); b2++; }
  443 acc8= constant 56
  444 acc8=> variable 6
  445 acc8= variable 6
@@ -457,7 +457,7 @@
  456 ;test11.j(108)   // byte - integer
  457 ;test11.j(109)   //not relevant
  458 ;test11.j(110)   // integer - byte
- 459 ;test11.j(111)   for (word i = 54; i+0 <= 55; i++) { write (b2); b2++;}
+ 459 ;test11.j(111)   for (word i = 54; i+0 <= 55; i++) { println (b2); b2++;}
  460 acc8= constant 54
  461 acc8=> variable 6
  462 acc16= variable 6
@@ -473,7 +473,7 @@
  472 incr8 variable 1
  473 br 468
  474 ;test11.j(112)   // integer - integer
- 475 ;test11.j(113)   for(word i = 1052; i+0 <= 1053; i++) { write (b2); b2++; }
+ 475 ;test11.j(113)   for(word i = 1052; i+0 <= 1053; i++) { println (b2); b2++; }
  476 acc16= constant 1052
  477 acc16=> variable 6
  478 acc16= variable 6
@@ -491,7 +491,7 @@
  490 ;test11.j(115)   /************************/
  491 ;test11.j(116)   // acc - acc
  492 ;test11.j(117)   // byte - byte
- 493 ;test11.j(118)   for (byte b = 64; 63+0 <= b+0; b--) { write (b2); b2++; }
+ 493 ;test11.j(118)   for (byte b = 64; 63+0 <= b+0; b--) { println (b2); b2++; }
  494 acc8= constant 64
  495 acc8=> variable 6
  496 acc8= constant 63
@@ -509,7 +509,7 @@
  508 incr8 variable 1
  509 br 504
  510 ;test11.j(119)   // byte - integer
- 511 ;test11.j(120)   for(word i = 62; 61+0 <= i+0; i--) { write (b2); b2++; }
+ 511 ;test11.j(120)   for(word i = 62; 61+0 <= i+0; i--) { println (b2); b2++; }
  512 acc8= constant 62
  513 acc8=> variable 6
  514 acc8= constant 61
@@ -531,7 +531,7 @@
  530 ;test11.j(122)   i2=59;
  531 acc8= constant 59
  532 acc8=> variable 2
- 533 ;test11.j(123)   for (byte b = 60; i2+0 <= b+0; b--) { write (b2); b2++; }
+ 533 ;test11.j(123)   for (byte b = 60; i2+0 <= b+0; b--) { println (b2); b2++; }
  534 acc8= constant 60
  535 acc8=> variable 6
  536 acc16= variable 2
@@ -550,7 +550,7 @@
  549 incr8 variable 1
  550 br 545
  551 ;test11.j(124)   // integer - integer
- 552 ;test11.j(125)   for(word i = 1058; 1000+57 <= i+0; i--) { write (b2); b2++; }
+ 552 ;test11.j(125)   for(word i = 1058; 1000+57 <= i+0; i--) { println (b2); b2++; }
  553 acc16= constant 1058
  554 acc16=> variable 6
  555 acc16= constant 1000
@@ -571,7 +571,7 @@
  570 ;test11.j(127)   /************************/
  571 ;test11.j(128)   // acc - var
  572 ;test11.j(129)   // byte - byte
- 573 ;test11.j(130)   for (byte b = 72; 71+0 <= b; b--) { write (b2); b2++; }
+ 573 ;test11.j(130)   for (byte b = 72; 71+0 <= b; b--) { println (b2); b2++; }
  574 acc8= constant 72
  575 acc8=> variable 6
  576 acc8= constant 71
@@ -586,7 +586,7 @@
  585 incr8 variable 1
  586 br 581
  587 ;test11.j(131)   // byte - integer
- 588 ;test11.j(132)   for(word i = 70; 69+0 <= i; i--) { write (b2); b2++; }
+ 588 ;test11.j(132)   for(word i = 70; 69+0 <= i; i--) { println (b2); b2++; }
  589 acc8= constant 70
  590 acc8=> variable 6
  591 acc8= constant 69
@@ -605,7 +605,7 @@
  604 ;test11.j(134)   i2=67;
  605 acc8= constant 67
  606 acc8=> variable 2
- 607 ;test11.j(135)   for (byte b = 68; i2+0 <= b; b--) { write (b2); b2++; }
+ 607 ;test11.j(135)   for (byte b = 68; i2+0 <= b; b--) { println (b2); b2++; }
  608 acc8= constant 68
  609 acc8=> variable 6
  610 acc16= variable 2
@@ -621,7 +621,7 @@
  620 incr8 variable 1
  621 br 616
  622 ;test11.j(136)   // integer - integer
- 623 ;test11.j(137)   for(word i = 1066; 1000+65 <= i; i--) { write (b2); b2++; }
+ 623 ;test11.j(137)   for(word i = 1066; 1000+65 <= i; i--) { println (b2); b2++; }
  624 acc16= constant 1066
  625 acc16=> variable 6
  626 acc16= constant 1000
@@ -640,34 +640,34 @@
  639 ;test11.j(140)   // acc - stack8
  640 ;test11.j(141)   // byte - byte
  641 ;test11.j(142)   //TODO
- 642 ;test11.j(143)   write(81);
+ 642 ;test11.j(143)   println(81);
  643 acc8= constant 81
  644 call writeAcc8
- 645 ;test11.j(144)   write(82);
+ 645 ;test11.j(144)   println(82);
  646 acc8= constant 82
  647 call writeAcc8
  648 ;test11.j(145)   // byte - integer
  649 ;test11.j(146)   //TODO
- 650 ;test11.j(147)   write(83);
+ 650 ;test11.j(147)   println(83);
  651 acc8= constant 83
  652 call writeAcc8
- 653 ;test11.j(148)   write(84);
+ 653 ;test11.j(148)   println(84);
  654 acc8= constant 84
  655 call writeAcc8
  656 ;test11.j(149)   // integer - byte
  657 ;test11.j(150)   //TODO
- 658 ;test11.j(151)   write(85);
+ 658 ;test11.j(151)   println(85);
  659 acc8= constant 85
  660 call writeAcc8
- 661 ;test11.j(152)   write(86);
+ 661 ;test11.j(152)   println(86);
  662 acc8= constant 86
  663 call writeAcc8
  664 ;test11.j(153)   // integer - integer
  665 ;test11.j(154)   //TODO
- 666 ;test11.j(155)   write(87);
+ 666 ;test11.j(155)   println(87);
  667 acc8= constant 87
  668 call writeAcc8
- 669 ;test11.j(156)   write(88);
+ 669 ;test11.j(156)   println(88);
  670 acc8= constant 88
  671 call writeAcc8
  672 ;test11.j(157) 
@@ -675,34 +675,34 @@
  674 ;test11.j(159)   // acc - stack16
  675 ;test11.j(160)   // byte - byte
  676 ;test11.j(161)   //TODO
- 677 ;test11.j(162)   write(89);
+ 677 ;test11.j(162)   println(89);
  678 acc8= constant 89
  679 call writeAcc8
- 680 ;test11.j(163)   write(90);
+ 680 ;test11.j(163)   println(90);
  681 acc8= constant 90
  682 call writeAcc8
  683 ;test11.j(164)   // byte - integer
  684 ;test11.j(165)   //TODO
- 685 ;test11.j(166)   write(91);
+ 685 ;test11.j(166)   println(91);
  686 acc8= constant 91
  687 call writeAcc8
- 688 ;test11.j(167)   write(92);
+ 688 ;test11.j(167)   println(92);
  689 acc8= constant 92
  690 call writeAcc8
  691 ;test11.j(168)   // integer - byte
  692 ;test11.j(169)   //TODO
- 693 ;test11.j(170)   write(93);
+ 693 ;test11.j(170)   println(93);
  694 acc8= constant 93
  695 call writeAcc8
- 696 ;test11.j(171)   write(94);
+ 696 ;test11.j(171)   println(94);
  697 acc8= constant 94
  698 call writeAcc8
  699 ;test11.j(172)   // integer - integer
  700 ;test11.j(173)   //TODO
- 701 ;test11.j(174)   write(95);
+ 701 ;test11.j(174)   println(95);
  702 acc8= constant 95
  703 call writeAcc8
- 704 ;test11.j(175)   write(96);
+ 704 ;test11.j(175)   println(96);
  705 acc8= constant 96
  706 call writeAcc8
  707 ;test11.j(176) 
@@ -712,7 +712,7 @@
  711 ;test11.j(180)   b2=97;
  712 acc8= constant 97
  713 acc8=> variable 1
- 714 ;test11.j(181)   for (byte b = 96; b <= 97; b++) { write (b2); b2++; }
+ 714 ;test11.j(181)   for (byte b = 96; b <= 97; b++) { println (b2); b2++; }
  715 acc8= constant 96
  716 acc8=> variable 6
  717 acc8= variable 6
@@ -728,7 +728,7 @@
  727 ;test11.j(182)   // byte - integer
  728 ;test11.j(183)   //not relevant
  729 ;test11.j(184)   // integer - byte
- 730 ;test11.j(185)   for(word i = 92; i <= 93; i++) { write (b2); b2++; }
+ 730 ;test11.j(185)   for(word i = 92; i <= 93; i++) { println (b2); b2++; }
  731 acc8= constant 92
  732 acc8=> variable 6
  733 acc16= variable 6
@@ -743,7 +743,7 @@
  742 incr8 variable 1
  743 br 738
  744 ;test11.j(186)   // integer - integer
- 745 ;test11.j(187)   for(word i = 1090; i <= 1091; i++) { write (b2); b2++; }
+ 745 ;test11.j(187)   for(word i = 1090; i <= 1091; i++) { println (b2); b2++; }
  746 acc16= constant 1090
  747 acc16=> variable 6
  748 acc16= variable 6
@@ -760,7 +760,7 @@
  759 ;test11.j(189)   /************************/
  760 ;test11.j(190)   // var - acc
  761 ;test11.j(191)   // byte - byte
- 762 ;test11.j(192)   for (byte b = 104; b <= 105+0; b++) { write (b2); b2++; }
+ 762 ;test11.j(192)   for (byte b = 104; b <= 105+0; b++) { println (b2); b2++; }
  763 acc8= constant 104
  764 acc8=> variable 6
  765 acc8= constant 105
@@ -778,7 +778,7 @@
  777 ;test11.j(194)   i2=103;
  778 acc8= constant 103
  779 acc8=> variable 2
- 780 ;test11.j(195)   for (byte b = 102; b <= i2+0; b++) { write (b2); b2++; }
+ 780 ;test11.j(195)   for (byte b = 102; b <= i2+0; b++) { println (b2); b2++; }
  781 acc8= constant 102
  782 acc8=> variable 6
  783 acc16= variable 2
@@ -794,7 +794,7 @@
  793 incr8 variable 1
  794 br 789
  795 ;test11.j(196)   // integer - byte
- 796 ;test11.j(197)   for(word i = 100; i <= 101+0; i++) { write (b2); b2++; }
+ 796 ;test11.j(197)   for(word i = 100; i <= 101+0; i++) { println (b2); b2++; }
  797 acc8= constant 100
  798 acc8=> variable 6
  799 acc8= constant 101
@@ -810,7 +810,7 @@
  809 incr8 variable 1
  810 br 805
  811 ;test11.j(198)   // integer - integer
- 812 ;test11.j(199)   for(word i = 1098; i <= 1099+0; i++) { write (b2); b2++; }
+ 812 ;test11.j(199)   for(word i = 1098; i <= 1099+0; i++) { println (b2); b2++; }
  813 acc16= constant 1098
  814 acc16=> variable 6
  815 acc16= constant 1099
@@ -828,7 +828,7 @@
  827 ;test11.j(201)   /************************/
  828 ;test11.j(202)   // var - var
  829 ;test11.j(203)   // byte - byte
- 830 ;test11.j(204)   for (byte b = 112; b2 <= b; b--) { write (b2); b2++; }
+ 830 ;test11.j(204)   for (byte b = 112; b2 <= b; b--) { println (b2); b2++; }
  831 acc8= constant 112
  832 acc8=> variable 6
  833 acc8= variable 1
@@ -842,7 +842,7 @@
  841 incr8 variable 1
  842 br 837
  843 ;test11.j(205)   // byte - integer
- 844 ;test11.j(206)   for(word i = 116; b2 <= i; i--) { write (b2); b2++; }
+ 844 ;test11.j(206)   for(word i = 116; b2 <= i; i--) { println (b2); b2++; }
  845 acc8= constant 116
  846 acc8=> variable 6
  847 acc8= variable 1
@@ -860,7 +860,7 @@
  859 ;test11.j(208)   i2=b2;
  860 acc8= variable 1
  861 acc8=> variable 2
- 862 ;test11.j(209)   for (byte b = 118; i2 <= b; b--) { write (b2); b2++; }
+ 862 ;test11.j(209)   for (byte b = 118; i2 <= b; b--) { println (b2); b2++; }
  863 acc8= constant 118
  864 acc8=> variable 6
  865 acc16= variable 2
@@ -878,7 +878,7 @@
  877 ;test11.j(211)   i2=120;
  878 acc8= constant 120
  879 acc8=> variable 2
- 880 ;test11.j(212)   for(word i = b2+4; i2 <= i; i--) { write (b2); b2++; }
+ 880 ;test11.j(212)   for(word i = b2+4; i2 <= i; i--) { println (b2); b2++; }
  881 acc8= variable 1
  882 acc8+ constant 4
  883 acc8=> variable 6
@@ -925,7 +925,7 @@
  924 ;test11.j(243)   // stack16 - stack16
  925 ;test11.j(244)   //TODO
  926 ;test11.j(245) 
- 927 ;test11.j(246)   write("Klaar.");
+ 927 ;test11.j(246)   println("Klaar.");
  928 acc16= constant 932
  929 writeString
  930 ;test11.j(247) }

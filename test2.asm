@@ -783,7 +783,7 @@ L28:
 L29:
         ;;test2.j(17) 
 L30:
-        ;;test2.j(18)   write(0);
+        ;;test2.j(18)   println(0);
 L31:
         LD    A,0
 L32:
@@ -797,7 +797,7 @@ L35:
 L36:
         ;;test2.j(22)   // byte - byte
 L37:
-        ;;test2.j(23)   if (1 == 1) write(1); else write(999);
+        ;;test2.j(23)   if (1 == 1) println(1); else println(999);
 L38:
         LD    A,1
 L39:
@@ -815,7 +815,7 @@ L44:
 L45:
         CALL  writeHL
 L46:
-        ;;test2.j(24)   if (1 != 0) write(2); else write(999);
+        ;;test2.j(24)   if (1 != 0) println(2); else println(999);
 L47:
         LD    A,1
 L48:
@@ -833,7 +833,7 @@ L53:
 L54:
         CALL  writeHL
 L55:
-        ;;test2.j(25)   if (1 >  0) write(3); else write(999);
+        ;;test2.j(25)   if (1 >  0) println(3); else println(999);
 L56:
         LD    A,1
 L57:
@@ -851,7 +851,7 @@ L62:
 L63:
         CALL  writeHL
 L64:
-        ;;test2.j(26)   if (1 >= 0) write(4); else write(999);
+        ;;test2.j(26)   if (1 >= 0) println(4); else println(999);
 L65:
         LD    A,1
 L66:
@@ -869,7 +869,7 @@ L71:
 L72:
         CALL  writeHL
 L73:
-        ;;test2.j(27)   if (1 >= 1) write(5); else write(999);
+        ;;test2.j(27)   if (1 >= 1) println(5); else println(999);
 L74:
         LD    A,1
 L75:
@@ -887,7 +887,7 @@ L80:
 L81:
         CALL  writeHL
 L82:
-        ;;test2.j(28)   if (1 <  2) write(6); else write(999);
+        ;;test2.j(28)   if (1 <  2) println(6); else println(999);
 L83:
         LD    A,1
 L84:
@@ -905,7 +905,7 @@ L89:
 L90:
         CALL  writeHL
 L91:
-        ;;test2.j(29)   if (1 <= 2) write(7); else write(999);
+        ;;test2.j(29)   if (1 <= 2) println(7); else println(999);
 L92:
         LD    A,1
 L93:
@@ -924,7 +924,7 @@ L98:
 L99:
         CALL  writeHL
 L100:
-        ;;test2.j(30)   if (1 <= 1) write(8); else write(999);
+        ;;test2.j(30)   if (1 <= 1) println(8); else println(999);
 L101:
         LD    A,1
 L102:
@@ -943,7 +943,7 @@ L107:
 L108:
         CALL  writeHL
 L109:
-        ;;test2.j(31)   write(9);
+        ;;test2.j(31)   println(9);
 L110:
         LD    A,9
 L111:
@@ -955,7 +955,7 @@ L113:
 L114:
         ;;test2.j(34)   // byte - integer
 L115:
-        ;;test2.j(35)   if (1 == 1000) write(999); else write(10);
+        ;;test2.j(35)   if (1 == 1000) println(999); else println(10);
 L116:
         LD    A,1
 L117:
@@ -978,7 +978,7 @@ L123:
 L124:
         CALL  writeA
 L125:
-        ;;test2.j(36)   if (1 != 1000) write(11);  else write(999);
+        ;;test2.j(36)   if (1 != 1000) println(11);  else println(999);
 L126:
         LD    A,1
 L127:
@@ -1001,7 +1001,7 @@ L133:
 L134:
         CALL  writeHL
 L135:
-        ;;test2.j(37)   if (1 >  1000) write(999); else write(12);
+        ;;test2.j(37)   if (1 >  1000) println(999); else println(12);
 L136:
         LD    A,1
 L137:
@@ -1024,7 +1024,7 @@ L143:
 L144:
         CALL  writeA
 L145:
-        ;;test2.j(38)   if (1 >= 1000) write(999); else write(13);
+        ;;test2.j(38)   if (1 >= 1000) println(999); else println(13);
 L146:
         LD    A,1
 L147:
@@ -1047,7 +1047,7 @@ L153:
 L154:
         CALL  writeA
 L155:
-        ;;test2.j(39)   if (1 >= 1000) write(999); else write(14);
+        ;;test2.j(39)   if (1 >= 1000) println(999); else println(14);
 L156:
         LD    A,1
 L157:
@@ -1070,7 +1070,7 @@ L163:
 L164:
         CALL  writeA
 L165:
-        ;;test2.j(40)   if (1 <  2000) write(15);  else write(999);
+        ;;test2.j(40)   if (1 <  2000) println(15);  else println(999);
 L166:
         LD    A,1
 L167:
@@ -1093,7 +1093,7 @@ L173:
 L174:
         CALL  writeHL
 L175:
-        ;;test2.j(41)   if (1 <= 2000) write(16);  else write(999);
+        ;;test2.j(41)   if (1 <= 2000) println(16);  else println(999);
 L176:
         LD    A,1
 L177:
@@ -1117,7 +1117,7 @@ L183:
 L184:
         CALL  writeHL
 L185:
-        ;;test2.j(42)   if (1 <= 1000) write(17);  else write(999);
+        ;;test2.j(42)   if (1 <= 1000) println(17);  else println(999);
 L186:
         LD    A,1
 L187:
@@ -1141,13 +1141,13 @@ L193:
 L194:
         CALL  writeHL
 L195:
-        ;;test2.j(43)   write(18);
+        ;;test2.j(43)   println(18);
 L196:
         LD    A,18
 L197:
         CALL  writeA
 L198:
-        ;;test2.j(44)   write(19);
+        ;;test2.j(44)   println(19);
 L199:
         LD    A,19
 L200:
@@ -1159,7 +1159,7 @@ L202:
 L203:
         ;;test2.j(47)   // integer - byte
 L204:
-        ;;test2.j(48)   if (1000 == 1) write(999); else write(20);
+        ;;test2.j(48)   if (1000 == 1) println(999); else println(20);
 L205:
         LD    HL,1000
 L206:
@@ -1183,7 +1183,7 @@ L212:
 L213:
         CALL  writeA
 L214:
-        ;;test2.j(49)   if (1000 != 0) write(21);  else write(999);
+        ;;test2.j(49)   if (1000 != 0) println(21);  else println(999);
 L215:
         LD    HL,1000
 L216:
@@ -1207,7 +1207,7 @@ L222:
 L223:
         CALL  writeHL
 L224:
-        ;;test2.j(50)   if (1000 >  0) write(22);  else write(999);
+        ;;test2.j(50)   if (1000 >  0) println(22);  else println(999);
 L225:
         LD    HL,1000
 L226:
@@ -1231,7 +1231,7 @@ L232:
 L233:
         CALL  writeHL
 L234:
-        ;;test2.j(51)   if (1000 >= 0) write(23);  else write(999);
+        ;;test2.j(51)   if (1000 >= 0) println(23);  else println(999);
 L235:
         LD    HL,1000
 L236:
@@ -1255,7 +1255,7 @@ L242:
 L243:
         CALL  writeHL
 L244:
-        ;;test2.j(52)   if (1000 >= 1) write(24);  else write(999);
+        ;;test2.j(52)   if (1000 >= 1) println(24);  else println(999);
 L245:
         LD    HL,1000
 L246:
@@ -1279,7 +1279,7 @@ L252:
 L253:
         CALL  writeHL
 L254:
-        ;;test2.j(53)   if (1 <  2000) write(25);  else write(999);
+        ;;test2.j(53)   if (1 <  2000) println(25);  else println(999);
 L255:
         LD    A,1
 L256:
@@ -1302,7 +1302,7 @@ L262:
 L263:
         CALL  writeHL
 L264:
-        ;;test2.j(54)   if (1 <= 2000) write(26);  else write(999);
+        ;;test2.j(54)   if (1 <= 2000) println(26);  else println(999);
 L265:
         LD    A,1
 L266:
@@ -1326,7 +1326,7 @@ L272:
 L273:
         CALL  writeHL
 L274:
-        ;;test2.j(55)   if (1 <= 1000) write(27);  else write(999);
+        ;;test2.j(55)   if (1 <= 1000) println(27);  else println(999);
 L275:
         LD    A,1
 L276:
@@ -1350,13 +1350,13 @@ L282:
 L283:
         CALL  writeHL
 L284:
-        ;;test2.j(56)   write(28);
+        ;;test2.j(56)   println(28);
 L285:
         LD    A,28
 L286:
         CALL  writeA
 L287:
-        ;;test2.j(57)   write(29);
+        ;;test2.j(57)   println(29);
 L288:
         LD    A,29
 L289:
@@ -1368,7 +1368,7 @@ L291:
 L292:
         ;;test2.j(60)   // integer - integer
 L293:
-        ;;test2.j(61)   if (1000 == 1000) write(30); else write(999);
+        ;;test2.j(61)   if (1000 == 1000) println(30); else println(999);
 L294:
         LD    HL,1000
 L295:
@@ -1388,7 +1388,7 @@ L300:
 L301:
         CALL  writeHL
 L302:
-        ;;test2.j(62)   if (1000 != 2000) write(31); else write(999);
+        ;;test2.j(62)   if (1000 != 2000) println(31); else println(999);
 L303:
         LD    HL,1000
 L304:
@@ -1408,7 +1408,7 @@ L309:
 L310:
         CALL  writeHL
 L311:
-        ;;test2.j(63)   if (2000 >  1000) write(32); else write(999);
+        ;;test2.j(63)   if (2000 >  1000) println(32); else println(999);
 L312:
         LD    HL,2000
 L313:
@@ -1428,7 +1428,7 @@ L318:
 L319:
         CALL  writeHL
 L320:
-        ;;test2.j(64)   if (2000 >= 1000) write(33); else write(999);
+        ;;test2.j(64)   if (2000 >= 1000) println(33); else println(999);
 L321:
         LD    HL,2000
 L322:
@@ -1448,7 +1448,7 @@ L327:
 L328:
         CALL  writeHL
 L329:
-        ;;test2.j(65)   if (1000 >= 1000) write(34); else write(999);
+        ;;test2.j(65)   if (1000 >= 1000) println(34); else println(999);
 L330:
         LD    HL,1000
 L331:
@@ -1468,7 +1468,7 @@ L336:
 L337:
         CALL  writeHL
 L338:
-        ;;test2.j(66)   if (1000 <  2000) write(35); else write(999);
+        ;;test2.j(66)   if (1000 <  2000) println(35); else println(999);
 L339:
         LD    HL,1000
 L340:
@@ -1488,7 +1488,7 @@ L345:
 L346:
         CALL  writeHL
 L347:
-        ;;test2.j(67)   if (1000 <= 2000) write(36); else write(999);
+        ;;test2.j(67)   if (1000 <= 2000) println(36); else println(999);
 L348:
         LD    HL,1000
 L349:
@@ -1509,7 +1509,7 @@ L354:
 L355:
         CALL  writeHL
 L356:
-        ;;test2.j(68)   if (1000 <= 1000) write(37); else write(999);
+        ;;test2.j(68)   if (1000 <= 1000) println(37); else println(999);
 L357:
         LD    HL,1000
 L358:
@@ -1530,13 +1530,13 @@ L363:
 L364:
         CALL  writeHL
 L365:
-        ;;test2.j(69)   write(38);
+        ;;test2.j(69)   println(38);
 L366:
         LD    A,38
 L367:
         CALL  writeA
 L368:
-        ;;test2.j(70)   write(39);
+        ;;test2.j(70)   println(39);
 L369:
         LD    A,39
 L370:
@@ -1550,7 +1550,7 @@ L373:
 L374:
         ;;test2.j(74)   // byte - byte
 L375:
-        ;;test2.j(75)   if (1 > 0+0) write(40); else write(999);
+        ;;test2.j(75)   if (1 > 0+0) println(40); else println(999);
 L376:
         LD    A,0
 L377:
@@ -1570,7 +1570,7 @@ L383:
 L384:
         CALL  writeHL
 L385:
-        ;;test2.j(76)   if (1 < 2+0) write(41); else write(999);
+        ;;test2.j(76)   if (1 < 2+0) println(41); else println(999);
 L386:
         LD    A,2
 L387:
@@ -1594,7 +1594,7 @@ L395:
 L396:
         ;;test2.j(78)   // byte - integer
 L397:
-        ;;test2.j(79)   if (1 > 1000+0) write(999); else write(42);
+        ;;test2.j(79)   if (1 > 1000+0) println(999); else println(42);
 L398:
         LD    HL,1000
 L399:
@@ -1620,7 +1620,7 @@ L406:
 L407:
         CALL  writeA
 L408:
-        ;;test2.j(80)   if (1 < 1000+0) write(43);  else write(999);
+        ;;test2.j(80)   if (1 < 1000+0) println(43);  else println(999);
 L409:
         LD    HL,1000
 L410:
@@ -1650,7 +1650,7 @@ L419:
 L420:
         ;;test2.j(82)   // integer - byte
 L421:
-        ;;test2.j(83)   if (1000 > 0+0) write(44);  else write(999);
+        ;;test2.j(83)   if (1000 > 0+0) println(44);  else println(999);
 L422:
         LD    A,0
 L423:
@@ -1676,7 +1676,7 @@ L430:
 L431:
         CALL  writeHL
 L432:
-        ;;test2.j(84)   if (1000 < 0+0) write(999); else write(45);
+        ;;test2.j(84)   if (1000 < 0+0) println(999); else println(45);
 L433:
         LD    A,0
 L434:
@@ -1706,7 +1706,7 @@ L443:
 L444:
         ;;test2.j(86)   // integer - integer
 L445:
-        ;;test2.j(87)   if (2000 > 1000+0) write(46); else write(999);
+        ;;test2.j(87)   if (2000 > 1000+0) println(46); else println(999);
 L446:
         LD    HL,1000
 L447:
@@ -1729,7 +1729,7 @@ L453:
 L454:
         CALL  writeHL
 L455:
-        ;;test2.j(88)   if (1000 < 2000+0) write(47); else write(999);
+        ;;test2.j(88)   if (1000 < 2000+0) println(47); else println(999);
 L456:
         LD    HL,2000
 L457:
@@ -1752,13 +1752,13 @@ L463:
 L464:
         CALL  writeHL
 L465:
-        ;;test2.j(89)   write(48);
+        ;;test2.j(89)   println(48);
 L466:
         LD    A,48
 L467:
         CALL  writeA
 L468:
-        ;;test2.j(90)   write(49);
+        ;;test2.j(90)   println(49);
 L469:
         LD    A,49
 L470:
@@ -1772,7 +1772,7 @@ L473:
 L474:
         ;;test2.j(94)   // byte - byte
 L475:
-        ;;test2.j(95)   if (30 > b) write(50); else write(999);
+        ;;test2.j(95)   if (30 > b) println(50); else println(999);
 L476:
         LD    A,(05006H)
 L477:
@@ -1790,7 +1790,7 @@ L482:
 L483:
         CALL  writeHL
 L484:
-        ;;test2.j(96)   if (10 < b) write(51); else write(999);
+        ;;test2.j(96)   if (10 < b) println(51); else println(999);
 L485:
         LD    A,(05006H)
 L486:
@@ -1812,7 +1812,7 @@ L493:
 L494:
         ;;test2.j(98)   // byte - integer
 L495:
-        ;;test2.j(99)   if (30 > i) write(999); else write(52);
+        ;;test2.j(99)   if (30 > i) println(999); else println(52);
 L496:
         LD    HL,(05000H)
 L497:
@@ -1835,7 +1835,7 @@ L503:
 L504:
         CALL  writeA
 L505:
-        ;;test2.j(100)   if (10 < i) write(53); else write(999);
+        ;;test2.j(100)   if (10 < i) println(53); else println(999);
 L506:
         LD    HL,(05000H)
 L507:
@@ -1862,7 +1862,7 @@ L515:
 L516:
         ;;test2.j(102)   // integer - byte
 L517:
-        ;;test2.j(103)   if (3000 > b) write(54); else write(999);
+        ;;test2.j(103)   if (3000 > b) println(54); else println(999);
 L518:
         LD    A,(05006H)
 L519:
@@ -1886,7 +1886,7 @@ L525:
 L526:
         CALL  writeHL
 L527:
-        ;;test2.j(104)   if (1000 < b) write(999); else write(55);
+        ;;test2.j(104)   if (1000 < b) println(999); else println(55);
 L528:
         LD    A,(05006H)
 L529:
@@ -1914,7 +1914,7 @@ L537:
 L538:
         ;;test2.j(106)   // integer - integer
 L539:
-        ;;test2.j(107)   if (3000 > i) write(56); else write(999);
+        ;;test2.j(107)   if (3000 > i) println(56); else println(999);
 L540:
         LD    HL,(05000H)
 L541:
@@ -1934,7 +1934,7 @@ L546:
 L547:
         CALL  writeHL
 L548:
-        ;;test2.j(108)   if (1000 < i) write(57); else write(999);
+        ;;test2.j(108)   if (1000 < i) println(57); else println(999);
 L549:
         LD    HL,(05000H)
 L550:
@@ -1954,13 +1954,13 @@ L555:
 L556:
         CALL  writeHL
 L557:
-        ;;test2.j(109)   write(58);
+        ;;test2.j(109)   println(58);
 L558:
         LD    A,58
 L559:
         CALL  writeA
 L560:
-        ;;test2.j(110)   write(59);
+        ;;test2.j(110)   println(59);
 L561:
         LD    A,59
 L562:
@@ -1974,13 +1974,13 @@ L565:
 L566:
         ;;test2.j(114)   // byte - byte
 L567:
-        ;;test2.j(115)   write(60);
+        ;;test2.j(115)   println(60);
 L568:
         LD    A,60
 L569:
         CALL  writeA
 L570:
-        ;;test2.j(116)   write(61);
+        ;;test2.j(116)   println(61);
 L571:
         LD    A,61
 L572:
@@ -1990,13 +1990,13 @@ L573:
 L574:
         ;;test2.j(118)   // byte - integer
 L575:
-        ;;test2.j(119)   write(62);
+        ;;test2.j(119)   println(62);
 L576:
         LD    A,62
 L577:
         CALL  writeA
 L578:
-        ;;test2.j(120)   write(63);
+        ;;test2.j(120)   println(63);
 L579:
         LD    A,63
 L580:
@@ -2006,13 +2006,13 @@ L581:
 L582:
         ;;test2.j(122)   // integer - byte
 L583:
-        ;;test2.j(123)   write(64);
+        ;;test2.j(123)   println(64);
 L584:
         LD    A,64
 L585:
         CALL  writeA
 L586:
-        ;;test2.j(124)   write(65);
+        ;;test2.j(124)   println(65);
 L587:
         LD    A,65
 L588:
@@ -2022,25 +2022,25 @@ L589:
 L590:
         ;;test2.j(126)   // integer - integer
 L591:
-        ;;test2.j(127)   write(66);
+        ;;test2.j(127)   println(66);
 L592:
         LD    A,66
 L593:
         CALL  writeA
 L594:
-        ;;test2.j(128)   write(67);
+        ;;test2.j(128)   println(67);
 L595:
         LD    A,67
 L596:
         CALL  writeA
 L597:
-        ;;test2.j(129)   write(68);
+        ;;test2.j(129)   println(68);
 L598:
         LD    A,68
 L599:
         CALL  writeA
 L600:
-        ;;test2.j(130)   write(69);
+        ;;test2.j(130)   println(69);
 L601:
         LD    A,69
 L602:
@@ -2054,13 +2054,13 @@ L605:
 L606:
         ;;test2.j(134)   // byte - byte
 L607:
-        ;;test2.j(135)   write(70);
+        ;;test2.j(135)   println(70);
 L608:
         LD    A,70
 L609:
         CALL  writeA
 L610:
-        ;;test2.j(136)   write(71);
+        ;;test2.j(136)   println(71);
 L611:
         LD    A,71
 L612:
@@ -2070,13 +2070,13 @@ L613:
 L614:
         ;;test2.j(138)   // byte - integer
 L615:
-        ;;test2.j(139)   write(72);
+        ;;test2.j(139)   println(72);
 L616:
         LD    A,72
 L617:
         CALL  writeA
 L618:
-        ;;test2.j(140)   write(73);
+        ;;test2.j(140)   println(73);
 L619:
         LD    A,73
 L620:
@@ -2086,13 +2086,13 @@ L621:
 L622:
         ;;test2.j(142)   // integer - byte
 L623:
-        ;;test2.j(143)   write(74);
+        ;;test2.j(143)   println(74);
 L624:
         LD    A,74
 L625:
         CALL  writeA
 L626:
-        ;;test2.j(144)   write(75);
+        ;;test2.j(144)   println(75);
 L627:
         LD    A,75
 L628:
@@ -2102,25 +2102,25 @@ L629:
 L630:
         ;;test2.j(146)   // integer - integer
 L631:
-        ;;test2.j(147)   write(76);
+        ;;test2.j(147)   println(76);
 L632:
         LD    A,76
 L633:
         CALL  writeA
 L634:
-        ;;test2.j(148)   write(77);
+        ;;test2.j(148)   println(77);
 L635:
         LD    A,77
 L636:
         CALL  writeA
 L637:
-        ;;test2.j(149)   write(78);
+        ;;test2.j(149)   println(78);
 L638:
         LD    A,78
 L639:
         CALL  writeA
 L640:
-        ;;test2.j(150)   write(79);
+        ;;test2.j(150)   println(79);
 L641:
         LD    A,79
 L642:
@@ -2134,7 +2134,7 @@ L645:
 L646:
         ;;test2.j(154)   // byte - byte
 L647:
-        ;;test2.j(155)   if (30+0 > 20) write(80); else write(999);
+        ;;test2.j(155)   if (30+0 > 20) println(80); else println(999);
 L648:
         LD    A,30
 L649:
@@ -2154,7 +2154,7 @@ L655:
 L656:
         CALL  writeHL
 L657:
-        ;;test2.j(156)   if (10+0 < 20) write(81); else write(999);
+        ;;test2.j(156)   if (10+0 < 20) println(81); else println(999);
 L658:
         LD    A,10
 L659:
@@ -2178,7 +2178,7 @@ L667:
 L668:
         ;;test2.j(158)   // byte - integer
 L669:
-        ;;test2.j(159)   if (30+0 > 2000) write(999); else write(82);
+        ;;test2.j(159)   if (30+0 > 2000) println(999); else println(82);
 L670:
         LD    A,30
 L671:
@@ -2203,7 +2203,7 @@ L678:
 L679:
         CALL  writeA
 L680:
-        ;;test2.j(160)   if (10+0 < 2000) write(83); else write(999);
+        ;;test2.j(160)   if (10+0 < 2000) println(83); else println(999);
 L681:
         LD    A,10
 L682:
@@ -2232,7 +2232,7 @@ L691:
 L692:
         ;;test2.j(162)   // integer - byte
 L693:
-        ;;test2.j(163)   if (3000+0 > 20) write(84); else write(999);
+        ;;test2.j(163)   if (3000+0 > 20) println(84); else println(999);
 L694:
         LD    HL,3000
 L695:
@@ -2259,7 +2259,7 @@ L702:
 L703:
         CALL  writeHL
 L704:
-        ;;test2.j(164)   if (1000+0 < 20) write(999); else write(85);
+        ;;test2.j(164)   if (1000+0 < 20) println(999); else println(85);
 L705:
         LD    HL,1000
 L706:
@@ -2290,7 +2290,7 @@ L715:
 L716:
         ;;test2.j(166)   // integer - integer
 L717:
-        ;;test2.j(167)   if (3000+0 > 2000) write(86); else write(999);
+        ;;test2.j(167)   if (3000+0 > 2000) println(86); else println(999);
 L718:
         LD    HL,3000
 L719:
@@ -2313,7 +2313,7 @@ L725:
 L726:
         CALL  writeHL
 L727:
-        ;;test2.j(168)   if (1000+0 < 2000) write(87); else write(999);
+        ;;test2.j(168)   if (1000+0 < 2000) println(87); else println(999);
 L728:
         LD    HL,1000
 L729:
@@ -2336,13 +2336,13 @@ L735:
 L736:
         CALL  writeHL
 L737:
-        ;;test2.j(169)   write(88);
+        ;;test2.j(169)   println(88);
 L738:
         LD    A,88
 L739:
         CALL  writeA
 L740:
-        ;;test2.j(170)   write(89);
+        ;;test2.j(170)   println(89);
 L741:
         LD    A,89
 L742:
@@ -2356,7 +2356,7 @@ L745:
 L746:
         ;;test2.j(174)   // byte - byte
 L747:
-        ;;test2.j(175)   if (30+0 > 20+0) write(90); else write(999);
+        ;;test2.j(175)   if (30+0 > 20+0) println(90); else println(999);
 L748:
         LD    A,30
 L749:
@@ -2383,7 +2383,7 @@ L758:
 L759:
         CALL  writeHL
 L760:
-        ;;test2.j(176)   if (10+0 < 20+0) write(91); else write(999);
+        ;;test2.j(176)   if (10+0 < 20+0) println(91); else println(999);
 L761:
         LD    A,10
 L762:
@@ -2414,7 +2414,7 @@ L773:
 L774:
         ;;test2.j(178)   // byte - integer
 L775:
-        ;;test2.j(179)   if (30+0 > 2000+0) write(999); else write(92);
+        ;;test2.j(179)   if (30+0 > 2000+0) println(999); else println(92);
 L776:
         LD    A,30
 L777:
@@ -2446,7 +2446,7 @@ L787:
 L788:
         CALL  writeA
 L789:
-        ;;test2.j(180)   if (10+0 < 2000+0) write(93); else write(999);
+        ;;test2.j(180)   if (10+0 < 2000+0) println(93); else println(999);
 L790:
         LD    A,10
 L791:
@@ -2482,7 +2482,7 @@ L803:
 L804:
         ;;test2.j(182)   // integer - byte
 L805:
-        ;;test2.j(183)   if (3000+0 > 20+0) write(94); else write(999);
+        ;;test2.j(183)   if (3000+0 > 20+0) println(94); else println(999);
 L806:
         LD    HL,3000
 L807:
@@ -2515,7 +2515,7 @@ L817:
 L818:
         CALL  writeHL
 L819:
-        ;;test2.j(184)   if (1000+0 < 20+0) write(999); else write(95);
+        ;;test2.j(184)   if (1000+0 < 20+0) println(999); else println(95);
 L820:
         LD    HL,1000
 L821:
@@ -2552,7 +2552,7 @@ L833:
 L834:
         ;;test2.j(186)   // integer - integer
 L835:
-        ;;test2.j(187)   if (3000+0 > 2000+0) write(96); else write(999);
+        ;;test2.j(187)   if (3000+0 > 2000+0) println(96); else println(999);
 L836:
         LD    HL,3000
 L837:
@@ -2582,7 +2582,7 @@ L846:
 L847:
         CALL  writeHL
 L848:
-        ;;test2.j(188)   if (1000+0 < 2000+0) write(97); else write(999);
+        ;;test2.j(188)   if (1000+0 < 2000+0) println(97); else println(999);
 L849:
         LD    HL,1000
 L850:
@@ -2612,13 +2612,13 @@ L859:
 L860:
         CALL  writeHL
 L861:
-        ;;test2.j(189)   write(98);
+        ;;test2.j(189)   println(98);
 L862:
         LD    A,98
 L863:
         CALL  writeA
 L864:
-        ;;test2.j(190)   write(99);
+        ;;test2.j(190)   println(99);
 L865:
         LD    A,99
 L866:
@@ -2632,7 +2632,7 @@ L869:
 L870:
         ;;test2.j(194)   // byte - byte
 L871:
-        ;;test2.j(195)   if (30+0 > b) write(100); else write(999);
+        ;;test2.j(195)   if (30+0 > b) println(100); else println(999);
 L872:
         LD    A,30
 L873:
@@ -2654,7 +2654,7 @@ L879:
 L880:
         CALL  writeHL
 L881:
-        ;;test2.j(196)   if (10+0 < b) write(101); else write(999);
+        ;;test2.j(196)   if (10+0 < b) println(101); else println(999);
 L882:
         LD    A,10
 L883:
@@ -2680,7 +2680,7 @@ L891:
 L892:
         ;;test2.j(198)   // byte - integer
 L893:
-        ;;test2.j(199)   if (30+0 > i) write(999); else write(102);
+        ;;test2.j(199)   if (30+0 > i) println(999); else println(102);
 L894:
         LD    A,30
 L895:
@@ -2705,7 +2705,7 @@ L902:
 L903:
         CALL  writeA
 L904:
-        ;;test2.j(200)   if (10+0 < i) write(103); else write(999);
+        ;;test2.j(200)   if (10+0 < i) println(103); else println(999);
 L905:
         LD    A,10
 L906:
@@ -2734,7 +2734,7 @@ L915:
 L916:
         ;;test2.j(202)   // integer - byte
 L917:
-        ;;test2.j(203)   if (3000+0 > b) write(104); else write(999);
+        ;;test2.j(203)   if (3000+0 > b) println(104); else println(999);
 L918:
         LD    HL,3000
 L919:
@@ -2761,7 +2761,7 @@ L926:
 L927:
         CALL  writeHL
 L928:
-        ;;test2.j(204)   if (1000+0 < b) write(999); else write(105);
+        ;;test2.j(204)   if (1000+0 < b) println(999); else println(105);
 L929:
         LD    HL,1000
 L930:
@@ -2792,7 +2792,7 @@ L939:
 L940:
         ;;test2.j(206)   // integer - integer
 L941:
-        ;;test2.j(207)   if (3000+0 > i) write(106); else write(999);
+        ;;test2.j(207)   if (3000+0 > i) println(106); else println(999);
 L942:
         LD    HL,3000
 L943:
@@ -2815,7 +2815,7 @@ L949:
 L950:
         CALL  writeHL
 L951:
-        ;;test2.j(208)   if (1000+0 < i) write(107); else write(999);
+        ;;test2.j(208)   if (1000+0 < i) println(107); else println(999);
 L952:
         LD    HL,1000
 L953:
@@ -2838,13 +2838,13 @@ L959:
 L960:
         CALL  writeHL
 L961:
-        ;;test2.j(209)   write(108);
+        ;;test2.j(209)   println(108);
 L962:
         LD    A,108
 L963:
         CALL  writeA
 L964:
-        ;;test2.j(210)   write(109);
+        ;;test2.j(210)   println(109);
 L965:
         LD    A,109
 L966:
@@ -2858,13 +2858,13 @@ L969:
 L970:
         ;;test2.j(214)   // byte - byte
 L971:
-        ;;test2.j(215)   write(110);
+        ;;test2.j(215)   println(110);
 L972:
         LD    A,110
 L973:
         CALL  writeA
 L974:
-        ;;test2.j(216)   write(111);
+        ;;test2.j(216)   println(111);
 L975:
         LD    A,111
 L976:
@@ -2874,13 +2874,13 @@ L977:
 L978:
         ;;test2.j(218)   // byte - integer
 L979:
-        ;;test2.j(219)   write(112);
+        ;;test2.j(219)   println(112);
 L980:
         LD    A,112
 L981:
         CALL  writeA
 L982:
-        ;;test2.j(220)   write(113);
+        ;;test2.j(220)   println(113);
 L983:
         LD    A,113
 L984:
@@ -2890,13 +2890,13 @@ L985:
 L986:
         ;;test2.j(222)   // integer - byte
 L987:
-        ;;test2.j(223)   write(114);
+        ;;test2.j(223)   println(114);
 L988:
         LD    A,114
 L989:
         CALL  writeA
 L990:
-        ;;test2.j(224)   write(115);
+        ;;test2.j(224)   println(115);
 L991:
         LD    A,115
 L992:
@@ -2906,25 +2906,25 @@ L993:
 L994:
         ;;test2.j(226)   // integer - integer
 L995:
-        ;;test2.j(227)   write(116);
+        ;;test2.j(227)   println(116);
 L996:
         LD    A,116
 L997:
         CALL  writeA
 L998:
-        ;;test2.j(228)   write(117);
+        ;;test2.j(228)   println(117);
 L999:
         LD    A,117
 L1000:
         CALL  writeA
 L1001:
-        ;;test2.j(229)   write(118);
+        ;;test2.j(229)   println(118);
 L1002:
         LD    A,118
 L1003:
         CALL  writeA
 L1004:
-        ;;test2.j(230)   write(119);
+        ;;test2.j(230)   println(119);
 L1005:
         LD    A,119
 L1006:
@@ -2938,13 +2938,13 @@ L1009:
 L1010:
         ;;test2.j(234)   // byte - byte
 L1011:
-        ;;test2.j(235)   write(120);
+        ;;test2.j(235)   println(120);
 L1012:
         LD    A,120
 L1013:
         CALL  writeA
 L1014:
-        ;;test2.j(236)   write(121);
+        ;;test2.j(236)   println(121);
 L1015:
         LD    A,121
 L1016:
@@ -2954,13 +2954,13 @@ L1017:
 L1018:
         ;;test2.j(238)   // byte - integer
 L1019:
-        ;;test2.j(239)   write(122);
+        ;;test2.j(239)   println(122);
 L1020:
         LD    A,122
 L1021:
         CALL  writeA
 L1022:
-        ;;test2.j(240)   write(123);
+        ;;test2.j(240)   println(123);
 L1023:
         LD    A,123
 L1024:
@@ -2970,13 +2970,13 @@ L1025:
 L1026:
         ;;test2.j(242)   // integer - byte
 L1027:
-        ;;test2.j(243)   write(124);
+        ;;test2.j(243)   println(124);
 L1028:
         LD    A,124
 L1029:
         CALL  writeA
 L1030:
-        ;;test2.j(244)   write(125);
+        ;;test2.j(244)   println(125);
 L1031:
         LD    A,125
 L1032:
@@ -2986,25 +2986,25 @@ L1033:
 L1034:
         ;;test2.j(246)   // integer - integer
 L1035:
-        ;;test2.j(247)   write(126);
+        ;;test2.j(247)   println(126);
 L1036:
         LD    A,126
 L1037:
         CALL  writeA
 L1038:
-        ;;test2.j(248)   write(127);
+        ;;test2.j(248)   println(127);
 L1039:
         LD    A,127
 L1040:
         CALL  writeA
 L1041:
-        ;;test2.j(249)   write(128);
+        ;;test2.j(249)   println(128);
 L1042:
         LD    A,128
 L1043:
         CALL  writeA
 L1044:
-        ;;test2.j(250)   write(129);
+        ;;test2.j(250)   println(129);
 L1045:
         LD    A,129
 L1046:
@@ -3018,7 +3018,7 @@ L1049:
 L1050:
         ;;test2.j(254)   // byte - byte
 L1051:
-        ;;test2.j(255)   if (b > 10) write(130); else write(999);
+        ;;test2.j(255)   if (b > 10) println(130); else println(999);
 L1052:
         LD    A,(05006H)
 L1053:
@@ -3036,7 +3036,7 @@ L1058:
 L1059:
         CALL  writeHL
 L1060:
-        ;;test2.j(256)   if (b < 30) write(131); else write(999);
+        ;;test2.j(256)   if (b < 30) println(131); else println(999);
 L1061:
         LD    A,(05006H)
 L1062:
@@ -3058,7 +3058,7 @@ L1069:
 L1070:
         ;;test2.j(258)   // byte - integer
 L1071:
-        ;;test2.j(259)   if (b > 1000) write(999); else write(132);
+        ;;test2.j(259)   if (b > 1000) println(999); else println(132);
 L1072:
         LD    A,(05006H)
 L1073:
@@ -3081,7 +3081,7 @@ L1079:
 L1080:
         CALL  writeA
 L1081:
-        ;;test2.j(260)   if (b < 1000) write(133); else write(999);
+        ;;test2.j(260)   if (b < 1000) println(133); else println(999);
 L1082:
         LD    A,(05006H)
 L1083:
@@ -3108,7 +3108,7 @@ L1091:
 L1092:
         ;;test2.j(262)   // integer - byte
 L1093:
-        ;;test2.j(263)   if (i > 1000) write(134); else write(999);
+        ;;test2.j(263)   if (i > 1000) println(134); else println(999);
 L1094:
         LD    HL,(05000H)
 L1095:
@@ -3128,7 +3128,7 @@ L1100:
 L1101:
         CALL  writeHL
 L1102:
-        ;;test2.j(264)   if (i < 3000) write(135); else write(999);
+        ;;test2.j(264)   if (i < 3000) println(135); else println(999);
 L1103:
         LD    HL,(05000H)
 L1104:
@@ -3152,7 +3152,7 @@ L1111:
 L1112:
         ;;test2.j(266)   // integer - integer
 L1113:
-        ;;test2.j(267)   if (i > 1000) write(136); else write(999);
+        ;;test2.j(267)   if (i > 1000) println(136); else println(999);
 L1114:
         LD    HL,(05000H)
 L1115:
@@ -3172,7 +3172,7 @@ L1120:
 L1121:
         CALL  writeHL
 L1122:
-        ;;test2.j(268)   if (i < 3000) write(137); else write(999);
+        ;;test2.j(268)   if (i < 3000) println(137); else println(999);
 L1123:
         LD    HL,(05000H)
 L1124:
@@ -3192,13 +3192,13 @@ L1129:
 L1130:
         CALL  writeHL
 L1131:
-        ;;test2.j(269)   write(138);
+        ;;test2.j(269)   println(138);
 L1132:
         LD    A,138
 L1133:
         CALL  writeA
 L1134:
-        ;;test2.j(270)   write(139);
+        ;;test2.j(270)   println(139);
 L1135:
         LD    A,139
 L1136:
@@ -3212,7 +3212,7 @@ L1139:
 L1140:
         ;;test2.j(274)   // byte - byte
 L1141:
-        ;;test2.j(275)   if (b > 10+0) write(140); else write(999);
+        ;;test2.j(275)   if (b > 10+0) println(140); else println(999);
 L1142:
         LD    A,10
 L1143:
@@ -3234,7 +3234,7 @@ L1149:
 L1150:
         CALL  writeHL
 L1151:
-        ;;test2.j(276)   if (b < 30+0) write(141); else write(999);
+        ;;test2.j(276)   if (b < 30+0) println(141); else println(999);
 L1152:
         LD    A,30
 L1153:
@@ -3260,7 +3260,7 @@ L1161:
 L1162:
         ;;test2.j(278)   // byte - integer
 L1163:
-        ;;test2.j(279)   if (b > 1000+0) write(999); else write(142);
+        ;;test2.j(279)   if (b > 1000+0) println(999); else println(142);
 L1164:
         LD    HL,1000
 L1165:
@@ -3286,7 +3286,7 @@ L1172:
 L1173:
         CALL  writeA
 L1174:
-        ;;test2.j(280)   if (b < 1000+0) write(143); else write(999);
+        ;;test2.j(280)   if (b < 1000+0) println(143); else println(999);
 L1175:
         LD    HL,1000
 L1176:
@@ -3316,7 +3316,7 @@ L1185:
 L1186:
         ;;test2.j(282)   // integer - byte
 L1187:
-        ;;test2.j(283)   if (i > 1000+0) write(144); else write(999);
+        ;;test2.j(283)   if (i > 1000+0) println(144); else println(999);
 L1188:
         LD    HL,1000
 L1189:
@@ -3339,7 +3339,7 @@ L1195:
 L1196:
         CALL  writeHL
 L1197:
-        ;;test2.j(284)   if (i < 3000+0) write(145); else write(999);
+        ;;test2.j(284)   if (i < 3000+0) println(145); else println(999);
 L1198:
         LD    HL,3000
 L1199:
@@ -3366,7 +3366,7 @@ L1207:
 L1208:
         ;;test2.j(286)   // integer - integer
 L1209:
-        ;;test2.j(287)   if (i > 1000+0) write(146); else write(999);
+        ;;test2.j(287)   if (i > 1000+0) println(146); else println(999);
 L1210:
         LD    HL,1000
 L1211:
@@ -3389,7 +3389,7 @@ L1217:
 L1218:
         CALL  writeHL
 L1219:
-        ;;test2.j(288)   if (i < 3000+0) write(147); else write(999);
+        ;;test2.j(288)   if (i < 3000+0) println(147); else println(999);
 L1220:
         LD    HL,3000
 L1221:
@@ -3412,13 +3412,13 @@ L1227:
 L1228:
         CALL  writeHL
 L1229:
-        ;;test2.j(289)   write(148);
+        ;;test2.j(289)   println(148);
 L1230:
         LD    A,148
 L1231:
         CALL  writeA
 L1232:
-        ;;test2.j(290)   write(149);
+        ;;test2.j(290)   println(149);
 L1233:
         LD    A,149
 L1234:
@@ -3432,7 +3432,7 @@ L1237:
 L1238:
         ;;test2.j(294)   // byte - byte
 L1239:
-        ;;test2.j(295)   if (b > b1) write(150);
+        ;;test2.j(295)   if (b > b1) println(150);
 L1240:
         LD    A,(05006H)
 L1241:
@@ -3446,7 +3446,7 @@ L1243:
 L1244:
         CALL  writeA
 L1245:
-        ;;test2.j(296)   if (b < b3) write(151);
+        ;;test2.j(296)   if (b < b3) println(151);
 L1246:
         LD    A,(05006H)
 L1247:
@@ -3464,7 +3464,7 @@ L1251:
 L1252:
         ;;test2.j(298)   // byte - integer
 L1253:
-        ;;test2.j(299)   if (b > i1) write(999); else write(152);
+        ;;test2.j(299)   if (b > i1) println(999); else println(152);
 L1254:
         LD    A,(05006H)
 L1255:
@@ -3487,7 +3487,7 @@ L1261:
 L1262:
         CALL  writeA
 L1263:
-        ;;test2.j(300)   if (b < i3) write(153);
+        ;;test2.j(300)   if (b < i3) println(153);
 L1264:
         LD    A,(05006H)
 L1265:
@@ -3508,7 +3508,7 @@ L1270:
 L1271:
         ;;test2.j(302)   // integer - byte
 L1272:
-        ;;test2.j(303)   if (i > i1) write(154);
+        ;;test2.j(303)   if (i > i1) println(154);
 L1273:
         LD    HL,(05000H)
 L1274:
@@ -3522,7 +3522,7 @@ L1276:
 L1277:
         CALL  writeA
 L1278:
-        ;;test2.j(304)   if (i < i3) write(155);
+        ;;test2.j(304)   if (i < i3) println(155);
 L1279:
         LD    HL,(05000H)
 L1280:
@@ -3540,7 +3540,7 @@ L1284:
 L1285:
         ;;test2.j(306)   // integer - integer
 L1286:
-        ;;test2.j(307)   if (i > i1) write(156);
+        ;;test2.j(307)   if (i > i1) println(156);
 L1287:
         LD    HL,(05000H)
 L1288:
@@ -3554,7 +3554,7 @@ L1290:
 L1291:
         CALL  writeA
 L1292:
-        ;;test2.j(308)   if (i < i3) write(157);
+        ;;test2.j(308)   if (i < i3) println(157);
 L1293:
         LD    HL,(05000H)
 L1294:
@@ -3568,13 +3568,13 @@ L1296:
 L1297:
         CALL  writeA
 L1298:
-        ;;test2.j(309)   write(158);
+        ;;test2.j(309)   println(158);
 L1299:
         LD    A,158
 L1300:
         CALL  writeA
 L1301:
-        ;;test2.j(310)   write(159);
+        ;;test2.j(310)   println(159);
 L1302:
         LD    A,159
 L1303:
@@ -3662,7 +3662,7 @@ L1343:
 L1344:
         ;;test2.j(351) 
 L1345:
-        ;;test2.j(352)   write("Klaar");
+        ;;test2.j(352)   println("Klaar");
 L1346:
         LD    HL,1350
 L1347:
