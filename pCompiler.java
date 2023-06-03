@@ -501,8 +501,6 @@ public class pCompiler {
   //expression = term {addop term}.
   private Operand expression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nexpression: start with stopSet = " + stopSet);
-    /* part of lexical analysis */
-    AddValType operator;
     
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
@@ -511,6 +509,7 @@ public class pCompiler {
     boolean leftOperandNotLoaded = true;
     
     debug("\nexpression: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    AddValType operator;
     while (lexeme.type == LexemeType.addop) {
       operator = lexeme.addVal;
 
@@ -1294,6 +1293,11 @@ public class pCompiler {
   } //update()
 
   // writeStatement = "write" "(" expression ")" ";".
+  // The write statement makes a distinction between a string expression and an algorithmic expression.
+  // An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
+  // In a write statement with a string expression, the subsequent terms may be added; other operators are not allowed.
+  // However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
+  // Terms in a string expression are converted to string and printed.
   private void writeStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwriteStatement: start with stopSet = " + stopSet);
     //skip write symbol.
