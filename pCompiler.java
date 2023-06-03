@@ -1323,8 +1323,6 @@ public class pCompiler {
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
-    //TODO
-    //Operand operand = expression(stopExpressionSet);
 
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopExpressionSet.clone();
@@ -1332,33 +1330,19 @@ public class pCompiler {
     Operand operand = term(followSet);
     
     if (operand.datatype == Datatype.string) {
-      operand = expressionWithOperand(operand, followSet);
+      //TODO
+      debug("\nwriteStatement: " + operand + ", lexeme: " + lexeme);
 
-      //ODOT
-      debug("\nwriteStatement: " + operand);
-      
       /* part of code generation */
       if (operand.opType != OperandType.acc) {
         plantAccLoad(operand);
       }
-      switch (operand.datatype) {
-        case word :
-          plant(new Instruction(FunctionType.writeAcc16));
-          break;
-        case byt :
-          plant(new Instruction(FunctionType.writeAcc8));
-          break;
-        case string :
-          plant(new Instruction(FunctionType.writeString));
-          break;
-        default: error(15);
-      }
+      plant(new Instruction(FunctionType.writeString));
+      //ODOT
     } else {
       operand = expressionWithOperand(operand, followSet);
-
-      //ODOT
       debug("\nwriteStatement: " + operand);
-      
+
       /* part of code generation */
       if (operand.opType != OperandType.acc) {
         plantAccLoad(operand);
