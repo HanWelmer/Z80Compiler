@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add string expression (+).
+//TODO support string expression in write statement.
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
@@ -80,6 +80,11 @@ import java.util.Stack;
  * - \b backspace
  * - \f form feed/new page
  * - \a alert/bell
+ * The write statement makes a distinction between a string expression and an algorithmic expression.
+ * An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
+ * In a write statement with a string expression, the subsequent terms may be added; other operators are not allowed.
+ * However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
+ * Terms in a string expression are converted to string and printed.
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
