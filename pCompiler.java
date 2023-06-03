@@ -501,12 +501,12 @@ public class pCompiler {
   //expression = term {addop term}.
   private Operand expression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nexpression: start with stopSet = " + stopSet);
-    
+
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.addop);
     Operand leftOperand = term(followSet);
-    
+
     leftOperand = expressionWithOperand(leftOperand, followSet);
     debug("\nexpression: end");
     return leftOperand;
@@ -1323,7 +1323,17 @@ public class pCompiler {
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
-    Operand operand = expression(stopExpressionSet);
+    //TODO
+    //Operand operand = expression(stopExpressionSet);
+
+    /* part of lexical analysis */
+    EnumSet<LexemeType> followSet = stopExpressionSet.clone();
+    followSet.add(LexemeType.addop);
+    Operand operand = term(followSet);
+
+    operand = expressionWithOperand(operand, followSet);
+
+    //ODOT
     debug("\nwriteStatement: " + operand);
     
     /* part of code generation */
