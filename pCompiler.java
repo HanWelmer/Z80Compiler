@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO printlnStatement: only accept + symbol (not addop or - symbol)
 //TODO printlnStatement: test *, / and (expression)
 //TODO add logical AND.
 //TODO add logical OR.
@@ -31,7 +30,7 @@ import java.util.Stack;
  * assignment       = [datatype] update ";".
  * datatype         = "byte" | "word" | "String".
  * update           = identifier++ | identifier-- | identifier "=" expression.
- * printlnStatement = "write" "(" expression ")" ";".
+ * printlnStatement = "println" "(" expression ")" ";".
  * ifStatement      = "if" "(" comparison ")" block [ "else" block].
  * forStatement     = "for" "(" initialization ";" comparison ";" update ")" block.
  * initialization   = "word" identifier "=" expression.
@@ -81,11 +80,11 @@ import java.util.Stack;
  * - \b backspace
  * - \f form feed/new page
  * - \a alert/bell
- * The write statement makes a distinction between a string expression and an algorithmic expression.
+ * The println statement makes a distinction between a string expression and an algorithmic expression.
  * An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
- * In a write statement with a string expression, the subsequent terms may be added; other operators are not allowed.
+ * In a println statement with a string expression, the subsequent terms may be added; other operators are not allowed.
  * However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
- * Terms in a string expression are converted to string and printed.
+ * Terms in a string expression are converted to string and then printed.
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
@@ -302,7 +301,7 @@ public class pCompiler {
       case 12 : System.out.println("internal compiler error during code generation");break;
       case 13 : System.out.println("constant too big"); break;
       case 14 : System.out.println("incompatible datatype between assignment variable and expression"); break;
-      case 15 : System.out.println("incompatible datatype in write statement"); break;
+      case 15 : System.out.println("incompatible datatype in println statement"); break;
     }
   }
   
@@ -1301,17 +1300,17 @@ public class pCompiler {
     debug("\nupdate: end");
   } //update()
 
-  // printlnStatement = "write" "(" expression ")" ";".
-  // The write statement makes a distinction between a string expression and an algorithmic expression.
+  // printlnStatement = "println" "(" expression ")" ";".
+  // The println statement makes a distinction between a string expression and an algorithmic expression.
   // An expression is a string expression if the first term is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
-  // In a write statement with a string expression, the subsequent terms may be added; other operators are not allowed.
+  // In a println statement with a string expression, the subsequent terms may be added; other operators are not allowed.
   // However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
   // Terms in a string expression are converted to string and then printed.
   private void printlnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nwriteStatement: start with stopSet = " + stopSet);
+    debug("\nprintlnStatement: start with stopSet = " + stopSet);
 
     //part of lexical analysis.
-    //skip write symbol.
+    //skip println symbol.
     lexeme = lexemeReader.getLexeme(sourceCode);
 
     EnumSet<LexemeType> stopWriteSet = stopSet.clone();
@@ -1337,8 +1336,8 @@ public class pCompiler {
     if (operand.datatype == Datatype.string) {
       do {
         //part of lexical analysis.
-        if (lexeme.type == LexemeType.addop) {
-          debug("\nwriteStatement: " + operand);
+        if ((lexeme.type == LexemeType.addop) && (lexeme.addVal == AddValType.add)) {
+          debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
           //part of code generation.
           if (operand.opType != OperandType.acc) {
             plantAccLoad(operand);
@@ -1351,18 +1350,26 @@ public class pCompiler {
 
           //read next term.
           operand = term(followSet);
+        } else if (lexeme.type != LexemeType.rbracket) {
+          //part of lexical analysis.
+          error(3); //only + symbol allowed between terms in string expression.
+          System.out.println(" " + lexeme.makeString(null));
+          //skip unexpected symbol.
+          if (checkOrSkip(EnumSet.of(lexeme.type), stopWriteSet)) {
+            lexeme = lexemeReader.getLexeme(sourceCode);
+          }
         }
       } while (lexeme.type != LexemeType.rbracket);
 
       //part of code generation.
-      debug("\nwriteStatement: " + operand);
+      debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
       if (operand.opType != OperandType.acc) {
         plantAccLoad(operand);
       }
       plant(new Instruction(FunctionType.writeLineString));
     } else {
       operand = expressionWithOperand(operand, followSet);
-      debug("\nwriteStatement: " + operand);
+      debug("\nprintlnStatement: " + operand);
 
       //part of code generation.
       if (operand.opType != OperandType.acc) {
@@ -1392,7 +1399,7 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    debug("\nwriteStatement: end");
+    debug("\nprintlnStatement: end");
   }
 
   //parse a statement, and return the address of the first object code in the statement.
