@@ -506,9 +506,17 @@ public class pCompiler {
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.addop);
     Operand leftOperand = term(followSet);
-    boolean leftOperandNotLoaded = true;
     
-    debug("\nexpression: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    leftOperand = expressionWithOperand(leftOperand, followSet);
+    debug("\nexpression: end");
+    return leftOperand;
+  } //expression()
+  
+  private Operand expressionWithOperand(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
+    debug("\nexpressionWithOperand: start with followSet = " + followSet);
+
+    boolean leftOperandNotLoaded = true;
+    debug("\nexpressionWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     AddValType operator;
     while (lexeme.type == LexemeType.addop) {
       operator = lexeme.addVal;
@@ -526,7 +534,7 @@ public class pCompiler {
       Operand rOperand = term(followSet);
       
       /* part of code generation */
-      debug("\nexpression loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+      debug("\nexpressionWithOperand loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
       /* leftOperand:  constant, acc, var, stack16, stack8
        * rOperand:     constant, acc, var, stack16, stack8
        */
@@ -600,9 +608,9 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     }
-    debug("\nexpression: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    debug("\nexpressionWithOperand: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     return leftOperand;
-  } //expression()
+  } //expressionWithOperand()
   
   //parse a comparison, and return the address of the jump instruction to be filled with the label at the end of the control statement block.
   //comparison = expression relop expression
