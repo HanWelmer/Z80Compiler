@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO fix bug in string expression in writeStatement: middle terms are printed twice.
 //TODO fix bug in writeStatement: all but last terms should be printed without line break.
-//TODO rename write statement to println statement.
+//TODO rename writeStatement to println statement.
+//TODO println statement: only accept + symbol (not addop or - symbol)
+//TODO println statement: test *, / and (expression)
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
@@ -1304,14 +1305,14 @@ public class pCompiler {
 
   // writeStatement = "write" "(" expression ")" ";".
   // The write statement makes a distinction between a string expression and an algorithmic expression.
-  // An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
+  // An expression is a string expression if the first term is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
   // In a write statement with a string expression, the subsequent terms may be added; other operators are not allowed.
   // However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
-  // Terms in a string expression are converted to string and printed.
+  // Terms in a string expression are converted to string and then printed.
   private void writeStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwriteStatement: start with stopSet = " + stopSet);
 
-    /* part of lexical analysis */
+    //part of lexical analysis.
     //skip write symbol.
     lexeme = lexemeReader.getLexeme(sourceCode);
 
@@ -1319,37 +1320,39 @@ public class pCompiler {
     stopWriteSet.addAll(startExp);
     stopWriteSet.add(LexemeType.rbracket);
     stopWriteSet.add(LexemeType.semicolon);
+
     //skip left bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWriteSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
     
+    //read first term.
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
-
+    
     EnumSet<LexemeType> followSet = stopExpressionSet.clone();
     followSet.add(LexemeType.addop);
     Operand operand = term(followSet);
     
+    //handle string expression or algorithmic expression.
     if (operand.datatype == Datatype.string) {
       debug("\nwriteStatement: " + operand + ", lexeme: " + lexeme.makeString(null));
 
-      do {
-        /* part of code generation */
-        if (operand.opType != OperandType.acc) {
-          plantAccLoad(operand);
-        }
-        plant(new Instruction(FunctionType.writeString));
+      //part of code generation.
+      if (operand.opType != OperandType.acc) {
+        plantAccLoad(operand);
+      }
+      plant(new Instruction(FunctionType.writeString));
         
-        /* part of lexical analysis */
-        //TODO accept only + symbol.
+      do {
+        //part of lexical analysis.
         if (lexeme.type == LexemeType.addop) {
           //skip addop symbol.
           lexeme = lexemeReader.getLexeme(sourceCode);
           operand = term(followSet);
 
-          /* part of code generation */
+          //part of code generation.
           if (operand.opType != OperandType.acc) {
             plantAccLoad(operand);
           }
@@ -1361,7 +1364,7 @@ public class pCompiler {
       operand = expressionWithOperand(operand, followSet);
       debug("\nwriteStatement: " + operand);
 
-      /* part of code generation */
+      //part of code generation.
       if (operand.opType != OperandType.acc) {
         plantAccLoad(operand);
       }
@@ -1379,7 +1382,7 @@ public class pCompiler {
       }
     }
 
-    /* part of lexical analysis */
+    //part of lexical analysis.
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }

@@ -761,50 +761,46 @@ L16:
 L17:
         ;;test0.j(7)   write("Hallo" + "Wereld.");
 L18:
-        LD    HL,36
+        LD    HL,34
 L19:
         CALL  putStr
 L20:
-        LD    HL,37
+        LD    HL,35
 L21:
         CALL  putStr
 L22:
         ;;test0.j(8)   write("Nog" + " een" + " bericht.");
 L23:
-        LD    HL,38
+        LD    HL,36
 L24:
         CALL  putStr
 L25:
-        LD    HL,39
+        LD    HL,37
 L26:
         CALL  putStr
 L27:
-        LD    HL,39
+        LD    HL,38
 L28:
         CALL  putStr
 L29:
-        LD    HL,40
-L30:
-        CALL  putStr
-L31:
         ;;test0.j(9)   write("Klaar.");
-L32:
-        LD    HL,41
-L33:
+L30:
+        LD    HL,39
+L31:
         CALL  putStr
-L34:
+L32:
         ;;test0.j(10) }
-L35:
+L33:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L36:
+L34:
         .ASCIZ  "Hallo"
-L37:
+L35:
         .ASCIZ  "Wereld."
-L38:
+L36:
         .ASCIZ  "Nog"
-L39:
+L37:
         .ASCIZ  " een"
-L40:
+L38:
         .ASCIZ  " bericht."
-L41:
+L39:
         .ASCIZ  "Klaar."

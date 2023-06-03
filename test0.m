@@ -16,27 +16,25 @@
   15 acc8= variable 2
   16 call writeAcc8
   17 ;test0.j(7)   write("Hallo" + "Wereld.");
-  18 acc16= constant 36
+  18 acc16= constant 34
   19 writeString
-  20 acc16= constant 37
+  20 acc16= constant 35
   21 writeString
   22 ;test0.j(8)   write("Nog" + " een" + " bericht.");
-  23 acc16= constant 38
+  23 acc16= constant 36
   24 writeString
-  25 acc16= constant 39
+  25 acc16= constant 37
   26 writeString
-  27 acc16= constant 39
+  27 acc16= constant 38
   28 writeString
-  29 acc16= constant 40
-  30 writeString
-  31 ;test0.j(9)   write("Klaar.");
-  32 acc16= constant 41
-  33 writeString
-  34 ;test0.j(10) }
-  35 stop
-  36 stringConstant 0 = "Hallo"
-  37 stringConstant 1 = "Wereld."
-  38 stringConstant 2 = "Nog"
-  39 stringConstant 3 = " een"
-  40 stringConstant 4 = " bericht."
-  41 stringConstant 5 = "Klaar."
+  29 ;test0.j(9)   write("Klaar.");
+  30 acc16= constant 39
+  31 writeString
+  32 ;test0.j(10) }
+  33 stop
+  34 stringConstant 0 = "Hallo"
+  35 stringConstant 1 = "Wereld."
+  36 stringConstant 2 = "Nog"
+  37 stringConstant 3 = " een"
+  38 stringConstant 4 = " bericht."
+  39 stringConstant 5 = "Klaar."
