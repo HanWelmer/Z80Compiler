@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO support string expression in write statement.
+//TODO fix bug in string expression in writeStatement: middle terms are printed twice.
+//TODO fix bug in writeStatement: all but last terms should be printed without line break.
+//TODO rename write statement to println statement.
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
@@ -1308,6 +1310,8 @@ public class pCompiler {
   // Terms in a string expression are converted to string and printed.
   private void writeStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwriteStatement: start with stopSet = " + stopSet);
+
+    /* part of lexical analysis */
     //skip write symbol.
     lexeme = lexemeReader.getLexeme(sourceCode);
 
@@ -1324,21 +1328,35 @@ public class pCompiler {
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
 
-    /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopExpressionSet.clone();
     followSet.add(LexemeType.addop);
     Operand operand = term(followSet);
     
     if (operand.datatype == Datatype.string) {
-      //TODO
-      debug("\nwriteStatement: " + operand + ", lexeme: " + lexeme);
+      debug("\nwriteStatement: " + operand + ", lexeme: " + lexeme.makeString(null));
 
-      /* part of code generation */
-      if (operand.opType != OperandType.acc) {
-        plantAccLoad(operand);
-      }
-      plant(new Instruction(FunctionType.writeString));
-      //ODOT
+      do {
+        /* part of code generation */
+        if (operand.opType != OperandType.acc) {
+          plantAccLoad(operand);
+        }
+        plant(new Instruction(FunctionType.writeString));
+        
+        /* part of lexical analysis */
+        //TODO accept only + symbol.
+        if (lexeme.type == LexemeType.addop) {
+          //skip addop symbol.
+          lexeme = lexemeReader.getLexeme(sourceCode);
+          operand = term(followSet);
+
+          /* part of code generation */
+          if (operand.opType != OperandType.acc) {
+            plantAccLoad(operand);
+          }
+          plant(new Instruction(FunctionType.writeString));
+        }
+        debug("\nwriteStatement: " + operand + ", lexeme: " + lexeme.makeString(null));
+      } while (lexeme.type != LexemeType.rbracket);
     } else {
       operand = expressionWithOperand(operand, followSet);
       debug("\nwriteStatement: " + operand);

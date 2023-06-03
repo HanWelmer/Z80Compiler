@@ -727,19 +727,19 @@ L0:
 L1:
         ;;test0.j(1) class TestPrint {
 L2:
-        ;;test0.j(2)   byte b = 2;
+        ;;test0.j(2)   word i = 1;
 L3:
-        LD    A,2
-L4:
-        LD    (05000H),A
-L5:
-        ;;test0.j(3)   word i = 1;
-L6:
         LD    A,1
-L7:
+L4:
         LD    L,A
         LD    H,0
-        LD    (05001H),HL
+        LD    (05000H),HL
+L5:
+        ;;test0.j(3)   byte b = 2;
+L6:
+        LD    A,2
+L7:
+        LD    (05002H),A
 L8:
         ;;test0.j(4)   write(0);
 L9:
@@ -749,24 +749,62 @@ L10:
 L11:
         ;;test0.j(5)   write(i);
 L12:
-        LD    HL,(05001H)
+        LD    HL,(05000H)
 L13:
         CALL  writeHL
 L14:
         ;;test0.j(6)   write(b);
 L15:
-        LD    A,(05000H)
+        LD    A,(05002H)
 L16:
         CALL  writeA
 L17:
-        ;;test0.j(7)   write("Klaar");
+        ;;test0.j(7)   write("Hallo" + "Wereld.");
 L18:
-        LD    HL,22
+        LD    HL,36
 L19:
         CALL  putStr
 L20:
-        ;;test0.j(8) }
+        LD    HL,37
 L21:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        CALL  putStr
 L22:
-        .ASCIZ  "Klaar"
+        ;;test0.j(8)   write("Nog" + " een" + " bericht.");
+L23:
+        LD    HL,38
+L24:
+        CALL  putStr
+L25:
+        LD    HL,39
+L26:
+        CALL  putStr
+L27:
+        LD    HL,39
+L28:
+        CALL  putStr
+L29:
+        LD    HL,40
+L30:
+        CALL  putStr
+L31:
+        ;;test0.j(9)   write("Klaar.");
+L32:
+        LD    HL,41
+L33:
+        CALL  putStr
+L34:
+        ;;test0.j(10) }
+L35:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L36:
+        .ASCIZ  "Hallo"
+L37:
+        .ASCIZ  "Wereld."
+L38:
+        .ASCIZ  "Nog"
+L39:
+        .ASCIZ  " een"
+L40:
+        .ASCIZ  " bericht."
+L41:
+        .ASCIZ  "Klaar."
