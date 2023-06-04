@@ -1337,10 +1337,7 @@ public class pCompiler {
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
-    
-    EnumSet<LexemeType> followSet = stopExpressionSet.clone();
-    //followSet.add(LexemeType.addop);
-    Operand operand = factor(followSet);
+    Operand operand = factor(stopExpressionSet);
     
     //handle string expression or algorithmic expression.
     if (operand.datatype == Datatype.string) {
@@ -1359,7 +1356,7 @@ public class pCompiler {
           lexeme = lexemeReader.getLexeme(sourceCode);
 
           //read next term.
-          operand = term(followSet);
+          operand = term(stopExpressionSet);
         } else if (lexeme.type != LexemeType.rbracket) {
           //part of lexical analysis.
           error(3); //only + symbol allowed between terms in string expression.
@@ -1380,12 +1377,10 @@ public class pCompiler {
     } else {
       //depending on the operand being part of a term or a factor, continue with finishing the expression or the first term in the expression.
       if (lexeme.type == LexemeType.mulop) {
-        EnumSet<LexemeType> factorFollowSet = followSet.clone();
-        factorFollowSet.add(LexemeType.mulop);
-        operand = termWithFactor(operand, factorFollowSet);
-        operand = expressionWithTerm(operand, followSet);
+        operand = termWithFactor(operand, stopExpressionSet);
+        operand = expressionWithTerm(operand, stopExpressionSet);
       } else {
-        operand = expressionWithTerm(operand, followSet);
+        operand = expressionWithTerm(operand, stopExpressionSet);
       }
       debug("\nprintlnStatement: " + operand);
 
