@@ -83,8 +83,8 @@ import java.util.Stack;
  * The println statement makes a distinction between a string expression and an algorithmic expression.
  * An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
  * In a println statement with a string expression, the subsequent operands may be added; other operators are not allowed.
- * However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
- * Operands in a string expression are converted to string and then printed.
+ * However, subexpressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
+ * Operands in a string expression, including results of subexpressions, are converted to string and then printed.
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
@@ -1305,7 +1305,7 @@ public class pCompiler {
   // An expression is a string expression if the first operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
   // In a println statement with a string expression, the subsequent operands may be added; other operators are not allowed.
   // However, sub expressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
-  // Operands in a string expression are converted to string and then printed.
+  // Operands in a string expression, including results of subexpressions, are converted to string and then printed.
   private void printlnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nprintlnStatement: start with stopSet = " + stopSet);
 
