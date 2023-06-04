@@ -4,6 +4,6 @@
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  */
 public enum MulValType {
-  muld, 
-  divd
+  mul, 
+  div
 };

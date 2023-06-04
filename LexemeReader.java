@@ -234,11 +234,11 @@ public class LexemeReader {
           break;
         case '*' :
           lexeme.type = LexemeType.mulop;
-          lexeme.mulVal = MulValType.muld;
+          lexeme.mulVal = MulValType.mul;
           break;
         case '/' :
           lexeme.type = LexemeType.mulop;
-          lexeme.mulVal = MulValType.divd;
+          lexeme.mulVal = MulValType.div;
           break;
         case '=' :
           if (nextChar(sourceCode) == '=') {

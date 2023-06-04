@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO printlnStatement: test *, / and (expression)
+//TODO printlnStatement: test subexpression.
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
@@ -254,15 +254,15 @@ public class pCompiler {
     reverseAdd8.put(AddValType.add, FunctionType.acc8Plus);
     reverseAdd8.put(AddValType.sub, FunctionType.minusAcc8);
 
-    forwardMul16.put(MulValType.muld, FunctionType.acc16Times);
-    forwardMul16.put(MulValType.divd, FunctionType.acc16Div);
-    reverseMul16.put(MulValType.muld, FunctionType.acc16Times);
-    reverseMul16.put(MulValType.divd, FunctionType.divAcc16);
+    forwardMul16.put(MulValType.mul, FunctionType.acc16Times);
+    forwardMul16.put(MulValType.div, FunctionType.acc16Div);
+    reverseMul16.put(MulValType.mul, FunctionType.acc16Times);
+    reverseMul16.put(MulValType.div, FunctionType.divAcc16);
 
-    forwardMul8.put(MulValType.muld, FunctionType.acc8Times);
-    forwardMul8.put(MulValType.divd, FunctionType.acc8Div);
-    reverseMul8.put(MulValType.muld, FunctionType.acc8Times);
-    reverseMul8.put(MulValType.divd, FunctionType.divAcc8);
+    forwardMul8.put(MulValType.mul, FunctionType.acc8Times);
+    forwardMul8.put(MulValType.div, FunctionType.acc8Div);
+    reverseMul8.put(MulValType.mul, FunctionType.acc8Times);
+    reverseMul8.put(MulValType.div, FunctionType.divAcc8);
 
     normalSkip.put(RelValType.eq, FunctionType.brNe);
     normalSkip.put(RelValType.ne, FunctionType.brEq);
@@ -398,23 +398,32 @@ public class pCompiler {
   
   //term = factor {mulop factor}.
   private Operand term(EnumSet<LexemeType> stopSet) throws FatalError {
-    /* part of code generation */
-    MulValType operator;
+    debug("\nterm: start with stopSet = " + stopSet);
 
     /* part of lexical analysis */
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LexemeType.mulop);
     Operand leftOperand = factor(followSet);
-    boolean leftOperandNotLoaded = true;
 
+    leftOperand = termWithFactor(leftOperand, stopSet);
+    debug("\nterm: end");
+    return leftOperand;
+  }//term
+  
+  private Operand termWithFactor(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
+    debug("\ntermWithOperand: start with followSet = " + followSet);
     debug("\nterm: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+
+    /* part of code generation */
+    boolean leftOperandNotLoaded = true;
+    MulValType operator;
     while (lexeme.type == LexemeType.mulop) {
 
       /* part of code generation */
       operator = lexeme.mulVal;
       if (leftOperandNotLoaded) {
         if (leftOperand.opType != OperandType.acc) {
-          debug("\nterm: calling plantAccLoad");
+          debug("\ntermWithOperand: calling plantAccLoad");
           plantAccLoad(leftOperand);
         }
         leftOperandNotLoaded = false;
@@ -425,7 +434,7 @@ public class pCompiler {
       Operand rOperand = factor(followSet);
 
       /* part of code generation */
-      debug("\nterm loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+      debug("\ntermWithOperand loop: lOperand=" + leftOperand + ", rOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
       /* leftOperand:  constant, acc, var, stack16, stack8
        * rOperand:     constant, acc, var, stack16, stack8
        */
@@ -494,9 +503,9 @@ public class pCompiler {
         throw new RuntimeException("Internal compiler error: abort.");
       }
     }
-    debug("\nterm: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    debug("\ntermWithOperand: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     return leftOperand;
-  } //term()
+  } //termWithOperand
   
   //expression = term {addop term}.
   private Operand expression(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -507,16 +516,17 @@ public class pCompiler {
     followSet.add(LexemeType.addop);
     Operand leftOperand = term(followSet);
 
-    leftOperand = expressionWithOperand(leftOperand, followSet);
+    leftOperand = expressionWithTerm(leftOperand, followSet);
     debug("\nexpression: end");
     return leftOperand;
   } //expression()
   
-  private Operand expressionWithOperand(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
+  private Operand expressionWithTerm(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
     debug("\nexpressionWithOperand: start with followSet = " + followSet);
 
     boolean leftOperandNotLoaded = true;
     debug("\nexpressionWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    
     AddValType operator;
     while (lexeme.type == LexemeType.addop) {
       operator = lexeme.addVal;
@@ -610,7 +620,7 @@ public class pCompiler {
     }
     debug("\nexpressionWithOperand: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     return leftOperand;
-  } //expressionWithOperand()
+  } //expressionWithTerm()
   
   //parse a comparison, and return the address of the jump instruction to be filled with the label at the end of the control statement block.
   //comparison = expression relop expression
@@ -1329,8 +1339,8 @@ public class pCompiler {
     stopExpressionSet.add(LexemeType.semicolon);
     
     EnumSet<LexemeType> followSet = stopExpressionSet.clone();
-    followSet.add(LexemeType.addop);
-    Operand operand = term(followSet);
+    //followSet.add(LexemeType.addop);
+    Operand operand = factor(followSet);
     
     //handle string expression or algorithmic expression.
     if (operand.datatype == Datatype.string) {
@@ -1368,7 +1378,15 @@ public class pCompiler {
       }
       plant(new Instruction(FunctionType.writeLineString));
     } else {
-      operand = expressionWithOperand(operand, followSet);
+      //depending on the operand being part of a term or a factor, continue with finishing the expression or the first term in the expression.
+      if (lexeme.type == LexemeType.mulop) {
+        EnumSet<LexemeType> factorFollowSet = followSet.clone();
+        factorFollowSet.add(LexemeType.mulop);
+        operand = termWithFactor(operand, factorFollowSet);
+        operand = expressionWithTerm(operand, followSet);
+      } else {
+        operand = expressionWithTerm(operand, followSet);
+      }
       debug("\nprintlnStatement: " + operand);
 
       //part of code generation.
