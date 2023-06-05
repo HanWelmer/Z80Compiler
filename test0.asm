@@ -793,72 +793,46 @@ L16:
 L17:
         ;;test0.j(7)   println("Hallo" + " wereld.");
 L18:
-        LD    HL,44
+        LD    HL,34
 L19:
         CALL  writeStr
 L20:
-        LD    HL,45
+        LD    HL,35
 L21:
         CALL  writeLineStr
 L22:
-        ;;test0.j(8)   //println("Hallo" * " wereld.");
+        ;;test0.j(8)   println("Nog" + " een" + " bericht.");
 L23:
-        ;;test0.j(9)   println("Nog" + " een" + " bericht.");
+        LD    HL,36
 L24:
-        LD    HL,46
+        CALL  writeStr
 L25:
-        CALL  writeStr
+        LD    HL,37
 L26:
-        LD    HL,47
-L27:
         CALL  writeStr
+L27:
+        LD    HL,38
 L28:
-        LD    HL,48
+        CALL  writeLineStr
 L29:
-        CALL  writeLineStr
+        ;;test0.j(9)   println("Klaar.");
 L30:
-        ;;test0.j(10)   println(2*3);
+        LD    HL,39
 L31:
-        LD    A,2
-L32:
-        LD    B,A
-        LD    C,3
-        MLT   BC
-        LD    A,C
-L33:
-        CALL  writeLineA
-L34:
-        ;;test0.j(11)   println(500 * 504 - 54354);
-L35:
-        LD    HL,500
-L36:
-        LD    DE,504
-        CALL  mul16
-L37:
-        LD    DE,54354
-        OR    A
-        SBC   HL,DE
-L38:
-        CALL  writeLineHL
-L39:
-        ;;test0.j(12)   println("Klaar.");
-L40:
-        LD    HL,49
-L41:
         CALL  writeLineStr
-L42:
-        ;;test0.j(13) }
-L43:
+L32:
+        ;;test0.j(10) }
+L33:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L44:
+L34:
         .ASCIZ  "Hallo"
-L45:
+L35:
         .ASCIZ  " wereld."
-L46:
+L36:
         .ASCIZ  "Nog"
-L47:
+L37:
         .ASCIZ  " een"
-L48:
+L38:
         .ASCIZ  " bericht."
-L49:
+L39:
         .ASCIZ  "Klaar."

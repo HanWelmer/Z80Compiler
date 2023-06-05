@@ -405,12 +405,12 @@ public class pCompiler {
     followSet.add(LexemeType.mulop);
     Operand leftOperand = factor(followSet);
 
-    leftOperand = termWithFactor(leftOperand, stopSet);
+    leftOperand = termWithOperand(leftOperand, stopSet);
     debug("\nterm: end");
     return leftOperand;
   }//term
   
-  private Operand termWithFactor(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
+  private Operand termWithOperand(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
     debug("\ntermWithOperand: start with followSet = " + followSet);
     debug("\nterm: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
@@ -516,12 +516,12 @@ public class pCompiler {
     followSet.add(LexemeType.addop);
     Operand leftOperand = term(followSet);
 
-    leftOperand = expressionWithTerm(leftOperand, followSet);
+    leftOperand = expressionWithOperand(leftOperand, followSet);
     debug("\nexpression: end");
     return leftOperand;
   } //expression()
   
-  private Operand expressionWithTerm(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
+  private Operand expressionWithOperand(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
     debug("\nexpressionWithOperand: start with followSet = " + followSet);
 
     boolean leftOperandNotLoaded = true;
@@ -620,7 +620,7 @@ public class pCompiler {
     }
     debug("\nexpressionWithOperand: end: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     return leftOperand;
-  } //expressionWithTerm()
+  } //expressionWithOperand()
   
   //parse a comparison, and return the address of the jump instruction to be filled with the label at the end of the control statement block.
   //comparison = expression relop expression
@@ -1338,9 +1338,12 @@ public class pCompiler {
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
     Operand operand = factor(stopExpressionSet);
+    EnumSet<LexemeType> startExpressionSet = stopExpressionSet.clone();
+    startExpressionSet.add(LexemeType.addop);
     
     //handle string expression or algorithmic expression.
     if (operand.datatype == Datatype.string) {
+      //string expression.
       do {
         //part of lexical analysis.
         if ((lexeme.type == LexemeType.addop) && (lexeme.addVal == AddValType.add)) {
@@ -1355,8 +1358,8 @@ public class pCompiler {
           //skip addop symbol.
           lexeme = lexemeReader.getLexeme(sourceCode);
 
-          //read next term.
-          operand = term(stopExpressionSet);
+          //read next factor.
+          operand = factor(startExpressionSet);
         } else if (lexeme.type != LexemeType.rbracket) {
           //part of lexical analysis.
           error(3); //only + symbol allowed between terms in string expression.
@@ -1375,12 +1378,13 @@ public class pCompiler {
       }
       plant(new Instruction(FunctionType.writeLineString));
     } else {
+      //algorithmic expression.
       //depending on the operand being part of a term or a factor, continue with finishing the expression or the first term in the expression.
       if (lexeme.type == LexemeType.mulop) {
-        operand = termWithFactor(operand, stopExpressionSet);
-        operand = expressionWithTerm(operand, stopExpressionSet);
+        operand = termWithOperand(operand, startExpressionSet);
+        operand = expressionWithOperand(operand, startExpressionSet);
       } else {
-        operand = expressionWithTerm(operand, stopExpressionSet);
+        operand = expressionWithOperand(operand, startExpressionSet);
       }
       debug("\nprintlnStatement: " + operand);
 

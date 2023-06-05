@@ -6,7 +6,6 @@ class TestPrint {
   println(i);
   println(b);
   println("Hallo" + " wereld.");
-  //println("Hallo" - " wereld.");
   println("Nog" + " een" + " bericht.");
   println("Klaar.");
 }

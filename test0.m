@@ -16,35 +16,25 @@
   15 acc8= variable 2
   16 call writeLineAcc8
   17 ;test0.j(7)   println("Hallo" + " wereld.");
-  18 acc16= constant 44
+  18 acc16= constant 34
   19 writeString
-  20 acc16= constant 45
+  20 acc16= constant 35
   21 writeLineString
-  22 ;test0.j(8)   //println("Hallo" * " wereld.");
-  23 ;test0.j(9)   println("Nog" + " een" + " bericht.");
-  24 acc16= constant 46
-  25 writeString
-  26 acc16= constant 47
-  27 writeString
-  28 acc16= constant 48
-  29 writeLineString
-  30 ;test0.j(10)   println(2*3);
-  31 acc8= constant 2
-  32 acc8* constant 3
-  33 call writeLineAcc8
-  34 ;test0.j(11)   println(500 * 504 - 54354);
-  35 acc16= constant 500
-  36 acc16* constant 504
-  37 acc16- constant 54354
-  38 call writeLineAcc16
-  39 ;test0.j(12)   println("Klaar.");
-  40 acc16= constant 49
-  41 writeLineString
-  42 ;test0.j(13) }
-  43 stop
-  44 stringConstant 0 = "Hallo"
-  45 stringConstant 1 = " wereld."
-  46 stringConstant 2 = "Nog"
-  47 stringConstant 3 = " een"
-  48 stringConstant 4 = " bericht."
-  49 stringConstant 5 = "Klaar."
+  22 ;test0.j(8)   println("Nog" + " een" + " bericht.");
+  23 acc16= constant 36
+  24 writeString
+  25 acc16= constant 37
+  26 writeString
+  27 acc16= constant 38
+  28 writeLineString
+  29 ;test0.j(9)   println("Klaar.");
+  30 acc16= constant 39
+  31 writeLineString
+  32 ;test0.j(10) }
+  33 stop
+  34 stringConstant 0 = "Hallo"
+  35 stringConstant 1 = " wereld."
+  36 stringConstant 2 = "Nog"
+  37 stringConstant 3 = " een"
+  38 stringConstant 4 = " bericht."
+  39 stringConstant 5 = "Klaar."
