@@ -22,5 +22,14 @@ class TestWrite {
   println("12 Hier komt een backslash \\.");
   String str = "13 Hallo wereld.";
   println(str);
+  println(7 * 2);
+  println(7 + 2 * 4);
+  println(2 * 6 + 4);
+  println(9 + 2 * (1 + 3));
+  println("18 Hallo" + " wereld.");
+  println("19 Nog" + " een" + " bericht.");
+  println("12 + 8 = " + 20);
+  println("7 * 3 = " + (7 * 3));
+  println("10 + 12 = " + (10 + 12) + ".");
   println("Klaar");
 }

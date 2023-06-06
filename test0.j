@@ -7,5 +7,8 @@ class TestPrint {
   println(b);
   println("Hallo" + " wereld.");
   println("Nog" + " een" + " bericht.");
+  println("3 + 2 = " + 5);
+  println("3 + 3 = " + (2 * 3));
+  println("3 + 4 = " + (2 + 5) + ".");
   println("Klaar.");
 }

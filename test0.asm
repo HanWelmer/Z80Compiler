@@ -793,46 +793,95 @@ L16:
 L17:
         ;;test0.j(7)   println("Hallo" + " wereld.");
 L18:
-        LD    HL,34
+        LD    HL,53
 L19:
         CALL  writeStr
 L20:
-        LD    HL,35
+        LD    HL,54
 L21:
         CALL  writeLineStr
 L22:
         ;;test0.j(8)   println("Nog" + " een" + " bericht.");
 L23:
-        LD    HL,36
+        LD    HL,55
 L24:
         CALL  writeStr
 L25:
-        LD    HL,37
+        LD    HL,56
 L26:
         CALL  writeStr
 L27:
-        LD    HL,38
+        LD    HL,57
 L28:
         CALL  writeLineStr
 L29:
-        ;;test0.j(9)   println("Klaar.");
+        ;;test0.j(9)   println("3 + 2 = " + 5);
 L30:
-        LD    HL,39
+        LD    HL,58
 L31:
-        CALL  writeLineStr
+        CALL  writeStr
 L32:
-        ;;test0.j(10) }
+        LD    A,5
 L33:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        CALL  writeLineA
 L34:
-        .ASCIZ  "Hallo"
+        ;;test0.j(10)   println("3 + 3 = " + (2 * 3));
 L35:
-        .ASCIZ  " wereld."
+        LD    HL,59
 L36:
-        .ASCIZ  "Nog"
+        CALL  writeStr
 L37:
-        .ASCIZ  " een"
+        LD    A,2
 L38:
-        .ASCIZ  " bericht."
+        LD    B,A
+        LD    C,3
+        MLT   BC
+        LD    A,C
 L39:
+        CALL  writeLineA
+L40:
+        ;;test0.j(11)   println("3 + 4 = " + (2 + 5) + ".");
+L41:
+        LD    HL,60
+L42:
+        CALL  writeStr
+L43:
+        LD    A,2
+L44:
+        ADD   A,5
+L45:
+        CALL  writeA
+L46:
+        LD    HL,61
+L47:
+        CALL  writeLineStr
+L48:
+        ;;test0.j(12)   println("Klaar.");
+L49:
+        LD    HL,62
+L50:
+        CALL  writeLineStr
+L51:
+        ;;test0.j(13) }
+L52:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L53:
+        .ASCIZ  "Hallo"
+L54:
+        .ASCIZ  " wereld."
+L55:
+        .ASCIZ  "Nog"
+L56:
+        .ASCIZ  " een"
+L57:
+        .ASCIZ  " bericht."
+L58:
+        .ASCIZ  "3 + 2 = "
+L59:
+        .ASCIZ  "3 + 3 = "
+L60:
+        .ASCIZ  "3 + 4 = "
+L61:
+        .ASCIZ  "."
+L62:
         .ASCIZ  "Klaar."

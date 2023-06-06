@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO printlnStatement: test subexpression.
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
@@ -1349,10 +1348,7 @@ public class pCompiler {
         if ((lexeme.type == LexemeType.addop) && (lexeme.addVal == AddValType.add)) {
           debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
           //part of code generation.
-          if (operand.opType != OperandType.acc) {
-            plantAccLoad(operand);
-          }
-          plant(new Instruction(FunctionType.writeString));
+          plantPrintln(operand, false);
 
           //part of lexical analysis.
           //skip addop symbol.
@@ -1371,39 +1367,20 @@ public class pCompiler {
         }
       } while (lexeme.type != LexemeType.rbracket);
 
-      //part of code generation.
       debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
-      if (operand.opType != OperandType.acc) {
-        plantAccLoad(operand);
-      }
-      plant(new Instruction(FunctionType.writeLineString));
+      //part of code generation.
+      plantPrintln(operand, true);
     } else {
       //algorithmic expression.
-      //depending on the operand being part of a term or a factor, continue with finishing the expression or the first term in the expression.
+      //if the first operand is a factor in a multiplication or division, finish the first term before finishing the expression .
       if (lexeme.type == LexemeType.mulop) {
         operand = termWithOperand(operand, startExpressionSet);
-        operand = expressionWithOperand(operand, startExpressionSet);
-      } else {
-        operand = expressionWithOperand(operand, startExpressionSet);
       }
+      operand = expressionWithOperand(operand, startExpressionSet);
       debug("\nprintlnStatement: " + operand);
 
       //part of code generation.
-      if (operand.opType != OperandType.acc) {
-        plantAccLoad(operand);
-      }
-      switch (operand.datatype) {
-        case word :
-          plant(new Instruction(FunctionType.writeLineAcc16));
-          break;
-        case byt :
-          plant(new Instruction(FunctionType.writeLineAcc8));
-          break;
-        case string :
-          plant(new Instruction(FunctionType.writeLineString));
-          break;
-        default: error(15);
-      }
+      plantPrintln(operand, true);
     }
 
     //part of lexical analysis.
@@ -1689,6 +1666,26 @@ public class pCompiler {
       instructions.add(new Instruction(FunctionType.stringConstant, operand));
     }
   }
+
+  private void plantPrintln(Operand operand, boolean withCarriageReturn) {
+    //part of code generation.
+    if (operand.opType != OperandType.acc) {
+      plantAccLoad(operand);
+    }
+    switch (operand.datatype) {
+      case word :
+        plant(new Instruction(withCarriageReturn ? FunctionType.writeLineAcc16 : FunctionType.writeAcc16));
+        break;
+      case byt :
+        plant(new Instruction(withCarriageReturn ? FunctionType.writeLineAcc8 : FunctionType.writeAcc8));
+        break;
+      case string :
+        plant(new Instruction(withCarriageReturn ? FunctionType.writeLineString : FunctionType.writeString));
+        break;
+      default: error(15);
+    }
+  }
+
   
   private void updateReferencesToStringConstants(int offset) {
     Map<Integer, ArrayList<Integer>> stringReferences = new HashMap<Integer, ArrayList<Integer>>();

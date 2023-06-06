@@ -799,79 +799,79 @@ L19:
 L20:
         ;;test12.j(10)   println("3  Drie keer.");
 L21:
-        LD    HL,67
+        LD    HL,121
 L22:
         CALL  writeLineStr
 L23:
         ;;test12.j(11)   println("3  Drie keer.");
 L24:
-        LD    HL,67
+        LD    HL,121
 L25:
         CALL  writeLineStr
 L26:
         ;;test12.j(12)   println("3  Drie keer.");
 L27:
-        LD    HL,67
+        LD    HL,121
 L28:
         CALL  writeLineStr
 L29:
         ;;test12.j(13)   println("4  Hier klinkt een bel\a en dan gaan we door.");
 L30:
-        LD    HL,68
+        LD    HL,122
 L31:
         CALL  writeLineStr
 L32:
         ;;test12.j(14)   println("5  Dit is pagina 1.\f   En dit is pagina 2.");
 L33:
-        LD    HL,69
+        LD    HL,123
 L34:
         CALL  writeLineStr
 L35:
         ;;test12.j(15)   println("6  Dit is gu\boed.");
 L36:
-        LD    HL,70
+        LD    HL,124
 L37:
         CALL  writeLineStr
 L38:
         ;;test12.j(16)   println("7  Getal na een tab\t1.");
 L39:
-        LD    HL,71
+        LD    HL,125
 L40:
         CALL  writeLineStr
 L41:
         ;;test12.j(17)   println("8  Dit zie je niet\r8  Dit zie je wel.");
 L42:
-        LD    HL,72
+        LD    HL,126
 L43:
         CALL  writeLineStr
 L44:
         ;;test12.j(18)   println("9  Dit is regel 1.\n   En dit regel 2.");
 L45:
-        LD    HL,73
+        LD    HL,127
 L46:
         CALL  writeLineStr
 L47:
         ;;test12.j(19)   println("10 Hier komt een dubbele quote \".");
 L48:
-        LD    HL,74
+        LD    HL,128
 L49:
         CALL  writeLineStr
 L50:
         ;;test12.j(20)   println("11 Hier komt een single quote \'.");
 L51:
-        LD    HL,75
+        LD    HL,129
 L52:
         CALL  writeLineStr
 L53:
         ;;test12.j(21)   println("12 Hier komt een backslash \\.");
 L54:
-        LD    HL,76
+        LD    HL,130
 L55:
         CALL  writeLineStr
 L56:
         ;;test12.j(22)   String str = "13 Hallo wereld.";
 L57:
-        LD    HL,77
+        LD    HL,131
 L58:
         LD    (05003H),HL
 L59:
@@ -881,36 +881,182 @@ L60:
 L61:
         CALL  writeLineStr
 L62:
-        ;;test12.j(24)   println("Klaar");
+        ;;test12.j(24)   println(7 * 2);
 L63:
-        LD    HL,78
+        LD    A,7
 L64:
-        CALL  writeLineStr
+        LD    B,A
+        LD    C,2
+        MLT   BC
+        LD    A,C
 L65:
-        ;;test12.j(25) }
+        CALL  writeLineA
 L66:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        ;;test12.j(25)   println(7 + 2 * 4);
 L67:
-        .ASCIZ  "3  Drie keer."
+        LD    A,7
 L68:
-        .ASCIZ  "4  Hier klinkt een bel\a en dan gaan we door."
+        PUSH  AF
+        LD    A,2
 L69:
-        .ASCIZ  "5  Dit is pagina 1.\n   En dit is pagina 2."
+        LD    B,A
+        LD    C,4
+        MLT   BC
+        LD    A,C
 L70:
-        .ASCIZ  "6  Dit is gu\boed."
+        POP   BC
+        ADD   A,B
 L71:
-        .ASCIZ  "7  Getal na een tab\t1."
+        CALL  writeLineA
 L72:
-        .ASCIZ  "8  Dit zie je niet\r8  Dit zie je wel."
+        ;;test12.j(26)   println(2 * 6 + 4);
 L73:
-        .ASCIZ  "9  Dit is regel 1.\n   En dit regel 2."
+        LD    A,2
 L74:
-        .ASCIZ  "10 Hier komt een dubbele quote \"."
+        LD    B,A
+        LD    C,6
+        MLT   BC
+        LD    A,C
 L75:
-        .ASCIZ  "11 Hier komt een single quote \'."
+        ADD   A,4
 L76:
-        .ASCIZ  "12 Hier komt een backslash \\."
+        CALL  writeLineA
 L77:
-        .ASCIZ  "13 Hallo wereld."
+        ;;test12.j(27)   println(9 + 2 * (1 + 3));
 L78:
+        LD    A,9
+L79:
+        PUSH  AF
+        LD    A,2
+L80:
+        PUSH  AF
+        LD    A,1
+L81:
+        ADD   A,3
+L82:
+        POP   BC
+        LD    B,A
+        MLT   BC
+        LD    A,C
+L83:
+        POP   BC
+        ADD   A,B
+L84:
+        CALL  writeLineA
+L85:
+        ;;test12.j(28)   println("18 Hallo" + " wereld.");
+L86:
+        LD    HL,132
+L87:
+        CALL  writeStr
+L88:
+        LD    HL,133
+L89:
+        CALL  writeLineStr
+L90:
+        ;;test12.j(29)   println("19 Nog" + " een" + " bericht.");
+L91:
+        LD    HL,134
+L92:
+        CALL  writeStr
+L93:
+        LD    HL,135
+L94:
+        CALL  writeStr
+L95:
+        LD    HL,136
+L96:
+        CALL  writeLineStr
+L97:
+        ;;test12.j(30)   println("12 + 8 = " + 20);
+L98:
+        LD    HL,137
+L99:
+        CALL  writeStr
+L100:
+        LD    A,20
+L101:
+        CALL  writeLineA
+L102:
+        ;;test12.j(31)   println("7 * 3 = " + (7 * 3));
+L103:
+        LD    HL,138
+L104:
+        CALL  writeStr
+L105:
+        LD    A,7
+L106:
+        LD    B,A
+        LD    C,3
+        MLT   BC
+        LD    A,C
+L107:
+        CALL  writeLineA
+L108:
+        ;;test12.j(32)   println("10 + 12 = " + (10 + 12) + ".");
+L109:
+        LD    HL,139
+L110:
+        CALL  writeStr
+L111:
+        LD    A,10
+L112:
+        ADD   A,12
+L113:
+        CALL  writeA
+L114:
+        LD    HL,140
+L115:
+        CALL  writeLineStr
+L116:
+        ;;test12.j(33)   println("Klaar");
+L117:
+        LD    HL,141
+L118:
+        CALL  writeLineStr
+L119:
+        ;;test12.j(34) }
+L120:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L121:
+        .ASCIZ  "3  Drie keer."
+L122:
+        .ASCIZ  "4  Hier klinkt een bel\a en dan gaan we door."
+L123:
+        .ASCIZ  "5  Dit is pagina 1.\n   En dit is pagina 2."
+L124:
+        .ASCIZ  "6  Dit is gu\boed."
+L125:
+        .ASCIZ  "7  Getal na een tab\t1."
+L126:
+        .ASCIZ  "8  Dit zie je niet\r8  Dit zie je wel."
+L127:
+        .ASCIZ  "9  Dit is regel 1.\n   En dit regel 2."
+L128:
+        .ASCIZ  "10 Hier komt een dubbele quote \"."
+L129:
+        .ASCIZ  "11 Hier komt een single quote \'."
+L130:
+        .ASCIZ  "12 Hier komt een backslash \\."
+L131:
+        .ASCIZ  "13 Hallo wereld."
+L132:
+        .ASCIZ  "18 Hallo"
+L133:
+        .ASCIZ  " wereld."
+L134:
+        .ASCIZ  "19 Nog"
+L135:
+        .ASCIZ  " een"
+L136:
+        .ASCIZ  " bericht."
+L137:
+        .ASCIZ  "12 + 8 = "
+L138:
+        .ASCIZ  "7 * 3 = "
+L139:
+        .ASCIZ  "10 + 12 = "
+L140:
+        .ASCIZ  "."
+L141:
         .ASCIZ  "Klaar"
