@@ -311,5 +311,14 @@ class Test8And16BitExpressions {
   i = 300 * 302;
   println(i);         // 90.600 % 65536 = 25.064
 
+  /***************************/
+  /* hex noatation constants */
+  /***************************/
+  println("hex noatation constants");
+  byte byteHex = 0x41;
+  //println(byteHex);
+  //word wordHex = 0x042A;
+  //println(wordHex);
+
   println("Klaar");
 }
