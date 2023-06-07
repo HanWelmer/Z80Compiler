@@ -4,20 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO add built-in function: output(port, value). See ledtest.j.
-//TODO add 'constant' qualifier. See ledtest.j.
-//TODO add logical AND.
-//TODO add logical OR.
-//TODO add logical NOT.
-//TODO add logical XOR.
-//TODO add function (parameter less; no global/local variables).
-//TODO add glocal variable to function.
-//TODO add local variable to function.
-//TODO add local parameter to function.
-//TODO add import
-//TODO introduce built in function malloc() (see test1, test5, test10, test11).
-//TODO refactor StringConstants.
-//TODO fix runtime error: too many variables
+//TODO Add built-in function: output(port, value). See ledtest.j.
+//TODO Add 'constant' qualifier. See ledtest.j.
+//TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
+//TODO Add logical AND.
+//TODO Add logical OR.
+//TODO Add logical NOT.
+//TODO Add logical XOR.
+//TODO Add function (parameter less; no global/local variables).
+//TODO Add glocal variable to function.
+//TODO Add local variable to function.
+//TODO Add local parameter to function.
+//TODO Add import
+//TODO Introduce built in function malloc() (see test1, test5, test10, test11).
+//TODO Refactor StringConstants.
+//TODO Fix runtime error: too many variables
 
 /**
  * Compiler for the miniJava programming language.

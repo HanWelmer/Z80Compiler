@@ -45,6 +45,7 @@ class LEDTest {
   byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
   byte DCNTL = 0x32;  //DMA/Wait Control Register P121
 
+/*
   //Device initialisation
   output(WDTCR, 0x00);  //Enable writing to system ctrl registers
                         // LD      A,00BH
@@ -90,7 +91,6 @@ class LEDTest {
                         // OUT0    (WDTCR),A
   //Einde device initialisatie
 
-/*
             JR      LedErr
 ;
 ;LedOK
