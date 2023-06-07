@@ -1,0 +1,15 @@
+Overzicht met test programma's:
+-------------------------------
+test0.j   TestPrint
+test1.j   TestWhile
+test2.j   TestBranches
+test3.j   TestMultiply
+test4.j   TestMultiplyDivide
+test5.j   TestIf
+test6.j   Test8And16BitExpressions: byte/word addition/subtraction/multiplication/division/possible loss of data/Overflow
+test7.j   Test8And16BitExpressions: read
+test8.j   Test8And16BitExpressions: byte/word reverse subtract/divide
+test9.j   TestMultiply
+test10.j  TestDo
+test11.j  TestFor
+test12.j  TestWrite
