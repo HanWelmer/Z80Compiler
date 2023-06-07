@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+//TODO parse byte/integer constant in hex format: 0x65 or 0x1023. See ledtest.j.
+//TODO add built-in function: output(port, value). See ledtest.j.
+//TODO add 'constant' qualifier. See ledtest.j.
 //TODO add logical AND.
 //TODO add logical OR.
 //TODO add logical NOT.
