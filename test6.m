@@ -402,7 +402,7 @@
  401 ;test6.j(150)   /* possible loss of data */
  402 ;test6.j(151)   /*************************/
  403 ;test6.j(152)   println("Nu komen 251 en 252");
- 404 acc16= constant 872
+ 404 acc16= constant 891
  405 writeLineString
  406 ;test6.j(153)   b = 507;
  407 acc16= constant 507
@@ -421,7 +421,7 @@
  420 call writeLineAcc8
  421 ;test6.j(158) 
  422 ;test6.j(159)   println("Nu komen -253 en -254");
- 423 acc16= constant 873
+ 423 acc16= constant 892
  424 writeLineString
  425 ;test6.j(160)   b = b - 505;
  426 acc8= variable 0
@@ -445,7 +445,7 @@
  444 call writeLineAcc8
  445 ;test6.j(165)   
  446 ;test6.j(166)   println("Nu komen 255 en 256");
- 447 acc16= constant 874
+ 447 acc16= constant 893
  448 writeLineString
  449 ;test6.j(167)   b = 255;
  450 acc8= constant 255
@@ -475,7 +475,7 @@
  474 ;test6.j(184)   //OK
  475 ;test6.j(185) 
  476 ;test6.j(186)   println("Nu komen 1000..1047");
- 477 acc16= constant 875
+ 477 acc16= constant 894
  478 writeLineString
  479 ;test6.j(187)   println(1000);      // 1000
  480 acc16= constant 1000
@@ -851,7 +851,7 @@
  850 ;test6.j(306)   /* Overflow */
  851 ;test6.j(307)   /************/
  852 ;test6.j(308)   println("Nu komen 24.764 en 25.064");
- 853 acc16= constant 876
+ 853 acc16= constant 895
  854 writeLineString
  855 ;test6.j(309)   println(300 * 301); // 90.300 % 65536 = 24.764
  856 acc16= constant 300
@@ -865,14 +865,34 @@
  864 acc16= variable 2
  865 call writeLineAcc16
  866 ;test6.j(312) 
- 867 ;test6.j(313)   println("Klaar");
- 868 acc16= constant 877
- 869 writeLineString
- 870 ;test6.j(314) }
- 871 stop
- 872 stringConstant 0 = "Nu komen 251 en 252"
- 873 stringConstant 1 = "Nu komen -253 en -254"
- 874 stringConstant 2 = "Nu komen 255 en 256"
- 875 stringConstant 3 = "Nu komen 1000..1047"
- 876 stringConstant 4 = "Nu komen 24.764 en 25.064"
- 877 stringConstant 5 = "Klaar"
+ 867 ;test6.j(313)   /***************************/
+ 868 ;test6.j(314)   /* hex noatation constants */
+ 869 ;test6.j(315)   /***************************/
+ 870 ;test6.j(316)   println("hex notation constants");
+ 871 acc16= constant 896
+ 872 writeLineString
+ 873 ;test6.j(317)   byte byteHex = 0x41;
+ 874 acc8= constant 65
+ 875 acc8=> variable 6
+ 876 ;test6.j(318)   println(byteHex);
+ 877 acc8= variable 6
+ 878 call writeLineAcc8
+ 879 ;test6.j(319)   word wordHex = 0x042A;
+ 880 acc16= constant 1066
+ 881 acc16=> variable 7
+ 882 ;test6.j(320)   println(wordHex);
+ 883 acc16= variable 7
+ 884 call writeLineAcc16
+ 885 ;test6.j(321) 
+ 886 ;test6.j(322)   println("Klaar");
+ 887 acc16= constant 897
+ 888 writeLineString
+ 889 ;test6.j(323) }
+ 890 stop
+ 891 stringConstant 0 = "Nu komen 251 en 252"
+ 892 stringConstant 1 = "Nu komen -253 en -254"
+ 893 stringConstant 2 = "Nu komen 255 en 256"
+ 894 stringConstant 3 = "Nu komen 1000..1047"
+ 895 stringConstant 4 = "Nu komen 24.764 en 25.064"
+ 896 stringConstant 5 = "hex notation constants"
+ 897 stringConstant 6 = "Klaar"

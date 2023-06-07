@@ -1663,7 +1663,7 @@ L402:
 L403:
         ;;test6.j(152)   println("Nu komen 251 en 252");
 L404:
-        LD    HL,872
+        LD    HL,891
 L405:
         CALL  writeLineStr
 L406:
@@ -1703,7 +1703,7 @@ L421:
 L422:
         ;;test6.j(159)   println("Nu komen -253 en -254");
 L423:
-        LD    HL,873
+        LD    HL,892
 L424:
         CALL  writeLineStr
 L425:
@@ -1760,7 +1760,7 @@ L445:
 L446:
         ;;test6.j(166)   println("Nu komen 255 en 256");
 L447:
-        LD    HL,874
+        LD    HL,893
 L448:
         CALL  writeLineStr
 L449:
@@ -1820,7 +1820,7 @@ L475:
 L476:
         ;;test6.j(186)   println("Nu komen 1000..1047");
 L477:
-        LD    HL,875
+        LD    HL,894
 L478:
         CALL  writeLineStr
 L479:
@@ -2652,7 +2652,7 @@ L851:
 L852:
         ;;test6.j(308)   println("Nu komen 24.764 en 25.064");
 L853:
-        LD    HL,876
+        LD    HL,895
 L854:
         CALL  writeLineStr
 L855:
@@ -2682,24 +2682,64 @@ L865:
 L866:
         ;;test6.j(312) 
 L867:
-        ;;test6.j(313)   println("Klaar");
+        ;;test6.j(313)   /***************************/
 L868:
-        LD    HL,877
+        ;;test6.j(314)   /* hex noatation constants */
 L869:
-        CALL  writeLineStr
+        ;;test6.j(315)   /***************************/
 L870:
-        ;;test6.j(314) }
+        ;;test6.j(316)   println("hex notation constants");
 L871:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        LD    HL,896
 L872:
-        .ASCIZ  "Nu komen 251 en 252"
+        CALL  writeLineStr
 L873:
-        .ASCIZ  "Nu komen -253 en -254"
+        ;;test6.j(317)   byte byteHex = 0x41;
 L874:
-        .ASCIZ  "Nu komen 255 en 256"
+        LD    A,65
 L875:
-        .ASCIZ  "Nu komen 1000..1047"
+        LD    (05006H),A
 L876:
-        .ASCIZ  "Nu komen 24.764 en 25.064"
+        ;;test6.j(318)   println(byteHex);
 L877:
+        LD    A,(05006H)
+L878:
+        CALL  writeLineA
+L879:
+        ;;test6.j(319)   word wordHex = 0x042A;
+L880:
+        LD    HL,1066
+L881:
+        LD    (05007H),HL
+L882:
+        ;;test6.j(320)   println(wordHex);
+L883:
+        LD    HL,(05007H)
+L884:
+        CALL  writeLineHL
+L885:
+        ;;test6.j(321) 
+L886:
+        ;;test6.j(322)   println("Klaar");
+L887:
+        LD    HL,897
+L888:
+        CALL  writeLineStr
+L889:
+        ;;test6.j(323) }
+L890:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L891:
+        .ASCIZ  "Nu komen 251 en 252"
+L892:
+        .ASCIZ  "Nu komen -253 en -254"
+L893:
+        .ASCIZ  "Nu komen 255 en 256"
+L894:
+        .ASCIZ  "Nu komen 1000..1047"
+L895:
+        .ASCIZ  "Nu komen 24.764 en 25.064"
+L896:
+        .ASCIZ  "hex notation constants"
+L897:
         .ASCIZ  "Klaar"

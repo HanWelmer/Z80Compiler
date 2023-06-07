@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO parse byte/integer constant in hex format: 0x65 or 0x1023. See ledtest.j.
 //TODO add built-in function: output(port, value). See ledtest.j.
 //TODO add 'constant' qualifier. See ledtest.j.
 //TODO add logical AND.
@@ -46,7 +45,9 @@ import java.util.Stack;
  * addop            = "+" | "-".
  * mulop            = "*" | "/".
  * relop            = "==" | "!=" | ">" | ">=" | "<" | "<=".
- * constant         = "(0-9)*".
+ * constant         = decimalConstant | hexadecimalConstant.
+ * decimalConstant  = "(0-9)*".
+ * hexadecimalConstant = "(0-9)x(A-F0-()*".
  * stringConstant   = "\"" ((char - ["\"\\"]) | ("\\" ["\\\'\"nrtbfa"]))* "\"".
  *
  * Java style end of line comment.

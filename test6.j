@@ -314,11 +314,11 @@ class Test8And16BitExpressions {
   /***************************/
   /* hex noatation constants */
   /***************************/
-  println("hex noatation constants");
+  println("hex notation constants");
   byte byteHex = 0x41;
-  //println(byteHex);
-  //word wordHex = 0x042A;
-  //println(wordHex);
+  println(byteHex);
+  word wordHex = 0x042A;
+  println(wordHex);
 
   println("Klaar");
 }

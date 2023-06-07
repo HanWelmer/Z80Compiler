@@ -26,6 +26,8 @@ public class LexemeReader {
   protected static final int MAX_BYT_CONSTANT = 255; //8 bit constant
   protected static final int MAX_INT_CONSTANT = 65535; //16 bit constant
   protected static final String VALID_IDENTIFIER_CHARACTERS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+  protected static final String VALID_DECIMAL_DIGITS ="0123456789";
+  protected static final String VALID_HEXADECIMAL_DIGITS ="ABCDEF0123456789";
 
   /**
   * return true if opening the file as lexeme reader is successfull, false otherwise.
@@ -117,6 +119,20 @@ public class LexemeReader {
     System.out.print('^');
   }
 
+  protected int toDecimalDigit(char ch) {
+    return (int)ch - (int)'0';
+  }
+
+  protected int toHexadecimalDigit(char ch) {
+    int digit = 0;
+    if (Character.isDigit(ch)) {
+      digit = (int)ch - (int)'0';
+    } else if (ch >= 'A' && ch <= 'F') {
+      digit = 10 + (int)ch - (int)'A';
+    }
+    return digit;
+  }
+
   /**
   * return the next lexeme from the lexeme reader.
   * parm sourceCode: this list will be extended by any lines of source code that have been read while getting the next lexeme.
@@ -144,16 +160,33 @@ public class LexemeReader {
     }
 
     if (ch >= '0' && ch <= '9') {
-      /* try to recognise a constant */
+      // try to recognise a constant.
+      // constant         = decimalConstant | hexadecimalConstant.
+      // decimalConstant  = "(0-9)*".
+      // hexadecimalConstant = "(0-9)x(A-F0-()*".
       lexeme.type = LexemeType.constant;
       lexeme.constVal = (int)ch - (int)'0';
       boolean error = false;
-      while (nextChar(sourceCode) >= '0' && nextChar(sourceCode) <= '9' && !error) {
+      boolean isHexadecimal = (nextChar(sourceCode) == 'x');
+      if (isHexadecimal) {
+        //eat the 'x' character.
         ch = getChar(sourceCode);
-        lexeme.constVal = lexeme.constVal * 10 + ((int)ch - (int)'0');
-        //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
-        if (lexeme.constVal > MAX_INT_CONSTANT) {
-          error = true;
+        while (VALID_HEXADECIMAL_DIGITS.contains("" + nextChar(sourceCode)) && !error) {
+          ch = getChar(sourceCode);
+          lexeme.constVal = lexeme.constVal * 16 + toHexadecimalDigit(ch);
+          //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
+          if (lexeme.constVal > MAX_INT_CONSTANT) {
+            error = true;
+          }
+        }
+      } else {
+        while (VALID_DECIMAL_DIGITS.contains("" + nextChar(sourceCode)) && !error) {
+          ch = getChar(sourceCode);
+          lexeme.constVal = lexeme.constVal * 10 + toDecimalDigit(ch);
+          //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
+          if (lexeme.constVal > MAX_INT_CONSTANT) {
+            error = true;
+          }
         }
       }
       if (error) {
