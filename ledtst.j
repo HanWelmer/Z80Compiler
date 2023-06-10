@@ -39,14 +39,17 @@ class LEDTest {
   //   Name  Address  Description
   //   ====  =======  =========
   byte WDTCR = 0x65;  //Watchdog Timer Control Register
-  byte PCR   = 0x7E;  //Power Control Register
   byte SCR   = 0x7F;  //System Configuration Register P91
   byte CCR   = 0x1F;  //CPU Control Register P84
-  byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
   byte DCNTL = 0x32;  //DMA/Wait Control Register P121
+  byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
+  byte PCR   = 0x7E;  //Power Control Register
 
-/*
   //Device initialisation
+  output(0x65, 0x00);  //Enable writing to system ctrl registers
+                        // LD      A,00BH
+                        // OUT0    (WDTCR),A
+/*
   output(WDTCR, 0x00);  //Enable writing to system ctrl registers
                         // LD      A,00BH
                         // OUT0    (WDTCR),A
@@ -89,8 +92,10 @@ class LEDTest {
   output(WDTCR, 0x00);  //Block writing to system ctrl registers
                         // XOR     A
                         // OUT0    (WDTCR),A
+*/
   //Einde device initialisatie
 
+/*
             JR      LedErr
 ;
 ;LedOK

@@ -43,6 +43,7 @@ public class Interpreter {
 
   /* interface method: execute a single instruction */
   public boolean step() {
+    boolean consoleInput = true;
     boolean stopRun = false;
 
     //get next instruction
@@ -54,17 +55,17 @@ public class Interpreter {
       // single line comment
       case comment : break;
       // 16-bit arithmetic:
-      case acc16Load: acc16 = getOp(); break;
+      case acc16Load: acc16 = getOp(instr.operand); break;
       case stackAcc16Load:
         push(acc16);
-        acc16 = getOp();
+        acc16 = getOp(instr.operand);
         break;
-      case acc16Plus: acc16 += getOp(); break;
-      case acc16Minus: acc16 -= getOp(); break;
-      case minusAcc16: acc16 = getOp() - acc16; break;
-      case acc16Times: acc16 *= getOp(); break;
+      case acc16Plus: acc16 += getOp(instr.operand); break;
+      case acc16Minus: acc16 -= getOp(instr.operand); break;
+      case minusAcc16: acc16 = getOp(instr.operand) - acc16; break;
+      case acc16Times: acc16 *= getOp(instr.operand); break;
       case acc16Div:
-        operand = getOp();
+        operand = getOp(instr.operand);
         if (operand == 0) {
           runError("division by zero");
         }
@@ -74,7 +75,7 @@ public class Interpreter {
         if (acc16 == 0) {
           runError("division by zero");
         }
-        acc16 = getOp() / acc16;
+        acc16 = getOp(instr.operand) / acc16;
         break;
       case acc16Store:
         switch(instr.operand.opType) {
@@ -131,17 +132,17 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case acc16Compare: //normal compare
-        debug("        acc16=" + acc16 + ", operand=" + getOp() + "\n");
-        branchSet = compare(acc16, getOp());
+        debug("        acc16=" + acc16 + ", operand=" + getOp(instr.operand) + "\n");
+        branchSet = compare(acc16, getOp(instr.operand));
         break;
       case revAcc16Compare: //reverse compare
         debug(" acc16=" + acc16 + ", operand=");
         if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
           debug("" + peek() + "\n");
         } else {
-          debug("" + getOp() + "\n");
+          debug("" + getOp(instr.operand) + "\n");
         }
-        branchSet = compare(acc16, getOp());
+        branchSet = compare(acc16, getOp(instr.operand));
         break;
       case acc16CompareAcc8: //normal compare
         debug(" acc16=" + acc16 + ", acc8=" + acc8 + "\n");
@@ -152,17 +153,17 @@ public class Interpreter {
         branchSet = compare(acc8, acc16);
         break;
       // 8-bit arithmetic:
-      case acc8Load: acc8 = getOp(); break;
+      case acc8Load: acc8 = getOp(instr.operand); break;
       case stackAcc8Load:
         push(acc8);
-        acc8 = getOp();
+        acc8 = getOp(instr.operand);
         break;
-      case acc8Plus: acc8 += getOp(); break;
-      case acc8Minus: acc8 -= getOp(); break;
-      case minusAcc8: acc8 = getOp() - acc8; break;
-      case acc8Times: acc8 *= getOp(); break;
+      case acc8Plus: acc8 += getOp(instr.operand); break;
+      case acc8Minus: acc8 -= getOp(instr.operand); break;
+      case minusAcc8: acc8 = getOp(instr.operand) - acc8; break;
+      case acc8Times: acc8 *= getOp(instr.operand); break;
       case acc8Div:
-        operand = getOp();
+        operand = getOp(instr.operand);
         if (operand == 0) {
           runError("division by zero");
         }
@@ -172,7 +173,7 @@ public class Interpreter {
         if (acc8 == 0) {
           runError("division by zero");
         }
-        acc8 = getOp() / acc8;
+        acc8 = getOp(instr.operand) / acc8;
         break;
       case acc8Store:
         switch(instr.operand.opType) {
@@ -223,17 +224,17 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case acc8Compare: //normal compare
-        debug(" acc8=" + acc8 + ", operand=" + getOp() + "\n");
-        branchSet = compare(acc8, getOp());
+        debug(" acc8=" + acc8 + ", operand=" + getOp(instr.operand) + "\n");
+        branchSet = compare(acc8, getOp(instr.operand));
         break;
       case revAcc8Compare: //reverse compare
         debug(" acc8=" + acc8 + ", operand=");
         if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
           debug("" + peek() + "\n");
         } else {
-          debug("" + getOp() + "\n");
+          debug("" + getOp(instr.operand) + "\n");
         }
-        branchSet = compare(acc8, getOp());
+        branchSet = compare(acc8, getOp(instr.operand));
         break;
       case acc8ToAcc16:
         acc16 = acc8;
@@ -280,9 +281,19 @@ public class Interpreter {
       case call:
         pc = instr.operand.intValue - 1;
         break;
+      //Input and output instructions:
+      case output:
+          str = String.format("\noutput 0x%1$02X to port 0x%2$02X", getOp(instr.operand2), getOp(instr.operand));
+          if (consoleInput) {
+            System.out.print(str);
+            System.out.print(" Press enter to confirm:");
+            System.console().readLine();
+          } else {
+            debug(str);
+          }
+          break;
       case read:
           System.out.print("\nread:");
-          boolean consoleInput = true;
           if (consoleInput) {
             try {
               acc16 = Integer.parseInt(System.console().readLine());
@@ -431,27 +442,26 @@ public class Interpreter {
     return instructions.get(pc).operand.opType;
   }
   
-  private int getOp() {
-    Instruction instr = instructions.get(pc);
+  private int getOp(Operand operand) {
     int result = 0;
-    switch(instr.operand.opType) {
+    switch(operand.opType) {
       case stack8:
       case stack16:
         result = pop();
         break;
-      case constant: result = instr.operand.intValue; break;
+      case constant: result = operand.intValue; break;
       case var:
-        if (instr.operand.intValue < vars.length) {
-          debug("pc=" + pc + " vars[" + instr.operand.intValue + "] = " + vars[instr.operand.intValue] + "\n");
-          result = vars[instr.operand.intValue];
+        if (operand.intValue < vars.length) {
+          debug("pc=" + pc + " vars[" + operand.intValue + "] = " + vars[operand.intValue] + "\n");
+          result = vars[operand.intValue];
         } else {
           runError("undefined variable");
         }
         break;
       case acc:
-        if (instr.operand.datatype == Datatype.byt) {
+        if (operand.datatype == Datatype.byt) {
           result = acc8;
-        } else if (instr.operand.datatype == Datatype.word) {
+        } else if (operand.datatype == Datatype.word) {
           result = acc16;
         }
         break;

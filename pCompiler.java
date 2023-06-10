@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add built-in function: output(port, value). See ledtest.j.
 //TODO Add 'constant' qualifier. See ledtest.j.
+//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 //TODO Add logical AND.
 //TODO Add logical OR.
@@ -28,7 +28,7 @@ import java.util.Stack;
  * program          = "class" identifier "{" statements "}".
  * identifier       = "(_A-Za-z)(_A-Za-z0-9)+".
  * statements       = (statement)*.
- * statement        = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement.
+ * statement        = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement.
  * assignment       = [datatype] update ";".
  * datatype         = "byte" | "word" | "String".
  * update           = identifier++ | identifier-- | identifier "=" expression.
@@ -38,6 +38,7 @@ import java.util.Stack;
  * initialization   = "word" identifier "=" expression.
  * doStatement      = "do" block "while" "(" comparison ")" ";".
  * whileStatement   = "while" "(" comparison ")" block.
+ * outputStatement  = "output" "(" expression "," expression ")".
  * block            = statement | "{" statements "}".
  * comparison       = expression relop expression.
  * expression       = term {addop term}.
@@ -85,10 +86,11 @@ import java.util.Stack;
  * - \f form feed/new page
  * - \a alert/bell
  * The println statement makes a distinction between a string expression and an algorithmic expression.
- * An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
- * In a println statement with a string expression, the subsequent operands may be added; other operators are not allowed.
- * However, subexpressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
- * Operands in a string expression, including results of subexpressions, are converted to string and then printed.
+ *   An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
+ *   In a println statement with a string expression, the subsequent operands may be added; other operators are not allowed.
+ *   However, subexpressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
+ *   Operands in a string expression, including results of subexpressions, are converted to string and then printed.
+ * The outputStatement accepts 2 byte value expressions, the port number and the value to be written to the port respectively.
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
@@ -175,6 +177,7 @@ public class pCompiler {
     , LexemeType.forlexeme
     , LexemeType.dolexeme
     , LexemeType.whilelexeme
+    , LexemeType.outputlexeme
   );
   private EnumSet<LexemeType> startAssignment = EnumSet.of(
       LexemeType.identifier
@@ -1141,6 +1144,76 @@ public class pCompiler {
     debug("\nwhileStatement: end");
   } //whileStatement()
 
+  //outputStatement = "output" "(" expression "," expression ")".
+  private void outputStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\noutputStatement: start with stopSet = " + stopSet);
+
+    //part of lexical analysis.
+    //skip output symbol.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    EnumSet<LexemeType> stopOutputSet = stopSet.clone();
+    stopOutputSet.addAll(startExp);
+    stopOutputSet.add(LexemeType.comma);
+    stopOutputSet.add(LexemeType.rbracket);
+    stopOutputSet.add(LexemeType.semicolon);
+
+    //skip left bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopOutputSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    
+    EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
+    stopExpressionSet.add(LexemeType.comma);
+    stopExpressionSet.add(LexemeType.rbracket);
+    stopExpressionSet.add(LexemeType.semicolon);
+
+    //read first expression.
+    Operand port = expression(stopExpressionSet);
+
+    //part of semantic analysis.
+    debug("\noutputStatement: port = " + port + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    //TODO
+
+    //part of lexical analysis.
+    stopOutputSet = stopSet.clone();
+    stopOutputSet.addAll(startExp);
+    stopOutputSet.add(LexemeType.rbracket);
+    stopOutputSet.add(LexemeType.semicolon);
+
+    //skip comma.
+    if (checkOrSkip(EnumSet.of(LexemeType.comma), stopOutputSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    
+    stopExpressionSet = stopSet.clone();
+    stopExpressionSet.add(LexemeType.rbracket);
+    stopExpressionSet.add(LexemeType.semicolon);
+
+    //read second expression.
+    Operand value = expression(stopExpressionSet);
+
+    //part of semantic analysis.
+    debug("\noutputStatement: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    //TODO
+
+    //part of code generation.
+    plant(new Instruction(FunctionType.output, port, value));
+
+    //part of lexical analysis.
+    //skip right bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    //skip semicolon.
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    debug("\noutput: end");
+  }
+
   // ifStatement = "if" "(" comparison ")" block [ "else" block ].
   private void ifStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nifStatement: start with stopSet = " + stopSet);
@@ -1389,11 +1462,12 @@ public class pCompiler {
     }
 
     //part of lexical analysis.
+    //skip right bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    //skip right bracket.
+    //skip semicolon.
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
@@ -1402,7 +1476,7 @@ public class pCompiler {
   }
 
   //parse a statement, and return the address of the first object code in the statement.
-  //statement = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement.
+  //statement = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement.
   private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     int firstAddress = 0;
@@ -1427,6 +1501,8 @@ public class pCompiler {
         doStatement(stopSet);
       } else if (lexeme.type == LexemeType.whilelexeme) {
         whileStatement(stopSet);
+      } else if (lexeme.type == LexemeType.outputlexeme) {
+        outputStatement(stopSet);
       }
     }
     debug("\nstatement: end, firstAddress = " + firstAddress);
@@ -1690,7 +1766,6 @@ public class pCompiler {
       default: error(15);
     }
   }
-
   
   private void updateReferencesToStringConstants(int offset) {
     Map<Integer, ArrayList<Integer>> stringReferences = new HashMap<Integer, ArrayList<Integer>>();

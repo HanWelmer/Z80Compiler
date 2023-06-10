@@ -6,12 +6,14 @@ import java.util.ArrayList;
 public class Instruction {
   public FunctionType function;
   public Operand operand;
+  public Operand operand2;
   
   public Instruction(FunctionType fn) {
     function = fn;
     
     //error detection (internal compiler errors):
     if (function != FunctionType.stop
+      && function != FunctionType.output
       && function != FunctionType.read
       && function != FunctionType.writeAcc8
       && function != FunctionType.writeAcc16
@@ -55,6 +57,9 @@ public class Instruction {
       case unstackAcc8:
       case unstackAcc16:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " expects no operand.");
+        //break;
+      case output:
+        throw new RuntimeException("Internal compiler error: functionType " + fn + " expects two operands.");
         //break;
       case call:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " not yet implemented.");
@@ -225,14 +230,41 @@ public class Instruction {
     //copy parameter fn to member function.
     function = fn;
     //deep copy of parameter operand to member operand, otherwise a reference to the mutable object operand is copied into the Instruction.
-    if (operand.datatype == Datatype.string) {
-      this.operand = new Operand(operand.opType, operand.datatype, operand.intValue);
-      this.operand.strValue = operand.strValue;
-    } else if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
-      this.operand = new Operand(operand.opType, operand.datatype, operand.intValue);
-    } else {
-      this.operand = new Operand(operand.opType, operand.datatype, operand.strValue);
+    this.operand = deepCopy(operand);
+  }
+
+  public Instruction(FunctionType fn, Operand operand1, Operand operand2) {
+    //error detection (internal compiler errors):
+    if (fn != FunctionType.output) {
+      throw new RuntimeException("Internal compiler error: functionType " + fn + " doesn't expect two operand.");
     }
+    
+    //Instruction(FunctionType.output, port, value)
+    if ((operand1 == null) || (operand1.datatype != Datatype.byt)) {
+      throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for operand1.");
+    }
+    if ((operand2 == null) || (operand2.datatype != Datatype.byt)) {
+      throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for operand2.");
+    }
+
+    //copy parameter fn to member function.
+    function = fn;
+    //deep copy of parameter operand to member operand, otherwise a reference to the mutable object operand is copied into the Instruction.
+    this.operand = deepCopy(operand1);
+    this.operand2 = deepCopy(operand2);
+  }
+
+  protected Operand deepCopy(Operand operand) {
+    Operand newOperand;
+    if (operand.datatype == Datatype.string) {
+      newOperand = new Operand(operand.opType, operand.datatype, operand.intValue);
+      newOperand.strValue = operand.strValue;
+    } else if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
+      newOperand = new Operand(operand.opType, operand.datatype, operand.intValue);
+    } else {
+      newOperand = new Operand(operand.opType, operand.datatype, operand.strValue);
+    }
+    return newOperand;
   }
   
   public String toString() {
@@ -351,6 +383,38 @@ public class Instruction {
       case stackAcc8:
       case unstackAcc16:
       case unstackAcc8:
+        break;
+      case output:
+        //output: port = operand, value = operand2.
+        //Template Z80S180 code:
+        // LD      A,value
+        // OUT0    (port),A
+        switch(operand.opType) {
+          case constant:
+            result += String.format(" port 0x%1$02X", operand.intValue);
+            break;
+          //case var:
+          //  result += " port variable " + operand.intValue;
+          //  break;
+          //case stack8:
+          //  result += " port " + operand.opType; 
+          //  break;
+          default:
+            throw new RuntimeException("output with unsupported operandType for port operand");
+        };
+        switch(operand2.opType) {
+          case constant:
+            result += String.format(" value 0x%1$02X", operand2.intValue);
+            break;
+          case var:
+            result += ", value variable " + operand2.intValue;
+            break;
+          case stack8:
+            result += ", value " + operand2.opType; 
+            break;
+          default:
+            throw new RuntimeException("accStore with unsupported operandType for value operand");
+        };
         break;
       default: throw new RuntimeException("unsupported instruction");
     }

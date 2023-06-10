@@ -215,6 +215,23 @@ public class Transcoder {
     /*
      * Input and output instructions:
      */
+    } else if (function == FunctionType.output) {
+      //output: port = operand, value = operand2.
+      
+      //Template:
+      // LD      A,00BH
+      // OUT0    (WDTCR),A
+      
+      asm = operandToA(instruction.operand2);
+      result.add(asm);
+      byteAddress += asm.getBytes().size();
+      
+      if (instruction.operand.opType == OperandType.constant) {
+        byt = instruction.operand.intValue % 256;
+        asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "OUT0  (0%02XH),A", byt), 0xED, 0x39, byt);
+      } else {
+        throw new RuntimeException("output with unsupported operandType for port operand");
+      }
     } else if (function == FunctionType.read) {
       putLabelReference("read", byteAddress);
       asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  read", 0xCD, 0, 0);
@@ -382,13 +399,13 @@ public class Transcoder {
         throw new RuntimeException("illegal M-code instruction: " + instruction);
       }
     } else if (function == FunctionType.acc8Load) {
-      asm = operandToA(instruction);
+      asm = operandToA(instruction.operand);
     } else if (function == FunctionType.stackAcc8Load) {
       result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  AF", 0xF5));
       if (instruction.operand.opType == OperandType.stack8) {
         throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
       }
-      asm = operandToA(instruction);
+      asm = operandToA(instruction.operand);
     } else if (function == FunctionType.acc8Plus) {
       switch(instruction.operand.opType) {
         case var:
@@ -617,18 +634,18 @@ public class Transcoder {
     return result;
   }
   
-  private AssemblyInstruction operandToA(Instruction instruction) {
+  private AssemblyInstruction operandToA(Operand operand) {
     String asmCode = null;
     AssemblyInstruction asm = null;
-    switch(instruction.operand.opType) {
+    switch(operand.opType) {
       case var: 
-        int memAddress = MEM_START + instruction.operand.intValue;
+        int memAddress = MEM_START + operand.intValue;
         asmCode = String.format(INDENT + "LD    A,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x3A, memAddress % 256, memAddress / 256);
         break;
       case constant: 
-        asmCode = INDENT + "LD    A," + instruction.operand.intValue;
-        asm = new AssemblyInstruction(byteAddress, asmCode, 0x3E, instruction.operand.intValue % 256);
+        asmCode = INDENT + "LD    A," + operand.intValue;
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0x3E, operand.intValue % 256);
         break;
       case stack8:
         asmCode = INDENT + "POP   AF";

@@ -841,21 +841,21 @@ L41:
 L42:
         LD    (05000H),A
 L43:
-        ;;ledtst.j(41)   byte PCR   = 0x7E;  //Power Control Register
+        ;;ledtst.j(41)   byte SCR   = 0x7F;  //System Configuration Register P91
 L44:
-        LD    A,126
+        LD    A,127
 L45:
         LD    (05001H),A
 L46:
-        ;;ledtst.j(42)   byte SCR   = 0x7F;  //System Configuration Register P91
+        ;;ledtst.j(42)   byte CCR   = 0x1F;  //CPU Control Register P84
 L47:
-        LD    A,127
+        LD    A,31
 L48:
         LD    (05002H),A
 L49:
-        ;;ledtst.j(43)   byte CCR   = 0x1F;  //CPU Control Register P84
+        ;;ledtst.j(43)   byte DCNTL = 0x32;  //DMA/Wait Control Register P121
 L50:
-        LD    A,31
+        LD    A,50
 L51:
         LD    (05003H),A
 L52:
@@ -865,300 +865,313 @@ L53:
 L54:
         LD    (05004H),A
 L55:
-        ;;ledtst.j(45)   byte DCNTL = 0x32;  //DMA/Wait Control Register P121
+        ;;ledtst.j(45)   byte PCR   = 0x7E;  //Power Control Register
 L56:
-        LD    A,50
+        LD    A,126
 L57:
         LD    (05005H),A
 L58:
         ;;ledtst.j(46) 
 L59:
-        ;;ledtst.j(47) /*
+        ;;ledtst.j(47)   //Device initialisation
 L60:
-        ;;ledtst.j(48)   //Device initialisation
+        ;;ledtst.j(48)   output(0x65, 0x00);  //Enable writing to system ctrl registers
 L61:
-        ;;ledtst.j(49)   output(WDTCR, 0x00);  //Enable writing to system ctrl registers
+        LD    A,0
+        OUT0  (065H),A
 L62:
-        ;;ledtst.j(50)                         // LD      A,00BH
+        ;;ledtst.j(49)                         // LD      A,00BH
 L63:
-        ;;ledtst.j(51)                         // OUT0    (WDTCR),A
+        ;;ledtst.j(50)                         // OUT0    (WDTCR),A
 L64:
-        ;;ledtst.j(52)   output(SCR, 0x5C);    //System configuration Register P91
+        ;;ledtst.j(51) /*
 L65:
-        ;;ledtst.j(53)                         // LD      A,05CH
+        ;;ledtst.j(52)   output(WDTCR, 0x00);  //Enable writing to system ctrl registers
 L66:
-        ;;ledtst.j(54)                         // OUT0    (SCR),A
+        ;;ledtst.j(53)                         // LD      A,00BH
 L67:
-        ;;ledtst.j(55)                         // b7 = 0 on-chip ROM disabled
+        ;;ledtst.j(54)                         // OUT0    (WDTCR),A
 L68:
-        ;;ledtst.j(56)                         // b6 = 1 on-chip RAM enabled
+        ;;ledtst.j(55)   output(SCR, 0x5C);    //System configuration Register P91
 L69:
-        ;;ledtst.j(57)                         // b5 = 0 on-chip RAM at xF800H-xFFFFH
+        ;;ledtst.j(56)                         // LD      A,05CH
 L70:
-        ;;ledtst.j(58)                         // b4 = 1 ROMCS enabled/disabled
+        ;;ledtst.j(57)                         // OUT0    (SCR),A
 L71:
-        ;;ledtst.j(59)                         // b3 = 1 RAMCS enabled/disabled
+        ;;ledtst.j(58)                         // b7 = 0 on-chip ROM disabled
 L72:
-        ;;ledtst.j(60)                         // b2 = 1 IOCS  enabled/disabled
+        ;;ledtst.j(59)                         // b6 = 1 on-chip RAM enabled
 L73:
-        ;;ledtst.j(61)                         // b10=00 PHI = EXTAL clock
+        ;;ledtst.j(60)                         // b5 = 0 on-chip RAM at xF800H-xFFFFH
 L74:
-        ;;ledtst.j(62) 
+        ;;ledtst.j(61)                         // b4 = 1 ROMCS enabled/disabled
 L75:
-        ;;ledtst.j(63)   output(CCR, 0x80);    //CPU Control Register P84
+        ;;ledtst.j(62)                         // b3 = 1 RAMCS enabled/disabled
 L76:
-        ;;ledtst.j(64)                         // LD      A,080H
+        ;;ledtst.j(63)                         // b2 = 1 IOCS  enabled/disabled
 L77:
-        ;;ledtst.j(65)                         // OUT0    (CCR),A
+        ;;ledtst.j(64)                         // b10=00 PHI = EXTAL clock
 L78:
-        ;;ledtst.j(66)                         // b7 = 1 PHI = XTAL / 1
+        ;;ledtst.j(65) 
 L79:
-        ;;ledtst.j(67)                         // b63=00 SLP instruction enters sleep mode
+        ;;ledtst.j(66)   output(CCR, 0x80);    //CPU Control Register P84
 L80:
-        ;;ledtst.j(68)                         // b5 = 0 BREQ in standby ignored
+        ;;ledtst.j(67)                         // LD      A,080H
 L81:
-        ;;ledtst.j(69)                         // b4 = 0 PHI low noise disabled
+        ;;ledtst.j(68)                         // OUT0    (CCR),A
 L82:
-        ;;ledtst.j(70)                         // b2 = x reserved
+        ;;ledtst.j(69)                         // b7 = 1 PHI = XTAL / 1
 L83:
-        ;;ledtst.j(71)                         // b1 = 0 IORD/IOWR low noise disabled
+        ;;ledtst.j(70)                         // b63=00 SLP instruction enters sleep mode
 L84:
-        ;;ledtst.j(72)                         // b0 = 0 A19-0/D7-0 low noise disabled
+        ;;ledtst.j(71)                         // b5 = 0 BREQ in standby ignored
 L85:
-        ;;ledtst.j(73)   output(DCNTL, 0x00);  //DMA/Wait Control Register P121
+        ;;ledtst.j(72)                         // b4 = 0 PHI low noise disabled
 L86:
-        ;;ledtst.j(74)                         // XOR      A
+        ;;ledtst.j(73)                         // b2 = x reserved
 L87:
-        ;;ledtst.j(75)                         // OUT0    (DCNTL),A
+        ;;ledtst.j(74)                         // b1 = 0 IORD/IOWR low noise disabled
 L88:
-        ;;ledtst.j(76)                         // b76=00 0 wait state CPU memory cycle
+        ;;ledtst.j(75)                         // b0 = 0 A19-0/D7-0 low noise disabled
 L89:
-        ;;ledtst.j(77)                         // b54=00 0 wait state CPU I/O cycle
+        ;;ledtst.j(76)   output(DCNTL, 0x00);  //DMA/Wait Control Register P121
 L90:
-        ;;ledtst.j(78)                         // b3 = 0 level detect on DMA1 Request
+        ;;ledtst.j(77)                         // XOR      A
 L91:
-        ;;ledtst.j(79)                         // b2 = 0 level detect on DMA0 Request
+        ;;ledtst.j(78)                         // OUT0    (DCNTL),A
 L92:
-        ;;ledtst.j(80)                         // b1 = 0 DMA from memory to I/O 
+        ;;ledtst.j(79)                         // b76=00 0 wait state CPU memory cycle
 L93:
-        ;;ledtst.j(81)                         // b0 = 0 DMA increasing memory address
+        ;;ledtst.j(80)                         // b54=00 0 wait state CPU I/O cycle
 L94:
-        ;;ledtst.j(82)   output(WSGCR, 0x00);  //Wait State Generator Control Register P96
+        ;;ledtst.j(81)                         // b3 = 0 level detect on DMA1 Request
 L95:
-        ;;ledtst.j(83)                         // OUT0    (WSGCR),A
+        ;;ledtst.j(82)                         // b2 = 0 level detect on DMA0 Request
 L96:
-        ;;ledtst.j(84)                         // b76=00 0 wait states CSROM
+        ;;ledtst.j(83)                         // b1 = 0 DMA from memory to I/O 
 L97:
-        ;;ledtst.j(85)                         // b54=00 0 wait states CSRAM
+        ;;ledtst.j(84)                         // b0 = 0 DMA increasing memory address
 L98:
-        ;;ledtst.j(86)                         // b32=00 0 wait states other
+        ;;ledtst.j(85)   output(WSGCR, 0x00);  //Wait State Generator Control Register P96
 L99:
-        ;;ledtst.j(87)                         // b10=xx reserved
+        ;;ledtst.j(86)                         // OUT0    (WSGCR),A
 L100:
-        ;;ledtst.j(88)   output(WDTCR, 0x00);  //Block writing to system ctrl registers
+        ;;ledtst.j(87)                         // b76=00 0 wait states CSROM
 L101:
-        ;;ledtst.j(89)                         // XOR     A
+        ;;ledtst.j(88)                         // b54=00 0 wait states CSRAM
 L102:
-        ;;ledtst.j(90)                         // OUT0    (WDTCR),A
+        ;;ledtst.j(89)                         // b32=00 0 wait states other
 L103:
-        ;;ledtst.j(91)   //Einde device initialisatie
+        ;;ledtst.j(90)                         // b10=xx reserved
 L104:
-        ;;ledtst.j(92) 
+        ;;ledtst.j(91)   output(WDTCR, 0x00);  //Block writing to system ctrl registers
 L105:
-        ;;ledtst.j(93)             JR      LedErr
+        ;;ledtst.j(92)                         // XOR     A
 L106:
-        ;;ledtst.j(94) ;
+        ;;ledtst.j(93)                         // OUT0    (WDTCR),A
 L107:
-        ;;ledtst.j(95) ;LedOK
+        ;;ledtst.j(94) */
 L108:
-        ;;ledtst.j(96) ;Blink LED on/off in a XXxxXXxx rythm
+        ;;ledtst.j(95)   //Einde device initialisatie
 L109:
-        ;;ledtst.j(97) LedOK:      LD      DE,500
+        ;;ledtst.j(96) 
 L110:
-        ;;ledtst.j(98) LedOK2:     CALL    TOGGLE
+        ;;ledtst.j(97) /*
 L111:
-        ;;ledtst.j(99)             CALL    WAIT
+        ;;ledtst.j(98)             JR      LedErr
 L112:
-        ;;ledtst.j(100)             JR      LedOK2
+        ;;ledtst.j(99) ;
 L113:
-        ;;ledtst.j(101) ;LedErr
+        ;;ledtst.j(100) ;LedOK
 L114:
-        ;;ledtst.j(102) ;Blink LED on/off in a XxXxxxxx rythm
+        ;;ledtst.j(101) ;Blink LED on/off in a XXxxXXxx rythm
 L115:
-        ;;ledtst.j(103) LedErr:     CALL    TOGGLE
+        ;;ledtst.j(102) LedOK:      LD      DE,500
 L116:
-        ;;ledtst.j(104)             LD      DE,170
+        ;;ledtst.j(103) LedOK2:     CALL    TOGGLE
 L117:
-        ;;ledtst.j(105)             CALL    WAIT
+        ;;ledtst.j(104)             CALL    WAIT
 L118:
-        ;;ledtst.j(106)             CALL    TOGGLE
+        ;;ledtst.j(105)             JR      LedOK2
 L119:
-        ;;ledtst.j(107)             CALL    WAIT
+        ;;ledtst.j(106) ;LedErr
 L120:
-        ;;ledtst.j(108)             CALL    TOGGLE
+        ;;ledtst.j(107) ;Blink LED on/off in a XxXxxxxx rythm
 L121:
-        ;;ledtst.j(109)             CALL    WAIT
+        ;;ledtst.j(108) LedErr:     CALL    TOGGLE
 L122:
-        ;;ledtst.j(110)             CALL    TOGGLE
+        ;;ledtst.j(109)             LD      DE,170
 L123:
-        ;;ledtst.j(111)             LD      DE,500
+        ;;ledtst.j(110)             CALL    WAIT
 L124:
-        ;;ledtst.j(112)             CALL    WAIT
+        ;;ledtst.j(111)             CALL    TOGGLE
 L125:
-        ;;ledtst.j(113)             JR      LedErr
+        ;;ledtst.j(112)             CALL    WAIT
 L126:
-        ;;ledtst.j(114) ;TOGGLE
+        ;;ledtst.j(113)             CALL    TOGGLE
 L127:
-        ;;ledtst.j(115) ;Switches off/on the LED connected to the PWRSWTCH output.
+        ;;ledtst.j(114)             CALL    WAIT
 L128:
-        ;;ledtst.j(116) ;LED is connected to VCC, so the output must be driven low
+        ;;ledtst.j(115)             CALL    TOGGLE
 L129:
-        ;;ledtst.j(117) ;in order to switch on the LED.
+        ;;ledtst.j(116)             LD      DE,500
 L130:
-        ;;ledtst.j(118) TOGGLE:     PUSH    AF
+        ;;ledtst.j(117)             CALL    WAIT
 L131:
-        ;;ledtst.j(119)             LD      A,00BH      ;enable writing to PCR
+        ;;ledtst.j(118)             JR      LedErr
 L132:
-        ;;ledtst.j(120)             OUT0    (WDTCR),A
+        ;;ledtst.j(119) ;TOGGLE
 L133:
-        ;;ledtst.j(121)             IN0     A,(PCR)     ;toggle LED at PWR_SW
+        ;;ledtst.j(120) ;Switches off/on the LED connected to the PWRSWTCH output.
 L134:
-        ;;ledtst.j(122)             XOR     A,020H
+        ;;ledtst.j(121) ;LED is connected to VCC, so the output must be driven low
 L135:
-        ;;ledtst.j(123)             OUT0    (PCR),A
+        ;;ledtst.j(122) ;in order to switch on the LED.
 L136:
-        ;;ledtst.j(124)             XOR     A,A         ;disable writing to PCR
+        ;;ledtst.j(123) TOGGLE:     PUSH    AF
 L137:
-        ;;ledtst.j(125)             OUT0    (WDTCR),A
+        ;;ledtst.j(124)             LD      A,00BH      ;enable writing to PCR
 L138:
-        ;;ledtst.j(126)             POP     AF
+        ;;ledtst.j(125)             OUT0    (WDTCR),A
 L139:
-        ;;ledtst.j(127)             RET
+        ;;ledtst.j(126)             IN0     A,(PCR)     ;toggle LED at PWR_SW
 L140:
-        ;;ledtst.j(128) ;WAIT
+        ;;ledtst.j(127)             XOR     A,020H
 L141:
-        ;;ledtst.j(129) ;Wait DE * 1 msec @ 18,432 MHz
+        ;;ledtst.j(128)             OUT0    (PCR),A
 L142:
-        ;;ledtst.j(130) WAIT:       PUSH    DE
+        ;;ledtst.j(129)             XOR     A,A         ;disable writing to PCR
 L143:
-        ;;ledtst.j(131)             PUSH    AF
+        ;;ledtst.j(130)             OUT0    (WDTCR),A
 L144:
-        ;;ledtst.j(132) WAIT1:      CALL    WAIT1M     ;Wait 1 msec
+        ;;ledtst.j(131)             POP     AF
 L145:
-        ;;ledtst.j(133)             DEC     DE
+        ;;ledtst.j(132)             RET
 L146:
-        ;;ledtst.j(134)             LD      A,D
+        ;;ledtst.j(133) ;WAIT
 L147:
-        ;;ledtst.j(135)             OR      A,E
+        ;;ledtst.j(134) ;Wait DE * 1 msec @ 18,432 MHz
 L148:
-        ;;ledtst.j(136)             JR      NZ,WAIT1
+        ;;ledtst.j(135) WAIT:       PUSH    DE
 L149:
-        ;;ledtst.j(137)             POP     AF
+        ;;ledtst.j(136)             PUSH    AF
 L150:
-        ;;ledtst.j(138)             POP     DE
+        ;;ledtst.j(137) WAIT1:      CALL    WAIT1M     ;Wait 1 msec
 L151:
-        ;;ledtst.j(139)             RET
+        ;;ledtst.j(138)             DEC     DE
 L152:
-        ;;ledtst.j(140) ;WAIT1M
+        ;;ledtst.j(139)             LD      A,D
 L153:
-        ;;ledtst.j(141) ;wait 1 msec at 18,432 MHz with no wait states
+        ;;ledtst.j(140)             OR      A,E
 L154:
-        ;;ledtst.j(142) ;The routine requires 56+n*22 states, so that with n=834
+        ;;ledtst.j(141)             JR      NZ,WAIT1
 L155:
-        ;;ledtst.j(143) ;28  clock cycles remain left.   Cycles, States (cumulative)
+        ;;ledtst.j(142)             POP     AF
 L156:
-        ;;ledtst.j(144) WAIT1M:     PUSH    HL          ;5      11 (11)
+        ;;ledtst.j(143)             POP     DE
 L157:
-        ;;ledtst.j(145)                                 ;       3 opcode
+        ;;ledtst.j(144)             RET
 L158:
-        ;;ledtst.j(146)                                 ;       3 mem write
+        ;;ledtst.j(145) ;WAIT1M
 L159:
-        ;;ledtst.j(147)                                 ;       1 inc SP
+        ;;ledtst.j(146) ;wait 1 msec at 18,432 MHz with no wait states
 L160:
-        ;;ledtst.j(148)                                 ;       3 mem write
+        ;;ledtst.j(147) ;The routine requires 56+n*22 states, so that with n=834
 L161:
-        ;;ledtst.j(149)                                 ;       1 inc SP
+        ;;ledtst.j(148) ;28  clock cycles remain left.   Cycles, States (cumulative)
 L162:
-        ;;ledtst.j(150)             PUSH    AF          ;5      11 (22)
+        ;;ledtst.j(149) WAIT1M:     PUSH    HL          ;5      11 (11)
 L163:
-        ;;ledtst.j(151)                                 ;       3 opcode
+        ;;ledtst.j(150)                                 ;       3 opcode
 L164:
-        ;;ledtst.j(152)                                 ;       3 mem write
+        ;;ledtst.j(151)                                 ;       3 mem write
 L165:
-        ;;ledtst.j(153)                                 ;       1 inc SP
+        ;;ledtst.j(152)                                 ;       1 inc SP
 L166:
-        ;;ledtst.j(154)                                 ;       3 mem write
+        ;;ledtst.j(153)                                 ;       3 mem write
 L167:
-        ;;ledtst.j(155)                                 ;       1 inc SP
+        ;;ledtst.j(154)                                 ;       1 inc SP
 L168:
-        ;;ledtst.j(156)             LD      HL, 834     ;3      9 (31)
+        ;;ledtst.j(155)             PUSH    AF          ;5      11 (22)
 L169:
-        ;;ledtst.j(157)                                 ;       3 opcode
+        ;;ledtst.j(156)                                 ;       3 opcode
 L170:
-        ;;ledtst.j(158)                                 ;       3 mem read
+        ;;ledtst.j(157)                                 ;       3 mem write
 L171:
-        ;;ledtst.j(159)                                 ;       3 mem read
+        ;;ledtst.j(158)                                 ;       1 inc SP
 L172:
-        ;;ledtst.j(160) WAIT1M2:    DEC     HL          ;2      4 (31+n*4)
+        ;;ledtst.j(159)                                 ;       3 mem write
 L173:
-        ;;ledtst.j(161)                                 ;       3 opcode
+        ;;ledtst.j(160)                                 ;       1 inc SP
 L174:
-        ;;ledtst.j(162)                                 ;       1 execute
+        ;;ledtst.j(161)             LD      HL, 834     ;3      9 (31)
 L175:
-        ;;ledtst.j(163)             LD	A,H			    ;2      6 (31+n*10)
+        ;;ledtst.j(162)                                 ;       3 opcode
 L176:
-        ;;ledtst.j(164)                                 ;       3 opcode
+        ;;ledtst.j(163)                                 ;       3 mem read
 L177:
-        ;;ledtst.j(165)                                 ;       3 execute
+        ;;ledtst.j(164)                                 ;       3 mem read
 L178:
-        ;;ledtst.j(166)             OR	A,L			    ;2      4 (31+n*14)
+        ;;ledtst.j(165) WAIT1M2:    DEC     HL          ;2      4 (31+n*4)
 L179:
-        ;;ledtst.j(167)                                 ;       3 opcode
+        ;;ledtst.j(166)                                 ;       3 opcode
 L180:
-        ;;ledtst.j(168)                                 ;       1 execute
+        ;;ledtst.j(167)                                 ;       1 execute
 L181:
-        ;;ledtst.j(169)             JR	NZ,WAIT1M2	    ;4      8 (31+n*22) if NZ
+        ;;ledtst.j(168)             LD	A,H			    ;2      6 (31+n*10)
 L182:
-        ;;ledtst.j(170)                                 ;       3 opcode
+        ;;ledtst.j(169)                                 ;       3 opcode
 L183:
-        ;;ledtst.j(171)                                 ;       3 mem read 
+        ;;ledtst.j(170)                                 ;       3 execute
 L184:
-        ;;ledtst.j(172)                                 ;       1 execute
+        ;;ledtst.j(171)             OR	A,L			    ;2      4 (31+n*14)
 L185:
-        ;;ledtst.j(173)                                 ;       1 execute
+        ;;ledtst.j(172)                                 ;       3 opcode
 L186:
-        ;;ledtst.j(174)                                 ;2      6 (29+n*22) if not NZ
+        ;;ledtst.j(173)                                 ;       1 execute
 L187:
-        ;;ledtst.j(175)                                 ;       3 opcode
+        ;;ledtst.j(174)             JR	NZ,WAIT1M2	    ;4      8 (31+n*22) if NZ
 L188:
-        ;;ledtst.j(176)                                 ;       3 mem read
+        ;;ledtst.j(175)                                 ;       3 opcode
 L189:
-        ;;ledtst.j(177)             POP	AF			    ;3      9 (38+n*22)
+        ;;ledtst.j(176)                                 ;       3 mem read 
 L190:
-        ;;ledtst.j(178)                                 ;       3 opcode
+        ;;ledtst.j(177)                                 ;       1 execute
 L191:
-        ;;ledtst.j(179)                                 ;       3 mem read
+        ;;ledtst.j(178)                                 ;       1 execute
 L192:
-        ;;ledtst.j(180)                                 ;       3 mem read
+        ;;ledtst.j(179)                                 ;2      6 (29+n*22) if not NZ
 L193:
-        ;;ledtst.j(181)             POP	HL			    ;3      9 (47+n*22)
+        ;;ledtst.j(180)                                 ;       3 opcode
 L194:
-        ;;ledtst.j(182)                                 ;       3 opcode   
+        ;;ledtst.j(181)                                 ;       3 mem read
 L195:
-        ;;ledtst.j(183)                                 ;       3 mem read
+        ;;ledtst.j(182)             POP	AF			    ;3      9 (38+n*22)
 L196:
-        ;;ledtst.j(184)                                 ;       3 mem read
+        ;;ledtst.j(183)                                 ;       3 opcode
 L197:
-        ;;ledtst.j(185)             RET				    ;3      9 (56+n*22)
+        ;;ledtst.j(184)                                 ;       3 mem read
 L198:
-        ;;ledtst.j(186)                                 ;       3 opcode
+        ;;ledtst.j(185)                                 ;       3 mem read
 L199:
-        ;;ledtst.j(187)                                 ;       3 mem read
+        ;;ledtst.j(186)             POP	HL			    ;3      9 (47+n*22)
 L200:
-        ;;ledtst.j(188)                                 ;       3 mem read
+        ;;ledtst.j(187)                                 ;       3 opcode   
 L201:
-        ;;ledtst.j(189)   */
+        ;;ledtst.j(188)                                 ;       3 mem read
 L202:
-        ;;ledtst.j(190) }
+        ;;ledtst.j(189)                                 ;       3 mem read
 L203:
+        ;;ledtst.j(190)             RET				    ;3      9 (56+n*22)
+L204:
+        ;;ledtst.j(191)                                 ;       3 opcode
+L205:
+        ;;ledtst.j(192)                                 ;       3 mem read
+L206:
+        ;;ledtst.j(193)                                 ;       3 mem read
+L207:
+        ;;ledtst.j(194)   */
+L208:
+        ;;ledtst.j(195) }
+L209:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.

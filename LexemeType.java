@@ -31,6 +31,7 @@ public enum LexemeType {
   forlexeme("for"),
   dolexeme("do"),
   whilelexeme("while"),
+  outputlexeme("output"),
   classlexeme("class"),
   endlexeme("}"),
   //unknown is a special lexemeType.
