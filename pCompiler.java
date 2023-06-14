@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add 'constant' qualifier. See ledtest.j.
+//TODO Add 'final' qualifier. See ledtest.j.
 //TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 //TODO Add logical AND.
@@ -12,10 +12,11 @@ import java.util.Stack;
 //TODO Add logical NOT.
 //TODO Add logical XOR.
 //TODO Add function (parameter less; no global/local variables).
-//TODO Add glocal variable to function.
-//TODO Add local variable to function.
-//TODO Add local parameter to function.
+//TODO Add parameter to function.
 //TODO Add import
+//TODO Add global variable to function.
+//TODO Add local variable to function.
+//TODO Add 'static' qualifier to global variables.
 //TODO Introduce built in function malloc() (see test1, test5, test10, test11).
 //TODO Refactor StringConstants.
 //TODO Fix runtime error: too many variables

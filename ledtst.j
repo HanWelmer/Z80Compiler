@@ -38,7 +38,7 @@ class LEDTest {
   //Definition of on-chip Z80S183 registers
   //   Name  Address  Description
   //   ====  =======  =========
-  byte WDTCR = 0x65;  //Watchdog Timer Control Register
+  final byte WDTCR = 0x65;  //Watchdog Timer Control Register
   byte SCR   = 0x7F;  //System Configuration Register P91
   byte CCR   = 0x1F;  //CPU Control Register P84
   byte DCNTL = 0x32;  //DMA/Wait Control Register P121
@@ -49,10 +49,10 @@ class LEDTest {
   output(0x65, 0x00);  //Enable writing to system ctrl registers
                         // LD      A,00BH
                         // OUT0    (WDTCR),A
-/*
   output(WDTCR, 0x00);  //Enable writing to system ctrl registers
                         // LD      A,00BH
                         // OUT0    (WDTCR),A
+/*
   output(SCR, 0x5C);    //System configuration Register P91
                         // LD      A,05CH
                         // OUT0    (SCR),A
