@@ -4,8 +4,10 @@
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  */
 public enum LexemeType {
-  //identifier is a special lexemeType.
+  //special lexemeTypes.
   identifier("identifier"),
+  constant("constant"),
+  stringConstant("stringConstant"),
   //from here until beginlexeme are the special characters...
   comma(","),
   assign("="),
@@ -16,24 +18,23 @@ public enum LexemeType {
   mulop("* or /"),
   relop("<!=>"),
   //from here until unknown are the keywords...
-  beginlexeme("{"),
-  constant("constant"),
-  stringConstant("stringConstant"),
-  bytelexeme("byte"),
-  wordlexeme("word"),
-  //shortlexeme("short"),
-  //intlexeme("int"),
-  stringlexeme("String"),
-  readlexeme("read"),
-  printlnlexeme("println"),
-  iflexeme("if"),
-  elselexeme("else"),
-  forlexeme("for"),
-  dolexeme("do"),
-  whilelexeme("while"),
-  outputlexeme("output"),
-  classlexeme("class"),
-  endlexeme("}"),
+  beginLexeme("{"),
+  finalLexeme("final"),
+  byteLexeme("byte"),
+  wordLexeme("word"),
+  //shortLexeme("short"),
+  //intLexeme("int"),
+  stringLexeme("String"),
+  readLexeme("read"),
+  printlnLexeme("println"),
+  ifLexeme("if"),
+  elseLexeme("else"),
+  forLexeme("for"),
+  doLexeme("do"),
+  whileLexeme("while"),
+  outputLexeme("output"),
+  classLexeme("class"),
+  endLexeme("}"),
   //unknown is a special lexemeType.
   unknown("?");
 

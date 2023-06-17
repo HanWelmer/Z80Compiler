@@ -790,22 +790,29 @@ L15:
 L16:
         ;;test13.j(11)   //final variable + hexadecimal constant
 L17:
-        ;;test13.j(12)   //final byte port = 0x05;
+        ;;test13.j(12)   final byte port = 0x05;
 L18:
-        ;;test13.j(13)   //output(port, 0x04);
+        ;;test13.j(13)   output(port, 0x04);
 L19:
-        ;;test13.j(14)   //println(3);
+        LD    A,4
+        OUT0  (005H),A
 L20:
-        ;;test13.j(15) 
+        ;;test13.j(14)   println(6);
 L21:
-        ;;test13.j(16)   println("Klaar");
+        LD    A,6
 L22:
-        LD    HL,26
+        CALL  writeLineA
 L23:
-        CALL  writeLineStr
+        ;;test13.j(15) 
 L24:
-        ;;test13.j(17) }
+        ;;test13.j(16)   println("Klaar");
 L25:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        LD    HL,29
 L26:
+        CALL  writeLineStr
+L27:
+        ;;test13.j(17) }
+L28:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L29:
         .ASCIZ  "Klaar"

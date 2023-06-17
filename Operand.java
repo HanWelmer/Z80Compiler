@@ -7,16 +7,18 @@ public class Operand {
   public Datatype datatype;
   public Integer intValue;
   public String strValue;
+  public boolean isFinal = false;
   /*
-   * opType   | datatype    | intValue | strValue |
-   *----------+-------------+----------+----------+
-   * unknown  |     X       |    X     |     X    |
-   * stack    | byt,integer |    X     |     X    |
-   * constant | byt,integer | value    |     X    |
-   * constant | string      |    X     | string   |
-   * var      | byt,integer | address  |     X    |
-   * label    | byt,integer | address  |     X    |
-   * acc      | byt,integer |    X     |     X    |
+   * opType    | datatype    | intValue | strValue   |
+   *-----------+-------------+----------+------------+
+   * unknown   |     X       |    X     |     X      |
+   * stack     | byt,integer |    X     |     X      |
+   * constant  | byt,integer | value    |     X      |
+   * constant  | string      |    X     | string     |
+   * var       | byt,integer | address  |     X      |
+   * final var | byt,integer |    X     | identifier |
+   * label     | byt,integer | address  |     X      |
+   * acc       | byt,integer |    X     |     X      |
   */
   
   public Operand(OperandType opType) {
@@ -55,6 +57,7 @@ public class Operand {
         result += ", strValue=" + strValue;
       }
     }
+    result += ", final=" + isFinal;
     result += ")";
     return result;
   }

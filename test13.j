@@ -10,9 +10,9 @@ class TestOutputInput {
   println(3);
 
   //final variable + hexadecimal constant
-  //final byte port = 0x05;
-  //output(port, 0x04);
-  //println(3);
+  final byte port = 0x05;
+  output(port, 0x04);
+  println(6);
 
   println("Klaar");
 }

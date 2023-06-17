@@ -42,7 +42,7 @@ public class LexemeReader {
     lineSize = 0;
 
     keywords.clear();
-    for (LexemeType lexemeType = LexemeType.beginlexeme; lexemeType != LexemeType.unknown; lexemeType = lexemeType.next()) {
+    for (LexemeType lexemeType = LexemeType.beginLexeme; lexemeType != LexemeType.unknown; lexemeType = lexemeType.next()) {
       keywords.put(lexemeType.getValue(), lexemeType);
     }
 
@@ -226,9 +226,9 @@ public class LexemeReader {
       /* eat up closing " of string constant */
       ch = getChar(sourceCode);
     } else if (ch == '{') {
-      lexeme.type = LexemeType.beginlexeme;
+      lexeme.type = LexemeType.beginLexeme;
     } else if (ch == '}') {
-      lexeme.type = LexemeType.endlexeme;
+      lexeme.type = LexemeType.endLexeme;
     } else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
       /* try to recognise an identifier or a keyword */
       String name = String.valueOf(ch);

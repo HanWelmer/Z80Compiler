@@ -43,13 +43,14 @@ public class Interpreter {
 
   /* interface method: execute a single instruction */
   public boolean step() {
-    boolean consoleInput = true;
+    boolean consoleInput = !debugMode;
     boolean stopRun = false;
 
     //get next instruction
     Instruction instr = instructions.get(pc);
     //execute instruction
     int operand;
+    int portNumber = 0;
     String str;
     switch(instr.function){
       // single line comment
@@ -283,6 +284,7 @@ public class Interpreter {
         break;
       //Input and output instructions:
       case output:
+          //port must be a constant or a final variable
           str = String.format("\noutput 0x%1$02X to port 0x%2$02X", getOp(instr.operand2), getOp(instr.operand));
           if (consoleInput) {
             System.out.print(str);
@@ -451,7 +453,10 @@ public class Interpreter {
         break;
       case constant: result = operand.intValue; break;
       case var:
-        if (operand.intValue < vars.length) {
+        if (operand.isFinal) {
+          debug("pc=" + pc + " final var " + operand.strValue + " = " + operand.intValue + "\n");
+          result = operand.intValue;
+        } else if (operand.intValue < vars.length) {
           debug("pc=" + pc + " vars[" + operand.intValue + "] = " + vars[operand.intValue] + "\n");
           result = vars[operand.intValue];
         } else {

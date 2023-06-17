@@ -264,6 +264,7 @@ public class Instruction {
     } else {
       newOperand = new Operand(operand.opType, operand.datatype, operand.strValue);
     }
+    newOperand.isFinal = operand.isFinal;
     return newOperand;
   }
   

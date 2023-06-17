@@ -78,6 +78,18 @@ public class Identifiers {
    * Returns : true if OK; false if such an identifier already declared.
    */
   public boolean declareId(Lexeme lexeme, LexemeType datatype) {
+    return declareId(lexeme, datatype, false);
+  }
+
+  /**
+   * Declare an identifier.
+   * Method is used during semantic analysis phase.
+   * Param lexeme : for the idVal of this lexeme an indentifier will be declared.
+   * Param datatype : datatype of variable.
+   * Param isFinale : true if the identifier is a final variable.
+   * Returns : true if OK; false if such an identifier already declared.
+   */
+  public boolean declareId(Lexeme lexeme, LexemeType datatype, boolean isFinal) {
     boolean result = true;
     //make sure the variable is declared.
     debug("\ndeclareId() calling checkId(");
@@ -87,17 +99,20 @@ public class Identifiers {
     Variable var = getId(lexeme.idVal);
     if (var.getDatatype() == null) {
       debug(String.format("declareId() overriding default datatype and other properties."));
-      if (datatype == LexemeType.bytelexeme) {
+      //set datatype
+      if (datatype == LexemeType.byteLexeme) {
         var.setDatatype(Datatype.byt);
-      } else if (datatype == LexemeType.wordlexeme) {
+      } else if (datatype == LexemeType.wordLexeme) {
         var.setDatatype(Datatype.word);
-      } else if (datatype == LexemeType.stringlexeme) {
+      } else if (datatype == LexemeType.stringLexeme) {
         var.setDatatype(Datatype.string);
-      } else if (datatype == LexemeType.classlexeme) {
+      } else if (datatype == LexemeType.classLexeme) {
         var.setDatatype(Datatype.clazz);
       } else {
         result = false;
       }
+      //set isFinal
+      var.setFinal(isFinal);
       //this scheme assumes that memory allocation can only occur in the current top level scope.
       int address = stackOfScopes.peek().getAddress();
       var.setAddress(address);

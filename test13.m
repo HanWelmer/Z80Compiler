@@ -15,13 +15,16 @@
   14 call writeLineAcc8
   15 ;test13.j(10) 
   16 ;test13.j(11)   //final variable + hexadecimal constant
-  17 ;test13.j(12)   //final byte port = 0x05;
-  18 ;test13.j(13)   //output(port, 0x04);
-  19 ;test13.j(14)   //println(3);
-  20 ;test13.j(15) 
-  21 ;test13.j(16)   println("Klaar");
-  22 acc16= constant 26
-  23 writeLineString
-  24 ;test13.j(17) }
-  25 stop
-  26 stringConstant 0 = "Klaar"
+  17 ;test13.j(12)   final byte port = 0x05;
+  18 ;test13.j(13)   output(port, 0x04);
+  19 output port 0x05 value 0x04
+  20 ;test13.j(14)   println(6);
+  21 acc8= constant 6
+  22 call writeLineAcc8
+  23 ;test13.j(15) 
+  24 ;test13.j(16)   println("Klaar");
+  25 acc16= constant 29
+  26 writeLineString
+  27 ;test13.j(17) }
+  28 stop
+  29 stringConstant 0 = "Klaar"

@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Command line fascade for the miniJava programming language compiler, based on the Pprogramming language as described 
+ * Command line fascade for the miniJava programming language compiler, based on the Programming language as described 
    in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
  * See usage() for a functional description.
  */
-public class Compiler {
+public class Z80Compiler {
 
   /**
   * The main method for the compiler.
@@ -112,7 +112,7 @@ public class Compiler {
   }
   
   private static void usage() {
-    System.out.println("Usage: Compiler [-Z80] [-b] [-d] source.j");
+    System.out.println("Usage: Z80Compiler [-Z80] [-b] [-d] source.j");
     System.out.println(" where -b generate binary output (M-code or Z80 assembler)");
     System.out.println("       -d issue debug messages during compilation");
     System.out.println("       -r run the compiled code using the built-in interpreter");
