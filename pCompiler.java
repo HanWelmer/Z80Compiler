@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add 'final' qualifier. See ledtest.j.
-//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
+//TODO Add input function.
+//TODO Add wait(n) function, waiting n milliseconds.
 //TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 //TODO Add logical AND.
 //TODO Add logical OR.
@@ -16,6 +16,8 @@ import java.util.Stack;
 //TODO Add import
 //TODO Add global variable to function.
 //TODO Add local variable to function.
+//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j
+//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Add 'static' qualifier to global variables.
 //TODO Introduce built in function malloc() (see test1, test5, test10, test11).
 //TODO Refactor StringConstants.

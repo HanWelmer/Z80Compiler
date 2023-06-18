@@ -39,20 +39,16 @@ class LEDTest {
   //   Name  Address  Description
   //   ====  =======  =========
   final byte WDTCR = 0x65;  //Watchdog Timer Control Register
-  byte SCR   = 0x7F;  //System Configuration Register P91
-  byte CCR   = 0x1F;  //CPU Control Register P84
-  byte DCNTL = 0x32;  //DMA/Wait Control Register P121
-  byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
-  byte PCR   = 0x7E;  //Power Control Register
+  final byte SCR   = 0x7F;  //System Configuration Register P91
+  final byte CCR   = 0x1F;  //CPU Control Register P84
+  final byte DCNTL = 0x32;  //DMA/Wait Control Register P121
+  final byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
+  final byte PCR   = 0x7E;  //Power Control Register
 
   //Device initialisation
-  output(0x65, 0x00);  //Enable writing to system ctrl registers
-                        // LD      A,00BH
-                        // OUT0    (WDTCR),A
   output(WDTCR, 0x00);  //Enable writing to system ctrl registers
                         // LD      A,00BH
                         // OUT0    (WDTCR),A
-/*
   output(SCR, 0x5C);    //System configuration Register P91
                         // LD      A,05CH
                         // OUT0    (SCR),A
@@ -92,19 +88,30 @@ class LEDTest {
   output(WDTCR, 0x00);  //Block writing to system ctrl registers
                         // XOR     A
                         // OUT0    (WDTCR),A
-*/
+
   //Einde device initialisatie
 
+
+  //Blink LED on/off in a XXxxXXxx rythm
+  //LedOK:      LD      DE,500
+  //LedOK2:     CALL    TOGGLE
+  //            CALL    WAIT
+  //            JR      LedOK2
+  while (1==1) {
+    output(WDTCR, 0x0B);  //enable writing to PCR
+                          //LD      A,00BH      ;enable writing to PCR
+                          //OUT0    (WDTCR),A
+                          //;toggle LED at PWR_SW
+    byte t = input(PCR);  //IN0     A,(PCR)     ;toggle LED at PWR_SW
+    t = t ^ 0x20;         //XOR     A,020H
+    output(PCR, t);       //OUT0    (PCR),A
+    output(WDTCR, 0x00);  //disable writing to PCR
+                          //XOR     A,A         ;disable writing to PCR
+                          //OUT0    (WDTCR),A
+    wait(500);            //wait 500 msec
+  }
+
 /*
-            JR      LedErr
-;
-;LedOK
-;Blink LED on/off in a XXxxXXxx rythm
-LedOK:      LD      DE,500
-LedOK2:     CALL    TOGGLE
-            CALL    WAIT
-            JR      LedOK2
-;LedErr
 ;Blink LED on/off in a XxXxxxxx rythm
 LedErr:     CALL    TOGGLE
             LD      DE,170
