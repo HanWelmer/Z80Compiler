@@ -1,4 +1,4 @@
-/* Program to test generated Z80 assembler code */
+/* Program to test generated Z80 assembler code for output and input statements*/
 class TestOutputInput {
 
   println(0);

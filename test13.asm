@@ -755,7 +755,7 @@ writeA:
         RET
 main:
 L0:
-        ;;test13.j(0) /* Program to test generated Z80 assembler code */
+        ;;test13.j(0) /* Program to test generated Z80 assembler code for output and input statements*/
 L1:
         ;;test13.j(1) class TestOutputInput {
 L2:

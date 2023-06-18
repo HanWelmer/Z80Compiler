@@ -1,4 +1,4 @@
-   0 ;test13.j(0) /* Program to test generated Z80 assembler code */
+   0 ;test13.j(0) /* Program to test generated Z80 assembler code for output and input statements*/
    1 ;test13.j(1) class TestOutputInput {
    2 ;test13.j(2) 
    3 ;test13.j(3)   println(0);
