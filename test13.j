@@ -18,9 +18,9 @@ class TestOutputInput {
   output(port, 0x04);
   println(6);
 
-  /*
 
   //final variable + byte constant expression
+  /*
   output(8, 3 + 2 * 2);
   println(9);
  

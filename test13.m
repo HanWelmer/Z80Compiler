@@ -26,9 +26,9 @@
   25 acc8= constant 6
   26 call writeLineAcc8
   27 ;test13.j(19) 
-  28 ;test13.j(20)   /*
-  29 ;test13.j(21) 
-  30 ;test13.j(22)   //final variable + byte constant expression
+  28 ;test13.j(20) 
+  29 ;test13.j(21)   //final variable + byte constant expression
+  30 ;test13.j(22)   /*
   31 ;test13.j(23)   output(8, 3 + 2 * 2);
   32 ;test13.j(24)   println(9);
   33 ;test13.j(25)  

@@ -813,11 +813,11 @@ L26:
 L27:
         ;;test13.j(19) 
 L28:
-        ;;test13.j(20)   /*
+        ;;test13.j(20) 
 L29:
-        ;;test13.j(21) 
+        ;;test13.j(21)   //final variable + byte constant expression
 L30:
-        ;;test13.j(22)   //final variable + byte constant expression
+        ;;test13.j(22)   /*
 L31:
         ;;test13.j(23)   output(8, 3 + 2 * 2);
 L32:
