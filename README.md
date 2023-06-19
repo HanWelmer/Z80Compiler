@@ -3,8 +3,8 @@ Java command line application that compiles Java-like programs to Z80 assembler 
 
 Development:
 All you need is Java JDK. More is better.
-javac *.java
-java RegressionTest
+* javac *.java
+* java RegressionTest
 
 Usage:
 java Z80Compiler
