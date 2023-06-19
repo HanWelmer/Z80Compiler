@@ -7,6 +7,6 @@ All you need is Java JDK. More is better.
 * java RegressionTest
 
 Usage:
-java Z80Compiler
-java Z80Compiler -r test1.j
-java Z80Compiler -r -z -b -d test1.j >test1.log
+* java Z80Compiler
+* java Z80Compiler -r test1.j
+* java Z80Compiler -r -z -b -d test1.j >test1.log
