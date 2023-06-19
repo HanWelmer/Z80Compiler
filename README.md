@@ -5,6 +5,7 @@ Development:
 All you need is Java JDK. More is better.
 * javac *.java
 * java RegressionTest
+** See file RegressionTest.txt for the list of *.j files with unit tests.
 
 Usage:
 * java Z80Compiler
