@@ -2,13 +2,13 @@
 class TestOutputInput {
 
   println(0);
-  
+
   // Possible operand types: constant, acc, var, stack8.
-  
+
   /**********/
   /* Output */
   /**********/
-  
+
   //constant + decimal constant
   output(2, 1);
   println(3);
@@ -18,6 +18,38 @@ class TestOutputInput {
   output(port, 0x04);
   println(6);
 
+  /*
+  // Possible port operand types:  constant, final var.
+  // Possible value operand types: constant, acc, var, final var, stack8.
+  
+  //constant + decimal constant
+  output(2, 1);
+  println(3);
+
+  //decimal constant
+  println("Enter 4");
+  byte value = input(5);
+  //IN0     A,(5)
+  println(value);
+  println(6);
+
+  println("Enter 7");
+  output(2, input(8));
+  println(9);
+
+  //final variable + hexadecimal constant
+  final byte port = 0x0A;
+  output(port, 0x0B);
+  println(12);
+
+  println("Enter 13");
+  output(0x0F, input(0xE));
+  println(16);
+
+  println("Enter 17");
+  output(0x13, input(0x12));
+  println(0x14);
+  */
 
   //final variable + byte constant expression
   /*
@@ -35,17 +67,7 @@ class TestOutputInput {
   
   */
 
-  /*********/
-  /* Input */
-  /*********/
-
 /*
-  //decimal constant
-  println("Enter 14");
-  value = input(13);
-  //IN0     A,(13)
-  println(value);
-
   //hexadecimal constant
   //IN0     A,(0x13)
   println("Enter 16");

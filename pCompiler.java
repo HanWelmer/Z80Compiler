@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j
-//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Add input function.
 //TODO Add wait(n) function, waiting n milliseconds.
+//TODO Implement portExpression.
+//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j
+//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 //TODO Add logical AND.
 //TODO Add logical OR.
@@ -43,12 +44,14 @@ import java.util.Stack;
  * initialization   = "word" identifier "=" expression.
  * doStatement      = "do" block "while" "(" comparison ")" ";".
  * whileStatement   = "while" "(" comparison ")" block.
- * outputStatement  = "output" "(" expression "," expression ")".
+ * outputStatement  = "output" "(" portExpression "," expression ")".
  * block            = statement | "{" statements "}".
  * comparison       = expression relop expression.
  * expression       = term {addop term}.
  * term             = factor {mulop factor}.
- * factor           = identifier | constant | stringConstant | "read" | "input" | "(" expression ")".
+ * factor           = identifier | constant | stringConstant | "read" | inputFactor | "(" expression ")".
+ * inputFactor      = "input" "(" portExpression ")".
+ * portExpression   = constant | {addop constant}.
  * addop            = "+" | "-".
  * mulop            = "*" | "/".
  * relop            = "==" | "!=" | ">" | ">=" | "<" | "<=".
@@ -199,6 +202,7 @@ public class pCompiler {
     , LexemeType.identifier
     , LexemeType.constant
     , LexemeType.stringConstant
+    //, LexemeType.inputLexeme
     , LexemeType.readLexeme
   );
 
@@ -318,7 +322,7 @@ public class pCompiler {
       case 13 : System.out.println("constant too big"); break;
       case 14 : System.out.println("incompatible datatype between assignment variable and expression"); break;
       case 15 : System.out.println("incompatible datatype in println statement"); break;
-      case 16 : System.out.println("port parameter in output statement must be a constant or a final variable"); break;
+      case 16 : System.out.println("port expression must be a constant or a final variable"); break;
       case 17 : System.out.println("final variable must be a byte or a word"); break;
     }
   }
@@ -343,8 +347,76 @@ public class pCompiler {
     //debug("\ncheckOrSkip: end");
     return result;
   }
-  
-  //factor = identifier | constant | stringConstant | "read" | "(" expression ")".
+
+  //portExpression = constant | {addop constant}.
+  private Operand portExpression(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nportExpression: start with stopSet = " + stopSet);
+
+    //part of lexical analysis.
+    Operand port = factor(stopSet);
+
+    //part of semantic analysis.
+    debug("\nportExpression: port = " + port + ", final = " + port.isFinal + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    //port must be a constant or a final variable
+    //convert port operand from final var to constant.
+    if (port.opType == OperandType.var && port.isFinal) {
+      port = new Operand(OperandType.constant, port.datatype, identifiers.getId(port.strValue).getIntValue());
+    }
+    if (port.opType != OperandType.constant) {
+      error(16);
+    }
+
+    debug("\nportExpression: end");
+    return port;
+  } //expression()
+
+  /*
+  //inputFactor = "input" "(" portExpression ")".
+  private void inputFactor(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\ninputFactor: start with stopSet = " + stopSet);
+
+    //part of lexical analysis.
+    //skip input symbol.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    EnumSet<LexemeType> stopInputSet = stopSet.clone();
+    stopInputSet.addAll(startExp);
+    stopInputSet.add(LexemeType.rbracket);
+    stopInputSet.add(LexemeType.semicolon);
+
+    //skip left bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopInputSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    
+    //part of code generation.
+    if (acc8.inUse()) {
+      plant(new Instruction(FunctionType.stackAcc8));
+    }
+
+    //read port expression.
+    Operand port = portExpression(stopInputSet);
+
+    //skip right bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopInputSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    //part of semantic analysis.
+    debug("\ninputFactor: port = " + port + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+
+    //part of code generation.
+    plant(new Instruction(FunctionType.input, port));
+    //The input() function always returns a byte value.
+    operand.opType = OperandType.acc;
+    operand.datatype = Datatype.byt;
+    acc8.setOperand(operand);
+
+    debug("\ninputFactor: end");
+  }
+  */
+
+  //factor = identifier | constant | stringConstant | "read" | "inputFactor" | "(" expression ")".
   private Operand factor(EnumSet<LexemeType> stopSet) throws FatalError {
     Operand operand = new Operand(OperandType.unknown);
     debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
@@ -392,6 +464,8 @@ public class pCompiler {
         operand.opType = OperandType.acc;
         operand.datatype = Datatype.word;
         acc16.setOperand(operand);
+      //} else if (lexeme.type == LexemeType.inputLexeme) {
+      //  operand = inputFactor(stopSet);
       } else if (lexeme.type == LexemeType.lbracket) {
         //skip left bracket.
         lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1155,7 +1229,7 @@ public class pCompiler {
     debug("\nwhileStatement: end");
   } //whileStatement()
 
-  //outputStatement = "output" "(" expression "," expression ")".
+  //outputStatement = "output" "(" portExpression "," expression ")".
   private void outputStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\noutputStatement: start with stopSet = " + stopSet);
 
@@ -1180,18 +1254,7 @@ public class pCompiler {
     stopExpressionSet.add(LexemeType.semicolon);
 
     //read first expression.
-    Operand port = expression(stopExpressionSet);
-
-    //part of semantic analysis.
-    debug("\noutputStatement: port = " + port + ", final = " + port.isFinal + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    //port must be a constant or a final variable
-    //convert port operand from final var to constant.
-    if (port.opType == OperandType.var && port.isFinal) {
-      port = new Operand(OperandType.constant, port.datatype, identifiers.getId(port.strValue).getIntValue());
-    }
-    if (port.opType != OperandType.constant) {
-      error(16);
-    }
+    Operand port = portExpression(stopExpressionSet);
 
     //part of lexical analysis.
     stopOutputSet = stopSet.clone();
