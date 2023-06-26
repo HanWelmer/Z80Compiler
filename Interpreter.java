@@ -294,6 +294,26 @@ public class Interpreter {
             debug(str);
           }
           break;
+      case input:
+          //port must be a constant or a final variable
+          System.out.print(String.format("\ninput from port 0x%1$02X: ", getOp(instr.operand)));
+          if (consoleInput) {
+            try {
+              acc8 = Integer.parseInt(System.console().readLine());
+            } catch (RuntimeException e) {
+              runError("read exception:" + e.getMessage());
+              acc8 = 0;
+              stopRun = true;
+            }
+          } else {
+            if (inputIndex >= inputParts.length) {
+              runError("read beyond input");
+              acc8 = 0;
+              stopRun = true;
+            }
+            acc8 = Integer.parseInt(inputParts[inputIndex++]);
+          }
+          break;
       case read:
           System.out.print("\nread:");
           if (consoleInput) {

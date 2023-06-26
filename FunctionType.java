@@ -10,6 +10,7 @@ public enum FunctionType {
   call("call"),
   //Input and output instructions:
   output("output"),
+  input("input"),
   read("read"),
   writeAcc16("writeAcc16"),
   writeAcc8("writeAcc8"),

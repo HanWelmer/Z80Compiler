@@ -26,6 +26,7 @@ public enum LexemeType {
   //intLexeme("int"),
   stringLexeme("String"),
   readLexeme("read"),
+  inputLexeme("input"),
   printlnLexeme("println"),
   ifLexeme("if"),
   elseLexeme("else"),

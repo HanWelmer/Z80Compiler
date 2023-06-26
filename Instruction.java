@@ -14,6 +14,7 @@ public class Instruction {
     //error detection (internal compiler errors):
     if (function != FunctionType.stop
       && function != FunctionType.output
+      && function != FunctionType.input
       && function != FunctionType.read
       && function != FunctionType.writeAcc8
       && function != FunctionType.writeAcc16
@@ -61,6 +62,11 @@ public class Instruction {
       case output:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " expects two operands.");
         //break;
+      case input:
+        if ((operand == null) || (operand.opType != OperandType.constant) || (operand.datatype != Datatype.byt)) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects constant byte value for port parameter.");
+        }
+        break;
       case call:
         throw new RuntimeException("Internal compiler error: functionType " + fn + " not yet implemented.");
         //break;
@@ -241,10 +247,10 @@ public class Instruction {
     
     //Instruction(FunctionType.output, port, value)
     if ((operand1 == null) || (operand1.datatype != Datatype.byt)) {
-      throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for operand1.");
+      throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for port parameter.");
     }
     if ((operand2 == null) || (operand2.datatype != Datatype.byt)) {
-      throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for operand2.");
+      throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for value parameter.");
     }
 
     //copy parameter fn to member function.
@@ -384,6 +390,24 @@ public class Instruction {
       case stackAcc8:
       case unstackAcc16:
       case unstackAcc8:
+        break;
+      case input:
+        //input: port = operand.
+        //Template Z80S180 code:
+        // IN0     A,(port)
+        switch(operand.opType) {
+          case constant:
+            result += String.format(" port 0x%1$02X", operand.intValue);
+            break;
+          //case var:
+          //  result += " port variable " + operand.intValue;
+          //  break;
+          //case stack8:
+          //  result += " port " + operand.opType; 
+          //  break;
+          default:
+            throw new RuntimeException("output with unsupported operandType for port operand");
+        };
         break;
       case output:
         //output: port = operand, value = operand2.

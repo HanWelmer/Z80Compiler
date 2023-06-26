@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add input function.
+//TODO Allow acc8 as value in output function. See test13.j
 //TODO Add wait(n) function, waiting n milliseconds.
 //TODO Implement portExpression.
 //TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j
@@ -20,9 +20,11 @@ import java.util.Stack;
 //TODO Add global variable to function.
 //TODO Add local variable to function.
 //TODO Add 'static' qualifier to global variables.
+//TODO Add non-constant port value to output/input (IN0 A,(C); OUT0 (C),A).
 //TODO Introduce built in function malloc() (see test1, test5, test10, test11).
 //TODO Refactor StringConstants.
 //TODO Fix runtime error: too many variables
+//TODO Add support for input data (see Z80Compiler.class; call to Interpreter).
 
 /**
  * Compiler for the miniJava programming language.
@@ -202,7 +204,7 @@ public class pCompiler {
     , LexemeType.identifier
     , LexemeType.constant
     , LexemeType.stringConstant
-    //, LexemeType.inputLexeme
+    , LexemeType.inputLexeme
     , LexemeType.readLexeme
   );
 
@@ -368,11 +370,10 @@ public class pCompiler {
 
     debug("\nportExpression: end");
     return port;
-  } //expression()
+  } //portExpression()
 
-  /*
   //inputFactor = "input" "(" portExpression ")".
-  private void inputFactor(EnumSet<LexemeType> stopSet) throws FatalError {
+  private Operand inputFactor(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ninputFactor: start with stopSet = " + stopSet);
 
     //part of lexical analysis.
@@ -408,13 +409,13 @@ public class pCompiler {
     //part of code generation.
     plant(new Instruction(FunctionType.input, port));
     //The input() function always returns a byte value.
-    operand.opType = OperandType.acc;
+    Operand operand = new Operand(OperandType.acc);
     operand.datatype = Datatype.byt;
     acc8.setOperand(operand);
 
     debug("\ninputFactor: end");
-  }
-  */
+    return operand;
+  } //inputFactor
 
   //factor = identifier | constant | stringConstant | "read" | "inputFactor" | "(" expression ")".
   private Operand factor(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -464,8 +465,8 @@ public class pCompiler {
         operand.opType = OperandType.acc;
         operand.datatype = Datatype.word;
         acc16.setOperand(operand);
-      //} else if (lexeme.type == LexemeType.inputLexeme) {
-      //  operand = inputFactor(stopSet);
+      } else if (lexeme.type == LexemeType.inputLexeme) {
+        operand = inputFactor(stopSet);
       } else if (lexeme.type == LexemeType.lbracket) {
         //skip left bracket.
         lexeme = lexemeReader.getLexeme(sourceCode);

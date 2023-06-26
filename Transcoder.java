@@ -217,11 +217,6 @@ public class Transcoder {
      */
     } else if (function == FunctionType.output) {
       //output: port = operand, value = operand2.
-      
-      //Template:
-      // LD      A,00BH
-      // OUT0    (WDTCR),A
-      
       asm = operandToA(instruction.operand2);
       result.add(asm);
       byteAddress += asm.getBytes().size();
@@ -231,6 +226,13 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "OUT0  (0%02XH),A", byt), 0xED, 0x39, byt);
       } else {
         throw new RuntimeException("output with unsupported operandType for port operand");
+      }
+    } else if (function == FunctionType.input) {
+      if (instruction.operand.opType == OperandType.constant) {
+        byt = instruction.operand.intValue % 256;
+        asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "IN0  A,(0%02XH)", byt), 0xED, 0x38, byt);
+      } else {
+        throw new RuntimeException("input with unsupported operandType for port operand");
       }
     } else if (function == FunctionType.read) {
       putLabelReference("read", byteAddress);

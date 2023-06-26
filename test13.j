@@ -3,39 +3,35 @@ class TestOutputInput {
 
   println(0);
 
-  // Possible operand types: constant, acc, var, stack8.
+  // Possible port operand types:  constant, final var.
+  // Possible value operand types: constant, acc, var, final var, stack8.
 
   /**********/
   /* Output */
   /**********/
 
-  //constant + decimal constant
+  //port as decimal constant + value as decimal constant
   output(2, 1);
   println(3);
 
-  //final variable + hexadecimal constant
-  final byte port = 0x05;
-  output(port, 0x04);
-  println(6);
-
-  /*
-  // Possible port operand types:  constant, final var.
-  // Possible value operand types: constant, acc, var, final var, stack8.
-  
-  //constant + decimal constant
-  output(2, 1);
-  println(3);
-
-  //decimal constant
-  println("Enter 4");
-  byte value = input(5);
-  //IN0     A,(5)
+  //port as decimal constant
+  println("Enter 5");
+  byte value = input(4);
+  //IN0     A,(4)
   println(value);
   println(6);
 
-  println("Enter 7");
-  output(2, input(8));
+  //port as final variable + value as hexadecimal constant
+  final byte port = 0x08;
+  output(port, 0x07);
   println(9);
+
+  /*
+
+  //port as decimal constant + value as acc8
+  println("Enter 12");
+  output(11, input(10));
+  println(13);
 
   //final variable + hexadecimal constant
   final byte port = 0x0A;
