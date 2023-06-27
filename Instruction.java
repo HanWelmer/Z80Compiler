@@ -431,6 +431,13 @@ public class Instruction {
           case constant:
             result += String.format(" value 0x%1$02X", operand2.intValue);
             break;
+          case acc:
+            if (operand2.datatype == Datatype.byt) {
+              result += ", value acc8"; 
+            } else {
+              throw new RuntimeException("output with unsupported datatype for value operand");
+            }
+            break;
           case var:
             result += ", value variable " + operand2.intValue;
             break;
@@ -438,7 +445,7 @@ public class Instruction {
             result += ", value " + operand2.opType; 
             break;
           default:
-            throw new RuntimeException("accStore with unsupported operandType for value operand");
+            throw new RuntimeException("output with unsupported operandType for value operand");
         };
         break;
       default: throw new RuntimeException("unsupported instruction");

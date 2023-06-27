@@ -217,9 +217,11 @@ public class Transcoder {
      */
     } else if (function == FunctionType.output) {
       //output: port = operand, value = operand2.
-      asm = operandToA(instruction.operand2);
-      result.add(asm);
-      byteAddress += asm.getBytes().size();
+      if (!((instruction.operand2.opType == OperandType.acc) && (instruction.operand2.datatype == Datatype.byt))) {
+        asm = operandToA(instruction.operand2);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+      }
       
       if (instruction.operand.opType == OperandType.constant) {
         byt = instruction.operand.intValue % 256;

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Allow acc8 as value in output function. See test13.j
 //TODO Add wait(n) function, waiting n milliseconds.
 //TODO Implement portExpression.
 //TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j
@@ -1747,7 +1746,6 @@ public class pCompiler {
   private void plant(Instruction instruction) {
     /* for debugging purposes */
     debug("\n->plant (acc8InUse=" + acc8.inUse() + ", acc16InUse=" + acc16.inUse() + ", lastSourceLineNr=" + lastSourceLineNr + ", sourceLineNr=" + lexeme.sourceLineNr + ", linesOfSourceCode=" + sourceCode.size() + "):");
-    
     plantSource();
     plantCode(instruction);
   } //plant

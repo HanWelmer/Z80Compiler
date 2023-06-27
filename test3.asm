@@ -761,271 +761,358 @@ L1:
 L2:
         ;;test3.j(2)   println(1 * 0);
 L3:
+        ;acc8= constant 1
         LD    A,1
 L4:
+        ;acc8* constant 0
         LD    B,A
         LD    C,0
         MLT   BC
         LD    A,C
 L5:
+        ;call writeLineAcc8
         CALL  writeLineA
 L6:
         ;;test3.j(3)   println(1 * 1);
 L7:
+        ;acc8= constant 1
         LD    A,1
 L8:
+        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
 L9:
+        ;call writeLineAcc8
         CALL  writeLineA
 L10:
         ;;test3.j(4)   println(2 * 1);
 L11:
+        ;acc8= constant 2
         LD    A,2
 L12:
+        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
 L13:
+        ;call writeLineAcc8
         CALL  writeLineA
 L14:
         ;;test3.j(5)   println(1 * 3);
 L15:
+        ;acc8= constant 1
         LD    A,1
 L16:
+        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
 L17:
+        ;call writeLineAcc8
         CALL  writeLineA
 L18:
         ;;test3.j(6)   word a = 2 * 2;
 L19:
+        ;acc8= constant 2
         LD    A,2
 L20:
+        ;acc8* constant 2
         LD    B,A
         LD    C,2
         MLT   BC
         LD    A,C
 L21:
+        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L22:
         ;;test3.j(7)   println(a);
 L23:
+        ;acc16= variable 0
         LD    HL,(05000H)
 L24:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L25:
         ;;test3.j(8)   a = 1;
 L26:
+        ;acc8= constant 1
         LD    A,1
 L27:
+        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L28:
         ;;test3.j(9)   println(a * 5);
 L29:
+        ;acc16= variable 0
         LD    HL,(05000H)
 L30:
+        ;acc16* constant 5
         LD    DE,5
         CALL  mul16
 L31:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L32:
         ;;test3.j(10)   a = 2;
 L33:
+        ;acc8= constant 2
         LD    A,2
 L34:
+        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L35:
         ;;test3.j(11)   println(3 * a);
 L36:
+        ;acc8= constant 3
         LD    A,3
 L37:
+        ;acc8ToAcc16
         LD    L,A
         LD    H,0
 L38:
+        ;acc16* variable 0
         LD    DE,(05000H)
         CALL  mul16
 L39:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L40:
         ;;test3.j(12)   if (7 * 5 == 35) println (7); else println (999);
 L41:
+        ;acc8= constant 7
         LD    A,7
 L42:
+        ;acc8* constant 5
         LD    B,A
         LD    C,5
         MLT   BC
         LD    A,C
 L43:
+        ;acc8Comp constant 35
         SUB   A,35
 L44:
+        ;brne 48
         JP    NZ,L48
 L45:
+        ;acc8= constant 7
         LD    A,7
 L46:
+        ;call writeLineAcc8
         CALL  writeLineA
 L47:
+        ;br 51
         JP    L51
 L48:
+        ;acc16= constant 999
         LD    HL,999
 L49:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L50:
         ;;test3.j(13)   if (2 * 9 * 9 == 162) println (8); else println (999);
 L51:
+        ;acc8= constant 2
         LD    A,2
 L52:
+        ;acc8* constant 9
         LD    B,A
         LD    C,9
         MLT   BC
         LD    A,C
 L53:
+        ;acc8* constant 9
         LD    B,A
         LD    C,9
         MLT   BC
         LD    A,C
 L54:
+        ;acc8Comp constant 162
         SUB   A,162
 L55:
+        ;brne 59
         JP    NZ,L59
 L56:
+        ;acc8= constant 8
         LD    A,8
 L57:
+        ;call writeLineAcc8
         CALL  writeLineA
 L58:
+        ;br 62
         JP    L62
 L59:
+        ;acc16= constant 999
         LD    HL,999
 L60:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L61:
         ;;test3.j(14)   if (729 == 729) println (9); else println (999);
 L62:
+        ;acc16= constant 729
         LD    HL,729
 L63:
+        ;acc16Comp constant 729
         LD    DE,729
         OR    A
         SBC   HL,DE
 L64:
+        ;brne 68
         JP    NZ,L68
 L65:
+        ;acc8= constant 9
         LD    A,9
 L66:
+        ;call writeLineAcc8
         CALL  writeLineA
 L67:
+        ;br 71
         JP    L71
 L68:
+        ;acc16= constant 999
         LD    HL,999
 L69:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L70:
         ;;test3.j(15)   if (729 * 9 == 6561) println (10); else println (999);
 L71:
+        ;acc16= constant 729
         LD    HL,729
 L72:
+        ;acc16* constant 9
         LD    DE,9
         CALL  mul16
 L73:
+        ;acc16Comp constant 6561
         LD    DE,6561
         OR    A
         SBC   HL,DE
 L74:
+        ;brne 78
         JP    NZ,L78
 L75:
+        ;acc8= constant 10
         LD    A,10
 L76:
+        ;call writeLineAcc8
         CALL  writeLineA
 L77:
+        ;br 81
         JP    L81
 L78:
+        ;acc16= constant 999
         LD    HL,999
 L79:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L80:
         ;;test3.j(16)   if (6561 / 729 == 9) println (11); else println (999);
 L81:
+        ;acc16= constant 6561
         LD    HL,6561
 L82:
+        ;acc16/ constant 729
         LD    DE,729
         CALL  div16
 L83:
+        ;acc8= constant 9
         LD    A,9
 L84:
+        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
 L85:
+        ;brne 89
         JP    NZ,L89
 L86:
+        ;acc8= constant 11
         LD    A,11
 L87:
+        ;call writeLineAcc8
         CALL  writeLineA
 L88:
+        ;br 92
         JP    L92
 L89:
+        ;acc16= constant 999
         LD    HL,999
 L90:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L91:
         ;;test3.j(17)   a = 13;
 L92:
+        ;acc8= constant 13
         LD    A,13
 L93:
+        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L94:
         ;;test3.j(18)   a--;
 L95:
+        ;decr16 variable 0
         LD    HL,(05000H)
         DEC   HL
         LD    (05000H),HL
 L96:
         ;;test3.j(19)   println(a);
 L97:
+        ;acc16= variable 0
         LD    HL,(05000H)
 L98:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L99:
         ;;test3.j(20)   a++;
 L100:
+        ;incr16 variable 0
         LD    HL,(05000H)
         INC   HL
         LD    (05000H),HL
 L101:
         ;;test3.j(21)   println(a);
 L102:
+        ;acc16= variable 0
         LD    HL,(05000H)
 L103:
+        ;call writeLineAcc16
         CALL  writeLineHL
 L104:
         ;;test3.j(22)   println(14);
 L105:
+        ;acc8= constant 14
         LD    A,14
 L106:
+        ;call writeLineAcc8
         CALL  writeLineA
 L107:
         ;;test3.j(23)   println("Klaar");
 L108:
+        ;acc16= constant 112
         LD    HL,112
 L109:
+        ;writeLineString
         CALL  writeLineStr
 L110:
         ;;test3.j(24) }
 L111:
+        ;stop
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
 L112:
         .ASCIZ  "Klaar"

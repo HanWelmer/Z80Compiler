@@ -802,7 +802,7 @@ L21:
 L22:
         ;;test13.j(17)   println("Enter 5");
 L23:
-        LD    HL,106
+        LD    HL,97
 L24:
         CALL  writeLineStr
 L25:
@@ -845,130 +845,114 @@ L42:
 L43:
         ;;test13.j(27) 
 L44:
-        ;;test13.j(28)   /*
+        ;;test13.j(28)   //port as final variable + value as acc8
 L45:
-        ;;test13.j(29) 
+        ;;test13.j(29)   final byte inputPort = 10;
 L46:
-        ;;test13.j(30)   //port as decimal constant + value as acc8
+        ;;test13.j(30)   println("Enter 12");
 L47:
-        ;;test13.j(31)   println("Enter 12");
+        LD    HL,98
 L48:
-        ;;test13.j(32)   output(11, input(10));
-L49:
-        ;;test13.j(33)   println(13);
-L50:
-        ;;test13.j(34) 
-L51:
-        ;;test13.j(35)   //final variable + hexadecimal constant
-L52:
-        ;;test13.j(36)   final byte port = 0x0A;
-L53:
-        ;;test13.j(37)   output(port, 0x0B);
-L54:
-        ;;test13.j(38)   println(12);
-L55:
-        ;;test13.j(39) 
-L56:
-        ;;test13.j(40)   println("Enter 13");
-L57:
-        ;;test13.j(41)   output(0x0F, input(0xE));
-L58:
-        ;;test13.j(42)   println(16);
-L59:
-        ;;test13.j(43) 
-L60:
-        ;;test13.j(44)   println("Enter 17");
-L61:
-        ;;test13.j(45)   output(0x13, input(0x12));
-L62:
-        ;;test13.j(46)   println(0x14);
-L63:
-        ;;test13.j(47)   */
-L64:
-        ;;test13.j(48) 
-L65:
-        ;;test13.j(49)   //final variable + byte constant expression
-L66:
-        ;;test13.j(50)   /*
-L67:
-        ;;test13.j(51)   output(8, 3 + 2 * 2);
-L68:
-        ;;test13.j(52)   println(9);
-L69:
-        ;;test13.j(53)  
-L70:
-        ;;test13.j(54)   //final variable + byte variable
-L71:
-        ;;test13.j(55)   byte value = 10;
-L72:
-        ;;test13.j(56)   output(0x0B, value);
-L73:
-        ;;test13.j(57)   println(12);
-L74:
-        ;;test13.j(58) 
-L75:
-        ;;test13.j(59)   //byte constant expression + decimal constant
-L76:
-        ;;test13.j(60)   output(2 * 5 + 4, 13);
-L77:
-        ;;test13.j(61)   println(15);
-L78:
-        ;;test13.j(62)   
-L79:
-        ;;test13.j(63)   */
-L80:
-        ;;test13.j(64) 
-L81:
-        ;;test13.j(65) /*
-L82:
-        ;;test13.j(66)   //hexadecimal constant
-L83:
-        ;;test13.j(67)   //IN0     A,(0x13)
-L84:
-        ;;test13.j(68)   println("Enter 16");
-L85:
-        ;;test13.j(69)   value = input(0x0F);
-L86:
-        ;;test13.j(70)   println(value);
-L87:
-        ;;test13.j(71) 
-L88:
-        ;;test13.j(72)   //byte constant expression
-L89:
-        ;;test13.j(73)   println("Enter 18");
-L90:
-        ;;test13.j(74)   value = input(7 + 5 * 2);
-L91:
-        ;;test13.j(75)   println(value);
-L92:
-        ;;test13.j(76) 
-L93:
-        ;;test13.j(77)   //final variable
-L94:
-        ;;test13.j(78)   //IN0     A,(0x13)
-L95:
-        ;;test13.j(79)   port = 0x11;
-L96:
-        ;;test13.j(80)   println("Enter 20");
-L97:
-        ;;test13.j(81)   value = input(port);
-L98:
-        ;;test13.j(82)   println(value);
-L99:
-        ;;test13.j(83) */
-L100:
-        ;;test13.j(84) 
-L101:
-        ;;test13.j(85)   println("Klaar");
-L102:
-        LD    HL,107
-L103:
         CALL  writeLineStr
-L104:
-        ;;test13.j(86) }
-L105:
+L49:
+        ;;test13.j(31)   output(11, input(inputPort));
+L50:
+        IN0  A,(00AH)
+L51:
+        OUT0  (00BH),A
+L52:
+        ;;test13.j(32)   println(13);
+L53:
+        LD    A,13
+L54:
+        CALL  writeLineA
+L55:
+        ;;test13.j(33) 
+L56:
+        ;;test13.j(34)   /*
+L57:
+        ;;test13.j(35)   //final variable + byte constant expression
+L58:
+        ;;test13.j(36)   output(8, 3 + 2 * 2);
+L59:
+        ;;test13.j(37)   println(9);
+L60:
+        ;;test13.j(38)  
+L61:
+        ;;test13.j(39)   //final variable + byte variable
+L62:
+        ;;test13.j(40)   byte value = 10;
+L63:
+        ;;test13.j(41)   output(0x0B, value);
+L64:
+        ;;test13.j(42)   println(12);
+L65:
+        ;;test13.j(43) 
+L66:
+        ;;test13.j(44)   //byte constant expression + decimal constant
+L67:
+        ;;test13.j(45)   output(2 * 5 + 4, 13);
+L68:
+        ;;test13.j(46)   println(15);
+L69:
+        ;;test13.j(47)   
+L70:
+        ;;test13.j(48)   */
+L71:
+        ;;test13.j(49) 
+L72:
+        ;;test13.j(50) /*
+L73:
+        ;;test13.j(51)   //hexadecimal constant
+L74:
+        ;;test13.j(52)   //IN0     A,(0x13)
+L75:
+        ;;test13.j(53)   println("Enter 16");
+L76:
+        ;;test13.j(54)   value = input(0x0F);
+L77:
+        ;;test13.j(55)   println(value);
+L78:
+        ;;test13.j(56) 
+L79:
+        ;;test13.j(57)   //byte constant expression
+L80:
+        ;;test13.j(58)   println("Enter 18");
+L81:
+        ;;test13.j(59)   value = input(7 + 5 * 2);
+L82:
+        ;;test13.j(60)   println(value);
+L83:
+        ;;test13.j(61) 
+L84:
+        ;;test13.j(62)   //final variable
+L85:
+        ;;test13.j(63)   //IN0     A,(0x13)
+L86:
+        ;;test13.j(64)   port = 0x11;
+L87:
+        ;;test13.j(65)   println("Enter 20");
+L88:
+        ;;test13.j(66)   value = input(port);
+L89:
+        ;;test13.j(67)   println(value);
+L90:
+        ;;test13.j(68) */
+L91:
+        ;;test13.j(69) 
+L92:
+        ;;test13.j(70)   println("Klaar");
+L93:
+        LD    HL,99
+L94:
+        CALL  writeLineStr
+L95:
+        ;;test13.j(71) }
+L96:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L106:
+L97:
         .ASCIZ  "Enter 5"
-L107:
+L98:
+        .ASCIZ  "Enter 12"
+L99:
         .ASCIZ  "Klaar"
