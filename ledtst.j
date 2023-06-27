@@ -102,9 +102,13 @@ class LEDTest {
                           //LD      A,00BH      ;enable writing to PCR
                           //OUT0    (WDTCR),A
                           //;toggle LED at PWR_SW
-    byte t = input(PCR);  //IN0     A,(PCR)     ;toggle LED at PWR_SW
-    t = t ^ 0x20;         //XOR     A,020H
-    output(PCR, t);       //OUT0    (PCR),A
+    output(PCR, input(PCR) ^ 0x20);
+                          //IN0     A,(PCR)     ;toggle LED at PWR_SW
+                          //XOR     A,020H
+                          //OUT0    (PCR),A
+    //byte t = input(PCR);//IN0     A,(PCR)     ;toggle LED at PWR_SW
+    //t = t ^ 0x20;       //XOR     A,020H
+    //output(PCR, t);     //OUT0    (PCR),A
     output(WDTCR, 0x00);  //disable writing to PCR
                           //XOR     A,A         ;disable writing to PCR
                           //OUT0    (WDTCR),A

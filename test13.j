@@ -26,29 +26,14 @@ class TestOutputInput {
   output(port, 0x07);
   println(9);
 
-  /*
-
-  //port as decimal constant + value as acc8
+  //port as final variable + value as acc8
+  final byte inputPort = 10;
   println("Enter 12");
-  output(11, input(10));
+  output(11, input(inputPort));
   println(13);
 
-  //final variable + hexadecimal constant
-  final byte port = 0x0A;
-  output(port, 0x0B);
-  println(12);
-
-  println("Enter 13");
-  output(0x0F, input(0xE));
-  println(16);
-
-  println("Enter 17");
-  output(0x13, input(0x12));
-  println(0x14);
-  */
-
-  //final variable + byte constant expression
   /*
+  //final variable + byte constant expression
   output(8, 3 + 2 * 2);
   println(9);
  
