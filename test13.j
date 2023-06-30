@@ -17,7 +17,6 @@ class TestOutputInput {
   //port as decimal constant
   println("Enter 5");
   byte value = input(4);
-  //IN0     A,(4)
   println(value);
   println(6);
 
@@ -28,24 +27,28 @@ class TestOutputInput {
 
   //port as final variable + value as acc8
   final byte inputPort = 10;
-  println("Enter 12");
-  output(11, input(inputPort));
+  println("Enter 11");
+  output(12, input(inputPort));
   println(13);
 
-  /*
-  //final variable + byte constant expression
-  output(8, 3 + 2 * 2);
-  println(9);
+  //constant + byte expression
+  output(15, 4 + 2 * 5);
+  println(16);
  
-  //final variable + byte variable
-  byte value = 10;
-  output(0x0B, value);
-  println(12);
+  //constant + byte variable
+  value = 17;
+  output(0x12, value);
+  println(19);
 
+  //constant + final variable
+  final byte finalValue = 20;
+  output(21, finalValue);
+  println(22);
+
+  /*
   //byte constant expression + decimal constant
-  output(2 * 5 + 4, 13);
+  output(4 * 5 + 4, 23);
   println(15);
-  
   */
 
 /*

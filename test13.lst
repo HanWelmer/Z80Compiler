@@ -802,7 +802,7 @@
 21D8             L22:
 21D8                     ;;test13.j(17)   println("Enter 5");
 21D8             L23:
-21D8 21 61 00            LD    HL,97
+21D8 21 73 00            LD    HL,115
 21DB             L24:
 21DB CD 3E 20            CALL  writeLineStr
 21DE             L25:
@@ -812,156 +812,217 @@
 21E1             L27:
 21E1 32 00 50            LD    (05000H),A
 21E4             L28:
-21E4                     ;;test13.j(19)   //IN0     A,(4)
+21E4                     ;;test13.j(19)   println(value);
 21E4             L29:
-21E4                     ;;test13.j(20)   println(value);
-21E4             L30:
 21E4 3A 00 50            LD    A,(05000H)
-21E7             L31:
+21E7             L30:
 21E7 CD B9 21            CALL  writeLineA
+21EA             L31:
+21EA                     ;;test13.j(20)   println(6);
 21EA             L32:
-21EA                     ;;test13.j(21)   println(6);
-21EA             L33:
 21EA 3E 06               LD    A,6
-21EC             L34:
+21EC             L33:
 21EC CD B9 21            CALL  writeLineA
+21EF             L34:
+21EF                     ;;test13.j(21) 
 21EF             L35:
-21EF                     ;;test13.j(22) 
+21EF                     ;;test13.j(22)   //port as final variable + value as hexadecimal constant
 21EF             L36:
-21EF                     ;;test13.j(23)   //port as final variable + value as hexadecimal constant
+21EF                     ;;test13.j(23)   final byte port = 0x08;
 21EF             L37:
-21EF                     ;;test13.j(24)   final byte port = 0x08;
+21EF                     ;;test13.j(24)   output(port, 0x07);
 21EF             L38:
-21EF                     ;;test13.j(25)   output(port, 0x07);
-21EF             L39:
 21EF 3E 07               LD    A,7
 21F1 ED 39 08            OUT0  (008H),A
+21F4             L39:
+21F4                     ;;test13.j(25)   println(9);
 21F4             L40:
-21F4                     ;;test13.j(26)   println(9);
-21F4             L41:
 21F4 3E 09               LD    A,9
-21F6             L42:
+21F6             L41:
 21F6 CD B9 21            CALL  writeLineA
+21F9             L42:
+21F9                     ;;test13.j(26) 
 21F9             L43:
-21F9                     ;;test13.j(27) 
+21F9                     ;;test13.j(27)   //port as final variable + value as acc8
 21F9             L44:
-21F9                     ;;test13.j(28)   //port as final variable + value as acc8
+21F9                     ;;test13.j(28)   final byte inputPort = 10;
 21F9             L45:
-21F9                     ;;test13.j(29)   final byte inputPort = 10;
+21F9                     ;;test13.j(29)   println("Enter 11");
 21F9             L46:
-21F9                     ;;test13.j(30)   println("Enter 12");
-21F9             L47:
-21F9 21 62 00            LD    HL,98
-21FC             L48:
+21F9 21 74 00            LD    HL,116
+21FC             L47:
 21FC CD 3E 20            CALL  writeLineStr
+21FF             L48:
+21FF                     ;;test13.j(30)   output(12, input(inputPort));
 21FF             L49:
-21FF                     ;;test13.j(31)   output(11, input(inputPort));
-21FF             L50:
 21FF ED 38 0A            IN0  A,(00AH)
-2202             L51:
-2202 ED 39 0B            OUT0  (00BH),A
+2202             L50:
+2202 ED 39 0C            OUT0  (00CH),A
+2205             L51:
+2205                     ;;test13.j(31)   println(13);
 2205             L52:
-2205                     ;;test13.j(32)   println(13);
-2205             L53:
 2205 3E 0D               LD    A,13
-2207             L54:
+2207             L53:
 2207 CD B9 21            CALL  writeLineA
+220A             L54:
+220A                     ;;test13.j(32) 
 220A             L55:
-220A                     ;;test13.j(33) 
+220A                     ;;test13.j(33)   //constant + byte expression
 220A             L56:
-220A                     ;;test13.j(34)   /*
+220A                     ;;test13.j(34)   output(15, 4 + 2 * 5);
 220A             L57:
-220A                     ;;test13.j(35)   //final variable + byte constant expression
-220A             L58:
-220A                     ;;test13.j(36)   output(8, 3 + 2 * 2);
-220A             L59:
-220A                     ;;test13.j(37)   println(9);
-220A             L60:
-220A                     ;;test13.j(38)  
-220A             L61:
-220A                     ;;test13.j(39)   //final variable + byte variable
-220A             L62:
-220A                     ;;test13.j(40)   byte value = 10;
-220A             L63:
-220A                     ;;test13.j(41)   output(0x0B, value);
-220A             L64:
-220A                     ;;test13.j(42)   println(12);
-220A             L65:
-220A                     ;;test13.j(43) 
-220A             L66:
-220A                     ;;test13.j(44)   //byte constant expression + decimal constant
-220A             L67:
-220A                     ;;test13.j(45)   output(2 * 5 + 4, 13);
-220A             L68:
-220A                     ;;test13.j(46)   println(15);
-220A             L69:
-220A                     ;;test13.j(47)   
-220A             L70:
-220A                     ;;test13.j(48)   */
-220A             L71:
-220A                     ;;test13.j(49) 
-220A             L72:
-220A                     ;;test13.j(50) /*
-220A             L73:
-220A                     ;;test13.j(51)   //hexadecimal constant
-220A             L74:
-220A                     ;;test13.j(52)   //IN0     A,(0x13)
-220A             L75:
-220A                     ;;test13.j(53)   println("Enter 16");
-220A             L76:
-220A                     ;;test13.j(54)   value = input(0x0F);
-220A             L77:
-220A                     ;;test13.j(55)   println(value);
-220A             L78:
-220A                     ;;test13.j(56) 
-220A             L79:
-220A                     ;;test13.j(57)   //byte constant expression
-220A             L80:
-220A                     ;;test13.j(58)   println("Enter 18");
-220A             L81:
-220A                     ;;test13.j(59)   value = input(7 + 5 * 2);
-220A             L82:
-220A                     ;;test13.j(60)   println(value);
-220A             L83:
-220A                     ;;test13.j(61) 
-220A             L84:
-220A                     ;;test13.j(62)   //final variable
-220A             L85:
-220A                     ;;test13.j(63)   //IN0     A,(0x13)
-220A             L86:
-220A                     ;;test13.j(64)   port = 0x11;
-220A             L87:
-220A                     ;;test13.j(65)   println("Enter 20");
-220A             L88:
-220A                     ;;test13.j(66)   value = input(port);
-220A             L89:
-220A                     ;;test13.j(67)   println(value);
-220A             L90:
-220A                     ;;test13.j(68) */
-220A             L91:
-220A                     ;;test13.j(69) 
-220A             L92:
-220A                     ;;test13.j(70)   println("Klaar");
-220A             L93:
-220A 21 63 00            LD    HL,99
-220D             L94:
-220D CD 3E 20            CALL  writeLineStr
-2210             L95:
-2210                     ;;test13.j(71) }
-2210             L96:
-2210 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
-2213             L97:
-2213                     .ASCIZ  "Enter 5"
-2213             L98:
-2213                     .ASCIZ  "Enter 12"
-2213             L99:
-2213                     .ASCIZ  "Klaar"
+220A 3E 04               LD    A,4
+220C             L58:
+220C F5                  PUSH  AF
+220D 3E 02               LD    A,2
+220F             L59:
+220F 47                  LD    B,A
+2210 0E 05               LD    C,5
+2212 ED 4C               MLT   BC
+2214 79                  LD    A,C
+2215             L60:
+2215 C1                  POP   BC
+2216 80                  ADD   A,B
+2217             L61:
+2217 ED 39 0F            OUT0  (00FH),A
+221A             L62:
+221A                     ;;test13.j(35)   println(16);
+221A             L63:
+221A 3E 10               LD    A,16
+221C             L64:
+221C CD B9 21            CALL  writeLineA
+221F             L65:
+221F                     ;;test13.j(36)  
+221F             L66:
+221F                     ;;test13.j(37)   //constant + byte variable
+221F             L67:
+221F                     ;;test13.j(38)   value = 17;
+221F             L68:
+221F 3E 11               LD    A,17
+2221             L69:
+2221 32 00 50            LD    (05000H),A
+2224             L70:
+2224                     ;;test13.j(39)   output(0x12, value);
+2224             L71:
+2224 3A 00 50            LD    A,(05000H)
+2227 ED 39 12            OUT0  (012H),A
+222A             L72:
+222A                     ;;test13.j(40)   println(19);
+222A             L73:
+222A 3E 13               LD    A,19
+222C             L74:
+222C CD B9 21            CALL  writeLineA
+222F             L75:
+222F                     ;;test13.j(41) 
+222F             L76:
+222F                     ;;test13.j(42)   //constant + final variable
+222F             L77:
+222F                     ;;test13.j(43)   final byte finalValue = 20;
+222F             L78:
+222F                     ;;test13.j(44)   output(21, finalValue);
+222F             L79:
+222F 3E 14               LD    A,20
+2231 ED 39 15            OUT0  (015H),A
+2234             L80:
+2234                     ;;test13.j(45)   println(22);
+2234             L81:
+2234 3E 16               LD    A,22
+2236             L82:
+2236 CD B9 21            CALL  writeLineA
+2239             L83:
+2239                     ;;test13.j(46) 
+2239             L84:
+2239                     ;;test13.j(47)   /*
+2239             L85:
+2239                     ;;test13.j(48)   //byte constant expression + decimal constant
+2239             L86:
+2239                     ;;test13.j(49)   output(4 * 5 + 4, 23);
+2239             L87:
+2239                     ;;test13.j(50)   println(15);
+2239             L88:
+2239                     ;;test13.j(51)   */
+2239             L89:
+2239                     ;;test13.j(52) 
+2239             L90:
+2239                     ;;test13.j(53) /*
+2239             L91:
+2239                     ;;test13.j(54)   //hexadecimal constant
+2239             L92:
+2239                     ;;test13.j(55)   //IN0     A,(0x13)
+2239             L93:
+2239                     ;;test13.j(56)   println("Enter 16");
+2239             L94:
+2239                     ;;test13.j(57)   value = input(0x0F);
+2239             L95:
+2239                     ;;test13.j(58)   println(value);
+2239             L96:
+2239                     ;;test13.j(59) 
+2239             L97:
+2239                     ;;test13.j(60)   //byte constant expression
+2239             L98:
+2239                     ;;test13.j(61)   println("Enter 18");
+2239             L99:
+2239                     ;;test13.j(62)   value = input(7 + 5 * 2);
+2239             L100:
+2239                     ;;test13.j(63)   println(value);
+2239             L101:
+2239                     ;;test13.j(64) 
+2239             L102:
+2239                     ;;test13.j(65)   //final variable
+2239             L103:
+2239                     ;;test13.j(66)   //IN0     A,(0x13)
+2239             L104:
+2239                     ;;test13.j(67)   port = 0x11;
+2239             L105:
+2239                     ;;test13.j(68)   println("Enter 20");
+2239             L106:
+2239                     ;;test13.j(69)   value = input(port);
+2239             L107:
+2239                     ;;test13.j(70)   println(value);
+2239             L108:
+2239                     ;;test13.j(71) */
+2239             L109:
+2239                     ;;test13.j(72) 
+2239             L110:
+2239                     ;;test13.j(73)   println("Klaar");
+2239             L111:
+2239 21 75 00            LD    HL,117
+223C             L112:
+223C CD 3E 20            CALL  writeLineStr
+223F             L113:
+223F                     ;;test13.j(74) }
+223F             L114:
+223F C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
+2242             L115:
+2242                     .ASCIZ  "Enter 5"
+2242             L116:
+2242                     .ASCIZ  "Enter 11"
+2242             L117:
+2242                     .ASCIZ  "Klaar"
 
 Labels and cross references:
       L0 = 21C9 :
       L1 = 21C9 :
      L10 = 21CE :
+    L100 = 2239 :
+    L101 = 2239 :
+    L102 = 2239 :
+    L103 = 2239 :
+    L104 = 2239 :
+    L105 = 2239 :
+    L106 = 2239 :
+    L107 = 2239 :
+    L108 = 2239 :
+    L109 = 2239 :
      L11 = 21CE :
+    L110 = 2239 :
+    L111 = 2239 :
+    L112 = 223C :
+    L113 = 223F :
+    L114 = 223F :
+    L115 = 2242 :
+    L116 = 2242 :
+    L117 = 2242 :
      L12 = 21CE :
      L13 = 21CE :
      L14 = 21CE :
@@ -982,82 +1043,82 @@ Labels and cross references:
      L28 = 21E4 :
      L29 = 21E4 :
       L3 = 21C9 :
-     L30 = 21E4 :
-     L31 = 21E7 :
+     L30 = 21E7 :
+     L31 = 21EA :
      L32 = 21EA :
-     L33 = 21EA :
-     L34 = 21EC :
+     L33 = 21EC :
+     L34 = 21EF :
      L35 = 21EF :
      L36 = 21EF :
      L37 = 21EF :
      L38 = 21EF :
-     L39 = 21EF :
+     L39 = 21F4 :
       L4 = 21C9 :
      L40 = 21F4 :
-     L41 = 21F4 :
-     L42 = 21F6 :
+     L41 = 21F6 :
+     L42 = 21F9 :
      L43 = 21F9 :
      L44 = 21F9 :
      L45 = 21F9 :
      L46 = 21F9 :
-     L47 = 21F9 :
-     L48 = 21FC :
+     L47 = 21FC :
+     L48 = 21FF :
      L49 = 21FF :
       L5 = 21CB :
-     L50 = 21FF :
-     L51 = 2202 :
+     L50 = 2202 :
+     L51 = 2205 :
      L52 = 2205 :
-     L53 = 2205 :
-     L54 = 2207 :
+     L53 = 2207 :
+     L54 = 220A :
      L55 = 220A :
      L56 = 220A :
      L57 = 220A :
-     L58 = 220A :
-     L59 = 220A :
+     L58 = 220C :
+     L59 = 220F :
       L6 = 21CE :
-     L60 = 220A :
-     L61 = 220A :
-     L62 = 220A :
-     L63 = 220A :
-     L64 = 220A :
-     L65 = 220A :
-     L66 = 220A :
-     L67 = 220A :
-     L68 = 220A :
-     L69 = 220A :
+     L60 = 2215 :
+     L61 = 2217 :
+     L62 = 221A :
+     L63 = 221A :
+     L64 = 221C :
+     L65 = 221F :
+     L66 = 221F :
+     L67 = 221F :
+     L68 = 221F :
+     L69 = 2221 :
       L7 = 21CE :
-     L70 = 220A :
-     L71 = 220A :
-     L72 = 220A :
-     L73 = 220A :
-     L74 = 220A :
-     L75 = 220A :
-     L76 = 220A :
-     L77 = 220A :
-     L78 = 220A :
-     L79 = 220A :
+     L70 = 2224 :
+     L71 = 2224 :
+     L72 = 222A :
+     L73 = 222A :
+     L74 = 222C :
+     L75 = 222F :
+     L76 = 222F :
+     L77 = 222F :
+     L78 = 222F :
+     L79 = 222F :
       L8 = 21CE :
-     L80 = 220A :
-     L81 = 220A :
-     L82 = 220A :
-     L83 = 220A :
-     L84 = 220A :
-     L85 = 220A :
-     L86 = 220A :
-     L87 = 220A :
-     L88 = 220A :
-     L89 = 220A :
+     L80 = 2234 :
+     L81 = 2234 :
+     L82 = 2236 :
+     L83 = 2239 :
+     L84 = 2239 :
+     L85 = 2239 :
+     L86 = 2239 :
+     L87 = 2239 :
+     L88 = 2239 :
+     L89 = 2239 :
       L9 = 21CE :
-     L90 = 220A :
-     L91 = 220A :
-     L92 = 220A :
-     L93 = 220A :
-     L94 = 220D :
-     L95 = 2210 :
-     L96 = 2210 :
-     L97 = 2213 :
-     L98 = 2213 :
-     L99 = 2213 :
+     L90 = 2239 :
+     L91 = 2239 :
+     L92 = 2239 :
+     L93 = 2239 :
+     L94 = 2239 :
+     L95 = 2239 :
+     L96 = 2239 :
+     L97 = 2239 :
+     L98 = 2239 :
+     L99 = 2239 :
     WAIT = 2006 :
    WAIT1 = 2008 : 200E
   WAIT1M = 2013 : 2008
@@ -1108,7 +1169,7 @@ putSpace = 2052 : 2073
 writeHL1 = 21A3 : 219E 21AC
 writeHL2 = 21AE : 21B4
 writeHL3 = 21AF : 21A1
-writeLineA = 21B9 : 21CB 21D5 21E7 21EC 21F6 2207
+writeLineA = 21B9 : 21CB 21D5 21E7 21EC 21F6 2207 221C 222C 2236
 writeLineHL = 2191 :
-writeLineStr = 203E : 21DB 21FC 220D
+writeLineStr = 203E : 21DB 21FC 223C
 writeStr = 2045 : 2039 203E

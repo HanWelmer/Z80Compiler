@@ -426,9 +426,15 @@ public class pCompiler {
         if (!identifiers.checkId(lexeme.idVal)) error(9); /* variable not declared */
         //part of code generation.
         Variable var = identifiers.getId(lexeme.idVal);
-        operand.opType = OperandType.var;
+        //treat final var as a constant
+        if (var.isFinal()) {
+          operand.opType = OperandType.constant;
+          operand.intValue = var.getIntValue();
+        } else {
+          operand.opType = OperandType.var;
+          operand.intValue = var.getAddress();
+        }
         operand.datatype = var.getDatatype();
-        operand.intValue = var.getAddress();
         operand.isFinal = var.isFinal();
         operand.strValue = lexeme.idVal;
         //part of lexical analysis.
