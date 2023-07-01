@@ -81,7 +81,7 @@
   80 ;test13.j(45)   println(22);
   81 acc8= constant 22
   82 call writeLineAcc8
-  83 ;test13.j(46) 
+  83 ;test13.j(46)   
   84 ;test13.j(47)   /*
   85 ;test13.j(48)   //byte constant expression + decimal constant
   86 ;test13.j(49)   output(4 * 5 + 4, 23);

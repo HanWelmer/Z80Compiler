@@ -212,6 +212,26 @@ public class Transcoder {
     } else if (function == FunctionType.call) {
       putLabelReference(word, byteAddress);
       asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "CALL  0%04XH", word), 0xCD, word % 256, word / 256);
+    } else if (function == FunctionType.sleep) {
+      if (instruction.operand.datatype == Datatype.byt) {
+        if (instruction.operand.opType != OperandType.acc) {
+          asm = operandToA(instruction.operand);
+          result.add(asm);
+          byteAddress += asm.getBytes().size();
+        }
+        putLabelReference("sleepA", byteAddress);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  sleepA", 0xCD, 0, 0);
+      } else if (instruction.operand.datatype == Datatype.word) {
+        if (instruction.operand.opType != OperandType.acc) {
+          asm = operandToHL(instruction);
+          result.add(asm);
+          byteAddress += asm.getBytes().size();
+        }
+        putLabelReference("sleepHL", byteAddress);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  sleepHL", 0xCD, 0, 0);
+      } else {
+        throw new RuntimeException("sleep with unsupported operand datatype");
+      }
     /*
      * Input and output instructions:
      */
@@ -742,28 +762,41 @@ public class Transcoder {
     putLabelReference("main", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JP    main", 0xC3, 0, 0));
     
-    //start of module wait.asm
+    //start of module sleep.asm
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    result.add(new AssemblyInstruction(byteAddress, ";WAIT - Wait DE * 1 msec @ 18,432 MHz with no wait states"));
-    result.add(new AssemblyInstruction(byteAddress, ";  IN:  DE number of msec to wait"));
+    result.add(new AssemblyInstruction(byteAddress, ";sleepHL - Wait HL * 1 msec @ 18,432 MHz with no wait states"));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  HL number of msec to wait"));
     result.add(new AssemblyInstruction(byteAddress, ";  OUT: none"));
     result.add(new AssemblyInstruction(byteAddress, ";  USES: 4 bytes on stack"));
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    labels.put("WAIT", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "WAIT:"));
-    result.add(plantAssemblyInstruction(INDENT + "PUSH  DE", 0xD5));
+    labels.put("sleepHL", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "sleepHL:"));
     result.add(plantAssemblyInstruction(INDENT + "PUSH  AF", 0xF5));
-    labels.put("WAIT1", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "WAIT1:"));
+    labels.put("sleep1", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "sleep1:"));
     putLabelReference("WAIT1M", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "CALL  WAIT1M      ;Wait 1 msec", 0xCD, 0, 0));
-    result.add(plantAssemblyInstruction(INDENT + "DEC   DE", 0x1B));
-    result.add(plantAssemblyInstruction(INDENT + "LD    A,D", 0x7A));
-    result.add(plantAssemblyInstruction(INDENT + "OR    A,E", 0xB3));
-    putLabelReference("WAIT1", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,WAIT1", 0x20, 0));
+    result.add(plantAssemblyInstruction(INDENT + "DEC   HL", 0x2B));
+    result.add(plantAssemblyInstruction(INDENT + "LD    A,H", 0x7C));
+    result.add(plantAssemblyInstruction(INDENT + "OR    L", 0xB5));
+    putLabelReference("sleep1", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,sleep1", 0x20, 0));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
-    result.add(plantAssemblyInstruction(INDENT + "POP   DE", 0xD1));
+    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
+    
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    result.add(new AssemblyInstruction(byteAddress, ";sleepA - Wait A * 1 msec @ 18,432 MHz with no wait states"));
+    result.add(new AssemblyInstruction(byteAddress, ";  IN:  A number of msec to wait"));
+    result.add(new AssemblyInstruction(byteAddress, ";  OUT: none"));
+    result.add(new AssemblyInstruction(byteAddress, ";  USES: no stack"));
+    result.add(new AssemblyInstruction(byteAddress, ";****************"));
+    labels.put("sleepA", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "sleepA:"));
+    putLabelReference("WAIT1M", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "CALL  WAIT1M      ;Wait 1 msec", 0xCD, 0, 0));
+    result.add(plantAssemblyInstruction(INDENT + "DEC   A", 0x3D));
+    putLabelReference("sleep1", byteAddress);
+    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,sleepA", 0x20, 0));
     result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
 
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
@@ -798,7 +831,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(            INDENT + "LD    A,H         ;2      6 (31+n*10)", 0x7C));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 execute"));
-    result.add(plantAssemblyInstruction(            INDENT + "OR    A,L         ;2      4 (31+n*14)", 0xB5));
+    result.add(plantAssemblyInstruction(            INDENT + "OR    L           ;2      4 (31+n*14)", 0xB5));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 execute"));
     putLabelReference("WAIT1M2", byteAddress);

@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add wait(n) function, waiting n milliseconds.
-//TODO Implement portExpression.
-//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j
-//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
-//TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
+//TODO Add logical XOR.
 //TODO Add logical AND.
 //TODO Add logical OR.
 //TODO Add logical NOT.
-//TODO Add logical XOR.
+//TODO Implement portExpression.
+//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j.
+//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
+//TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 //TODO Add function (parameter less; no global/local variables).
 //TODO Add parameter to function.
 //TODO Add import
@@ -33,7 +32,7 @@ import java.util.Stack;
  * program          = "class" identifier "{" statements "}".
  * identifier       = "(_A-Za-z)(_A-Za-z0-9)+".
  * statements       = (statement)*.
- * statement        = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement.
+ * statement        = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement | sleepStatement.
  * assignment       = [declaration] update ";".
  * declaration      = [qualifier] datatype.
  * qualifier        = "final".
@@ -46,6 +45,7 @@ import java.util.Stack;
  * doStatement      = "do" block "while" "(" comparison ")" ";".
  * whileStatement   = "while" "(" comparison ")" block.
  * outputStatement  = "output" "(" portExpression "," expression ")".
+ * sleepStatement   = "sleep" "(" expression ")".
  * block            = statement | "{" statements "}".
  * comparison       = expression relop expression.
  * expression       = term {addop term}.
@@ -102,6 +102,7 @@ import java.util.Stack;
  *   However, subexpressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
  *   Operands in a string expression, including results of subexpressions, are converted to string and then printed.
  * The outputStatement accepts 2 byte value expressions, the port number and the value to be written to the port respectively.
+ * The sleep statement lets the target program sleep for N milliseconds.
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
@@ -190,6 +191,7 @@ public class pCompiler {
     , LexemeType.doLexeme
     , LexemeType.whileLexeme
     , LexemeType.outputLexeme
+    , LexemeType.sleepLexeme
   );
   private EnumSet<LexemeType> startAssignment = EnumSet.of(
       LexemeType.finalLexeme
@@ -325,6 +327,7 @@ public class pCompiler {
       case 15 : System.out.println("incompatible datatype in println statement"); break;
       case 16 : System.out.println("port expression must be a constant or a final variable"); break;
       case 17 : System.out.println("final variable must be a byte or a word"); break;
+      case 18 : System.out.println("datatype must be byte or word"); break;
     }
   }
   
@@ -1301,6 +1304,51 @@ public class pCompiler {
     debug("\noutput: end");
   }
 
+  //sleepStatement = "sleep" "(" expression ")".
+  private void sleepStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nsleep: start with stopSet = " + stopSet);
+
+    //part of lexical analysis.
+    //skip sleep symbol.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    EnumSet<LexemeType> stopSleepSet = stopSet.clone();
+    stopSleepSet.addAll(startExp);
+    stopSleepSet.add(LexemeType.rbracket);
+    stopSleepSet.add(LexemeType.semicolon);
+
+    //skip left bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopSleepSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    
+    //read second expression.
+    Operand value = expression(stopSleepSet);
+
+    //part of semantic analysis.
+    debug("\nsleep: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    //check value has type byte or word.
+    if (value.datatype != Datatype.byt && value.datatype != Datatype.word) {
+      error(18);
+    }
+
+    //part of code generation.
+    plant(new Instruction(FunctionType.sleep, value));
+
+    //part of lexical analysis.
+    //skip right bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    //skip semicolon.
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    debug("\nsleep: end");
+  }
+
   // ifStatement = "if" "(" comparison ")" block [ "else" block ].
   private void ifStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nifStatement: start with stopSet = " + stopSet);
@@ -1587,7 +1635,7 @@ public class pCompiler {
   }
 
   //parse a statement, and return the address of the first object code in the statement.
-  //statement = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement.
+  //statement = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement | sleepStatement.
   private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     int firstAddress = 0;
@@ -1614,6 +1662,8 @@ public class pCompiler {
         whileStatement(stopSet);
       } else if (lexeme.type == LexemeType.outputLexeme) {
         outputStatement(stopSet);
+      } else if (lexeme.type == LexemeType.sleepLexeme) {
+        sleepStatement(stopSet);
       }
     }
     debug("\nstatement: end, firstAddress = " + firstAddress);

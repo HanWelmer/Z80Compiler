@@ -279,6 +279,13 @@ public class Interpreter {
         }
         break;
       // special instructions:
+      case sleep:
+        try{
+          Thread.sleep(getOp(instr.operand));
+        } catch (InterruptedException e) {
+          System.out.println(e);
+        }
+        break;
       case call:
         pc = instr.operand.intValue - 1;
         break;

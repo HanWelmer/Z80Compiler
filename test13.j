@@ -44,7 +44,7 @@ class TestOutputInput {
   final byte finalValue = 20;
   output(21, finalValue);
   println(22);
-
+  
   /*
   //byte constant expression + decimal constant
   output(4 * 5 + 4, 23);

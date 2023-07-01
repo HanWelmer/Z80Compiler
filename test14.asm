@@ -764,247 +764,90 @@ writeA:
         RET
 main:
 L0:
-        ;;test13.j(0) /* Program to test generated Z80 assembler code for output and input statements*/
+        ;;test14.j(0) /* Program to test generated Z80 assembler code for output and input statements*/
 L1:
-        ;;test13.j(1) class TestOutputInput {
+        ;;test14.j(1) class TestSleep {
 L2:
-        ;;test13.j(2) 
+        ;;test14.j(2) 
 L3:
-        ;;test13.j(3)   println(0);
+        ;;test14.j(3)   println(0);
 L4:
         LD    A,0
 L5:
         CALL  writeLineA
 L6:
-        ;;test13.j(4) 
+        ;;test14.j(4) 
 L7:
-        ;;test13.j(5)   // Possible port operand types:  constant, final var.
+        ;;test14.j(5)   println("sleeping 0.25 second:");
 L8:
-        ;;test13.j(6)   // Possible value operand types: constant, acc, var, final var, stack8.
+        LD    HL,39
 L9:
-        ;;test13.j(7) 
+        CALL  writeLineStr
 L10:
-        ;;test13.j(8)   /**********/
+        ;;test14.j(6)   sleep(250);
 L11:
-        ;;test13.j(9)   /* Output */
+        LD    A,250
+        CALL  sleepA
 L12:
-        ;;test13.j(10)   /**********/
+        ;;test14.j(7)   println("sleeping 10 second:");
 L13:
-        ;;test13.j(11) 
+        LD    HL,40
 L14:
-        ;;test13.j(12)   //port as decimal constant + value as decimal constant
+        CALL  writeLineStr
 L15:
-        ;;test13.j(13)   output(2, 1);
+        ;;test14.j(8)   sleep(10000);
 L16:
-        LD    A,1
-        OUT0  (002H),A
+        LD    HL,10000
+        CALL  sleepHL
 L17:
-        ;;test13.j(14)   println(3);
+        ;;test14.j(9)   println("sleeping 0.25 second:");
 L18:
-        LD    A,3
+        LD    HL,39
 L19:
-        CALL  writeLineA
+        CALL  writeLineStr
 L20:
-        ;;test13.j(15) 
+        ;;test14.j(10)   byte value = 200;
 L21:
-        ;;test13.j(16)   //port as decimal constant
+        LD    A,200
 L22:
-        ;;test13.j(17)   println("Enter 5");
+        LD    (05000H),A
 L23:
-        LD    HL,115
+        ;;test14.j(11)   sleep(value);
 L24:
-        CALL  writeLineStr
+        LD    A,(05000H)
+        CALL  sleepA
 L25:
-        ;;test13.j(18)   byte value = input(4);
+        ;;test14.j(12)   println("sleeping 10 second:");
 L26:
-        IN0  A,(004H)
+        LD    HL,40
 L27:
-        LD    (05000H),A
+        CALL  writeLineStr
 L28:
-        ;;test13.j(19)   println(value);
+        ;;test14.j(13)   word bigValue = 10000;
 L29:
-        LD    A,(05000H)
+        LD    HL,10000
 L30:
-        CALL  writeLineA
+        LD    (05001H),HL
 L31:
-        ;;test13.j(20)   println(6);
+        ;;test14.j(14)   sleep(bigValue);
 L32:
-        LD    A,6
+        LD    HL,(05001H)
+        CALL  sleepHL
 L33:
-        CALL  writeLineA
+        ;;test14.j(15) 
 L34:
-        ;;test13.j(21) 
+        ;;test14.j(16)   println("Klaar");
 L35:
-        ;;test13.j(22)   //port as final variable + value as hexadecimal constant
+        LD    HL,41
 L36:
-        ;;test13.j(23)   final byte port = 0x08;
+        CALL  writeLineStr
 L37:
-        ;;test13.j(24)   output(port, 0x07);
+        ;;test14.j(17) }
 L38:
-        LD    A,7
-        OUT0  (008H),A
-L39:
-        ;;test13.j(25)   println(9);
-L40:
-        LD    A,9
-L41:
-        CALL  writeLineA
-L42:
-        ;;test13.j(26) 
-L43:
-        ;;test13.j(27)   //port as final variable + value as acc8
-L44:
-        ;;test13.j(28)   final byte inputPort = 10;
-L45:
-        ;;test13.j(29)   println("Enter 11");
-L46:
-        LD    HL,116
-L47:
-        CALL  writeLineStr
-L48:
-        ;;test13.j(30)   output(12, input(inputPort));
-L49:
-        IN0  A,(00AH)
-L50:
-        OUT0  (00CH),A
-L51:
-        ;;test13.j(31)   println(13);
-L52:
-        LD    A,13
-L53:
-        CALL  writeLineA
-L54:
-        ;;test13.j(32) 
-L55:
-        ;;test13.j(33)   //constant + byte expression
-L56:
-        ;;test13.j(34)   output(15, 4 + 2 * 5);
-L57:
-        LD    A,4
-L58:
-        PUSH  AF
-        LD    A,2
-L59:
-        LD    B,A
-        LD    C,5
-        MLT   BC
-        LD    A,C
-L60:
-        POP   BC
-        ADD   A,B
-L61:
-        OUT0  (00FH),A
-L62:
-        ;;test13.j(35)   println(16);
-L63:
-        LD    A,16
-L64:
-        CALL  writeLineA
-L65:
-        ;;test13.j(36)  
-L66:
-        ;;test13.j(37)   //constant + byte variable
-L67:
-        ;;test13.j(38)   value = 17;
-L68:
-        LD    A,17
-L69:
-        LD    (05000H),A
-L70:
-        ;;test13.j(39)   output(0x12, value);
-L71:
-        LD    A,(05000H)
-        OUT0  (012H),A
-L72:
-        ;;test13.j(40)   println(19);
-L73:
-        LD    A,19
-L74:
-        CALL  writeLineA
-L75:
-        ;;test13.j(41) 
-L76:
-        ;;test13.j(42)   //constant + final variable
-L77:
-        ;;test13.j(43)   final byte finalValue = 20;
-L78:
-        ;;test13.j(44)   output(21, finalValue);
-L79:
-        LD    A,20
-        OUT0  (015H),A
-L80:
-        ;;test13.j(45)   println(22);
-L81:
-        LD    A,22
-L82:
-        CALL  writeLineA
-L83:
-        ;;test13.j(46)   
-L84:
-        ;;test13.j(47)   /*
-L85:
-        ;;test13.j(48)   //byte constant expression + decimal constant
-L86:
-        ;;test13.j(49)   output(4 * 5 + 4, 23);
-L87:
-        ;;test13.j(50)   println(15);
-L88:
-        ;;test13.j(51)   */
-L89:
-        ;;test13.j(52) 
-L90:
-        ;;test13.j(53) /*
-L91:
-        ;;test13.j(54)   //hexadecimal constant
-L92:
-        ;;test13.j(55)   //IN0     A,(0x13)
-L93:
-        ;;test13.j(56)   println("Enter 16");
-L94:
-        ;;test13.j(57)   value = input(0x0F);
-L95:
-        ;;test13.j(58)   println(value);
-L96:
-        ;;test13.j(59) 
-L97:
-        ;;test13.j(60)   //byte constant expression
-L98:
-        ;;test13.j(61)   println("Enter 18");
-L99:
-        ;;test13.j(62)   value = input(7 + 5 * 2);
-L100:
-        ;;test13.j(63)   println(value);
-L101:
-        ;;test13.j(64) 
-L102:
-        ;;test13.j(65)   //final variable
-L103:
-        ;;test13.j(66)   //IN0     A,(0x13)
-L104:
-        ;;test13.j(67)   port = 0x11;
-L105:
-        ;;test13.j(68)   println("Enter 20");
-L106:
-        ;;test13.j(69)   value = input(port);
-L107:
-        ;;test13.j(70)   println(value);
-L108:
-        ;;test13.j(71) */
-L109:
-        ;;test13.j(72) 
-L110:
-        ;;test13.j(73)   println("Klaar");
-L111:
-        LD    HL,117
-L112:
-        CALL  writeLineStr
-L113:
-        ;;test13.j(74) }
-L114:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L115:
-        .ASCIZ  "Enter 5"
-L116:
-        .ASCIZ  "Enter 11"
-L117:
+L39:
+        .ASCIZ  "sleeping 0.25 second:"
+L40:
+        .ASCIZ  "sleeping 10 second:"
+L41:
         .ASCIZ  "Klaar"
