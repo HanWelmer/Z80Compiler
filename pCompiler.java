@@ -666,12 +666,16 @@ public class pCompiler {
   } //expression()
   
   private Operand expressionWithOperand(Operand leftOperand, EnumSet<LexemeType> followSet) throws FatalError {
-    debug("\nexpressionWithOperand: start with followSet = " + followSet);
-
-    boolean leftOperandNotLoaded = true;
+    debug("\nexpressionWithOperand: start with lexeme = " + lexeme + " and followSet = " + followSet);
     debug("\nexpressionWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     
+    //if the first operand is a factor in a multiplication or division, finish the first term before finishing the expression .
+    if (lexeme.type == LexemeType.mulop) {
+      leftOperand = termWithOperand(leftOperand, followSet);
+    }
+
     AddValType operator;
+    boolean leftOperandNotLoaded = true;
     while (lexeme.type == LexemeType.addop) {
       operator = lexeme.addVal;
 
@@ -1652,10 +1656,6 @@ public class pCompiler {
       plantPrintln(operand, true);
     } else {
       //algorithmic expression.
-      //if the first operand is a factor in a multiplication or division, finish the first term before finishing the expression .
-      if (lexeme.type == LexemeType.mulop) {
-        operand = termWithOperand(operand, startExpressionSet);
-      }
       operand = expressionWithOperand(operand, startExpressionSet);
       debug("\nprintlnStatement: " + operand);
 
