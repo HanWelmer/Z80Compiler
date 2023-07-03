@@ -8,7 +8,7 @@ import java.util.Stack;
 //TODO Add logical AND.
 //TODO Add logical OR.
 //TODO Add logical NOT.
-//TODO Implement portExpression.
+//TODO Implement constantExpression.
 //TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j.
 //TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
@@ -23,6 +23,49 @@ import java.util.Stack;
 //TODO Refactor StringConstants.
 //TODO Fix runtime error: too many variables
 //TODO Add support for input data (see Z80Compiler.class; call to Interpreter).
+/* Java operator precedence:
+Precedence	Operator	Type	                    Associativity
+15	        ()        Parentheses               Left to Right
+            []        Array subscript
+            .         M-codeember selection
+14	        ++	      Unary post-increment
+            --        Unary post-decrement	    Left to Right
+13	        ++	      Unary pre-increment
+            --        Unary pre-decrement
+            +         Unary plus
+            -         Unary minus
+            !         Unary logical negation
+            ~         Unary bitwise complement
+            ( type )  Unary type cast	          Right to left
+12	        *	        Multiplication
+            /         Division
+            %         Modulus	                  Left to right
+11	        +	        Addition
+            -         Subtraction	              Left to right
+10	        <<	      Bitwise left shift
+            >>        Bitwise right shift 
+                      with sign extension
+            >>>       Bitwise right shift
+                      with zero extension	      Left to right
+9	          <         less than
+            <=        less than or equal
+            >         greater than
+            >=        greater than or equal     Left to right
+8	          ==	      Relational equal
+            !=        Relational not equal      Left to right
+7	          &         Bitwise AND               Left to right
+6           ^         Bitwise exclusive OR      Left to right
+5           |         Bitwise inclusive OR      Left to right
+4           &&        Logical AND               Left to right
+3           ||        Logical OR                Left to right
+2           ? :       Ternary conditional       Right to left
+1           =         Assignment
+            +=        Addition assignment
+            -=        Subtraction assignment
+            *=        Multiplication assignment
+            /=        Division assignment
+            %=        Modulus assignment	      Right to left
+*/
 
 /**
  * Compiler for the miniJava programming language.
@@ -44,15 +87,15 @@ import java.util.Stack;
  * initialization   = "word" identifier "=" expression.
  * doStatement      = "do" block "while" "(" comparison ")" ";".
  * whileStatement   = "while" "(" comparison ")" block.
- * outputStatement  = "output" "(" portExpression "," expression ")".
+ * outputStatement  = "output" "(" constantExpression "," expression ")".
  * sleepStatement   = "sleep" "(" expression ")".
  * block            = statement | "{" statements "}".
  * comparison       = expression relop expression.
  * expression       = term {addop term}.
  * term             = factor {mulop factor}.
  * factor           = identifier | constant | stringConstant | "read" | inputFactor | "(" expression ")".
- * inputFactor      = "input" "(" portExpression ")".
- * portExpression   = constant | {addop constant}.
+ * inputFactor      = "input" "(" constantExpression ")".
+ * constantExpression   = constant | {addop constant}.
  * addop            = "+" | "-".
  * mulop            = "*" | "/".
  * relop            = "==" | "!=" | ">" | ">=" | "<" | "<=".
@@ -352,15 +395,15 @@ public class pCompiler {
     return result;
   }
 
-  //portExpression = constant | {addop constant}.
-  private Operand portExpression(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nportExpression: start with stopSet = " + stopSet);
+  //constantExpression = constant | {addop constant}.
+  private Operand constantExpression(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nconstantExpression: start with stopSet = " + stopSet);
 
     //part of lexical analysis.
     Operand port = factor(stopSet);
 
     //part of semantic analysis.
-    debug("\nportExpression: port = " + port + ", final = " + port.isFinal + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    debug("\nconstantExpression: port = " + port + ", final = " + port.isFinal + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     //port must be a constant or a final variable
     //convert port operand from final var to constant.
     if (port.opType == OperandType.var && port.isFinal) {
@@ -370,11 +413,11 @@ public class pCompiler {
       error(16);
     }
 
-    debug("\nportExpression: end");
+    debug("\nconstantExpression: end");
     return port;
-  } //portExpression()
+  } //constantExpression()
 
-  //inputFactor = "input" "(" portExpression ")".
+  //inputFactor = "input" "(" constantExpression ")".
   private Operand inputFactor(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ninputFactor: start with stopSet = " + stopSet);
 
@@ -397,8 +440,8 @@ public class pCompiler {
       plant(new Instruction(FunctionType.stackAcc8));
     }
 
-    //read port expression.
-    Operand port = portExpression(stopInputSet);
+    //read constant expression.
+    Operand port = constantExpression(stopInputSet);
 
     //skip right bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopInputSet)) {
@@ -1238,7 +1281,7 @@ public class pCompiler {
     debug("\nwhileStatement: end");
   } //whileStatement()
 
-  //outputStatement = "output" "(" portExpression "," expression ")".
+  //outputStatement = "output" "(" constantExpression "," expression ")".
   private void outputStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\noutputStatement: start with stopSet = " + stopSet);
 
@@ -1262,8 +1305,8 @@ public class pCompiler {
     stopExpressionSet.add(LexemeType.rbracket);
     stopExpressionSet.add(LexemeType.semicolon);
 
-    //read first expression.
-    Operand port = portExpression(stopExpressionSet);
+    //read constant expression.
+    Operand port = constantExpression(stopExpressionSet);
 
     //part of lexical analysis.
     stopOutputSet = stopSet.clone();
@@ -1632,7 +1675,7 @@ public class pCompiler {
     }
 
     debug("\nprintlnStatement: end");
-  }
+  } //printlnStatement
 
   //parse a statement, and return the address of the first object code in the statement.
   //statement = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement | sleepStatement.
