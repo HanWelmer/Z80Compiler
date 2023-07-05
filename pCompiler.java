@@ -27,7 +27,7 @@ import java.util.Stack;
 Precedence	Operator	Type	                    Associativity
 15	        ()        Parentheses               Left to Right
             []        Array subscript
-            .         M-codeember selection
+            .         Member selection
 14	        ++	      Unary post-increment
             --        Unary post-decrement	    Left to Right
 13	        ++	      Unary pre-increment
@@ -72,37 +72,43 @@ Precedence	Operator	Type	                    Associativity
  * Inspired by the book Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks
  * and of course Java as developed by Sun.
  *
- * program          = "class" identifier "{" statements "}".
- * identifier       = "(_A-Za-z)(_A-Za-z0-9)+".
- * statements       = (statement)*.
- * statement        = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement | sleepStatement.
- * assignment       = [declaration] update ";".
- * declaration      = [qualifier] datatype.
- * qualifier        = "final".
- * datatype         = "byte" | "word" | "String".
- * update           = identifier++ | identifier-- | identifier "=" expression.
- * printlnStatement = "println" "(" expression ")" ";".
- * ifStatement      = "if" "(" comparison ")" block [ "else" block].
- * forStatement     = "for" "(" initialization ";" comparison ";" update ")" block.
- * initialization   = "word" identifier "=" expression.
- * doStatement      = "do" block "while" "(" comparison ")" ";".
- * whileStatement   = "while" "(" comparison ")" block.
- * outputStatement  = "output" "(" constantExpression "," expression ")".
- * sleepStatement   = "sleep" "(" expression ")".
- * block            = statement | "{" statements "}".
- * comparison       = expression relop expression.
- * expression       = term {addop term}.
- * term             = factor {mulop factor}.
- * factor           = identifier | constant | stringConstant | "read" | inputFactor | "(" expression ")".
- * inputFactor      = "input" "(" constantExpression ")".
- * constantExpression   = constant | {addop constant}.
- * addop            = "+" | "-".
- * mulop            = "*" | "/".
- * relop            = "==" | "!=" | ">" | ">=" | "<" | "<=".
- * constant         = decimalConstant | hexadecimalConstant.
- * decimalConstant  = "(0-9)*".
- * hexadecimalConstant = "(0-9)x(A-F0-()*".
- * stringConstant   = "\"" ((char - ["\"\\"]) | ("\\" ["\\\'\"nrtbfa"]))* "\"".
+ * program            = "class" identifier "{" statements "}".
+ * identifier         = "(_A-Za-z)(_A-Za-z0-9)+".
+ * statements         = (statement)*.
+ * statement          = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement | sleepStatement.
+ * assignment         = [declaration] update ";".
+ * declaration        = [qualifier] datatype.
+ * qualifier          = "final".
+ * datatype           = "byte" | "word" | "String".
+ * update             = identifier++ | identifier-- | identifier "=" expression.
+ * printlnStatement   = "println" "(" expression ")" ";".
+ * ifStatement        = "if" "(" comparison ")" block [ "else" block].
+ * forStatement       = "for" "(" initialization ";" comparison ";" update ")" block.
+ * initialization     = "word" identifier "=" expression.
+ * doStatement        = "do" block "while" "(" comparison ")" ";".
+ * whileStatement     = "while" "(" comparison ")" block.
+ * outputStatement    = "output" "(" constantExpression "," expression ")".
+ * sleepStatement     = "sleep" "(" expression ")".
+ * block              = statement | "{" statements "}".
+ * comparison         = expression relop expression.
+ * expression         = xorTerm {or xorTerm}.
+ * xorTerm            = andTerm {xor andTerm}
+ ' andTerm            = addTerm {and addTerm}.
+ * addTerm            = term {addop term}.
+ * term               = factor {mulop factor}.
+ * factor             = identifier | constant | stringConstant | "read" | inputFactor | "(" expression ")".
+ * inputFactor        = "input" "(" constantExpression ")".
+ * constantExpression = constant | {addop constant}.
+ * or                 = "|".
+ * xor                = "^".
+ * and                = "&".
+ * addop              = "+" | "-".
+ * mulop              = "*" | "/".
+ * relop              = "==" | "!=" | ">" | ">=" | "<" | "<=".
+ * constant           = decimalConstant | hexConstant.
+ * decimalConstant    = "(0-9)*".
+ * hexConstant        = "(0-9)x(A-F0-()*".
+ * stringConstant     = "\"" ((char - ["\"\\"]) | ("\\" ["\\\'\"nrtbfa"]))* "\"".
  *
  * Java style end of line comment.
  * Java style multi-line comment.
