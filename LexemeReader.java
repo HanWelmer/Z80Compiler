@@ -259,25 +259,25 @@ public class LexemeReader {
         case ')' : lexeme.type = LexemeType.rbracket; break;
         case '+' :
           lexeme.type = LexemeType.addop;
-          lexeme.addVal = AddValType.add;
+          lexeme.operator = OperatorType.add;
           break;
         case '-' :
           lexeme.type = LexemeType.addop;
-          lexeme.addVal = AddValType.sub;
+          lexeme.operator = OperatorType.sub;
           break;
         case '*' :
           lexeme.type = LexemeType.mulop;
-          lexeme.mulVal = MulValType.mul;
+          lexeme.operator = OperatorType.mul;
           break;
         case '/' :
           lexeme.type = LexemeType.mulop;
-          lexeme.mulVal = MulValType.div;
+          lexeme.operator = OperatorType.div;
           break;
         case '=' :
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
             lexeme.type = LexemeType.relop;
-            lexeme.relVal = RelValType.eq;
+            lexeme.operator = OperatorType.eq;
           } else {
             lexeme.type = LexemeType.assign;
           }
@@ -286,7 +286,7 @@ public class LexemeReader {
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
             lexeme.type = LexemeType.relop;
-            lexeme.relVal = RelValType.ne;
+            lexeme.operator = OperatorType.ne;
           } else {
             lexeme.type = LexemeType.unknown;
             error();
@@ -297,18 +297,18 @@ public class LexemeReader {
           lexeme.type = LexemeType.relop;
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
-            lexeme.relVal = RelValType.ge;
+            lexeme.operator = OperatorType.ge;
           } else {
-            lexeme.relVal = RelValType.gt;
+            lexeme.operator = OperatorType.gt;
           }
           break;
         case '<' :
           lexeme.type = LexemeType.relop;
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
-            lexeme.relVal = RelValType.le;
+            lexeme.operator = OperatorType.le;
           } else {
-            lexeme.relVal = RelValType.lt;
+            lexeme.operator = OperatorType.lt;
           }
           break;
         default :
@@ -318,7 +318,6 @@ public class LexemeReader {
       }
     }
     if (debugMode) {
-      //System.out.println("\ngetLexeme: " + lexeme.makeString(identifiers.getId(lexeme.idVal)));
       System.out.println("\ngetLexeme=" + lexeme.makeString(null) + ", sourceLineNr=" + lineNumber);
     }
     lexeme.sourceLineNr = lineNumber;

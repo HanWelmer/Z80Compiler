@@ -226,9 +226,25 @@
  225 acc8ToAcc16
  226 acc16+ variable 3
  227 call writeLineAcc16
- 228 ;test8.j(78)   println("Klaar");
- 229 acc16= constant 233
- 230 writeLineString
- 231 ;test8.j(79) }
- 232 stop
- 233 stringConstant 0 = "Klaar"
+ 228 ;test8.j(78)   println(2*5+3*4);           // 22
+ 229 acc8= constant 2
+ 230 acc8* constant 5
+ 231 <acc8= constant 3
+ 232 acc8* constant 4
+ 233 acc8+ unstack8
+ 234 call writeLineAcc8
+ 235 ;test8.j(79)   println(120/4-(3+8/2));     // 23
+ 236 acc8= constant 120
+ 237 acc8/ constant 4
+ 238 <acc8= constant 3
+ 239 <acc8= constant 8
+ 240 acc8/ constant 2
+ 241 acc8+ unstack8
+ 242 -acc8 unstack8
+ 243 call writeLineAcc8
+ 244 ;test8.j(80)   println("Klaar");
+ 245 acc16= constant 249
+ 246 writeLineString
+ 247 ;test8.j(81) }
+ 248 stop
+ 249 stringConstant 0 = "Klaar"

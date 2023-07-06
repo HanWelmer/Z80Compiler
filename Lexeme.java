@@ -10,9 +10,7 @@ public class Lexeme {
   protected String stringVal;
   protected Datatype datatype;
   protected String idVal;
-  protected AddValType addVal;
-  protected MulValType mulVal;
-  protected RelValType relVal;
+  protected OperatorType operator;
   //Line number of source code leading up to and including this lexeme.
   public int sourceLineNr = 0;
   
@@ -46,9 +44,11 @@ public class Lexeme {
           result += variable.getAddress();
         }
         break;
-      case addop: result += " " + addVal; break;
-      case mulop: result += " " + mulVal; break;
-      case relop: result += " " + relVal; break;
+      case addop:
+      case mulop:
+      case relop:
+        result += " " + operator;
+        break;
     }
     return result;
   }

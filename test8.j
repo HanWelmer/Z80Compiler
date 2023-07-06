@@ -76,5 +76,7 @@ class Test8And16BitExpressions {
   
   println(i + 1);             // 20
   println(2 + i);             // 21
+  println(2*5+3*4);           // 22
+  println(120/4-(3+8/2));     // 23
   println("Klaar");
 }
