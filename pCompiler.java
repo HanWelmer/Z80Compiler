@@ -527,9 +527,8 @@ public class pCompiler {
     debug("\ntermWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     
     //part of lexical analysis.
-    //if the first operand is a factor in a multiplication or division, finish the first term before finishing the expression.
-    //TODO generalize to lexemetype with higher precendence.
-    if (level == 1 && lexeme.type == LexemeType.mulop) {
+    //process the first operand at the next level (lower number) if it is followed by an operator with higher precedence (lower ordinal value).
+    if (level > 0 && lexeme.type.ordinal() > lexemeTypeAtLevel[level].ordinal()) {
       leftOperand = termWithOperand(level - 1, leftOperand, followSet);
     }
 
