@@ -3,19 +3,19 @@
  * This class defines the operation types for an expression in the P language. 
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  *
- * Operators are enumerated in order of decreasing precedence.
+ * Operators are enumerated in order of increasing precedence.
  */
 public enum OperatorType {
-  mul,
-  div,
-  add,
-  sub,
+  eq,
+  ne,
   lt,
   le,
   gt,
   ge,
-  eq,
-  ne
+  add,
+  sub,
+  mul,
+  div
 };
 
 /* Java operator precedence:
