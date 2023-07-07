@@ -182,6 +182,8 @@ public class pCompiler {
   private ArrayList<String> sourceCode;
   private int lastSourceLineNr = 0;
   private Lexeme lexeme;
+  //Lexeme types in an expression in increasing order of precedence.
+  private LexemeType[] lexemeTypeAtLevel = {LexemeType.addop, LexemeType.mulop}; 
   private int errors;
 
   /* Constants and class member variables for syntax analysis phase */
@@ -494,17 +496,14 @@ public class pCompiler {
     return operand;
   } //factor()
   
-  //expression lexeme types in decreasing order of precedence.
-  private LexemeType[] lexemeTypeAtLevel = {LexemeType.mulop, LexemeType.addop}; 
-  
   //expression = xorTerm {or xorTerm}.
   //xorTerm    = andTerm {xor andTerm}
   //andTerm    = addTerm {and addTerm}.
   //addTerm    = term {addop term}.
   //term       = factor {mulop factor}.
   private Operand expression(EnumSet<LexemeType> stopSet) throws FatalError {
-    //start with lexeme type of lowest precedence, but highest index.
-    return term(lexemeTypeAtLevel.length - 1, stopSet);
+    //start with lexeme type of lowest precedence.
+    return term(0, stopSet);
   }
   
   //Parse a term, as part of an expression, at a given precendence level.
@@ -514,7 +513,7 @@ public class pCompiler {
     //part of lexical analysis.
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(lexemeTypeAtLevel[level]);
-    Operand leftOperand = (level == 0) ? factor(followSet) : term(level - 1, followSet);
+    Operand leftOperand = (level == lexemeTypeAtLevel.length - 1) ? factor(followSet) : term(level + 1, followSet);
 
     leftOperand = termWithOperand(level, leftOperand, followSet);
     debug("\nterm: end");
@@ -527,9 +526,9 @@ public class pCompiler {
     debug("\ntermWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     
     //part of lexical analysis.
-    //process the first operand at the next level (lower number) if it is followed by an operator with higher precedence (lower ordinal value).
-    if (level > 0 && lexeme.type.ordinal() > lexemeTypeAtLevel[level].ordinal()) {
-      leftOperand = termWithOperand(level - 1, leftOperand, followSet);
+    //process the first operand at the next level if it is followed by an operator with higher precedence.
+    if (level < lexemeTypeAtLevel.length - 1 && lexeme.type.ordinal() > lexemeTypeAtLevel[level].ordinal()) {
+      leftOperand = termWithOperand(level + 1, leftOperand, followSet);
     }
 
     //part of code generation.
@@ -549,7 +548,8 @@ public class pCompiler {
 
       //part of lexical analysis.
       lexeme = lexemeReader.getLexeme(sourceCode);
-      Operand rOperand = (level == 0) ? factor(followSet) : term(level - 1, followSet);
+      //process the right hand operand and subsequent operators/operands at the next level, ultimately parsing a factor.
+      Operand rOperand = (level == lexemeTypeAtLevel.length - 1) ? factor(followSet) : term(level + 1, followSet);
 
       //part of code generation.
       debug("\ntermWithOperand loop: level = " + level + ", leftOperand=" + leftOperand + ", rightOperand=" + rOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
@@ -1516,7 +1516,7 @@ public class pCompiler {
       plantPrintln(operand, true);
     } else {
       //algorithmic expression.
-      operand = termWithOperand(lexemeTypeAtLevel.length - 1, operand, startExpressionSet);
+      operand = termWithOperand(0, operand, startExpressionSet);
       debug("\nprintlnStatement: " + operand);
 
       //part of code generation.

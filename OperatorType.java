@@ -2,6 +2,8 @@
  * Enumeration for the pCompiler.
  * This class defines the operation types for an expression in the P language. 
  * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
+ *
+ * Operators are enumerated in order of decreasing precedence.
  */
 public enum OperatorType {
   mul,

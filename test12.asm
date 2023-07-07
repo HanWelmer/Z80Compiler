@@ -12,22 +12,31 @@ start:
         LD    SP,TOS
         JP    main
 ;****************
-;WAIT - Wait DE * 1 msec @ 18,432 MHz with no wait states
-;  IN:  DE number of msec to wait
+;sleepHL - Wait HL * 1 msec @ 18,432 MHz with no wait states
+;  IN:  HL number of msec to wait
 ;  OUT: none
 ;  USES: 4 bytes on stack
 ;****************
-WAIT:
-        PUSH  DE
+sleepHL:
         PUSH  AF
-WAIT1:
+sleep1:
         CALL  WAIT1M      ;Wait 1 msec
-        DEC   DE
-        LD    A,D
-        OR    A,E
-        JR    NZ,WAIT1
+        DEC   HL
+        LD    A,H
+        OR    L
+        JR    NZ,sleep1
         POP   AF
-        POP   DE
+        RET
+;****************
+;sleepA - Wait A * 1 msec @ 18,432 MHz with no wait states
+;  IN:  A number of msec to wait
+;  OUT: none
+;  USES: no stack
+;****************
+sleepA:
+        CALL  WAIT1M      ;Wait 1 msec
+        DEC   A
+        JR    NZ,sleepA
         RET
 ;****************
 ;WAIT1M
@@ -59,7 +68,7 @@ WAIT1M2:
         LD    A,H         ;2      6 (31+n*10)
                           ;       3 opcode
                           ;       3 execute
-        OR    A,L         ;2      4 (31+n*14)
+        OR    L           ;2      4 (31+n*14)
                           ;       3 opcode
                           ;       1 execute
         JR    NZ,WAIT1M2  ;4      8 (31+n*22) if NZ

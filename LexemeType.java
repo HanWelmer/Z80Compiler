@@ -14,6 +14,7 @@ public enum LexemeType {
   semicolon(";"),
   lbracket("("),
   rbracket(")"),
+  // Lexeme types for operators are enumerated in order of increasing precedence.
   addop("+ or -"),
   mulop("* or /"),
   relop("<!=>"),
