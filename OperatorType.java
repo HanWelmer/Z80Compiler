@@ -6,6 +6,9 @@
  * Operators are enumerated in order of increasing precedence.
  */
 public enum OperatorType {
+  bitwiseOr,
+  bitwiseXor,
+  bitwiseAnd,
   eq,
   ne,
   lt,

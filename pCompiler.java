@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add logical XOR.
-//TODO Add logical AND.
-//TODO Add logical OR.
+//TODO Add bitwise NOT.
+//TODO Add logical OR, XOR and AND.
 //TODO Add logical NOT.
 //TODO Implement constantExpression.
 //TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j.
@@ -48,9 +47,9 @@ import java.util.Stack;
  * sleepStatement     = "sleep" "(" expression ")".
  * block              = statement | "{" statements "}".
  * comparison         = expression relop expression.
- * expression         = xorTerm {or xorTerm}.
- * xorTerm            = andTerm {xor andTerm}
- ' andTerm            = addTerm {and addTerm}.
+ * expression         = xorTerm {bitwiseOrOp xorTerm}.
+ * xorTerm            = andTerm {bitwiseXorOp andTerm}
+ ' andTerm            = addTerm {bitwiseAndOp addTerm}.
  * addTerm            = term {addop term}.
  * term               = factor {mulop factor}.
  * factor             = identifier | constant | stringConstant | "read" | inputFactor | "(" expression ")".
@@ -183,7 +182,7 @@ public class pCompiler {
   private int lastSourceLineNr = 0;
   private Lexeme lexeme;
   //Lexeme types in an expression in increasing order of precedence.
-  private LexemeType[] lexemeTypeAtLevel = {LexemeType.addop, LexemeType.mulop}; 
+  private LexemeType[] lexemeTypeAtLevel = {LexemeType.bitwiseOrOp, LexemeType.bitwiseXorOp, LexemeType.bitwiseAndOp, LexemeType.addop, LexemeType.mulop};
   private int errors;
 
   /* Constants and class member variables for syntax analysis phase */
@@ -266,21 +265,33 @@ public class pCompiler {
     reverseSkip.clear();
     instructions.clear();
 
+    forwardOperation16.put(OperatorType.bitwiseOr, FunctionType.acc16Or);
+    forwardOperation16.put(OperatorType.bitwiseXor, FunctionType.acc16Xor);
+    forwardOperation16.put(OperatorType.bitwiseAnd, FunctionType.acc16And);
     forwardOperation16.put(OperatorType.add, FunctionType.acc16Plus);
     forwardOperation16.put(OperatorType.sub, FunctionType.acc16Minus);
     forwardOperation16.put(OperatorType.mul, FunctionType.acc16Times);
     forwardOperation16.put(OperatorType.div, FunctionType.acc16Div);
 
+    reverseOperation16.put(OperatorType.bitwiseOr, FunctionType.acc16Or);
+    reverseOperation16.put(OperatorType.bitwiseXor, FunctionType.acc16Xor);
+    reverseOperation16.put(OperatorType.bitwiseAnd, FunctionType.acc16And);
     reverseOperation16.put(OperatorType.add, FunctionType.acc16Plus);
     reverseOperation16.put(OperatorType.sub, FunctionType.minusAcc16);
     reverseOperation16.put(OperatorType.mul, FunctionType.acc16Times);
     reverseOperation16.put(OperatorType.div, FunctionType.divAcc16);
 
+    forwardOperation8.put(OperatorType.bitwiseOr, FunctionType.acc8Or);
+    forwardOperation8.put(OperatorType.bitwiseXor, FunctionType.acc8Xor);
+    forwardOperation8.put(OperatorType.bitwiseAnd, FunctionType.acc8And);
     forwardOperation8.put(OperatorType.add, FunctionType.acc8Plus);
     forwardOperation8.put(OperatorType.sub, FunctionType.acc8Minus);
     forwardOperation8.put(OperatorType.mul, FunctionType.acc8Times);
     forwardOperation8.put(OperatorType.div, FunctionType.acc8Div);
 
+    reverseOperation8.put(OperatorType.bitwiseOr, FunctionType.acc8Or);
+    reverseOperation8.put(OperatorType.bitwiseXor, FunctionType.acc8Xor);
+    reverseOperation8.put(OperatorType.bitwiseAnd, FunctionType.acc8And);
     reverseOperation8.put(OperatorType.add, FunctionType.acc8Plus);
     reverseOperation8.put(OperatorType.sub, FunctionType.minusAcc8);
     reverseOperation8.put(OperatorType.mul, FunctionType.acc8Times);
@@ -496,9 +507,9 @@ public class pCompiler {
     return operand;
   } //factor()
   
-  //expression = xorTerm {or xorTerm}.
-  //xorTerm    = andTerm {xor andTerm}
-  //andTerm    = addTerm {and addTerm}.
+  //expression = xorTerm {bitwiseOrOp xorTerm}.
+  //xorTerm    = andTerm {bitwiseXorOp andTerm}
+  //andTerm    = addTerm {bitwiseAndOp addTerm}.
   //addTerm    = term {addop term}.
   //term       = factor {mulop factor}.
   private Operand expression(EnumSet<LexemeType> stopSet) throws FatalError {

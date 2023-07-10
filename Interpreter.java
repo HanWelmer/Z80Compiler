@@ -61,6 +61,9 @@ public class Interpreter {
         push(acc16);
         acc16 = getOp(instr.operand);
         break;
+      case acc16Or: acc16 |= getOp(instr.operand); break;
+      case acc16Xor: acc16 ^= getOp(instr.operand); break;
+      case acc16And: acc16 &= getOp(instr.operand); break;
       case acc16Plus: acc16 += getOp(instr.operand); break;
       case acc16Minus: acc16 -= getOp(instr.operand); break;
       case minusAcc16: acc16 = getOp(instr.operand) - acc16; break;
@@ -159,6 +162,9 @@ public class Interpreter {
         push(acc8);
         acc8 = getOp(instr.operand);
         break;
+      case acc8Or: acc8 |= getOp(instr.operand); break;
+      case acc8Xor: acc8 ^= getOp(instr.operand); break;
+      case acc8And: acc8 &= getOp(instr.operand); break;
       case acc8Plus: acc8 += getOp(instr.operand); break;
       case acc8Minus: acc8 -= getOp(instr.operand); break;
       case minusAcc8: acc8 = getOp(instr.operand) - acc8; break;

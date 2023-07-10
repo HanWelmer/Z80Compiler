@@ -251,27 +251,21 @@ public class LexemeReader {
       }
       lexeme.idVal = name;
     } else {
-      /* try to recognise keywords or , ; = ( ) + - * / <!=> */
+      /* try to recognise keywords or symbols , ; | ^ & == != < <= > >= + - * / ( ) */
       switch (ch) {
         case ',' : lexeme.type = LexemeType.comma; break;
         case ';' : lexeme.type = LexemeType.semicolon; break;
-        case '(' : lexeme.type = LexemeType.lbracket; break;
-        case ')' : lexeme.type = LexemeType.rbracket; break;
-        case '+' :
-          lexeme.type = LexemeType.addop;
-          lexeme.operator = OperatorType.add;
+        case '|' :
+          lexeme.type = LexemeType.bitwiseOrOp;
+          lexeme.operator = OperatorType.bitwiseOr;
           break;
-        case '-' :
-          lexeme.type = LexemeType.addop;
-          lexeme.operator = OperatorType.sub;
+        case '^' :
+          lexeme.type = LexemeType.bitwiseXorOp;
+          lexeme.operator = OperatorType.bitwiseXor;
           break;
-        case '*' :
-          lexeme.type = LexemeType.mulop;
-          lexeme.operator = OperatorType.mul;
-          break;
-        case '/' :
-          lexeme.type = LexemeType.mulop;
-          lexeme.operator = OperatorType.div;
+        case '&' :
+          lexeme.type = LexemeType.bitwiseAndOp;
+          lexeme.operator = OperatorType.bitwiseAnd;
           break;
         case '=' :
           if (nextChar(sourceCode) == '=') {
@@ -293,15 +287,6 @@ public class LexemeReader {
             System.out.println("! not followed by = ");
           }
           break;
-        case '>' :
-          lexeme.type = LexemeType.relop;
-          if (nextChar(sourceCode) == '=') {
-            ch = getChar(sourceCode);
-            lexeme.operator = OperatorType.ge;
-          } else {
-            lexeme.operator = OperatorType.gt;
-          }
-          break;
         case '<' :
           lexeme.type = LexemeType.relop;
           if (nextChar(sourceCode) == '=') {
@@ -311,6 +296,33 @@ public class LexemeReader {
             lexeme.operator = OperatorType.lt;
           }
           break;
+        case '>' :
+          lexeme.type = LexemeType.relop;
+          if (nextChar(sourceCode) == '=') {
+            ch = getChar(sourceCode);
+            lexeme.operator = OperatorType.ge;
+          } else {
+            lexeme.operator = OperatorType.gt;
+          }
+          break;
+        case '+' :
+          lexeme.type = LexemeType.addop;
+          lexeme.operator = OperatorType.add;
+          break;
+        case '-' :
+          lexeme.type = LexemeType.addop;
+          lexeme.operator = OperatorType.sub;
+          break;
+        case '*' :
+          lexeme.type = LexemeType.mulop;
+          lexeme.operator = OperatorType.mul;
+          break;
+        case '/' :
+          lexeme.type = LexemeType.mulop;
+          lexeme.operator = OperatorType.div;
+          break;
+        case '(' : lexeme.type = LexemeType.lbracket; break;
+        case ')' : lexeme.type = LexemeType.rbracket; break;
         default :
           lexeme.type = LexemeType.unknown;
           error();

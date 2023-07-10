@@ -48,6 +48,9 @@ public class Instruction {
     , FunctionType.acc8Store
     , FunctionType.acc8Load
     , FunctionType.stackAcc8Load
+    , FunctionType.acc8Or
+    , FunctionType.acc8Xor
+    , FunctionType.acc8And
     , FunctionType.acc8Plus
     , FunctionType.acc8Minus
     , FunctionType.minusAcc8
@@ -62,6 +65,9 @@ public class Instruction {
     , FunctionType.acc16Store
     , FunctionType.acc16Load
     , FunctionType.stackAcc16Load
+    , FunctionType.acc16Or
+    , FunctionType.acc16Xor
+    , FunctionType.acc16And
     , FunctionType.acc16Plus
     , FunctionType.acc16Minus
     , FunctionType.minusAcc16
@@ -208,6 +214,9 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
         }
         break;
+      case acc16Or:
+      case acc16Xor:
+      case acc16And:
       case acc16Plus:
       case acc16Minus:
       case minusAcc16:
@@ -216,6 +225,9 @@ public class Instruction {
       case divAcc16:
       case acc16Compare: //normal compare
       case revAcc16Compare: //reverse compare
+      case acc8Or:
+      case acc8Xor:
+      case acc8And:
       case acc8Plus:
       case acc8Minus:
       case minusAcc8:
@@ -354,6 +366,9 @@ public class Instruction {
         break;
       case acc16Load:
       case stackAcc16Load:
+      case acc16Or:
+      case acc16Xor:
+      case acc16And:
       case acc16Plus:
       case acc16Minus:
       case minusAcc16:
@@ -364,6 +379,9 @@ public class Instruction {
       case revAcc16Compare: //reverse compare
       case acc8Load:
       case stackAcc8Load:
+      case acc8Or:
+      case acc8Xor:
+      case acc8And:
       case acc8Plus:
       case acc8Minus:
       case minusAcc8:

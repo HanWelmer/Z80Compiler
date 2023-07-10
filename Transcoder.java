@@ -301,6 +301,86 @@ public class Transcoder {
         throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
       }
       asm = operandToHL(instruction);
+    } else if (function == FunctionType.acc16Or) {
+      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,L", 0xB5)); //L = L | A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    L,A", 0x6F);         //H = H | 0
+      } else if (instruction.operand.opType == OperandType.stack8) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,A", 0x57)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,E", 0x7B)); //L = L | E
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,L", 0xB5)); //H = H | 0
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,D", 0x7A); //restore A
+      } else {
+        asm = operandToDE(instruction);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  BC",  0xC5));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,H", 0x7C)); //HL = HL | DE
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,D", 0xB2));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    H,A", 0x67));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,L", 0x7D));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,E", 0xB3));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); //restore A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "POP   BC", 0xC1);
+      }
+    } else if (function == FunctionType.acc16Xor) {
+      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "XOR   A,L", 0xAD)); //L = L ^ A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    L,A", 0x6F);         //H = H ^ 0
+      } else if (instruction.operand.opType == OperandType.stack8) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,A", 0x57)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,E", 0x7B)); //L = L ^ E
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "XOR   A,L", 0xAD)); //H = H ^ 0
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,D", 0x7A);         //restore A
+      } else {
+        asm = operandToDE(instruction);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  BC",  0xC5));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,H", 0x7C)); //HL = HL ^ DE
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "XOR   A,D", 0xAA));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    H,A", 0x67));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,L", 0x7D));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "XOR   A,E", 0xAB));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); //restore A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "POP   BC", 0xC1);
+      }
+    } else if (function == FunctionType.acc16And) {
+      if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,L", 0xA5)); //L = L & A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00); //H = 0
+      } else if (instruction.operand.opType == OperandType.stack8) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,A", 0x57)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,E", 0x7B)); //L = L & E
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,L", 0xA5));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,D", 0x7A)); //restore A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00); //H = 0
+      } else {
+        asm = operandToDE(instruction);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  BC",  0xC5));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,H", 0x7C)); //H = H & D
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,D", 0xA2));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    H,A", 0x67));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,L", 0x7D)); //L = L & E
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,E", 0xA3));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); //restore A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "POP   BC", 0xC1);
+      }
     } else if (function == FunctionType.acc16Plus) {
       if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
@@ -430,6 +510,66 @@ public class Transcoder {
         throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
       }
       asm = operandToA(instruction.operand);
+    } else if (function == FunctionType.acc8Or) {
+      switch(instruction.operand.opType) {
+        case var:
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47));
+
+          memAddress = MEM_START + instruction.operand.intValue;
+          result.add(new AssemblyInstruction(byteAddress, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+          byteAddress += 3;
+          
+          asm = new AssemblyInstruction(byteAddress, INDENT + "OR    A,B", 0xB0);
+          break;
+        case constant:
+          byt = instruction.operand.intValue % 256;
+          asm = new AssemblyInstruction(byteAddress, INDENT + "OR    A," + byt, 0xF6, byt);
+          break;
+        case stack8:
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   BC", 0xC1));
+          asm = new AssemblyInstruction(byteAddress, INDENT + "OR    A,B", 0xB0);
+          break;
+      };
+    } else if (function == FunctionType.acc8Xor) {
+      switch(instruction.operand.opType) {
+        case var:
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47));
+
+          memAddress = MEM_START + instruction.operand.intValue;
+          result.add(new AssemblyInstruction(byteAddress, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+          byteAddress += 3;
+          
+          asm = new AssemblyInstruction(byteAddress, INDENT + "XOR   A,B", 0xA8);
+          break;
+        case constant:
+          byt = instruction.operand.intValue % 256;
+          asm = new AssemblyInstruction(byteAddress, INDENT + "XOR   A," + byt, 0xEE, byt);
+          break;
+        case stack8:
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   BC", 0xC1));
+          asm = new AssemblyInstruction(byteAddress, INDENT + "XOR   A,B", 0xA8);
+          break;
+      };
+    } else if (function == FunctionType.acc8And) {
+      switch(instruction.operand.opType) {
+        case var:
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47));
+
+          memAddress = MEM_START + instruction.operand.intValue;
+          result.add(new AssemblyInstruction(byteAddress, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+          byteAddress += 3;
+          
+          asm = new AssemblyInstruction(byteAddress, INDENT + "AND   A,B", 0xA0);
+          break;
+        case constant:
+          byt = instruction.operand.intValue % 256;
+          asm = new AssemblyInstruction(byteAddress, INDENT + "AND   A," + byt, 0xE6, byt);
+          break;
+        case stack8:
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   BC", 0xC1));
+          asm = new AssemblyInstruction(byteAddress, INDENT + "AND   A,B", 0xA0);
+          break;
+      };
     } else if (function == FunctionType.acc8Plus) {
       switch(instruction.operand.opType) {
         case var:

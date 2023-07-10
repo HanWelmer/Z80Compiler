@@ -764,309 +764,413 @@ writeA:
         RET
 main:
 L0:
-        ;;test13.j(0) /* Program to test generated Z80 assembler code for output and input statements*/
+        ;;test15.j(0) /* Program to test bitwise operators and, or and xor. */
 L1:
-        ;;test13.j(1) class TestOutputInput {
+        ;;test15.j(1) class TestBitwiseOperators {
 L2:
-        ;;test13.j(2) 
+        ;;test15.j(2)   println(0);
 L3:
-        ;;test13.j(3)   println(0);
-L4:
         LD    A,0
+L4:
+        CALL  writeLineA
 L5:
-        CALL  writeLineA
+        ;;test15.j(3)   
 L6:
-        ;;test13.j(4) 
+        ;;test15.j(4)   // Possible operand types: constant, acc, var, final var, stack8, stack16.
 L7:
-        ;;test13.j(5)   // Possible port operand types:  constant, final var.
+        ;;test15.j(5)   // Possible data types: byt, word.
 L8:
-        ;;test13.j(6)   // Possible value operand types: constant, acc, var, final var, stack8.
+        ;;test15.j(6) 
 L9:
-        ;;test13.j(7) 
+        ;;test15.j(7)   //constant byte/constant byte
 L10:
-        ;;test13.j(8)   /**********/
+        ;;test15.j(8)   if (0x07 & 0x1C == 0x04) println (1); else println (999); //0000.0111 & 0001.1100 = 0000.0100
 L11:
-        ;;test13.j(9)   /* Output */
-L12:
-        ;;test13.j(10)   /**********/
-L13:
-        ;;test13.j(11) 
-L14:
-        ;;test13.j(12)   //port as decimal constant + value as decimal constant
-L15:
-        ;;test13.j(13)   output(2, 1);
-L16:
-        LD    A,1
-        OUT0  (002H),A
-L17:
-        ;;test13.j(14)   println(3);
-L18:
-        LD    A,3
-L19:
-        CALL  writeLineA
-L20:
-        ;;test13.j(15) 
-L21:
-        ;;test13.j(16)   //port as decimal constant
-L22:
-        ;;test13.j(17)   println("Enter 5");
-L23:
-        LD    HL,143
-L24:
-        CALL  writeLineStr
-L25:
-        ;;test13.j(18)   byte value = input(4);
-L26:
-        IN0  A,(004H)
-L27:
-        LD    (05000H),A
-L28:
-        ;;test13.j(19)   println(value);
-L29:
-        LD    A,(05000H)
-L30:
-        CALL  writeLineA
-L31:
-        ;;test13.j(20)   println(6);
-L32:
-        LD    A,6
-L33:
-        CALL  writeLineA
-L34:
-        ;;test13.j(21) 
-L35:
-        ;;test13.j(22)   //port as final variable + value as hexadecimal constant
-L36:
-        ;;test13.j(23)   final byte port = 0x08;
-L37:
-        ;;test13.j(24)   output(port, 0x07);
-L38:
         LD    A,7
-        OUT0  (008H),A
-L39:
-        ;;test13.j(25)   println(9);
-L40:
-        LD    A,9
-L41:
+L12:
+        AND   A,28
+L13:
+        SUB   A,4
+L14:
+        JP    NZ,L18
+L15:
+        LD    A,1
+L16:
         CALL  writeLineA
-L42:
-        ;;test13.j(26) 
-L43:
-        ;;test13.j(27)   //port as final variable + value as acc8
-L44:
-        ;;test13.j(28)   final byte inputPort = 10;
-L45:
-        ;;test13.j(29)   println("Enter 11");
-L46:
-        LD    HL,144
-L47:
-        CALL  writeLineStr
-L48:
-        ;;test13.j(30)   output(12, input(inputPort));
-L49:
-        IN0  A,(00AH)
-L50:
-        OUT0  (00CH),A
-L51:
-        ;;test13.j(31)   println(13);
-L52:
-        LD    A,13
-L53:
-        CALL  writeLineA
-L54:
-        ;;test13.j(32) 
-L55:
-        ;;test13.j(33)   //constant + byte expression
-L56:
-        ;;test13.j(34)   output(15, 4 + 2 * 5);
-L57:
-        LD    A,4
-L58:
-        PUSH  AF
+L17:
+        JP    L21
+L18:
+        LD    HL,999
+L19:
+        CALL  writeLineHL
+L20:
+        ;;test15.j(9)   if (0x07 | 0x1C == 0x1F) println (2); else println (999); //0000.0111 | 0001.1100 = 0001.1111
+L21:
+        LD    A,7
+L22:
+        OR    A,28
+L23:
+        SUB   A,31
+L24:
+        JP    NZ,L28
+L25:
         LD    A,2
-L59:
+L26:
+        CALL  writeLineA
+L27:
+        JP    L31
+L28:
+        LD    HL,999
+L29:
+        CALL  writeLineHL
+L30:
+        ;;test15.j(10)   if (0x07 ^ 0x1C == 0x1B) println (3); else println (999); //0000.0111 ^ 0001.1100 = 0001.1011
+L31:
+        LD    A,7
+L32:
+        XOR   A,28
+L33:
+        SUB   A,27
+L34:
+        JP    NZ,L38
+L35:
+        LD    A,3
+L36:
+        CALL  writeLineA
+L37:
+        JP    L42
+L38:
+        LD    HL,999
+L39:
+        CALL  writeLineHL
+L40:
+        ;;test15.j(11)   //constant word/constant word
+L41:
+        ;;test15.j(12)   if (0x1234 & 0x032C == 0x0224) println (4); else println (999);
+L42:
+        LD    HL,4660
+L43:
+        LD    DE,812
+        PUSH  BC
         LD    B,A
-        LD    C,5
-        MLT   BC
-        LD    A,C
-L60:
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
         POP   BC
-        ADD   A,B
+L44:
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
+L45:
+        JP    NZ,L49
+L46:
+        LD    A,4
+L47:
+        CALL  writeLineA
+L48:
+        JP    L53
+L49:
+        LD    HL,999
+L50:
+        CALL  writeLineHL
+L51:
+        ;;test15.j(13)   //0001.0010.0011.0100 & 0000.0011.0010.1100 = 0000.0010.0010.0100
+L52:
+        ;;test15.j(14)   if (0x1234 | 0x032C == 0x133C) println (5); else println (999);
+L53:
+        LD    HL,4660
+L54:
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L55:
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
+L56:
+        JP    NZ,L60
+L57:
+        LD    A,5
+L58:
+        CALL  writeLineA
+L59:
+        JP    L64
+L60:
+        LD    HL,999
 L61:
-        OUT0  (00FH),A
+        CALL  writeLineHL
 L62:
-        ;;test13.j(35)   println(16);
+        ;;test15.j(15)   //0001.0010.0011.0100 | 0000.0011.0010.1100 = 0001.0011.0011.1100
 L63:
-        LD    A,16
+        ;;test15.j(16)   if (0x1234 ^ 0x032C == 0x1118) println (6); else println (999);
 L64:
-        CALL  writeLineA
+        LD    HL,4660
 L65:
-        ;;test13.j(36)  
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L66:
-        ;;test13.j(37)   //constant + byte variable
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L67:
-        ;;test13.j(38)   value = 17;
+        JP    NZ,L71
 L68:
-        LD    A,17
+        LD    A,6
 L69:
-        LD    (05000H),A
-L70:
-        ;;test13.j(39)   output(0x12, value);
-L71:
-        LD    A,(05000H)
-        OUT0  (012H),A
-L72:
-        ;;test13.j(40)   println(19);
-L73:
-        LD    A,19
-L74:
         CALL  writeLineA
+L70:
+        JP    L76
+L71:
+        LD    HL,999
+L72:
+        CALL  writeLineHL
+L73:
+        ;;test15.j(17)   //0001.0010.0011.0100 ^ 0000.0011.0010.1100 = 0001.0001.0001.1000
+L74:
+        ;;test15.j(18)   //constant byt/constant word
 L75:
-        ;;test13.j(41) 
+        ;;test15.j(19)   if (0x1C & 0x1234 == 0x0014) println (7); else println (999); //0001.1100 & 0001.0010.0011.0100 = 0000.0000.0001.0100
 L76:
-        ;;test13.j(42)   //constant + final variable
+        LD    A,28
 L77:
-        ;;test13.j(43)   final byte finalValue = 20;
+        LD    L,A
+        LD    H,0
 L78:
-        ;;test13.j(44)   output(21, finalValue);
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L79:
         LD    A,20
-        OUT0  (015H),A
 L80:
-        ;;test13.j(45)   println(22);
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L81:
-        LD    A,22
+        JP    NZ,L85
 L82:
-        CALL  writeLineA
+        LD    A,7
 L83:
-        ;;test13.j(46)   
+        CALL  writeLineA
 L84:
-        ;;test13.j(47)   //temp test; move it somewhere else once it works
+        JP    L88
 L85:
-        ;;test13.j(48)   println("Enter 23, expect 0x14"); //0001.0111 & 0001.1100 = 0001.0100
+        LD    HL,999
 L86:
-        LD    HL,145
+        CALL  writeLineHL
 L87:
-        CALL  writeLineStr
+        ;;test15.j(20)   if (0x1C | 0x1234 == 0x123C) println (8); else println (999); //0001.1100 | 0001.0010.0011.0100 = 0001.0010.0011.1100
 L88:
-        ;;test13.j(49)   final byte PCR = 0x7E;
+        LD    A,28
 L89:
-        ;;test13.j(50)   output(PCR, input(PCR) & 0x1C);
+        LD    L,A
+        LD    H,0
 L90:
-        IN0  A,(07EH)
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L91:
-        AND   A,28
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L92:
-        OUT0  (07EH),A
+        JP    NZ,L96
 L93:
-        ;;test13.j(51) 
+        LD    A,8
 L94:
-        ;;test13.j(52)   //temp test; move it somewhere else once it works
+        CALL  writeLineA
 L95:
-        ;;test13.j(53)   println("Enter 24, expect 0x19"); //0001.1000 | 0001.0001 = 0001.1001
+        JP    L99
 L96:
-        LD    HL,146
+        LD    HL,999
 L97:
-        CALL  writeLineStr
+        CALL  writeLineHL
 L98:
-        ;;test13.j(54)   output(PCR, input(PCR) | 0x11);
+        ;;test15.j(21)   if (0x1C ^ 0x1234 == 0x1228) println (9); else println (999); //0001.1100 ^ 0001.0010.0011.0100 = 0001.0010.0010.1000
 L99:
-        IN0  A,(07EH)
+        LD    A,28
 L100:
-        OR    A,17
+        LD    L,A
+        LD    H,0
 L101:
-        OUT0  (07EH),A
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L102:
-        ;;test13.j(55) 
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L103:
-        ;;test13.j(56)   //temp test; move it somewhere else once it works
+        JP    NZ,L107
 L104:
-        ;;test13.j(57)   println("Enter 25, expect 0x0B"); //0001.1001 ^ 0001.0010 = 0000.1011
+        LD    A,9
 L105:
-        LD    HL,147
+        CALL  writeLineA
 L106:
-        CALL  writeLineStr
+        JP    L111
 L107:
-        ;;test13.j(58)   output(PCR, input(PCR) ^ 0x12);
+        LD    HL,999
 L108:
-        IN0  A,(07EH)
+        CALL  writeLineHL
 L109:
-        XOR   A,18
+        ;;test15.j(22)   //constant word/constant byt
 L110:
-        OUT0  (07EH),A
+        ;;test15.j(23)   if (0x1234 & 0x1C == 0x0014) println (10); else println (999); //0001.0010.0011.0100 & 0001.1100 = 0000.0000.0001.0100
 L111:
-        ;;test13.j(59) 
+        LD    HL,4660
 L112:
-        ;;test13.j(60)   /*
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L113:
-        ;;test13.j(61)   //byte constant expression + decimal constant
+        LD    A,20
 L114:
-        ;;test13.j(62)   output(4 * 5 + 4, 23);
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L115:
-        ;;test13.j(63)   println(15);
+        JP    NZ,L119
 L116:
-        ;;test13.j(64)   */
+        LD    A,10
 L117:
-        ;;test13.j(65) 
+        CALL  writeLineA
 L118:
-        ;;test13.j(66) /*
+        JP    L122
 L119:
-        ;;test13.j(67)   //hexadecimal constant
+        LD    HL,999
 L120:
-        ;;test13.j(68)   //IN0     A,(0x13)
+        CALL  writeLineHL
 L121:
-        ;;test13.j(69)   println("Enter 16");
+        ;;test15.j(24)   if (0x1234 | 0x1C == 0x123C) println (11); else println (999); //0001.0010.0011.0100 | 0001.1100 = 0001.0010.0011.1100
 L122:
-        ;;test13.j(70)   value = input(0x0F);
+        LD    HL,4660
 L123:
-        ;;test13.j(71)   println(value);
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L124:
-        ;;test13.j(72) 
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L125:
-        ;;test13.j(73)   //byte constant expression
+        JP    NZ,L129
 L126:
-        ;;test13.j(74)   println("Enter 18");
+        LD    A,11
 L127:
-        ;;test13.j(75)   value = input(7 + 5 * 2);
+        CALL  writeLineA
 L128:
-        ;;test13.j(76)   println(value);
+        JP    L132
 L129:
-        ;;test13.j(77) 
+        LD    HL,999
 L130:
-        ;;test13.j(78)   //final variable
+        CALL  writeLineHL
 L131:
-        ;;test13.j(79)   //IN0     A,(0x13)
+        ;;test15.j(25)   if (0x1234 ^ 0x1C == 0x1228) println (12); else println (999); //0001.0010.0011.0100 ^ 0001.1100 = 0001.0010.0010.1000
 L132:
-        ;;test13.j(80)   port = 0x11;
+        LD    HL,4660
 L133:
-        ;;test13.j(81)   println("Enter 20");
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L134:
-        ;;test13.j(82)   value = input(port);
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L135:
-        ;;test13.j(83)   println(value);
+        JP    NZ,L139
 L136:
-        ;;test13.j(84) */
+        LD    A,12
 L137:
-        ;;test13.j(85) 
+        CALL  writeLineA
 L138:
-        ;;test13.j(86)   println("Klaar");
+        JP    L143
 L139:
-        LD    HL,148
+        LD    HL,999
 L140:
-        CALL  writeLineStr
+        CALL  writeLineHL
 L141:
-        ;;test13.j(87) }
+        ;;test15.j(26) 
 L142:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        ;;test15.j(27)   println("Klaar");
 L143:
-        .ASCIZ  "Enter 5"
+        LD    HL,147
 L144:
-        .ASCIZ  "Enter 11"
+        CALL  writeLineStr
 L145:
-        .ASCIZ  "Enter 23, expect 0x14"
+        ;;test15.j(28) }
 L146:
-        .ASCIZ  "Enter 24, expect 0x19"
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
 L147:
-        .ASCIZ  "Enter 25, expect 0x0B"
-L148:
         .ASCIZ  "Klaar"

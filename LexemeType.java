@@ -15,9 +15,12 @@ public enum LexemeType {
   lbracket("("),
   rbracket(")"),
   // Lexeme types for operators are enumerated in order of increasing precedence.
+  bitwiseOrOp("|"),
+  bitwiseXorOp("^"),
+  bitwiseAndOp("&"),
+  relop("<!=>"),
   addop("+ or -"),
   mulop("* or /"),
-  relop("<!=>"),
   //from here until unknown are the keywords...
   beginLexeme("{"),
   finalLexeme("final"),
