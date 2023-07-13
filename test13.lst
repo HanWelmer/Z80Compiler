@@ -811,7 +811,7 @@
 21DD             L22:
 21DD                     ;;test13.j(17)   println("Enter 5");
 21DD             L23:
-21DD 21 8F 00            LD    HL,143
+21DD 21 73 00            LD    HL,115
 21E0             L24:
 21E0 CD 43 20            CALL  writeLineStr
 21E3             L25:
@@ -858,7 +858,7 @@
 21FE             L45:
 21FE                     ;;test13.j(29)   println("Enter 11");
 21FE             L46:
-21FE 21 90 00            LD    HL,144
+21FE 21 74 00            LD    HL,116
 2201             L47:
 2201 CD 43 20            CALL  writeLineStr
 2204             L48:
@@ -941,193 +941,100 @@
 223E             L83:
 223E                     ;;test13.j(46)   
 223E             L84:
-223E                     ;;test13.j(47)   //temp test; move it somewhere else once it works
+223E                     ;;test13.j(47)   /*
 223E             L85:
-223E                     ;;test13.j(48)   println("Enter 23, expect 0x14"); //0001.0111 & 0001.1100 = 0001.0100
+223E                     ;;test13.j(48)   //byte constant expression + decimal constant
 223E             L86:
-223E 21 91 00            LD    HL,145
-2241             L87:
+223E                     ;;test13.j(49)   output(4 * 5 + 4, 23);
+223E             L87:
+223E                     ;;test13.j(50)   println(15);
+223E             L88:
+223E                     ;;test13.j(51)   */
+223E             L89:
+223E                     ;;test13.j(52) 
+223E             L90:
+223E                     ;;test13.j(53) /*
+223E             L91:
+223E                     ;;test13.j(54)   //hexadecimal constant
+223E             L92:
+223E                     ;;test13.j(55)   //IN0     A,(0x13)
+223E             L93:
+223E                     ;;test13.j(56)   println("Enter 16");
+223E             L94:
+223E                     ;;test13.j(57)   value = input(0x0F);
+223E             L95:
+223E                     ;;test13.j(58)   println(value);
+223E             L96:
+223E                     ;;test13.j(59) 
+223E             L97:
+223E                     ;;test13.j(60)   //byte constant expression
+223E             L98:
+223E                     ;;test13.j(61)   println("Enter 18");
+223E             L99:
+223E                     ;;test13.j(62)   value = input(7 + 5 * 2);
+223E             L100:
+223E                     ;;test13.j(63)   println(value);
+223E             L101:
+223E                     ;;test13.j(64) 
+223E             L102:
+223E                     ;;test13.j(65)   //final variable
+223E             L103:
+223E                     ;;test13.j(66)   //IN0     A,(0x13)
+223E             L104:
+223E                     ;;test13.j(67)   port = 0x11;
+223E             L105:
+223E                     ;;test13.j(68)   println("Enter 20");
+223E             L106:
+223E                     ;;test13.j(69)   value = input(port);
+223E             L107:
+223E                     ;;test13.j(70)   println(value);
+223E             L108:
+223E                     ;;test13.j(71) */
+223E             L109:
+223E                     ;;test13.j(72) 
+223E             L110:
+223E                     ;;test13.j(73)   println("Klaar");
+223E             L111:
+223E 21 75 00            LD    HL,117
+2241             L112:
 2241 CD 43 20            CALL  writeLineStr
-2244             L88:
-2244                     ;;test13.j(49)   final byte PCR = 0x7E;
-2244             L89:
-2244                     ;;test13.j(50)   output(PCR, input(PCR) & 0x1C);
-2244             L90:
-2244 ED 38 7E            IN0  A,(07EH)
-2247             L91:
-2247 E6 1C               AND   A,28
-2249             L92:
-2249 ED 39 7E            OUT0  (07EH),A
-224C             L93:
-224C                     ;;test13.j(51) 
-224C             L94:
-224C                     ;;test13.j(52)   //temp test; move it somewhere else once it works
-224C             L95:
-224C                     ;;test13.j(53)   println("Enter 24, expect 0x19"); //0001.1000 | 0001.0001 = 0001.1001
-224C             L96:
-224C 21 92 00            LD    HL,146
-224F             L97:
-224F CD 43 20            CALL  writeLineStr
-2252             L98:
-2252                     ;;test13.j(54)   output(PCR, input(PCR) | 0x11);
-2252             L99:
-2252 ED 38 7E            IN0  A,(07EH)
-2255             L100:
-2255 F6 11               OR    A,17
-2257             L101:
-2257 ED 39 7E            OUT0  (07EH),A
-225A             L102:
-225A                     ;;test13.j(55) 
-225A             L103:
-225A                     ;;test13.j(56)   //temp test; move it somewhere else once it works
-225A             L104:
-225A                     ;;test13.j(57)   println("Enter 25, expect 0x0B"); //0001.1001 ^ 0001.0010 = 0000.1011
-225A             L105:
-225A 21 93 00            LD    HL,147
-225D             L106:
-225D CD 43 20            CALL  writeLineStr
-2260             L107:
-2260                     ;;test13.j(58)   output(PCR, input(PCR) ^ 0x12);
-2260             L108:
-2260 ED 38 7E            IN0  A,(07EH)
-2263             L109:
-2263 EE 12               XOR   A,18
-2265             L110:
-2265 ED 39 7E            OUT0  (07EH),A
-2268             L111:
-2268                     ;;test13.j(59) 
-2268             L112:
-2268                     ;;test13.j(60)   /*
-2268             L113:
-2268                     ;;test13.j(61)   //byte constant expression + decimal constant
-2268             L114:
-2268                     ;;test13.j(62)   output(4 * 5 + 4, 23);
-2268             L115:
-2268                     ;;test13.j(63)   println(15);
-2268             L116:
-2268                     ;;test13.j(64)   */
-2268             L117:
-2268                     ;;test13.j(65) 
-2268             L118:
-2268                     ;;test13.j(66) /*
-2268             L119:
-2268                     ;;test13.j(67)   //hexadecimal constant
-2268             L120:
-2268                     ;;test13.j(68)   //IN0     A,(0x13)
-2268             L121:
-2268                     ;;test13.j(69)   println("Enter 16");
-2268             L122:
-2268                     ;;test13.j(70)   value = input(0x0F);
-2268             L123:
-2268                     ;;test13.j(71)   println(value);
-2268             L124:
-2268                     ;;test13.j(72) 
-2268             L125:
-2268                     ;;test13.j(73)   //byte constant expression
-2268             L126:
-2268                     ;;test13.j(74)   println("Enter 18");
-2268             L127:
-2268                     ;;test13.j(75)   value = input(7 + 5 * 2);
-2268             L128:
-2268                     ;;test13.j(76)   println(value);
-2268             L129:
-2268                     ;;test13.j(77) 
-2268             L130:
-2268                     ;;test13.j(78)   //final variable
-2268             L131:
-2268                     ;;test13.j(79)   //IN0     A,(0x13)
-2268             L132:
-2268                     ;;test13.j(80)   port = 0x11;
-2268             L133:
-2268                     ;;test13.j(81)   println("Enter 20");
-2268             L134:
-2268                     ;;test13.j(82)   value = input(port);
-2268             L135:
-2268                     ;;test13.j(83)   println(value);
-2268             L136:
-2268                     ;;test13.j(84) */
-2268             L137:
-2268                     ;;test13.j(85) 
-2268             L138:
-2268                     ;;test13.j(86)   println("Klaar");
-2268             L139:
-2268 21 94 00            LD    HL,148
-226B             L140:
-226B CD 43 20            CALL  writeLineStr
-226E             L141:
-226E                     ;;test13.j(87) }
-226E             L142:
-226E C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
-2271             L143:
-2271                     .ASCIZ  "Enter 5"
-2271             L144:
-2271                     .ASCIZ  "Enter 11"
-2271             L145:
-2271                     .ASCIZ  "Enter 23, expect 0x14"
-2271             L146:
-2271                     .ASCIZ  "Enter 24, expect 0x19"
-2271             L147:
-2271                     .ASCIZ  "Enter 25, expect 0x0B"
-2271             L148:
-2271                     .ASCIZ  "Klaar"
+2244             L113:
+2244                     ;;test13.j(74) }
+2244             L114:
+2244 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
+2247             L115:
+2247                     .ASCIZ  "Enter 5"
+2247             L116:
+2247                     .ASCIZ  "Enter 11"
+2247             L117:
+2247                     .ASCIZ  "Klaar"
 
 Labels and cross references:
       L0 = 21CE :
       L1 = 21CE :
      L10 = 21D3 :
-    L100 = 2255 :
-    L101 = 2257 :
-    L102 = 225A :
-    L103 = 225A :
-    L104 = 225A :
-    L105 = 225A :
-    L106 = 225D :
-    L107 = 2260 :
-    L108 = 2260 :
-    L109 = 2263 :
+    L100 = 223E :
+    L101 = 223E :
+    L102 = 223E :
+    L103 = 223E :
+    L104 = 223E :
+    L105 = 223E :
+    L106 = 223E :
+    L107 = 223E :
+    L108 = 223E :
+    L109 = 223E :
      L11 = 21D3 :
-    L110 = 2265 :
-    L111 = 2268 :
-    L112 = 2268 :
-    L113 = 2268 :
-    L114 = 2268 :
-    L115 = 2268 :
-    L116 = 2268 :
-    L117 = 2268 :
-    L118 = 2268 :
-    L119 = 2268 :
+    L110 = 223E :
+    L111 = 223E :
+    L112 = 2241 :
+    L113 = 2244 :
+    L114 = 2244 :
+    L115 = 2247 :
+    L116 = 2247 :
+    L117 = 2247 :
      L12 = 21D3 :
-    L120 = 2268 :
-    L121 = 2268 :
-    L122 = 2268 :
-    L123 = 2268 :
-    L124 = 2268 :
-    L125 = 2268 :
-    L126 = 2268 :
-    L127 = 2268 :
-    L128 = 2268 :
-    L129 = 2268 :
      L13 = 21D3 :
-    L130 = 2268 :
-    L131 = 2268 :
-    L132 = 2268 :
-    L133 = 2268 :
-    L134 = 2268 :
-    L135 = 2268 :
-    L136 = 2268 :
-    L137 = 2268 :
-    L138 = 2268 :
-    L139 = 2268 :
      L14 = 21D3 :
-    L140 = 226B :
-    L141 = 226E :
-    L142 = 226E :
-    L143 = 2271 :
-    L144 = 2271 :
-    L145 = 2271 :
-    L146 = 2271 :
-    L147 = 2271 :
-    L148 = 2271 :
      L15 = 21D3 :
      L16 = 21D3 :
      L17 = 21D8 :
@@ -1207,20 +1114,20 @@ Labels and cross references:
      L84 = 223E :
      L85 = 223E :
      L86 = 223E :
-     L87 = 2241 :
-     L88 = 2244 :
-     L89 = 2244 :
+     L87 = 223E :
+     L88 = 223E :
+     L89 = 223E :
       L9 = 21D3 :
-     L90 = 2244 :
-     L91 = 2247 :
-     L92 = 2249 :
-     L93 = 224C :
-     L94 = 224C :
-     L95 = 224C :
-     L96 = 224C :
-     L97 = 224F :
-     L98 = 2252 :
-     L99 = 2252 :
+     L90 = 223E :
+     L91 = 223E :
+     L92 = 223E :
+     L93 = 223E :
+     L94 = 223E :
+     L95 = 223E :
+     L96 = 223E :
+     L97 = 223E :
+     L98 = 223E :
+     L99 = 223E :
   WAIT1M = 2018 : 2007 2011
  WAIT1M2 = 201D : 2020
    div16 = 2123 :
@@ -1274,5 +1181,5 @@ writeHL2 = 21B3 : 21B9
 writeHL3 = 21B4 : 21A6
 writeLineA = 21BE : 21D0 21DA 21EC 21F1 21FB 220C 2221 2231 223B
 writeLineHL = 2196 :
-writeLineStr = 2043 : 21E0 2201 2241 224F 225D 226B
+writeLineStr = 2043 : 21E0 2201 2241
 writeStr = 204A : 203E 2043

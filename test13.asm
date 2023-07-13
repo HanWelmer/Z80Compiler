@@ -811,7 +811,7 @@ L21:
 L22:
         ;;test13.j(17)   println("Enter 5");
 L23:
-        LD    HL,143
+        LD    HL,115
 L24:
         CALL  writeLineStr
 L25:
@@ -858,7 +858,7 @@ L44:
 L45:
         ;;test13.j(29)   println("Enter 11");
 L46:
-        LD    HL,144
+        LD    HL,116
 L47:
         CALL  writeLineStr
 L48:
@@ -941,132 +941,70 @@ L82:
 L83:
         ;;test13.j(46)   
 L84:
-        ;;test13.j(47)   //temp test; move it somewhere else once it works
+        ;;test13.j(47)   /*
 L85:
-        ;;test13.j(48)   println("Enter 23, expect 0x14"); //0001.0111 & 0001.1100 = 0001.0100
+        ;;test13.j(48)   //byte constant expression + decimal constant
 L86:
-        LD    HL,145
+        ;;test13.j(49)   output(4 * 5 + 4, 23);
 L87:
-        CALL  writeLineStr
+        ;;test13.j(50)   println(15);
 L88:
-        ;;test13.j(49)   final byte PCR = 0x7E;
+        ;;test13.j(51)   */
 L89:
-        ;;test13.j(50)   output(PCR, input(PCR) & 0x1C);
+        ;;test13.j(52) 
 L90:
-        IN0  A,(07EH)
+        ;;test13.j(53) /*
 L91:
-        AND   A,28
+        ;;test13.j(54)   //hexadecimal constant
 L92:
-        OUT0  (07EH),A
+        ;;test13.j(55)   //IN0     A,(0x13)
 L93:
-        ;;test13.j(51) 
+        ;;test13.j(56)   println("Enter 16");
 L94:
-        ;;test13.j(52)   //temp test; move it somewhere else once it works
+        ;;test13.j(57)   value = input(0x0F);
 L95:
-        ;;test13.j(53)   println("Enter 24, expect 0x19"); //0001.1000 | 0001.0001 = 0001.1001
+        ;;test13.j(58)   println(value);
 L96:
-        LD    HL,146
-L97:
-        CALL  writeLineStr
-L98:
-        ;;test13.j(54)   output(PCR, input(PCR) | 0x11);
-L99:
-        IN0  A,(07EH)
-L100:
-        OR    A,17
-L101:
-        OUT0  (07EH),A
-L102:
-        ;;test13.j(55) 
-L103:
-        ;;test13.j(56)   //temp test; move it somewhere else once it works
-L104:
-        ;;test13.j(57)   println("Enter 25, expect 0x0B"); //0001.1001 ^ 0001.0010 = 0000.1011
-L105:
-        LD    HL,147
-L106:
-        CALL  writeLineStr
-L107:
-        ;;test13.j(58)   output(PCR, input(PCR) ^ 0x12);
-L108:
-        IN0  A,(07EH)
-L109:
-        XOR   A,18
-L110:
-        OUT0  (07EH),A
-L111:
         ;;test13.j(59) 
-L112:
-        ;;test13.j(60)   /*
-L113:
-        ;;test13.j(61)   //byte constant expression + decimal constant
-L114:
-        ;;test13.j(62)   output(4 * 5 + 4, 23);
-L115:
-        ;;test13.j(63)   println(15);
-L116:
-        ;;test13.j(64)   */
-L117:
-        ;;test13.j(65) 
-L118:
-        ;;test13.j(66) /*
-L119:
-        ;;test13.j(67)   //hexadecimal constant
-L120:
-        ;;test13.j(68)   //IN0     A,(0x13)
-L121:
-        ;;test13.j(69)   println("Enter 16");
-L122:
-        ;;test13.j(70)   value = input(0x0F);
-L123:
-        ;;test13.j(71)   println(value);
-L124:
+L97:
+        ;;test13.j(60)   //byte constant expression
+L98:
+        ;;test13.j(61)   println("Enter 18");
+L99:
+        ;;test13.j(62)   value = input(7 + 5 * 2);
+L100:
+        ;;test13.j(63)   println(value);
+L101:
+        ;;test13.j(64) 
+L102:
+        ;;test13.j(65)   //final variable
+L103:
+        ;;test13.j(66)   //IN0     A,(0x13)
+L104:
+        ;;test13.j(67)   port = 0x11;
+L105:
+        ;;test13.j(68)   println("Enter 20");
+L106:
+        ;;test13.j(69)   value = input(port);
+L107:
+        ;;test13.j(70)   println(value);
+L108:
+        ;;test13.j(71) */
+L109:
         ;;test13.j(72) 
-L125:
-        ;;test13.j(73)   //byte constant expression
-L126:
-        ;;test13.j(74)   println("Enter 18");
-L127:
-        ;;test13.j(75)   value = input(7 + 5 * 2);
-L128:
-        ;;test13.j(76)   println(value);
-L129:
-        ;;test13.j(77) 
-L130:
-        ;;test13.j(78)   //final variable
-L131:
-        ;;test13.j(79)   //IN0     A,(0x13)
-L132:
-        ;;test13.j(80)   port = 0x11;
-L133:
-        ;;test13.j(81)   println("Enter 20");
-L134:
-        ;;test13.j(82)   value = input(port);
-L135:
-        ;;test13.j(83)   println(value);
-L136:
-        ;;test13.j(84) */
-L137:
-        ;;test13.j(85) 
-L138:
-        ;;test13.j(86)   println("Klaar");
-L139:
-        LD    HL,148
-L140:
+L110:
+        ;;test13.j(73)   println("Klaar");
+L111:
+        LD    HL,117
+L112:
         CALL  writeLineStr
-L141:
-        ;;test13.j(87) }
-L142:
+L113:
+        ;;test13.j(74) }
+L114:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L143:
+L115:
         .ASCIZ  "Enter 5"
-L144:
+L116:
         .ASCIZ  "Enter 11"
-L145:
-        .ASCIZ  "Enter 23, expect 0x14"
-L146:
-        .ASCIZ  "Enter 24, expect 0x19"
-L147:
-        .ASCIZ  "Enter 25, expect 0x0B"
-L148:
+L117:
         .ASCIZ  "Klaar"

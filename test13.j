@@ -45,19 +45,6 @@ class TestOutputInput {
   output(21, finalValue);
   println(22);
   
-  //temp test; move it somewhere else once it works
-  println("Enter 23, expect 0x14"); //0001.0111 & 0001.1100 = 0001.0100
-  final byte PCR = 0x7E;
-  output(PCR, input(PCR) & 0x1C);
-
-  //temp test; move it somewhere else once it works
-  println("Enter 24, expect 0x19"); //0001.1000 | 0001.0001 = 0001.1001
-  output(PCR, input(PCR) | 0x11);
-
-  //temp test; move it somewhere else once it works
-  println("Enter 25, expect 0x0B"); //0001.1001 ^ 0001.0010 = 0000.1011
-  output(PCR, input(PCR) ^ 0x12);
-
   /*
   //byte constant expression + decimal constant
   output(4 * 5 + 4, 23);
