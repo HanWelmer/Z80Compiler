@@ -4,13 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add bitwise NOT.
-//TODO Add logical OR, XOR and AND.
-//TODO Add logical NOT.
-//TODO Implement constantExpression.
-//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j.
-//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
-//TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
+//TODO Bug fix: test15.j: acc word/acc word; line 121, 128.
+//TODO Bug fix: error in z80 code when loading byte variable as second operand besides 16-bit accumulator; see test15.j line 73.
 //TODO Add function (parameter less; no global/local variables).
 //TODO Add parameter to function.
 //TODO Add import
@@ -22,6 +17,14 @@ import java.util.Stack;
 //TODO Refactor StringConstants.
 //TODO Fix runtime error: too many variables
 //TODO Add support for input data (see Z80Compiler.class; call to Interpreter).
+//TODO Merge comparison with expression.
+//TODO Add bitwise NOT.
+//TODO Add logical OR, XOR and AND.
+//TODO Add logical NOT.
+//TODO Implement constantExpression.
+//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j.
+//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
+//TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 
 /**
  * Compiler for the miniJava programming language.
