@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Bug fix: test15.j: acc word/acc word; line 121, 128.
 //TODO Bug fix: error in z80 code when loading byte variable as second operand besides 16-bit accumulator; see test15.j line 73.
 //TODO Add function (parameter less; no global/local variables).
 //TODO Add parameter to function.

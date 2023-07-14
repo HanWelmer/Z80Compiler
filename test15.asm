@@ -2847,16 +2847,19 @@ L763:
 L764:
         ;;test15.j(120)   //acc word/acc word
 L765:
-        ;;test15.j(121)   if (0x1234 & 0x0100 + 0x022C == 0x0224) println (64); else println (999);
+        ;;test15.j(121)   if (0x1000 + 0x0234 & 0x0100 + 0x022C == 0x0224) println (64); else println (999);
 L766:
-        LD    HL,4660
+        LD    HL,4096
 L767:
+        LD    DE,564
+        ADD   HL,DE
+L768:
         PUSH  HL
         LD    HL,256
-L768:
+L769:
         LD    DE,556
         ADD   HL,DE
-L769:
+L770:
         POP   DE
         PUSH  BC
         LD    B,A
@@ -2868,3851 +2871,2721 @@ L769:
         LD    L,A
         LD    A,B
         POP   BC
-L770:
+L771:
         LD    DE,548
         OR    A
         SBC   HL,DE
-L771:
-        JP    NZ,L775
 L772:
-        LD    A,64
+        JP    NZ,L776
 L773:
-        CALL  writeLineA
+        LD    A,64
 L774:
-        JP    L778
+        CALL  writeLineA
 L775:
-        LD    HL,999
+        JP    L779
 L776:
-        CALL  writeLineHL
+        LD    HL,999
 L777:
-        ;;test15.j(122)   if (0x1234 | 0x0100 + 0x022C == 0x133C) println (65); else println (999);
+        CALL  writeLineHL
 L778:
-        LD    HL,4660
+        ;;test15.j(122)   if (0x1000 + 0x0234 | 0x0100 + 0x022C == 0x133C) println (65); else println (999);
 L779:
-        PUSH  HL
-        LD    HL,256
+        LD    HL,4096
 L780:
-        LD    DE,556
+        LD    DE,564
         ADD   HL,DE
 L781:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        PUSH  HL
+        LD    HL,256
 L782:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,556
+        ADD   HL,DE
 L783:
-        JP    NZ,L787
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L784:
-        LD    A,65
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L785:
-        CALL  writeLineA
+        JP    NZ,L789
 L786:
-        JP    L790
+        LD    A,65
 L787:
-        LD    HL,999
+        CALL  writeLineA
 L788:
-        CALL  writeLineHL
+        JP    L792
 L789:
-        ;;test15.j(123)   if (0x1234 ^ 0x0100 + 0x022C == 0x1118) println (66); else println (999);
+        LD    HL,999
 L790:
-        LD    HL,4660
+        CALL  writeLineHL
 L791:
-        PUSH  HL
-        LD    HL,256
+        ;;test15.j(123)   if (0x1000 + 0x0234 ^ 0x0100 + 0x022C == 0x1118) println (66); else println (999);
 L792:
-        LD    DE,556
-        ADD   HL,DE
+        LD    HL,4096
 L793:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L794:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        PUSH  HL
+        LD    HL,256
 L795:
-        JP    NZ,L799
+        LD    DE,556
+        ADD   HL,DE
 L796:
-        LD    A,66
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L797:
-        CALL  writeLineA
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L798:
-        JP    L803
+        JP    NZ,L802
 L799:
-        LD    HL,999
+        LD    A,66
 L800:
-        CALL  writeLineHL
+        CALL  writeLineA
 L801:
-        ;;test15.j(124)   //acc byt/acc word
+        JP    L806
 L802:
-        ;;test15.j(125)   if (0x10 + 0x0C & 0x1000 + 0x0234 == 0x0014) println (67); else println (999);
+        LD    HL,999
 L803:
-        LD    A,16
+        CALL  writeLineHL
 L804:
-        ADD   A,12
+        ;;test15.j(124)   //acc byt/acc word
 L805:
-        LD    HL,4096
+        ;;test15.j(125)   if (0x10 + 0x0C & 0x1000 + 0x0234 == 0x0014) println (67); else println (999);
 L806:
-        LD    DE,564
-        ADD   HL,DE
+        LD    A,16
 L807:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L808:
-        LD    A,20
+        LD    HL,4096
 L809:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    DE,564
+        ADD   HL,DE
 L810:
-        JP    NZ,L814
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L811:
-        LD    A,67
+        LD    A,20
 L812:
-        CALL  writeLineA
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L813:
-        JP    L817
+        JP    NZ,L817
 L814:
-        LD    HL,999
+        LD    A,67
 L815:
-        CALL  writeLineHL
+        CALL  writeLineA
 L816:
-        ;;test15.j(126)   if (0x10 + 0x0C | 0x1000 + 0x0234 == 0x123C) println (68); else println (999);
+        JP    L820
 L817:
-        LD    A,16
+        LD    HL,999
 L818:
-        ADD   A,12
+        CALL  writeLineHL
 L819:
-        LD    HL,4096
+        ;;test15.j(126)   if (0x10 + 0x0C | 0x1000 + 0x0234 == 0x123C) println (68); else println (999);
 L820:
-        LD    DE,564
-        ADD   HL,DE
+        LD    A,16
 L821:
-        OR    A,L
-        LD    L,A
+        ADD   A,12
 L822:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    HL,4096
 L823:
-        JP    NZ,L827
+        LD    DE,564
+        ADD   HL,DE
 L824:
-        LD    A,68
+        OR    A,L
+        LD    L,A
 L825:
-        CALL  writeLineA
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L826:
-        JP    L830
+        JP    NZ,L830
 L827:
-        LD    HL,999
+        LD    A,68
 L828:
-        CALL  writeLineHL
+        CALL  writeLineA
 L829:
-        ;;test15.j(127)   if (0x10 + 0x0C ^ 0x1000 + 0x0234 == 0x1228) println (69); else println (999);
+        JP    L833
 L830:
-        LD    A,16
+        LD    HL,999
 L831:
-        ADD   A,12
+        CALL  writeLineHL
 L832:
-        LD    HL,4096
+        ;;test15.j(127)   if (0x10 + 0x0C ^ 0x1000 + 0x0234 == 0x1228) println (69); else println (999);
 L833:
-        LD    DE,564
-        ADD   HL,DE
+        LD    A,16
 L834:
-        XOR   A,L
-        LD    L,A
+        ADD   A,12
 L835:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    HL,4096
 L836:
-        JP    NZ,L840
+        LD    DE,564
+        ADD   HL,DE
 L837:
-        LD    A,69
+        XOR   A,L
+        LD    L,A
 L838:
-        CALL  writeLineA
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L839:
-        JP    L844
+        JP    NZ,L843
 L840:
-        LD    HL,999
+        LD    A,69
 L841:
-        CALL  writeLineHL
+        CALL  writeLineA
 L842:
-        ;;test15.j(128)   //acc word/acc byt
+        JP    L847
 L843:
-        ;;test15.j(129)   if (0x1234 & 0x10 + 0x0C == 0x0014) println (70); else println (999);
+        LD    HL,999
 L844:
-        LD    HL,4660
+        CALL  writeLineHL
 L845:
-        LD    A,16
+        ;;test15.j(128)   //acc word/acc byt
 L846:
-        ADD   A,12
+        ;;test15.j(129)   if (0x1000 + 0x0234 & 0x10 + 0x0C == 0x0014) println (70); else println (999);
 L847:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        LD    HL,4096
 L848:
-        LD    A,20
+        LD    DE,564
+        ADD   HL,DE
 L849:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,16
 L850:
-        JP    NZ,L854
+        ADD   A,12
 L851:
-        LD    A,70
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L852:
-        CALL  writeLineA
+        LD    A,20
 L853:
-        JP    L857
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L854:
-        LD    HL,999
+        JP    NZ,L858
 L855:
-        CALL  writeLineHL
+        LD    A,70
 L856:
-        ;;test15.j(130)   if (0x1234 | 0x10 + 0x0C == 0x123C) println (71); else println (999);
+        CALL  writeLineA
 L857:
-        LD    HL,4660
+        JP    L861
 L858:
-        LD    A,16
+        LD    HL,999
 L859:
-        ADD   A,12
+        CALL  writeLineHL
 L860:
-        OR    A,L
-        LD    L,A
+        ;;test15.j(130)   if (0x1000 + 0x0234 | 0x10 + 0x0C == 0x123C) println (71); else println (999);
 L861:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    HL,4096
 L862:
-        JP    NZ,L866
+        LD    DE,564
+        ADD   HL,DE
 L863:
-        LD    A,71
+        LD    A,16
 L864:
-        CALL  writeLineA
+        ADD   A,12
 L865:
-        JP    L869
+        OR    A,L
+        LD    L,A
 L866:
-        LD    HL,999
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L867:
-        CALL  writeLineHL
+        JP    NZ,L871
 L868:
-        ;;test15.j(131)   if (0x1234 ^ 0x10 + 0x0C == 0x1228) println (72); else println (999);
+        LD    A,71
 L869:
-        LD    HL,4660
+        CALL  writeLineA
 L870:
-        LD    A,16
+        JP    L874
 L871:
-        ADD   A,12
+        LD    HL,999
 L872:
-        XOR   A,L
-        LD    L,A
+        CALL  writeLineHL
 L873:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(131)   if (0x1000 + 0x0234 ^ 0x10 + 0x0C == 0x1228) println (72); else println (999);
 L874:
-        JP    NZ,L878
+        LD    HL,4096
 L875:
-        LD    A,72
+        LD    DE,564
+        ADD   HL,DE
 L876:
-        CALL  writeLineA
+        LD    A,16
 L877:
-        JP    L885
+        ADD   A,12
 L878:
-        LD    HL,999
+        XOR   A,L
+        LD    L,A
 L879:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L880:
-        ;;test15.j(132) 
+        JP    NZ,L884
 L881:
-        ;;test15.j(133)   //acc/var
+        LD    A,72
 L882:
-        ;;test15.j(134)   //*******
+        CALL  writeLineA
 L883:
-        ;;test15.j(135)   //acc byte/var byte
+        JP    L891
 L884:
-        ;;test15.j(136)   if (0x04 + 0x03 & b1 == 0x04) println (73); else println (999);
+        LD    HL,999
 L885:
-        LD    A,4
+        CALL  writeLineHL
 L886:
-        ADD   A,3
+        ;;test15.j(132) 
 L887:
-        LD    B,A
-        LD    A,(05000H)
-        AND   A,B
+        ;;test15.j(133)   //acc/var
 L888:
-        SUB   A,4
+        ;;test15.j(134)   //*******
 L889:
-        JP    NZ,L893
+        ;;test15.j(135)   //acc byte/var byte
 L890:
-        LD    A,73
+        ;;test15.j(136)   if (0x04 + 0x03 & b1 == 0x04) println (73); else println (999);
 L891:
-        CALL  writeLineA
+        LD    A,4
 L892:
-        JP    L896
+        ADD   A,3
 L893:
-        LD    HL,999
+        LD    B,A
+        LD    A,(05000H)
+        AND   A,B
 L894:
-        CALL  writeLineHL
+        SUB   A,4
 L895:
-        ;;test15.j(137)   if (0x04 + 0x03 | b1 == 0x1F) println (74); else println (999);
+        JP    NZ,L899
 L896:
-        LD    A,4
+        LD    A,73
 L897:
-        ADD   A,3
+        CALL  writeLineA
 L898:
-        LD    B,A
-        LD    A,(05000H)
-        OR    A,B
+        JP    L902
 L899:
-        SUB   A,31
+        LD    HL,999
 L900:
-        JP    NZ,L904
+        CALL  writeLineHL
 L901:
-        LD    A,74
+        ;;test15.j(137)   if (0x04 + 0x03 | b1 == 0x1F) println (74); else println (999);
 L902:
-        CALL  writeLineA
+        LD    A,4
 L903:
-        JP    L907
+        ADD   A,3
 L904:
-        LD    HL,999
+        LD    B,A
+        LD    A,(05000H)
+        OR    A,B
 L905:
-        CALL  writeLineHL
+        SUB   A,31
 L906:
-        ;;test15.j(138)   if (0x04 + 0x03 ^ b1 == 0x1B) println (75); else println (999);
+        JP    NZ,L910
 L907:
-        LD    A,4
+        LD    A,74
 L908:
-        ADD   A,3
+        CALL  writeLineA
 L909:
-        LD    B,A
-        LD    A,(05000H)
-        XOR   A,B
+        JP    L913
 L910:
-        SUB   A,27
+        LD    HL,999
 L911:
-        JP    NZ,L915
+        CALL  writeLineHL
 L912:
-        LD    A,75
+        ;;test15.j(138)   if (0x04 + 0x03 ^ b1 == 0x1B) println (75); else println (999);
 L913:
-        CALL  writeLineA
+        LD    A,4
 L914:
-        JP    L919
+        ADD   A,3
 L915:
-        LD    HL,999
+        LD    B,A
+        LD    A,(05000H)
+        XOR   A,B
 L916:
-        CALL  writeLineHL
+        SUB   A,27
 L917:
-        ;;test15.j(139)   //acc word/var word
+        JP    NZ,L921
 L918:
-        ;;test15.j(140)   if (0x1000 + 0x0234 & w1 == 0x0224) println (76); else println (999);
+        LD    A,75
 L919:
-        LD    HL,4096
+        CALL  writeLineA
 L920:
-        LD    DE,564
-        ADD   HL,DE
+        JP    L925
 L921:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L922:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L923:
-        JP    NZ,L927
+        ;;test15.j(139)   //acc word/var word
 L924:
-        LD    A,76
+        ;;test15.j(140)   if (0x1000 + 0x0234 & w1 == 0x0224) println (76); else println (999);
 L925:
-        CALL  writeLineA
+        LD    HL,4096
 L926:
-        JP    L930
+        LD    DE,564
+        ADD   HL,DE
 L927:
-        LD    HL,999
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L928:
-        CALL  writeLineHL
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L929:
-        ;;test15.j(141)   if (0x1000 + 0x0234 | w1 == 0x133C) println (77); else println (999);
+        JP    NZ,L933
 L930:
-        LD    HL,4096
+        LD    A,76
 L931:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L932:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L936
 L933:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L934:
-        JP    NZ,L938
+        CALL  writeLineHL
 L935:
-        LD    A,77
+        ;;test15.j(141)   if (0x1000 + 0x0234 | w1 == 0x133C) println (77); else println (999);
 L936:
-        CALL  writeLineA
+        LD    HL,4096
 L937:
-        JP    L941
+        LD    DE,564
+        ADD   HL,DE
 L938:
-        LD    HL,999
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L939:
-        CALL  writeLineHL
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L940:
-        ;;test15.j(142)   if (0x1000 + 0x0234 ^ w1 == 0x1118) println (78); else println (999);
+        JP    NZ,L944
 L941:
-        LD    HL,4096
+        LD    A,77
 L942:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L943:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L947
 L944:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L945:
-        JP    NZ,L949
+        CALL  writeLineHL
 L946:
-        LD    A,78
+        ;;test15.j(142)   if (0x1000 + 0x0234 ^ w1 == 0x1118) println (78); else println (999);
 L947:
-        CALL  writeLineA
+        LD    HL,4096
 L948:
-        JP    L953
+        LD    DE,564
+        ADD   HL,DE
 L949:
-        LD    HL,999
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L950:
-        CALL  writeLineHL
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L951:
-        ;;test15.j(143)   //acc byt/var word
+        JP    NZ,L955
 L952:
-        ;;test15.j(144)   if (0x10 + 0x0C & w2 == 0x0014) println (79); else println (999);
+        LD    A,78
 L953:
-        LD    A,16
+        CALL  writeLineA
 L954:
-        ADD   A,12
+        JP    L959
 L955:
-        LD    L,A
-        LD    H,0
+        LD    HL,999
 L956:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineHL
 L957:
-        LD    A,20
+        ;;test15.j(143)   //acc byt/var word
 L958:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(144)   if (0x10 + 0x0C & w2 == 0x0014) println (79); else println (999);
 L959:
-        JP    NZ,L963
+        LD    A,16
 L960:
-        LD    A,79
+        ADD   A,12
 L961:
-        CALL  writeLineA
+        LD    L,A
+        LD    H,0
 L962:
-        JP    L966
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L963:
-        LD    HL,999
+        LD    A,20
 L964:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L965:
-        ;;test15.j(145)   if (0x10 + 0x0C | w2 == 0x123C) println (80); else println (999);
+        JP    NZ,L969
 L966:
-        LD    A,16
+        LD    A,79
 L967:
-        ADD   A,12
+        CALL  writeLineA
 L968:
-        LD    L,A
-        LD    H,0
+        JP    L972
 L969:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L970:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L971:
-        JP    NZ,L975
+        ;;test15.j(145)   if (0x10 + 0x0C | w2 == 0x123C) println (80); else println (999);
 L972:
-        LD    A,80
+        LD    A,16
 L973:
-        CALL  writeLineA
+        ADD   A,12
 L974:
-        JP    L978
+        LD    L,A
+        LD    H,0
 L975:
-        LD    HL,999
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L976:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L977:
-        ;;test15.j(146)   if (0x10 + 0x0C ^ w2 == 0x1228) println (81); else println (999);
+        JP    NZ,L981
 L978:
-        LD    A,16
+        LD    A,80
 L979:
-        ADD   A,12
+        CALL  writeLineA
 L980:
-        LD    L,A
-        LD    H,0
+        JP    L984
 L981:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L982:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L983:
-        JP    NZ,L987
+        ;;test15.j(146)   if (0x10 + 0x0C ^ w2 == 0x1228) println (81); else println (999);
 L984:
-        LD    A,81
+        LD    A,16
 L985:
-        CALL  writeLineA
+        ADD   A,12
 L986:
-        JP    L991
+        LD    L,A
+        LD    H,0
 L987:
-        LD    HL,999
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L988:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L989:
-        ;;test15.j(147)   //acc word/var byt
+        JP    NZ,L993
 L990:
-        ;;test15.j(148)   if (0x1000 + 0x0234 & b1 == 0x0014) println (82); else println (999);
+        LD    A,81
 L991:
-        LD    HL,4096
+        CALL  writeLineA
 L992:
-        LD    DE,564
-        ADD   HL,DE
+        JP    L997
 L993:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L994:
-        LD    A,20
+        CALL  writeLineHL
 L995:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(147)   //acc word/var byt
 L996:
-        JP    NZ,L1000
+        ;;test15.j(148)   if (0x1000 + 0x0234 & b1 == 0x0014) println (82); else println (999);
 L997:
-        LD    A,82
+        LD    HL,4096
 L998:
-        CALL  writeLineA
+        LD    DE,564
+        ADD   HL,DE
 L999:
-        JP    L1003
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1000:
-        LD    HL,999
+        LD    A,20
 L1001:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1002:
-        ;;test15.j(149)   if (0x1000 + 0x0234 | b1 == 0x123C) println (83); else println (999);
+        JP    NZ,L1006
 L1003:
-        LD    HL,4096
+        LD    A,82
 L1004:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L1005:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1009
 L1006:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1007:
-        JP    NZ,L1011
+        CALL  writeLineHL
 L1008:
-        LD    A,83
+        ;;test15.j(149)   if (0x1000 + 0x0234 | b1 == 0x123C) println (83); else println (999);
 L1009:
-        CALL  writeLineA
+        LD    HL,4096
 L1010:
-        JP    L1014
+        LD    DE,564
+        ADD   HL,DE
 L1011:
-        LD    HL,999
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1012:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1013:
-        ;;test15.j(150)   if (0x1000 + 0x0234 ^ b1 == 0x1228) println (84); else println (999);
+        JP    NZ,L1017
 L1014:
-        LD    HL,4096
+        LD    A,83
 L1015:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L1016:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1020
 L1017:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1018:
-        JP    NZ,L1022
+        CALL  writeLineHL
 L1019:
-        LD    A,84
+        ;;test15.j(150)   if (0x1000 + 0x0234 ^ b1 == 0x1228) println (84); else println (999);
 L1020:
-        CALL  writeLineA
+        LD    HL,4096
 L1021:
-        JP    L1029
+        LD    DE,564
+        ADD   HL,DE
 L1022:
-        LD    HL,999
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1023:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1024:
-        ;;test15.j(151) 
+        JP    NZ,L1028
 L1025:
-        ;;test15.j(152)   //acc/final var
+        LD    A,84
 L1026:
-        ;;test15.j(153)   //*************
+        CALL  writeLineA
 L1027:
-        ;;test15.j(154)   //acc byte/final var byte
+        JP    L1035
 L1028:
-        ;;test15.j(155)   if (0x04 + 0x03 & fb1 == 0x04) println (85); else println (999);
+        LD    HL,999
 L1029:
-        LD    A,4
+        CALL  writeLineHL
 L1030:
-        ADD   A,3
+        ;;test15.j(151) 
 L1031:
-        AND   A,28
+        ;;test15.j(152)   //acc/final var
 L1032:
-        SUB   A,4
+        ;;test15.j(153)   //*************
 L1033:
-        JP    NZ,L1037
+        ;;test15.j(154)   //acc byte/final var byte
 L1034:
-        LD    A,85
+        ;;test15.j(155)   if (0x04 + 0x03 & fb1 == 0x04) println (85); else println (999);
 L1035:
-        CALL  writeLineA
+        LD    A,4
 L1036:
-        JP    L1040
+        ADD   A,3
 L1037:
-        LD    HL,999
+        AND   A,28
 L1038:
-        CALL  writeLineHL
+        SUB   A,4
 L1039:
-        ;;test15.j(156)   if (0x04 + 0x03 | fb1 == 0x1F) println (86); else println (999);
+        JP    NZ,L1043
 L1040:
-        LD    A,4
+        LD    A,85
 L1041:
-        ADD   A,3
+        CALL  writeLineA
 L1042:
-        OR    A,28
+        JP    L1046
 L1043:
-        SUB   A,31
+        LD    HL,999
 L1044:
-        JP    NZ,L1048
+        CALL  writeLineHL
 L1045:
-        LD    A,86
+        ;;test15.j(156)   if (0x04 + 0x03 | fb1 == 0x1F) println (86); else println (999);
 L1046:
-        CALL  writeLineA
-L1047:
-        JP    L1051
-L1048:
-        LD    HL,999
-L1049:
-        CALL  writeLineHL
-L1050:
-        ;;test15.j(157)   if (0x04 + 0x03 ^ fb1 == 0x1B) println (87); else println (999);
-L1051:
         LD    A,4
-L1052:
+L1047:
         ADD   A,3
+L1048:
+        OR    A,28
+L1049:
+        SUB   A,31
+L1050:
+        JP    NZ,L1054
+L1051:
+        LD    A,86
+L1052:
+        CALL  writeLineA
 L1053:
-        XOR   A,28
+        JP    L1057
 L1054:
-        SUB   A,27
+        LD    HL,999
 L1055:
-        JP    NZ,L1059
+        CALL  writeLineHL
 L1056:
-        LD    A,87
+        ;;test15.j(157)   if (0x04 + 0x03 ^ fb1 == 0x1B) println (87); else println (999);
 L1057:
-        CALL  writeLineA
+        LD    A,4
 L1058:
-        JP    L1063
+        ADD   A,3
 L1059:
-        LD    HL,999
+        XOR   A,28
 L1060:
-        CALL  writeLineHL
+        SUB   A,27
 L1061:
-        ;;test15.j(158)   //acc word/final var word
+        JP    NZ,L1065
 L1062:
-        ;;test15.j(159)   if (0x1000 + 0x0234 & fw1 == 0x0224) println (88); else println (999);
+        LD    A,87
 L1063:
-        LD    HL,4096
+        CALL  writeLineA
 L1064:
-        LD    DE,564
-        ADD   HL,DE
+        JP    L1069
 L1065:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1066:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1067:
-        JP    NZ,L1071
+        ;;test15.j(158)   //acc word/final var word
 L1068:
-        LD    A,88
+        ;;test15.j(159)   if (0x1000 + 0x0234 & fw1 == 0x0224) println (88); else println (999);
 L1069:
-        CALL  writeLineA
+        LD    HL,4096
 L1070:
-        JP    L1074
+        LD    DE,564
+        ADD   HL,DE
 L1071:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1072:
-        CALL  writeLineHL
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1073:
-        ;;test15.j(160)   if (0x1000 + 0x0234 | fw1 == 0x133C) println (89); else println (999);
+        JP    NZ,L1077
 L1074:
-        LD    HL,4096
+        LD    A,88
 L1075:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L1076:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1080
 L1077:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1078:
-        JP    NZ,L1082
+        CALL  writeLineHL
 L1079:
-        LD    A,89
+        ;;test15.j(160)   if (0x1000 + 0x0234 | fw1 == 0x133C) println (89); else println (999);
 L1080:
-        CALL  writeLineA
+        LD    HL,4096
 L1081:
-        JP    L1085
+        LD    DE,564
+        ADD   HL,DE
 L1082:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1083:
-        CALL  writeLineHL
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1084:
-        ;;test15.j(161)   if (0x1000 + 0x0234 ^ fw1 == 0x1118) println (90); else println (999);
+        JP    NZ,L1088
 L1085:
-        LD    HL,4096
+        LD    A,89
 L1086:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L1087:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1091
 L1088:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1089:
-        JP    NZ,L1093
+        CALL  writeLineHL
 L1090:
-        LD    A,90
+        ;;test15.j(161)   if (0x1000 + 0x0234 ^ fw1 == 0x1118) println (90); else println (999);
 L1091:
-        CALL  writeLineA
+        LD    HL,4096
 L1092:
-        JP    L1097
+        LD    DE,564
+        ADD   HL,DE
 L1093:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1094:
-        CALL  writeLineHL
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1095:
-        ;;test15.j(162)   //acc byt/final var word
+        JP    NZ,L1099
 L1096:
-        ;;test15.j(163)   if (0x10 + 0x0C & fw2 == 0x0014) println (91); else println (999);
+        LD    A,90
 L1097:
-        LD    A,16
+        CALL  writeLineA
 L1098:
-        ADD   A,12
+        JP    L1103
 L1099:
-        LD    L,A
-        LD    H,0
+        LD    HL,999
 L1100:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineHL
 L1101:
-        LD    A,20
+        ;;test15.j(162)   //acc byt/final var word
 L1102:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(163)   if (0x10 + 0x0C & fw2 == 0x0014) println (91); else println (999);
 L1103:
-        JP    NZ,L1107
+        LD    A,16
 L1104:
-        LD    A,91
+        ADD   A,12
 L1105:
-        CALL  writeLineA
+        LD    L,A
+        LD    H,0
 L1106:
-        JP    L1110
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1107:
-        LD    HL,999
+        LD    A,20
 L1108:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1109:
-        ;;test15.j(164)   if (0x10 + 0x0C | fw2 == 0x123C) println (92); else println (999);
+        JP    NZ,L1113
 L1110:
-        LD    A,16
+        LD    A,91
 L1111:
-        ADD   A,12
+        CALL  writeLineA
 L1112:
-        LD    L,A
-        LD    H,0
+        JP    L1116
 L1113:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1114:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1115:
-        JP    NZ,L1119
+        ;;test15.j(164)   if (0x10 + 0x0C | fw2 == 0x123C) println (92); else println (999);
 L1116:
-        LD    A,92
+        LD    A,16
 L1117:
-        CALL  writeLineA
+        ADD   A,12
 L1118:
-        JP    L1122
+        LD    L,A
+        LD    H,0
 L1119:
-        LD    HL,999
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1120:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1121:
-        ;;test15.j(165)   if (0x10 + 0x0C ^ fw2 == 0x1228) println (93); else println (999);
+        JP    NZ,L1125
 L1122:
-        LD    A,16
+        LD    A,92
 L1123:
-        ADD   A,12
+        CALL  writeLineA
 L1124:
-        LD    L,A
-        LD    H,0
+        JP    L1128
 L1125:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1126:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1127:
-        JP    NZ,L1131
+        ;;test15.j(165)   if (0x10 + 0x0C ^ fw2 == 0x1228) println (93); else println (999);
 L1128:
-        LD    A,93
+        LD    A,16
 L1129:
-        CALL  writeLineA
+        ADD   A,12
 L1130:
-        JP    L1135
+        LD    L,A
+        LD    H,0
 L1131:
-        LD    HL,999
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1132:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1133:
-        ;;test15.j(166)   //acc word/final var byt
+        JP    NZ,L1137
 L1134:
-        ;;test15.j(167)   if (0x1000 + 0x0234 & fb1 == 0x0014) println (94); else println (999);
+        LD    A,93
 L1135:
-        LD    HL,4096
+        CALL  writeLineA
 L1136:
-        LD    DE,564
-        ADD   HL,DE
+        JP    L1141
 L1137:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1138:
-        LD    A,20
+        CALL  writeLineHL
 L1139:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(166)   //acc word/final var byt
 L1140:
-        JP    NZ,L1144
+        ;;test15.j(167)   if (0x1000 + 0x0234 & fb1 == 0x0014) println (94); else println (999);
 L1141:
-        LD    A,94
+        LD    HL,4096
 L1142:
-        CALL  writeLineA
+        LD    DE,564
+        ADD   HL,DE
 L1143:
-        JP    L1147
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1144:
-        LD    HL,999
+        LD    A,20
 L1145:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1146:
-        ;;test15.j(168)   if (0x1000 + 0x0234 | fb1 == 0x123C) println (95); else println (999);
+        JP    NZ,L1150
 L1147:
-        LD    HL,4096
+        LD    A,94
 L1148:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L1149:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1153
 L1150:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1151:
-        JP    NZ,L1155
+        CALL  writeLineHL
 L1152:
-        LD    A,95
+        ;;test15.j(168)   if (0x1000 + 0x0234 | fb1 == 0x123C) println (95); else println (999);
 L1153:
-        CALL  writeLineA
+        LD    HL,4096
 L1154:
-        JP    L1158
+        LD    DE,564
+        ADD   HL,DE
 L1155:
-        LD    HL,999
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1156:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1157:
-        ;;test15.j(169)   if (0x1000 + 0x0234 ^ fb1 == 0x1228) println (96); else println (999);
+        JP    NZ,L1161
 L1158:
-        LD    HL,4096
+        LD    A,95
 L1159:
-        LD    DE,564
-        ADD   HL,DE
+        CALL  writeLineA
 L1160:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1164
 L1161:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1162:
-        JP    NZ,L1166
+        CALL  writeLineHL
 L1163:
-        LD    A,96
+        ;;test15.j(169)   if (0x1000 + 0x0234 ^ fb1 == 0x1228) println (96); else println (999);
 L1164:
-        CALL  writeLineA
+        LD    HL,4096
 L1165:
-        JP    L1173
+        LD    DE,564
+        ADD   HL,DE
 L1166:
-        LD    HL,999
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1167:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1168:
-        ;;test15.j(170) 
+        JP    NZ,L1172
 L1169:
-        ;;test15.j(171)   //var/constant
+        LD    A,96
 L1170:
-        ;;test15.j(172)   //************
+        CALL  writeLineA
 L1171:
-        ;;test15.j(173)   //var byte/constant byte
+        JP    L1179
 L1172:
-        ;;test15.j(174)   if (b2 & 0x1C == 0x04) println (97); else println (999);
+        LD    HL,999
 L1173:
-        LD    A,(05001H)
+        CALL  writeLineHL
 L1174:
-        AND   A,28
+        ;;test15.j(170) 
 L1175:
-        SUB   A,4
+        ;;test15.j(171)   //var/constant
 L1176:
-        JP    NZ,L1180
+        ;;test15.j(172)   //************
 L1177:
-        LD    A,97
+        ;;test15.j(173)   //var byte/constant byte
 L1178:
-        CALL  writeLineA
+        ;;test15.j(174)   if (b2 & 0x1C == 0x04) println (97); else println (999);
 L1179:
-        JP    L1183
+        LD    A,(05001H)
 L1180:
-        LD    HL,999
+        AND   A,28
 L1181:
-        CALL  writeLineHL
+        SUB   A,4
 L1182:
-        ;;test15.j(175)   if (b2 | 0x1C == 0x1F) println (98); else println (999);
+        JP    NZ,L1186
 L1183:
-        LD    A,(05001H)
+        LD    A,97
 L1184:
-        OR    A,28
+        CALL  writeLineA
 L1185:
-        SUB   A,31
+        JP    L1189
 L1186:
-        JP    NZ,L1190
+        LD    HL,999
 L1187:
-        LD    A,98
+        CALL  writeLineHL
 L1188:
-        CALL  writeLineA
+        ;;test15.j(175)   if (b2 | 0x1C == 0x1F) println (98); else println (999);
 L1189:
-        JP    L1193
+        LD    A,(05001H)
 L1190:
-        LD    HL,999
+        OR    A,28
 L1191:
-        CALL  writeLineHL
+        SUB   A,31
 L1192:
-        ;;test15.j(176)   if (b2 ^ 0x1C == 0x1B) println (99); else println (999);
+        JP    NZ,L1196
 L1193:
-        LD    A,(05001H)
+        LD    A,98
 L1194:
-        XOR   A,28
+        CALL  writeLineA
 L1195:
-        SUB   A,27
+        JP    L1199
 L1196:
-        JP    NZ,L1200
+        LD    HL,999
 L1197:
-        LD    A,99
+        CALL  writeLineHL
 L1198:
-        CALL  writeLineA
+        ;;test15.j(176)   if (b2 ^ 0x1C == 0x1B) println (99); else println (999);
 L1199:
-        JP    L1204
+        LD    A,(05001H)
 L1200:
-        LD    HL,999
+        XOR   A,28
 L1201:
-        CALL  writeLineHL
+        SUB   A,27
 L1202:
-        ;;test15.j(177)   //var word/constant word
+        JP    NZ,L1206
 L1203:
-        ;;test15.j(178)   if (w2 & 0x032C == 0x0224) println (100); else println (999);
+        LD    A,99
 L1204:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1205:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1210
 L1206:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1207:
-        JP    NZ,L1211
+        CALL  writeLineHL
 L1208:
-        LD    A,100
+        ;;test15.j(177)   //var word/constant word
 L1209:
-        CALL  writeLineA
+        ;;test15.j(178)   if (w2 & 0x032C == 0x0224) println (100); else println (999);
 L1210:
-        JP    L1214
+        LD    HL,(05004H)
 L1211:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1212:
-        CALL  writeLineHL
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1213:
-        ;;test15.j(179)   if (w2 | 0x032C == 0x133C) println (101); else println (999);
+        JP    NZ,L1217
 L1214:
-        LD    HL,(05004H)
+        LD    A,100
 L1215:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1216:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        JP    L1220
 L1217:
-        JP    NZ,L1221
+        LD    HL,999
 L1218:
-        LD    A,101
+        CALL  writeLineHL
 L1219:
-        CALL  writeLineA
+        ;;test15.j(179)   if (w2 | 0x032C == 0x133C) println (101); else println (999);
 L1220:
-        JP    L1224
+        LD    HL,(05004H)
 L1221:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1222:
-        CALL  writeLineHL
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1223:
-        ;;test15.j(180)   if (w2 ^ 0x032C == 0x1118) println (102); else println (999);
+        JP    NZ,L1227
 L1224:
-        LD    HL,(05004H)
+        LD    A,101
 L1225:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1226:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        JP    L1230
 L1227:
-        JP    NZ,L1231
+        LD    HL,999
 L1228:
-        LD    A,102
+        CALL  writeLineHL
 L1229:
-        CALL  writeLineA
+        ;;test15.j(180)   if (w2 ^ 0x032C == 0x1118) println (102); else println (999);
 L1230:
-        JP    L1235
+        LD    HL,(05004H)
 L1231:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1232:
-        CALL  writeLineHL
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1233:
-        ;;test15.j(181)   //var byt/constant word
+        JP    NZ,L1237
 L1234:
-        ;;test15.j(182)   if (b1 & 0x1234 == 0x0014) println (103); else println (999);
+        LD    A,102
 L1235:
-        LD    A,(05000H)
+        CALL  writeLineA
 L1236:
-        LD    L,A
-        LD    H,0
+        JP    L1241
 L1237:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1238:
-        LD    A,20
+        CALL  writeLineHL
 L1239:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(181)   //var byt/constant word
 L1240:
-        JP    NZ,L1244
+        ;;test15.j(182)   if (b1 & 0x1234 == 0x0014) println (103); else println (999);
 L1241:
-        LD    A,103
+        LD    A,(05000H)
 L1242:
-        CALL  writeLineA
+        LD    L,A
+        LD    H,0
 L1243:
-        JP    L1247
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1244:
-        LD    HL,999
+        LD    A,20
 L1245:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1246:
-        ;;test15.j(183)   if (b1 | 0x1234 == 0x123C) println (104); else println (999);
+        JP    NZ,L1250
 L1247:
-        LD    A,(05000H)
+        LD    A,103
 L1248:
-        LD    L,A
-        LD    H,0
+        CALL  writeLineA
 L1249:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1253
 L1250:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1251:
-        JP    NZ,L1255
+        CALL  writeLineHL
 L1252:
-        LD    A,104
+        ;;test15.j(183)   if (b1 | 0x1234 == 0x123C) println (104); else println (999);
 L1253:
-        CALL  writeLineA
+        LD    A,(05000H)
 L1254:
-        JP    L1258
+        LD    L,A
+        LD    H,0
 L1255:
-        LD    HL,999
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1256:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1257:
-        ;;test15.j(184)   if (b1 ^ 0x1234 == 0x1228) println (105); else println (999);
+        JP    NZ,L1261
 L1258:
-        LD    A,(05000H)
+        LD    A,104
 L1259:
-        LD    L,A
-        LD    H,0
+        CALL  writeLineA
 L1260:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1264
 L1261:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1262:
-        JP    NZ,L1266
+        CALL  writeLineHL
 L1263:
-        LD    A,105
+        ;;test15.j(184)   if (b1 ^ 0x1234 == 0x1228) println (105); else println (999);
 L1264:
-        CALL  writeLineA
+        LD    A,(05000H)
 L1265:
-        JP    L1270
+        LD    L,A
+        LD    H,0
 L1266:
-        LD    HL,999
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1267:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1268:
-        ;;test15.j(185)   //var word/constant byt
+        JP    NZ,L1272
 L1269:
-        ;;test15.j(186)   if (w2 & 0x1C == 0x0014) println (106); else println (999);
+        LD    A,105
 L1270:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1271:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1276
 L1272:
-        LD    A,20
+        LD    HL,999
 L1273:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1274:
-        JP    NZ,L1278
+        ;;test15.j(185)   //var word/constant byt
 L1275:
-        LD    A,106
+        ;;test15.j(186)   if (w2 & 0x1C == 0x0014) println (106); else println (999);
 L1276:
-        CALL  writeLineA
+        LD    HL,(05004H)
 L1277:
-        JP    L1281
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1278:
-        LD    HL,999
+        LD    A,20
 L1279:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1280:
-        ;;test15.j(187)   if (w2 | 0x1C == 0x123C) println (107); else println (999);
+        JP    NZ,L1284
 L1281:
-        LD    HL,(05004H)
+        LD    A,106
 L1282:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1283:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        JP    L1287
 L1284:
-        JP    NZ,L1288
+        LD    HL,999
 L1285:
-        LD    A,107
+        CALL  writeLineHL
 L1286:
-        CALL  writeLineA
+        ;;test15.j(187)   if (w2 | 0x1C == 0x123C) println (107); else println (999);
 L1287:
-        JP    L1291
+        LD    HL,(05004H)
 L1288:
-        LD    HL,999
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1289:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1290:
-        ;;test15.j(188)   if (w2 ^ 0x1C == 0x1228) println (108); else println (999);
+        JP    NZ,L1294
 L1291:
-        LD    HL,(05004H)
+        LD    A,107
 L1292:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1293:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        JP    L1297
 L1294:
-        JP    NZ,L1298
+        LD    HL,999
 L1295:
-        LD    A,108
+        CALL  writeLineHL
 L1296:
-        CALL  writeLineA
+        ;;test15.j(188)   if (w2 ^ 0x1C == 0x1228) println (108); else println (999);
 L1297:
-        JP    L1305
+        LD    HL,(05004H)
 L1298:
-        LD    HL,999
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1299:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1300:
-        ;;test15.j(189) 
+        JP    NZ,L1304
 L1301:
-        ;;test15.j(190)   //var/acc
+        LD    A,108
 L1302:
-        ;;test15.j(191)   //*******
+        CALL  writeLineA
 L1303:
-        ;;test15.j(192)   //var byte/acc byte
+        JP    L1311
 L1304:
-        ;;test15.j(193)   if (b2 & (0x10 + 0x0C) == 0x04) println (109); else println (999);
+        LD    HL,999
 L1305:
-        LD    A,(05001H)
+        CALL  writeLineHL
 L1306:
-        PUSH  AF
-        LD    A,16
+        ;;test15.j(189) 
 L1307:
-        ADD   A,12
+        ;;test15.j(190)   //var/acc
 L1308:
-        POP   BC
-        AND   A,B
+        ;;test15.j(191)   //*******
 L1309:
-        SUB   A,4
+        ;;test15.j(192)   //var byte/acc byte
 L1310:
-        JP    NZ,L1314
+        ;;test15.j(193)   if (b2 & (0x10 + 0x0C) == 0x04) println (109); else println (999);
 L1311:
-        LD    A,109
+        LD    A,(05001H)
 L1312:
-        CALL  writeLineA
+        PUSH  AF
+        LD    A,16
 L1313:
-        JP    L1317
+        ADD   A,12
 L1314:
-        LD    HL,999
+        POP   BC
+        AND   A,B
 L1315:
-        CALL  writeLineHL
+        SUB   A,4
 L1316:
-        ;;test15.j(194)   if (b2 | (0x10 + 0x0C) == 0x1F) println (110); else println (999);
+        JP    NZ,L1320
 L1317:
-        LD    A,(05001H)
+        LD    A,109
 L1318:
-        PUSH  AF
-        LD    A,16
+        CALL  writeLineA
 L1319:
-        ADD   A,12
+        JP    L1323
 L1320:
-        POP   BC
-        OR    A,B
+        LD    HL,999
 L1321:
-        SUB   A,31
+        CALL  writeLineHL
 L1322:
-        JP    NZ,L1326
+        ;;test15.j(194)   if (b2 | (0x10 + 0x0C) == 0x1F) println (110); else println (999);
 L1323:
-        LD    A,110
+        LD    A,(05001H)
 L1324:
-        CALL  writeLineA
+        PUSH  AF
+        LD    A,16
 L1325:
-        JP    L1329
+        ADD   A,12
 L1326:
-        LD    HL,999
+        POP   BC
+        OR    A,B
 L1327:
-        CALL  writeLineHL
+        SUB   A,31
 L1328:
-        ;;test15.j(195)   if (b2 ^ (0x10 + 0x0C) == 0x1B) println (111); else println (999);
+        JP    NZ,L1332
 L1329:
-        LD    A,(05001H)
+        LD    A,110
 L1330:
-        PUSH  AF
-        LD    A,16
+        CALL  writeLineA
 L1331:
-        ADD   A,12
+        JP    L1335
 L1332:
-        POP   BC
-        XOR   A,B
+        LD    HL,999
 L1333:
-        SUB   A,27
+        CALL  writeLineHL
 L1334:
-        JP    NZ,L1338
+        ;;test15.j(195)   if (b2 ^ (0x10 + 0x0C) == 0x1B) println (111); else println (999);
 L1335:
-        LD    A,111
+        LD    A,(05001H)
 L1336:
-        CALL  writeLineA
+        PUSH  AF
+        LD    A,16
 L1337:
-        JP    L1342
+        ADD   A,12
 L1338:
-        LD    HL,999
+        POP   BC
+        XOR   A,B
 L1339:
-        CALL  writeLineHL
+        SUB   A,27
 L1340:
-        ;;test15.j(196)   //var word/acc word
+        JP    NZ,L1344
 L1341:
-        ;;test15.j(197)   if (w2 & 0x0100 + 0x022C == 0x0224) println (112); else println (999);
+        LD    A,111
 L1342:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1343:
-        PUSH  HL
-        LD    HL,256
+        JP    L1348
 L1344:
-        LD    DE,556
-        ADD   HL,DE
+        LD    HL,999
 L1345:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineHL
 L1346:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(196)   //var word/acc word
 L1347:
-        JP    NZ,L1351
+        ;;test15.j(197)   if (w2 & 0x0100 + 0x022C == 0x0224) println (112); else println (999);
 L1348:
-        LD    A,112
+        LD    HL,(05004H)
 L1349:
-        CALL  writeLineA
+        PUSH  HL
+        LD    HL,256
 L1350:
-        JP    L1354
+        LD    DE,556
+        ADD   HL,DE
 L1351:
-        LD    HL,999
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1352:
-        CALL  writeLineHL
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1353:
-        ;;test15.j(198)   if (w2 | 0x0100 + 0x022C == 0x133C) println (113); else println (999);
+        JP    NZ,L1357
 L1354:
-        LD    HL,(05004H)
+        LD    A,112
 L1355:
-        PUSH  HL
-        LD    HL,256
+        CALL  writeLineA
 L1356:
-        LD    DE,556
-        ADD   HL,DE
+        JP    L1360
 L1357:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1358:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1359:
-        JP    NZ,L1363
+        ;;test15.j(198)   if (w2 | 0x0100 + 0x022C == 0x133C) println (113); else println (999);
 L1360:
-        LD    A,113
+        LD    HL,(05004H)
 L1361:
-        CALL  writeLineA
+        PUSH  HL
+        LD    HL,256
 L1362:
-        JP    L1366
+        LD    DE,556
+        ADD   HL,DE
 L1363:
-        LD    HL,999
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1364:
-        CALL  writeLineHL
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1365:
-        ;;test15.j(199)   if (w2 ^ 0x0100 + 0x022C == 0x1118) println (114); else println (999);
+        JP    NZ,L1369
 L1366:
-        LD    HL,(05004H)
+        LD    A,113
 L1367:
-        PUSH  HL
-        LD    HL,256
+        CALL  writeLineA
 L1368:
-        LD    DE,556
-        ADD   HL,DE
+        JP    L1372
 L1369:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1370:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1371:
-        JP    NZ,L1375
+        ;;test15.j(199)   if (w2 ^ 0x0100 + 0x022C == 0x1118) println (114); else println (999);
 L1372:
-        LD    A,114
+        LD    HL,(05004H)
 L1373:
-        CALL  writeLineA
+        PUSH  HL
+        LD    HL,256
 L1374:
-        JP    L1379
+        LD    DE,556
+        ADD   HL,DE
 L1375:
-        LD    HL,999
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1376:
-        CALL  writeLineHL
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1377:
-        ;;test15.j(200)   //var byt/acc word
+        JP    NZ,L1381
 L1378:
-        ;;test15.j(201)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (115); else println (999);
+        LD    A,114
 L1379:
-        LD    A,(05000H)
+        CALL  writeLineA
 L1380:
-        LD    HL,4096
+        JP    L1385
 L1381:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,999
 L1382:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        CALL  writeLineHL
 L1383:
-        LD    A,20
+        ;;test15.j(200)   //var byt/acc word
 L1384:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(201)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (115); else println (999);
 L1385:
-        JP    NZ,L1389
+        LD    A,(05000H)
 L1386:
-        LD    A,115
+        LD    HL,4096
 L1387:
-        CALL  writeLineA
+        LD    DE,564
+        ADD   HL,DE
 L1388:
-        JP    L1392
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L1389:
-        LD    HL,999
+        LD    A,20
 L1390:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1391:
-        ;;test15.j(202)   if (b1 | 0x1000 + 0x0234 == 0x123C) println (116); else println (999);
+        JP    NZ,L1395
 L1392:
-        LD    A,(05000H)
+        LD    A,115
 L1393:
-        LD    HL,4096
+        CALL  writeLineA
 L1394:
-        LD    DE,564
-        ADD   HL,DE
+        JP    L1398
 L1395:
-        OR    A,L
-        LD    L,A
+        LD    HL,999
 L1396:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1397:
-        JP    NZ,L1401
+        ;;test15.j(202)   if (b1 | 0x1000 + 0x0234 == 0x123C) println (116); else println (999);
 L1398:
-        LD    A,116
+        LD    A,(05000H)
 L1399:
-        CALL  writeLineA
+        LD    HL,4096
 L1400:
-        JP    L1404
+        LD    DE,564
+        ADD   HL,DE
 L1401:
-        LD    HL,999
+        OR    A,L
+        LD    L,A
 L1402:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1403:
-        ;;test15.j(203)   if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (117); else println (999);
+        JP    NZ,L1407
 L1404:
-        LD    A,(05000H)
+        LD    A,116
 L1405:
-        LD    HL,4096
+        CALL  writeLineA
 L1406:
-        LD    DE,564
-        ADD   HL,DE
+        JP    L1410
 L1407:
-        XOR   A,L
-        LD    L,A
+        LD    HL,999
 L1408:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1409:
-        JP    NZ,L1413
+        ;;test15.j(203)   if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (117); else println (999);
 L1410:
-        LD    A,117
+        LD    A,(05000H)
 L1411:
-        CALL  writeLineA
+        LD    HL,4096
 L1412:
-        JP    L1417
+        LD    DE,564
+        ADD   HL,DE
 L1413:
-        LD    HL,999
+        XOR   A,L
+        LD    L,A
 L1414:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1415:
-        ;;test15.j(204)   //var word/acc byt
+        JP    NZ,L1419
 L1416:
-        ;;test15.j(205)   if (w2 & 0x10 + 0x0C == 0x0014) println (118); else println (999);
+        LD    A,117
 L1417:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1418:
-        LD    A,16
+        JP    L1423
 L1419:
-        ADD   A,12
+        LD    HL,999
 L1420:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        CALL  writeLineHL
 L1421:
-        LD    A,20
+        ;;test15.j(204)   //var word/acc byt
 L1422:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(205)   if (w2 & 0x10 + 0x0C == 0x0014) println (118); else println (999);
 L1423:
-        JP    NZ,L1427
+        LD    HL,(05004H)
 L1424:
-        LD    A,118
+        LD    A,16
 L1425:
-        CALL  writeLineA
+        ADD   A,12
 L1426:
-        JP    L1430
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L1427:
-        LD    HL,999
+        LD    A,20
 L1428:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1429:
-        ;;test15.j(206)   if (w2 | 0x10 + 0x0C == 0x123C) println (119); else println (999);
+        JP    NZ,L1433
 L1430:
-        LD    HL,(05004H)
+        LD    A,118
 L1431:
-        LD    A,16
+        CALL  writeLineA
 L1432:
-        ADD   A,12
+        JP    L1436
 L1433:
-        OR    A,L
-        LD    L,A
+        LD    HL,999
 L1434:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1435:
-        JP    NZ,L1439
+        ;;test15.j(206)   if (w2 | 0x10 + 0x0C == 0x123C) println (119); else println (999);
 L1436:
-        LD    A,119
+        LD    HL,(05004H)
 L1437:
-        CALL  writeLineA
+        LD    A,16
 L1438:
-        JP    L1442
+        ADD   A,12
 L1439:
-        LD    HL,999
+        OR    A,L
+        LD    L,A
 L1440:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1441:
-        ;;test15.j(207)   if (w2 ^ 0x10 + 0x0C == 0x1228) println (120); else println (999);
+        JP    NZ,L1445
 L1442:
-        LD    HL,(05004H)
+        LD    A,119
 L1443:
-        LD    A,16
+        CALL  writeLineA
 L1444:
-        ADD   A,12
+        JP    L1448
 L1445:
-        XOR   A,L
-        LD    L,A
+        LD    HL,999
 L1446:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1447:
-        JP    NZ,L1451
+        ;;test15.j(207)   if (w2 ^ 0x10 + 0x0C == 0x1228) println (120); else println (999);
 L1448:
-        LD    A,120
+        LD    HL,(05004H)
 L1449:
-        CALL  writeLineA
+        LD    A,16
 L1450:
-        JP    L1458
+        ADD   A,12
 L1451:
-        LD    HL,999
+        XOR   A,L
+        LD    L,A
 L1452:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1453:
-        ;;test15.j(208) 
+        JP    NZ,L1457
 L1454:
-        ;;test15.j(209)   //var/var
+        LD    A,120
 L1455:
-        ;;test15.j(210)   //*******
+        CALL  writeLineA
 L1456:
-        ;;test15.j(211)   //var byte/var byte
+        JP    L1464
 L1457:
-        ;;test15.j(212)   if (b2 & b1 == 0x04) println (121); else println (999);
+        LD    HL,999
 L1458:
-        LD    A,(05001H)
+        CALL  writeLineHL
 L1459:
-        LD    B,A
-        LD    A,(05000H)
-        AND   A,B
+        ;;test15.j(208) 
 L1460:
-        SUB   A,4
+        ;;test15.j(209)   //var/var
 L1461:
-        JP    NZ,L1465
+        ;;test15.j(210)   //*******
 L1462:
-        LD    A,121
+        ;;test15.j(211)   //var byte/var byte
 L1463:
-        CALL  writeLineA
+        ;;test15.j(212)   if (b2 & b1 == 0x04) println (121); else println (999);
 L1464:
-        JP    L1468
+        LD    A,(05001H)
 L1465:
-        LD    HL,999
+        LD    B,A
+        LD    A,(05000H)
+        AND   A,B
 L1466:
-        CALL  writeLineHL
+        SUB   A,4
 L1467:
-        ;;test15.j(213)   if (b2 | b1 == 0x1F) println (122); else println (999);
+        JP    NZ,L1471
 L1468:
-        LD    A,(05001H)
+        LD    A,121
 L1469:
-        LD    B,A
-        LD    A,(05000H)
-        OR    A,B
+        CALL  writeLineA
 L1470:
-        SUB   A,31
+        JP    L1474
 L1471:
-        JP    NZ,L1475
+        LD    HL,999
 L1472:
-        LD    A,122
+        CALL  writeLineHL
 L1473:
-        CALL  writeLineA
+        ;;test15.j(213)   if (b2 | b1 == 0x1F) println (122); else println (999);
 L1474:
-        JP    L1478
+        LD    A,(05001H)
 L1475:
-        LD    HL,999
+        LD    B,A
+        LD    A,(05000H)
+        OR    A,B
 L1476:
-        CALL  writeLineHL
+        SUB   A,31
 L1477:
-        ;;test15.j(214)   if (b2 ^ b1 == 0x1B) println (123); else println (999);
+        JP    NZ,L1481
 L1478:
-        LD    A,(05001H)
+        LD    A,122
 L1479:
-        LD    B,A
-        LD    A,(05000H)
-        XOR   A,B
+        CALL  writeLineA
 L1480:
-        SUB   A,27
+        JP    L1484
 L1481:
-        JP    NZ,L1485
+        LD    HL,999
 L1482:
-        LD    A,123
+        CALL  writeLineHL
 L1483:
-        CALL  writeLineA
+        ;;test15.j(214)   if (b2 ^ b1 == 0x1B) println (123); else println (999);
 L1484:
-        JP    L1489
+        LD    A,(05001H)
 L1485:
-        LD    HL,999
+        LD    B,A
+        LD    A,(05000H)
+        XOR   A,B
 L1486:
-        CALL  writeLineHL
+        SUB   A,27
 L1487:
-        ;;test15.j(215)   //var word/var word
+        JP    NZ,L1491
 L1488:
-        ;;test15.j(216)   if (w2 & w1 == 0x0224) println (124); else println (999);
+        LD    A,123
 L1489:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1490:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1495
 L1491:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1492:
-        JP    NZ,L1496
+        CALL  writeLineHL
 L1493:
-        LD    A,124
+        ;;test15.j(215)   //var word/var word
 L1494:
-        CALL  writeLineA
+        ;;test15.j(216)   if (w2 & w1 == 0x0224) println (124); else println (999);
 L1495:
-        JP    L1499
+        LD    HL,(05004H)
 L1496:
-        LD    HL,999
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1497:
-        CALL  writeLineHL
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1498:
-        ;;test15.j(217)   if (w2 | w1 == 0x133C) println (125); else println (999);
+        JP    NZ,L1502
 L1499:
-        LD    HL,(05004H)
+        LD    A,124
 L1500:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1501:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        JP    L1505
 L1502:
-        JP    NZ,L1506
+        LD    HL,999
 L1503:
-        LD    A,125
+        CALL  writeLineHL
 L1504:
-        CALL  writeLineA
+        ;;test15.j(217)   if (w2 | w1 == 0x133C) println (125); else println (999);
 L1505:
-        JP    L1509
+        LD    HL,(05004H)
 L1506:
-        LD    HL,999
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1507:
-        CALL  writeLineHL
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1508:
-        ;;test15.j(218)   if (w2 ^ w1 == 0x1118) println (126); else println (999);
+        JP    NZ,L1512
 L1509:
-        LD    HL,(05004H)
+        LD    A,125
 L1510:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1511:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        JP    L1515
 L1512:
-        JP    NZ,L1516
+        LD    HL,999
 L1513:
-        LD    A,126
+        CALL  writeLineHL
 L1514:
-        CALL  writeLineA
+        ;;test15.j(218)   if (w2 ^ w1 == 0x1118) println (126); else println (999);
 L1515:
-        JP    L1520
+        LD    HL,(05004H)
 L1516:
-        LD    HL,999
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1517:
-        CALL  writeLineHL
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1518:
-        ;;test15.j(219)   //var byt/var word
+        JP    NZ,L1522
 L1519:
-        ;;test15.j(220)   if (b1 & w2 == 0x0014) println (127); else println (999);
+        LD    A,126
 L1520:
-        LD    A,(05000H)
+        CALL  writeLineA
 L1521:
-        LD    L,A
-        LD    H,0
+        JP    L1526
 L1522:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1523:
-        LD    A,20
+        CALL  writeLineHL
 L1524:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(219)   //var byt/var word
 L1525:
-        JP    NZ,L1529
+        ;;test15.j(220)   if (b1 & w2 == 0x0014) println (127); else println (999);
 L1526:
-        LD    A,127
+        LD    A,(05000H)
 L1527:
-        CALL  writeLineA
+        LD    L,A
+        LD    H,0
 L1528:
-        JP    L1532
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1529:
-        LD    HL,999
+        LD    A,20
 L1530:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1531:
-        ;;test15.j(221)   if (b1 | w2 == 0x123C) println (128); else println (999);
+        JP    NZ,L1535
 L1532:
-        LD    A,(05000H)
+        LD    A,127
 L1533:
-        LD    L,A
-        LD    H,0
+        CALL  writeLineA
 L1534:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1538
 L1535:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1536:
-        JP    NZ,L1540
+        CALL  writeLineHL
 L1537:
-        LD    A,128
+        ;;test15.j(221)   if (b1 | w2 == 0x123C) println (128); else println (999);
 L1538:
-        CALL  writeLineA
+        LD    A,(05000H)
 L1539:
-        JP    L1543
+        LD    L,A
+        LD    H,0
 L1540:
-        LD    HL,999
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1541:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1542:
-        ;;test15.j(222)   if (b1 ^ w2 == 0x1228) println (129); else println (999);
+        JP    NZ,L1546
 L1543:
-        LD    A,(05000H)
+        LD    A,128
 L1544:
-        LD    L,A
-        LD    H,0
+        CALL  writeLineA
 L1545:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1549
 L1546:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1547:
-        JP    NZ,L1551
+        CALL  writeLineHL
 L1548:
-        LD    A,129
+        ;;test15.j(222)   if (b1 ^ w2 == 0x1228) println (129); else println (999);
 L1549:
-        CALL  writeLineA
+        LD    A,(05000H)
 L1550:
-        JP    L1555
+        LD    L,A
+        LD    H,0
 L1551:
-        LD    HL,999
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1552:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1553:
-        ;;test15.j(223)   //var word/var byt
+        JP    NZ,L1557
 L1554:
-        ;;test15.j(224)   if (w2 & b1 == 0x0014) println (130); else println (999);
+        LD    A,129
 L1555:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1556:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1561
 L1557:
-        LD    A,20
+        LD    HL,999
 L1558:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1559:
-        JP    NZ,L1563
+        ;;test15.j(223)   //var word/var byt
 L1560:
-        LD    A,130
+        ;;test15.j(224)   if (w2 & b1 == 0x0014) println (130); else println (999);
 L1561:
-        CALL  writeLineA
+        LD    HL,(05004H)
 L1562:
-        JP    L1566
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1563:
-        LD    HL,999
+        LD    A,20
 L1564:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1565:
-        ;;test15.j(225)   if (w2 | b1 == 0x123C) println (131); else println (999);
+        JP    NZ,L1569
 L1566:
-        LD    HL,(05004H)
+        LD    A,130
 L1567:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1568:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        JP    L1572
 L1569:
-        JP    NZ,L1573
+        LD    HL,999
 L1570:
-        LD    A,131
+        CALL  writeLineHL
 L1571:
-        CALL  writeLineA
+        ;;test15.j(225)   if (w2 | b1 == 0x123C) println (131); else println (999);
 L1572:
-        JP    L1576
+        LD    HL,(05004H)
 L1573:
-        LD    HL,999
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1574:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1575:
-        ;;test15.j(226)   if (w2 ^ b1 == 0x1228) println (132); else println (999);
+        JP    NZ,L1579
 L1576:
-        LD    HL,(05004H)
+        LD    A,131
 L1577:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1578:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        JP    L1582
 L1579:
-        JP    NZ,L1583
+        LD    HL,999
 L1580:
-        LD    A,132
+        CALL  writeLineHL
 L1581:
-        CALL  writeLineA
+        ;;test15.j(226)   if (w2 ^ b1 == 0x1228) println (132); else println (999);
 L1582:
-        JP    L1590
+        LD    HL,(05004H)
 L1583:
-        LD    HL,999
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1584:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1585:
-        ;;test15.j(227) 
+        JP    NZ,L1589
 L1586:
-        ;;test15.j(228)   //var/final var
+        LD    A,132
 L1587:
-        ;;test15.j(229)   //*************
+        CALL  writeLineA
 L1588:
-        ;;test15.j(230)   //var byte/final var byte
+        JP    L1596
 L1589:
-        ;;test15.j(231)   if (b2 & fb1 == 0x04) println (133); else println (999);
+        LD    HL,999
 L1590:
-        LD    A,(05001H)
+        CALL  writeLineHL
 L1591:
-        AND   A,28
+        ;;test15.j(227) 
 L1592:
-        SUB   A,4
+        ;;test15.j(228)   //var/final var
 L1593:
-        JP    NZ,L1597
+        ;;test15.j(229)   //*************
 L1594:
-        LD    A,133
+        ;;test15.j(230)   //var byte/final var byte
 L1595:
-        CALL  writeLineA
+        ;;test15.j(231)   if (b2 & fb1 == 0x04) println (133); else println (999);
 L1596:
-        JP    L1600
+        LD    A,(05001H)
 L1597:
-        LD    HL,999
+        AND   A,28
 L1598:
-        CALL  writeLineHL
+        SUB   A,4
 L1599:
-        ;;test15.j(232)   if (b2 | fb1 == 0x1F) println (134); else println (999);
+        JP    NZ,L1603
 L1600:
-        LD    A,(05001H)
+        LD    A,133
 L1601:
-        OR    A,28
+        CALL  writeLineA
 L1602:
-        SUB   A,31
+        JP    L1606
 L1603:
-        JP    NZ,L1607
+        LD    HL,999
 L1604:
-        LD    A,134
+        CALL  writeLineHL
 L1605:
-        CALL  writeLineA
+        ;;test15.j(232)   if (b2 | fb1 == 0x1F) println (134); else println (999);
 L1606:
-        JP    L1610
+        LD    A,(05001H)
 L1607:
-        LD    HL,999
+        OR    A,28
 L1608:
-        CALL  writeLineHL
+        SUB   A,31
 L1609:
-        ;;test15.j(233)   if (b2 ^ fb1 == 0x1B) println (135); else println (999);
+        JP    NZ,L1613
 L1610:
-        LD    A,(05001H)
+        LD    A,134
 L1611:
-        XOR   A,28
+        CALL  writeLineA
 L1612:
-        SUB   A,27
+        JP    L1616
 L1613:
-        JP    NZ,L1617
+        LD    HL,999
 L1614:
-        LD    A,135
+        CALL  writeLineHL
 L1615:
-        CALL  writeLineA
+        ;;test15.j(233)   if (b2 ^ fb1 == 0x1B) println (135); else println (999);
 L1616:
-        JP    L1621
+        LD    A,(05001H)
 L1617:
-        LD    HL,999
+        XOR   A,28
 L1618:
-        CALL  writeLineHL
+        SUB   A,27
 L1619:
-        ;;test15.j(234)   //var word/final var word
+        JP    NZ,L1623
 L1620:
-        ;;test15.j(235)   if (w2 & fw1 == 0x0224) println (136); else println (999);
+        LD    A,135
 L1621:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1622:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1627
 L1623:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1624:
-        JP    NZ,L1628
+        CALL  writeLineHL
 L1625:
-        LD    A,136
+        ;;test15.j(234)   //var word/final var word
 L1626:
-        CALL  writeLineA
+        ;;test15.j(235)   if (w2 & fw1 == 0x0224) println (136); else println (999);
 L1627:
-        JP    L1631
+        LD    HL,(05004H)
 L1628:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1629:
-        CALL  writeLineHL
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1630:
-        ;;test15.j(236)   if (w2 | fw1 == 0x133C) println (137); else println (999);
+        JP    NZ,L1634
 L1631:
-        LD    HL,(05004H)
+        LD    A,136
 L1632:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1633:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        JP    L1637
 L1634:
-        JP    NZ,L1638
+        LD    HL,999
 L1635:
-        LD    A,137
+        CALL  writeLineHL
 L1636:
-        CALL  writeLineA
+        ;;test15.j(236)   if (w2 | fw1 == 0x133C) println (137); else println (999);
 L1637:
-        JP    L1641
+        LD    HL,(05004H)
 L1638:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1639:
-        CALL  writeLineHL
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1640:
-        ;;test15.j(237)   if (w2 ^ fw1 == 0x1118) println (138); else println (999);
+        JP    NZ,L1644
 L1641:
-        LD    HL,(05004H)
+        LD    A,137
 L1642:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1643:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        JP    L1647
 L1644:
-        JP    NZ,L1648
+        LD    HL,999
 L1645:
-        LD    A,138
+        CALL  writeLineHL
 L1646:
-        CALL  writeLineA
+        ;;test15.j(237)   if (w2 ^ fw1 == 0x1118) println (138); else println (999);
 L1647:
-        JP    L1652
+        LD    HL,(05004H)
 L1648:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1649:
-        CALL  writeLineHL
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1650:
-        ;;test15.j(238)   //var byt/final var word
+        JP    NZ,L1654
 L1651:
-        ;;test15.j(239)   if (b1 & fw2 == 0x0014) println (139); else println (999);
+        LD    A,138
 L1652:
-        LD    A,(05000H)
+        CALL  writeLineA
 L1653:
-        LD    L,A
-        LD    H,0
+        JP    L1658
 L1654:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L1655:
-        LD    A,20
+        CALL  writeLineHL
 L1656:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        ;;test15.j(238)   //var byt/final var word
 L1657:
-        JP    NZ,L1661
+        ;;test15.j(239)   if (b1 & fw2 == 0x0014) println (139); else println (999);
 L1658:
-        LD    A,139
+        LD    A,(05000H)
 L1659:
-        CALL  writeLineA
+        LD    L,A
+        LD    H,0
 L1660:
-        JP    L1664
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1661:
-        LD    HL,999
+        LD    A,20
 L1662:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1663:
-        ;;test15.j(240)   if (b1 | fw2 == 0x123C) println (140); else println (999);
+        JP    NZ,L1667
 L1664:
-        LD    A,(05000H)
+        LD    A,139
 L1665:
-        LD    L,A
-        LD    H,0
+        CALL  writeLineA
 L1666:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1670
 L1667:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1668:
-        JP    NZ,L1672
+        CALL  writeLineHL
 L1669:
-        LD    A,140
+        ;;test15.j(240)   if (b1 | fw2 == 0x123C) println (140); else println (999);
 L1670:
-        CALL  writeLineA
+        LD    A,(05000H)
 L1671:
-        JP    L1675
+        LD    L,A
+        LD    H,0
 L1672:
-        LD    HL,999
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1673:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1674:
-        ;;test15.j(241)   if (b1 ^ fw2 == 0x1228) println (141); else println (999);
+        JP    NZ,L1678
 L1675:
-        LD    A,(05000H)
+        LD    A,140
 L1676:
-        LD    L,A
-        LD    H,0
+        CALL  writeLineA
 L1677:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1681
 L1678:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    HL,999
 L1679:
-        JP    NZ,L1683
+        CALL  writeLineHL
 L1680:
-        LD    A,141
+        ;;test15.j(241)   if (b1 ^ fw2 == 0x1228) println (141); else println (999);
 L1681:
-        CALL  writeLineA
+        LD    A,(05000H)
 L1682:
-        JP    L1687
+        LD    L,A
+        LD    H,0
 L1683:
-        LD    HL,999
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1684:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1685:
-        ;;test15.j(242)   //var word/final var byt
+        JP    NZ,L1689
 L1686:
-        ;;test15.j(243)   if (w2 & fb1 == 0x0014) println (142); else println (999);
+        LD    A,141
 L1687:
-        LD    HL,(05004H)
+        CALL  writeLineA
 L1688:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        JP    L1693
 L1689:
-        LD    A,20
+        LD    HL,999
 L1690:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        CALL  writeLineHL
 L1691:
-        JP    NZ,L1695
+        ;;test15.j(242)   //var word/final var byt
 L1692:
-        LD    A,142
+        ;;test15.j(243)   if (w2 & fb1 == 0x0014) println (142); else println (999);
 L1693:
-        CALL  writeLineA
+        LD    HL,(05004H)
 L1694:
-        JP    L1698
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1695:
-        LD    HL,999
+        LD    A,20
 L1696:
-        CALL  writeLineHL
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1697:
-        ;;test15.j(244)   if (w2 | fb1 == 0x123C) println (143); else println (999);
+        JP    NZ,L1701
 L1698:
-        LD    HL,(05004H)
+        LD    A,142
 L1699:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1700:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        JP    L1704
 L1701:
-        JP    NZ,L1705
+        LD    HL,999
 L1702:
-        LD    A,143
+        CALL  writeLineHL
 L1703:
-        CALL  writeLineA
+        ;;test15.j(244)   if (w2 | fb1 == 0x123C) println (143); else println (999);
 L1704:
-        JP    L1708
+        LD    HL,(05004H)
 L1705:
-        LD    HL,999
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1706:
-        CALL  writeLineHL
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1707:
-        ;;test15.j(245)   if (w2 ^ fb1 == 0x1228) println (144); else println (999);
+        JP    NZ,L1711
 L1708:
-        LD    HL,(05004H)
+        LD    A,143
 L1709:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        CALL  writeLineA
 L1710:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        JP    L1714
 L1711:
-        JP    NZ,L1715
+        LD    HL,999
 L1712:
-        LD    A,144
+        CALL  writeLineHL
 L1713:
-        CALL  writeLineA
+        ;;test15.j(245)   if (w2 ^ fb1 == 0x1228) println (144); else println (999);
 L1714:
-        JP    L1722
+        LD    HL,(05004H)
 L1715:
-        LD    HL,999
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1716:
-        CALL  writeLineHL
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1717:
-        ;;test15.j(246) 
+        JP    NZ,L1721
 L1718:
-        ;;test15.j(247)   //final var/constant
+        LD    A,144
 L1719:
-        ;;test15.j(248)   //******************
+        CALL  writeLineA
 L1720:
-        ;;test15.j(249)   //final var byte/constant byte
+        JP    L1728
 L1721:
-        ;;test15.j(250)   if (b2 & 0x1C == 0x04) println (145); else println (999);
+        LD    HL,999
 L1722:
-        LD    A,(05001H)
+        CALL  writeLineHL
 L1723:
-        AND   A,28
+        ;;test15.j(246) 
 L1724:
-        SUB   A,4
+        ;;test15.j(247)   //final var/constant
 L1725:
-        JP    NZ,L1729
+        ;;test15.j(248)   //******************
 L1726:
-        LD    A,145
+        ;;test15.j(249)   //final var byte/constant byte
 L1727:
-        CALL  writeLineA
+        ;;test15.j(250)   if (b2 & 0x1C == 0x04) println (145); else println (999);
 L1728:
-        JP    L1732
+        LD    A,(05001H)
 L1729:
-        LD    HL,999
-L1730:
-        CALL  writeLineHL
-L1731:
-        ;;test15.j(251)   if (b2 | 0x1C == 0x1F) println (146); else println (999);
-L1732:
-        LD    A,(05001H)
-L1733:
-        OR    A,28
-L1734:
-        SUB   A,31
-L1735:
-        JP    NZ,L1739
-L1736:
-        LD    A,146
-L1737:
-        CALL  writeLineA
-L1738:
-        JP    L1742
-L1739:
-        LD    HL,999
-L1740:
-        CALL  writeLineHL
-L1741:
-        ;;test15.j(252)   if (b2 ^ 0x1C == 0x1B) println (147); else println (999);
-L1742:
-        LD    A,(05001H)
-L1743:
-        XOR   A,28
-L1744:
-        SUB   A,27
-L1745:
-        JP    NZ,L1749
-L1746:
-        LD    A,147
-L1747:
-        CALL  writeLineA
-L1748:
-        JP    L1753
-L1749:
-        LD    HL,999
-L1750:
-        CALL  writeLineHL
-L1751:
-        ;;test15.j(253)   //final var word/constant word
-L1752:
-        ;;test15.j(254)   if (w2 & 0x032C == 0x0224) println (148); else println (999);
-L1753:
-        LD    HL,(05004H)
-L1754:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1755:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
-L1756:
-        JP    NZ,L1760
-L1757:
-        LD    A,148
-L1758:
-        CALL  writeLineA
-L1759:
-        JP    L1763
-L1760:
-        LD    HL,999
-L1761:
-        CALL  writeLineHL
-L1762:
-        ;;test15.j(255)   if (w2 | 0x032C == 0x133C) println (149); else println (999);
-L1763:
-        LD    HL,(05004H)
-L1764:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1765:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
-L1766:
-        JP    NZ,L1770
-L1767:
-        LD    A,149
-L1768:
-        CALL  writeLineA
-L1769:
-        JP    L1773
-L1770:
-        LD    HL,999
-L1771:
-        CALL  writeLineHL
-L1772:
-        ;;test15.j(256)   if (w2 ^ 0x032C == 0x1118) println (150); else println (999);
-L1773:
-        LD    HL,(05004H)
-L1774:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1775:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
-L1776:
-        JP    NZ,L1780
-L1777:
-        LD    A,150
-L1778:
-        CALL  writeLineA
-L1779:
-        JP    L1784
-L1780:
-        LD    HL,999
-L1781:
-        CALL  writeLineHL
-L1782:
-        ;;test15.j(257)   //final var byt/constant word
-L1783:
-        ;;test15.j(258)   if (b1 & 0x1234 == 0x0014) println (151); else println (999);
-L1784:
-        LD    A,(05000H)
-L1785:
-        LD    L,A
-        LD    H,0
-L1786:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1787:
-        LD    A,20
-L1788:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1789:
-        JP    NZ,L1793
-L1790:
-        LD    A,151
-L1791:
-        CALL  writeLineA
-L1792:
-        JP    L1796
-L1793:
-        LD    HL,999
-L1794:
-        CALL  writeLineHL
-L1795:
-        ;;test15.j(259)   if (b1 | 0x1234 == 0x123C) println (152); else println (999);
-L1796:
-        LD    A,(05000H)
-L1797:
-        LD    L,A
-        LD    H,0
-L1798:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1799:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1800:
-        JP    NZ,L1804
-L1801:
-        LD    A,152
-L1802:
-        CALL  writeLineA
-L1803:
-        JP    L1807
-L1804:
-        LD    HL,999
-L1805:
-        CALL  writeLineHL
-L1806:
-        ;;test15.j(260)   if (b1 ^ 0x1234 == 0x1228) println (153); else println (999);
-L1807:
-        LD    A,(05000H)
-L1808:
-        LD    L,A
-        LD    H,0
-L1809:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1810:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L1811:
-        JP    NZ,L1815
-L1812:
-        LD    A,153
-L1813:
-        CALL  writeLineA
-L1814:
-        JP    L1819
-L1815:
-        LD    HL,999
-L1816:
-        CALL  writeLineHL
-L1817:
-        ;;test15.j(261)   //final var word/constant byt
-L1818:
-        ;;test15.j(262)   if (w2 & 0x1C == 0x0014) println (154); else println (999);
-L1819:
-        LD    HL,(05004H)
-L1820:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1821:
-        LD    A,20
-L1822:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1823:
-        JP    NZ,L1827
-L1824:
-        LD    A,154
-L1825:
-        CALL  writeLineA
-L1826:
-        JP    L1830
-L1827:
-        LD    HL,999
-L1828:
-        CALL  writeLineHL
-L1829:
-        ;;test15.j(263)   if (w2 | 0x1C == 0x123C) println (155); else println (999);
-L1830:
-        LD    HL,(05004H)
-L1831:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1832:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1833:
-        JP    NZ,L1837
-L1834:
-        LD    A,155
-L1835:
-        CALL  writeLineA
-L1836:
-        JP    L1840
-L1837:
-        LD    HL,999
-L1838:
-        CALL  writeLineHL
-L1839:
-        ;;test15.j(264)   if (w2 ^ 0x1C == 0x1228) println (156); else println (999);
-L1840:
-        LD    HL,(05004H)
-L1841:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1842:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L1843:
-        JP    NZ,L1847
-L1844:
-        LD    A,156
-L1845:
-        CALL  writeLineA
-L1846:
-        JP    L1854
-L1847:
-        LD    HL,999
-L1848:
-        CALL  writeLineHL
-L1849:
-        ;;test15.j(265) 
-L1850:
-        ;;test15.j(266)   //final var/acc
-L1851:
-        ;;test15.j(267)   //*************
-L1852:
-        ;;test15.j(268)   //final var byte/acc byte
-L1853:
-        ;;test15.j(269)   if (b2 & (0x10 + 0x0C) == 0x04) println (157); else println (999);
-L1854:
-        LD    A,(05001H)
-L1855:
-        PUSH  AF
-        LD    A,16
-L1856:
-        ADD   A,12
-L1857:
-        POP   BC
-        AND   A,B
-L1858:
-        SUB   A,4
-L1859:
-        JP    NZ,L1863
-L1860:
-        LD    A,157
-L1861:
-        CALL  writeLineA
-L1862:
-        JP    L1866
-L1863:
-        LD    HL,999
-L1864:
-        CALL  writeLineHL
-L1865:
-        ;;test15.j(270)   if (b2 | (0x10 + 0x0C) == 0x1F) println (158); else println (999);
-L1866:
-        LD    A,(05001H)
-L1867:
-        PUSH  AF
-        LD    A,16
-L1868:
-        ADD   A,12
-L1869:
-        POP   BC
-        OR    A,B
-L1870:
-        SUB   A,31
-L1871:
-        JP    NZ,L1875
-L1872:
-        LD    A,158
-L1873:
-        CALL  writeLineA
-L1874:
-        JP    L1878
-L1875:
-        LD    HL,999
-L1876:
-        CALL  writeLineHL
-L1877:
-        ;;test15.j(271)   if (b2 ^ (0x10 + 0x0C) == 0x1B) println (159); else println (999);
-L1878:
-        LD    A,(05001H)
-L1879:
-        PUSH  AF
-        LD    A,16
-L1880:
-        ADD   A,12
-L1881:
-        POP   BC
-        XOR   A,B
-L1882:
-        SUB   A,27
-L1883:
-        JP    NZ,L1887
-L1884:
-        LD    A,159
-L1885:
-        CALL  writeLineA
-L1886:
-        JP    L1891
-L1887:
-        LD    HL,999
-L1888:
-        CALL  writeLineHL
-L1889:
-        ;;test15.j(272)   //final var word/acc word
-L1890:
-        ;;test15.j(273)   if (w2 & 0x0100 + 0x022C == 0x0224) println (160); else println (999);
-L1891:
-        LD    HL,(05004H)
-L1892:
-        PUSH  HL
-        LD    HL,256
-L1893:
-        LD    DE,556
-        ADD   HL,DE
-L1894:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1895:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
-L1896:
-        JP    NZ,L1900
-L1897:
-        LD    A,160
-L1898:
-        CALL  writeLineA
-L1899:
-        JP    L1903
-L1900:
-        LD    HL,999
-L1901:
-        CALL  writeLineHL
-L1902:
-        ;;test15.j(274)   if (w2 | 0x0100 + 0x022C == 0x133C) println (161); else println (999);
-L1903:
-        LD    HL,(05004H)
-L1904:
-        PUSH  HL
-        LD    HL,256
-L1905:
-        LD    DE,556
-        ADD   HL,DE
-L1906:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1907:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
-L1908:
-        JP    NZ,L1912
-L1909:
-        LD    A,161
-L1910:
-        CALL  writeLineA
-L1911:
-        JP    L1915
-L1912:
-        LD    HL,999
-L1913:
-        CALL  writeLineHL
-L1914:
-        ;;test15.j(275)   if (w2 ^ 0x0100 + 0x022C == 0x1118) println (162); else println (999);
-L1915:
-        LD    HL,(05004H)
-L1916:
-        PUSH  HL
-        LD    HL,256
-L1917:
-        LD    DE,556
-        ADD   HL,DE
-L1918:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1919:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
-L1920:
-        JP    NZ,L1924
-L1921:
-        LD    A,162
-L1922:
-        CALL  writeLineA
-L1923:
-        JP    L1928
-L1924:
-        LD    HL,999
-L1925:
-        CALL  writeLineHL
-L1926:
-        ;;test15.j(276)   //final var byt/acc word
-L1927:
-        ;;test15.j(277)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (163); else println (999);
-L1928:
-        LD    A,(05000H)
-L1929:
-        LD    HL,4096
-L1930:
-        LD    DE,564
-        ADD   HL,DE
-L1931:
-        AND   A,L
-        LD    L,A
-        LD    H,0
-L1932:
-        LD    A,20
-L1933:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1934:
-        JP    NZ,L1938
-L1935:
-        LD    A,163
-L1936:
-        CALL  writeLineA
-L1937:
-        JP    L1941
-L1938:
-        LD    HL,999
-L1939:
-        CALL  writeLineHL
-L1940:
-        ;;test15.j(278)   if (b1 | 0x1000 + 0x0234 == 0x123C) println (164); else println (999);
-L1941:
-        LD    A,(05000H)
-L1942:
-        LD    HL,4096
-L1943:
-        LD    DE,564
-        ADD   HL,DE
-L1944:
-        OR    A,L
-        LD    L,A
-L1945:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1946:
-        JP    NZ,L1950
-L1947:
-        LD    A,164
-L1948:
-        CALL  writeLineA
-L1949:
-        JP    L1953
-L1950:
-        LD    HL,999
-L1951:
-        CALL  writeLineHL
-L1952:
-        ;;test15.j(279)   if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (165); else println (999);
-L1953:
-        LD    A,(05000H)
-L1954:
-        LD    HL,4096
-L1955:
-        LD    DE,564
-        ADD   HL,DE
-L1956:
-        XOR   A,L
-        LD    L,A
-L1957:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L1958:
-        JP    NZ,L1962
-L1959:
-        LD    A,165
-L1960:
-        CALL  writeLineA
-L1961:
-        JP    L1966
-L1962:
-        LD    HL,999
-L1963:
-        CALL  writeLineHL
-L1964:
-        ;;test15.j(280)   //final var word/acc byt
-L1965:
-        ;;test15.j(281)   if (w2 & 0x10 + 0x0C == 0x0014) println (166); else println (999);
-L1966:
-        LD    HL,(05004H)
-L1967:
-        LD    A,16
-L1968:
-        ADD   A,12
-L1969:
-        AND   A,L
-        LD    L,A
-        LD    H,0
-L1970:
-        LD    A,20
-L1971:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1972:
-        JP    NZ,L1976
-L1973:
-        LD    A,166
-L1974:
-        CALL  writeLineA
-L1975:
-        JP    L1979
-L1976:
-        LD    HL,999
-L1977:
-        CALL  writeLineHL
-L1978:
-        ;;test15.j(282)   if (w2 | 0x10 + 0x0C == 0x123C) println (167); else println (999);
-L1979:
-        LD    HL,(05004H)
-L1980:
-        LD    A,16
-L1981:
-        ADD   A,12
-L1982:
-        OR    A,L
-        LD    L,A
-L1983:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1984:
-        JP    NZ,L1988
-L1985:
-        LD    A,167
-L1986:
-        CALL  writeLineA
-L1987:
-        JP    L1991
-L1988:
-        LD    HL,999
-L1989:
-        CALL  writeLineHL
-L1990:
-        ;;test15.j(283)   if (w2 ^ 0x10 + 0x0C == 0x1228) println (168); else println (999);
-L1991:
-        LD    HL,(05004H)
-L1992:
-        LD    A,16
-L1993:
-        ADD   A,12
-L1994:
-        XOR   A,L
-        LD    L,A
-L1995:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L1996:
-        JP    NZ,L2000
-L1997:
-        LD    A,168
-L1998:
-        CALL  writeLineA
-L1999:
-        JP    L2007
-L2000:
-        LD    HL,999
-L2001:
-        CALL  writeLineHL
-L2002:
-        ;;test15.j(284) 
-L2003:
-        ;;test15.j(285)   //final var/var
-L2004:
-        ;;test15.j(286)   //*************
-L2005:
-        ;;test15.j(287)   //final var byte/var byte
-L2006:
-        ;;test15.j(288)   if (b2 & b1 == 0x04) println (169); else println (999);
-L2007:
-        LD    A,(05001H)
-L2008:
-        LD    B,A
-        LD    A,(05000H)
-        AND   A,B
-L2009:
-        SUB   A,4
-L2010:
-        JP    NZ,L2014
-L2011:
-        LD    A,169
-L2012:
-        CALL  writeLineA
-L2013:
-        JP    L2017
-L2014:
-        LD    HL,999
-L2015:
-        CALL  writeLineHL
-L2016:
-        ;;test15.j(289)   if (b2 | b1 == 0x1F) println (170); else println (999);
-L2017:
-        LD    A,(05001H)
-L2018:
-        LD    B,A
-        LD    A,(05000H)
-        OR    A,B
-L2019:
-        SUB   A,31
-L2020:
-        JP    NZ,L2024
-L2021:
-        LD    A,170
-L2022:
-        CALL  writeLineA
-L2023:
-        JP    L2027
-L2024:
-        LD    HL,999
-L2025:
-        CALL  writeLineHL
-L2026:
-        ;;test15.j(290)   if (b2 ^ b1 == 0x1B) println (171); else println (999);
-L2027:
-        LD    A,(05001H)
-L2028:
-        LD    B,A
-        LD    A,(05000H)
-        XOR   A,B
-L2029:
-        SUB   A,27
-L2030:
-        JP    NZ,L2034
-L2031:
-        LD    A,171
-L2032:
-        CALL  writeLineA
-L2033:
-        JP    L2038
-L2034:
-        LD    HL,999
-L2035:
-        CALL  writeLineHL
-L2036:
-        ;;test15.j(291)   //final var word/var word
-L2037:
-        ;;test15.j(292)   if (w2 & w1 == 0x0224) println (172); else println (999);
-L2038:
-        LD    HL,(05004H)
-L2039:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2040:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
-L2041:
-        JP    NZ,L2045
-L2042:
-        LD    A,172
-L2043:
-        CALL  writeLineA
-L2044:
-        JP    L2048
-L2045:
-        LD    HL,999
-L2046:
-        CALL  writeLineHL
-L2047:
-        ;;test15.j(293)   if (w2 | w1 == 0x133C) println (173); else println (999);
-L2048:
-        LD    HL,(05004H)
-L2049:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2050:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
-L2051:
-        JP    NZ,L2055
-L2052:
-        LD    A,173
-L2053:
-        CALL  writeLineA
-L2054:
-        JP    L2058
-L2055:
-        LD    HL,999
-L2056:
-        CALL  writeLineHL
-L2057:
-        ;;test15.j(294)   if (w2 ^ w1 == 0x1118) println (174); else println (999);
-L2058:
-        LD    HL,(05004H)
-L2059:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2060:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
-L2061:
-        JP    NZ,L2065
-L2062:
-        LD    A,174
-L2063:
-        CALL  writeLineA
-L2064:
-        JP    L2069
-L2065:
-        LD    HL,999
-L2066:
-        CALL  writeLineHL
-L2067:
-        ;;test15.j(295)   //final var byt/var word
-L2068:
-        ;;test15.j(296)   if (b1 & w2 == 0x0014) println (175); else println (999);
-L2069:
-        LD    A,(05000H)
-L2070:
-        LD    L,A
-        LD    H,0
-L2071:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2072:
-        LD    A,20
-L2073:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L2074:
-        JP    NZ,L2078
-L2075:
-        LD    A,175
-L2076:
-        CALL  writeLineA
-L2077:
-        JP    L2081
-L2078:
-        LD    HL,999
-L2079:
-        CALL  writeLineHL
-L2080:
-        ;;test15.j(297)   if (b1 | w2 == 0x123C) println (176); else println (999);
-L2081:
-        LD    A,(05000H)
-L2082:
-        LD    L,A
-        LD    H,0
-L2083:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2084:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L2085:
-        JP    NZ,L2089
-L2086:
-        LD    A,176
-L2087:
-        CALL  writeLineA
-L2088:
-        JP    L2092
-L2089:
-        LD    HL,999
-L2090:
-        CALL  writeLineHL
-L2091:
-        ;;test15.j(298)   if (b1 ^ w2 == 0x1228) println (177); else println (999);
-L2092:
-        LD    A,(05000H)
-L2093:
-        LD    L,A
-        LD    H,0
-L2094:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2095:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L2096:
-        JP    NZ,L2100
-L2097:
-        LD    A,177
-L2098:
-        CALL  writeLineA
-L2099:
-        JP    L2104
-L2100:
-        LD    HL,999
-L2101:
-        CALL  writeLineHL
-L2102:
-        ;;test15.j(299)   //final var word/var byt
-L2103:
-        ;;test15.j(300)   if (w2 & b1 == 0x0014) println (178); else println (999);
-L2104:
-        LD    HL,(05004H)
-L2105:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2106:
-        LD    A,20
-L2107:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L2108:
-        JP    NZ,L2112
-L2109:
-        LD    A,178
-L2110:
-        CALL  writeLineA
-L2111:
-        JP    L2115
-L2112:
-        LD    HL,999
-L2113:
-        CALL  writeLineHL
-L2114:
-        ;;test15.j(301)   if (w2 | b1 == 0x123C) println (179); else println (999);
-L2115:
-        LD    HL,(05004H)
-L2116:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2117:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L2118:
-        JP    NZ,L2122
-L2119:
-        LD    A,179
-L2120:
-        CALL  writeLineA
-L2121:
-        JP    L2125
-L2122:
-        LD    HL,999
-L2123:
-        CALL  writeLineHL
-L2124:
-        ;;test15.j(302)   if (w2 ^ b1 == 0x1228) println (180); else println (999);
-L2125:
-        LD    HL,(05004H)
-L2126:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2127:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L2128:
-        JP    NZ,L2132
-L2129:
-        LD    A,180
-L2130:
-        CALL  writeLineA
-L2131:
-        JP    L2139
-L2132:
-        LD    HL,999
-L2133:
-        CALL  writeLineHL
-L2134:
-        ;;test15.j(303) 
-L2135:
-        ;;test15.j(304)   //final var/final var
-L2136:
-        ;;test15.j(305)   //*******************
-L2137:
-        ;;test15.j(306)   //final var byte/final var byte
-L2138:
-        ;;test15.j(307)   if (fb2 & fb1 == 0x04) println (181); else println (999);
-L2139:
-        LD    A,7
-L2140:
         AND   A,28
-L2141:
+L1730:
         SUB   A,4
-L2142:
-        JP    NZ,L2146
-L2143:
-        LD    A,181
-L2144:
+L1731:
+        JP    NZ,L1735
+L1732:
+        LD    A,145
+L1733:
         CALL  writeLineA
-L2145:
-        JP    L2149
-L2146:
+L1734:
+        JP    L1738
+L1735:
         LD    HL,999
-L2147:
+L1736:
         CALL  writeLineHL
-L2148:
-        ;;test15.j(308)   if (fb2 | fb1 == 0x1F) println (182); else println (999);
-L2149:
-        LD    A,7
-L2150:
+L1737:
+        ;;test15.j(251)   if (b2 | 0x1C == 0x1F) println (146); else println (999);
+L1738:
+        LD    A,(05001H)
+L1739:
         OR    A,28
-L2151:
+L1740:
         SUB   A,31
-L2152:
-        JP    NZ,L2156
-L2153:
-        LD    A,182
-L2154:
+L1741:
+        JP    NZ,L1745
+L1742:
+        LD    A,146
+L1743:
         CALL  writeLineA
-L2155:
-        JP    L2159
-L2156:
+L1744:
+        JP    L1748
+L1745:
         LD    HL,999
-L2157:
+L1746:
         CALL  writeLineHL
-L2158:
-        ;;test15.j(309)   if (fb2 ^ fb1 == 0x1B) println (183); else println (999);
-L2159:
-        LD    A,7
-L2160:
+L1747:
+        ;;test15.j(252)   if (b2 ^ 0x1C == 0x1B) println (147); else println (999);
+L1748:
+        LD    A,(05001H)
+L1749:
         XOR   A,28
-L2161:
+L1750:
         SUB   A,27
-L2162:
-        JP    NZ,L2166
-L2163:
-        LD    A,183
-L2164:
+L1751:
+        JP    NZ,L1755
+L1752:
+        LD    A,147
+L1753:
         CALL  writeLineA
-L2165:
-        JP    L2170
-L2166:
+L1754:
+        JP    L1759
+L1755:
         LD    HL,999
-L2167:
+L1756:
         CALL  writeLineHL
-L2168:
-        ;;test15.j(310)   //final var word/final var word
-L2169:
-        ;;test15.j(311)   if (fw2 & fw1 == 0x0224) println (184); else println (999);
-L2170:
-        LD    HL,4660
-L2171:
+L1757:
+        ;;test15.j(253)   //final var word/constant word
+L1758:
+        ;;test15.j(254)   if (w2 & 0x032C == 0x0224) println (148); else println (999);
+L1759:
+        LD    HL,(05004H)
+L1760:
         LD    DE,812
         PUSH  BC
         LD    B,A
@@ -6724,27 +5597,27 @@ L2171:
         LD    L,A
         LD    A,B
         POP   BC
-L2172:
+L1761:
         LD    DE,548
         OR    A
         SBC   HL,DE
-L2173:
-        JP    NZ,L2177
-L2174:
-        LD    A,184
-L2175:
+L1762:
+        JP    NZ,L1766
+L1763:
+        LD    A,148
+L1764:
         CALL  writeLineA
-L2176:
-        JP    L2180
-L2177:
+L1765:
+        JP    L1769
+L1766:
         LD    HL,999
-L2178:
+L1767:
         CALL  writeLineHL
-L2179:
-        ;;test15.j(312)   if (fw2 | fw1 == 0x133C) println (185); else println (999);
-L2180:
-        LD    HL,4660
-L2181:
+L1768:
+        ;;test15.j(255)   if (w2 | 0x032C == 0x133C) println (149); else println (999);
+L1769:
+        LD    HL,(05004H)
+L1770:
         LD    DE,812
         PUSH  BC
         LD    B,A
@@ -6756,27 +5629,27 @@ L2181:
         LD    L,A
         LD    A,B
         POP   BC
-L2182:
+L1771:
         LD    DE,4924
         OR    A
         SBC   HL,DE
-L2183:
-        JP    NZ,L2187
-L2184:
-        LD    A,185
-L2185:
+L1772:
+        JP    NZ,L1776
+L1773:
+        LD    A,149
+L1774:
         CALL  writeLineA
-L2186:
-        JP    L2190
-L2187:
+L1775:
+        JP    L1779
+L1776:
         LD    HL,999
-L2188:
+L1777:
         CALL  writeLineHL
-L2189:
-        ;;test15.j(313)   if (fw2 ^ fw1 == 0x1118) println (186); else println (999);
-L2190:
-        LD    HL,4660
-L2191:
+L1778:
+        ;;test15.j(256)   if (w2 ^ 0x032C == 0x1118) println (150); else println (999);
+L1779:
+        LD    HL,(05004H)
+L1780:
         LD    DE,812
         PUSH  BC
         LD    B,A
@@ -6788,71 +5661,1216 @@ L2191:
         LD    L,A
         LD    A,B
         POP   BC
-L2192:
+L1781:
         LD    DE,4376
         OR    A
         SBC   HL,DE
+L1782:
+        JP    NZ,L1786
+L1783:
+        LD    A,150
+L1784:
+        CALL  writeLineA
+L1785:
+        JP    L1790
+L1786:
+        LD    HL,999
+L1787:
+        CALL  writeLineHL
+L1788:
+        ;;test15.j(257)   //final var byt/constant word
+L1789:
+        ;;test15.j(258)   if (b1 & 0x1234 == 0x0014) println (151); else println (999);
+L1790:
+        LD    A,(05000H)
+L1791:
+        LD    L,A
+        LD    H,0
+L1792:
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1793:
+        LD    A,20
+L1794:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1795:
+        JP    NZ,L1799
+L1796:
+        LD    A,151
+L1797:
+        CALL  writeLineA
+L1798:
+        JP    L1802
+L1799:
+        LD    HL,999
+L1800:
+        CALL  writeLineHL
+L1801:
+        ;;test15.j(259)   if (b1 | 0x1234 == 0x123C) println (152); else println (999);
+L1802:
+        LD    A,(05000H)
+L1803:
+        LD    L,A
+        LD    H,0
+L1804:
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1805:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1806:
+        JP    NZ,L1810
+L1807:
+        LD    A,152
+L1808:
+        CALL  writeLineA
+L1809:
+        JP    L1813
+L1810:
+        LD    HL,999
+L1811:
+        CALL  writeLineHL
+L1812:
+        ;;test15.j(260)   if (b1 ^ 0x1234 == 0x1228) println (153); else println (999);
+L1813:
+        LD    A,(05000H)
+L1814:
+        LD    L,A
+        LD    H,0
+L1815:
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1816:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L1817:
+        JP    NZ,L1821
+L1818:
+        LD    A,153
+L1819:
+        CALL  writeLineA
+L1820:
+        JP    L1825
+L1821:
+        LD    HL,999
+L1822:
+        CALL  writeLineHL
+L1823:
+        ;;test15.j(261)   //final var word/constant byt
+L1824:
+        ;;test15.j(262)   if (w2 & 0x1C == 0x0014) println (154); else println (999);
+L1825:
+        LD    HL,(05004H)
+L1826:
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1827:
+        LD    A,20
+L1828:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1829:
+        JP    NZ,L1833
+L1830:
+        LD    A,154
+L1831:
+        CALL  writeLineA
+L1832:
+        JP    L1836
+L1833:
+        LD    HL,999
+L1834:
+        CALL  writeLineHL
+L1835:
+        ;;test15.j(263)   if (w2 | 0x1C == 0x123C) println (155); else println (999);
+L1836:
+        LD    HL,(05004H)
+L1837:
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1838:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1839:
+        JP    NZ,L1843
+L1840:
+        LD    A,155
+L1841:
+        CALL  writeLineA
+L1842:
+        JP    L1846
+L1843:
+        LD    HL,999
+L1844:
+        CALL  writeLineHL
+L1845:
+        ;;test15.j(264)   if (w2 ^ 0x1C == 0x1228) println (156); else println (999);
+L1846:
+        LD    HL,(05004H)
+L1847:
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1848:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L1849:
+        JP    NZ,L1853
+L1850:
+        LD    A,156
+L1851:
+        CALL  writeLineA
+L1852:
+        JP    L1860
+L1853:
+        LD    HL,999
+L1854:
+        CALL  writeLineHL
+L1855:
+        ;;test15.j(265) 
+L1856:
+        ;;test15.j(266)   //final var/acc
+L1857:
+        ;;test15.j(267)   //*************
+L1858:
+        ;;test15.j(268)   //final var byte/acc byte
+L1859:
+        ;;test15.j(269)   if (b2 & (0x10 + 0x0C) == 0x04) println (157); else println (999);
+L1860:
+        LD    A,(05001H)
+L1861:
+        PUSH  AF
+        LD    A,16
+L1862:
+        ADD   A,12
+L1863:
+        POP   BC
+        AND   A,B
+L1864:
+        SUB   A,4
+L1865:
+        JP    NZ,L1869
+L1866:
+        LD    A,157
+L1867:
+        CALL  writeLineA
+L1868:
+        JP    L1872
+L1869:
+        LD    HL,999
+L1870:
+        CALL  writeLineHL
+L1871:
+        ;;test15.j(270)   if (b2 | (0x10 + 0x0C) == 0x1F) println (158); else println (999);
+L1872:
+        LD    A,(05001H)
+L1873:
+        PUSH  AF
+        LD    A,16
+L1874:
+        ADD   A,12
+L1875:
+        POP   BC
+        OR    A,B
+L1876:
+        SUB   A,31
+L1877:
+        JP    NZ,L1881
+L1878:
+        LD    A,158
+L1879:
+        CALL  writeLineA
+L1880:
+        JP    L1884
+L1881:
+        LD    HL,999
+L1882:
+        CALL  writeLineHL
+L1883:
+        ;;test15.j(271)   if (b2 ^ (0x10 + 0x0C) == 0x1B) println (159); else println (999);
+L1884:
+        LD    A,(05001H)
+L1885:
+        PUSH  AF
+        LD    A,16
+L1886:
+        ADD   A,12
+L1887:
+        POP   BC
+        XOR   A,B
+L1888:
+        SUB   A,27
+L1889:
+        JP    NZ,L1893
+L1890:
+        LD    A,159
+L1891:
+        CALL  writeLineA
+L1892:
+        JP    L1897
+L1893:
+        LD    HL,999
+L1894:
+        CALL  writeLineHL
+L1895:
+        ;;test15.j(272)   //final var word/acc word
+L1896:
+        ;;test15.j(273)   if (w2 & 0x0100 + 0x022C == 0x0224) println (160); else println (999);
+L1897:
+        LD    HL,(05004H)
+L1898:
+        PUSH  HL
+        LD    HL,256
+L1899:
+        LD    DE,556
+        ADD   HL,DE
+L1900:
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1901:
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
+L1902:
+        JP    NZ,L1906
+L1903:
+        LD    A,160
+L1904:
+        CALL  writeLineA
+L1905:
+        JP    L1909
+L1906:
+        LD    HL,999
+L1907:
+        CALL  writeLineHL
+L1908:
+        ;;test15.j(274)   if (w2 | 0x0100 + 0x022C == 0x133C) println (161); else println (999);
+L1909:
+        LD    HL,(05004H)
+L1910:
+        PUSH  HL
+        LD    HL,256
+L1911:
+        LD    DE,556
+        ADD   HL,DE
+L1912:
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1913:
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
+L1914:
+        JP    NZ,L1918
+L1915:
+        LD    A,161
+L1916:
+        CALL  writeLineA
+L1917:
+        JP    L1921
+L1918:
+        LD    HL,999
+L1919:
+        CALL  writeLineHL
+L1920:
+        ;;test15.j(275)   if (w2 ^ 0x0100 + 0x022C == 0x1118) println (162); else println (999);
+L1921:
+        LD    HL,(05004H)
+L1922:
+        PUSH  HL
+        LD    HL,256
+L1923:
+        LD    DE,556
+        ADD   HL,DE
+L1924:
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1925:
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
+L1926:
+        JP    NZ,L1930
+L1927:
+        LD    A,162
+L1928:
+        CALL  writeLineA
+L1929:
+        JP    L1934
+L1930:
+        LD    HL,999
+L1931:
+        CALL  writeLineHL
+L1932:
+        ;;test15.j(276)   //final var byt/acc word
+L1933:
+        ;;test15.j(277)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (163); else println (999);
+L1934:
+        LD    A,(05000H)
+L1935:
+        LD    HL,4096
+L1936:
+        LD    DE,564
+        ADD   HL,DE
+L1937:
+        AND   A,L
+        LD    L,A
+        LD    H,0
+L1938:
+        LD    A,20
+L1939:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1940:
+        JP    NZ,L1944
+L1941:
+        LD    A,163
+L1942:
+        CALL  writeLineA
+L1943:
+        JP    L1947
+L1944:
+        LD    HL,999
+L1945:
+        CALL  writeLineHL
+L1946:
+        ;;test15.j(278)   if (b1 | 0x1000 + 0x0234 == 0x123C) println (164); else println (999);
+L1947:
+        LD    A,(05000H)
+L1948:
+        LD    HL,4096
+L1949:
+        LD    DE,564
+        ADD   HL,DE
+L1950:
+        OR    A,L
+        LD    L,A
+L1951:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1952:
+        JP    NZ,L1956
+L1953:
+        LD    A,164
+L1954:
+        CALL  writeLineA
+L1955:
+        JP    L1959
+L1956:
+        LD    HL,999
+L1957:
+        CALL  writeLineHL
+L1958:
+        ;;test15.j(279)   if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (165); else println (999);
+L1959:
+        LD    A,(05000H)
+L1960:
+        LD    HL,4096
+L1961:
+        LD    DE,564
+        ADD   HL,DE
+L1962:
+        XOR   A,L
+        LD    L,A
+L1963:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L1964:
+        JP    NZ,L1968
+L1965:
+        LD    A,165
+L1966:
+        CALL  writeLineA
+L1967:
+        JP    L1972
+L1968:
+        LD    HL,999
+L1969:
+        CALL  writeLineHL
+L1970:
+        ;;test15.j(280)   //final var word/acc byt
+L1971:
+        ;;test15.j(281)   if (w2 & 0x10 + 0x0C == 0x0014) println (166); else println (999);
+L1972:
+        LD    HL,(05004H)
+L1973:
+        LD    A,16
+L1974:
+        ADD   A,12
+L1975:
+        AND   A,L
+        LD    L,A
+        LD    H,0
+L1976:
+        LD    A,20
+L1977:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1978:
+        JP    NZ,L1982
+L1979:
+        LD    A,166
+L1980:
+        CALL  writeLineA
+L1981:
+        JP    L1985
+L1982:
+        LD    HL,999
+L1983:
+        CALL  writeLineHL
+L1984:
+        ;;test15.j(282)   if (w2 | 0x10 + 0x0C == 0x123C) println (167); else println (999);
+L1985:
+        LD    HL,(05004H)
+L1986:
+        LD    A,16
+L1987:
+        ADD   A,12
+L1988:
+        OR    A,L
+        LD    L,A
+L1989:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1990:
+        JP    NZ,L1994
+L1991:
+        LD    A,167
+L1992:
+        CALL  writeLineA
+L1993:
+        JP    L1997
+L1994:
+        LD    HL,999
+L1995:
+        CALL  writeLineHL
+L1996:
+        ;;test15.j(283)   if (w2 ^ 0x10 + 0x0C == 0x1228) println (168); else println (999);
+L1997:
+        LD    HL,(05004H)
+L1998:
+        LD    A,16
+L1999:
+        ADD   A,12
+L2000:
+        XOR   A,L
+        LD    L,A
+L2001:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L2002:
+        JP    NZ,L2006
+L2003:
+        LD    A,168
+L2004:
+        CALL  writeLineA
+L2005:
+        JP    L2013
+L2006:
+        LD    HL,999
+L2007:
+        CALL  writeLineHL
+L2008:
+        ;;test15.j(284) 
+L2009:
+        ;;test15.j(285)   //final var/var
+L2010:
+        ;;test15.j(286)   //*************
+L2011:
+        ;;test15.j(287)   //final var byte/var byte
+L2012:
+        ;;test15.j(288)   if (b2 & b1 == 0x04) println (169); else println (999);
+L2013:
+        LD    A,(05001H)
+L2014:
+        LD    B,A
+        LD    A,(05000H)
+        AND   A,B
+L2015:
+        SUB   A,4
+L2016:
+        JP    NZ,L2020
+L2017:
+        LD    A,169
+L2018:
+        CALL  writeLineA
+L2019:
+        JP    L2023
+L2020:
+        LD    HL,999
+L2021:
+        CALL  writeLineHL
+L2022:
+        ;;test15.j(289)   if (b2 | b1 == 0x1F) println (170); else println (999);
+L2023:
+        LD    A,(05001H)
+L2024:
+        LD    B,A
+        LD    A,(05000H)
+        OR    A,B
+L2025:
+        SUB   A,31
+L2026:
+        JP    NZ,L2030
+L2027:
+        LD    A,170
+L2028:
+        CALL  writeLineA
+L2029:
+        JP    L2033
+L2030:
+        LD    HL,999
+L2031:
+        CALL  writeLineHL
+L2032:
+        ;;test15.j(290)   if (b2 ^ b1 == 0x1B) println (171); else println (999);
+L2033:
+        LD    A,(05001H)
+L2034:
+        LD    B,A
+        LD    A,(05000H)
+        XOR   A,B
+L2035:
+        SUB   A,27
+L2036:
+        JP    NZ,L2040
+L2037:
+        LD    A,171
+L2038:
+        CALL  writeLineA
+L2039:
+        JP    L2044
+L2040:
+        LD    HL,999
+L2041:
+        CALL  writeLineHL
+L2042:
+        ;;test15.j(291)   //final var word/var word
+L2043:
+        ;;test15.j(292)   if (w2 & w1 == 0x0224) println (172); else println (999);
+L2044:
+        LD    HL,(05004H)
+L2045:
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2046:
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
+L2047:
+        JP    NZ,L2051
+L2048:
+        LD    A,172
+L2049:
+        CALL  writeLineA
+L2050:
+        JP    L2054
+L2051:
+        LD    HL,999
+L2052:
+        CALL  writeLineHL
+L2053:
+        ;;test15.j(293)   if (w2 | w1 == 0x133C) println (173); else println (999);
+L2054:
+        LD    HL,(05004H)
+L2055:
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2056:
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
+L2057:
+        JP    NZ,L2061
+L2058:
+        LD    A,173
+L2059:
+        CALL  writeLineA
+L2060:
+        JP    L2064
+L2061:
+        LD    HL,999
+L2062:
+        CALL  writeLineHL
+L2063:
+        ;;test15.j(294)   if (w2 ^ w1 == 0x1118) println (174); else println (999);
+L2064:
+        LD    HL,(05004H)
+L2065:
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2066:
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
+L2067:
+        JP    NZ,L2071
+L2068:
+        LD    A,174
+L2069:
+        CALL  writeLineA
+L2070:
+        JP    L2075
+L2071:
+        LD    HL,999
+L2072:
+        CALL  writeLineHL
+L2073:
+        ;;test15.j(295)   //final var byt/var word
+L2074:
+        ;;test15.j(296)   if (b1 & w2 == 0x0014) println (175); else println (999);
+L2075:
+        LD    A,(05000H)
+L2076:
+        LD    L,A
+        LD    H,0
+L2077:
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2078:
+        LD    A,20
+L2079:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L2080:
+        JP    NZ,L2084
+L2081:
+        LD    A,175
+L2082:
+        CALL  writeLineA
+L2083:
+        JP    L2087
+L2084:
+        LD    HL,999
+L2085:
+        CALL  writeLineHL
+L2086:
+        ;;test15.j(297)   if (b1 | w2 == 0x123C) println (176); else println (999);
+L2087:
+        LD    A,(05000H)
+L2088:
+        LD    L,A
+        LD    H,0
+L2089:
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2090:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L2091:
+        JP    NZ,L2095
+L2092:
+        LD    A,176
+L2093:
+        CALL  writeLineA
+L2094:
+        JP    L2098
+L2095:
+        LD    HL,999
+L2096:
+        CALL  writeLineHL
+L2097:
+        ;;test15.j(298)   if (b1 ^ w2 == 0x1228) println (177); else println (999);
+L2098:
+        LD    A,(05000H)
+L2099:
+        LD    L,A
+        LD    H,0
+L2100:
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2101:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L2102:
+        JP    NZ,L2106
+L2103:
+        LD    A,177
+L2104:
+        CALL  writeLineA
+L2105:
+        JP    L2110
+L2106:
+        LD    HL,999
+L2107:
+        CALL  writeLineHL
+L2108:
+        ;;test15.j(299)   //final var word/var byt
+L2109:
+        ;;test15.j(300)   if (w2 & b1 == 0x0014) println (178); else println (999);
+L2110:
+        LD    HL,(05004H)
+L2111:
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2112:
+        LD    A,20
+L2113:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L2114:
+        JP    NZ,L2118
+L2115:
+        LD    A,178
+L2116:
+        CALL  writeLineA
+L2117:
+        JP    L2121
+L2118:
+        LD    HL,999
+L2119:
+        CALL  writeLineHL
+L2120:
+        ;;test15.j(301)   if (w2 | b1 == 0x123C) println (179); else println (999);
+L2121:
+        LD    HL,(05004H)
+L2122:
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2123:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L2124:
+        JP    NZ,L2128
+L2125:
+        LD    A,179
+L2126:
+        CALL  writeLineA
+L2127:
+        JP    L2131
+L2128:
+        LD    HL,999
+L2129:
+        CALL  writeLineHL
+L2130:
+        ;;test15.j(302)   if (w2 ^ b1 == 0x1228) println (180); else println (999);
+L2131:
+        LD    HL,(05004H)
+L2132:
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2133:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L2134:
+        JP    NZ,L2138
+L2135:
+        LD    A,180
+L2136:
+        CALL  writeLineA
+L2137:
+        JP    L2145
+L2138:
+        LD    HL,999
+L2139:
+        CALL  writeLineHL
+L2140:
+        ;;test15.j(303) 
+L2141:
+        ;;test15.j(304)   //final var/final var
+L2142:
+        ;;test15.j(305)   //*******************
+L2143:
+        ;;test15.j(306)   //final var byte/final var byte
+L2144:
+        ;;test15.j(307)   if (fb2 & fb1 == 0x04) println (181); else println (999);
+L2145:
+        LD    A,7
+L2146:
+        AND   A,28
+L2147:
+        SUB   A,4
+L2148:
+        JP    NZ,L2152
+L2149:
+        LD    A,181
+L2150:
+        CALL  writeLineA
+L2151:
+        JP    L2155
+L2152:
+        LD    HL,999
+L2153:
+        CALL  writeLineHL
+L2154:
+        ;;test15.j(308)   if (fb2 | fb1 == 0x1F) println (182); else println (999);
+L2155:
+        LD    A,7
+L2156:
+        OR    A,28
+L2157:
+        SUB   A,31
+L2158:
+        JP    NZ,L2162
+L2159:
+        LD    A,182
+L2160:
+        CALL  writeLineA
+L2161:
+        JP    L2165
+L2162:
+        LD    HL,999
+L2163:
+        CALL  writeLineHL
+L2164:
+        ;;test15.j(309)   if (fb2 ^ fb1 == 0x1B) println (183); else println (999);
+L2165:
+        LD    A,7
+L2166:
+        XOR   A,28
+L2167:
+        SUB   A,27
+L2168:
+        JP    NZ,L2172
+L2169:
+        LD    A,183
+L2170:
+        CALL  writeLineA
+L2171:
+        JP    L2176
+L2172:
+        LD    HL,999
+L2173:
+        CALL  writeLineHL
+L2174:
+        ;;test15.j(310)   //final var word/final var word
+L2175:
+        ;;test15.j(311)   if (fw2 & fw1 == 0x0224) println (184); else println (999);
+L2176:
+        LD    HL,4660
+L2177:
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2178:
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
+L2179:
+        JP    NZ,L2183
+L2180:
+        LD    A,184
+L2181:
+        CALL  writeLineA
+L2182:
+        JP    L2186
+L2183:
+        LD    HL,999
+L2184:
+        CALL  writeLineHL
+L2185:
+        ;;test15.j(312)   if (fw2 | fw1 == 0x133C) println (185); else println (999);
+L2186:
+        LD    HL,4660
+L2187:
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2188:
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
+L2189:
+        JP    NZ,L2193
+L2190:
+        LD    A,185
+L2191:
+        CALL  writeLineA
+L2192:
+        JP    L2196
 L2193:
-        JP    NZ,L2197
+        LD    HL,999
 L2194:
-        LD    A,186
+        CALL  writeLineHL
 L2195:
-        CALL  writeLineA
+        ;;test15.j(313)   if (fw2 ^ fw1 == 0x1118) println (186); else println (999);
 L2196:
-        JP    L2201
+        LD    HL,4660
 L2197:
-        LD    HL,999
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L2198:
-        CALL  writeLineHL
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L2199:
-        ;;test15.j(314)   //final var byt/final var word
+        JP    NZ,L2203
 L2200:
-        ;;test15.j(315)   if (fb1 & fw2 == 0x0014) println (187); else println (999);
+        LD    A,186
 L2201:
-        LD    A,28
+        CALL  writeLineA
 L2202:
-        LD    L,A
-        LD    H,0
+        JP    L2207
 L2203:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,999
 L2204:
-        LD    A,20
+        CALL  writeLineHL
 L2205:
+        ;;test15.j(314)   //final var byt/final var word
+L2206:
+        ;;test15.j(315)   if (fb1 & fw2 == 0x0014) println (187); else println (999);
+L2207:
+        LD    A,28
+L2208:
+        LD    L,A
+        LD    H,0
+L2209:
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2210:
+        LD    A,20
+L2211:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L2206:
-        JP    NZ,L2210
-L2207:
-        LD    A,187
-L2208:
-        CALL  writeLineA
-L2209:
-        JP    L2213
-L2210:
-        LD    HL,999
-L2211:
-        CALL  writeLineHL
 L2212:
-        ;;test15.j(316)   if (fb1 | fw2 == 0x123C) println (188); else println (999);
+        JP    NZ,L2216
 L2213:
-        LD    A,28
+        LD    A,187
 L2214:
+        CALL  writeLineA
+L2215:
+        JP    L2219
+L2216:
+        LD    HL,999
+L2217:
+        CALL  writeLineHL
+L2218:
+        ;;test15.j(316)   if (fb1 | fw2 == 0x123C) println (188); else println (999);
+L2219:
+        LD    A,28
+L2220:
         LD    L,A
         LD    H,0
-L2215:
+L2221:
         LD    DE,4660
         PUSH  BC
         LD    B,A
@@ -6864,30 +6882,30 @@ L2215:
         LD    L,A
         LD    A,B
         POP   BC
-L2216:
+L2222:
         LD    DE,4668
         OR    A
         SBC   HL,DE
-L2217:
-        JP    NZ,L2221
-L2218:
-        LD    A,188
-L2219:
-        CALL  writeLineA
-L2220:
-        JP    L2224
-L2221:
-        LD    HL,999
-L2222:
-        CALL  writeLineHL
 L2223:
-        ;;test15.j(317)   if (fb1 ^ fw2 == 0x1228) println (189); else println (999);
+        JP    NZ,L2227
 L2224:
-        LD    A,28
+        LD    A,188
 L2225:
+        CALL  writeLineA
+L2226:
+        JP    L2230
+L2227:
+        LD    HL,999
+L2228:
+        CALL  writeLineHL
+L2229:
+        ;;test15.j(317)   if (fb1 ^ fw2 == 0x1228) println (189); else println (999);
+L2230:
+        LD    A,28
+L2231:
         LD    L,A
         LD    H,0
-L2226:
+L2232:
         LD    DE,4660
         PUSH  BC
         LD    B,A
@@ -6899,29 +6917,29 @@ L2226:
         LD    L,A
         LD    A,B
         POP   BC
-L2227:
+L2233:
         LD    DE,4648
         OR    A
         SBC   HL,DE
-L2228:
-        JP    NZ,L2232
-L2229:
-        LD    A,189
-L2230:
-        CALL  writeLineA
-L2231:
-        JP    L2236
-L2232:
-        LD    HL,999
-L2233:
-        CALL  writeLineHL
 L2234:
-        ;;test15.j(318)   //final var word/final var byt
+        JP    NZ,L2238
 L2235:
-        ;;test15.j(319)   if (fw2 & fb1 == 0x0014) println (190); else println (999);
+        LD    A,189
 L2236:
-        LD    HL,4660
+        CALL  writeLineA
 L2237:
+        JP    L2242
+L2238:
+        LD    HL,999
+L2239:
+        CALL  writeLineHL
+L2240:
+        ;;test15.j(318)   //final var word/final var byt
+L2241:
+        ;;test15.j(319)   if (fw2 & fb1 == 0x0014) println (190); else println (999);
+L2242:
+        LD    HL,4660
+L2243:
         LD    DE,28
         PUSH  BC
         LD    B,A
@@ -6933,31 +6951,31 @@ L2237:
         LD    L,A
         LD    A,B
         POP   BC
-L2238:
+L2244:
         LD    A,20
-L2239:
+L2245:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L2240:
-        JP    NZ,L2244
-L2241:
-        LD    A,190
-L2242:
-        CALL  writeLineA
-L2243:
-        JP    L2247
-L2244:
-        LD    HL,999
-L2245:
-        CALL  writeLineHL
 L2246:
-        ;;test15.j(320)   if (fw2 | fb1 == 0x123C) println (191); else println (999);
+        JP    NZ,L2250
 L2247:
-        LD    HL,4660
+        LD    A,190
 L2248:
+        CALL  writeLineA
+L2249:
+        JP    L2253
+L2250:
+        LD    HL,999
+L2251:
+        CALL  writeLineHL
+L2252:
+        ;;test15.j(320)   if (fw2 | fb1 == 0x123C) println (191); else println (999);
+L2253:
+        LD    HL,4660
+L2254:
         LD    DE,28
         PUSH  BC
         LD    B,A
@@ -6969,27 +6987,27 @@ L2248:
         LD    L,A
         LD    A,B
         POP   BC
-L2249:
+L2255:
         LD    DE,4668
         OR    A
         SBC   HL,DE
-L2250:
-        JP    NZ,L2254
-L2251:
-        LD    A,191
-L2252:
-        CALL  writeLineA
-L2253:
-        JP    L2257
-L2254:
-        LD    HL,999
-L2255:
-        CALL  writeLineHL
 L2256:
-        ;;test15.j(321)   if (fw2 ^ fb1 == 0x1228) println (192); else println (999);
+        JP    NZ,L2260
 L2257:
-        LD    HL,4660
+        LD    A,191
 L2258:
+        CALL  writeLineA
+L2259:
+        JP    L2263
+L2260:
+        LD    HL,999
+L2261:
+        CALL  writeLineHL
+L2262:
+        ;;test15.j(321)   if (fw2 ^ fb1 == 0x1228) println (192); else println (999);
+L2263:
+        LD    HL,4660
+L2264:
         LD    DE,28
         PUSH  BC
         LD    B,A
@@ -7001,33 +7019,33 @@ L2258:
         LD    L,A
         LD    A,B
         POP   BC
-L2259:
+L2265:
         LD    DE,4648
         OR    A
         SBC   HL,DE
-L2260:
-        JP    NZ,L2264
-L2261:
-        LD    A,192
-L2262:
-        CALL  writeLineA
-L2263:
-        JP    L2268
-L2264:
-        LD    HL,999
-L2265:
-        CALL  writeLineHL
 L2266:
-        ;;test15.j(322) 
+        JP    NZ,L2270
 L2267:
-        ;;test15.j(323)   println("Klaar");
+        LD    A,192
 L2268:
-        LD    HL,2272
+        CALL  writeLineA
 L2269:
-        CALL  writeLineStr
+        JP    L2274
 L2270:
-        ;;test15.j(324) }
+        LD    HL,999
 L2271:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+        CALL  writeLineHL
 L2272:
+        ;;test15.j(322) 
+L2273:
+        ;;test15.j(323)   println("Klaar");
+L2274:
+        LD    HL,2278
+L2275:
+        CALL  writeLineStr
+L2276:
+        ;;test15.j(324) }
+L2277:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L2278:
         .ASCIZ  "Klaar"
