@@ -306,17 +306,22 @@ public class Transcoder {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,L", 0xB5)); //L = L | A
         asm = new AssemblyInstruction(byteAddress, INDENT + "LD    L,A", 0x6F);         //H = H | 0
       } else if (instruction.operand.opType == OperandType.stack8) {
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,A", 0x57)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,E", 0x7B)); //L = L | E
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,L", 0xB5)); //H = H | 0
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
-        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,D", 0x7A); //restore A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,B", 0x78); //restore A
+      } else if (instruction.operand.opType == OperandType.var && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+        byteAddress += 2;
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,L", 0xB5)); //L = L | var
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F)); //H = H | 0
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,B", 0x78); //restore A
       } else {
         asm = operandToDE(instruction);
         result.add(asm);
         byteAddress += asm.getBytes().size();
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  BC",  0xC5));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,H", 0x7C)); //HL = HL | DE
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,D", 0xB2));
@@ -324,20 +329,25 @@ public class Transcoder {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,L", 0x7D));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "OR    A,E", 0xB3));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); //restore A
-        asm = new AssemblyInstruction(byteAddress, INDENT + "POP   BC", 0xC1);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,B", 0x78); //restore A
       }
     } else if (function == FunctionType.acc16Xor) {
       if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "XOR   A,L", 0xAD)); //L = L ^ A
         asm = new AssemblyInstruction(byteAddress, INDENT + "LD    L,A", 0x6F);         //H = H ^ 0
       } else if (instruction.operand.opType == OperandType.stack8) {
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,A", 0x57)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,E", 0x7B)); //L = L ^ E
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "XOR   A,L", 0xAD)); //H = H ^ 0
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
-        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,D", 0x7A);         //restore A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,B", 0x78); //restore A
+      } else if (instruction.operand.opType == OperandType.var && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+        byteAddress += 2;
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "XOR   A,L", 0xAD)); //L = L ^ var
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F)); //H = H ^ 0
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,B", 0x78); //restore A
       } else {
         asm = operandToDE(instruction);
         result.add(asm);
@@ -366,6 +376,14 @@ public class Transcoder {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,D", 0x7A)); //restore A
         asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00); //H = 0
+      } else if (instruction.operand.opType == OperandType.var && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+        byteAddress += 2;
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,L", 0xA5)); //L = L & var
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F)); //H = 0
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); //restore A
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00);
       } else {
         asm = operandToDE(instruction);
         result.add(asm);
@@ -390,6 +408,14 @@ public class Transcoder {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
         byteAddress++;
+      } else if (instruction.operand.opType == OperandType.var && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+        byteAddress += 2;
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); //restore A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
+        byteAddress++;
       } else {
         asm = operandToDE(instruction);
         result.add(asm);
@@ -412,6 +438,14 @@ public class Transcoder {
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
         byteAddress++;
+      } else if (instruction.operand.opType == OperandType.var && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+        byteAddress += 2;
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); //restore A
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
+        byteAddress++;
       } else {
         asm = operandToDE(instruction);
         result.add(asm);
@@ -428,6 +462,14 @@ public class Transcoder {
       if (instruction.operand.opType == OperandType.acc && instruction.operand.datatype == Datatype.byt) {
         putLabelReference("mul16_8", byteAddress);
         asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  mul16_8", 0xCD, 0x00, 0x00);
+      } else if (instruction.operand.opType == OperandType.var && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+        byteAddress += 2;
+        putLabelReference("mul16_8", byteAddress);
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "CALL  mul16_8", 0xCD, 0x00, 0x00));
+        byteAddress += 2;
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,B", 0x78); //restore A
       } else {
         asm = operandToDE(instruction);
         result.add(asm);
@@ -445,6 +487,21 @@ public class Transcoder {
           putLabelReference("div16_8", byteAddress);
           asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div16_8", 0xCD, 0x00, 0x00);
         }
+      } else if (instruction.operand.opType == OperandType.var && instruction.operand.datatype == Datatype.byt) {
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); //save A
+        result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A, memAddress % 256, memAddress / 256));
+        byteAddress += 2;
+        if (function == FunctionType.divAcc16) {
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
+          putLabelReference("div8_16", byteAddress);
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "CALL  div8_16", 0xCD, 0x00, 0x00));
+          byteAddress += 2;
+        } else {
+          putLabelReference("div16_8", byteAddress);
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "CALL  div16_8", 0xCD, 0x00, 0x00));
+          byteAddress += 2;
+        }
+        asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,B", 0x78); //restore A
       } else {
         asm = operandToDE(instruction);
         result.add(asm);
@@ -844,7 +901,7 @@ public class Transcoder {
     String asmCode = null;
     AssemblyInstruction asm = null;
     switch(instruction.operand.opType) {
-      case var: 
+      case var:
         int memAddress = MEM_START + instruction.operand.intValue;
         asmCode = String.format(INDENT + "LD    DE,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
@@ -918,7 +975,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "CALL  WAIT1M      ;Wait 1 msec", 0xCD, 0, 0));
     result.add(plantAssemblyInstruction(INDENT + "DEC   HL", 0x2B));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,H", 0x7C));
-    result.add(plantAssemblyInstruction(INDENT + "OR    L", 0xB5));
+    result.add(plantAssemblyInstruction(INDENT + "OR    A,L", 0xB5));
     putLabelReference("sleep1", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    NZ,sleep1", 0x20, 0));
     result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
@@ -971,7 +1028,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(            INDENT + "LD    A,H         ;2      6 (31+n*10)", 0x7C));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 execute"));
-    result.add(plantAssemblyInstruction(            INDENT + "OR    L           ;2      4 (31+n*14)", 0xB5));
+    result.add(plantAssemblyInstruction(            INDENT + "OR    A,L         ;2      4 (31+n*14)", 0xB5));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
     result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 execute"));
     putLabelReference("WAIT1M2", byteAddress);
@@ -1022,7 +1079,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "IN0   A,(CNTLA0)  ;read ASCI0 control register", 0xED, 0x38, 0x00));
     result.add(plantAssemblyInstruction(INDENT + "RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags", 0xCB, 0x9F));
     result.add(plantAssemblyInstruction(INDENT + "OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL", 0xED, 0x39, 0x00));
-    result.add(plantAssemblyInstruction(INDENT + "XOR   A", 0xAF));
+    result.add(plantAssemblyInstruction(INDENT + "XOR   A,A", 0xAF));
     result.add(plantAssemblyInstruction(INDENT + "RET               ;return without a character", 0xC9));
 
     result.add(new AssemblyInstruction(byteAddress, ";****************"));
@@ -1496,7 +1553,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)", 0xCB, 0x21));
     result.add(plantAssemblyInstruction(INDENT + "RL    A           ;16* 7=112 269   Q = Q * 2", 0xCB, 0x17));
     result.add(plantAssemblyInstruction(INDENT + "ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry", 0xED, 0x6A));
-    result.add(plantAssemblyInstruction(INDENT + "OR    A           ;16* 4= 64 493   if (R >= D) {", 0xB7));
+    result.add(plantAssemblyInstruction(INDENT + "OR    A,A         ;16* 4= 64 493   if (R >= D) {", 0xB7));
     result.add(plantAssemblyInstruction(INDENT + "SBC   HL,DE       ;16*10=160 653", 0xED, 0x52));
     putLabelReference("div16_2", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D", 0x38, 0x03));
@@ -1533,15 +1590,15 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "PUSH  BC          ;11 11 save registers used", 0xC5));
     result.add(plantAssemblyInstruction(INDENT + "LD    B,16        ; 6 17 the length of the dividend (16 bits)", 0x06, 0x10));
     result.add(plantAssemblyInstruction(INDENT + "LD    C,A         ; 4 21 move divisor to C", 0x4F));
-    result.add(plantAssemblyInstruction(INDENT + "XOR   A           ; 4 25 clear upper 8 bits of AHL", 0xAF));
+    result.add(plantAssemblyInstruction(INDENT + "XOR   A,A         ; 4 25 clear upper 8 bits of AHL", 0xAF));
     labels.put("div16_82", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "div16_82:"));
     result.add(plantAssemblyInstruction(INDENT + "ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)", 0x29));
     result.add(plantAssemblyInstruction(INDENT + "RL    A           ;16*7=112 249", 0xCB, 0x17));
-    result.add(plantAssemblyInstruction(INDENT + "CP    C           ;16*4= 64 313 check if divisor (E) <= selected digits (A)", 0xB9));
+    result.add(plantAssemblyInstruction(INDENT + "CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)", 0xB9));
     putLabelReference("div16_83", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction", 0x38, 0));
-    result.add(plantAssemblyInstruction(INDENT + "SUB   C           ;             16*4=64 473 subtract the divisor", 0x91));
+    result.add(plantAssemblyInstruction(INDENT + "SUB   A,C         ;             16*4=64 473 subtract the divisor", 0x91));
     result.add(plantAssemblyInstruction(INDENT + "INC   L           ;             16*4=64 537 and set the next digit of the quotient", 0x2C));
     labels.put("div16_83", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "div16_83:"));
@@ -1604,16 +1661,16 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "LD    B,8         ; 6 28 the length of the dividend (8 bits)", 0x06, 0x08));
     result.add(plantAssemblyInstruction(INDENT + "LD    D,0         ; 6 34 D = Q = quotient = 0", 0x16, 0x00));
     result.add(plantAssemblyInstruction(INDENT + "LD    E,A         ; 4 38 E = T = dividend", 0x5F));
-    result.add(plantAssemblyInstruction(INDENT + "XOR   A           ; 4 42 A = R = remainder = 0", 0xAF));
+    result.add(plantAssemblyInstruction(INDENT + "XOR   A,A         ; 4 42 A = R = remainder = 0", 0xAF));
     labels.put("div8_1", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "div8_1:"));
     result.add(plantAssemblyInstruction(INDENT + "SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)", 0xCB, 0x23));
     result.add(plantAssemblyInstruction(INDENT + "RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry", 0xCB, 0x17));
     result.add(plantAssemblyInstruction(INDENT + "SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2", 0xCB, 0x22));
-    result.add(plantAssemblyInstruction(INDENT + "CP    C           ;8*4=32 242            if (R[A] - D[C] >= 0) {", 0xB9));
+    result.add(plantAssemblyInstruction(INDENT + "CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {", 0xB9));
     putLabelReference("div8_2", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    C,div8_2    ;8*8=64 306 8*6=48 290", 0x38, 0));
-    result.add(plantAssemblyInstruction(INDENT + "SUB   C           ;           8*4=32 322   R[A] = R[A] - D[C];", 0x91));
+    result.add(plantAssemblyInstruction(INDENT + "SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];", 0x91));
     result.add(plantAssemblyInstruction(INDENT + "INC   D           ;           8*4=32 354   Q[D]++;", 0x14));
     labels.put("div8_2", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "div8_2:           ;                      }"));
@@ -1656,10 +1713,10 @@ public class Transcoder {
     result.add(new AssemblyInstruction(byteAddress, "div8_16:"));
     result.add(plantAssemblyInstruction(INDENT + "LD    C,A         ;  4  4         save dividend(A) in C", 0x4F));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,H         ;  4  8         if D >= 256 {", 0x7C));
-    result.add(plantAssemblyInstruction(INDENT + "OR    A           ;  4 12", 0xB7));
+    result.add(plantAssemblyInstruction(INDENT + "OR    A,A         ;  4 12", 0xB7));
     putLabelReference("div8_161", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    Z,div8_161  ;  6 18  8  20", 0x28, 0x02));
-    result.add(plantAssemblyInstruction(INDENT + "XOR   A           ;  4 22           R = T;", 0xAF));
+    result.add(plantAssemblyInstruction(INDENT + "XOR   A,A         ;  4 22           R = T;", 0xAF));
     result.add(plantAssemblyInstruction(INDENT + "RET               ;  9 31           Q = 0;", 0xC9));
     labels.put("div8_161", byteAddress);
     result.add(new AssemblyInstruction(byteAddress, "div8_161:                     ;               } else {"));
@@ -1687,7 +1744,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "CALL  getChar     ;check if a character is available.", 0xCD, 0, 0));
     putLabelReference("read1", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    Z,read1     ;-no: wait for it.", 0x28, 0xFB));
-    result.add(plantAssemblyInstruction(INDENT + "CP    '\\r'        ;return if char == Carriage Return", 0xFE, 0x0D));
+    result.add(plantAssemblyInstruction(INDENT + "CP    A,'\\r'      ;return if char == Carriage Return", 0xFE, 0x0D));
     putLabelReference("read2", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    Z,read2", 0x28, 0x0F));
     putLabelReference("mul16_10", byteAddress);
@@ -1733,7 +1790,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "PUSH  AF", 0xF5));
     result.add(plantAssemblyInstruction(INDENT + "LD    B,0         ;number of digits on stack", 0x06, 0x00));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,H         ;is HL=0?", 0x7C));
-    result.add(plantAssemblyInstruction(INDENT + "OR    L", 0xB5));
+    result.add(plantAssemblyInstruction(INDENT + "OR    A,L", 0xB5));
     putLabelReference("writeHL1", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    NZ,writeHL1", 0x20, 0x03));
     result.add(plantAssemblyInstruction(INDENT + "INC   B           ;write a single digit 0", 0x04));
@@ -1747,7 +1804,7 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "PUSH  AF          ;put remainder on stack", 0xF5));
     result.add(plantAssemblyInstruction(INDENT + "INC   B", 0x04));
     result.add(plantAssemblyInstruction(INDENT + "LD    A,H         ;is quotient 0?", 0x7C));
-    result.add(plantAssemblyInstruction(INDENT + "OR    L", 0xB5));
+    result.add(plantAssemblyInstruction(INDENT + "OR    A,L", 0xB5));
     putLabelReference("writeHL1", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JR    NZ,writeHL1", 0x20, 0xF5));
     labels.put("writeHL2", byteAddress);

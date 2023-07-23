@@ -1,0 +1,5144 @@
+2000             TOS     equ 0FD00H        ;User stack grows before user global data.
+2000             CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
+2000             STAT0   equ 004H          ;147 ASCI0 Status register.
+2000             TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
+2000             RDR0    equ 008H          ;149 ASCI0 Receive Data Register.
+2000             ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
+2000             TDRE    equ 1             ;STAT0->Tx data register empty bit.
+2000             OVERRUN equ 6             ;STAT0->OVERRUN bit.
+2000             RDRF    equ 7             ;STAT0->Rx data register full bit.
+2000                     .ORG  02000H      ;lowest external RAM address.
+2000             start:
+2000 31 00 FD            LD    SP,TOS
+2003 C3 CE 21            JP    main
+2006             ;****************
+2006             ;sleepHL - Wait HL * 1 msec @ 18,432 MHz with no wait states
+2006             ;  IN:  HL number of msec to wait
+2006             ;  OUT: none
+2006             ;  USES: 4 bytes on stack
+2006             ;****************
+2006             sleepHL:
+2006 F5                  PUSH  AF
+2007             sleep1:
+2007 CD 18 20            CALL  WAIT1M      ;Wait 1 msec
+200A 2B                  DEC   HL
+200B 7C                  LD    A,H
+200C B5                  OR    A,L
+200D 20 F8               JR    NZ,sleep1
+200F F1                  POP   AF
+2010 C9                  RET
+2011             ;****************
+2011             ;sleepA - Wait A * 1 msec @ 18,432 MHz with no wait states
+2011             ;  IN:  A number of msec to wait
+2011             ;  OUT: none
+2011             ;  USES: no stack
+2011             ;****************
+2011             sleepA:
+2011 CD 18 20            CALL  WAIT1M      ;Wait 1 msec
+2014 3D                  DEC   A
+2015 20 F0               JR    NZ,sleepA
+2017 C9                  RET
+2018             ;****************
+2018             ;WAIT1M
+2018             ;wait 1 msec at 18,432 MHz with no wait states
+2018             ;The routine requires 56+n*22 states, so that with n=834
+2018             ;28  clock cycles remain left.
+2018             ;****************
+2018             WAIT1M:
+2018 E5                  PUSH  HL          ;5      11 (11)
+2019                                       ;       3 opcode
+2019                                       ;       3 mem write
+2019                                       ;       1 inc SP
+2019                                       ;       3 mem write
+2019                                       ;       1 inc SP
+2019 F5                  PUSH  AF          ;5      11 (22)
+201A                                       ;       3 opcode
+201A                                       ;       3 mem write
+201A                                       ;       1 inc SP
+201A                                       ;       3 mem write
+201A                                       ;       1 inc SP
+201A 21 42 03            LD    HL, 834     ;3      9 (31)
+201D                                       ;       3 opcode
+201D                                       ;       3 mem read
+201D                                       ;       3 mem read
+201D             WAIT1M2:
+201D 2B                  DEC   HL          ;2      4 (31+n*4)
+201E                                       ;       3 opcode
+201E                                       ;       1 execute
+201E 7C                  LD    A,H         ;2      6 (31+n*10)
+201F                                       ;       3 opcode
+201F                                       ;       3 execute
+201F B5                  OR    A,L         ;2      4 (31+n*14)
+2020                                       ;       3 opcode
+2020                                       ;       1 execute
+2020 20 FB               JR    NZ,WAIT1M2  ;4      8 (31+n*22) if NZ
+2022                                       ;       3 opcode
+2022                                       ;       3 mem read
+2022                                       ;       1 execute
+2022                                       ;       1 execute
+2022                                       ;2      6 (29+n*22) if not NZ
+2022                                       ;       3 opcode
+2022                                       ;       3 mem read
+2022 F1                  POP   AF          ;3      9 (38+n*22)
+2023                                       ;       3 opcode
+2023                                       ;       3 mem read
+2023                                       ;       3 mem read
+2023 E1                  POP   HL          ;3      9 (47+n*22)
+2024                                       ;       3 opcode
+2024                                       ;       3 mem read
+2024                                       ;       3 mem read
+2024 C9                  RET               ;3      9 (56+n*22)
+2025                                       ;       3 opcode
+2025                                       ;       3 mem read
+2025                                       ;       3 mem read
+2025             ;****************
+2025             ;getChar
+2025             ;Check if an input character from ASCI0 is available.
+2025             ;  IN:  none
+2025             ;  OUT: F: ZERO flag set if no character is available.
+2025             ;          ZERO flag reset if a character is available.
+2025             ;       A : character from ASCI0, if available.
+2025             ;  USES:AF
+2025             ;****************
+2025             getChar:
+2025 ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status
+2028 CB 77               BIT   OVERRUN,A   ;check if ASCIO OVERRUN bit is set
+202A 20 07               JR    NZ,getChar1 ;-yes: reset error flags
+202C CB 7F               BIT   RDRF,A      ;check if ASCIO RDRF bit is set
+202E C8                  RET   Z           ;-no: return without a character
+202F ED 38 08            IN0   A,(RDR0)    ;-yes:read ASCIO Rx data register
+2032 C9                  RET
+2033             getChar1:
+2033 ED 38 00            IN0   A,(CNTLA0)  ;read ASCI0 control register
+2036 CB 9F               RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
+2038 ED 39 00            OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
+203B AF                  XOR   A,A
+203C C9                  RET               ;return without a character
+203D             ;****************
+203D             ;putMsg
+203D             ;Print via ASCI0 a zero terminated string, starting at the return address on the stack.
+203D             ;  IN:  none.
+203D             ;  OUT: none.
+203D             ;  USES:none.
+203D             ;****************
+203D             putMsg:
+203D E3                  EX    (SP),HL     ;save HL and load return address into HL.
+203E CD 4A 20            CALL  writeStr
+2041 E3                  EX    (SP),HL     ;put return address onto stack and restore HL.
+2042 C9                  RET
+2043             ;****************
+2043             ;writeLineStr
+2043             ;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+2043             ;  IN:  HL:address of zero terminated string to be printed.
+2043             ;  OUT: none.
+2043             ;  USES:HL (point to byte after zero terminated string)
+2043             ;****************
+2043             writeLineStr:
+2043 CD 4A 20            CALL  writeStr
+2046 CD 66 20            CALL  putCRLF
+2049 C9                  RET
+204A             ;****************
+204A             ;writeStr
+204A             ;Print via ASCI0 a zero terminated string, pointed to by HL.
+204A             ;  IN:  HL:address of zero terminated string to be printed.
+204A             ;  OUT: none.
+204A             ;  USES:HL (point to byte after zero terminated string)
+204A             ;****************
+204A             writeStr:
+204A F5                  PUSH  AF          ;save registers
+204B             putStr1:
+204B 7E                  LD    A,(HL)      ;get next character
+204C 23                  INC   HL
+204D B7                  OR    A,A         ;is it zer0?
+204E 28 05               JR    Z,putStr2   ;yes ->return
+2050 CD 59 20            CALL  putChar     ;no->put it to ASCI0
+2053 18 F6               JR    putStr1
+2055             putStr2:
+2055 F1                  POP   AF
+2056 C9                  RET
+2057             ;****************
+2057             ;putSpace
+2057             ;Send a space character to ASCI0
+2057             ;  IN:  none.
+2057             ;  OUT: none.
+2057             ;  USES:AF
+2057             ;****************
+2057             putSpace:
+2057 3E 20               LD    A,' '       ;load space and continue with putChar.
+2059             ;****************
+2059             ;putChar
+2059             ;Send one character to ASCI0.
+2059             ;  IN:  A = character
+2059             ;  OUT: none.
+2059             ;  USES:none.
+2059             ;****************
+2059             putChar:
+2059 F5                  PUSH  AF          ;send the character via ASCI0
+205A             putChar1:
+205A ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status register
+205D CB 4F               BIT   TDRE,A      ;wait until TDRE <> 0
+205F 28 F9               JR    Z,putChar1
+2061 F1                  POP   AF          ;restore AF registers
+2062 ED 39 06            OUT0  (TDR0),A    ;write character to ASCI0
+2065 C9                  RET
+2066             ;****************
+2066             ;putCRLF
+2066             ;Send CR and LF to ASCI0
+2066             ;  IN:  none.
+2066             ;  OUT: none.
+2066             ;  USES:none.
+2066             ;****************
+2066             putCRLF:
+2066 F5                  PUSH  AF
+2067 3E 0D               LD    A,'\r'       ;print carriage return
+2069 CD 59 20            CALL  putChar
+206C 3E 0A               LD    A,'\n'       ;print line feed
+206E CD 59 20            CALL  putChar
+2071 F1                  POP   AF
+2072 C9                  RET
+2073             ;****************
+2073             ;putErase
+2073             ;Erase the latest character at ASCI0
+2073             ;  IN:  none.
+2073             ;  OUT: none.
+2073             ;  USES:AF
+2073             ;****************
+2073             putErase:
+2073 3E 08               LD    A,'\b'       ;print backspace
+2075 CD 59 20            CALL  putChar
+2078 CD 57 20            CALL  putSpace    ;print space (erase character)
+207B 3E 08               LD    A,'\b'      ;print backspace
+207D 18 DA               JR    putChar
+207F             ;****************
+207F             ;putBell
+207F             ;Send a Bell character to ASCI0
+207F             ;  IN:  none.
+207F             ;  OUT: none.
+207F             ;  USES:AF
+207F             ;****************
+207F             putBell:
+207F 3E 07               LD    A,07        ;ring the bell at ASCI0
+2081 18 D6               JR    putChar
+2083             ;****************
+2083             ;putHexHL
+2083             ;Print HL register pair as 4 hex digits
+2083             ;  IN:  HL = word to be printed.
+2083             ;  OUT: none.
+2083             ;  USES:none.
+2083             ;****************
+2083             putHexHL:
+2083 F5                  PUSH  AF          ;save used registers
+2084 7C                  LD    A,H         ;print H as 2 hex digits
+2085 CD 8E 20            CALL  putHexA
+2088 7D                  LD    A,L         ;print L as 2 hex digits
+2089 CD 8E 20            CALL  putHexA
+208C F1                  POP   AF          ;restore used registers
+208D C9                  RET
+208E             ;****************
+208E             ;putHexA
+208E             ;Print A register as 2 hex digits
+208E             ;  IN:  A = byte to be printed
+208E             ;  OUT: none.
+208E             ;  USES:none.
+208E             ;****************
+208E             putHexA:
+208E F5                  PUSH  AF          ;save input
+208F 1F                  RRA               ;shift upper nibble to the right
+2090 1F                  RRA
+2091 1F                  RRA
+2092 1F                  RRA
+2093 CD 97 20            CALL  putHexA1    ;print upper nibble
+2096 F1                  POP   AF          ;restore input & print lower nibble
+2097             putHexA1:
+2097 F5                  PUSH  AF          ;save input
+2098 E6 0F               AND   A,00FH      ;mask lower nibble
+209A C6 30               ADD   A,'0'       ;convert to hex digit
+209C FE 3A               CP    A,'9'+1
+209E 38 02               JR    C,putHexA2
+20A0 C6 07               ADD   A,07
+20A2             putHexA2:
+20A2 CD 59 20            CALL  putChar
+20A5 F1                  POP   AF          ;restore input
+20A6 C9                  RET               ;and return
+20A7             ;****************
+20A7             ;mul16
+20A7             ;16 by 16 bit unsigned multiplication with 16 bit result.
+20A7             ;  IN:  HL = operand 1
+20A7             ;       DE = operand 2
+20A7             ;  OUT: HL = HL * DE low part
+20A7             ;  USES:DE
+20A7             ;  Size   25 bytes
+20A7             ;  Time  160 cycles
+20A7             ;****************
+20A7             mul16:
+20A7                     ;HL = HL * DE
+20A7                     ;        H  L
+20A7                     ;        D  E
+20A7                     ;    --------*
+20A7                     ;          EL
+20A7                     ;       EH  0
+20A7                     ;       DL  0
+20A7                     ; -----------+
+20A7                     ;        R  S
+20A7                     ;S = ELlow
+20A7                     ;R = ELhigh+EHlow+DLlow
+20A7 C5                  PUSH  BC          ;11  11 save BC
+20A8 44                  LD    B,H         ; 4  15 copy HL to BC
+20A9 4D                  LD    C,L         ; 4  19
+20AA 63                  LD    H,E         ; 4  23 HL contains EL
+20AB ED 6C               MLT   HL          ;17  40
+20AD E5                  PUSH  HL          ;11  51
+20AE 63                  LD    H,E         ; 4  55 HL contains EH aka EB
+20AF 68                  LD    L,B         ; 4  59
+20B0 ED 6C               MLT   HL          ;17  76
+20B2 45                  LD    B,L         ; 4  80 save EHlow in B
+20B3 62                  LD    H,D         ; 4  84 HL contains DL aka DC
+20B4 69                  LD    L,C         ; 4  88
+20B5 ED 6C               MLT   HL          ;17 105
+20B7 55                  LD    D,L         ; 4 109 DLlow into DE
+20B8 1E 00               LD    E,0         ; 6 115
+20BA E1                  POP   HL          ; 9 124 add EL+DElow
+20BB 19                  ADD   HL,DE       ; 7 131
+20BC 50                  LD    D,B         ; 4 135 add EL+DElow+EHlow
+20BD 19                  ADD   HL,DE       ; 7 142
+20BE C1                  POP   BC          ; 9 151 restore BC
+20BF C9                  RET               ; 9 160
+20C0             ;****************
+20C0             ;mul16_10
+20C0             ;multiply a 16 bit unsigned number by 10 with a 16 bit result.
+20C0             ;  IN:  HL = operand
+20C0             ;  OUT: HL = HL * 10; low part
+20C0             ;  USES:Flags
+20C0             ;  Size   9 bytes
+20C0             ;  Time   65 cycles
+20C0             ;****************
+20C0             mul16_10:
+20C0 D5                  PUSH  DE          ;11 11
+20C1 54                  LD    D,H         ; 4 15
+20C2 5D                  LD    E,L         ; 4 19
+20C3 29                  ADD   HL,HL       ; 7 26 times 2
+20C4 29                  ADD   HL,HL       ; 7 33 times 4
+20C5 19                  ADD   HL,DE       ; 7 40 times 5
+20C6 29                  ADD   HL,HL       ; 7 47 times 10
+20C7 D1                  POP   DE          ; 9 56
+20C8 C9                  RET               ; 9 65
+20C9             ;****************
+20C9             ;mul16_8
+20C9             ;16 by 8 bit unsigned multiplication with 16 bit result.
+20C9             ;  IN:  HL = operand 1
+20C9             ;        A = operand 2
+20C9             ;  OUT: HL = HL * A low part
+20C9             ;  USES:AF
+20C9             ;  Size   .. bytes
+20C9             ;  Time  ... cycles
+20C9             ;****************
+20C9             mul16_8:
+20C9                     ;HL = HL * A
+20C9                     ;        H  L
+20C9                     ;           A
+20C9                     ;    --------*
+20C9                     ;          AL
+20C9                     ;       AH  0
+20C9                     ; -----------+
+20C9                     ;        R  S
+20C9                     ;S = ALlow
+20C9                     ;R = ALhigh+AHlow
+20C9 C5                  PUSH  BC          ;11  11 save BC
+20CA 44                  LD    B,H         ; 4  15
+20CB 47                  LD    C,A         ; 4  19
+20CC 67                  LD    H,A         ; 4  23
+20CD ED 6C               MLT   HL          ;17  40 HL = AL
+20CF ED 4C               MLT   BC          ;17  57 BC = AH
+20D1 7C                  LD    A,H         ; 4  61 A = S = ALhigh+AHlow
+20D2 81                  ADD   A,C         ; 4  65
+20D3 67                  LD    H,A         ; 4  69
+20D4 C1                  POP   BC          ; 9  78 | 289 restore BC
+20D5 C9                  RET               ; 9  87 | 307
+20D6             ;****************
+20D6             ;mul1632
+20D6             ;16 by 16 bit unsigned multiplication with 32 bit result.
+20D6             ;  IN:  HL = operand 1
+20D6             ;       DE = operand 2
+20D6             ;  OUT: HL = HL * DE low part
+20D6             ;       DE = HL * DE high part
+20D6             ;  USES:-
+20D6             ;  Size 49 bytes
+20D6             ;  Time between 303 en 307 cycles
+20D6             ;****************
+20D6             mul1632:
+20D6                     ;HL = HL * DE
+20D6                     ;        H  L
+20D6                     ;        D  E
+20D6                     ;    --------*
+20D6                     ;          EL
+20D6                     ;       EH  0
+20D6                     ;       DL  0
+20D6                     ;    DH  0  0
+20D6                     ; -----------+
+20D6                     ;  P  Q  R  S
+20D6                     ;S = ELlow
+20D6                     ;R = ELhigh+EHlow+DLlow
+20D6                     ;Q = DHlow+EHhigh+DLhigh
+20D6                     ;P = DHhigh
+20D6 F5                  PUSH  AF          ;11  11 save AF
+20D7 C5                  PUSH  BC          ;11  22 save BC
+20D8 44                  LD    B,H         ; 4  26
+20D9 4D                  LD    C,L         ; 4  30
+20DA 62                  LD    H,D         ; 4  34 HL contains DH aka DB
+20DB 68                  LD    L,B         ; 4  38
+20DC ED 6C               MLT   HL          ;17  55
+20DE E5                  PUSH  HL          ;11  66
+20DF 62                  LD    H,D         ; 4  70 HL contains DL aka DC
+20E0 69                  LD    L,C         ; 4  74
+20E1 ED 6C               MLT   HL          ;17  91
+20E3 E5                  PUSH  HL          ;11 102
+20E4 63                  LD    H,E         ; 4 106 HL contains EH aka EB
+20E5 68                  LD    L,B         ; 4 110
+20E6 ED 6C               MLT   HL          ;17 127
+20E8 E5                  PUSH  HL          ;11 138
+20E9 63                  LD    H,E         ; 4 142 HL contains EL aka EC
+20EA 69                  LD    L,C         ; 4 146
+20EB ED 6C               MLT   HL          ;17 163
+20ED D1                  POP   DE          ; 9 172 calculate RS=EL+EH0
+20EE 06 00               LD    B,0         ; 6 178
+20F0 4A                  LD    C,D         ; 4 182 ..C=EHhigh
+20F1 53                  LD    D,E         ; 4 186 ..D=EHlow
+20F2 1E 00               LD    E,0         ; 6 192
+20F4 19                  ADD   HL,DE       ; 7 199
+20F5 30 01               JR    NC,mul16321 ; 8 207 | 6 205 add carry to PQ
+20F7 03                  INC   BC          ;         4 209
+20F8             mul16321:
+20F8 D1                  POP   DE          ; 9 209 | 211 calculate RS=EL+EH0+DL0
+20F9 7A                  LD    A,D         ; 4 220 | 222 ..A=DLhigh
+20FA 53                  LD    D,E         ; 4 224 | 226 ..D=DLlow
+20FB 19                  ADD   HL,DE       ; 7 231 | 233
+20FC 30 01               JR    NC,mul16322 ; 8 239 | 6 239 add carry to PQ
+20FE 03                  INC   BC          ;         4 243
+20FF             mul16322:
+20FF                                       ;HL=RS=EL+EH0+DL0
+20FF                                       ;C=EHhigh
+20FF                                       ;A=DLhigh
+20FF                                       ;E=0
+20FF EB                  EX    DE,HL       ; 3 242 | 246
+2100 65                  LD    H,L         ; 4 246 | 250 ..E was 0, so H=L=0
+2101 6F                  LD    L,A         ; 4 250 | 254 ..HL=DLhigh
+2102 09                  ADD   HL,BC       ; 7 257 | 261 PQ=EHhigh+DLhigh+DH
+2103 C1                  POP   BC          ; 9 266 | 270
+2104 09                  ADD   HL,BC       ; 7 273 | 277
+2105 EB                  EX    DE,HL       ; 3 276 | 280
+2106                                       ;D=P=DHhigh
+2106                                       ;E=Q=DHlow+EHhigh+DLhigh
+2106                                       ;H=R=ELhigh+EHlow+DLlow
+2106                                       ;L=S=ELlow
+2106 C1                  POP   BC          ; 9 285 | 289 restore BC
+2107 F1                  POP   AF          ; 9 294 | 298 restore AF
+2108 C9                  RET               ; 9 303 | 307
+2109             ;****************
+2109             ;mul16S
+2109             ;16 by 16 bit slow unsigned multiplication with 32 bit result.
+2109             ;  IN:  HL = operand 1
+2109             ;       DE = operand 2
+2109             ;  OUT: DE = HL * DE high part
+2109             ;       HL = HL * DE low part
+2109             ;  USES:none.
+2109             ;  Size 26 bytes
+2109             ;  Time between 726 en 998 cycles
+2109             ;****************
+2109             mul16S:
+2109 F5                  PUSH  AF          ;11  11 save AF
+210A C5                  PUSH  BC          ;11  22 save BC
+210B 44                  LD    B,H         ; 4  26
+210C 4D                  LD    C,L         ; 4  30
+210D 21 00 00            LD    HL,0        ; 9  39
+2110 3E 10               LD    A,16        ; 6  45
+2112             mul16S1:
+2112 29                  ADD   HL,HL       ;16*7=112 157
+2113 CB 13               RL    E           ;16*7=112 269
+2115 CB 12               RL    D           ;16*7=112 381
+2117 30 04               JR    NC,mul16S2  ;16*8=128 509 16*6= 96 477
+2119 09                  ADD   HL,BC       ;             16*7=112 589
+211A 30 01               JR    NC,mul16S2  ;             16*8=128 717 16*6=96 685
+211C 13                  INC   DE          ;             16*4= 64 781 16*4=64 749 This instruction (with the jump) is like an "ADC DE,0"
+211D             mul16S2:
+211D 3D                  DEC   A           ;16*4=64    573 | 845 | 813
+211E 20 F2               JR    NZ,mul16S1  ;15*8+6=126 699 | 971 | 939
+2120 C1                  POP   BC          ; 9         708 | 980 | 948 restore BC
+2121 F1                  POP   AF          ; 9         717 | 989 | 957 restore AF
+2122 C9                  RET               ; 9         726 | 998 | 966
+2123             ;****************
+2123             ;div16
+2123             ;16 by 16 bit unsigned division.
+2123             ;  IN:  HL = dividend
+2123             ;       DE = divisor
+2123             ;  OUT: HL = quotient
+2123             ;       DE = remainder
+2123             ;  USES:-
+2123             ;  Size   32 bytes
+2123             ;  Time   between 1073 en 1121 cycles
+2123             ;pseudo code:
+2123             ;T = AC = dividend
+2123             ;D = DE = divisor
+2123             ;Q = AC = quotient = 0
+2123             ;R = HL = remainder = 0
+2123             ;invariante betrekking:
+2123             ; D/T\Q     
+2123             ;   R       
+2123             ; T = QD + R
+2123             ; T <= 2^N  
+2123             ;
+2123             ; D/T'.RT\Q'      
+2123             ;   R'             
+2123             ; RT <= 2^N        
+2123             ; 0<=k<=N          
+2123             ; RT = T % 2^k     
+2123             ; T' = (T-RT) / 2^k
+2123             ; Q' = T' / D      
+2123             ; R' = T' % D      
+2123             ;
+2123             ;for (i=16; i>0; i--) {
+2123             ;  T = T * 2 (remember MSB in carry)
+2123             ;  R = R * 2 + carry
+2123             ;  Q = Q * 2
+2123             ;  if (R >= D) {
+2123             ;    R = R - D;
+2123             ;    Q++;
+2123             ;  }
+2123             ;}
+2123             ;return Q (in HL) and R (in DE)
+2123             ;****************
+2123             div16:
+2123 F5                  PUSH  AF          ;11  11 save registers used
+2124 C5                  PUSH  BC          ;11  22
+2125 4D                  LD    C,L         ; 4  26 T(AC) = teller from input (HL)
+2126 7C                  LD    A,H         ; 4  30 D(DE) = deler from input  (DE)
+2127 21 00 00            LD    HL,0        ; 9  39 R(HL) = restant; Q(AC) = quotient
+212A 06 10               LD    B,16        ; 6  45 for (i=16; i>0; i--)
+212C             div16_1:
+212C CB 21               SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
+212E CB 17               RL    A           ;16* 7=112 269   Q = Q * 2
+2130 ED 6A               ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
+2132 B7                  OR    A,A         ;16* 4= 64 493   if (R >= D) {
+2133 ED 52               SBC   HL,DE       ;16*10=160 653
+2135 38 03               JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
+2137 0C                  INC   C           ;              16*4= 64 813   Q++
+2138 18 01               JR    div16_3     ;              16*8=128 941
+213A             div16_2:
+213A 19                  ADD   HL,DE       ;16* 7=112 893  (compensate comparison)
+213B             div16_3:
+213B 10 EF               DJNZ  div16_1     ;15*9+7=142 1035 | 1083 }
+213D EB                  EX    DE,HL       ; 3 1038 | 1086 swap remainder (HL) into DE
+213E 67                  LD    H,A         ; 4 1042 | 1090 move quotient (AC) into HL
+213F 69                  LD    L,C         ; 4 1046 | 1094
+2140 C1                  POP   BC          ; 9 1055 | 1103
+2141 F1                  POP   AF          ; 9 1064 | 1112
+2142 C9                  RET               ; 9 1073 | 1121
+2143             ;****************
+2143             ;div16_8
+2143             ;16 by 8 bit unsigned division.
+2143             ;  IN:  HL = dividend
+2143             ;       A  = divisor
+2143             ;  OUT: HL = quotient
+2143             ;       A  = remainder
+2143             ;  USES:F(lags)
+2143             ;  Size 18 bytes
+2143             ;  Time between 601 en 697 cycles
+2143             ;****************
+2143             div16_8:
+2143 C5                  PUSH  BC          ;11 11 save registers used
+2144 06 10               LD    B,16        ; 6 17 the length of the dividend (16 bits)
+2146 4F                  LD    C,A         ; 4 21 move divisor to C
+2147 AF                  XOR   A,A         ; 4 25 clear upper 8 bits of AHL
+2148             div16_82:
+2148 29                  ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
+2149 CB 17               RL    A           ;16*7=112 249
+214B B9                  CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
+214C 38 02               JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
+214E 91                  SUB   A,C         ;             16*4=64 473 subtract the divisor
+214F 2C                  INC   L           ;             16*4=64 537 and set the next digit of the quotient
+2150             div16_83:
+2150 10 F6               DJNZ  div16_82    ;15*9+7=142 583 679
+2152 C1                  POP   BC          ;9 592 688
+2153 C9                  RET               ;9 601 697
+2154             ;****************
+2154             ;div8
+2154             ;8 by 8 bit unsigned division.
+2154             ;  IN:  A = dividend
+2154             ;       C = divisor
+2154             ;  OUT: A = quotient
+2154             ;       C = remainder
+2154             ;  USES:F(lags)
+2154             ;  Size 26 bytes
+2154             ;  Time between 411 and 459 cycles
+2154             ;****************
+2154             ;pseudo code:
+2154             ;T = dividend
+2154             ;D = divisor
+2154             ;Q = quotient = 0
+2154             ;R = remainder = 0
+2154             ;invariante betrekking:
+2154             ; T = QD + R
+2154             ; T <= 2^8  
+2154             ;
+2154             ; D/T'.RT\Q'      
+2154             ;   R'             
+2154             ; RT <= 2^8        
+2154             ; 0<=k<=8          
+2154             ; RT = T % 2^k     
+2154             ; T' = (T-RT) / 2^k
+2154             ; Q' = T' / D      
+2154             ; R' = T' % D      
+2154             ;
+2154             ;for (i=8; i>0; i--) {
+2154             ;  T = T * 2 (remember MSB in carry)
+2154             ;  R = R * 2 + carry
+2154             ;  Q = Q * 2
+2154             ;  if (R >= D) {
+2154             ;    R = R - D;
+2154             ;    Q++;
+2154             ;  }
+2154             ;}
+2154             ;return Q (in A) and R (in C)
+2154             ;****************
+2154             ;E = T = dividend
+2154             ;C = D = divisor
+2154             ;D = Q = quotient
+2154             ;A = R = remainder
+2154             ;****************
+2154             ;  IN:  A = dividend
+2154             ;       C  = divisor
+2154             div8:
+2154 D5                  PUSH  DE          ;11 11 save registers used
+2155 C5                  PUSH  BC          ;11 22 save registers used
+2156 06 08               LD    B,8         ; 6 28 the length of the dividend (8 bits)
+2158 16 00               LD    D,0         ; 6 34 D = Q = quotient = 0
+215A 5F                  LD    E,A         ; 4 38 E = T = dividend
+215B AF                  XOR   A,A         ; 4 42 A = R = remainder = 0
+215C             div8_1:
+215C CB 23               SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
+215E CB 17               RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
+2160 CB 22               SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
+2162 B9                  CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
+2163 38 02               JR    C,div8_2    ;8*8=64 306 8*6=48 290
+2165 91                  SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
+2166 14                  INC   D           ;           8*4=32 354   Q[D]++;
+2167             div8_2:           ;                      }
+2167 10 F3               DJNZ  div8_1      ;7*9+7=70 376 424      }
+2169 C1                  POP   BC          ;9        385 433
+216A 4F                  LD    C,A         ;4        389 437      return Remainder[A] in C
+216B 7A                  LD    A,D         ;4        393 441      return Quotient[D] in A
+216C D1                  POP   DE          ;9        402 450
+216D C9                  RET               ;9        411 459
+216E             ;****************
+216E             ;div8_16
+216E             ;8 by 16 bit unsigned division.
+216E             ;  IN:  A = dividend
+216E             ;       HL = divisor
+216E             ;  OUT: A = quotient
+216E             ;       C = remainder
+216E             ;  USES:F(lags)
+216E             ;  Size 13 bytes (plus dependency on div8)
+216E             ;  Time 31 or between 436 and 484 cycles
+216E             ;****************
+216E             ;invariante betrekking:
+216E             ; T = dividend
+216E             ; D = divisor
+216E             ; Q = quotient
+216E             ; R = remainder
+216E             ; T = QD + R
+216E             ;pseudo code:
+216E             ; if D >= 256 {
+216E             ;   R = T
+216E             ;   Q = 0
+216E             ; } else {
+216E             ;   R = T/D (using div8)
+216E             ;   Q = T%D (using div8)
+216E             ; }
+216E             ;****************
+216E             
+216E             
+216E             div8_16:
+216E 4F                  LD    C,A         ;  4  4         save dividend(A) in C
+216F 7C                  LD    A,H         ;  4  8         if D >= 256 {
+2170 B7                  OR    A,A         ;  4 12
+2171 28 02               JR    Z,div8_161  ;  6 18  8  20
+2173 AF                  XOR   A,A         ;  4 22           R = T;
+2174 C9                  RET               ;  9 31           Q = 0;
+2175             div8_161:                     ;               } else {
+2175 79                  LD    A,C         ;        4  24    restore dividend into A
+2176 4D                  LD    C,L         ;        4  28    load divisor (HL) into C
+2177 CD 54 21            CALL  div8        ; 16+411/16+459               R = T/D; Q = T%D;
+217A C9                  RET               ; 9  436/484    }
+217B             ;****************
+217B             ;read
+217B             ;read a 16 bit unsigned number from the input
+217B             ;  IN:  none
+217B             ;  OUT: HL = 16 bit unsigned number
+217B             ;  USES:-
+217B             ;****************
+217B             read:
+217B F5                  PUSH  AF
+217C 21 00 00            LD    HL,0        ;result = 0;
+217F             read1:
+217F CD 25 20            CALL  getChar     ;check if a character is available.
+2182 28 FB               JR    Z,read1     ;-no: wait for it.
+2184 FE 0D               CP    A,'\r'      ;return if char == Carriage Return
+2186 28 0C               JR    Z,read2
+2188 CD C0 20            CALL  mul16_10    ;result *= 10;
+218B D6 30               SUB   A,'0'       ;digit = char - '0';
+218D 85                  ADD   A,L         ;result += digit;
+218E 6F                  LD    L,A
+218F 30 EE               JR    NC,read1     ;get next character
+2191 24                  INC   H
+2192 18 EB               JR    read1        ;get next character
+2194             read2:
+2194 F1                  POP   AF
+2195 C9                  RET
+2196             ;****************
+2196             ;writeLineHL
+2196             ;write a 16 bit unsigned number to the output, followed by a carriage return
+2196             ;  IN:  HL = 16 bit unsigned number
+2196             ;  OUT: none
+2196             ;  USES:HL
+2196             ;****************
+2196             writeLineHL:
+2196 CD 9D 21            CALL  writeHL
+2199 CD 66 20            CALL  putCRLF
+219C C9                  RET
+219D             ;****************
+219D             ;writeHL
+219D             ;write a 16 bit unsigned number to the output
+219D             ;  IN:  HL = 16 bit unsigned number
+219D             ;  OUT: none
+219D             ;  USES:HL
+219D             ;****************
+219D             writeHL:
+219D C5                  PUSH  BC          ;save registers used
+219E F5                  PUSH  AF
+219F 06 00               LD    B,0         ;number of digits on stack
+21A1 7C                  LD    A,H         ;is HL=0?
+21A2 B5                  OR    A,L
+21A3 20 03               JR    NZ,writeHL1
+21A5 04                  INC   B           ;write a single digit 0
+21A6 18 0C               JR    writeHL3
+21A8             writeHL1:
+21A8 3E 0A               LD    A,10        ;divide HL by 10
+21AA CD 43 21            CALL  div16_8
+21AD F5                  PUSH  AF          ;put remainder on stack
+21AE 04                  INC   B
+21AF 7C                  LD    A,H         ;is quotient 0?
+21B0 B5                  OR    A,L
+21B1 20 F5               JR    NZ,writeHL1
+21B3             writeHL2:
+21B3 F1                  POP   AF          ;write digit
+21B4             writeHL3:
+21B4 C6 30               ADD   A,'0'
+21B6 CD 59 20            CALL  putChar
+21B9 10 F8               DJNZ  writeHL2
+21BB F1                  POP   AF          ;restore registers used
+21BC C1                  POP   BC
+21BD C9                  RET
+21BE             ;****************
+21BE             ;writeLineA
+21BE             ;write an 8-bit unsigned number to the output, followed by a carriage return
+21BE             ;  IN:  A = 8-bit unsigned number
+21BE             ;  OUT: none
+21BE             ;  USES:none
+21BE             ;****************
+21BE             writeLineA:
+21BE CD C5 21            CALL  writeA
+21C1 CD 66 20            CALL  putCRLF
+21C4 C9                  RET
+21C5             ;****************
+21C5             ;writeA
+21C5             ;write an 8-bit unsigned number to the output
+21C5             ;  IN:  A = 8-bit unsigned number
+21C5             ;  OUT: none
+21C5             ;  USES:none
+21C5             ;****************
+21C5             writeA:
+21C5 E5                  PUSH  HL          ;save registers used
+21C6 26 00               LD    H,0
+21C8 6F                  LD    L,A
+21C9 CD 9D 21            CALL  writeHL
+21CC E1                  POP   HL
+21CD C9                  RET
+21CE             main:
+21CE             L0:
+21CE                     ;;test2.j(0) /* Program to test branch instructions */
+21CE             L1:
+21CE                     ;;test2.j(1) class TestBranches {
+21CE             L2:
+21CE                     ;;test2.j(2)   word i = 2000;
+21CE             L3:
+21CE 21 D0 07            LD    HL,2000
+21D1             L4:
+21D1 22 00 50            LD    (05000H),HL
+21D4             L5:
+21D4                     ;;test2.j(3)   word i1 = 1000;
+21D4             L6:
+21D4 21 E8 03            LD    HL,1000
+21D7             L7:
+21D7 22 02 50            LD    (05002H),HL
+21DA             L8:
+21DA                     ;;test2.j(4)   word i3 = 3000;
+21DA             L9:
+21DA 21 B8 0B            LD    HL,3000
+21DD             L10:
+21DD 22 04 50            LD    (05004H),HL
+21E0             L11:
+21E0                     ;;test2.j(5)   byte b = 20;
+21E0             L12:
+21E0 3E 14               LD    A,20
+21E2             L13:
+21E2 32 06 50            LD    (05006H),A
+21E5             L14:
+21E5                     ;;test2.j(6)   byte b1 = 10;
+21E5             L15:
+21E5 3E 0A               LD    A,10
+21E7             L16:
+21E7 32 07 50            LD    (05007H),A
+21EA             L17:
+21EA                     ;;test2.j(7)   byte b3 = 30;
+21EA             L18:
+21EA 3E 1E               LD    A,30
+21EC             L19:
+21EC 32 08 50            LD    (05008H),A
+21EF             L20:
+21EF                     ;;test2.j(8) 
+21EF             L21:
+21EF                     ;;test2.j(9)   /*Possible operand types: 
+21EF             L22:
+21EF                     ;;test2.j(10)    * constant, acc, var, stack8, stack16
+21EF             L23:
+21EF                     ;;test2.j(11)    *Possible datatype combinations:
+21EF             L24:
+21EF                     ;;test2.j(12)    * byte - byte
+21EF             L25:
+21EF                     ;;test2.j(13)    * byte - integer
+21EF             L26:
+21EF                     ;;test2.j(14)    * integer - byte
+21EF             L27:
+21EF                     ;;test2.j(15)    * integer - integer
+21EF             L28:
+21EF                     ;;test2.j(16)   */
+21EF             L29:
+21EF                     ;;test2.j(17) 
+21EF             L30:
+21EF                     ;;test2.j(18)   println(0);
+21EF             L31:
+21EF 3E 00               LD    A,0
+21F1             L32:
+21F1 CD BE 21            CALL  writeLineA
+21F4             L33:
+21F4                     ;;test2.j(19) 
+21F4             L34:
+21F4                     ;;test2.j(20)   /************************/
+21F4             L35:
+21F4                     ;;test2.j(21)   // constant - constant
+21F4             L36:
+21F4                     ;;test2.j(22)   // byte - byte
+21F4             L37:
+21F4                     ;;test2.j(23)   if (1 == 1) println(1); else println(999);
+21F4             L38:
+21F4 3E 01               LD    A,1
+21F6             L39:
+21F6 D6 01               SUB   A,1
+21F8             L40:
+21F8 C2 03 22            JP    NZ,L44
+21FB             L41:
+21FB 3E 01               LD    A,1
+21FD             L42:
+21FD CD BE 21            CALL  writeLineA
+2200             L43:
+2200 C3 09 22            JP    L47
+2203             L44:
+2203 21 E7 03            LD    HL,999
+2206             L45:
+2206 CD 96 21            CALL  writeLineHL
+2209             L46:
+2209                     ;;test2.j(24)   if (1 != 0) println(2); else println(999);
+2209             L47:
+2209 3E 01               LD    A,1
+220B             L48:
+220B D6 00               SUB   A,0
+220D             L49:
+220D CA 18 22            JP    Z,L53
+2210             L50:
+2210 3E 02               LD    A,2
+2212             L51:
+2212 CD BE 21            CALL  writeLineA
+2215             L52:
+2215 C3 1E 22            JP    L56
+2218             L53:
+2218 21 E7 03            LD    HL,999
+221B             L54:
+221B CD 96 21            CALL  writeLineHL
+221E             L55:
+221E                     ;;test2.j(25)   if (1 >  0) println(3); else println(999);
+221E             L56:
+221E 3E 01               LD    A,1
+2220             L57:
+2220 D6 00               SUB   A,0
+2222             L58:
+2222 CA 2D 22            JP    Z,L62
+2225             L59:
+2225 3E 03               LD    A,3
+2227             L60:
+2227 CD BE 21            CALL  writeLineA
+222A             L61:
+222A C3 33 22            JP    L65
+222D             L62:
+222D 21 E7 03            LD    HL,999
+2230             L63:
+2230 CD 96 21            CALL  writeLineHL
+2233             L64:
+2233                     ;;test2.j(26)   if (1 >= 0) println(4); else println(999);
+2233             L65:
+2233 3E 01               LD    A,1
+2235             L66:
+2235 D6 00               SUB   A,0
+2237             L67:
+2237 DA 42 22            JP    C,L71
+223A             L68:
+223A 3E 04               LD    A,4
+223C             L69:
+223C CD BE 21            CALL  writeLineA
+223F             L70:
+223F C3 48 22            JP    L74
+2242             L71:
+2242 21 E7 03            LD    HL,999
+2245             L72:
+2245 CD 96 21            CALL  writeLineHL
+2248             L73:
+2248                     ;;test2.j(27)   if (1 >= 1) println(5); else println(999);
+2248             L74:
+2248 3E 01               LD    A,1
+224A             L75:
+224A D6 01               SUB   A,1
+224C             L76:
+224C DA 57 22            JP    C,L80
+224F             L77:
+224F 3E 05               LD    A,5
+2251             L78:
+2251 CD BE 21            CALL  writeLineA
+2254             L79:
+2254 C3 5D 22            JP    L83
+2257             L80:
+2257 21 E7 03            LD    HL,999
+225A             L81:
+225A CD 96 21            CALL  writeLineHL
+225D             L82:
+225D                     ;;test2.j(28)   if (1 <  2) println(6); else println(999);
+225D             L83:
+225D 3E 01               LD    A,1
+225F             L84:
+225F D6 02               SUB   A,2
+2261             L85:
+2261 D2 6C 22            JP    NC,L89
+2264             L86:
+2264 3E 06               LD    A,6
+2266             L87:
+2266 CD BE 21            CALL  writeLineA
+2269             L88:
+2269 C3 72 22            JP    L92
+226C             L89:
+226C 21 E7 03            LD    HL,999
+226F             L90:
+226F CD 96 21            CALL  writeLineHL
+2272             L91:
+2272                     ;;test2.j(29)   if (1 <= 2) println(7); else println(999);
+2272             L92:
+2272 3E 01               LD    A,1
+2274             L93:
+2274 D6 02               SUB   A,2
+2276             L94:
+2276 28 03               JR    Z,$+5
+2278 DA 83 22            JP    C,L98
+227B             L95:
+227B 3E 07               LD    A,7
+227D             L96:
+227D CD BE 21            CALL  writeLineA
+2280             L97:
+2280 C3 89 22            JP    L101
+2283             L98:
+2283 21 E7 03            LD    HL,999
+2286             L99:
+2286 CD 96 21            CALL  writeLineHL
+2289             L100:
+2289                     ;;test2.j(30)   if (1 <= 1) println(8); else println(999);
+2289             L101:
+2289 3E 01               LD    A,1
+228B             L102:
+228B D6 01               SUB   A,1
+228D             L103:
+228D 28 03               JR    Z,$+5
+228F DA 9A 22            JP    C,L107
+2292             L104:
+2292 3E 08               LD    A,8
+2294             L105:
+2294 CD BE 21            CALL  writeLineA
+2297             L106:
+2297 C3 A0 22            JP    L110
+229A             L107:
+229A 21 E7 03            LD    HL,999
+229D             L108:
+229D CD 96 21            CALL  writeLineHL
+22A0             L109:
+22A0                     ;;test2.j(31)   println(9);
+22A0             L110:
+22A0 3E 09               LD    A,9
+22A2             L111:
+22A2 CD BE 21            CALL  writeLineA
+22A5             L112:
+22A5                     ;;test2.j(32) 
+22A5             L113:
+22A5                     ;;test2.j(33)   // constant - constant
+22A5             L114:
+22A5                     ;;test2.j(34)   // byte - integer
+22A5             L115:
+22A5                     ;;test2.j(35)   if (1 == 1000) println(999); else println(10);
+22A5             L116:
+22A5 3E 01               LD    A,1
+22A7             L117:
+22A7 21 E8 03            LD    HL,1000
+22AA             L118:
+22AA 5F                  LD    E,A
+22AB 16 00               LD    D,0
+22AD B7                  OR    A
+22AE ED 52               SBC   HL,DE
+22B0             L119:
+22B0 C2 BC 22            JP    NZ,L123
+22B3             L120:
+22B3 21 E7 03            LD    HL,999
+22B6             L121:
+22B6 CD 96 21            CALL  writeLineHL
+22B9             L122:
+22B9 C3 C1 22            JP    L126
+22BC             L123:
+22BC 3E 0A               LD    A,10
+22BE             L124:
+22BE CD BE 21            CALL  writeLineA
+22C1             L125:
+22C1                     ;;test2.j(36)   if (1 != 1000) println(11);  else println(999);
+22C1             L126:
+22C1 3E 01               LD    A,1
+22C3             L127:
+22C3 21 E8 03            LD    HL,1000
+22C6             L128:
+22C6 5F                  LD    E,A
+22C7 16 00               LD    D,0
+22C9 B7                  OR    A
+22CA ED 52               SBC   HL,DE
+22CC             L129:
+22CC CA D7 22            JP    Z,L133
+22CF             L130:
+22CF 3E 0B               LD    A,11
+22D1             L131:
+22D1 CD BE 21            CALL  writeLineA
+22D4             L132:
+22D4 C3 DD 22            JP    L136
+22D7             L133:
+22D7 21 E7 03            LD    HL,999
+22DA             L134:
+22DA CD 96 21            CALL  writeLineHL
+22DD             L135:
+22DD                     ;;test2.j(37)   if (1 >  1000) println(999); else println(12);
+22DD             L136:
+22DD 3E 01               LD    A,1
+22DF             L137:
+22DF 21 E8 03            LD    HL,1000
+22E2             L138:
+22E2 5F                  LD    E,A
+22E3 16 00               LD    D,0
+22E5 B7                  OR    A
+22E6 ED 52               SBC   HL,DE
+22E8             L139:
+22E8 CA F4 22            JP    Z,L143
+22EB             L140:
+22EB 21 E7 03            LD    HL,999
+22EE             L141:
+22EE CD 96 21            CALL  writeLineHL
+22F1             L142:
+22F1 C3 F9 22            JP    L146
+22F4             L143:
+22F4 3E 0C               LD    A,12
+22F6             L144:
+22F6 CD BE 21            CALL  writeLineA
+22F9             L145:
+22F9                     ;;test2.j(38)   if (1 >= 1000) println(999); else println(13);
+22F9             L146:
+22F9 3E 01               LD    A,1
+22FB             L147:
+22FB 21 E8 03            LD    HL,1000
+22FE             L148:
+22FE 5F                  LD    E,A
+22FF 16 00               LD    D,0
+2301 B7                  OR    A
+2302 ED 52               SBC   HL,DE
+2304             L149:
+2304 DA 10 23            JP    C,L153
+2307             L150:
+2307 21 E7 03            LD    HL,999
+230A             L151:
+230A CD 96 21            CALL  writeLineHL
+230D             L152:
+230D C3 15 23            JP    L156
+2310             L153:
+2310 3E 0D               LD    A,13
+2312             L154:
+2312 CD BE 21            CALL  writeLineA
+2315             L155:
+2315                     ;;test2.j(39)   if (1 >= 1000) println(999); else println(14);
+2315             L156:
+2315 3E 01               LD    A,1
+2317             L157:
+2317 21 E8 03            LD    HL,1000
+231A             L158:
+231A 5F                  LD    E,A
+231B 16 00               LD    D,0
+231D B7                  OR    A
+231E ED 52               SBC   HL,DE
+2320             L159:
+2320 DA 2C 23            JP    C,L163
+2323             L160:
+2323 21 E7 03            LD    HL,999
+2326             L161:
+2326 CD 96 21            CALL  writeLineHL
+2329             L162:
+2329 C3 31 23            JP    L166
+232C             L163:
+232C 3E 0E               LD    A,14
+232E             L164:
+232E CD BE 21            CALL  writeLineA
+2331             L165:
+2331                     ;;test2.j(40)   if (1 <  2000) println(15);  else println(999);
+2331             L166:
+2331 3E 01               LD    A,1
+2333             L167:
+2333 21 D0 07            LD    HL,2000
+2336             L168:
+2336 5F                  LD    E,A
+2337 16 00               LD    D,0
+2339 B7                  OR    A
+233A ED 52               SBC   HL,DE
+233C             L169:
+233C D2 47 23            JP    NC,L173
+233F             L170:
+233F 3E 0F               LD    A,15
+2341             L171:
+2341 CD BE 21            CALL  writeLineA
+2344             L172:
+2344 C3 4D 23            JP    L176
+2347             L173:
+2347 21 E7 03            LD    HL,999
+234A             L174:
+234A CD 96 21            CALL  writeLineHL
+234D             L175:
+234D                     ;;test2.j(41)   if (1 <= 2000) println(16);  else println(999);
+234D             L176:
+234D 3E 01               LD    A,1
+234F             L177:
+234F 21 D0 07            LD    HL,2000
+2352             L178:
+2352 5F                  LD    E,A
+2353 16 00               LD    D,0
+2355 B7                  OR    A
+2356 ED 52               SBC   HL,DE
+2358             L179:
+2358 28 03               JR    Z,$+5
+235A DA 65 23            JP    C,L183
+235D             L180:
+235D 3E 10               LD    A,16
+235F             L181:
+235F CD BE 21            CALL  writeLineA
+2362             L182:
+2362 C3 6B 23            JP    L186
+2365             L183:
+2365 21 E7 03            LD    HL,999
+2368             L184:
+2368 CD 96 21            CALL  writeLineHL
+236B             L185:
+236B                     ;;test2.j(42)   if (1 <= 1000) println(17);  else println(999);
+236B             L186:
+236B 3E 01               LD    A,1
+236D             L187:
+236D 21 E8 03            LD    HL,1000
+2370             L188:
+2370 5F                  LD    E,A
+2371 16 00               LD    D,0
+2373 B7                  OR    A
+2374 ED 52               SBC   HL,DE
+2376             L189:
+2376 28 03               JR    Z,$+5
+2378 DA 83 23            JP    C,L193
+237B             L190:
+237B 3E 11               LD    A,17
+237D             L191:
+237D CD BE 21            CALL  writeLineA
+2380             L192:
+2380 C3 89 23            JP    L196
+2383             L193:
+2383 21 E7 03            LD    HL,999
+2386             L194:
+2386 CD 96 21            CALL  writeLineHL
+2389             L195:
+2389                     ;;test2.j(43)   println(18);
+2389             L196:
+2389 3E 12               LD    A,18
+238B             L197:
+238B CD BE 21            CALL  writeLineA
+238E             L198:
+238E                     ;;test2.j(44)   println(19);
+238E             L199:
+238E 3E 13               LD    A,19
+2390             L200:
+2390 CD BE 21            CALL  writeLineA
+2393             L201:
+2393                     ;;test2.j(45) 
+2393             L202:
+2393                     ;;test2.j(46)   // constant - constant
+2393             L203:
+2393                     ;;test2.j(47)   // integer - byte
+2393             L204:
+2393                     ;;test2.j(48)   if (1000 == 1) println(999); else println(20);
+2393             L205:
+2393 21 E8 03            LD    HL,1000
+2396             L206:
+2396 3E 01               LD    A,1
+2398             L207:
+2398 5F                  LD    E,A
+2399 16 00               LD    D,0
+239B EB                  EX    DE,HL
+239C B7                  OR    A
+239D ED 52               SBC   HL,DE
+239F             L208:
+239F C2 AB 23            JP    NZ,L212
+23A2             L209:
+23A2 21 E7 03            LD    HL,999
+23A5             L210:
+23A5 CD 96 21            CALL  writeLineHL
+23A8             L211:
+23A8 C3 B0 23            JP    L215
+23AB             L212:
+23AB 3E 14               LD    A,20
+23AD             L213:
+23AD CD BE 21            CALL  writeLineA
+23B0             L214:
+23B0                     ;;test2.j(49)   if (1000 != 0) println(21);  else println(999);
+23B0             L215:
+23B0 21 E8 03            LD    HL,1000
+23B3             L216:
+23B3 3E 00               LD    A,0
+23B5             L217:
+23B5 5F                  LD    E,A
+23B6 16 00               LD    D,0
+23B8 EB                  EX    DE,HL
+23B9 B7                  OR    A
+23BA ED 52               SBC   HL,DE
+23BC             L218:
+23BC CA C7 23            JP    Z,L222
+23BF             L219:
+23BF 3E 15               LD    A,21
+23C1             L220:
+23C1 CD BE 21            CALL  writeLineA
+23C4             L221:
+23C4 C3 CD 23            JP    L225
+23C7             L222:
+23C7 21 E7 03            LD    HL,999
+23CA             L223:
+23CA CD 96 21            CALL  writeLineHL
+23CD             L224:
+23CD                     ;;test2.j(50)   if (1000 >  0) println(22);  else println(999);
+23CD             L225:
+23CD 21 E8 03            LD    HL,1000
+23D0             L226:
+23D0 3E 00               LD    A,0
+23D2             L227:
+23D2 5F                  LD    E,A
+23D3 16 00               LD    D,0
+23D5 EB                  EX    DE,HL
+23D6 B7                  OR    A
+23D7 ED 52               SBC   HL,DE
+23D9             L228:
+23D9 CA E4 23            JP    Z,L232
+23DC             L229:
+23DC 3E 16               LD    A,22
+23DE             L230:
+23DE CD BE 21            CALL  writeLineA
+23E1             L231:
+23E1 C3 EA 23            JP    L235
+23E4             L232:
+23E4 21 E7 03            LD    HL,999
+23E7             L233:
+23E7 CD 96 21            CALL  writeLineHL
+23EA             L234:
+23EA                     ;;test2.j(51)   if (1000 >= 0) println(23);  else println(999);
+23EA             L235:
+23EA 21 E8 03            LD    HL,1000
+23ED             L236:
+23ED 3E 00               LD    A,0
+23EF             L237:
+23EF 5F                  LD    E,A
+23F0 16 00               LD    D,0
+23F2 EB                  EX    DE,HL
+23F3 B7                  OR    A
+23F4 ED 52               SBC   HL,DE
+23F6             L238:
+23F6 DA 01 24            JP    C,L242
+23F9             L239:
+23F9 3E 17               LD    A,23
+23FB             L240:
+23FB CD BE 21            CALL  writeLineA
+23FE             L241:
+23FE C3 07 24            JP    L245
+2401             L242:
+2401 21 E7 03            LD    HL,999
+2404             L243:
+2404 CD 96 21            CALL  writeLineHL
+2407             L244:
+2407                     ;;test2.j(52)   if (1000 >= 1) println(24);  else println(999);
+2407             L245:
+2407 21 E8 03            LD    HL,1000
+240A             L246:
+240A 3E 01               LD    A,1
+240C             L247:
+240C 5F                  LD    E,A
+240D 16 00               LD    D,0
+240F EB                  EX    DE,HL
+2410 B7                  OR    A
+2411 ED 52               SBC   HL,DE
+2413             L248:
+2413 DA 1E 24            JP    C,L252
+2416             L249:
+2416 3E 18               LD    A,24
+2418             L250:
+2418 CD BE 21            CALL  writeLineA
+241B             L251:
+241B C3 24 24            JP    L255
+241E             L252:
+241E 21 E7 03            LD    HL,999
+2421             L253:
+2421 CD 96 21            CALL  writeLineHL
+2424             L254:
+2424                     ;;test2.j(53)   if (1 <  2000) println(25);  else println(999);
+2424             L255:
+2424 3E 01               LD    A,1
+2426             L256:
+2426 21 D0 07            LD    HL,2000
+2429             L257:
+2429 5F                  LD    E,A
+242A 16 00               LD    D,0
+242C B7                  OR    A
+242D ED 52               SBC   HL,DE
+242F             L258:
+242F D2 3A 24            JP    NC,L262
+2432             L259:
+2432 3E 19               LD    A,25
+2434             L260:
+2434 CD BE 21            CALL  writeLineA
+2437             L261:
+2437 C3 40 24            JP    L265
+243A             L262:
+243A 21 E7 03            LD    HL,999
+243D             L263:
+243D CD 96 21            CALL  writeLineHL
+2440             L264:
+2440                     ;;test2.j(54)   if (1 <= 2000) println(26);  else println(999);
+2440             L265:
+2440 3E 01               LD    A,1
+2442             L266:
+2442 21 D0 07            LD    HL,2000
+2445             L267:
+2445 5F                  LD    E,A
+2446 16 00               LD    D,0
+2448 B7                  OR    A
+2449 ED 52               SBC   HL,DE
+244B             L268:
+244B 28 03               JR    Z,$+5
+244D DA 58 24            JP    C,L272
+2450             L269:
+2450 3E 1A               LD    A,26
+2452             L270:
+2452 CD BE 21            CALL  writeLineA
+2455             L271:
+2455 C3 5E 24            JP    L275
+2458             L272:
+2458 21 E7 03            LD    HL,999
+245B             L273:
+245B CD 96 21            CALL  writeLineHL
+245E             L274:
+245E                     ;;test2.j(55)   if (1 <= 1000) println(27);  else println(999);
+245E             L275:
+245E 3E 01               LD    A,1
+2460             L276:
+2460 21 E8 03            LD    HL,1000
+2463             L277:
+2463 5F                  LD    E,A
+2464 16 00               LD    D,0
+2466 B7                  OR    A
+2467 ED 52               SBC   HL,DE
+2469             L278:
+2469 28 03               JR    Z,$+5
+246B DA 76 24            JP    C,L282
+246E             L279:
+246E 3E 1B               LD    A,27
+2470             L280:
+2470 CD BE 21            CALL  writeLineA
+2473             L281:
+2473 C3 7C 24            JP    L285
+2476             L282:
+2476 21 E7 03            LD    HL,999
+2479             L283:
+2479 CD 96 21            CALL  writeLineHL
+247C             L284:
+247C                     ;;test2.j(56)   println(28);
+247C             L285:
+247C 3E 1C               LD    A,28
+247E             L286:
+247E CD BE 21            CALL  writeLineA
+2481             L287:
+2481                     ;;test2.j(57)   println(29);
+2481             L288:
+2481 3E 1D               LD    A,29
+2483             L289:
+2483 CD BE 21            CALL  writeLineA
+2486             L290:
+2486                     ;;test2.j(58) 
+2486             L291:
+2486                     ;;test2.j(59)   // constant - constant
+2486             L292:
+2486                     ;;test2.j(60)   // integer - integer
+2486             L293:
+2486                     ;;test2.j(61)   if (1000 == 1000) println(30); else println(999);
+2486             L294:
+2486 21 E8 03            LD    HL,1000
+2489             L295:
+2489 11 E8 03            LD    DE,1000
+248C B7                  OR    A
+248D ED 52               SBC   HL,DE
+248F             L296:
+248F C2 9A 24            JP    NZ,L300
+2492             L297:
+2492 3E 1E               LD    A,30
+2494             L298:
+2494 CD BE 21            CALL  writeLineA
+2497             L299:
+2497 C3 A0 24            JP    L303
+249A             L300:
+249A 21 E7 03            LD    HL,999
+249D             L301:
+249D CD 96 21            CALL  writeLineHL
+24A0             L302:
+24A0                     ;;test2.j(62)   if (1000 != 2000) println(31); else println(999);
+24A0             L303:
+24A0 21 E8 03            LD    HL,1000
+24A3             L304:
+24A3 11 D0 07            LD    DE,2000
+24A6 B7                  OR    A
+24A7 ED 52               SBC   HL,DE
+24A9             L305:
+24A9 CA B4 24            JP    Z,L309
+24AC             L306:
+24AC 3E 1F               LD    A,31
+24AE             L307:
+24AE CD BE 21            CALL  writeLineA
+24B1             L308:
+24B1 C3 BA 24            JP    L312
+24B4             L309:
+24B4 21 E7 03            LD    HL,999
+24B7             L310:
+24B7 CD 96 21            CALL  writeLineHL
+24BA             L311:
+24BA                     ;;test2.j(63)   if (2000 >  1000) println(32); else println(999);
+24BA             L312:
+24BA 21 D0 07            LD    HL,2000
+24BD             L313:
+24BD 11 E8 03            LD    DE,1000
+24C0 B7                  OR    A
+24C1 ED 52               SBC   HL,DE
+24C3             L314:
+24C3 CA CE 24            JP    Z,L318
+24C6             L315:
+24C6 3E 20               LD    A,32
+24C8             L316:
+24C8 CD BE 21            CALL  writeLineA
+24CB             L317:
+24CB C3 D4 24            JP    L321
+24CE             L318:
+24CE 21 E7 03            LD    HL,999
+24D1             L319:
+24D1 CD 96 21            CALL  writeLineHL
+24D4             L320:
+24D4                     ;;test2.j(64)   if (2000 >= 1000) println(33); else println(999);
+24D4             L321:
+24D4 21 D0 07            LD    HL,2000
+24D7             L322:
+24D7 11 E8 03            LD    DE,1000
+24DA B7                  OR    A
+24DB ED 52               SBC   HL,DE
+24DD             L323:
+24DD DA E8 24            JP    C,L327
+24E0             L324:
+24E0 3E 21               LD    A,33
+24E2             L325:
+24E2 CD BE 21            CALL  writeLineA
+24E5             L326:
+24E5 C3 EE 24            JP    L330
+24E8             L327:
+24E8 21 E7 03            LD    HL,999
+24EB             L328:
+24EB CD 96 21            CALL  writeLineHL
+24EE             L329:
+24EE                     ;;test2.j(65)   if (1000 >= 1000) println(34); else println(999);
+24EE             L330:
+24EE 21 E8 03            LD    HL,1000
+24F1             L331:
+24F1 11 E8 03            LD    DE,1000
+24F4 B7                  OR    A
+24F5 ED 52               SBC   HL,DE
+24F7             L332:
+24F7 DA 02 25            JP    C,L336
+24FA             L333:
+24FA 3E 22               LD    A,34
+24FC             L334:
+24FC CD BE 21            CALL  writeLineA
+24FF             L335:
+24FF C3 08 25            JP    L339
+2502             L336:
+2502 21 E7 03            LD    HL,999
+2505             L337:
+2505 CD 96 21            CALL  writeLineHL
+2508             L338:
+2508                     ;;test2.j(66)   if (1000 <  2000) println(35); else println(999);
+2508             L339:
+2508 21 E8 03            LD    HL,1000
+250B             L340:
+250B 11 D0 07            LD    DE,2000
+250E B7                  OR    A
+250F ED 52               SBC   HL,DE
+2511             L341:
+2511 D2 1C 25            JP    NC,L345
+2514             L342:
+2514 3E 23               LD    A,35
+2516             L343:
+2516 CD BE 21            CALL  writeLineA
+2519             L344:
+2519 C3 22 25            JP    L348
+251C             L345:
+251C 21 E7 03            LD    HL,999
+251F             L346:
+251F CD 96 21            CALL  writeLineHL
+2522             L347:
+2522                     ;;test2.j(67)   if (1000 <= 2000) println(36); else println(999);
+2522             L348:
+2522 21 E8 03            LD    HL,1000
+2525             L349:
+2525 11 D0 07            LD    DE,2000
+2528 B7                  OR    A
+2529 ED 52               SBC   HL,DE
+252B             L350:
+252B 28 03               JR    Z,$+5
+252D DA 38 25            JP    C,L354
+2530             L351:
+2530 3E 24               LD    A,36
+2532             L352:
+2532 CD BE 21            CALL  writeLineA
+2535             L353:
+2535 C3 3E 25            JP    L357
+2538             L354:
+2538 21 E7 03            LD    HL,999
+253B             L355:
+253B CD 96 21            CALL  writeLineHL
+253E             L356:
+253E                     ;;test2.j(68)   if (1000 <= 1000) println(37); else println(999);
+253E             L357:
+253E 21 E8 03            LD    HL,1000
+2541             L358:
+2541 11 E8 03            LD    DE,1000
+2544 B7                  OR    A
+2545 ED 52               SBC   HL,DE
+2547             L359:
+2547 28 03               JR    Z,$+5
+2549 DA 54 25            JP    C,L363
+254C             L360:
+254C 3E 25               LD    A,37
+254E             L361:
+254E CD BE 21            CALL  writeLineA
+2551             L362:
+2551 C3 5A 25            JP    L366
+2554             L363:
+2554 21 E7 03            LD    HL,999
+2557             L364:
+2557 CD 96 21            CALL  writeLineHL
+255A             L365:
+255A                     ;;test2.j(69)   println(38);
+255A             L366:
+255A 3E 26               LD    A,38
+255C             L367:
+255C CD BE 21            CALL  writeLineA
+255F             L368:
+255F                     ;;test2.j(70)   println(39);
+255F             L369:
+255F 3E 27               LD    A,39
+2561             L370:
+2561 CD BE 21            CALL  writeLineA
+2564             L371:
+2564                     ;;test2.j(71) 
+2564             L372:
+2564                     ;;test2.j(72)   /************************/
+2564             L373:
+2564                     ;;test2.j(73)   // constant - acc
+2564             L374:
+2564                     ;;test2.j(74)   // byte - byte
+2564             L375:
+2564                     ;;test2.j(75)   if (1 > 0+0) println(40); else println(999);
+2564             L376:
+2564 3E 00               LD    A,0
+2566             L377:
+2566 C6 00               ADD   A,0
+2568             L378:
+2568 D6 01               SUB   A,1
+256A             L379:
+256A D2 75 25            JP    NC,L383
+256D             L380:
+256D 3E 28               LD    A,40
+256F             L381:
+256F CD BE 21            CALL  writeLineA
+2572             L382:
+2572 C3 7B 25            JP    L386
+2575             L383:
+2575 21 E7 03            LD    HL,999
+2578             L384:
+2578 CD 96 21            CALL  writeLineHL
+257B             L385:
+257B                     ;;test2.j(76)   if (1 < 2+0) println(41); else println(999);
+257B             L386:
+257B 3E 02               LD    A,2
+257D             L387:
+257D C6 00               ADD   A,0
+257F             L388:
+257F D6 01               SUB   A,1
+2581             L389:
+2581 CA 8C 25            JP    Z,L393
+2584             L390:
+2584 3E 29               LD    A,41
+2586             L391:
+2586 CD BE 21            CALL  writeLineA
+2589             L392:
+2589 C3 92 25            JP    L398
+258C             L393:
+258C 21 E7 03            LD    HL,999
+258F             L394:
+258F CD 96 21            CALL  writeLineHL
+2592             L395:
+2592                     ;;test2.j(77)   // constant - acc
+2592             L396:
+2592                     ;;test2.j(78)   // byte - integer
+2592             L397:
+2592                     ;;test2.j(79)   if (1 > 1000+0) println(999); else println(42);
+2592             L398:
+2592 21 E8 03            LD    HL,1000
+2595             L399:
+2595 11 00 00            LD    DE,0
+2598 19                  ADD   HL,DE
+2599             L400:
+2599 3E 01               LD    A,1
+259B             L401:
+259B 5F                  LD    E,A
+259C 16 00               LD    D,0
+259E B7                  OR    A
+259F ED 52               SBC   HL,DE
+25A1             L402:
+25A1 CA AD 25            JP    Z,L406
+25A4             L403:
+25A4 21 E7 03            LD    HL,999
+25A7             L404:
+25A7 CD 96 21            CALL  writeLineHL
+25AA             L405:
+25AA C3 B2 25            JP    L409
+25AD             L406:
+25AD 3E 2A               LD    A,42
+25AF             L407:
+25AF CD BE 21            CALL  writeLineA
+25B2             L408:
+25B2                     ;;test2.j(80)   if (1 < 1000+0) println(43);  else println(999);
+25B2             L409:
+25B2 21 E8 03            LD    HL,1000
+25B5             L410:
+25B5 11 00 00            LD    DE,0
+25B8 19                  ADD   HL,DE
+25B9             L411:
+25B9 3E 01               LD    A,1
+25BB             L412:
+25BB 5F                  LD    E,A
+25BC 16 00               LD    D,0
+25BE B7                  OR    A
+25BF ED 52               SBC   HL,DE
+25C1             L413:
+25C1 D2 CC 25            JP    NC,L417
+25C4             L414:
+25C4 3E 2B               LD    A,43
+25C6             L415:
+25C6 CD BE 21            CALL  writeLineA
+25C9             L416:
+25C9 C3 D2 25            JP    L422
+25CC             L417:
+25CC 21 E7 03            LD    HL,999
+25CF             L418:
+25CF CD 96 21            CALL  writeLineHL
+25D2             L419:
+25D2                     ;;test2.j(81)   // constant - acc
+25D2             L420:
+25D2                     ;;test2.j(82)   // integer - byte
+25D2             L421:
+25D2                     ;;test2.j(83)   if (1000 > 0+0) println(44);  else println(999);
+25D2             L422:
+25D2 3E 00               LD    A,0
+25D4             L423:
+25D4 C6 00               ADD   A,0
+25D6             L424:
+25D6 21 E8 03            LD    HL,1000
+25D9             L425:
+25D9 5F                  LD    E,A
+25DA 16 00               LD    D,0
+25DC EB                  EX    DE,HL
+25DD B7                  OR    A
+25DE ED 52               SBC   HL,DE
+25E0             L426:
+25E0 CA EB 25            JP    Z,L430
+25E3             L427:
+25E3 3E 2C               LD    A,44
+25E5             L428:
+25E5 CD BE 21            CALL  writeLineA
+25E8             L429:
+25E8 C3 F1 25            JP    L433
+25EB             L430:
+25EB 21 E7 03            LD    HL,999
+25EE             L431:
+25EE CD 96 21            CALL  writeLineHL
+25F1             L432:
+25F1                     ;;test2.j(84)   if (1000 < 0+0) println(999); else println(45);
+25F1             L433:
+25F1 3E 00               LD    A,0
+25F3             L434:
+25F3 C6 00               ADD   A,0
+25F5             L435:
+25F5 21 E8 03            LD    HL,1000
+25F8             L436:
+25F8 5F                  LD    E,A
+25F9 16 00               LD    D,0
+25FB EB                  EX    DE,HL
+25FC B7                  OR    A
+25FD ED 52               SBC   HL,DE
+25FF             L437:
+25FF D2 0B 26            JP    NC,L441
+2602             L438:
+2602 21 E7 03            LD    HL,999
+2605             L439:
+2605 CD 96 21            CALL  writeLineHL
+2608             L440:
+2608 C3 10 26            JP    L446
+260B             L441:
+260B 3E 2D               LD    A,45
+260D             L442:
+260D CD BE 21            CALL  writeLineA
+2610             L443:
+2610                     ;;test2.j(85)   // constant - acc
+2610             L444:
+2610                     ;;test2.j(86)   // integer - integer
+2610             L445:
+2610                     ;;test2.j(87)   if (2000 > 1000+0) println(46); else println(999);
+2610             L446:
+2610 21 E8 03            LD    HL,1000
+2613             L447:
+2613 11 00 00            LD    DE,0
+2616 19                  ADD   HL,DE
+2617             L448:
+2617 11 D0 07            LD    DE,2000
+261A B7                  OR    A
+261B ED 52               SBC   HL,DE
+261D             L449:
+261D D2 28 26            JP    NC,L453
+2620             L450:
+2620 3E 2E               LD    A,46
+2622             L451:
+2622 CD BE 21            CALL  writeLineA
+2625             L452:
+2625 C3 2E 26            JP    L456
+2628             L453:
+2628 21 E7 03            LD    HL,999
+262B             L454:
+262B CD 96 21            CALL  writeLineHL
+262E             L455:
+262E                     ;;test2.j(88)   if (1000 < 2000+0) println(47); else println(999);
+262E             L456:
+262E 21 D0 07            LD    HL,2000
+2631             L457:
+2631 11 00 00            LD    DE,0
+2634 19                  ADD   HL,DE
+2635             L458:
+2635 11 E8 03            LD    DE,1000
+2638 B7                  OR    A
+2639 ED 52               SBC   HL,DE
+263B             L459:
+263B CA 46 26            JP    Z,L463
+263E             L460:
+263E 3E 2F               LD    A,47
+2640             L461:
+2640 CD BE 21            CALL  writeLineA
+2643             L462:
+2643 C3 4C 26            JP    L466
+2646             L463:
+2646 21 E7 03            LD    HL,999
+2649             L464:
+2649 CD 96 21            CALL  writeLineHL
+264C             L465:
+264C                     ;;test2.j(89)   println(48);
+264C             L466:
+264C 3E 30               LD    A,48
+264E             L467:
+264E CD BE 21            CALL  writeLineA
+2651             L468:
+2651                     ;;test2.j(90)   println(49);
+2651             L469:
+2651 3E 31               LD    A,49
+2653             L470:
+2653 CD BE 21            CALL  writeLineA
+2656             L471:
+2656                     ;;test2.j(91) 
+2656             L472:
+2656                     ;;test2.j(92)   /************************/
+2656             L473:
+2656                     ;;test2.j(93)   // constant - var
+2656             L474:
+2656                     ;;test2.j(94)   // byte - byte
+2656             L475:
+2656                     ;;test2.j(95)   if (30 > b) println(50); else println(999);
+2656             L476:
+2656 3A 06 50            LD    A,(05006H)
+2659             L477:
+2659 D6 1E               SUB   A,30
+265B             L478:
+265B D2 66 26            JP    NC,L482
+265E             L479:
+265E 3E 32               LD    A,50
+2660             L480:
+2660 CD BE 21            CALL  writeLineA
+2663             L481:
+2663 C3 6C 26            JP    L485
+2666             L482:
+2666 21 E7 03            LD    HL,999
+2669             L483:
+2669 CD 96 21            CALL  writeLineHL
+266C             L484:
+266C                     ;;test2.j(96)   if (10 < b) println(51); else println(999);
+266C             L485:
+266C 3A 06 50            LD    A,(05006H)
+266F             L486:
+266F D6 0A               SUB   A,10
+2671             L487:
+2671 CA 7C 26            JP    Z,L491
+2674             L488:
+2674 3E 33               LD    A,51
+2676             L489:
+2676 CD BE 21            CALL  writeLineA
+2679             L490:
+2679 C3 82 26            JP    L496
+267C             L491:
+267C 21 E7 03            LD    HL,999
+267F             L492:
+267F CD 96 21            CALL  writeLineHL
+2682             L493:
+2682                     ;;test2.j(97)   // constant - var
+2682             L494:
+2682                     ;;test2.j(98)   // byte - integer
+2682             L495:
+2682                     ;;test2.j(99)   if (30 > i) println(999); else println(52);
+2682             L496:
+2682 2A 00 50            LD    HL,(05000H)
+2685             L497:
+2685 3E 1E               LD    A,30
+2687             L498:
+2687 5F                  LD    E,A
+2688 16 00               LD    D,0
+268A B7                  OR    A
+268B ED 52               SBC   HL,DE
+268D             L499:
+268D CA 99 26            JP    Z,L503
+2690             L500:
+2690 21 E7 03            LD    HL,999
+2693             L501:
+2693 CD 96 21            CALL  writeLineHL
+2696             L502:
+2696 C3 9E 26            JP    L506
+2699             L503:
+2699 3E 34               LD    A,52
+269B             L504:
+269B CD BE 21            CALL  writeLineA
+269E             L505:
+269E                     ;;test2.j(100)   if (10 < i) println(53); else println(999);
+269E             L506:
+269E 2A 00 50            LD    HL,(05000H)
+26A1             L507:
+26A1 3E 0A               LD    A,10
+26A3             L508:
+26A3 5F                  LD    E,A
+26A4 16 00               LD    D,0
+26A6 B7                  OR    A
+26A7 ED 52               SBC   HL,DE
+26A9             L509:
+26A9 D2 B4 26            JP    NC,L513
+26AC             L510:
+26AC 3E 35               LD    A,53
+26AE             L511:
+26AE CD BE 21            CALL  writeLineA
+26B1             L512:
+26B1 C3 BA 26            JP    L518
+26B4             L513:
+26B4 21 E7 03            LD    HL,999
+26B7             L514:
+26B7 CD 96 21            CALL  writeLineHL
+26BA             L515:
+26BA                     ;;test2.j(101)   // constant - var
+26BA             L516:
+26BA                     ;;test2.j(102)   // integer - byte
+26BA             L517:
+26BA                     ;;test2.j(103)   if (3000 > b) println(54); else println(999);
+26BA             L518:
+26BA 3A 06 50            LD    A,(05006H)
+26BD             L519:
+26BD 21 B8 0B            LD    HL,3000
+26C0             L520:
+26C0 5F                  LD    E,A
+26C1 16 00               LD    D,0
+26C3 EB                  EX    DE,HL
+26C4 B7                  OR    A
+26C5 ED 52               SBC   HL,DE
+26C7             L521:
+26C7 CA D2 26            JP    Z,L525
+26CA             L522:
+26CA 3E 36               LD    A,54
+26CC             L523:
+26CC CD BE 21            CALL  writeLineA
+26CF             L524:
+26CF C3 D8 26            JP    L528
+26D2             L525:
+26D2 21 E7 03            LD    HL,999
+26D5             L526:
+26D5 CD 96 21            CALL  writeLineHL
+26D8             L527:
+26D8                     ;;test2.j(104)   if (1000 < b) println(999); else println(55);
+26D8             L528:
+26D8 3A 06 50            LD    A,(05006H)
+26DB             L529:
+26DB 21 E8 03            LD    HL,1000
+26DE             L530:
+26DE 5F                  LD    E,A
+26DF 16 00               LD    D,0
+26E1 EB                  EX    DE,HL
+26E2 B7                  OR    A
+26E3 ED 52               SBC   HL,DE
+26E5             L531:
+26E5 D2 F1 26            JP    NC,L535
+26E8             L532:
+26E8 21 E7 03            LD    HL,999
+26EB             L533:
+26EB CD 96 21            CALL  writeLineHL
+26EE             L534:
+26EE C3 F6 26            JP    L540
+26F1             L535:
+26F1 3E 37               LD    A,55
+26F3             L536:
+26F3 CD BE 21            CALL  writeLineA
+26F6             L537:
+26F6                     ;;test2.j(105)   // constant - var
+26F6             L538:
+26F6                     ;;test2.j(106)   // integer - integer
+26F6             L539:
+26F6                     ;;test2.j(107)   if (3000 > i) println(56); else println(999);
+26F6             L540:
+26F6 2A 00 50            LD    HL,(05000H)
+26F9             L541:
+26F9 11 B8 0B            LD    DE,3000
+26FC B7                  OR    A
+26FD ED 52               SBC   HL,DE
+26FF             L542:
+26FF D2 0A 27            JP    NC,L546
+2702             L543:
+2702 3E 38               LD    A,56
+2704             L544:
+2704 CD BE 21            CALL  writeLineA
+2707             L545:
+2707 C3 10 27            JP    L549
+270A             L546:
+270A 21 E7 03            LD    HL,999
+270D             L547:
+270D CD 96 21            CALL  writeLineHL
+2710             L548:
+2710                     ;;test2.j(108)   if (1000 < i) println(57); else println(999);
+2710             L549:
+2710 2A 00 50            LD    HL,(05000H)
+2713             L550:
+2713 11 E8 03            LD    DE,1000
+2716 B7                  OR    A
+2717 ED 52               SBC   HL,DE
+2719             L551:
+2719 CA 24 27            JP    Z,L555
+271C             L552:
+271C 3E 39               LD    A,57
+271E             L553:
+271E CD BE 21            CALL  writeLineA
+2721             L554:
+2721 C3 2A 27            JP    L558
+2724             L555:
+2724 21 E7 03            LD    HL,999
+2727             L556:
+2727 CD 96 21            CALL  writeLineHL
+272A             L557:
+272A                     ;;test2.j(109)   println(58);
+272A             L558:
+272A 3E 3A               LD    A,58
+272C             L559:
+272C CD BE 21            CALL  writeLineA
+272F             L560:
+272F                     ;;test2.j(110)   println(59);
+272F             L561:
+272F 3E 3B               LD    A,59
+2731             L562:
+2731 CD BE 21            CALL  writeLineA
+2734             L563:
+2734                     ;;test2.j(111) 
+2734             L564:
+2734                     ;;test2.j(112)   /************************/
+2734             L565:
+2734                     ;;test2.j(113)   // constant - stack8
+2734             L566:
+2734                     ;;test2.j(114)   // byte - byte
+2734             L567:
+2734                     ;;test2.j(115)   println(60);
+2734             L568:
+2734 3E 3C               LD    A,60
+2736             L569:
+2736 CD BE 21            CALL  writeLineA
+2739             L570:
+2739                     ;;test2.j(116)   println(61);
+2739             L571:
+2739 3E 3D               LD    A,61
+273B             L572:
+273B CD BE 21            CALL  writeLineA
+273E             L573:
+273E                     ;;test2.j(117)   // constant - stack8
+273E             L574:
+273E                     ;;test2.j(118)   // byte - integer
+273E             L575:
+273E                     ;;test2.j(119)   println(62);
+273E             L576:
+273E 3E 3E               LD    A,62
+2740             L577:
+2740 CD BE 21            CALL  writeLineA
+2743             L578:
+2743                     ;;test2.j(120)   println(63);
+2743             L579:
+2743 3E 3F               LD    A,63
+2745             L580:
+2745 CD BE 21            CALL  writeLineA
+2748             L581:
+2748                     ;;test2.j(121)   // constant - stack8
+2748             L582:
+2748                     ;;test2.j(122)   // integer - byte
+2748             L583:
+2748                     ;;test2.j(123)   println(64);
+2748             L584:
+2748 3E 40               LD    A,64
+274A             L585:
+274A CD BE 21            CALL  writeLineA
+274D             L586:
+274D                     ;;test2.j(124)   println(65);
+274D             L587:
+274D 3E 41               LD    A,65
+274F             L588:
+274F CD BE 21            CALL  writeLineA
+2752             L589:
+2752                     ;;test2.j(125)   // constant - stack8
+2752             L590:
+2752                     ;;test2.j(126)   // integer - integer
+2752             L591:
+2752                     ;;test2.j(127)   println(66);
+2752             L592:
+2752 3E 42               LD    A,66
+2754             L593:
+2754 CD BE 21            CALL  writeLineA
+2757             L594:
+2757                     ;;test2.j(128)   println(67);
+2757             L595:
+2757 3E 43               LD    A,67
+2759             L596:
+2759 CD BE 21            CALL  writeLineA
+275C             L597:
+275C                     ;;test2.j(129)   println(68);
+275C             L598:
+275C 3E 44               LD    A,68
+275E             L599:
+275E CD BE 21            CALL  writeLineA
+2761             L600:
+2761                     ;;test2.j(130)   println(69);
+2761             L601:
+2761 3E 45               LD    A,69
+2763             L602:
+2763 CD BE 21            CALL  writeLineA
+2766             L603:
+2766                     ;;test2.j(131) 
+2766             L604:
+2766                     ;;test2.j(132)   /************************/
+2766             L605:
+2766                     ;;test2.j(133)   // constant - stack16
+2766             L606:
+2766                     ;;test2.j(134)   // byte - byte
+2766             L607:
+2766                     ;;test2.j(135)   println(70);
+2766             L608:
+2766 3E 46               LD    A,70
+2768             L609:
+2768 CD BE 21            CALL  writeLineA
+276B             L610:
+276B                     ;;test2.j(136)   println(71);
+276B             L611:
+276B 3E 47               LD    A,71
+276D             L612:
+276D CD BE 21            CALL  writeLineA
+2770             L613:
+2770                     ;;test2.j(137)   // constant - stack16
+2770             L614:
+2770                     ;;test2.j(138)   // byte - integer
+2770             L615:
+2770                     ;;test2.j(139)   println(72);
+2770             L616:
+2770 3E 48               LD    A,72
+2772             L617:
+2772 CD BE 21            CALL  writeLineA
+2775             L618:
+2775                     ;;test2.j(140)   println(73);
+2775             L619:
+2775 3E 49               LD    A,73
+2777             L620:
+2777 CD BE 21            CALL  writeLineA
+277A             L621:
+277A                     ;;test2.j(141)   // constant - stack16
+277A             L622:
+277A                     ;;test2.j(142)   // integer - byte
+277A             L623:
+277A                     ;;test2.j(143)   println(74);
+277A             L624:
+277A 3E 4A               LD    A,74
+277C             L625:
+277C CD BE 21            CALL  writeLineA
+277F             L626:
+277F                     ;;test2.j(144)   println(75);
+277F             L627:
+277F 3E 4B               LD    A,75
+2781             L628:
+2781 CD BE 21            CALL  writeLineA
+2784             L629:
+2784                     ;;test2.j(145)   // constant - stack16
+2784             L630:
+2784                     ;;test2.j(146)   // integer - integer
+2784             L631:
+2784                     ;;test2.j(147)   println(76);
+2784             L632:
+2784 3E 4C               LD    A,76
+2786             L633:
+2786 CD BE 21            CALL  writeLineA
+2789             L634:
+2789                     ;;test2.j(148)   println(77);
+2789             L635:
+2789 3E 4D               LD    A,77
+278B             L636:
+278B CD BE 21            CALL  writeLineA
+278E             L637:
+278E                     ;;test2.j(149)   println(78);
+278E             L638:
+278E 3E 4E               LD    A,78
+2790             L639:
+2790 CD BE 21            CALL  writeLineA
+2793             L640:
+2793                     ;;test2.j(150)   println(79);
+2793             L641:
+2793 3E 4F               LD    A,79
+2795             L642:
+2795 CD BE 21            CALL  writeLineA
+2798             L643:
+2798                     ;;test2.j(151) 
+2798             L644:
+2798                     ;;test2.j(152)   /************************/
+2798             L645:
+2798                     ;;test2.j(153)   // acc - constant
+2798             L646:
+2798                     ;;test2.j(154)   // byte - byte
+2798             L647:
+2798                     ;;test2.j(155)   if (30+0 > 20) println(80); else println(999);
+2798             L648:
+2798 3E 1E               LD    A,30
+279A             L649:
+279A C6 00               ADD   A,0
+279C             L650:
+279C D6 14               SUB   A,20
+279E             L651:
+279E CA A9 27            JP    Z,L655
+27A1             L652:
+27A1 3E 50               LD    A,80
+27A3             L653:
+27A3 CD BE 21            CALL  writeLineA
+27A6             L654:
+27A6 C3 AF 27            JP    L658
+27A9             L655:
+27A9 21 E7 03            LD    HL,999
+27AC             L656:
+27AC CD 96 21            CALL  writeLineHL
+27AF             L657:
+27AF                     ;;test2.j(156)   if (10+0 < 20) println(81); else println(999);
+27AF             L658:
+27AF 3E 0A               LD    A,10
+27B1             L659:
+27B1 C6 00               ADD   A,0
+27B3             L660:
+27B3 D6 14               SUB   A,20
+27B5             L661:
+27B5 D2 C0 27            JP    NC,L665
+27B8             L662:
+27B8 3E 51               LD    A,81
+27BA             L663:
+27BA CD BE 21            CALL  writeLineA
+27BD             L664:
+27BD C3 C6 27            JP    L670
+27C0             L665:
+27C0 21 E7 03            LD    HL,999
+27C3             L666:
+27C3 CD 96 21            CALL  writeLineHL
+27C6             L667:
+27C6                     ;;test2.j(157)   // acc - constant
+27C6             L668:
+27C6                     ;;test2.j(158)   // byte - integer
+27C6             L669:
+27C6                     ;;test2.j(159)   if (30+0 > 2000) println(999); else println(82);
+27C6             L670:
+27C6 3E 1E               LD    A,30
+27C8             L671:
+27C8 C6 00               ADD   A,0
+27CA             L672:
+27CA 21 D0 07            LD    HL,2000
+27CD             L673:
+27CD 5F                  LD    E,A
+27CE 16 00               LD    D,0
+27D0 B7                  OR    A
+27D1 ED 52               SBC   HL,DE
+27D3             L674:
+27D3 CA DF 27            JP    Z,L678
+27D6             L675:
+27D6 21 E7 03            LD    HL,999
+27D9             L676:
+27D9 CD 96 21            CALL  writeLineHL
+27DC             L677:
+27DC C3 E4 27            JP    L681
+27DF             L678:
+27DF 3E 52               LD    A,82
+27E1             L679:
+27E1 CD BE 21            CALL  writeLineA
+27E4             L680:
+27E4                     ;;test2.j(160)   if (10+0 < 2000) println(83); else println(999);
+27E4             L681:
+27E4 3E 0A               LD    A,10
+27E6             L682:
+27E6 C6 00               ADD   A,0
+27E8             L683:
+27E8 21 D0 07            LD    HL,2000
+27EB             L684:
+27EB 5F                  LD    E,A
+27EC 16 00               LD    D,0
+27EE B7                  OR    A
+27EF ED 52               SBC   HL,DE
+27F1             L685:
+27F1 D2 FC 27            JP    NC,L689
+27F4             L686:
+27F4 3E 53               LD    A,83
+27F6             L687:
+27F6 CD BE 21            CALL  writeLineA
+27F9             L688:
+27F9 C3 02 28            JP    L694
+27FC             L689:
+27FC 21 E7 03            LD    HL,999
+27FF             L690:
+27FF CD 96 21            CALL  writeLineHL
+2802             L691:
+2802                     ;;test2.j(161)   // acc - constant
+2802             L692:
+2802                     ;;test2.j(162)   // integer - byte
+2802             L693:
+2802                     ;;test2.j(163)   if (3000+0 > 20) println(84); else println(999);
+2802             L694:
+2802 21 B8 0B            LD    HL,3000
+2805             L695:
+2805 11 00 00            LD    DE,0
+2808 19                  ADD   HL,DE
+2809             L696:
+2809 3E 14               LD    A,20
+280B             L697:
+280B 5F                  LD    E,A
+280C 16 00               LD    D,0
+280E EB                  EX    DE,HL
+280F B7                  OR    A
+2810 ED 52               SBC   HL,DE
+2812             L698:
+2812 CA 1D 28            JP    Z,L702
+2815             L699:
+2815 3E 54               LD    A,84
+2817             L700:
+2817 CD BE 21            CALL  writeLineA
+281A             L701:
+281A C3 23 28            JP    L705
+281D             L702:
+281D 21 E7 03            LD    HL,999
+2820             L703:
+2820 CD 96 21            CALL  writeLineHL
+2823             L704:
+2823                     ;;test2.j(164)   if (1000+0 < 20) println(999); else println(85);
+2823             L705:
+2823 21 E8 03            LD    HL,1000
+2826             L706:
+2826 11 00 00            LD    DE,0
+2829 19                  ADD   HL,DE
+282A             L707:
+282A 3E 14               LD    A,20
+282C             L708:
+282C 5F                  LD    E,A
+282D 16 00               LD    D,0
+282F EB                  EX    DE,HL
+2830 B7                  OR    A
+2831 ED 52               SBC   HL,DE
+2833             L709:
+2833 D2 3F 28            JP    NC,L713
+2836             L710:
+2836 21 E7 03            LD    HL,999
+2839             L711:
+2839 CD 96 21            CALL  writeLineHL
+283C             L712:
+283C C3 44 28            JP    L718
+283F             L713:
+283F 3E 55               LD    A,85
+2841             L714:
+2841 CD BE 21            CALL  writeLineA
+2844             L715:
+2844                     ;;test2.j(165)   // acc - constant
+2844             L716:
+2844                     ;;test2.j(166)   // integer - integer
+2844             L717:
+2844                     ;;test2.j(167)   if (3000+0 > 2000) println(86); else println(999);
+2844             L718:
+2844 21 B8 0B            LD    HL,3000
+2847             L719:
+2847 11 00 00            LD    DE,0
+284A 19                  ADD   HL,DE
+284B             L720:
+284B 11 D0 07            LD    DE,2000
+284E B7                  OR    A
+284F ED 52               SBC   HL,DE
+2851             L721:
+2851 CA 5C 28            JP    Z,L725
+2854             L722:
+2854 3E 56               LD    A,86
+2856             L723:
+2856 CD BE 21            CALL  writeLineA
+2859             L724:
+2859 C3 62 28            JP    L728
+285C             L725:
+285C 21 E7 03            LD    HL,999
+285F             L726:
+285F CD 96 21            CALL  writeLineHL
+2862             L727:
+2862                     ;;test2.j(168)   if (1000+0 < 2000) println(87); else println(999);
+2862             L728:
+2862 21 E8 03            LD    HL,1000
+2865             L729:
+2865 11 00 00            LD    DE,0
+2868 19                  ADD   HL,DE
+2869             L730:
+2869 11 D0 07            LD    DE,2000
+286C B7                  OR    A
+286D ED 52               SBC   HL,DE
+286F             L731:
+286F D2 7A 28            JP    NC,L735
+2872             L732:
+2872 3E 57               LD    A,87
+2874             L733:
+2874 CD BE 21            CALL  writeLineA
+2877             L734:
+2877 C3 80 28            JP    L738
+287A             L735:
+287A 21 E7 03            LD    HL,999
+287D             L736:
+287D CD 96 21            CALL  writeLineHL
+2880             L737:
+2880                     ;;test2.j(169)   println(88);
+2880             L738:
+2880 3E 58               LD    A,88
+2882             L739:
+2882 CD BE 21            CALL  writeLineA
+2885             L740:
+2885                     ;;test2.j(170)   println(89);
+2885             L741:
+2885 3E 59               LD    A,89
+2887             L742:
+2887 CD BE 21            CALL  writeLineA
+288A             L743:
+288A                     ;;test2.j(171) 
+288A             L744:
+288A                     ;;test2.j(172)   /************************/
+288A             L745:
+288A                     ;;test2.j(173)   // acc - acc
+288A             L746:
+288A                     ;;test2.j(174)   // byte - byte
+288A             L747:
+288A                     ;;test2.j(175)   if (30+0 > 20+0) println(90); else println(999);
+288A             L748:
+288A 3E 1E               LD    A,30
+288C             L749:
+288C C6 00               ADD   A,0
+288E             L750:
+288E F6                  PUSH AF
+288F             L751:
+288F 3E 14               LD    A,20
+2891             L752:
+2891 C6 00               ADD   A,0
+2893             L753:
+2893 C1                  POP   BC
+2894 90                  SUB   A,B
+2895             L754:
+2895 D2 A0 28            JP    NC,L758
+2898             L755:
+2898 3E 5A               LD    A,90
+289A             L756:
+289A CD BE 21            CALL  writeLineA
+289D             L757:
+289D C3 A6 28            JP    L761
+28A0             L758:
+28A0 21 E7 03            LD    HL,999
+28A3             L759:
+28A3 CD 96 21            CALL  writeLineHL
+28A6             L760:
+28A6                     ;;test2.j(176)   if (10+0 < 20+0) println(91); else println(999);
+28A6             L761:
+28A6 3E 0A               LD    A,10
+28A8             L762:
+28A8 C6 00               ADD   A,0
+28AA             L763:
+28AA F6                  PUSH AF
+28AB             L764:
+28AB 3E 14               LD    A,20
+28AD             L765:
+28AD C6 00               ADD   A,0
+28AF             L766:
+28AF C1                  POP   BC
+28B0 90                  SUB   A,B
+28B1             L767:
+28B1 CA BC 28            JP    Z,L771
+28B4             L768:
+28B4 3E 5B               LD    A,91
+28B6             L769:
+28B6 CD BE 21            CALL  writeLineA
+28B9             L770:
+28B9 C3 C2 28            JP    L776
+28BC             L771:
+28BC 21 E7 03            LD    HL,999
+28BF             L772:
+28BF CD 96 21            CALL  writeLineHL
+28C2             L773:
+28C2                     ;;test2.j(177)   // acc - acc
+28C2             L774:
+28C2                     ;;test2.j(178)   // byte - integer
+28C2             L775:
+28C2                     ;;test2.j(179)   if (30+0 > 2000+0) println(999); else println(92);
+28C2             L776:
+28C2 3E 1E               LD    A,30
+28C4             L777:
+28C4 C6 00               ADD   A,0
+28C6             L778:
+28C6 F6                  PUSH AF
+28C7             L779:
+28C7 21 D0 07            LD    HL,2000
+28CA             L780:
+28CA 11 00 00            LD    DE,0
+28CD 19                  ADD   HL,DE
+28CE             L781:
+28CE F1                  POP  AF
+28CF             L782:
+28CF 5F                  LD    E,A
+28D0 16 00               LD    D,0
+28D2 B7                  OR    A
+28D3 ED 52               SBC   HL,DE
+28D5             L783:
+28D5 CA E1 28            JP    Z,L787
+28D8             L784:
+28D8 21 E7 03            LD    HL,999
+28DB             L785:
+28DB CD 96 21            CALL  writeLineHL
+28DE             L786:
+28DE C3 E6 28            JP    L790
+28E1             L787:
+28E1 3E 5C               LD    A,92
+28E3             L788:
+28E3 CD BE 21            CALL  writeLineA
+28E6             L789:
+28E6                     ;;test2.j(180)   if (10+0 < 2000+0) println(93); else println(999);
+28E6             L790:
+28E6 3E 0A               LD    A,10
+28E8             L791:
+28E8 C6 00               ADD   A,0
+28EA             L792:
+28EA F6                  PUSH AF
+28EB             L793:
+28EB 21 D0 07            LD    HL,2000
+28EE             L794:
+28EE 11 00 00            LD    DE,0
+28F1 19                  ADD   HL,DE
+28F2             L795:
+28F2 F1                  POP  AF
+28F3             L796:
+28F3 5F                  LD    E,A
+28F4 16 00               LD    D,0
+28F6 B7                  OR    A
+28F7 ED 52               SBC   HL,DE
+28F9             L797:
+28F9 D2 04 29            JP    NC,L801
+28FC             L798:
+28FC 3E 5D               LD    A,93
+28FE             L799:
+28FE CD BE 21            CALL  writeLineA
+2901             L800:
+2901 C3 0A 29            JP    L806
+2904             L801:
+2904 21 E7 03            LD    HL,999
+2907             L802:
+2907 CD 96 21            CALL  writeLineHL
+290A             L803:
+290A                     ;;test2.j(181)   // acc - acc
+290A             L804:
+290A                     ;;test2.j(182)   // integer - byte
+290A             L805:
+290A                     ;;test2.j(183)   if (3000+0 > 20+0) println(94); else println(999);
+290A             L806:
+290A 21 B8 0B            LD    HL,3000
+290D             L807:
+290D 11 00 00            LD    DE,0
+2910 19                  ADD   HL,DE
+2911             L808:
+2911 E6                  PUSH HL
+2912             L809:
+2912 3E 14               LD    A,20
+2914             L810:
+2914 C6 00               ADD   A,0
+2916             L811:
+2916 E1                  POP  HL
+2917             L812:
+2917 5F                  LD    E,A
+2918 16 00               LD    D,0
+291A EB                  EX    DE,HL
+291B B7                  OR    A
+291C ED 52               SBC   HL,DE
+291E             L813:
+291E CA 29 29            JP    Z,L817
+2921             L814:
+2921 3E 5E               LD    A,94
+2923             L815:
+2923 CD BE 21            CALL  writeLineA
+2926             L816:
+2926 C3 2F 29            JP    L820
+2929             L817:
+2929 21 E7 03            LD    HL,999
+292C             L818:
+292C CD 96 21            CALL  writeLineHL
+292F             L819:
+292F                     ;;test2.j(184)   if (1000+0 < 20+0) println(999); else println(95);
+292F             L820:
+292F 21 E8 03            LD    HL,1000
+2932             L821:
+2932 11 00 00            LD    DE,0
+2935 19                  ADD   HL,DE
+2936             L822:
+2936 E6                  PUSH HL
+2937             L823:
+2937 3E 14               LD    A,20
+2939             L824:
+2939 C6 00               ADD   A,0
+293B             L825:
+293B E1                  POP  HL
+293C             L826:
+293C 5F                  LD    E,A
+293D 16 00               LD    D,0
+293F EB                  EX    DE,HL
+2940 B7                  OR    A
+2941 ED 52               SBC   HL,DE
+2943             L827:
+2943 D2 4F 29            JP    NC,L831
+2946             L828:
+2946 21 E7 03            LD    HL,999
+2949             L829:
+2949 CD 96 21            CALL  writeLineHL
+294C             L830:
+294C C3 54 29            JP    L836
+294F             L831:
+294F 3E 5F               LD    A,95
+2951             L832:
+2951 CD BE 21            CALL  writeLineA
+2954             L833:
+2954                     ;;test2.j(185)   // acc - acc
+2954             L834:
+2954                     ;;test2.j(186)   // integer - integer
+2954             L835:
+2954                     ;;test2.j(187)   if (3000+0 > 2000+0) println(96); else println(999);
+2954             L836:
+2954 21 B8 0B            LD    HL,3000
+2957             L837:
+2957 11 00 00            LD    DE,0
+295A 19                  ADD   HL,DE
+295B             L838:
+295B E6                  PUSH HL
+295C             L839:
+295C 21 D0 07            LD    HL,2000
+295F             L840:
+295F 11 00 00            LD    DE,0
+2962 19                  ADD   HL,DE
+2963             L841:
+2963 D1                  POP   DE
+2964 B7                  OR    A
+2965 ED 52               SBC   HL,DE
+2967             L842:
+2967 D2 72 29            JP    NC,L846
+296A             L843:
+296A 3E 60               LD    A,96
+296C             L844:
+296C CD BE 21            CALL  writeLineA
+296F             L845:
+296F C3 78 29            JP    L849
+2972             L846:
+2972 21 E7 03            LD    HL,999
+2975             L847:
+2975 CD 96 21            CALL  writeLineHL
+2978             L848:
+2978                     ;;test2.j(188)   if (1000+0 < 2000+0) println(97); else println(999);
+2978             L849:
+2978 21 E8 03            LD    HL,1000
+297B             L850:
+297B 11 00 00            LD    DE,0
+297E 19                  ADD   HL,DE
+297F             L851:
+297F E6                  PUSH HL
+2980             L852:
+2980 21 D0 07            LD    HL,2000
+2983             L853:
+2983 11 00 00            LD    DE,0
+2986 19                  ADD   HL,DE
+2987             L854:
+2987 D1                  POP   DE
+2988 B7                  OR    A
+2989 ED 52               SBC   HL,DE
+298B             L855:
+298B CA 96 29            JP    Z,L859
+298E             L856:
+298E 3E 61               LD    A,97
+2990             L857:
+2990 CD BE 21            CALL  writeLineA
+2993             L858:
+2993 C3 9C 29            JP    L862
+2996             L859:
+2996 21 E7 03            LD    HL,999
+2999             L860:
+2999 CD 96 21            CALL  writeLineHL
+299C             L861:
+299C                     ;;test2.j(189)   println(98);
+299C             L862:
+299C 3E 62               LD    A,98
+299E             L863:
+299E CD BE 21            CALL  writeLineA
+29A1             L864:
+29A1                     ;;test2.j(190)   println(99);
+29A1             L865:
+29A1 3E 63               LD    A,99
+29A3             L866:
+29A3 CD BE 21            CALL  writeLineA
+29A6             L867:
+29A6                     ;;test2.j(191) 
+29A6             L868:
+29A6                     ;;test2.j(192)   /************************/
+29A6             L869:
+29A6                     ;;test2.j(193)   // acc - var
+29A6             L870:
+29A6                     ;;test2.j(194)   // byte - byte
+29A6             L871:
+29A6                     ;;test2.j(195)   if (30+0 > b) println(100); else println(999);
+29A6             L872:
+29A6 3E 1E               LD    A,30
+29A8             L873:
+29A8 C6 00               ADD   A,0
+29AA             L874:
+29AA 47                  LD    B,A
+29AB 3A 06 50            LD    A,(05006H)
+29AE 90                  SUB   A,B
+29AF             L875:
+29AF CA BA 29            JP    Z,L879
+29B2             L876:
+29B2 3E 64               LD    A,100
+29B4             L877:
+29B4 CD BE 21            CALL  writeLineA
+29B7             L878:
+29B7 C3 C0 29            JP    L882
+29BA             L879:
+29BA 21 E7 03            LD    HL,999
+29BD             L880:
+29BD CD 96 21            CALL  writeLineHL
+29C0             L881:
+29C0                     ;;test2.j(196)   if (10+0 < b) println(101); else println(999);
+29C0             L882:
+29C0 3E 0A               LD    A,10
+29C2             L883:
+29C2 C6 00               ADD   A,0
+29C4             L884:
+29C4 47                  LD    B,A
+29C5 3A 06 50            LD    A,(05006H)
+29C8 90                  SUB   A,B
+29C9             L885:
+29C9 D2 D4 29            JP    NC,L889
+29CC             L886:
+29CC 3E 65               LD    A,101
+29CE             L887:
+29CE CD BE 21            CALL  writeLineA
+29D1             L888:
+29D1 C3 DA 29            JP    L894
+29D4             L889:
+29D4 21 E7 03            LD    HL,999
+29D7             L890:
+29D7 CD 96 21            CALL  writeLineHL
+29DA             L891:
+29DA                     ;;test2.j(197)   // acc - var
+29DA             L892:
+29DA                     ;;test2.j(198)   // byte - integer
+29DA             L893:
+29DA                     ;;test2.j(199)   if (30+0 > i) println(999); else println(102);
+29DA             L894:
+29DA 3E 1E               LD    A,30
+29DC             L895:
+29DC C6 00               ADD   A,0
+29DE             L896:
+29DE 2A 00 50            LD    HL,(05000H)
+29E1             L897:
+29E1 5F                  LD    E,A
+29E2 16 00               LD    D,0
+29E4 B7                  OR    A
+29E5 ED 52               SBC   HL,DE
+29E7             L898:
+29E7 CA F3 29            JP    Z,L902
+29EA             L899:
+29EA 21 E7 03            LD    HL,999
+29ED             L900:
+29ED CD 96 21            CALL  writeLineHL
+29F0             L901:
+29F0 C3 F8 29            JP    L905
+29F3             L902:
+29F3 3E 66               LD    A,102
+29F5             L903:
+29F5 CD BE 21            CALL  writeLineA
+29F8             L904:
+29F8                     ;;test2.j(200)   if (10+0 < i) println(103); else println(999);
+29F8             L905:
+29F8 3E 0A               LD    A,10
+29FA             L906:
+29FA C6 00               ADD   A,0
+29FC             L907:
+29FC 2A 00 50            LD    HL,(05000H)
+29FF             L908:
+29FF 5F                  LD    E,A
+2A00 16 00               LD    D,0
+2A02 B7                  OR    A
+2A03 ED 52               SBC   HL,DE
+2A05             L909:
+2A05 D2 10 2A            JP    NC,L913
+2A08             L910:
+2A08 3E 67               LD    A,103
+2A0A             L911:
+2A0A CD BE 21            CALL  writeLineA
+2A0D             L912:
+2A0D C3 16 2A            JP    L918
+2A10             L913:
+2A10 21 E7 03            LD    HL,999
+2A13             L914:
+2A13 CD 96 21            CALL  writeLineHL
+2A16             L915:
+2A16                     ;;test2.j(201)   // acc - var
+2A16             L916:
+2A16                     ;;test2.j(202)   // integer - byte
+2A16             L917:
+2A16                     ;;test2.j(203)   if (3000+0 > b) println(104); else println(999);
+2A16             L918:
+2A16 21 B8 0B            LD    HL,3000
+2A19             L919:
+2A19 11 00 00            LD    DE,0
+2A1C 19                  ADD   HL,DE
+2A1D             L920:
+2A1D 3A 06 50            LD    A,(05006H)
+2A20             L921:
+2A20 5F                  LD    E,A
+2A21 16 00               LD    D,0
+2A23 EB                  EX    DE,HL
+2A24 B7                  OR    A
+2A25 ED 52               SBC   HL,DE
+2A27             L922:
+2A27 CA 32 2A            JP    Z,L926
+2A2A             L923:
+2A2A 3E 68               LD    A,104
+2A2C             L924:
+2A2C CD BE 21            CALL  writeLineA
+2A2F             L925:
+2A2F C3 38 2A            JP    L929
+2A32             L926:
+2A32 21 E7 03            LD    HL,999
+2A35             L927:
+2A35 CD 96 21            CALL  writeLineHL
+2A38             L928:
+2A38                     ;;test2.j(204)   if (1000+0 < b) println(999); else println(105);
+2A38             L929:
+2A38 21 E8 03            LD    HL,1000
+2A3B             L930:
+2A3B 11 00 00            LD    DE,0
+2A3E 19                  ADD   HL,DE
+2A3F             L931:
+2A3F 3A 06 50            LD    A,(05006H)
+2A42             L932:
+2A42 5F                  LD    E,A
+2A43 16 00               LD    D,0
+2A45 EB                  EX    DE,HL
+2A46 B7                  OR    A
+2A47 ED 52               SBC   HL,DE
+2A49             L933:
+2A49 D2 55 2A            JP    NC,L937
+2A4C             L934:
+2A4C 21 E7 03            LD    HL,999
+2A4F             L935:
+2A4F CD 96 21            CALL  writeLineHL
+2A52             L936:
+2A52 C3 5A 2A            JP    L942
+2A55             L937:
+2A55 3E 69               LD    A,105
+2A57             L938:
+2A57 CD BE 21            CALL  writeLineA
+2A5A             L939:
+2A5A                     ;;test2.j(205)   // acc - var
+2A5A             L940:
+2A5A                     ;;test2.j(206)   // integer - integer
+2A5A             L941:
+2A5A                     ;;test2.j(207)   if (3000+0 > i) println(106); else println(999);
+2A5A             L942:
+2A5A 21 B8 0B            LD    HL,3000
+2A5D             L943:
+2A5D 11 00 00            LD    DE,0
+2A60 19                  ADD   HL,DE
+2A61             L944:
+2A61 ED 5B 00 50         LD    DE,(05000H)
+2A65 B7                  OR    A
+2A66 ED 52               SBC   HL,DE
+2A68             L945:
+2A68 CA 73 2A            JP    Z,L949
+2A6B             L946:
+2A6B 3E 6A               LD    A,106
+2A6D             L947:
+2A6D CD BE 21            CALL  writeLineA
+2A70             L948:
+2A70 C3 79 2A            JP    L952
+2A73             L949:
+2A73 21 E7 03            LD    HL,999
+2A76             L950:
+2A76 CD 96 21            CALL  writeLineHL
+2A79             L951:
+2A79                     ;;test2.j(208)   if (1000+0 < i) println(107); else println(999);
+2A79             L952:
+2A79 21 E8 03            LD    HL,1000
+2A7C             L953:
+2A7C 11 00 00            LD    DE,0
+2A7F 19                  ADD   HL,DE
+2A80             L954:
+2A80 ED 5B 00 50         LD    DE,(05000H)
+2A84 B7                  OR    A
+2A85 ED 52               SBC   HL,DE
+2A87             L955:
+2A87 D2 92 2A            JP    NC,L959
+2A8A             L956:
+2A8A 3E 6B               LD    A,107
+2A8C             L957:
+2A8C CD BE 21            CALL  writeLineA
+2A8F             L958:
+2A8F C3 98 2A            JP    L962
+2A92             L959:
+2A92 21 E7 03            LD    HL,999
+2A95             L960:
+2A95 CD 96 21            CALL  writeLineHL
+2A98             L961:
+2A98                     ;;test2.j(209)   println(108);
+2A98             L962:
+2A98 3E 6C               LD    A,108
+2A9A             L963:
+2A9A CD BE 21            CALL  writeLineA
+2A9D             L964:
+2A9D                     ;;test2.j(210)   println(109);
+2A9D             L965:
+2A9D 3E 6D               LD    A,109
+2A9F             L966:
+2A9F CD BE 21            CALL  writeLineA
+2AA2             L967:
+2AA2                     ;;test2.j(211) 
+2AA2             L968:
+2AA2                     ;;test2.j(212)   /************************/
+2AA2             L969:
+2AA2                     ;;test2.j(213)   // acc - stack8
+2AA2             L970:
+2AA2                     ;;test2.j(214)   // byte - byte
+2AA2             L971:
+2AA2                     ;;test2.j(215)   println(110);
+2AA2             L972:
+2AA2 3E 6E               LD    A,110
+2AA4             L973:
+2AA4 CD BE 21            CALL  writeLineA
+2AA7             L974:
+2AA7                     ;;test2.j(216)   println(111);
+2AA7             L975:
+2AA7 3E 6F               LD    A,111
+2AA9             L976:
+2AA9 CD BE 21            CALL  writeLineA
+2AAC             L977:
+2AAC                     ;;test2.j(217)   // acc - stack8
+2AAC             L978:
+2AAC                     ;;test2.j(218)   // byte - integer
+2AAC             L979:
+2AAC                     ;;test2.j(219)   println(112);
+2AAC             L980:
+2AAC 3E 70               LD    A,112
+2AAE             L981:
+2AAE CD BE 21            CALL  writeLineA
+2AB1             L982:
+2AB1                     ;;test2.j(220)   println(113);
+2AB1             L983:
+2AB1 3E 71               LD    A,113
+2AB3             L984:
+2AB3 CD BE 21            CALL  writeLineA
+2AB6             L985:
+2AB6                     ;;test2.j(221)   // acc - stack8
+2AB6             L986:
+2AB6                     ;;test2.j(222)   // integer - byte
+2AB6             L987:
+2AB6                     ;;test2.j(223)   println(114);
+2AB6             L988:
+2AB6 3E 72               LD    A,114
+2AB8             L989:
+2AB8 CD BE 21            CALL  writeLineA
+2ABB             L990:
+2ABB                     ;;test2.j(224)   println(115);
+2ABB             L991:
+2ABB 3E 73               LD    A,115
+2ABD             L992:
+2ABD CD BE 21            CALL  writeLineA
+2AC0             L993:
+2AC0                     ;;test2.j(225)   // acc - stack8
+2AC0             L994:
+2AC0                     ;;test2.j(226)   // integer - integer
+2AC0             L995:
+2AC0                     ;;test2.j(227)   println(116);
+2AC0             L996:
+2AC0 3E 74               LD    A,116
+2AC2             L997:
+2AC2 CD BE 21            CALL  writeLineA
+2AC5             L998:
+2AC5                     ;;test2.j(228)   println(117);
+2AC5             L999:
+2AC5 3E 75               LD    A,117
+2AC7             L1000:
+2AC7 CD BE 21            CALL  writeLineA
+2ACA             L1001:
+2ACA                     ;;test2.j(229)   println(118);
+2ACA             L1002:
+2ACA 3E 76               LD    A,118
+2ACC             L1003:
+2ACC CD BE 21            CALL  writeLineA
+2ACF             L1004:
+2ACF                     ;;test2.j(230)   println(119);
+2ACF             L1005:
+2ACF 3E 77               LD    A,119
+2AD1             L1006:
+2AD1 CD BE 21            CALL  writeLineA
+2AD4             L1007:
+2AD4                     ;;test2.j(231) 
+2AD4             L1008:
+2AD4                     ;;test2.j(232)   /************************/
+2AD4             L1009:
+2AD4                     ;;test2.j(233)   // acc - stack16
+2AD4             L1010:
+2AD4                     ;;test2.j(234)   // byte - byte
+2AD4             L1011:
+2AD4                     ;;test2.j(235)   println(120);
+2AD4             L1012:
+2AD4 3E 78               LD    A,120
+2AD6             L1013:
+2AD6 CD BE 21            CALL  writeLineA
+2AD9             L1014:
+2AD9                     ;;test2.j(236)   println(121);
+2AD9             L1015:
+2AD9 3E 79               LD    A,121
+2ADB             L1016:
+2ADB CD BE 21            CALL  writeLineA
+2ADE             L1017:
+2ADE                     ;;test2.j(237)   // acc - stack16
+2ADE             L1018:
+2ADE                     ;;test2.j(238)   // byte - integer
+2ADE             L1019:
+2ADE                     ;;test2.j(239)   println(122);
+2ADE             L1020:
+2ADE 3E 7A               LD    A,122
+2AE0             L1021:
+2AE0 CD BE 21            CALL  writeLineA
+2AE3             L1022:
+2AE3                     ;;test2.j(240)   println(123);
+2AE3             L1023:
+2AE3 3E 7B               LD    A,123
+2AE5             L1024:
+2AE5 CD BE 21            CALL  writeLineA
+2AE8             L1025:
+2AE8                     ;;test2.j(241)   // acc - stack16
+2AE8             L1026:
+2AE8                     ;;test2.j(242)   // integer - byte
+2AE8             L1027:
+2AE8                     ;;test2.j(243)   println(124);
+2AE8             L1028:
+2AE8 3E 7C               LD    A,124
+2AEA             L1029:
+2AEA CD BE 21            CALL  writeLineA
+2AED             L1030:
+2AED                     ;;test2.j(244)   println(125);
+2AED             L1031:
+2AED 3E 7D               LD    A,125
+2AEF             L1032:
+2AEF CD BE 21            CALL  writeLineA
+2AF2             L1033:
+2AF2                     ;;test2.j(245)   // acc - stack16
+2AF2             L1034:
+2AF2                     ;;test2.j(246)   // integer - integer
+2AF2             L1035:
+2AF2                     ;;test2.j(247)   println(126);
+2AF2             L1036:
+2AF2 3E 7E               LD    A,126
+2AF4             L1037:
+2AF4 CD BE 21            CALL  writeLineA
+2AF7             L1038:
+2AF7                     ;;test2.j(248)   println(127);
+2AF7             L1039:
+2AF7 3E 7F               LD    A,127
+2AF9             L1040:
+2AF9 CD BE 21            CALL  writeLineA
+2AFC             L1041:
+2AFC                     ;;test2.j(249)   println(128);
+2AFC             L1042:
+2AFC 3E 80               LD    A,128
+2AFE             L1043:
+2AFE CD BE 21            CALL  writeLineA
+2B01             L1044:
+2B01                     ;;test2.j(250)   println(129);
+2B01             L1045:
+2B01 3E 81               LD    A,129
+2B03             L1046:
+2B03 CD BE 21            CALL  writeLineA
+2B06             L1047:
+2B06                     ;;test2.j(251) 
+2B06             L1048:
+2B06                     ;;test2.j(252)   /************************/
+2B06             L1049:
+2B06                     ;;test2.j(253)   // var - constant
+2B06             L1050:
+2B06                     ;;test2.j(254)   // byte - byte
+2B06             L1051:
+2B06                     ;;test2.j(255)   if (b > 10) println(130); else println(999);
+2B06             L1052:
+2B06 3A 06 50            LD    A,(05006H)
+2B09             L1053:
+2B09 D6 0A               SUB   A,10
+2B0B             L1054:
+2B0B CA 16 2B            JP    Z,L1058
+2B0E             L1055:
+2B0E 3E 82               LD    A,130
+2B10             L1056:
+2B10 CD BE 21            CALL  writeLineA
+2B13             L1057:
+2B13 C3 1C 2B            JP    L1061
+2B16             L1058:
+2B16 21 E7 03            LD    HL,999
+2B19             L1059:
+2B19 CD 96 21            CALL  writeLineHL
+2B1C             L1060:
+2B1C                     ;;test2.j(256)   if (b < 30) println(131); else println(999);
+2B1C             L1061:
+2B1C 3A 06 50            LD    A,(05006H)
+2B1F             L1062:
+2B1F D6 1E               SUB   A,30
+2B21             L1063:
+2B21 D2 2C 2B            JP    NC,L1067
+2B24             L1064:
+2B24 3E 83               LD    A,131
+2B26             L1065:
+2B26 CD BE 21            CALL  writeLineA
+2B29             L1066:
+2B29 C3 32 2B            JP    L1072
+2B2C             L1067:
+2B2C 21 E7 03            LD    HL,999
+2B2F             L1068:
+2B2F CD 96 21            CALL  writeLineHL
+2B32             L1069:
+2B32                     ;;test2.j(257)   // var - constant
+2B32             L1070:
+2B32                     ;;test2.j(258)   // byte - integer
+2B32             L1071:
+2B32                     ;;test2.j(259)   if (b > 1000) println(999); else println(132);
+2B32             L1072:
+2B32 3A 06 50            LD    A,(05006H)
+2B35             L1073:
+2B35 21 E8 03            LD    HL,1000
+2B38             L1074:
+2B38 5F                  LD    E,A
+2B39 16 00               LD    D,0
+2B3B B7                  OR    A
+2B3C ED 52               SBC   HL,DE
+2B3E             L1075:
+2B3E CA 4A 2B            JP    Z,L1079
+2B41             L1076:
+2B41 21 E7 03            LD    HL,999
+2B44             L1077:
+2B44 CD 96 21            CALL  writeLineHL
+2B47             L1078:
+2B47 C3 4F 2B            JP    L1082
+2B4A             L1079:
+2B4A 3E 84               LD    A,132
+2B4C             L1080:
+2B4C CD BE 21            CALL  writeLineA
+2B4F             L1081:
+2B4F                     ;;test2.j(260)   if (b < 1000) println(133); else println(999);
+2B4F             L1082:
+2B4F 3A 06 50            LD    A,(05006H)
+2B52             L1083:
+2B52 21 E8 03            LD    HL,1000
+2B55             L1084:
+2B55 5F                  LD    E,A
+2B56 16 00               LD    D,0
+2B58 B7                  OR    A
+2B59 ED 52               SBC   HL,DE
+2B5B             L1085:
+2B5B D2 66 2B            JP    NC,L1089
+2B5E             L1086:
+2B5E 3E 85               LD    A,133
+2B60             L1087:
+2B60 CD BE 21            CALL  writeLineA
+2B63             L1088:
+2B63 C3 6C 2B            JP    L1094
+2B66             L1089:
+2B66 21 E7 03            LD    HL,999
+2B69             L1090:
+2B69 CD 96 21            CALL  writeLineHL
+2B6C             L1091:
+2B6C                     ;;test2.j(261)   // var - constant
+2B6C             L1092:
+2B6C                     ;;test2.j(262)   // integer - byte
+2B6C             L1093:
+2B6C                     ;;test2.j(263)   if (i > 1000) println(134); else println(999);
+2B6C             L1094:
+2B6C 2A 00 50            LD    HL,(05000H)
+2B6F             L1095:
+2B6F 11 E8 03            LD    DE,1000
+2B72 B7                  OR    A
+2B73 ED 52               SBC   HL,DE
+2B75             L1096:
+2B75 CA 80 2B            JP    Z,L1100
+2B78             L1097:
+2B78 3E 86               LD    A,134
+2B7A             L1098:
+2B7A CD BE 21            CALL  writeLineA
+2B7D             L1099:
+2B7D C3 86 2B            JP    L1103
+2B80             L1100:
+2B80 21 E7 03            LD    HL,999
+2B83             L1101:
+2B83 CD 96 21            CALL  writeLineHL
+2B86             L1102:
+2B86                     ;;test2.j(264)   if (i < 3000) println(135); else println(999);
+2B86             L1103:
+2B86 2A 00 50            LD    HL,(05000H)
+2B89             L1104:
+2B89 11 B8 0B            LD    DE,3000
+2B8C B7                  OR    A
+2B8D ED 52               SBC   HL,DE
+2B8F             L1105:
+2B8F D2 9A 2B            JP    NC,L1109
+2B92             L1106:
+2B92 3E 87               LD    A,135
+2B94             L1107:
+2B94 CD BE 21            CALL  writeLineA
+2B97             L1108:
+2B97 C3 A0 2B            JP    L1114
+2B9A             L1109:
+2B9A 21 E7 03            LD    HL,999
+2B9D             L1110:
+2B9D CD 96 21            CALL  writeLineHL
+2BA0             L1111:
+2BA0                     ;;test2.j(265)   // var - constant
+2BA0             L1112:
+2BA0                     ;;test2.j(266)   // integer - integer
+2BA0             L1113:
+2BA0                     ;;test2.j(267)   if (i > 1000) println(136); else println(999);
+2BA0             L1114:
+2BA0 2A 00 50            LD    HL,(05000H)
+2BA3             L1115:
+2BA3 11 E8 03            LD    DE,1000
+2BA6 B7                  OR    A
+2BA7 ED 52               SBC   HL,DE
+2BA9             L1116:
+2BA9 CA B4 2B            JP    Z,L1120
+2BAC             L1117:
+2BAC 3E 88               LD    A,136
+2BAE             L1118:
+2BAE CD BE 21            CALL  writeLineA
+2BB1             L1119:
+2BB1 C3 BA 2B            JP    L1123
+2BB4             L1120:
+2BB4 21 E7 03            LD    HL,999
+2BB7             L1121:
+2BB7 CD 96 21            CALL  writeLineHL
+2BBA             L1122:
+2BBA                     ;;test2.j(268)   if (i < 3000) println(137); else println(999);
+2BBA             L1123:
+2BBA 2A 00 50            LD    HL,(05000H)
+2BBD             L1124:
+2BBD 11 B8 0B            LD    DE,3000
+2BC0 B7                  OR    A
+2BC1 ED 52               SBC   HL,DE
+2BC3             L1125:
+2BC3 D2 CE 2B            JP    NC,L1129
+2BC6             L1126:
+2BC6 3E 89               LD    A,137
+2BC8             L1127:
+2BC8 CD BE 21            CALL  writeLineA
+2BCB             L1128:
+2BCB C3 D4 2B            JP    L1132
+2BCE             L1129:
+2BCE 21 E7 03            LD    HL,999
+2BD1             L1130:
+2BD1 CD 96 21            CALL  writeLineHL
+2BD4             L1131:
+2BD4                     ;;test2.j(269)   println(138);
+2BD4             L1132:
+2BD4 3E 8A               LD    A,138
+2BD6             L1133:
+2BD6 CD BE 21            CALL  writeLineA
+2BD9             L1134:
+2BD9                     ;;test2.j(270)   println(139);
+2BD9             L1135:
+2BD9 3E 8B               LD    A,139
+2BDB             L1136:
+2BDB CD BE 21            CALL  writeLineA
+2BDE             L1137:
+2BDE                     ;;test2.j(271) 
+2BDE             L1138:
+2BDE                     ;;test2.j(272)   /************************/
+2BDE             L1139:
+2BDE                     ;;test2.j(273)   // var - acc
+2BDE             L1140:
+2BDE                     ;;test2.j(274)   // byte - byte
+2BDE             L1141:
+2BDE                     ;;test2.j(275)   if (b > 10+0) println(140); else println(999);
+2BDE             L1142:
+2BDE 3E 0A               LD    A,10
+2BE0             L1143:
+2BE0 C6 00               ADD   A,0
+2BE2             L1144:
+2BE2 47                  LD    B,A
+2BE3 3A 06 50            LD    A,(05006H)
+2BE6 90                  SUB   A,B
+2BE7             L1145:
+2BE7 D2 F2 2B            JP    NC,L1149
+2BEA             L1146:
+2BEA 3E 8C               LD    A,140
+2BEC             L1147:
+2BEC CD BE 21            CALL  writeLineA
+2BEF             L1148:
+2BEF C3 F8 2B            JP    L1152
+2BF2             L1149:
+2BF2 21 E7 03            LD    HL,999
+2BF5             L1150:
+2BF5 CD 96 21            CALL  writeLineHL
+2BF8             L1151:
+2BF8                     ;;test2.j(276)   if (b < 30+0) println(141); else println(999);
+2BF8             L1152:
+2BF8 3E 1E               LD    A,30
+2BFA             L1153:
+2BFA C6 00               ADD   A,0
+2BFC             L1154:
+2BFC 47                  LD    B,A
+2BFD 3A 06 50            LD    A,(05006H)
+2C00 90                  SUB   A,B
+2C01             L1155:
+2C01 CA 0C 2C            JP    Z,L1159
+2C04             L1156:
+2C04 3E 8D               LD    A,141
+2C06             L1157:
+2C06 CD BE 21            CALL  writeLineA
+2C09             L1158:
+2C09 C3 12 2C            JP    L1164
+2C0C             L1159:
+2C0C 21 E7 03            LD    HL,999
+2C0F             L1160:
+2C0F CD 96 21            CALL  writeLineHL
+2C12             L1161:
+2C12                     ;;test2.j(277)   // var - acc
+2C12             L1162:
+2C12                     ;;test2.j(278)   // byte - integer
+2C12             L1163:
+2C12                     ;;test2.j(279)   if (b > 1000+0) println(999); else println(142);
+2C12             L1164:
+2C12 21 E8 03            LD    HL,1000
+2C15             L1165:
+2C15 11 00 00            LD    DE,0
+2C18 19                  ADD   HL,DE
+2C19             L1166:
+2C19 3A 06 50            LD    A,(05006H)
+2C1C             L1167:
+2C1C 5F                  LD    E,A
+2C1D 16 00               LD    D,0
+2C1F B7                  OR    A
+2C20 ED 52               SBC   HL,DE
+2C22             L1168:
+2C22 CA 2E 2C            JP    Z,L1172
+2C25             L1169:
+2C25 21 E7 03            LD    HL,999
+2C28             L1170:
+2C28 CD 96 21            CALL  writeLineHL
+2C2B             L1171:
+2C2B C3 33 2C            JP    L1175
+2C2E             L1172:
+2C2E 3E 8E               LD    A,142
+2C30             L1173:
+2C30 CD BE 21            CALL  writeLineA
+2C33             L1174:
+2C33                     ;;test2.j(280)   if (b < 1000+0) println(143); else println(999);
+2C33             L1175:
+2C33 21 E8 03            LD    HL,1000
+2C36             L1176:
+2C36 11 00 00            LD    DE,0
+2C39 19                  ADD   HL,DE
+2C3A             L1177:
+2C3A 3A 06 50            LD    A,(05006H)
+2C3D             L1178:
+2C3D 5F                  LD    E,A
+2C3E 16 00               LD    D,0
+2C40 B7                  OR    A
+2C41 ED 52               SBC   HL,DE
+2C43             L1179:
+2C43 D2 4E 2C            JP    NC,L1183
+2C46             L1180:
+2C46 3E 8F               LD    A,143
+2C48             L1181:
+2C48 CD BE 21            CALL  writeLineA
+2C4B             L1182:
+2C4B C3 54 2C            JP    L1188
+2C4E             L1183:
+2C4E 21 E7 03            LD    HL,999
+2C51             L1184:
+2C51 CD 96 21            CALL  writeLineHL
+2C54             L1185:
+2C54                     ;;test2.j(281)   // var - acc
+2C54             L1186:
+2C54                     ;;test2.j(282)   // integer - byte
+2C54             L1187:
+2C54                     ;;test2.j(283)   if (i > 1000+0) println(144); else println(999);
+2C54             L1188:
+2C54 21 E8 03            LD    HL,1000
+2C57             L1189:
+2C57 11 00 00            LD    DE,0
+2C5A 19                  ADD   HL,DE
+2C5B             L1190:
+2C5B ED 5B 00 50         LD    DE,(05000H)
+2C5F B7                  OR    A
+2C60 ED 52               SBC   HL,DE
+2C62             L1191:
+2C62 D2 6D 2C            JP    NC,L1195
+2C65             L1192:
+2C65 3E 90               LD    A,144
+2C67             L1193:
+2C67 CD BE 21            CALL  writeLineA
+2C6A             L1194:
+2C6A C3 73 2C            JP    L1198
+2C6D             L1195:
+2C6D 21 E7 03            LD    HL,999
+2C70             L1196:
+2C70 CD 96 21            CALL  writeLineHL
+2C73             L1197:
+2C73                     ;;test2.j(284)   if (i < 3000+0) println(145); else println(999);
+2C73             L1198:
+2C73 21 B8 0B            LD    HL,3000
+2C76             L1199:
+2C76 11 00 00            LD    DE,0
+2C79 19                  ADD   HL,DE
+2C7A             L1200:
+2C7A ED 5B 00 50         LD    DE,(05000H)
+2C7E B7                  OR    A
+2C7F ED 52               SBC   HL,DE
+2C81             L1201:
+2C81 CA 8C 2C            JP    Z,L1205
+2C84             L1202:
+2C84 3E 91               LD    A,145
+2C86             L1203:
+2C86 CD BE 21            CALL  writeLineA
+2C89             L1204:
+2C89 C3 92 2C            JP    L1210
+2C8C             L1205:
+2C8C 21 E7 03            LD    HL,999
+2C8F             L1206:
+2C8F CD 96 21            CALL  writeLineHL
+2C92             L1207:
+2C92                     ;;test2.j(285)   // var - acc
+2C92             L1208:
+2C92                     ;;test2.j(286)   // integer - integer
+2C92             L1209:
+2C92                     ;;test2.j(287)   if (i > 1000+0) println(146); else println(999);
+2C92             L1210:
+2C92 21 E8 03            LD    HL,1000
+2C95             L1211:
+2C95 11 00 00            LD    DE,0
+2C98 19                  ADD   HL,DE
+2C99             L1212:
+2C99 ED 5B 00 50         LD    DE,(05000H)
+2C9D B7                  OR    A
+2C9E ED 52               SBC   HL,DE
+2CA0             L1213:
+2CA0 D2 AB 2C            JP    NC,L1217
+2CA3             L1214:
+2CA3 3E 92               LD    A,146
+2CA5             L1215:
+2CA5 CD BE 21            CALL  writeLineA
+2CA8             L1216:
+2CA8 C3 B1 2C            JP    L1220
+2CAB             L1217:
+2CAB 21 E7 03            LD    HL,999
+2CAE             L1218:
+2CAE CD 96 21            CALL  writeLineHL
+2CB1             L1219:
+2CB1                     ;;test2.j(288)   if (i < 3000+0) println(147); else println(999);
+2CB1             L1220:
+2CB1 21 B8 0B            LD    HL,3000
+2CB4             L1221:
+2CB4 11 00 00            LD    DE,0
+2CB7 19                  ADD   HL,DE
+2CB8             L1222:
+2CB8 ED 5B 00 50         LD    DE,(05000H)
+2CBC B7                  OR    A
+2CBD ED 52               SBC   HL,DE
+2CBF             L1223:
+2CBF CA CA 2C            JP    Z,L1227
+2CC2             L1224:
+2CC2 3E 93               LD    A,147
+2CC4             L1225:
+2CC4 CD BE 21            CALL  writeLineA
+2CC7             L1226:
+2CC7 C3 D0 2C            JP    L1230
+2CCA             L1227:
+2CCA 21 E7 03            LD    HL,999
+2CCD             L1228:
+2CCD CD 96 21            CALL  writeLineHL
+2CD0             L1229:
+2CD0                     ;;test2.j(289)   println(148);
+2CD0             L1230:
+2CD0 3E 94               LD    A,148
+2CD2             L1231:
+2CD2 CD BE 21            CALL  writeLineA
+2CD5             L1232:
+2CD5                     ;;test2.j(290)   println(149);
+2CD5             L1233:
+2CD5 3E 95               LD    A,149
+2CD7             L1234:
+2CD7 CD BE 21            CALL  writeLineA
+2CDA             L1235:
+2CDA                     ;;test2.j(291) 
+2CDA             L1236:
+2CDA                     ;;test2.j(292)   /************************/
+2CDA             L1237:
+2CDA                     ;;test2.j(293)   // var - var
+2CDA             L1238:
+2CDA                     ;;test2.j(294)   // byte - byte
+2CDA             L1239:
+2CDA                     ;;test2.j(295)   if (b > b1) println(150);
+2CDA             L1240:
+2CDA 3A 06 50            LD    A,(05006H)
+2CDD             L1241:
+2CDD 47                  LD    B,A
+2CDE 3A 07 50            LD    A,(05007H)
+2CE1 90                  SUB   A,B
+2CE2             L1242:
+2CE2 CA EA 2C            JP    Z,L1246
+2CE5             L1243:
+2CE5 3E 96               LD    A,150
+2CE7             L1244:
+2CE7 CD BE 21            CALL  writeLineA
+2CEA             L1245:
+2CEA                     ;;test2.j(296)   if (b < b3) println(151);
+2CEA             L1246:
+2CEA 3A 06 50            LD    A,(05006H)
+2CED             L1247:
+2CED 47                  LD    B,A
+2CEE 3A 08 50            LD    A,(05008H)
+2CF1 90                  SUB   A,B
+2CF2             L1248:
+2CF2 D2 FA 2C            JP    NC,L1254
+2CF5             L1249:
+2CF5 3E 97               LD    A,151
+2CF7             L1250:
+2CF7 CD BE 21            CALL  writeLineA
+2CFA             L1251:
+2CFA                     ;;test2.j(297)   // var - var
+2CFA             L1252:
+2CFA                     ;;test2.j(298)   // byte - integer
+2CFA             L1253:
+2CFA                     ;;test2.j(299)   if (b > i1) println(999); else println(152);
+2CFA             L1254:
+2CFA 3A 06 50            LD    A,(05006H)
+2CFD             L1255:
+2CFD 2A 02 50            LD    HL,(05002H)
+2D00             L1256:
+2D00 5F                  LD    E,A
+2D01 16 00               LD    D,0
+2D03 B7                  OR    A
+2D04 ED 52               SBC   HL,DE
+2D06             L1257:
+2D06 CA 12 2D            JP    Z,L1261
+2D09             L1258:
+2D09 21 E7 03            LD    HL,999
+2D0C             L1259:
+2D0C CD 96 21            CALL  writeLineHL
+2D0F             L1260:
+2D0F C3 17 2D            JP    L1264
+2D12             L1261:
+2D12 3E 98               LD    A,152
+2D14             L1262:
+2D14 CD BE 21            CALL  writeLineA
+2D17             L1263:
+2D17                     ;;test2.j(300)   if (b < i3) println(153);
+2D17             L1264:
+2D17 3A 06 50            LD    A,(05006H)
+2D1A             L1265:
+2D1A 2A 04 50            LD    HL,(05004H)
+2D1D             L1266:
+2D1D 5F                  LD    E,A
+2D1E 16 00               LD    D,0
+2D20 B7                  OR    A
+2D21 ED 52               SBC   HL,DE
+2D23             L1267:
+2D23 D2 2B 2D            JP    NC,L1273
+2D26             L1268:
+2D26 3E 99               LD    A,153
+2D28             L1269:
+2D28 CD BE 21            CALL  writeLineA
+2D2B             L1270:
+2D2B                     ;;test2.j(301)   // var - var
+2D2B             L1271:
+2D2B                     ;;test2.j(302)   // integer - byte
+2D2B             L1272:
+2D2B                     ;;test2.j(303)   if (i > i1) println(154);
+2D2B             L1273:
+2D2B 2A 00 50            LD    HL,(05000H)
+2D2E             L1274:
+2D2E ED 5B 02 50         LD    DE,(05002H)
+2D32 B7                  OR    A
+2D33 ED 52               SBC   HL,DE
+2D35             L1275:
+2D35 CA 3D 2D            JP    Z,L1279
+2D38             L1276:
+2D38 3E 9A               LD    A,154
+2D3A             L1277:
+2D3A CD BE 21            CALL  writeLineA
+2D3D             L1278:
+2D3D                     ;;test2.j(304)   if (i < i3) println(155);
+2D3D             L1279:
+2D3D 2A 00 50            LD    HL,(05000H)
+2D40             L1280:
+2D40 ED 5B 04 50         LD    DE,(05004H)
+2D44 B7                  OR    A
+2D45 ED 52               SBC   HL,DE
+2D47             L1281:
+2D47 D2 4F 2D            JP    NC,L1287
+2D4A             L1282:
+2D4A 3E 9B               LD    A,155
+2D4C             L1283:
+2D4C CD BE 21            CALL  writeLineA
+2D4F             L1284:
+2D4F                     ;;test2.j(305)   // var - var
+2D4F             L1285:
+2D4F                     ;;test2.j(306)   // integer - integer
+2D4F             L1286:
+2D4F                     ;;test2.j(307)   if (i > i1) println(156);
+2D4F             L1287:
+2D4F 2A 00 50            LD    HL,(05000H)
+2D52             L1288:
+2D52 ED 5B 02 50         LD    DE,(05002H)
+2D56 B7                  OR    A
+2D57 ED 52               SBC   HL,DE
+2D59             L1289:
+2D59 CA 61 2D            JP    Z,L1293
+2D5C             L1290:
+2D5C 3E 9C               LD    A,156
+2D5E             L1291:
+2D5E CD BE 21            CALL  writeLineA
+2D61             L1292:
+2D61                     ;;test2.j(308)   if (i < i3) println(157);
+2D61             L1293:
+2D61 2A 00 50            LD    HL,(05000H)
+2D64             L1294:
+2D64 ED 5B 04 50         LD    DE,(05004H)
+2D68 B7                  OR    A
+2D69 ED 52               SBC   HL,DE
+2D6B             L1295:
+2D6B D2 73 2D            JP    NC,L1299
+2D6E             L1296:
+2D6E 3E 9D               LD    A,157
+2D70             L1297:
+2D70 CD BE 21            CALL  writeLineA
+2D73             L1298:
+2D73                     ;;test2.j(309)   println(158);
+2D73             L1299:
+2D73 3E 9E               LD    A,158
+2D75             L1300:
+2D75 CD BE 21            CALL  writeLineA
+2D78             L1301:
+2D78                     ;;test2.j(310)   println(159);
+2D78             L1302:
+2D78 3E 9F               LD    A,159
+2D7A             L1303:
+2D7A CD BE 21            CALL  writeLineA
+2D7D             L1304:
+2D7D                     ;;test2.j(311) 
+2D7D             L1305:
+2D7D                     ;;test2.j(312)   /************************/
+2D7D             L1306:
+2D7D                     ;;test2.j(313)   // var - stack8
+2D7D             L1307:
+2D7D                     ;;test2.j(314)   // byte - byte
+2D7D             L1308:
+2D7D                     ;;test2.j(315) 
+2D7D             L1309:
+2D7D                     ;;test2.j(316)   // var - stack8
+2D7D             L1310:
+2D7D                     ;;test2.j(317)   // byte - integer
+2D7D             L1311:
+2D7D                     ;;test2.j(318) 
+2D7D             L1312:
+2D7D                     ;;test2.j(319)   // var - stack8
+2D7D             L1313:
+2D7D                     ;;test2.j(320)   // integer - byte 
+2D7D             L1314:
+2D7D                     ;;test2.j(321) 
+2D7D             L1315:
+2D7D                     ;;test2.j(322)   // var - stack8
+2D7D             L1316:
+2D7D                     ;;test2.j(323)   // integer - integer
+2D7D             L1317:
+2D7D                     ;;test2.j(324) 
+2D7D             L1318:
+2D7D                     ;;test2.j(325)   /************************/
+2D7D             L1319:
+2D7D                     ;;test2.j(326)   // var - stack16
+2D7D             L1320:
+2D7D                     ;;test2.j(327)   // byte - byte
+2D7D             L1321:
+2D7D                     ;;test2.j(328) 
+2D7D             L1322:
+2D7D                     ;;test2.j(329)   // var - stack16
+2D7D             L1323:
+2D7D                     ;;test2.j(330)   // byte - integer
+2D7D             L1324:
+2D7D                     ;;test2.j(331) 
+2D7D             L1325:
+2D7D                     ;;test2.j(332)   // var - stack16
+2D7D             L1326:
+2D7D                     ;;test2.j(333)   // integer - byte
+2D7D             L1327:
+2D7D                     ;;test2.j(334) 
+2D7D             L1328:
+2D7D                     ;;test2.j(335)   // var - stack16
+2D7D             L1329:
+2D7D                     ;;test2.j(336)   // integer - integer
+2D7D             L1330:
+2D7D                     ;;test2.j(337) 
+2D7D             L1331:
+2D7D                     ;;test2.j(338)   /************************/
+2D7D             L1332:
+2D7D                     ;;test2.j(339)   // stack8 - constant
+2D7D             L1333:
+2D7D                     ;;test2.j(340)   // stack8 - acc
+2D7D             L1334:
+2D7D                     ;;test2.j(341)   // stack8 - var
+2D7D             L1335:
+2D7D                     ;;test2.j(342)   // stack8 - stack8
+2D7D             L1336:
+2D7D                     ;;test2.j(343)   // stack8 - stack16
+2D7D             L1337:
+2D7D                     ;;test2.j(344) 
+2D7D             L1338:
+2D7D                     ;;test2.j(345)   /************************/
+2D7D             L1339:
+2D7D                     ;;test2.j(346)   // stack16 - constant
+2D7D             L1340:
+2D7D                     ;;test2.j(347)   // stack16 - acc
+2D7D             L1341:
+2D7D                     ;;test2.j(348)   // stack16 - var
+2D7D             L1342:
+2D7D                     ;;test2.j(349)   // stack16 - stack8
+2D7D             L1343:
+2D7D                     ;;test2.j(350)   // stack16 - stack16
+2D7D             L1344:
+2D7D                     ;;test2.j(351) 
+2D7D             L1345:
+2D7D                     ;;test2.j(352)   println("Klaar");
+2D7D             L1346:
+2D7D 21 46 05            LD    HL,1350
+2D80             L1347:
+2D80 CD 43 20            CALL  writeLineStr
+2D83             L1348:
+2D83                     ;;test2.j(353) }
+2D83             L1349:
+2D83 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
+2D86             L1350:
+2D86                     .ASCIZ  "Klaar"
+
+Labels and cross references:
+      L0 = 21CE :
+      L1 = 21CE :
+     L10 = 21DD :
+    L100 = 2289 :
+   L1000 = 2AC7 :
+   L1001 = 2ACA :
+   L1002 = 2ACA :
+   L1003 = 2ACC :
+   L1004 = 2ACF :
+   L1005 = 2ACF :
+   L1006 = 2AD1 :
+   L1007 = 2AD4 :
+   L1008 = 2AD4 :
+   L1009 = 2AD4 :
+    L101 = 2289 : 2280
+   L1010 = 2AD4 :
+   L1011 = 2AD4 :
+   L1012 = 2AD4 :
+   L1013 = 2AD6 :
+   L1014 = 2AD9 :
+   L1015 = 2AD9 :
+   L1016 = 2ADB :
+   L1017 = 2ADE :
+   L1018 = 2ADE :
+   L1019 = 2ADE :
+    L102 = 228B :
+   L1020 = 2ADE :
+   L1021 = 2AE0 :
+   L1022 = 2AE3 :
+   L1023 = 2AE3 :
+   L1024 = 2AE5 :
+   L1025 = 2AE8 :
+   L1026 = 2AE8 :
+   L1027 = 2AE8 :
+   L1028 = 2AE8 :
+   L1029 = 2AEA :
+    L103 = 228D :
+   L1030 = 2AED :
+   L1031 = 2AED :
+   L1032 = 2AEF :
+   L1033 = 2AF2 :
+   L1034 = 2AF2 :
+   L1035 = 2AF2 :
+   L1036 = 2AF2 :
+   L1037 = 2AF4 :
+   L1038 = 2AF7 :
+   L1039 = 2AF7 :
+    L104 = 2292 :
+   L1040 = 2AF9 :
+   L1041 = 2AFC :
+   L1042 = 2AFC :
+   L1043 = 2AFE :
+   L1044 = 2B01 :
+   L1045 = 2B01 :
+   L1046 = 2B03 :
+   L1047 = 2B06 :
+   L1048 = 2B06 :
+   L1049 = 2B06 :
+    L105 = 2294 :
+   L1050 = 2B06 :
+   L1051 = 2B06 :
+   L1052 = 2B06 :
+   L1053 = 2B09 :
+   L1054 = 2B0B :
+   L1055 = 2B0E :
+   L1056 = 2B10 :
+   L1057 = 2B13 :
+   L1058 = 2B16 : 2B0B
+   L1059 = 2B19 :
+    L106 = 2297 :
+   L1060 = 2B1C :
+   L1061 = 2B1C : 2B13
+   L1062 = 2B1F :
+   L1063 = 2B21 :
+   L1064 = 2B24 :
+   L1065 = 2B26 :
+   L1066 = 2B29 :
+   L1067 = 2B2C : 2B21
+   L1068 = 2B2F :
+   L1069 = 2B32 :
+    L107 = 229A : 228F
+   L1070 = 2B32 :
+   L1071 = 2B32 :
+   L1072 = 2B32 : 2B29
+   L1073 = 2B35 :
+   L1074 = 2B38 :
+   L1075 = 2B3E :
+   L1076 = 2B41 :
+   L1077 = 2B44 :
+   L1078 = 2B47 :
+   L1079 = 2B4A : 2B3E
+    L108 = 229D :
+   L1080 = 2B4C :
+   L1081 = 2B4F :
+   L1082 = 2B4F : 2B47
+   L1083 = 2B52 :
+   L1084 = 2B55 :
+   L1085 = 2B5B :
+   L1086 = 2B5E :
+   L1087 = 2B60 :
+   L1088 = 2B63 :
+   L1089 = 2B66 : 2B5B
+    L109 = 22A0 :
+   L1090 = 2B69 :
+   L1091 = 2B6C :
+   L1092 = 2B6C :
+   L1093 = 2B6C :
+   L1094 = 2B6C : 2B63
+   L1095 = 2B6F :
+   L1096 = 2B75 :
+   L1097 = 2B78 :
+   L1098 = 2B7A :
+   L1099 = 2B7D :
+     L11 = 21E0 :
+    L110 = 22A0 : 2297
+   L1100 = 2B80 : 2B75
+   L1101 = 2B83 :
+   L1102 = 2B86 :
+   L1103 = 2B86 : 2B7D
+   L1104 = 2B89 :
+   L1105 = 2B8F :
+   L1106 = 2B92 :
+   L1107 = 2B94 :
+   L1108 = 2B97 :
+   L1109 = 2B9A : 2B8F
+    L111 = 22A2 :
+   L1110 = 2B9D :
+   L1111 = 2BA0 :
+   L1112 = 2BA0 :
+   L1113 = 2BA0 :
+   L1114 = 2BA0 : 2B97
+   L1115 = 2BA3 :
+   L1116 = 2BA9 :
+   L1117 = 2BAC :
+   L1118 = 2BAE :
+   L1119 = 2BB1 :
+    L112 = 22A5 :
+   L1120 = 2BB4 : 2BA9
+   L1121 = 2BB7 :
+   L1122 = 2BBA :
+   L1123 = 2BBA : 2BB1
+   L1124 = 2BBD :
+   L1125 = 2BC3 :
+   L1126 = 2BC6 :
+   L1127 = 2BC8 :
+   L1128 = 2BCB :
+   L1129 = 2BCE : 2BC3
+    L113 = 22A5 :
+   L1130 = 2BD1 :
+   L1131 = 2BD4 :
+   L1132 = 2BD4 : 2BCB
+   L1133 = 2BD6 :
+   L1134 = 2BD9 :
+   L1135 = 2BD9 :
+   L1136 = 2BDB :
+   L1137 = 2BDE :
+   L1138 = 2BDE :
+   L1139 = 2BDE :
+    L114 = 22A5 :
+   L1140 = 2BDE :
+   L1141 = 2BDE :
+   L1142 = 2BDE :
+   L1143 = 2BE0 :
+   L1144 = 2BE2 :
+   L1145 = 2BE7 :
+   L1146 = 2BEA :
+   L1147 = 2BEC :
+   L1148 = 2BEF :
+   L1149 = 2BF2 : 2BE7
+    L115 = 22A5 :
+   L1150 = 2BF5 :
+   L1151 = 2BF8 :
+   L1152 = 2BF8 : 2BEF
+   L1153 = 2BFA :
+   L1154 = 2BFC :
+   L1155 = 2C01 :
+   L1156 = 2C04 :
+   L1157 = 2C06 :
+   L1158 = 2C09 :
+   L1159 = 2C0C : 2C01
+    L116 = 22A5 :
+   L1160 = 2C0F :
+   L1161 = 2C12 :
+   L1162 = 2C12 :
+   L1163 = 2C12 :
+   L1164 = 2C12 : 2C09
+   L1165 = 2C15 :
+   L1166 = 2C19 :
+   L1167 = 2C1C :
+   L1168 = 2C22 :
+   L1169 = 2C25 :
+    L117 = 22A7 :
+   L1170 = 2C28 :
+   L1171 = 2C2B :
+   L1172 = 2C2E : 2C22
+   L1173 = 2C30 :
+   L1174 = 2C33 :
+   L1175 = 2C33 : 2C2B
+   L1176 = 2C36 :
+   L1177 = 2C3A :
+   L1178 = 2C3D :
+   L1179 = 2C43 :
+    L118 = 22AA :
+   L1180 = 2C46 :
+   L1181 = 2C48 :
+   L1182 = 2C4B :
+   L1183 = 2C4E : 2C43
+   L1184 = 2C51 :
+   L1185 = 2C54 :
+   L1186 = 2C54 :
+   L1187 = 2C54 :
+   L1188 = 2C54 : 2C4B
+   L1189 = 2C57 :
+    L119 = 22B0 :
+   L1190 = 2C5B :
+   L1191 = 2C62 :
+   L1192 = 2C65 :
+   L1193 = 2C67 :
+   L1194 = 2C6A :
+   L1195 = 2C6D : 2C62
+   L1196 = 2C70 :
+   L1197 = 2C73 :
+   L1198 = 2C73 : 2C6A
+   L1199 = 2C76 :
+     L12 = 21E0 :
+    L120 = 22B3 :
+   L1200 = 2C7A :
+   L1201 = 2C81 :
+   L1202 = 2C84 :
+   L1203 = 2C86 :
+   L1204 = 2C89 :
+   L1205 = 2C8C : 2C81
+   L1206 = 2C8F :
+   L1207 = 2C92 :
+   L1208 = 2C92 :
+   L1209 = 2C92 :
+    L121 = 22B6 :
+   L1210 = 2C92 : 2C89
+   L1211 = 2C95 :
+   L1212 = 2C99 :
+   L1213 = 2CA0 :
+   L1214 = 2CA3 :
+   L1215 = 2CA5 :
+   L1216 = 2CA8 :
+   L1217 = 2CAB : 2CA0
+   L1218 = 2CAE :
+   L1219 = 2CB1 :
+    L122 = 22B9 :
+   L1220 = 2CB1 : 2CA8
+   L1221 = 2CB4 :
+   L1222 = 2CB8 :
+   L1223 = 2CBF :
+   L1224 = 2CC2 :
+   L1225 = 2CC4 :
+   L1226 = 2CC7 :
+   L1227 = 2CCA : 2CBF
+   L1228 = 2CCD :
+   L1229 = 2CD0 :
+    L123 = 22BC : 22B0
+   L1230 = 2CD0 : 2CC7
+   L1231 = 2CD2 :
+   L1232 = 2CD5 :
+   L1233 = 2CD5 :
+   L1234 = 2CD7 :
+   L1235 = 2CDA :
+   L1236 = 2CDA :
+   L1237 = 2CDA :
+   L1238 = 2CDA :
+   L1239 = 2CDA :
+    L124 = 22BE :
+   L1240 = 2CDA :
+   L1241 = 2CDD :
+   L1242 = 2CE2 :
+   L1243 = 2CE5 :
+   L1244 = 2CE7 :
+   L1245 = 2CEA :
+   L1246 = 2CEA : 2CE2
+   L1247 = 2CED :
+   L1248 = 2CF2 :
+   L1249 = 2CF5 :
+    L125 = 22C1 :
+   L1250 = 2CF7 :
+   L1251 = 2CFA :
+   L1252 = 2CFA :
+   L1253 = 2CFA :
+   L1254 = 2CFA : 2CF2
+   L1255 = 2CFD :
+   L1256 = 2D00 :
+   L1257 = 2D06 :
+   L1258 = 2D09 :
+   L1259 = 2D0C :
+    L126 = 22C1 : 22B9
+   L1260 = 2D0F :
+   L1261 = 2D12 : 2D06
+   L1262 = 2D14 :
+   L1263 = 2D17 :
+   L1264 = 2D17 : 2D0F
+   L1265 = 2D1A :
+   L1266 = 2D1D :
+   L1267 = 2D23 :
+   L1268 = 2D26 :
+   L1269 = 2D28 :
+    L127 = 22C3 :
+   L1270 = 2D2B :
+   L1271 = 2D2B :
+   L1272 = 2D2B :
+   L1273 = 2D2B : 2D23
+   L1274 = 2D2E :
+   L1275 = 2D35 :
+   L1276 = 2D38 :
+   L1277 = 2D3A :
+   L1278 = 2D3D :
+   L1279 = 2D3D : 2D35
+    L128 = 22C6 :
+   L1280 = 2D40 :
+   L1281 = 2D47 :
+   L1282 = 2D4A :
+   L1283 = 2D4C :
+   L1284 = 2D4F :
+   L1285 = 2D4F :
+   L1286 = 2D4F :
+   L1287 = 2D4F : 2D47
+   L1288 = 2D52 :
+   L1289 = 2D59 :
+    L129 = 22CC :
+   L1290 = 2D5C :
+   L1291 = 2D5E :
+   L1292 = 2D61 :
+   L1293 = 2D61 : 2D59
+   L1294 = 2D64 :
+   L1295 = 2D6B :
+   L1296 = 2D6E :
+   L1297 = 2D70 :
+   L1298 = 2D73 :
+   L1299 = 2D73 : 2D6B
+     L13 = 21E2 :
+    L130 = 22CF :
+   L1300 = 2D75 :
+   L1301 = 2D78 :
+   L1302 = 2D78 :
+   L1303 = 2D7A :
+   L1304 = 2D7D :
+   L1305 = 2D7D :
+   L1306 = 2D7D :
+   L1307 = 2D7D :
+   L1308 = 2D7D :
+   L1309 = 2D7D :
+    L131 = 22D1 :
+   L1310 = 2D7D :
+   L1311 = 2D7D :
+   L1312 = 2D7D :
+   L1313 = 2D7D :
+   L1314 = 2D7D :
+   L1315 = 2D7D :
+   L1316 = 2D7D :
+   L1317 = 2D7D :
+   L1318 = 2D7D :
+   L1319 = 2D7D :
+    L132 = 22D4 :
+   L1320 = 2D7D :
+   L1321 = 2D7D :
+   L1322 = 2D7D :
+   L1323 = 2D7D :
+   L1324 = 2D7D :
+   L1325 = 2D7D :
+   L1326 = 2D7D :
+   L1327 = 2D7D :
+   L1328 = 2D7D :
+   L1329 = 2D7D :
+    L133 = 22D7 : 22CC
+   L1330 = 2D7D :
+   L1331 = 2D7D :
+   L1332 = 2D7D :
+   L1333 = 2D7D :
+   L1334 = 2D7D :
+   L1335 = 2D7D :
+   L1336 = 2D7D :
+   L1337 = 2D7D :
+   L1338 = 2D7D :
+   L1339 = 2D7D :
+    L134 = 22DA :
+   L1340 = 2D7D :
+   L1341 = 2D7D :
+   L1342 = 2D7D :
+   L1343 = 2D7D :
+   L1344 = 2D7D :
+   L1345 = 2D7D :
+   L1346 = 2D7D :
+   L1347 = 2D80 :
+   L1348 = 2D83 :
+   L1349 = 2D83 :
+    L135 = 22DD :
+   L1350 = 2D86 :
+    L136 = 22DD : 22D4
+    L137 = 22DF :
+    L138 = 22E2 :
+    L139 = 22E8 :
+     L14 = 21E5 :
+    L140 = 22EB :
+    L141 = 22EE :
+    L142 = 22F1 :
+    L143 = 22F4 : 22E8
+    L144 = 22F6 :
+    L145 = 22F9 :
+    L146 = 22F9 : 22F1
+    L147 = 22FB :
+    L148 = 22FE :
+    L149 = 2304 :
+     L15 = 21E5 :
+    L150 = 2307 :
+    L151 = 230A :
+    L152 = 230D :
+    L153 = 2310 : 2304
+    L154 = 2312 :
+    L155 = 2315 :
+    L156 = 2315 : 230D
+    L157 = 2317 :
+    L158 = 231A :
+    L159 = 2320 :
+     L16 = 21E7 :
+    L160 = 2323 :
+    L161 = 2326 :
+    L162 = 2329 :
+    L163 = 232C : 2320
+    L164 = 232E :
+    L165 = 2331 :
+    L166 = 2331 : 2329
+    L167 = 2333 :
+    L168 = 2336 :
+    L169 = 233C :
+     L17 = 21EA :
+    L170 = 233F :
+    L171 = 2341 :
+    L172 = 2344 :
+    L173 = 2347 : 233C
+    L174 = 234A :
+    L175 = 234D :
+    L176 = 234D : 2344
+    L177 = 234F :
+    L178 = 2352 :
+    L179 = 2358 :
+     L18 = 21EA :
+    L180 = 235D :
+    L181 = 235F :
+    L182 = 2362 :
+    L183 = 2365 : 235A
+    L184 = 2368 :
+    L185 = 236B :
+    L186 = 236B : 2362
+    L187 = 236D :
+    L188 = 2370 :
+    L189 = 2376 :
+     L19 = 21EC :
+    L190 = 237B :
+    L191 = 237D :
+    L192 = 2380 :
+    L193 = 2383 : 2378
+    L194 = 2386 :
+    L195 = 2389 :
+    L196 = 2389 : 2380
+    L197 = 238B :
+    L198 = 238E :
+    L199 = 238E :
+      L2 = 21CE :
+     L20 = 21EF :
+    L200 = 2390 :
+    L201 = 2393 :
+    L202 = 2393 :
+    L203 = 2393 :
+    L204 = 2393 :
+    L205 = 2393 :
+    L206 = 2396 :
+    L207 = 2398 :
+    L208 = 239F :
+    L209 = 23A2 :
+     L21 = 21EF :
+    L210 = 23A5 :
+    L211 = 23A8 :
+    L212 = 23AB : 239F
+    L213 = 23AD :
+    L214 = 23B0 :
+    L215 = 23B0 : 23A8
+    L216 = 23B3 :
+    L217 = 23B5 :
+    L218 = 23BC :
+    L219 = 23BF :
+     L22 = 21EF :
+    L220 = 23C1 :
+    L221 = 23C4 :
+    L222 = 23C7 : 23BC
+    L223 = 23CA :
+    L224 = 23CD :
+    L225 = 23CD : 23C4
+    L226 = 23D0 :
+    L227 = 23D2 :
+    L228 = 23D9 :
+    L229 = 23DC :
+     L23 = 21EF :
+    L230 = 23DE :
+    L231 = 23E1 :
+    L232 = 23E4 : 23D9
+    L233 = 23E7 :
+    L234 = 23EA :
+    L235 = 23EA : 23E1
+    L236 = 23ED :
+    L237 = 23EF :
+    L238 = 23F6 :
+    L239 = 23F9 :
+     L24 = 21EF :
+    L240 = 23FB :
+    L241 = 23FE :
+    L242 = 2401 : 23F6
+    L243 = 2404 :
+    L244 = 2407 :
+    L245 = 2407 : 23FE
+    L246 = 240A :
+    L247 = 240C :
+    L248 = 2413 :
+    L249 = 2416 :
+     L25 = 21EF :
+    L250 = 2418 :
+    L251 = 241B :
+    L252 = 241E : 2413
+    L253 = 2421 :
+    L254 = 2424 :
+    L255 = 2424 : 241B
+    L256 = 2426 :
+    L257 = 2429 :
+    L258 = 242F :
+    L259 = 2432 :
+     L26 = 21EF :
+    L260 = 2434 :
+    L261 = 2437 :
+    L262 = 243A : 242F
+    L263 = 243D :
+    L264 = 2440 :
+    L265 = 2440 : 2437
+    L266 = 2442 :
+    L267 = 2445 :
+    L268 = 244B :
+    L269 = 2450 :
+     L27 = 21EF :
+    L270 = 2452 :
+    L271 = 2455 :
+    L272 = 2458 : 244D
+    L273 = 245B :
+    L274 = 245E :
+    L275 = 245E : 2455
+    L276 = 2460 :
+    L277 = 2463 :
+    L278 = 2469 :
+    L279 = 246E :
+     L28 = 21EF :
+    L280 = 2470 :
+    L281 = 2473 :
+    L282 = 2476 : 246B
+    L283 = 2479 :
+    L284 = 247C :
+    L285 = 247C : 2473
+    L286 = 247E :
+    L287 = 2481 :
+    L288 = 2481 :
+    L289 = 2483 :
+     L29 = 21EF :
+    L290 = 2486 :
+    L291 = 2486 :
+    L292 = 2486 :
+    L293 = 2486 :
+    L294 = 2486 :
+    L295 = 2489 :
+    L296 = 248F :
+    L297 = 2492 :
+    L298 = 2494 :
+    L299 = 2497 :
+      L3 = 21CE :
+     L30 = 21EF :
+    L300 = 249A : 248F
+    L301 = 249D :
+    L302 = 24A0 :
+    L303 = 24A0 : 2497
+    L304 = 24A3 :
+    L305 = 24A9 :
+    L306 = 24AC :
+    L307 = 24AE :
+    L308 = 24B1 :
+    L309 = 24B4 : 24A9
+     L31 = 21EF :
+    L310 = 24B7 :
+    L311 = 24BA :
+    L312 = 24BA : 24B1
+    L313 = 24BD :
+    L314 = 24C3 :
+    L315 = 24C6 :
+    L316 = 24C8 :
+    L317 = 24CB :
+    L318 = 24CE : 24C3
+    L319 = 24D1 :
+     L32 = 21F1 :
+    L320 = 24D4 :
+    L321 = 24D4 : 24CB
+    L322 = 24D7 :
+    L323 = 24DD :
+    L324 = 24E0 :
+    L325 = 24E2 :
+    L326 = 24E5 :
+    L327 = 24E8 : 24DD
+    L328 = 24EB :
+    L329 = 24EE :
+     L33 = 21F4 :
+    L330 = 24EE : 24E5
+    L331 = 24F1 :
+    L332 = 24F7 :
+    L333 = 24FA :
+    L334 = 24FC :
+    L335 = 24FF :
+    L336 = 2502 : 24F7
+    L337 = 2505 :
+    L338 = 2508 :
+    L339 = 2508 : 24FF
+     L34 = 21F4 :
+    L340 = 250B :
+    L341 = 2511 :
+    L342 = 2514 :
+    L343 = 2516 :
+    L344 = 2519 :
+    L345 = 251C : 2511
+    L346 = 251F :
+    L347 = 2522 :
+    L348 = 2522 : 2519
+    L349 = 2525 :
+     L35 = 21F4 :
+    L350 = 252B :
+    L351 = 2530 :
+    L352 = 2532 :
+    L353 = 2535 :
+    L354 = 2538 : 252D
+    L355 = 253B :
+    L356 = 253E :
+    L357 = 253E : 2535
+    L358 = 2541 :
+    L359 = 2547 :
+     L36 = 21F4 :
+    L360 = 254C :
+    L361 = 254E :
+    L362 = 2551 :
+    L363 = 2554 : 2549
+    L364 = 2557 :
+    L365 = 255A :
+    L366 = 255A : 2551
+    L367 = 255C :
+    L368 = 255F :
+    L369 = 255F :
+     L37 = 21F4 :
+    L370 = 2561 :
+    L371 = 2564 :
+    L372 = 2564 :
+    L373 = 2564 :
+    L374 = 2564 :
+    L375 = 2564 :
+    L376 = 2564 :
+    L377 = 2566 :
+    L378 = 2568 :
+    L379 = 256A :
+     L38 = 21F4 :
+    L380 = 256D :
+    L381 = 256F :
+    L382 = 2572 :
+    L383 = 2575 : 256A
+    L384 = 2578 :
+    L385 = 257B :
+    L386 = 257B : 2572
+    L387 = 257D :
+    L388 = 257F :
+    L389 = 2581 :
+     L39 = 21F6 :
+    L390 = 2584 :
+    L391 = 2586 :
+    L392 = 2589 :
+    L393 = 258C : 2581
+    L394 = 258F :
+    L395 = 2592 :
+    L396 = 2592 :
+    L397 = 2592 :
+    L398 = 2592 : 2589
+    L399 = 2595 :
+      L4 = 21D1 :
+     L40 = 21F8 :
+    L400 = 2599 :
+    L401 = 259B :
+    L402 = 25A1 :
+    L403 = 25A4 :
+    L404 = 25A7 :
+    L405 = 25AA :
+    L406 = 25AD : 25A1
+    L407 = 25AF :
+    L408 = 25B2 :
+    L409 = 25B2 : 25AA
+     L41 = 21FB :
+    L410 = 25B5 :
+    L411 = 25B9 :
+    L412 = 25BB :
+    L413 = 25C1 :
+    L414 = 25C4 :
+    L415 = 25C6 :
+    L416 = 25C9 :
+    L417 = 25CC : 25C1
+    L418 = 25CF :
+    L419 = 25D2 :
+     L42 = 21FD :
+    L420 = 25D2 :
+    L421 = 25D2 :
+    L422 = 25D2 : 25C9
+    L423 = 25D4 :
+    L424 = 25D6 :
+    L425 = 25D9 :
+    L426 = 25E0 :
+    L427 = 25E3 :
+    L428 = 25E5 :
+    L429 = 25E8 :
+     L43 = 2200 :
+    L430 = 25EB : 25E0
+    L431 = 25EE :
+    L432 = 25F1 :
+    L433 = 25F1 : 25E8
+    L434 = 25F3 :
+    L435 = 25F5 :
+    L436 = 25F8 :
+    L437 = 25FF :
+    L438 = 2602 :
+    L439 = 2605 :
+     L44 = 2203 : 21F8
+    L440 = 2608 :
+    L441 = 260B : 25FF
+    L442 = 260D :
+    L443 = 2610 :
+    L444 = 2610 :
+    L445 = 2610 :
+    L446 = 2610 : 2608
+    L447 = 2613 :
+    L448 = 2617 :
+    L449 = 261D :
+     L45 = 2206 :
+    L450 = 2620 :
+    L451 = 2622 :
+    L452 = 2625 :
+    L453 = 2628 : 261D
+    L454 = 262B :
+    L455 = 262E :
+    L456 = 262E : 2625
+    L457 = 2631 :
+    L458 = 2635 :
+    L459 = 263B :
+     L46 = 2209 :
+    L460 = 263E :
+    L461 = 2640 :
+    L462 = 2643 :
+    L463 = 2646 : 263B
+    L464 = 2649 :
+    L465 = 264C :
+    L466 = 264C : 2643
+    L467 = 264E :
+    L468 = 2651 :
+    L469 = 2651 :
+     L47 = 2209 : 2200
+    L470 = 2653 :
+    L471 = 2656 :
+    L472 = 2656 :
+    L473 = 2656 :
+    L474 = 2656 :
+    L475 = 2656 :
+    L476 = 2656 :
+    L477 = 2659 :
+    L478 = 265B :
+    L479 = 265E :
+     L48 = 220B :
+    L480 = 2660 :
+    L481 = 2663 :
+    L482 = 2666 : 265B
+    L483 = 2669 :
+    L484 = 266C :
+    L485 = 266C : 2663
+    L486 = 266F :
+    L487 = 2671 :
+    L488 = 2674 :
+    L489 = 2676 :
+     L49 = 220D :
+    L490 = 2679 :
+    L491 = 267C : 2671
+    L492 = 267F :
+    L493 = 2682 :
+    L494 = 2682 :
+    L495 = 2682 :
+    L496 = 2682 : 2679
+    L497 = 2685 :
+    L498 = 2687 :
+    L499 = 268D :
+      L5 = 21D4 :
+     L50 = 2210 :
+    L500 = 2690 :
+    L501 = 2693 :
+    L502 = 2696 :
+    L503 = 2699 : 268D
+    L504 = 269B :
+    L505 = 269E :
+    L506 = 269E : 2696
+    L507 = 26A1 :
+    L508 = 26A3 :
+    L509 = 26A9 :
+     L51 = 2212 :
+    L510 = 26AC :
+    L511 = 26AE :
+    L512 = 26B1 :
+    L513 = 26B4 : 26A9
+    L514 = 26B7 :
+    L515 = 26BA :
+    L516 = 26BA :
+    L517 = 26BA :
+    L518 = 26BA : 26B1
+    L519 = 26BD :
+     L52 = 2215 :
+    L520 = 26C0 :
+    L521 = 26C7 :
+    L522 = 26CA :
+    L523 = 26CC :
+    L524 = 26CF :
+    L525 = 26D2 : 26C7
+    L526 = 26D5 :
+    L527 = 26D8 :
+    L528 = 26D8 : 26CF
+    L529 = 26DB :
+     L53 = 2218 : 220D
+    L530 = 26DE :
+    L531 = 26E5 :
+    L532 = 26E8 :
+    L533 = 26EB :
+    L534 = 26EE :
+    L535 = 26F1 : 26E5
+    L536 = 26F3 :
+    L537 = 26F6 :
+    L538 = 26F6 :
+    L539 = 26F6 :
+     L54 = 221B :
+    L540 = 26F6 : 26EE
+    L541 = 26F9 :
+    L542 = 26FF :
+    L543 = 2702 :
+    L544 = 2704 :
+    L545 = 2707 :
+    L546 = 270A : 26FF
+    L547 = 270D :
+    L548 = 2710 :
+    L549 = 2710 : 2707
+     L55 = 221E :
+    L550 = 2713 :
+    L551 = 2719 :
+    L552 = 271C :
+    L553 = 271E :
+    L554 = 2721 :
+    L555 = 2724 : 2719
+    L556 = 2727 :
+    L557 = 272A :
+    L558 = 272A : 2721
+    L559 = 272C :
+     L56 = 221E : 2215
+    L560 = 272F :
+    L561 = 272F :
+    L562 = 2731 :
+    L563 = 2734 :
+    L564 = 2734 :
+    L565 = 2734 :
+    L566 = 2734 :
+    L567 = 2734 :
+    L568 = 2734 :
+    L569 = 2736 :
+     L57 = 2220 :
+    L570 = 2739 :
+    L571 = 2739 :
+    L572 = 273B :
+    L573 = 273E :
+    L574 = 273E :
+    L575 = 273E :
+    L576 = 273E :
+    L577 = 2740 :
+    L578 = 2743 :
+    L579 = 2743 :
+     L58 = 2222 :
+    L580 = 2745 :
+    L581 = 2748 :
+    L582 = 2748 :
+    L583 = 2748 :
+    L584 = 2748 :
+    L585 = 274A :
+    L586 = 274D :
+    L587 = 274D :
+    L588 = 274F :
+    L589 = 2752 :
+     L59 = 2225 :
+    L590 = 2752 :
+    L591 = 2752 :
+    L592 = 2752 :
+    L593 = 2754 :
+    L594 = 2757 :
+    L595 = 2757 :
+    L596 = 2759 :
+    L597 = 275C :
+    L598 = 275C :
+    L599 = 275E :
+      L6 = 21D4 :
+     L60 = 2227 :
+    L600 = 2761 :
+    L601 = 2761 :
+    L602 = 2763 :
+    L603 = 2766 :
+    L604 = 2766 :
+    L605 = 2766 :
+    L606 = 2766 :
+    L607 = 2766 :
+    L608 = 2766 :
+    L609 = 2768 :
+     L61 = 222A :
+    L610 = 276B :
+    L611 = 276B :
+    L612 = 276D :
+    L613 = 2770 :
+    L614 = 2770 :
+    L615 = 2770 :
+    L616 = 2770 :
+    L617 = 2772 :
+    L618 = 2775 :
+    L619 = 2775 :
+     L62 = 222D : 2222
+    L620 = 2777 :
+    L621 = 277A :
+    L622 = 277A :
+    L623 = 277A :
+    L624 = 277A :
+    L625 = 277C :
+    L626 = 277F :
+    L627 = 277F :
+    L628 = 2781 :
+    L629 = 2784 :
+     L63 = 2230 :
+    L630 = 2784 :
+    L631 = 2784 :
+    L632 = 2784 :
+    L633 = 2786 :
+    L634 = 2789 :
+    L635 = 2789 :
+    L636 = 278B :
+    L637 = 278E :
+    L638 = 278E :
+    L639 = 2790 :
+     L64 = 2233 :
+    L640 = 2793 :
+    L641 = 2793 :
+    L642 = 2795 :
+    L643 = 2798 :
+    L644 = 2798 :
+    L645 = 2798 :
+    L646 = 2798 :
+    L647 = 2798 :
+    L648 = 2798 :
+    L649 = 279A :
+     L65 = 2233 : 222A
+    L650 = 279C :
+    L651 = 279E :
+    L652 = 27A1 :
+    L653 = 27A3 :
+    L654 = 27A6 :
+    L655 = 27A9 : 279E
+    L656 = 27AC :
+    L657 = 27AF :
+    L658 = 27AF : 27A6
+    L659 = 27B1 :
+     L66 = 2235 :
+    L660 = 27B3 :
+    L661 = 27B5 :
+    L662 = 27B8 :
+    L663 = 27BA :
+    L664 = 27BD :
+    L665 = 27C0 : 27B5
+    L666 = 27C3 :
+    L667 = 27C6 :
+    L668 = 27C6 :
+    L669 = 27C6 :
+     L67 = 2237 :
+    L670 = 27C6 : 27BD
+    L671 = 27C8 :
+    L672 = 27CA :
+    L673 = 27CD :
+    L674 = 27D3 :
+    L675 = 27D6 :
+    L676 = 27D9 :
+    L677 = 27DC :
+    L678 = 27DF : 27D3
+    L679 = 27E1 :
+     L68 = 223A :
+    L680 = 27E4 :
+    L681 = 27E4 : 27DC
+    L682 = 27E6 :
+    L683 = 27E8 :
+    L684 = 27EB :
+    L685 = 27F1 :
+    L686 = 27F4 :
+    L687 = 27F6 :
+    L688 = 27F9 :
+    L689 = 27FC : 27F1
+     L69 = 223C :
+    L690 = 27FF :
+    L691 = 2802 :
+    L692 = 2802 :
+    L693 = 2802 :
+    L694 = 2802 : 27F9
+    L695 = 2805 :
+    L696 = 2809 :
+    L697 = 280B :
+    L698 = 2812 :
+    L699 = 2815 :
+      L7 = 21D7 :
+     L70 = 223F :
+    L700 = 2817 :
+    L701 = 281A :
+    L702 = 281D : 2812
+    L703 = 2820 :
+    L704 = 2823 :
+    L705 = 2823 : 281A
+    L706 = 2826 :
+    L707 = 282A :
+    L708 = 282C :
+    L709 = 2833 :
+     L71 = 2242 : 2237
+    L710 = 2836 :
+    L711 = 2839 :
+    L712 = 283C :
+    L713 = 283F : 2833
+    L714 = 2841 :
+    L715 = 2844 :
+    L716 = 2844 :
+    L717 = 2844 :
+    L718 = 2844 : 283C
+    L719 = 2847 :
+     L72 = 2245 :
+    L720 = 284B :
+    L721 = 2851 :
+    L722 = 2854 :
+    L723 = 2856 :
+    L724 = 2859 :
+    L725 = 285C : 2851
+    L726 = 285F :
+    L727 = 2862 :
+    L728 = 2862 : 2859
+    L729 = 2865 :
+     L73 = 2248 :
+    L730 = 2869 :
+    L731 = 286F :
+    L732 = 2872 :
+    L733 = 2874 :
+    L734 = 2877 :
+    L735 = 287A : 286F
+    L736 = 287D :
+    L737 = 2880 :
+    L738 = 2880 : 2877
+    L739 = 2882 :
+     L74 = 2248 : 223F
+    L740 = 2885 :
+    L741 = 2885 :
+    L742 = 2887 :
+    L743 = 288A :
+    L744 = 288A :
+    L745 = 288A :
+    L746 = 288A :
+    L747 = 288A :
+    L748 = 288A :
+    L749 = 288C :
+     L75 = 224A :
+    L750 = 288E :
+    L751 = 288F :
+    L752 = 2891 :
+    L753 = 2893 :
+    L754 = 2895 :
+    L755 = 2898 :
+    L756 = 289A :
+    L757 = 289D :
+    L758 = 28A0 : 2895
+    L759 = 28A3 :
+     L76 = 224C :
+    L760 = 28A6 :
+    L761 = 28A6 : 289D
+    L762 = 28A8 :
+    L763 = 28AA :
+    L764 = 28AB :
+    L765 = 28AD :
+    L766 = 28AF :
+    L767 = 28B1 :
+    L768 = 28B4 :
+    L769 = 28B6 :
+     L77 = 224F :
+    L770 = 28B9 :
+    L771 = 28BC : 28B1
+    L772 = 28BF :
+    L773 = 28C2 :
+    L774 = 28C2 :
+    L775 = 28C2 :
+    L776 = 28C2 : 28B9
+    L777 = 28C4 :
+    L778 = 28C6 :
+    L779 = 28C7 :
+     L78 = 2251 :
+    L780 = 28CA :
+    L781 = 28CE :
+    L782 = 28CF :
+    L783 = 28D5 :
+    L784 = 28D8 :
+    L785 = 28DB :
+    L786 = 28DE :
+    L787 = 28E1 : 28D5
+    L788 = 28E3 :
+    L789 = 28E6 :
+     L79 = 2254 :
+    L790 = 28E6 : 28DE
+    L791 = 28E8 :
+    L792 = 28EA :
+    L793 = 28EB :
+    L794 = 28EE :
+    L795 = 28F2 :
+    L796 = 28F3 :
+    L797 = 28F9 :
+    L798 = 28FC :
+    L799 = 28FE :
+      L8 = 21DA :
+     L80 = 2257 : 224C
+    L800 = 2901 :
+    L801 = 2904 : 28F9
+    L802 = 2907 :
+    L803 = 290A :
+    L804 = 290A :
+    L805 = 290A :
+    L806 = 290A : 2901
+    L807 = 290D :
+    L808 = 2911 :
+    L809 = 2912 :
+     L81 = 225A :
+    L810 = 2914 :
+    L811 = 2916 :
+    L812 = 2917 :
+    L813 = 291E :
+    L814 = 2921 :
+    L815 = 2923 :
+    L816 = 2926 :
+    L817 = 2929 : 291E
+    L818 = 292C :
+    L819 = 292F :
+     L82 = 225D :
+    L820 = 292F : 2926
+    L821 = 2932 :
+    L822 = 2936 :
+    L823 = 2937 :
+    L824 = 2939 :
+    L825 = 293B :
+    L826 = 293C :
+    L827 = 2943 :
+    L828 = 2946 :
+    L829 = 2949 :
+     L83 = 225D : 2254
+    L830 = 294C :
+    L831 = 294F : 2943
+    L832 = 2951 :
+    L833 = 2954 :
+    L834 = 2954 :
+    L835 = 2954 :
+    L836 = 2954 : 294C
+    L837 = 2957 :
+    L838 = 295B :
+    L839 = 295C :
+     L84 = 225F :
+    L840 = 295F :
+    L841 = 2963 :
+    L842 = 2967 :
+    L843 = 296A :
+    L844 = 296C :
+    L845 = 296F :
+    L846 = 2972 : 2967
+    L847 = 2975 :
+    L848 = 2978 :
+    L849 = 2978 : 296F
+     L85 = 2261 :
+    L850 = 297B :
+    L851 = 297F :
+    L852 = 2980 :
+    L853 = 2983 :
+    L854 = 2987 :
+    L855 = 298B :
+    L856 = 298E :
+    L857 = 2990 :
+    L858 = 2993 :
+    L859 = 2996 : 298B
+     L86 = 2264 :
+    L860 = 2999 :
+    L861 = 299C :
+    L862 = 299C : 2993
+    L863 = 299E :
+    L864 = 29A1 :
+    L865 = 29A1 :
+    L866 = 29A3 :
+    L867 = 29A6 :
+    L868 = 29A6 :
+    L869 = 29A6 :
+     L87 = 2266 :
+    L870 = 29A6 :
+    L871 = 29A6 :
+    L872 = 29A6 :
+    L873 = 29A8 :
+    L874 = 29AA :
+    L875 = 29AF :
+    L876 = 29B2 :
+    L877 = 29B4 :
+    L878 = 29B7 :
+    L879 = 29BA : 29AF
+     L88 = 2269 :
+    L880 = 29BD :
+    L881 = 29C0 :
+    L882 = 29C0 : 29B7
+    L883 = 29C2 :
+    L884 = 29C4 :
+    L885 = 29C9 :
+    L886 = 29CC :
+    L887 = 29CE :
+    L888 = 29D1 :
+    L889 = 29D4 : 29C9
+     L89 = 226C : 2261
+    L890 = 29D7 :
+    L891 = 29DA :
+    L892 = 29DA :
+    L893 = 29DA :
+    L894 = 29DA : 29D1
+    L895 = 29DC :
+    L896 = 29DE :
+    L897 = 29E1 :
+    L898 = 29E7 :
+    L899 = 29EA :
+      L9 = 21DA :
+     L90 = 226F :
+    L900 = 29ED :
+    L901 = 29F0 :
+    L902 = 29F3 : 29E7
+    L903 = 29F5 :
+    L904 = 29F8 :
+    L905 = 29F8 : 29F0
+    L906 = 29FA :
+    L907 = 29FC :
+    L908 = 29FF :
+    L909 = 2A05 :
+     L91 = 2272 :
+    L910 = 2A08 :
+    L911 = 2A0A :
+    L912 = 2A0D :
+    L913 = 2A10 : 2A05
+    L914 = 2A13 :
+    L915 = 2A16 :
+    L916 = 2A16 :
+    L917 = 2A16 :
+    L918 = 2A16 : 2A0D
+    L919 = 2A19 :
+     L92 = 2272 : 2269
+    L920 = 2A1D :
+    L921 = 2A20 :
+    L922 = 2A27 :
+    L923 = 2A2A :
+    L924 = 2A2C :
+    L925 = 2A2F :
+    L926 = 2A32 : 2A27
+    L927 = 2A35 :
+    L928 = 2A38 :
+    L929 = 2A38 : 2A2F
+     L93 = 2274 :
+    L930 = 2A3B :
+    L931 = 2A3F :
+    L932 = 2A42 :
+    L933 = 2A49 :
+    L934 = 2A4C :
+    L935 = 2A4F :
+    L936 = 2A52 :
+    L937 = 2A55 : 2A49
+    L938 = 2A57 :
+    L939 = 2A5A :
+     L94 = 2276 :
+    L940 = 2A5A :
+    L941 = 2A5A :
+    L942 = 2A5A : 2A52
+    L943 = 2A5D :
+    L944 = 2A61 :
+    L945 = 2A68 :
+    L946 = 2A6B :
+    L947 = 2A6D :
+    L948 = 2A70 :
+    L949 = 2A73 : 2A68
+     L95 = 227B :
+    L950 = 2A76 :
+    L951 = 2A79 :
+    L952 = 2A79 : 2A70
+    L953 = 2A7C :
+    L954 = 2A80 :
+    L955 = 2A87 :
+    L956 = 2A8A :
+    L957 = 2A8C :
+    L958 = 2A8F :
+    L959 = 2A92 : 2A87
+     L96 = 227D :
+    L960 = 2A95 :
+    L961 = 2A98 :
+    L962 = 2A98 : 2A8F
+    L963 = 2A9A :
+    L964 = 2A9D :
+    L965 = 2A9D :
+    L966 = 2A9F :
+    L967 = 2AA2 :
+    L968 = 2AA2 :
+    L969 = 2AA2 :
+     L97 = 2280 :
+    L970 = 2AA2 :
+    L971 = 2AA2 :
+    L972 = 2AA2 :
+    L973 = 2AA4 :
+    L974 = 2AA7 :
+    L975 = 2AA7 :
+    L976 = 2AA9 :
+    L977 = 2AAC :
+    L978 = 2AAC :
+    L979 = 2AAC :
+     L98 = 2283 : 2278
+    L980 = 2AAC :
+    L981 = 2AAE :
+    L982 = 2AB1 :
+    L983 = 2AB1 :
+    L984 = 2AB3 :
+    L985 = 2AB6 :
+    L986 = 2AB6 :
+    L987 = 2AB6 :
+    L988 = 2AB6 :
+    L989 = 2AB8 :
+     L99 = 2286 :
+    L990 = 2ABB :
+    L991 = 2ABB :
+    L992 = 2ABD :
+    L993 = 2AC0 :
+    L994 = 2AC0 :
+    L995 = 2AC0 :
+    L996 = 2AC0 :
+    L997 = 2AC2 :
+    L998 = 2AC5 :
+    L999 = 2AC5 :
+  WAIT1M = 2018 : 2007 2011
+ WAIT1M2 = 201D : 2020
+   div16 = 2123 :
+ div16_1 = 212C : 213B
+ div16_2 = 213A : 2135
+ div16_3 = 213B : 2138
+ div16_8 = 2143 : 21AA
+div16_82 = 2148 : 2150
+div16_83 = 2150 : 214C
+    div8 = 2154 : 2177
+  div8_1 = 215C : 2167
+ div8_16 = 216E :
+div8_161 = 2175 : 2171
+  div8_2 = 2167 : 2163
+ getChar = 2025 : 217F
+getChar1 = 2033 : 202A
+    main = 21CE : 2003
+   mul16 = 20A7 :
+ mul1632 = 20D6 :
+mul16321 = 20F8 : 20F5
+mul16322 = 20FF : 20FC
+  mul16S = 2109 :
+ mul16S1 = 2112 : 211E
+ mul16S2 = 211D : 2117 211A
+mul16_10 = 20C0 : 2188
+ mul16_8 = 20C9 :
+ putBell = 207F :
+ putCRLF = 2066 : 2046 2199 21C1
+ putChar = 2059 : 2050 2069 206E 2075 207D 2081 20A2 21B6
+putChar1 = 205A : 205F
+putErase = 2073 :
+ putHexA = 208E : 2085 2089
+putHexA1 = 2097 : 2093
+putHexA2 = 20A2 : 209E
+putHexHL = 2083 :
+  putMsg = 203D :
+putSpace = 2057 : 2078
+ putStr1 = 204B : 2053
+ putStr2 = 2055 : 204E
+    read = 217B :
+   read1 = 217F : 2182 218F 2192
+   read2 = 2194 : 2186
+  sleep1 = 2007 : 200D 2015
+  sleepA = 2011 :
+ sleepHL = 2006 :
+   start = 2000 :
+  writeA = 21C5 : 21BE
+ writeHL = 219D : 2196 21C9
+writeHL1 = 21A8 : 21A3 21B1
+writeHL2 = 21B3 : 21B9
+writeHL3 = 21B4 : 21A6
+writeLineA = 21BE : 21F1 21FD 2212 2227 223C 2251 2266 227D 2294 22A2 22BE 22D1
+                : 22F6 2312 232E 2341 235F 237D 238B 2390 23AD 23C1 23DE 23FB
+                : 2418 2434 2452 2470 247E 2483 2494 24AE 24C8 24E2 24FC 2516
+                : 2532 254E 255C 2561 256F 2586 25AF 25C6 25E5 260D 2622 2640
+                : 264E 2653 2660 2676 269B 26AE 26CC 26F3 2704 271E 272C 2731
+                : 2736 273B 2740 2745 274A 274F 2754 2759 275E 2763 2768 276D
+                : 2772 2777 277C 2781 2786 278B 2790 2795 27A3 27BA 27E1 27F6
+                : 2817 2841 2856 2874 2882 2887 289A 28B6 28E3 28FE 2923 2951
+                : 296C 2990 299E 29A3 29B4 29CE 29F5 2A0A 2A2C 2A57 2A6D 2A8C
+                : 2A9A 2A9F 2AA4 2AA9 2AAE 2AB3 2AB8 2ABD 2AC2 2AC7 2ACC 2AD1
+                : 2AD6 2ADB 2AE0 2AE5 2AEA 2AEF 2AF4 2AF9 2AFE 2B03 2B10 2B26
+                : 2B4C 2B60 2B7A 2B94 2BAE 2BC8 2BD6 2BDB 2BEC 2C06 2C30 2C48
+                : 2C67 2C86 2CA5 2CC4 2CD2 2CD7 2CE7 2CF7 2D14 2D28 2D3A 2D4C
+                : 2D5E 2D70 2D75 2D7A
+writeLineHL = 2196 : 2206 221B 2230 2245 225A 226F 2286 229D 22B6 22DA 22EE 230A
+                : 2326 234A 2368 2386 23A5 23CA 23E7 2404 2421 243D 245B 2479
+                : 249D 24B7 24D1 24EB 2505 251F 253B 2557 2578 258F 25A7 25CF
+                : 25EE 2605 262B 2649 2669 267F 2693 26B7 26D5 26EB 270D 2727
+                : 27AC 27C3 27D9 27FF 2820 2839 285F 287D 28A3 28BF 28DB 2907
+                : 292C 2949 2975 2999 29BD 29D7 29ED 2A13 2A35 2A4F 2A76 2A95
+                : 2B19 2B2F 2B44 2B69 2B83 2B9D 2BB7 2BD1 2BF5 2C0F 2C28 2C51
+                : 2C70 2C8F 2CAE 2CCD 2D0C
+writeLineStr = 2043 : 2D80
+writeStr = 204A : 203E 2043

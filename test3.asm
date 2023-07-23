@@ -12,22 +12,31 @@ start:
         LD    SP,TOS
         JP    main
 ;****************
-;WAIT - Wait DE * 1 msec @ 18,432 MHz with no wait states
-;  IN:  DE number of msec to wait
+;sleepHL - Wait HL * 1 msec @ 18,432 MHz with no wait states
+;  IN:  HL number of msec to wait
 ;  OUT: none
 ;  USES: 4 bytes on stack
 ;****************
-WAIT:
-        PUSH  DE
+sleepHL:
         PUSH  AF
-WAIT1:
+sleep1:
         CALL  WAIT1M      ;Wait 1 msec
-        DEC   DE
-        LD    A,D
-        OR    A,E
-        JR    NZ,WAIT1
+        DEC   HL
+        LD    A,H
+        OR    A,L
+        JR    NZ,sleep1
         POP   AF
-        POP   DE
+        RET
+;****************
+;sleepA - Wait A * 1 msec @ 18,432 MHz with no wait states
+;  IN:  A number of msec to wait
+;  OUT: none
+;  USES: no stack
+;****************
+sleepA:
+        CALL  WAIT1M      ;Wait 1 msec
+        DEC   A
+        JR    NZ,sleepA
         RET
 ;****************
 ;WAIT1M
@@ -103,7 +112,7 @@ getChar1:
         IN0   A,(CNTLA0)  ;read ASCI0 control register
         RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
         OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
-        XOR   A
+        XOR   A,A
         RET               ;return without a character
 ;****************
 ;putMsg
@@ -508,7 +517,7 @@ div16_1:
         SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
         RL    A           ;16* 7=112 269   Q = Q * 2
         ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
-        OR    A           ;16* 4= 64 493   if (R >= D) {
+        OR    A,A         ;16* 4= 64 493   if (R >= D) {
         SBC   HL,DE       ;16*10=160 653
         JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
         INC   C           ;              16*4= 64 813   Q++
@@ -538,13 +547,13 @@ div16_8:
         PUSH  BC          ;11 11 save registers used
         LD    B,16        ; 6 17 the length of the dividend (16 bits)
         LD    C,A         ; 4 21 move divisor to C
-        XOR   A           ; 4 25 clear upper 8 bits of AHL
+        XOR   A,A         ; 4 25 clear upper 8 bits of AHL
 div16_82:
         ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
         RL    A           ;16*7=112 249
-        CP    C           ;16*4= 64 313 check if divisor (E) <= selected digits (A)
+        CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
         JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
-        SUB   C           ;             16*4=64 473 subtract the divisor
+        SUB   A,C         ;             16*4=64 473 subtract the divisor
         INC   L           ;             16*4=64 537 and set the next digit of the quotient
 div16_83:
         DJNZ  div16_82    ;15*9+7=142 583 679
@@ -603,14 +612,14 @@ div8:
         LD    B,8         ; 6 28 the length of the dividend (8 bits)
         LD    D,0         ; 6 34 D = Q = quotient = 0
         LD    E,A         ; 4 38 E = T = dividend
-        XOR   A           ; 4 42 A = R = remainder = 0
+        XOR   A,A         ; 4 42 A = R = remainder = 0
 div8_1:
         SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
         RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
         SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
-        CP    C           ;8*4=32 242            if (R[A] - D[C] >= 0) {
+        CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
         JR    C,div8_2    ;8*8=64 306 8*6=48 290
-        SUB   C           ;           8*4=32 322   R[A] = R[A] - D[C];
+        SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
         INC   D           ;           8*4=32 354   Q[D]++;
 div8_2:           ;                      }
         DJNZ  div8_1      ;7*9+7=70 376 424      }
@@ -650,9 +659,9 @@ div8_2:           ;                      }
 div8_16:
         LD    C,A         ;  4  4         save dividend(A) in C
         LD    A,H         ;  4  8         if D >= 256 {
-        OR    A           ;  4 12
+        OR    A,A         ;  4 12
         JR    Z,div8_161  ;  6 18  8  20
-        XOR   A           ;  4 22           R = T;
+        XOR   A,A         ;  4 22           R = T;
         RET               ;  9 31           Q = 0;
 div8_161:                     ;               } else {
         LD    A,C         ;        4  24    restore dividend into A
@@ -672,7 +681,7 @@ read:
 read1:
         CALL  getChar     ;check if a character is available.
         JR    Z,read1     ;-no: wait for it.
-        CP    '\r'        ;return if char == Carriage Return
+        CP    A,'\r'      ;return if char == Carriage Return
         JR    Z,read2
         CALL  mul16_10    ;result *= 10;
         SUB   A,'0'       ;digit = char - '0';
@@ -707,7 +716,7 @@ writeHL:
         PUSH  AF
         LD    B,0         ;number of digits on stack
         LD    A,H         ;is HL=0?
-        OR    L
+        OR    A,L
         JR    NZ,writeHL1
         INC   B           ;write a single digit 0
         JR    writeHL3
@@ -717,7 +726,7 @@ writeHL1:
         PUSH  AF          ;put remainder on stack
         INC   B
         LD    A,H         ;is quotient 0?
-        OR    L
+        OR    A,L
         JR    NZ,writeHL1
 writeHL2:
         POP   AF          ;write digit
@@ -761,358 +770,271 @@ L1:
 L2:
         ;;test3.j(2)   println(1 * 0);
 L3:
-        ;acc8= constant 1
         LD    A,1
 L4:
-        ;acc8* constant 0
         LD    B,A
         LD    C,0
         MLT   BC
         LD    A,C
 L5:
-        ;call writeLineAcc8
         CALL  writeLineA
 L6:
         ;;test3.j(3)   println(1 * 1);
 L7:
-        ;acc8= constant 1
         LD    A,1
 L8:
-        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
 L9:
-        ;call writeLineAcc8
         CALL  writeLineA
 L10:
         ;;test3.j(4)   println(2 * 1);
 L11:
-        ;acc8= constant 2
         LD    A,2
 L12:
-        ;acc8* constant 1
         LD    B,A
         LD    C,1
         MLT   BC
         LD    A,C
 L13:
-        ;call writeLineAcc8
         CALL  writeLineA
 L14:
         ;;test3.j(5)   println(1 * 3);
 L15:
-        ;acc8= constant 1
         LD    A,1
 L16:
-        ;acc8* constant 3
         LD    B,A
         LD    C,3
         MLT   BC
         LD    A,C
 L17:
-        ;call writeLineAcc8
         CALL  writeLineA
 L18:
         ;;test3.j(6)   word a = 2 * 2;
 L19:
-        ;acc8= constant 2
         LD    A,2
 L20:
-        ;acc8* constant 2
         LD    B,A
         LD    C,2
         MLT   BC
         LD    A,C
 L21:
-        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L22:
         ;;test3.j(7)   println(a);
 L23:
-        ;acc16= variable 0
         LD    HL,(05000H)
 L24:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L25:
         ;;test3.j(8)   a = 1;
 L26:
-        ;acc8= constant 1
         LD    A,1
 L27:
-        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L28:
         ;;test3.j(9)   println(a * 5);
 L29:
-        ;acc16= variable 0
         LD    HL,(05000H)
 L30:
-        ;acc16* constant 5
         LD    DE,5
         CALL  mul16
 L31:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L32:
         ;;test3.j(10)   a = 2;
 L33:
-        ;acc8= constant 2
         LD    A,2
 L34:
-        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L35:
         ;;test3.j(11)   println(3 * a);
 L36:
-        ;acc8= constant 3
         LD    A,3
 L37:
-        ;acc8ToAcc16
         LD    L,A
         LD    H,0
 L38:
-        ;acc16* variable 0
         LD    DE,(05000H)
         CALL  mul16
 L39:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L40:
         ;;test3.j(12)   if (7 * 5 == 35) println (7); else println (999);
 L41:
-        ;acc8= constant 7
         LD    A,7
 L42:
-        ;acc8* constant 5
         LD    B,A
         LD    C,5
         MLT   BC
         LD    A,C
 L43:
-        ;acc8Comp constant 35
         SUB   A,35
 L44:
-        ;brne 48
         JP    NZ,L48
 L45:
-        ;acc8= constant 7
         LD    A,7
 L46:
-        ;call writeLineAcc8
         CALL  writeLineA
 L47:
-        ;br 51
         JP    L51
 L48:
-        ;acc16= constant 999
         LD    HL,999
 L49:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L50:
         ;;test3.j(13)   if (2 * 9 * 9 == 162) println (8); else println (999);
 L51:
-        ;acc8= constant 2
         LD    A,2
 L52:
-        ;acc8* constant 9
         LD    B,A
         LD    C,9
         MLT   BC
         LD    A,C
 L53:
-        ;acc8* constant 9
         LD    B,A
         LD    C,9
         MLT   BC
         LD    A,C
 L54:
-        ;acc8Comp constant 162
         SUB   A,162
 L55:
-        ;brne 59
         JP    NZ,L59
 L56:
-        ;acc8= constant 8
         LD    A,8
 L57:
-        ;call writeLineAcc8
         CALL  writeLineA
 L58:
-        ;br 62
         JP    L62
 L59:
-        ;acc16= constant 999
         LD    HL,999
 L60:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L61:
         ;;test3.j(14)   if (729 == 729) println (9); else println (999);
 L62:
-        ;acc16= constant 729
         LD    HL,729
 L63:
-        ;acc16Comp constant 729
         LD    DE,729
         OR    A
         SBC   HL,DE
 L64:
-        ;brne 68
         JP    NZ,L68
 L65:
-        ;acc8= constant 9
         LD    A,9
 L66:
-        ;call writeLineAcc8
         CALL  writeLineA
 L67:
-        ;br 71
         JP    L71
 L68:
-        ;acc16= constant 999
         LD    HL,999
 L69:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L70:
         ;;test3.j(15)   if (729 * 9 == 6561) println (10); else println (999);
 L71:
-        ;acc16= constant 729
         LD    HL,729
 L72:
-        ;acc16* constant 9
         LD    DE,9
         CALL  mul16
 L73:
-        ;acc16Comp constant 6561
         LD    DE,6561
         OR    A
         SBC   HL,DE
 L74:
-        ;brne 78
         JP    NZ,L78
 L75:
-        ;acc8= constant 10
         LD    A,10
 L76:
-        ;call writeLineAcc8
         CALL  writeLineA
 L77:
-        ;br 81
         JP    L81
 L78:
-        ;acc16= constant 999
         LD    HL,999
 L79:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L80:
         ;;test3.j(16)   if (6561 / 729 == 9) println (11); else println (999);
 L81:
-        ;acc16= constant 6561
         LD    HL,6561
 L82:
-        ;acc16/ constant 729
         LD    DE,729
         CALL  div16
 L83:
-        ;acc8= constant 9
         LD    A,9
 L84:
-        ;acc16CompareAcc8
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
 L85:
-        ;brne 89
         JP    NZ,L89
 L86:
-        ;acc8= constant 11
         LD    A,11
 L87:
-        ;call writeLineAcc8
         CALL  writeLineA
 L88:
-        ;br 92
         JP    L92
 L89:
-        ;acc16= constant 999
         LD    HL,999
 L90:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L91:
         ;;test3.j(17)   a = 13;
 L92:
-        ;acc8= constant 13
         LD    A,13
 L93:
-        ;acc8=> variable 0
         LD    L,A
         LD    H,0
         LD    (05000H),HL
 L94:
         ;;test3.j(18)   a--;
 L95:
-        ;decr16 variable 0
         LD    HL,(05000H)
         DEC   HL
         LD    (05000H),HL
 L96:
         ;;test3.j(19)   println(a);
 L97:
-        ;acc16= variable 0
         LD    HL,(05000H)
 L98:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L99:
         ;;test3.j(20)   a++;
 L100:
-        ;incr16 variable 0
         LD    HL,(05000H)
         INC   HL
         LD    (05000H),HL
 L101:
         ;;test3.j(21)   println(a);
 L102:
-        ;acc16= variable 0
         LD    HL,(05000H)
 L103:
-        ;call writeLineAcc16
         CALL  writeLineHL
 L104:
         ;;test3.j(22)   println(14);
 L105:
-        ;acc8= constant 14
         LD    A,14
 L106:
-        ;call writeLineAcc8
         CALL  writeLineA
 L107:
         ;;test3.j(23)   println("Klaar");
 L108:
-        ;acc16= constant 112
         LD    HL,112
 L109:
-        ;writeLineString
         CALL  writeLineStr
 L110:
         ;;test3.j(24) }
 L111:
-        ;stop
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
 L112:
         .ASCIZ  "Klaar"

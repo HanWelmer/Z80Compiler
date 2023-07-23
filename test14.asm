@@ -23,7 +23,7 @@ sleep1:
         CALL  WAIT1M      ;Wait 1 msec
         DEC   HL
         LD    A,H
-        OR    L
+        OR    A,L
         JR    NZ,sleep1
         POP   AF
         RET
@@ -68,7 +68,7 @@ WAIT1M2:
         LD    A,H         ;2      6 (31+n*10)
                           ;       3 opcode
                           ;       3 execute
-        OR    L           ;2      4 (31+n*14)
+        OR    A,L         ;2      4 (31+n*14)
                           ;       3 opcode
                           ;       1 execute
         JR    NZ,WAIT1M2  ;4      8 (31+n*22) if NZ
@@ -112,7 +112,7 @@ getChar1:
         IN0   A,(CNTLA0)  ;read ASCI0 control register
         RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
         OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
-        XOR   A
+        XOR   A,A
         RET               ;return without a character
 ;****************
 ;putMsg
@@ -517,7 +517,7 @@ div16_1:
         SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
         RL    A           ;16* 7=112 269   Q = Q * 2
         ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
-        OR    A           ;16* 4= 64 493   if (R >= D) {
+        OR    A,A         ;16* 4= 64 493   if (R >= D) {
         SBC   HL,DE       ;16*10=160 653
         JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
         INC   C           ;              16*4= 64 813   Q++
@@ -547,13 +547,13 @@ div16_8:
         PUSH  BC          ;11 11 save registers used
         LD    B,16        ; 6 17 the length of the dividend (16 bits)
         LD    C,A         ; 4 21 move divisor to C
-        XOR   A           ; 4 25 clear upper 8 bits of AHL
+        XOR   A,A         ; 4 25 clear upper 8 bits of AHL
 div16_82:
         ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
         RL    A           ;16*7=112 249
-        CP    C           ;16*4= 64 313 check if divisor (E) <= selected digits (A)
+        CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
         JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
-        SUB   C           ;             16*4=64 473 subtract the divisor
+        SUB   A,C         ;             16*4=64 473 subtract the divisor
         INC   L           ;             16*4=64 537 and set the next digit of the quotient
 div16_83:
         DJNZ  div16_82    ;15*9+7=142 583 679
@@ -612,14 +612,14 @@ div8:
         LD    B,8         ; 6 28 the length of the dividend (8 bits)
         LD    D,0         ; 6 34 D = Q = quotient = 0
         LD    E,A         ; 4 38 E = T = dividend
-        XOR   A           ; 4 42 A = R = remainder = 0
+        XOR   A,A         ; 4 42 A = R = remainder = 0
 div8_1:
         SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
         RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
         SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
-        CP    C           ;8*4=32 242            if (R[A] - D[C] >= 0) {
+        CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
         JR    C,div8_2    ;8*8=64 306 8*6=48 290
-        SUB   C           ;           8*4=32 322   R[A] = R[A] - D[C];
+        SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
         INC   D           ;           8*4=32 354   Q[D]++;
 div8_2:           ;                      }
         DJNZ  div8_1      ;7*9+7=70 376 424      }
@@ -659,9 +659,9 @@ div8_2:           ;                      }
 div8_16:
         LD    C,A         ;  4  4         save dividend(A) in C
         LD    A,H         ;  4  8         if D >= 256 {
-        OR    A           ;  4 12
+        OR    A,A         ;  4 12
         JR    Z,div8_161  ;  6 18  8  20
-        XOR   A           ;  4 22           R = T;
+        XOR   A,A         ;  4 22           R = T;
         RET               ;  9 31           Q = 0;
 div8_161:                     ;               } else {
         LD    A,C         ;        4  24    restore dividend into A
@@ -681,7 +681,7 @@ read:
 read1:
         CALL  getChar     ;check if a character is available.
         JR    Z,read1     ;-no: wait for it.
-        CP    '\r'        ;return if char == Carriage Return
+        CP    A,'\r'      ;return if char == Carriage Return
         JR    Z,read2
         CALL  mul16_10    ;result *= 10;
         SUB   A,'0'       ;digit = char - '0';
@@ -716,7 +716,7 @@ writeHL:
         PUSH  AF
         LD    B,0         ;number of digits on stack
         LD    A,H         ;is HL=0?
-        OR    L
+        OR    A,L
         JR    NZ,writeHL1
         INC   B           ;write a single digit 0
         JR    writeHL3
@@ -726,7 +726,7 @@ writeHL1:
         PUSH  AF          ;put remainder on stack
         INC   B
         LD    A,H         ;is quotient 0?
-        OR    L
+        OR    A,L
         JR    NZ,writeHL1
 writeHL2:
         POP   AF          ;write digit

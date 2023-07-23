@@ -764,147 +764,234 @@
 21CD C9                  RET
 21CE             main:
 21CE             L0:
-21CE                     ;;test14.j(0) /* Program to test generated Z80 assembler code for output and input statements*/
+21CE                     ;;test4.j(0) /* Program to test division */
 21CE             L1:
-21CE                     ;;test14.j(1) class TestSleep {
+21CE                     ;;test4.j(1) class TestMultiplyDivide {
 21CE             L2:
-21CE                     ;;test14.j(2) 
+21CE                     ;;test4.j(2)   println(0 * 1);
 21CE             L3:
-21CE                     ;;test14.j(3)   println(0);
-21CE             L4:
 21CE 3E 00               LD    A,0
-21D0             L5:
-21D0 CD BE 21            CALL  writeLineA
-21D3             L6:
-21D3                     ;;test14.j(4) 
-21D3             L7:
-21D3                     ;;test14.j(5)   println("sleeping 0.25 second:");
-21D3             L8:
-21D3 21 27 00            LD    HL,39
-21D6             L9:
-21D6 CD 43 20            CALL  writeLineStr
-21D9             L10:
-21D9                     ;;test14.j(6)   sleep(250);
-21D9             L11:
-21D9 3E FA               LD    A,250
-21DB CD 11 20            CALL  sleepA
-21DE             L12:
-21DE                     ;;test14.j(7)   println("sleeping 10 second:");
-21DE             L13:
-21DE 21 28 00            LD    HL,40
-21E1             L14:
-21E1 CD 43 20            CALL  writeLineStr
-21E4             L15:
-21E4                     ;;test14.j(8)   sleep(10000);
-21E4             L16:
-21E4 21 10 27            LD    HL,10000
-21E7 CD 06 20            CALL  sleepHL
-21EA             L17:
-21EA                     ;;test14.j(9)   println("sleeping 0.25 second:");
-21EA             L18:
-21EA 21 27 00            LD    HL,39
-21ED             L19:
-21ED CD 43 20            CALL  writeLineStr
-21F0             L20:
-21F0                     ;;test14.j(10)   byte value = 200;
-21F0             L21:
-21F0 3E C8               LD    A,200
-21F2             L22:
-21F2 32 00 50            LD    (05000H),A
-21F5             L23:
-21F5                     ;;test14.j(11)   sleep(value);
-21F5             L24:
-21F5 3A 00 50            LD    A,(05000H)
-21F8 CD 11 20            CALL  sleepA
-21FB             L25:
-21FB                     ;;test14.j(12)   println("sleeping 10 second:");
-21FB             L26:
-21FB 21 28 00            LD    HL,40
-21FE             L27:
-21FE CD 43 20            CALL  writeLineStr
-2201             L28:
-2201                     ;;test14.j(13)   word bigValue = 10000;
-2201             L29:
-2201 21 10 27            LD    HL,10000
-2204             L30:
-2204 22 01 50            LD    (05001H),HL
-2207             L31:
-2207                     ;;test14.j(14)   sleep(bigValue);
-2207             L32:
-2207 2A 01 50            LD    HL,(05001H)
-220A CD 06 20            CALL  sleepHL
-220D             L33:
-220D                     ;;test14.j(15) 
-220D             L34:
-220D                     ;;test14.j(16)   println("Klaar");
-220D             L35:
-220D 21 29 00            LD    HL,41
-2210             L36:
-2210 CD 43 20            CALL  writeLineStr
-2213             L37:
-2213                     ;;test14.j(17) }
-2213             L38:
-2213 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
-2216             L39:
-2216                     .ASCIZ  "sleeping 0.25 second:"
-2216             L40:
-2216                     .ASCIZ  "sleeping 10 second:"
-2216             L41:
-2216                     .ASCIZ  "Klaar"
+21D0             L4:
+21D0 47                  LD    B,A
+21D1 0E 01               LD    C,1
+21D3 ED 4C               MLT   BC
+21D5 79                  LD    A,C
+21D6             L5:
+21D6 CD BE 21            CALL  writeLineA
+21D9             L6:
+21D9                     ;;test4.j(3)   println(1 * 1);
+21D9             L7:
+21D9 3E 01               LD    A,1
+21DB             L8:
+21DB 47                  LD    B,A
+21DC 0E 01               LD    C,1
+21DE ED 4C               MLT   BC
+21E0 79                  LD    A,C
+21E1             L9:
+21E1 CD BE 21            CALL  writeLineA
+21E4             L10:
+21E4                     ;;test4.j(4)   println(4 / 2);
+21E4             L11:
+21E4 3E 04               LD    A,4
+21E6             L12:
+21E6 0E 02               LD    C,2
+21E8 CD 54 21            CALL  div8
+21EB             L13:
+21EB CD BE 21            CALL  writeLineA
+21EE             L14:
+21EE                     ;;test4.j(5)   println(9 / 3);
+21EE             L15:
+21EE 3E 09               LD    A,9
+21F0             L16:
+21F0 0E 03               LD    C,3
+21F2 CD 54 21            CALL  div8
+21F5             L17:
+21F5 CD BE 21            CALL  writeLineA
+21F8             L18:
+21F8                     ;;test4.j(6)   println(8 / 2);
+21F8             L19:
+21F8 3E 08               LD    A,8
+21FA             L20:
+21FA 0E 02               LD    C,2
+21FC CD 54 21            CALL  div8
+21FF             L21:
+21FF CD BE 21            CALL  writeLineA
+2202             L22:
+2202                     ;;test4.j(7)   println(5 / 1);
+2202             L23:
+2202 3E 05               LD    A,5
+2204             L24:
+2204 0E 01               LD    C,1
+2206 CD 54 21            CALL  div8
+2209             L25:
+2209 CD BE 21            CALL  writeLineA
+220C             L26:
+220C                     ;;test4.j(8)   println((3 * 8) / 4);
+220C             L27:
+220C 3E 03               LD    A,3
+220E             L28:
+220E 47                  LD    B,A
+220F 0E 08               LD    C,8
+2211 ED 4C               MLT   BC
+2213 79                  LD    A,C
+2214             L29:
+2214 0E 04               LD    C,4
+2216 CD 54 21            CALL  div8
+2219             L30:
+2219 CD BE 21            CALL  writeLineA
+221C             L31:
+221C                     ;;test4.j(9)   println((7 * 7) / 7);
+221C             L32:
+221C 3E 07               LD    A,7
+221E             L33:
+221E 47                  LD    B,A
+221F 0E 07               LD    C,7
+2221 ED 4C               MLT   BC
+2223 79                  LD    A,C
+2224             L34:
+2224 0E 07               LD    C,7
+2226 CD 54 21            CALL  div8
+2229             L35:
+2229 CD BE 21            CALL  writeLineA
+222C             L36:
+222C                     ;;test4.j(10)   println((4 * 5 * 2) / 5);
+222C             L37:
+222C 3E 04               LD    A,4
+222E             L38:
+222E 47                  LD    B,A
+222F 0E 05               LD    C,5
+2231 ED 4C               MLT   BC
+2233 79                  LD    A,C
+2234             L39:
+2234 47                  LD    B,A
+2235 0E 02               LD    C,2
+2237 ED 4C               MLT   BC
+2239 79                  LD    A,C
+223A             L40:
+223A 0E 05               LD    C,5
+223C CD 54 21            CALL  div8
+223F             L41:
+223F CD BE 21            CALL  writeLineA
+2242             L42:
+2242                     ;;test4.j(11)   println(6561 / 729);
+2242             L43:
+2242 21 A1 19            LD    HL,6561
+2245             L44:
+2245 11 D9 02            LD    DE,729
+2248 CD 23 21            CALL  div16
+224B             L45:
+224B CD 96 21            CALL  writeLineHL
+224E             L46:
+224E                     ;;test4.j(12)   println(60 / 6);
+224E             L47:
+224E 3E 3C               LD    A,60
+2250             L48:
+2250 0E 06               LD    C,6
+2252 CD 54 21            CALL  div8
+2255             L49:
+2255 CD BE 21            CALL  writeLineA
+2258             L50:
+2258                     ;;test4.j(13)   println(22 / 2);
+2258             L51:
+2258 3E 16               LD    A,22
+225A             L52:
+225A 0E 02               LD    C,2
+225C CD 54 21            CALL  div8
+225F             L53:
+225F CD BE 21            CALL  writeLineA
+2262             L54:
+2262                     ;;test4.j(14)   println(12);
+2262             L55:
+2262 3E 0C               LD    A,12
+2264             L56:
+2264 CD BE 21            CALL  writeLineA
+2267             L57:
+2267                     ;;test4.j(15)   println("Klaar");
+2267             L58:
+2267 21 3E 00            LD    HL,62
+226A             L59:
+226A CD 43 20            CALL  writeLineStr
+226D             L60:
+226D                     ;;test4.j(16) }
+226D             L61:
+226D C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
+2270             L62:
+2270                     .ASCIZ  "Klaar"
 
 Labels and cross references:
       L0 = 21CE :
       L1 = 21CE :
-     L10 = 21D9 :
-     L11 = 21D9 :
-     L12 = 21DE :
-     L13 = 21DE :
-     L14 = 21E1 :
-     L15 = 21E4 :
-     L16 = 21E4 :
-     L17 = 21EA :
-     L18 = 21EA :
-     L19 = 21ED :
+     L10 = 21E4 :
+     L11 = 21E4 :
+     L12 = 21E6 :
+     L13 = 21EB :
+     L14 = 21EE :
+     L15 = 21EE :
+     L16 = 21F0 :
+     L17 = 21F5 :
+     L18 = 21F8 :
+     L19 = 21F8 :
       L2 = 21CE :
-     L20 = 21F0 :
-     L21 = 21F0 :
-     L22 = 21F2 :
-     L23 = 21F5 :
-     L24 = 21F5 :
-     L25 = 21FB :
-     L26 = 21FB :
-     L27 = 21FE :
-     L28 = 2201 :
-     L29 = 2201 :
+     L20 = 21FA :
+     L21 = 21FF :
+     L22 = 2202 :
+     L23 = 2202 :
+     L24 = 2204 :
+     L25 = 2209 :
+     L26 = 220C :
+     L27 = 220C :
+     L28 = 220E :
+     L29 = 2214 :
       L3 = 21CE :
-     L30 = 2204 :
-     L31 = 2207 :
-     L32 = 2207 :
-     L33 = 220D :
-     L34 = 220D :
-     L35 = 220D :
-     L36 = 2210 :
-     L37 = 2213 :
-     L38 = 2213 :
-     L39 = 2216 :
-      L4 = 21CE :
-     L40 = 2216 :
-     L41 = 2216 :
-      L5 = 21D0 :
-      L6 = 21D3 :
-      L7 = 21D3 :
-      L8 = 21D3 :
-      L9 = 21D6 :
+     L30 = 2219 :
+     L31 = 221C :
+     L32 = 221C :
+     L33 = 221E :
+     L34 = 2224 :
+     L35 = 2229 :
+     L36 = 222C :
+     L37 = 222C :
+     L38 = 222E :
+     L39 = 2234 :
+      L4 = 21D0 :
+     L40 = 223A :
+     L41 = 223F :
+     L42 = 2242 :
+     L43 = 2242 :
+     L44 = 2245 :
+     L45 = 224B :
+     L46 = 224E :
+     L47 = 224E :
+     L48 = 2250 :
+     L49 = 2255 :
+      L5 = 21D6 :
+     L50 = 2258 :
+     L51 = 2258 :
+     L52 = 225A :
+     L53 = 225F :
+     L54 = 2262 :
+     L55 = 2262 :
+     L56 = 2264 :
+     L57 = 2267 :
+     L58 = 2267 :
+     L59 = 226A :
+      L6 = 21D9 :
+     L60 = 226D :
+     L61 = 226D :
+     L62 = 2270 :
+      L7 = 21D9 :
+      L8 = 21DB :
+      L9 = 21E1 :
   WAIT1M = 2018 : 2007 2011
  WAIT1M2 = 201D : 2020
-   div16 = 2123 :
+   div16 = 2123 : 2248
  div16_1 = 212C : 213B
  div16_2 = 213A : 2135
  div16_3 = 213B : 2138
  div16_8 = 2143 : 21AA
 div16_82 = 2148 : 2150
 div16_83 = 2150 : 214C
-    div8 = 2154 : 2177
+    div8 = 2154 : 2177 21E8 21F2 21FC 2206 2216 2226 223C 2252 225C
   div8_1 = 215C : 2167
  div8_16 = 216E :
 div8_161 = 2175 : 2171
@@ -938,15 +1025,16 @@ putSpace = 2057 : 2078
    read1 = 217F : 2182 218F 2192
    read2 = 2194 : 2186
   sleep1 = 2007 : 200D 2015
-  sleepA = 2011 : 21DB 21F8
- sleepHL = 2006 : 21E7 220A
+  sleepA = 2011 :
+ sleepHL = 2006 :
    start = 2000 :
   writeA = 21C5 : 21BE
  writeHL = 219D : 2196 21C9
 writeHL1 = 21A8 : 21A3 21B1
 writeHL2 = 21B3 : 21B9
 writeHL3 = 21B4 : 21A6
-writeLineA = 21BE : 21D0
-writeLineHL = 2196 :
-writeLineStr = 2043 : 21D6 21E1 21ED 21FE 2210
+writeLineA = 21BE : 21D6 21E1 21EB 21F5 21FF 2209 2219 2229 223F 2255 225F 2264
+                :
+writeLineHL = 2196 : 224B
+writeLineStr = 2043 : 226A
 writeStr = 204A : 203E 2043

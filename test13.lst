@@ -23,7 +23,7 @@
 2007 CD 18 20            CALL  WAIT1M      ;Wait 1 msec
 200A 2B                  DEC   HL
 200B 7C                  LD    A,H
-200C B5                  OR    L
+200C B5                  OR    A,L
 200D 20 F8               JR    NZ,sleep1
 200F F1                  POP   AF
 2010 C9                  RET
@@ -68,7 +68,7 @@
 201E 7C                  LD    A,H         ;2      6 (31+n*10)
 201F                                       ;       3 opcode
 201F                                       ;       3 execute
-201F B5                  OR    L           ;2      4 (31+n*14)
+201F B5                  OR    A,L         ;2      4 (31+n*14)
 2020                                       ;       3 opcode
 2020                                       ;       1 execute
 2020 20 FB               JR    NZ,WAIT1M2  ;4      8 (31+n*22) if NZ
@@ -112,7 +112,7 @@
 2033 ED 38 00            IN0   A,(CNTLA0)  ;read ASCI0 control register
 2036 CB 9F               RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
 2038 ED 39 00            OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
-203B AF                  XOR   A
+203B AF                  XOR   A,A
 203C C9                  RET               ;return without a character
 203D             ;****************
 203D             ;putMsg
@@ -517,7 +517,7 @@
 212C CB 21               SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
 212E CB 17               RL    A           ;16* 7=112 269   Q = Q * 2
 2130 ED 6A               ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
-2132 B7                  OR    A           ;16* 4= 64 493   if (R >= D) {
+2132 B7                  OR    A,A         ;16* 4= 64 493   if (R >= D) {
 2133 ED 52               SBC   HL,DE       ;16*10=160 653
 2135 38 03               JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
 2137 0C                  INC   C           ;              16*4= 64 813   Q++
@@ -547,13 +547,13 @@
 2143 C5                  PUSH  BC          ;11 11 save registers used
 2144 06 10               LD    B,16        ; 6 17 the length of the dividend (16 bits)
 2146 4F                  LD    C,A         ; 4 21 move divisor to C
-2147 AF                  XOR   A           ; 4 25 clear upper 8 bits of AHL
+2147 AF                  XOR   A,A         ; 4 25 clear upper 8 bits of AHL
 2148             div16_82:
 2148 29                  ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
 2149 CB 17               RL    A           ;16*7=112 249
-214B B9                  CP    C           ;16*4= 64 313 check if divisor (E) <= selected digits (A)
+214B B9                  CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
 214C 38 02               JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
-214E 91                  SUB   C           ;             16*4=64 473 subtract the divisor
+214E 91                  SUB   A,C         ;             16*4=64 473 subtract the divisor
 214F 2C                  INC   L           ;             16*4=64 537 and set the next digit of the quotient
 2150             div16_83:
 2150 10 F6               DJNZ  div16_82    ;15*9+7=142 583 679
@@ -612,14 +612,14 @@
 2156 06 08               LD    B,8         ; 6 28 the length of the dividend (8 bits)
 2158 16 00               LD    D,0         ; 6 34 D = Q = quotient = 0
 215A 5F                  LD    E,A         ; 4 38 E = T = dividend
-215B AF                  XOR   A           ; 4 42 A = R = remainder = 0
+215B AF                  XOR   A,A         ; 4 42 A = R = remainder = 0
 215C             div8_1:
 215C CB 23               SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
 215E CB 17               RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
 2160 CB 22               SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
-2162 B9                  CP    C           ;8*4=32 242            if (R[A] - D[C] >= 0) {
+2162 B9                  CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
 2163 38 02               JR    C,div8_2    ;8*8=64 306 8*6=48 290
-2165 91                  SUB   C           ;           8*4=32 322   R[A] = R[A] - D[C];
+2165 91                  SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
 2166 14                  INC   D           ;           8*4=32 354   Q[D]++;
 2167             div8_2:           ;                      }
 2167 10 F3               DJNZ  div8_1      ;7*9+7=70 376 424      }
@@ -659,9 +659,9 @@
 216E             div8_16:
 216E 4F                  LD    C,A         ;  4  4         save dividend(A) in C
 216F 7C                  LD    A,H         ;  4  8         if D >= 256 {
-2170 B7                  OR    A           ;  4 12
+2170 B7                  OR    A,A         ;  4 12
 2171 28 02               JR    Z,div8_161  ;  6 18  8  20
-2173 AF                  XOR   A           ;  4 22           R = T;
+2173 AF                  XOR   A,A         ;  4 22           R = T;
 2174 C9                  RET               ;  9 31           Q = 0;
 2175             div8_161:                     ;               } else {
 2175 79                  LD    A,C         ;        4  24    restore dividend into A
@@ -681,7 +681,7 @@
 217F             read1:
 217F CD 25 20            CALL  getChar     ;check if a character is available.
 2182 28 FB               JR    Z,read1     ;-no: wait for it.
-2184 FE 0D               CP    '\r'        ;return if char == Carriage Return
+2184 FE 0D               CP    A,'\r'      ;return if char == Carriage Return
 2186 28 0C               JR    Z,read2
 2188 CD C0 20            CALL  mul16_10    ;result *= 10;
 218B D6 30               SUB   A,'0'       ;digit = char - '0';
@@ -716,7 +716,7 @@
 219E F5                  PUSH  AF
 219F 06 00               LD    B,0         ;number of digits on stack
 21A1 7C                  LD    A,H         ;is HL=0?
-21A2 B5                  OR    L
+21A2 B5                  OR    A,L
 21A3 20 03               JR    NZ,writeHL1
 21A5 04                  INC   B           ;write a single digit 0
 21A6 18 0C               JR    writeHL3
@@ -726,7 +726,7 @@
 21AD F5                  PUSH  AF          ;put remainder on stack
 21AE 04                  INC   B
 21AF 7C                  LD    A,H         ;is quotient 0?
-21B0 B5                  OR    L
+21B0 B5                  OR    A,L
 21B1 20 F5               JR    NZ,writeHL1
 21B3             writeHL2:
 21B3 F1                  POP   AF          ;write digit

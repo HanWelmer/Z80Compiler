@@ -23,7 +23,7 @@ sleep1:
         CALL  WAIT1M      ;Wait 1 msec
         DEC   HL
         LD    A,H
-        OR    L
+        OR    A,L
         JR    NZ,sleep1
         POP   AF
         RET
@@ -68,7 +68,7 @@ WAIT1M2:
         LD    A,H         ;2      6 (31+n*10)
                           ;       3 opcode
                           ;       3 execute
-        OR    L           ;2      4 (31+n*14)
+        OR    A,L         ;2      4 (31+n*14)
                           ;       3 opcode
                           ;       1 execute
         JR    NZ,WAIT1M2  ;4      8 (31+n*22) if NZ
@@ -112,7 +112,7 @@ getChar1:
         IN0   A,(CNTLA0)  ;read ASCI0 control register
         RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
         OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
-        XOR   A
+        XOR   A,A
         RET               ;return without a character
 ;****************
 ;putMsg
@@ -517,7 +517,7 @@ div16_1:
         SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
         RL    A           ;16* 7=112 269   Q = Q * 2
         ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
-        OR    A           ;16* 4= 64 493   if (R >= D) {
+        OR    A,A         ;16* 4= 64 493   if (R >= D) {
         SBC   HL,DE       ;16*10=160 653
         JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
         INC   C           ;              16*4= 64 813   Q++
@@ -547,13 +547,13 @@ div16_8:
         PUSH  BC          ;11 11 save registers used
         LD    B,16        ; 6 17 the length of the dividend (16 bits)
         LD    C,A         ; 4 21 move divisor to C
-        XOR   A           ; 4 25 clear upper 8 bits of AHL
+        XOR   A,A         ; 4 25 clear upper 8 bits of AHL
 div16_82:
         ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
         RL    A           ;16*7=112 249
-        CP    C           ;16*4= 64 313 check if divisor (E) <= selected digits (A)
+        CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
         JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
-        SUB   C           ;             16*4=64 473 subtract the divisor
+        SUB   A,C         ;             16*4=64 473 subtract the divisor
         INC   L           ;             16*4=64 537 and set the next digit of the quotient
 div16_83:
         DJNZ  div16_82    ;15*9+7=142 583 679
@@ -612,14 +612,14 @@ div8:
         LD    B,8         ; 6 28 the length of the dividend (8 bits)
         LD    D,0         ; 6 34 D = Q = quotient = 0
         LD    E,A         ; 4 38 E = T = dividend
-        XOR   A           ; 4 42 A = R = remainder = 0
+        XOR   A,A         ; 4 42 A = R = remainder = 0
 div8_1:
         SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
         RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
         SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
-        CP    C           ;8*4=32 242            if (R[A] - D[C] >= 0) {
+        CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
         JR    C,div8_2    ;8*8=64 306 8*6=48 290
-        SUB   C           ;           8*4=32 322   R[A] = R[A] - D[C];
+        SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
         INC   D           ;           8*4=32 354   Q[D]++;
 div8_2:           ;                      }
         DJNZ  div8_1      ;7*9+7=70 376 424      }
@@ -659,9 +659,9 @@ div8_2:           ;                      }
 div8_16:
         LD    C,A         ;  4  4         save dividend(A) in C
         LD    A,H         ;  4  8         if D >= 256 {
-        OR    A           ;  4 12
+        OR    A,A         ;  4 12
         JR    Z,div8_161  ;  6 18  8  20
-        XOR   A           ;  4 22           R = T;
+        XOR   A,A         ;  4 22           R = T;
         RET               ;  9 31           Q = 0;
 div8_161:                     ;               } else {
         LD    A,C         ;        4  24    restore dividend into A
@@ -681,7 +681,7 @@ read:
 read1:
         CALL  getChar     ;check if a character is available.
         JR    Z,read1     ;-no: wait for it.
-        CP    '\r'        ;return if char == Carriage Return
+        CP    A,'\r'      ;return if char == Carriage Return
         JR    Z,read2
         CALL  mul16_10    ;result *= 10;
         SUB   A,'0'       ;digit = char - '0';
@@ -716,7 +716,7 @@ writeHL:
         PUSH  AF
         LD    B,0         ;number of digits on stack
         LD    A,H         ;is HL=0?
-        OR    L
+        OR    A,L
         JR    NZ,writeHL1
         INC   B           ;write a single digit 0
         JR    writeHL3
@@ -726,7 +726,7 @@ writeHL1:
         PUSH  AF          ;put remainder on stack
         INC   B
         LD    A,H         ;is quotient 0?
-        OR    L
+        OR    A,L
         JR    NZ,writeHL1
 writeHL2:
         POP   AF          ;write digit
@@ -923,7 +923,6 @@ L72:
         LD    HL,4660
 L73:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -932,7 +931,6 @@ L73:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L74:
         LD    DE,4924
         OR    A
@@ -1035,7 +1033,6 @@ L108:
         LD    H,0
 L109:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -1044,7 +1041,6 @@ L109:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L110:
         LD    DE,4668
         OR    A
@@ -1140,7 +1136,6 @@ L141:
         LD    HL,4660
 L142:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -1149,7 +1144,6 @@ L142:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L143:
         LD    DE,4668
         OR    A
@@ -1336,7 +1330,6 @@ L216:
         ADD   HL,DE
 L217:
         POP   DE
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -1345,7 +1338,6 @@ L217:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L218:
         LD    DE,4924
         OR    A
@@ -1693,7 +1685,6 @@ L359:
         LD    HL,4660
 L360:
         LD    DE,(05002H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -1702,7 +1693,6 @@ L360:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L361:
         LD    DE,4924
         OR    A
@@ -1801,7 +1791,6 @@ L393:
         LD    H,0
 L394:
         LD    DE,(05004H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -1810,7 +1799,6 @@ L394:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L395:
         LD    DE,4668
         OR    A
@@ -1869,17 +1857,12 @@ L414:
 L415:
         LD    HL,4660
 L416:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
         LD    A,B
-        POP   BC
+        LD    H,0
 L417:
         LD    A,20
 L418:
@@ -1905,17 +1888,11 @@ L425:
 L426:
         LD    HL,4660
 L427:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L428:
         LD    DE,4668
         OR    A
@@ -1937,17 +1914,11 @@ L435:
 L436:
         LD    HL,4660
 L437:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L438:
         LD    DE,4648
         OR    A
@@ -2072,7 +2043,6 @@ L491:
         LD    HL,4660
 L492:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -2081,7 +2051,6 @@ L492:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L493:
         LD    DE,4924
         OR    A
@@ -2180,7 +2149,6 @@ L525:
         LD    H,0
 L526:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -2189,7 +2157,6 @@ L526:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L527:
         LD    DE,4668
         OR    A
@@ -2285,7 +2252,6 @@ L558:
         LD    HL,4660
 L559:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -2294,7 +2260,6 @@ L559:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L560:
         LD    DE,4668
         OR    A
@@ -2463,7 +2428,6 @@ L628:
         ADD   HL,DE
 L629:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -2472,7 +2436,6 @@ L629:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L630:
         LD    DE,4924
         OR    A
@@ -2578,7 +2541,6 @@ L665:
         LD    H,0
 L666:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -2587,7 +2549,6 @@ L666:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L667:
         LD    DE,4668
         OR    A
@@ -2691,7 +2652,6 @@ L701:
         ADD   HL,DE
 L702:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -2700,7 +2660,6 @@ L702:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L703:
         LD    DE,4668
         OR    A
@@ -2902,7 +2861,6 @@ L782:
         ADD   HL,DE
 L783:
         POP   DE
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -2911,7 +2869,6 @@ L783:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L784:
         LD    DE,4924
         OR    A
@@ -3289,7 +3246,6 @@ L937:
         ADD   HL,DE
 L938:
         LD    DE,(05002H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -3298,7 +3254,6 @@ L938:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L939:
         LD    DE,4924
         OR    A
@@ -3404,7 +3359,6 @@ L974:
         LD    H,0
 L975:
         LD    DE,(05004H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -3413,7 +3367,6 @@ L975:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L976:
         LD    DE,4668
         OR    A
@@ -3477,17 +3430,12 @@ L998:
         LD    DE,564
         ADD   HL,DE
 L999:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
         LD    A,B
-        POP   BC
+        LD    H,0
 L1000:
         LD    A,20
 L1001:
@@ -3516,17 +3464,11 @@ L1010:
         LD    DE,564
         ADD   HL,DE
 L1011:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L1012:
         LD    DE,4668
         OR    A
@@ -3551,17 +3493,11 @@ L1021:
         LD    DE,564
         ADD   HL,DE
 L1022:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L1023:
         LD    DE,4648
         OR    A
@@ -3698,7 +3634,6 @@ L1081:
         ADD   HL,DE
 L1082:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -3707,7 +3642,6 @@ L1082:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1083:
         LD    DE,4924
         OR    A
@@ -3813,7 +3747,6 @@ L1118:
         LD    H,0
 L1119:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -3822,7 +3755,6 @@ L1119:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1120:
         LD    DE,4668
         OR    A
@@ -3926,7 +3858,6 @@ L1154:
         ADD   HL,DE
 L1155:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -3935,7 +3866,6 @@ L1155:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1156:
         LD    DE,4668
         OR    A
@@ -4095,7 +4025,6 @@ L1220:
         LD    HL,(05004H)
 L1221:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -4104,7 +4033,6 @@ L1221:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1222:
         LD    DE,4924
         OR    A
@@ -4203,7 +4131,6 @@ L1254:
         LD    H,0
 L1255:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -4212,7 +4139,6 @@ L1255:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1256:
         LD    DE,4668
         OR    A
@@ -4308,7 +4234,6 @@ L1287:
         LD    HL,(05004H)
 L1288:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -4317,7 +4242,6 @@ L1288:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1289:
         LD    DE,4668
         OR    A
@@ -4504,7 +4428,6 @@ L1362:
         ADD   HL,DE
 L1363:
         POP   DE
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -4513,7 +4436,6 @@ L1363:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1364:
         LD    DE,4924
         OR    A
@@ -4861,7 +4783,6 @@ L1505:
         LD    HL,(05004H)
 L1506:
         LD    DE,(05002H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -4870,7 +4791,6 @@ L1506:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1507:
         LD    DE,4924
         OR    A
@@ -4969,7 +4889,6 @@ L1539:
         LD    H,0
 L1540:
         LD    DE,(05004H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -4978,7 +4897,6 @@ L1540:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1541:
         LD    DE,4668
         OR    A
@@ -5037,17 +4955,12 @@ L1560:
 L1561:
         LD    HL,(05004H)
 L1562:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
         LD    A,B
-        POP   BC
+        LD    H,0
 L1563:
         LD    A,20
 L1564:
@@ -5073,17 +4986,11 @@ L1571:
 L1572:
         LD    HL,(05004H)
 L1573:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L1574:
         LD    DE,4668
         OR    A
@@ -5105,17 +5012,11 @@ L1581:
 L1582:
         LD    HL,(05004H)
 L1583:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L1584:
         LD    DE,4648
         OR    A
@@ -5240,7 +5141,6 @@ L1637:
         LD    HL,(05004H)
 L1638:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -5249,7 +5149,6 @@ L1638:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1639:
         LD    DE,4924
         OR    A
@@ -5348,7 +5247,6 @@ L1671:
         LD    H,0
 L1672:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -5357,7 +5255,6 @@ L1672:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1673:
         LD    DE,4668
         OR    A
@@ -5453,7 +5350,6 @@ L1704:
         LD    HL,(05004H)
 L1705:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -5462,7 +5358,6 @@ L1705:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1706:
         LD    DE,4668
         OR    A
@@ -5619,7 +5514,6 @@ L1769:
         LD    HL,(05004H)
 L1770:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -5628,7 +5522,6 @@ L1770:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1771:
         LD    DE,4924
         OR    A
@@ -5727,7 +5620,6 @@ L1803:
         LD    H,0
 L1804:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -5736,7 +5628,6 @@ L1804:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1805:
         LD    DE,4668
         OR    A
@@ -5832,7 +5723,6 @@ L1836:
         LD    HL,(05004H)
 L1837:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -5841,7 +5731,6 @@ L1837:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1838:
         LD    DE,4668
         OR    A
@@ -6028,7 +5917,6 @@ L1911:
         ADD   HL,DE
 L1912:
         POP   DE
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -6037,7 +5925,6 @@ L1912:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L1913:
         LD    DE,4924
         OR    A
@@ -6385,7 +6272,6 @@ L2054:
         LD    HL,(05004H)
 L2055:
         LD    DE,(05002H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -6394,7 +6280,6 @@ L2055:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L2056:
         LD    DE,4924
         OR    A
@@ -6493,7 +6378,6 @@ L2088:
         LD    H,0
 L2089:
         LD    DE,(05004H)
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -6502,7 +6386,6 @@ L2089:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L2090:
         LD    DE,4668
         OR    A
@@ -6561,17 +6444,12 @@ L2109:
 L2110:
         LD    HL,(05004H)
 L2111:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
         LD    A,B
-        POP   BC
+        LD    H,0
 L2112:
         LD    A,20
 L2113:
@@ -6597,17 +6475,11 @@ L2120:
 L2121:
         LD    HL,(05004H)
 L2122:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L2123:
         LD    DE,4668
         OR    A
@@ -6629,17 +6501,11 @@ L2130:
 L2131:
         LD    HL,(05004H)
 L2132:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L2133:
         LD    DE,4648
         OR    A
@@ -6764,7 +6630,6 @@ L2186:
         LD    HL,4660
 L2187:
         LD    DE,812
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -6773,7 +6638,6 @@ L2187:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L2188:
         LD    DE,4924
         OR    A
@@ -6872,7 +6736,6 @@ L2220:
         LD    H,0
 L2221:
         LD    DE,4660
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -6881,7 +6744,6 @@ L2221:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L2222:
         LD    DE,4668
         OR    A
@@ -6977,7 +6839,6 @@ L2253:
         LD    HL,4660
 L2254:
         LD    DE,28
-        PUSH  BC
         LD    B,A
         LD    A,H
         OR    A,D
@@ -6986,7 +6847,6 @@ L2254:
         OR    A,E
         LD    L,A
         LD    A,B
-        POP   BC
 L2255:
         LD    DE,4668
         OR    A

@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Bug fix: error in z80 code when loading byte variable as second operand besides 16-bit accumulator; see test15.j line 73.
+//TODO Check z80 code for constant byte/var word.
+//TODO Check z80 code for var word/constant byte.
+//TODO Check z80 code for var byte/constant word.
 //TODO Add function (parameter less; no global/local variables).
 //TODO Add parameter to function.
 //TODO Add import
