@@ -5,7 +5,7 @@
    4 call writeLineAcc8
    5 ;test15.j(3)   
    6 ;test15.j(4)   // Possible operand types: constant, acc, var, final var, stack8, stack16.
-   7 ;test15.j(5)   // Possible data types: byt, word.
+   7 ;test15.j(5)   // Possible data types: byte, word.
    8 ;test15.j(6) 
    9 ;test15.j(7)   byte b1 = 0x1C;
   10 acc8= constant 28
@@ -91,7 +91,7 @@
   90 acc16= constant 999
   91 call writeLineAcc16
   92 ;test15.j(28)   //0001.0010.0011.0100 ^ 0000.0011.0010.1100 = 0001.0001.0001.1000
-  93 ;test15.j(29)   //constant byt/constant word
+  93 ;test15.j(29)   //constant byte/constant word
   94 ;test15.j(30)   if (0x1C & 0x1234 == 0x0014) println (7); else println (999); //0001.1100 & 0001.0010.0011.0100 = 0000.0000.0001.0100
   95 acc8= constant 28
   96 acc8ToAcc16
@@ -126,7 +126,7 @@
  125 br 130
  126 acc16= constant 999
  127 call writeLineAcc16
- 128 ;test15.j(33)   //constant word/constant byt
+ 128 ;test15.j(33)   //constant word/constant byte
  129 ;test15.j(34)   if (0x1234 & 0x1C == 0x0014) println (10); else println (999); //0001.0010.0011.0100 & 0001.1100 = 0000.0000.0001.0100
  130 acc16= constant 4660
  131 acc16And constant 28
@@ -235,7 +235,7 @@
  234 br 239
  235 acc16= constant 999
  236 call writeLineAcc16
- 237 ;test15.j(48)   //constant byt/acc word
+ 237 ;test15.j(48)   //constant byte/acc word
  238 ;test15.j(49)   if (0x1C & 0x1000 + 0x0234 == 0x0014) println (19); else println (999);
  239 acc8= constant 28
  240 acc16= constant 4096
@@ -273,7 +273,7 @@
  272 br 277
  273 acc16= constant 999
  274 call writeLineAcc16
- 275 ;test15.j(52)   //constant word/acc byt
+ 275 ;test15.j(52)   //constant word/acc byte
  276 ;test15.j(53)   if (0x1234 & 0x10 + 0x0C == 0x0014) println (22); else println (999);
  277 acc16= constant 4660
  278 acc8= constant 16
@@ -376,7 +376,7 @@
  375 br 380
  376 acc16= constant 999
  377 call writeLineAcc16
- 378 ;test15.j(67)   //constant byt/var word
+ 378 ;test15.j(67)   //constant byte/var word
  379 ;test15.j(68)   if (0x1C & w2 == 0x0014) println (31); else println (999);
  380 acc8= constant 28
  381 acc8ToAcc16
@@ -411,7 +411,7 @@
  410 br 415
  411 acc16= constant 999
  412 call writeLineAcc16
- 413 ;test15.j(71)   //constant word/var byt
+ 413 ;test15.j(71)   //constant word/var byte
  414 ;test15.j(72)   if (0x1234 & b1 == 0x0014) println (34); else println (999);
  415 acc16= constant 4660
  416 acc16And variable 0
@@ -508,7 +508,7 @@
  507 br 512
  508 acc16= constant 999
  509 call writeLineAcc16
- 510 ;test15.j(86)   //constant byt/final var word
+ 510 ;test15.j(86)   //constant byte/final var word
  511 ;test15.j(87)   if (0x1C & fw2 == 0x0014) println (43); else println (999);
  512 acc8= constant 28
  513 acc8ToAcc16
@@ -543,7 +543,7 @@
  542 br 547
  543 acc16= constant 999
  544 call writeLineAcc16
- 545 ;test15.j(90)   //constant word/final var byt
+ 545 ;test15.j(90)   //constant word/final var byte
  546 ;test15.j(91)   if (0x1234 & fb1 == 0x0014) println (46); else println (999);
  547 acc16= constant 4660
  548 acc16And constant 28
@@ -646,7 +646,7 @@
  645 br 650
  646 acc16= constant 999
  647 call writeLineAcc16
- 648 ;test15.j(105)   //acc byt/constant word
+ 648 ;test15.j(105)   //acc byte/constant word
  649 ;test15.j(106)   if (0x10 + 0x0C & 0x1234 == 0x0014) println (55); else println (999);
  650 acc8= constant 16
  651 acc8+ constant 12
@@ -684,7 +684,7 @@
  683 br 688
  684 acc16= constant 999
  685 call writeLineAcc16
- 686 ;test15.j(109)   //acc word/constant byt
+ 686 ;test15.j(109)   //acc word/constant byte
  687 ;test15.j(110)   if (0x1000 + 0x0234 & 0x1C == 0x0014) println (58); else println (999);
  688 acc16= constant 4096
  689 acc16+ constant 564
@@ -802,7 +802,7 @@
  801 br 806
  802 acc16= constant 999
  803 call writeLineAcc16
- 804 ;test15.j(124)   //acc byt/acc word
+ 804 ;test15.j(124)   //acc byte/acc word
  805 ;test15.j(125)   if (0x10 + 0x0C & 0x1000 + 0x0234 == 0x0014) println (67); else println (999);
  806 acc8= constant 16
  807 acc8+ constant 12
@@ -843,7 +843,7 @@
  842 br 847
  843 acc16= constant 999
  844 call writeLineAcc16
- 845 ;test15.j(128)   //acc word/acc byt
+ 845 ;test15.j(128)   //acc word/acc byte
  846 ;test15.j(129)   if (0x1000 + 0x0234 & 0x10 + 0x0C == 0x0014) println (70); else println (999);
  847 acc16= constant 4096
  848 acc16+ constant 564
@@ -955,7 +955,7 @@
  954 br 959
  955 acc16= constant 999
  956 call writeLineAcc16
- 957 ;test15.j(143)   //acc byt/var word
+ 957 ;test15.j(143)   //acc byte/var word
  958 ;test15.j(144)   if (0x10 + 0x0C & w2 == 0x0014) println (79); else println (999);
  959 acc8= constant 16
  960 acc8+ constant 12
@@ -993,7 +993,7 @@
  992 br 997
  993 acc16= constant 999
  994 call writeLineAcc16
- 995 ;test15.j(147)   //acc word/var byt
+ 995 ;test15.j(147)   //acc word/var byte
  996 ;test15.j(148)   if (0x1000 + 0x0234 & b1 == 0x0014) println (82); else println (999);
  997 acc16= constant 4096
  998 acc16+ constant 564
@@ -1099,7 +1099,7 @@
 1098 br 1103
 1099 acc16= constant 999
 1100 call writeLineAcc16
-1101 ;test15.j(162)   //acc byt/final var word
+1101 ;test15.j(162)   //acc byte/final var word
 1102 ;test15.j(163)   if (0x10 + 0x0C & fw2 == 0x0014) println (91); else println (999);
 1103 acc8= constant 16
 1104 acc8+ constant 12
@@ -1137,7 +1137,7 @@
 1136 br 1141
 1137 acc16= constant 999
 1138 call writeLineAcc16
-1139 ;test15.j(166)   //acc word/final var byt
+1139 ;test15.j(166)   //acc word/final var byte
 1140 ;test15.j(167)   if (0x1000 + 0x0234 & fb1 == 0x0014) println (94); else println (999);
 1141 acc16= constant 4096
 1142 acc16+ constant 564
@@ -1237,7 +1237,7 @@
 1236 br 1241
 1237 acc16= constant 999
 1238 call writeLineAcc16
-1239 ;test15.j(181)   //var byt/constant word
+1239 ;test15.j(181)   //var byte/constant word
 1240 ;test15.j(182)   if (b1 & 0x1234 == 0x0014) println (103); else println (999);
 1241 acc8= variable 0
 1242 acc8ToAcc16
@@ -1272,7 +1272,7 @@
 1271 br 1276
 1272 acc16= constant 999
 1273 call writeLineAcc16
-1274 ;test15.j(185)   //var word/constant byt
+1274 ;test15.j(185)   //var word/constant byte
 1275 ;test15.j(186)   if (w2 & 0x1C == 0x0014) println (106); else println (999);
 1276 acc16= variable 4
 1277 acc16And constant 28
@@ -1381,7 +1381,7 @@
 1380 br 1385
 1381 acc16= constant 999
 1382 call writeLineAcc16
-1383 ;test15.j(200)   //var byt/acc word
+1383 ;test15.j(200)   //var byte/acc word
 1384 ;test15.j(201)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (115); else println (999);
 1385 acc8= variable 0
 1386 acc16= constant 4096
@@ -1419,7 +1419,7 @@
 1418 br 1423
 1419 acc16= constant 999
 1420 call writeLineAcc16
-1421 ;test15.j(204)   //var word/acc byt
+1421 ;test15.j(204)   //var word/acc byte
 1422 ;test15.j(205)   if (w2 & 0x10 + 0x0C == 0x0014) println (118); else println (999);
 1423 acc16= variable 4
 1424 acc8= constant 16
@@ -1522,7 +1522,7 @@
 1521 br 1526
 1522 acc16= constant 999
 1523 call writeLineAcc16
-1524 ;test15.j(219)   //var byt/var word
+1524 ;test15.j(219)   //var byte/var word
 1525 ;test15.j(220)   if (b1 & w2 == 0x0014) println (127); else println (999);
 1526 acc8= variable 0
 1527 acc8ToAcc16
@@ -1557,7 +1557,7 @@
 1556 br 1561
 1557 acc16= constant 999
 1558 call writeLineAcc16
-1559 ;test15.j(223)   //var word/var byt
+1559 ;test15.j(223)   //var word/var byte
 1560 ;test15.j(224)   if (w2 & b1 == 0x0014) println (130); else println (999);
 1561 acc16= variable 4
 1562 acc16And variable 0
@@ -1654,7 +1654,7 @@
 1653 br 1658
 1654 acc16= constant 999
 1655 call writeLineAcc16
-1656 ;test15.j(238)   //var byt/final var word
+1656 ;test15.j(238)   //var byte/final var word
 1657 ;test15.j(239)   if (b1 & fw2 == 0x0014) println (139); else println (999);
 1658 acc8= variable 0
 1659 acc8ToAcc16
@@ -1689,7 +1689,7 @@
 1688 br 1693
 1689 acc16= constant 999
 1690 call writeLineAcc16
-1691 ;test15.j(242)   //var word/final var byt
+1691 ;test15.j(242)   //var word/final var byte
 1692 ;test15.j(243)   if (w2 & fb1 == 0x0014) println (142); else println (999);
 1693 acc16= variable 4
 1694 acc16And constant 28
@@ -1786,7 +1786,7 @@
 1785 br 1790
 1786 acc16= constant 999
 1787 call writeLineAcc16
-1788 ;test15.j(257)   //final var byt/constant word
+1788 ;test15.j(257)   //final var byte/constant word
 1789 ;test15.j(258)   if (b1 & 0x1234 == 0x0014) println (151); else println (999);
 1790 acc8= variable 0
 1791 acc8ToAcc16
@@ -1821,7 +1821,7 @@
 1820 br 1825
 1821 acc16= constant 999
 1822 call writeLineAcc16
-1823 ;test15.j(261)   //final var word/constant byt
+1823 ;test15.j(261)   //final var word/constant byte
 1824 ;test15.j(262)   if (w2 & 0x1C == 0x0014) println (154); else println (999);
 1825 acc16= variable 4
 1826 acc16And constant 28
@@ -1930,7 +1930,7 @@
 1929 br 1934
 1930 acc16= constant 999
 1931 call writeLineAcc16
-1932 ;test15.j(276)   //final var byt/acc word
+1932 ;test15.j(276)   //final var byte/acc word
 1933 ;test15.j(277)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (163); else println (999);
 1934 acc8= variable 0
 1935 acc16= constant 4096
@@ -1968,7 +1968,7 @@
 1967 br 1972
 1968 acc16= constant 999
 1969 call writeLineAcc16
-1970 ;test15.j(280)   //final var word/acc byt
+1970 ;test15.j(280)   //final var word/acc byte
 1971 ;test15.j(281)   if (w2 & 0x10 + 0x0C == 0x0014) println (166); else println (999);
 1972 acc16= variable 4
 1973 acc8= constant 16
@@ -2071,7 +2071,7 @@
 2070 br 2075
 2071 acc16= constant 999
 2072 call writeLineAcc16
-2073 ;test15.j(295)   //final var byt/var word
+2073 ;test15.j(295)   //final var byte/var word
 2074 ;test15.j(296)   if (b1 & w2 == 0x0014) println (175); else println (999);
 2075 acc8= variable 0
 2076 acc8ToAcc16
@@ -2106,7 +2106,7 @@
 2105 br 2110
 2106 acc16= constant 999
 2107 call writeLineAcc16
-2108 ;test15.j(299)   //final var word/var byt
+2108 ;test15.j(299)   //final var word/var byte
 2109 ;test15.j(300)   if (w2 & b1 == 0x0014) println (178); else println (999);
 2110 acc16= variable 4
 2111 acc16And variable 0
@@ -2203,7 +2203,7 @@
 2202 br 2207
 2203 acc16= constant 999
 2204 call writeLineAcc16
-2205 ;test15.j(314)   //final var byt/final var word
+2205 ;test15.j(314)   //final var byte/final var word
 2206 ;test15.j(315)   if (fb1 & fw2 == 0x0014) println (187); else println (999);
 2207 acc8= constant 28
 2208 acc8ToAcc16
@@ -2238,7 +2238,7 @@
 2237 br 2242
 2238 acc16= constant 999
 2239 call writeLineAcc16
-2240 ;test15.j(318)   //final var word/final var byt
+2240 ;test15.j(318)   //final var word/final var byte
 2241 ;test15.j(319)   if (fw2 & fb1 == 0x0014) println (190); else println (999);
 2242 acc16= constant 4660
 2243 acc16And constant 28

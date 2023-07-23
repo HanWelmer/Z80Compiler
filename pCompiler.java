@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Check z80 code for constant byte/var word.
-//TODO Check z80 code for var word/constant byte.
-//TODO Check z80 code for var byte/constant word.
 //TODO Add function (parameter less; no global/local variables).
 //TODO Add parameter to function.
 //TODO Add import

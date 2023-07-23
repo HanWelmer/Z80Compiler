@@ -112,7 +112,7 @@ class LEDTest {
     output(WDTCR, 0x00);  //disable writing to PCR
                           //XOR     A,A         ;disable writing to PCR
                           //OUT0    (WDTCR),A
-    wait(500);            //wait 500 msec
+    sleep(500);           //wait 500 msec
   }
 
 /*
@@ -142,66 +142,5 @@ TOGGLE:     PUSH    AF
             OUT0    (WDTCR),A
             POP     AF
             RET
-;WAIT
-;Wait DE * 1 msec @ 18,432 MHz
-WAIT:       PUSH    DE
-            PUSH    AF
-WAIT1:      CALL    WAIT1M     ;Wait 1 msec
-            DEC     DE
-            LD      A,D
-            OR      A,E
-            JR      NZ,WAIT1
-            POP     AF
-            POP     DE
-            RET
-;WAIT1M
-;wait 1 msec at 18,432 MHz with no wait states
-;The routine requires 56+n*22 states, so that with n=834
-;28  clock cycles remain left.   Cycles, States (cumulative)
-WAIT1M:     PUSH    HL          ;5      11 (11)
-                                ;       3 opcode
-                                ;       3 mem write
-                                ;       1 inc SP
-                                ;       3 mem write
-                                ;       1 inc SP
-            PUSH    AF          ;5      11 (22)
-                                ;       3 opcode
-                                ;       3 mem write
-                                ;       1 inc SP
-                                ;       3 mem write
-                                ;       1 inc SP
-            LD      HL, 834     ;3      9 (31)
-                                ;       3 opcode
-                                ;       3 mem read
-                                ;       3 mem read
-WAIT1M2:    DEC     HL          ;2      4 (31+n*4)
-                                ;       3 opcode
-                                ;       1 execute
-            LD	A,H			    ;2      6 (31+n*10)
-                                ;       3 opcode
-                                ;       3 execute
-            OR	A,L			    ;2      4 (31+n*14)
-                                ;       3 opcode
-                                ;       1 execute
-            JR	NZ,WAIT1M2	    ;4      8 (31+n*22) if NZ
-                                ;       3 opcode
-                                ;       3 mem read 
-                                ;       1 execute
-                                ;       1 execute
-                                ;2      6 (29+n*22) if not NZ
-                                ;       3 opcode
-                                ;       3 mem read
-            POP	AF			    ;3      9 (38+n*22)
-                                ;       3 opcode
-                                ;       3 mem read
-                                ;       3 mem read
-            POP	HL			    ;3      9 (47+n*22)
-                                ;       3 opcode   
-                                ;       3 mem read
-                                ;       3 mem read
-            RET				    ;3      9 (56+n*22)
-                                ;       3 opcode
-                                ;       3 mem read
-                                ;       3 mem read
   */
 }

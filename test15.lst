@@ -778,7 +778,7 @@
 21D3             L6:
 21D3                     ;;test15.j(4)   // Possible operand types: constant, acc, var, final var, stack8, stack16.
 21D3             L7:
-21D3                     ;;test15.j(5)   // Possible data types: byt, word.
+21D3                     ;;test15.j(5)   // Possible data types: byte, word.
 21D3             L8:
 21D3                     ;;test15.j(6) 
 21D3             L9:
@@ -984,7 +984,7 @@
 22A1             L92:
 22A1                     ;;test15.j(28)   //0001.0010.0011.0100 ^ 0000.0011.0010.1100 = 0001.0001.0001.1000
 22A1             L93:
-22A1                     ;;test15.j(29)   //constant byt/constant word
+22A1                     ;;test15.j(29)   //constant byte/constant word
 22A1             L94:
 22A1                     ;;test15.j(30)   if (0x1C & 0x1234 == 0x0014) println (7); else println (999); //0001.1100 & 0001.0010.0011.0100 = 0000.0000.0001.0100
 22A1             L95:
@@ -1093,7 +1093,7 @@
 231A             L127:
 231A CD 96 21            CALL  writeLineHL
 231D             L128:
-231D                     ;;test15.j(33)   //constant word/constant byt
+231D                     ;;test15.j(33)   //constant word/constant byte
 231D             L129:
 231D                     ;;test15.j(34)   if (0x1234 & 0x1C == 0x0014) println (10); else println (999); //0001.0010.0011.0100 & 0001.1100 = 0000.0000.0001.0100
 231D             L130:
@@ -1393,7 +1393,7 @@
 2469             L236:
 2469 CD 96 21            CALL  writeLineHL
 246C             L237:
-246C                     ;;test15.j(48)   //constant byt/acc word
+246C                     ;;test15.j(48)   //constant byte/acc word
 246C             L238:
 246C                     ;;test15.j(49)   if (0x1C & 0x1000 + 0x0234 == 0x0014) println (19); else println (999);
 246C             L239:
@@ -1484,7 +1484,7 @@
 24D4             L274:
 24D4 CD 96 21            CALL  writeLineHL
 24D7             L275:
-24D7                     ;;test15.j(52)   //constant word/acc byt
+24D7                     ;;test15.j(52)   //constant word/acc byte
 24D7             L276:
 24D7                     ;;test15.j(53)   if (0x1234 & 0x10 + 0x0C == 0x0014) println (22); else println (999);
 24D7             L277:
@@ -1742,7 +1742,7 @@
 25FD             L377:
 25FD CD 96 21            CALL  writeLineHL
 2600             L378:
-2600                     ;;test15.j(67)   //constant byt/var word
+2600                     ;;test15.j(67)   //constant byte/var word
 2600             L379:
 2600                     ;;test15.j(68)   if (0x1C & w2 == 0x0014) println (31); else println (999);
 2600             L380:
@@ -1851,7 +1851,7 @@
 267C             L412:
 267C CD 96 21            CALL  writeLineHL
 267F             L413:
-267F                     ;;test15.j(71)   //constant word/var byt
+267F                     ;;test15.j(71)   //constant word/var byte
 267F             L414:
 267F                     ;;test15.j(72)   if (0x1234 & b1 == 0x0014) println (34); else println (999);
 267F             L415:
@@ -2100,7 +2100,7 @@
 279C             L509:
 279C CD 96 21            CALL  writeLineHL
 279F             L510:
-279F                     ;;test15.j(86)   //constant byt/final var word
+279F                     ;;test15.j(86)   //constant byte/final var word
 279F             L511:
 279F                     ;;test15.j(87)   if (0x1C & fw2 == 0x0014) println (43); else println (999);
 279F             L512:
@@ -2209,7 +2209,7 @@
 2818             L544:
 2818 CD 96 21            CALL  writeLineHL
 281B             L545:
-281B                     ;;test15.j(90)   //constant word/final var byt
+281B                     ;;test15.j(90)   //constant word/final var byte
 281B             L546:
 281B                     ;;test15.j(91)   if (0x1234 & fb1 == 0x0014) println (46); else println (999);
 281B             L547:
@@ -2488,7 +2488,7 @@
 2958             L647:
 2958 CD 96 21            CALL  writeLineHL
 295B             L648:
-295B                     ;;test15.j(105)   //acc byt/constant word
+295B                     ;;test15.j(105)   //acc byte/constant word
 295B             L649:
 295B                     ;;test15.j(106)   if (0x10 + 0x0C & 0x1234 == 0x0014) println (55); else println (999);
 295B             L650:
@@ -2603,7 +2603,7 @@
 29DA             L685:
 29DA CD 96 21            CALL  writeLineHL
 29DD             L686:
-29DD                     ;;test15.j(109)   //acc word/constant byt
+29DD                     ;;test15.j(109)   //acc word/constant byte
 29DD             L687:
 29DD                     ;;test15.j(110)   if (0x1000 + 0x0234 & 0x1C == 0x0014) println (58); else println (999);
 29DD             L688:
@@ -2927,7 +2927,7 @@
 2B47             L803:
 2B47 CD 96 21            CALL  writeLineHL
 2B4A             L804:
-2B4A                     ;;test15.j(124)   //acc byt/acc word
+2B4A                     ;;test15.j(124)   //acc byte/acc word
 2B4A             L805:
 2B4A                     ;;test15.j(125)   if (0x10 + 0x0C & 0x1000 + 0x0234 == 0x0014) println (67); else println (999);
 2B4A             L806:
@@ -3024,7 +3024,7 @@
 2BB8             L844:
 2BB8 CD 96 21            CALL  writeLineHL
 2BBB             L845:
-2BBB                     ;;test15.j(128)   //acc word/acc byt
+2BBB                     ;;test15.j(128)   //acc word/acc byte
 2BBB             L846:
 2BBB                     ;;test15.j(129)   if (0x1000 + 0x0234 & 0x10 + 0x0C == 0x0014) println (70); else println (999);
 2BBB             L847:
@@ -3306,7 +3306,7 @@
 2CFF             L956:
 2CFF CD 96 21            CALL  writeLineHL
 2D02             L957:
-2D02                     ;;test15.j(143)   //acc byt/var word
+2D02                     ;;test15.j(143)   //acc byte/var word
 2D02             L958:
 2D02                     ;;test15.j(144)   if (0x10 + 0x0C & w2 == 0x0014) println (79); else println (999);
 2D02             L959:
@@ -3421,7 +3421,7 @@
 2D84             L994:
 2D84 CD 96 21            CALL  writeLineHL
 2D87             L995:
-2D87                     ;;test15.j(147)   //acc word/var byt
+2D87                     ;;test15.j(147)   //acc word/var byte
 2D87             L996:
 2D87                     ;;test15.j(148)   if (0x1000 + 0x0234 & b1 == 0x0014) println (82); else println (999);
 2D87             L997:
@@ -3694,7 +3694,7 @@
 2EC2             L1100:
 2EC2 CD 96 21            CALL  writeLineHL
 2EC5             L1101:
-2EC5                     ;;test15.j(162)   //acc byt/final var word
+2EC5                     ;;test15.j(162)   //acc byte/final var word
 2EC5             L1102:
 2EC5                     ;;test15.j(163)   if (0x10 + 0x0C & fw2 == 0x0014) println (91); else println (999);
 2EC5             L1103:
@@ -3809,7 +3809,7 @@
 2F44             L1138:
 2F44 CD 96 21            CALL  writeLineHL
 2F47             L1139:
-2F47                     ;;test15.j(166)   //acc word/final var byt
+2F47                     ;;test15.j(166)   //acc word/final var byte
 2F47             L1140:
 2F47                     ;;test15.j(167)   if (0x1000 + 0x0234 & fb1 == 0x0014) println (94); else println (999);
 2F47             L1141:
@@ -4082,7 +4082,7 @@
 3081             L1238:
 3081 CD 96 21            CALL  writeLineHL
 3084             L1239:
-3084                     ;;test15.j(181)   //var byt/constant word
+3084                     ;;test15.j(181)   //var byte/constant word
 3084             L1240:
 3084                     ;;test15.j(182)   if (b1 & 0x1234 == 0x0014) println (103); else println (999);
 3084             L1241:
@@ -4191,7 +4191,7 @@
 3100             L1273:
 3100 CD 96 21            CALL  writeLineHL
 3103             L1274:
-3103                     ;;test15.j(185)   //var word/constant byt
+3103                     ;;test15.j(185)   //var word/constant byte
 3103             L1275:
 3103                     ;;test15.j(186)   if (w2 & 0x1C == 0x0014) println (106); else println (999);
 3103             L1276:
@@ -4491,7 +4491,7 @@
 3252             L1382:
 3252 CD 96 21            CALL  writeLineHL
 3255             L1383:
-3255                     ;;test15.j(200)   //var byt/acc word
+3255                     ;;test15.j(200)   //var byte/acc word
 3255             L1384:
 3255                     ;;test15.j(201)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (115); else println (999);
 3255             L1385:
@@ -4582,7 +4582,7 @@
 32C0             L1420:
 32C0 CD 96 21            CALL  writeLineHL
 32C3             L1421:
-32C3                     ;;test15.j(204)   //var word/acc byt
+32C3                     ;;test15.j(204)   //var word/acc byte
 32C3             L1422:
 32C3                     ;;test15.j(205)   if (w2 & 0x10 + 0x0C == 0x0014) println (118); else println (999);
 32C3             L1423:
@@ -4840,7 +4840,7 @@
 33EC             L1523:
 33EC CD 96 21            CALL  writeLineHL
 33EF             L1524:
-33EF                     ;;test15.j(219)   //var byt/var word
+33EF                     ;;test15.j(219)   //var byte/var word
 33EF             L1525:
 33EF                     ;;test15.j(220)   if (b1 & w2 == 0x0014) println (127); else println (999);
 33EF             L1526:
@@ -4949,7 +4949,7 @@
 346E             L1558:
 346E CD 96 21            CALL  writeLineHL
 3471             L1559:
-3471                     ;;test15.j(223)   //var word/var byt
+3471                     ;;test15.j(223)   //var word/var byte
 3471             L1560:
 3471                     ;;test15.j(224)   if (w2 & b1 == 0x0014) println (130); else println (999);
 3471             L1561:
@@ -5198,7 +5198,7 @@
 3591             L1655:
 3591 CD 96 21            CALL  writeLineHL
 3594             L1656:
-3594                     ;;test15.j(238)   //var byt/final var word
+3594                     ;;test15.j(238)   //var byte/final var word
 3594             L1657:
 3594                     ;;test15.j(239)   if (b1 & fw2 == 0x0014) println (139); else println (999);
 3594             L1658:
@@ -5307,7 +5307,7 @@
 3610             L1690:
 3610 CD 96 21            CALL  writeLineHL
 3613             L1691:
-3613                     ;;test15.j(242)   //var word/final var byt
+3613                     ;;test15.j(242)   //var word/final var byte
 3613             L1692:
 3613                     ;;test15.j(243)   if (w2 & fb1 == 0x0014) println (142); else println (999);
 3613             L1693:
@@ -5571,7 +5571,7 @@
 3741             L1787:
 3741 CD 96 21            CALL  writeLineHL
 3744             L1788:
-3744                     ;;test15.j(257)   //final var byt/constant word
+3744                     ;;test15.j(257)   //final var byte/constant word
 3744             L1789:
 3744                     ;;test15.j(258)   if (b1 & 0x1234 == 0x0014) println (151); else println (999);
 3744             L1790:
@@ -5680,7 +5680,7 @@
 37C0             L1822:
 37C0 CD 96 21            CALL  writeLineHL
 37C3             L1823:
-37C3                     ;;test15.j(261)   //final var word/constant byt
+37C3                     ;;test15.j(261)   //final var word/constant byte
 37C3             L1824:
 37C3                     ;;test15.j(262)   if (w2 & 0x1C == 0x0014) println (154); else println (999);
 37C3             L1825:
@@ -5980,7 +5980,7 @@
 3912             L1931:
 3912 CD 96 21            CALL  writeLineHL
 3915             L1932:
-3915                     ;;test15.j(276)   //final var byt/acc word
+3915                     ;;test15.j(276)   //final var byte/acc word
 3915             L1933:
 3915                     ;;test15.j(277)   if (b1 & 0x1000 + 0x0234 == 0x0014) println (163); else println (999);
 3915             L1934:
@@ -6071,7 +6071,7 @@
 3980             L1969:
 3980 CD 96 21            CALL  writeLineHL
 3983             L1970:
-3983                     ;;test15.j(280)   //final var word/acc byt
+3983                     ;;test15.j(280)   //final var word/acc byte
 3983             L1971:
 3983                     ;;test15.j(281)   if (w2 & 0x10 + 0x0C == 0x0014) println (166); else println (999);
 3983             L1972:
@@ -6329,7 +6329,7 @@
 3AAC             L2072:
 3AAC CD 96 21            CALL  writeLineHL
 3AAF             L2073:
-3AAF                     ;;test15.j(295)   //final var byt/var word
+3AAF                     ;;test15.j(295)   //final var byte/var word
 3AAF             L2074:
 3AAF                     ;;test15.j(296)   if (b1 & w2 == 0x0014) println (175); else println (999);
 3AAF             L2075:
@@ -6438,7 +6438,7 @@
 3B2E             L2107:
 3B2E CD 96 21            CALL  writeLineHL
 3B31             L2108:
-3B31                     ;;test15.j(299)   //final var word/var byt
+3B31                     ;;test15.j(299)   //final var word/var byte
 3B31             L2109:
 3B31                     ;;test15.j(300)   if (w2 & b1 == 0x0014) println (178); else println (999);
 3B31             L2110:
@@ -6687,7 +6687,7 @@
 3C4E             L2204:
 3C4E CD 96 21            CALL  writeLineHL
 3C51             L2205:
-3C51                     ;;test15.j(314)   //final var byt/final var word
+3C51                     ;;test15.j(314)   //final var byte/final var word
 3C51             L2206:
 3C51                     ;;test15.j(315)   if (fb1 & fw2 == 0x0014) println (187); else println (999);
 3C51             L2207:
@@ -6796,7 +6796,7 @@
 3CCA             L2239:
 3CCA CD 96 21            CALL  writeLineHL
 3CCD             L2240:
-3CCD                     ;;test15.j(318)   //final var word/final var byt
+3CCD                     ;;test15.j(318)   //final var word/final var byte
 3CCD             L2241:
 3CCD                     ;;test15.j(319)   if (fw2 & fb1 == 0x0014) println (190); else println (999);
 3CCD             L2242:
