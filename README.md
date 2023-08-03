@@ -1,5 +1,6 @@
 # Z80Compiler
-Java command line application that compiles Java-like programs to Z80 assembler and binary.
+Java command line application that compiles miniJava programs to Z80 assembler and binary.
+See syntax.md for a description of the miniJava syntax and semantics.
 
 Development:
 All you need is Java JDK. More is better.
