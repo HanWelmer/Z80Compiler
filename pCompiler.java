@@ -4,9 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add function (parameter less; no global/local variables).
-//TODO Add parameter to function.
-//TODO Add import
+//TODO implement classDeclaration
+//TODO implement typeDeclaration
+//TODO implement compilationUnit
+//TODO implement packageDeclaration
+//TODO implement importDeclaration
+//TODO implement void methodDeclaration (parameter less; no global/local variables).
+//TODO implement void methodDeclaration (no global/local variables).
 //TODO Add global variable to function.
 //TODO Add local variable to function.
 //TODO Add 'static' qualifier to global variables.
@@ -24,91 +28,126 @@ import java.util.Stack;
 //TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 
-/**
- * Compiler for the miniJava programming language.
+/* comments to be distributed over the parser methods.
+ *
+ * compilationUnit                      = packageDeclaration? { importDeclaration } { typeDeclaration }.
+ * packageDeclaration                   = "package" packageName ";".
+ * importDeclaration                    = "import" packageName "." importType ";".
+ * importType                           = identifier | "*".
+ * typeDeclaration                      = classDeclaration.
+ * classDeclaration                     = classModifier? "class" identifier classBody.
+ * classModifier                        = "public".
+ * classBody                            = "{" { classBodyDeclaration } "}".
+ * classBodyDeclaration                 = classMemberDeclaration | staticInitializer.
+ * classMemberDeclaration               = fieldDeclaration | methodDeclaration.
+ * staticInitializer                    = "static" block.
+ * fieldDeclaration                     = { fieldModifier } type variableDeclarators ";".
+ * fieldModifier                        = "public" | "private" | "final".
+ * methodDeclaration                    = methodHeader methodBody.
+ * methodHeader                         = { methodModifier } resultType methodDeclarator.
+ * methodModifier                       = "public" | "private".
+ * resultType                           = type | "void".
+ * methodDeclarator                     = identifier "(" formalParameterList? ")".
+ * formalParameterList                  = formalParameter {"," formalParameter}.
+ * formalParameter                      = type variableDeclaratorId.
+ * methodBody                           = block | ";".
+ * block                                = "{" { blockStatement } "}".
+ * blockStatement                       = localVariableDeclarationStatement | statement.
+ * localVariableDeclarationStatement    = localVariableDeclaration ";".
+ * localVariableDeclaration             = type variableDeclarators.
+ * type                                 = primitiveType.
+ * primitiveType                        = numericType.
+ * numericType                          = integralType.
+ * integralType                         = "byte" | "word".
+ * variableDeclarators                  = variableDeclarator {"," variableDeclarator}.
+ * variableDeclarator                   = variableDeclaratorId ["=" variableInitializer].
+ * variableDeclaratorId                 = identifier.
+ * variableInitializer                  = expression.
+ * statement                            = statementExceptIf | ifStatement
+ * statementExceptIf                    = statementWithoutTrailingSubstatement | whileStatement | forStatement.
+ * statementWithoutTrailingSubstatement = block | emptyStatement | expressionStatement | doStatement | returnStatement.
+ * emptyStatement                       = ";".
+ * expressionStatement                  = statementExpression ";".
+ * statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.
+ * preincrementExpression               = "++" unaryExpression.
+ * predecrementExpression               = "--" unaryExpression.
+ * doStatement                          = "do" statement "while" "(" expression ")" ";".
+ * returnStatement                      = "return" expression? ";".
+ * whileStatement                       = "while" "(" expression ")" statementExceptIf.
+ * forStatement                         = "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.
+ * forInit                              = statementExpressionList | localVariableDeclaration.
+ * forUpdate                            = statementExpressionList.
+ * statementExpressionList              = statementExpression {"," statementExpression}.
+ * ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].
+ * constantExpression                   = expression.
+ * expression                           = assignmentExpression.
+ * assignmentExpression                 = assignment | conditionalExpression.
+ * assignment                           = leftHandSide assignmentOperator assignmentExpression.
+ * leftHandSide                         = expressionName.
+ * assignmentOperator                   = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=".
+ * conditionalExpression                = conditionalOrExpression [ "?" expression ":" conditionalExpression ].
+ * conditionalOrExpression              = conditionalAndExpression { "||" conditionalAndExpression }.
+ * conditionalAndExpression             = inclusiveOrExpression { "&&" inclusiveOrExpression }.
+ * inclusiveOrExpression                = exclusiveOrExpression { "|" exclusiveOrExpression }.
+ * exclusiveOrExpression                = andExpression { "^" andExpression }.
+ * andExpression                        = equalityExpression { "&" equalityExpression }.
+ * equalityExpression                   = relationalExpression [ equalityOperator equalityExpression ].
+ * equalityOperator                     = "==" | "!=".
+ * relationalExpression                 = shiftExpression [ relationalOperator shiftExpression ].
+ * relationalOperator                   = ">" | ">=" | "<" | "<=".
+ * shiftExpression                      = additiveExpression [ shiftOperator additiveExpression].
+ * shiftOperator                        = "<<" | ">>" | ">>>".
+ * additiveExpression                   = multiplicativeExpression [ additiveOperator multiplicativeExpression ].
+ * additiveOperator                     = "+" | "-".
+ * multiplicativeExpression             = unaryExpression [ multiplicativeOperator unaryExpression ].
+ * multiplicativeOperator               = "*" | "/" | "%".
+ * unaryExpression                      = {unaryOperator} postfixExpression.
+ * unaryOperator                        = "++" | "--" | "+" | "-" | "~" | "!" | castPrefix.
+ * castPrefix                           = "(" primitiveType ")".
+ * postfixExpression                    = postincrementExpression | postdecrementExpression | primary | expressionName.
+ * postincrementExpression              = postfixExpression "++".
+ * postdecrementExpression              = postfixExpression "--".
+ * primary                              = primaryNoNewArray.
+ * primaryNoNewArray                    = literal | "this" | "(" expression ")" | fieldAccess | methodInvocation.
+ * fieldAccess                          = primary "." identifier.
+ * methodInvocation                     = methodName "(" argumentList? ")".
+ * argumentList                         = expression { "," expression }.
+ * packageName                          = identifier { "." identifier }.
+ * expressionName                       = [ ambiguousName "." ] identifier.
+ * methodName                           = [ ambiguousName "." ] identifier.
+ * ambiguousName                        = identifier { "." identifier }.
+ * literal                              = integerLiteral | characterLiteral | stringLiteral.
+ * integerLiteral                       = decimalIntegerLiteral | hexIntegerLiteral | octalIntegerLiteral.
+ * decimalIntegerLiteral                = decimalNumeral.
+ * hexIntegerLiteral                    = hexNumeral.
+ * octalIntegerLiteral                  = octalNumeral.
+ * decimalNumeral                       = "0" | nonZeroDigit { digit }.
+ * digit                                = "0" | nonZeroDigit.
+ * nonZeroDigit                         = "(1-9)".
+ * hexNumeral                           = "0x" hexDigit { hexDigit } | "0X" hexDigit { hexDigit }.
+ * hexDigit                             = "(0-9a-fAF)".
+ * octalNumeral                         = "0" octalDigit { octalDigit }.
+ * octalDigit                           = "(0-7)".
+ * characterLiteral                     = "'" singleCharacter "'" | "'" escapeSequence "'".
+ * singleCharacter                      = inputCharacter - ("'" | "\" ).
+ * stringLiteral                        = '"' { stringCharacter } '"'.
+ * stringCharacter                      = escapeSequence | inputCharacter - ( '"' or '\').
+ * escapeSequence                       = "\\" | "\'" | "\"" | "\n" | "\r" | "\t" | "\b" | "\f" | "\a".
+ * keyword                              = "abstract" | "boolean" | "break" | "byte" | "case" | "catch" | "char" | "class" | "const" | "continue"
+                                       | "default" | "do" | "double" | "else" | "extends" | "final" | "finally" | "float" | "for" | "goto"
+                                       | "if" | "implements" | "import" | "instanceof" | "int" | "interface" | "long" | "native" | "new"
+                                       | "package" | "private" | "protected" | "public" | "return" | "short" | "static" | "super" | "switch" | "synchronized"
+                                       | "this" | "throw" | "throws" | "transient" | "try" | "void" | "volatile" | "while".
+ **/
+
+ /*
+ * pCompiler; main class for the recursive descent miniJava compiler.
+ *
  * Inspired by the book Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks
  * and of course Java as developed by Sun.
  *
- * program            = "class" identifier "{" statements "}".
- * identifier         = "(_A-Za-z)(_A-Za-z0-9)+".
- * statements         = (statement)*.
- * statement          = assignment | printlnStatement | ifStatement | forStatement | doStatement | whileStatement | outputStatement | sleepStatement.
- * assignment         = [declaration] update ";".
- * declaration        = [qualifier] datatype.
- * qualifier          = "final".
- * datatype           = "byte" | "word" | "String".
- * update             = identifier++ | identifier-- | identifier "=" expression.
- * printlnStatement   = "println" "(" expression ")" ";".
- * ifStatement        = "if" "(" comparison ")" block [ "else" block].
- * forStatement       = "for" "(" initialization ";" comparison ";" update ")" block.
- * initialization     = "word" identifier "=" expression.
- * doStatement        = "do" block "while" "(" comparison ")" ";".
- * whileStatement     = "while" "(" comparison ")" block.
- * outputStatement    = "output" "(" constantExpression "," expression ")".
- * sleepStatement     = "sleep" "(" expression ")".
- * block              = statement | "{" statements "}".
- * comparison         = expression relop expression.
- * expression         = xorTerm {bitwiseOrOp xorTerm}.
- * xorTerm            = andTerm {bitwiseXorOp andTerm}
- ' andTerm            = addTerm {bitwiseAndOp addTerm}.
- * addTerm            = term {addop term}.
- * term               = factor {mulop factor}.
- * factor             = identifier | constant | stringConstant | "read" | inputFactor | "(" expression ")".
- * inputFactor        = "input" "(" constantExpression ")".
- * constantExpression = constant | {addop constant}.
- * or                 = "|".
- * xor                = "^".
- * and                = "&".
- * addop              = "+" | "-".
- * mulop              = "*" | "/".
- * relop              = "==" | "!=" | ">" | ">=" | "<" | "<=".
- * constant           = decimalConstant | hexConstant.
- * decimalConstant    = "(0-9)*".
- * hexConstant        = "(0-9)x(A-F0-()*".
- * stringConstant     = "\"" ((char - ["\"\\"]) | ("\\" ["\\\'\"nrtbfa"]))* "\"".
- *
- * Java style end of line comment.
- * Java style multi-line comment.
- * Multi-line comment may contain end of line comment.
- * Multi-line comment may not be nested.
- * A variable must be declared before it is used.
- * A declaration is valid within the scope within which it is defined (class, for statement, statement block) and it's sub-scopes.
- * The name of a valid declaration may only be declared once within its scope (overloading is not supported).
- * A variable declaration must include the datatype.
- * A variable of type byte takes one byte (8 bit).
- * A variable of type word takes two bytes (16 bit).
- * A variable of type byte has a range from 0 to 255.
- * A variable of type word has a range from 0 to 65535.
- * An expression is initially evaluated in the type of the first (left most) factor.
- * A constant has a type byte if the value is between 0 and 255.
- * A byte expression is promoted to a word expression if a right-hand factor requires so.
- * The read() function returns a word value.
- * In an addop, mulop or relop the type of the lefthand operand and the right hand operand must be the same.
- * The value of the lefthand operand of an addop, mulop or relop is changed from byte to word if the type of the righthand operand is a word.
- * In an assignment the value of a byte expression can be assigned to a word variable.
- * In an assignment the value of a word expression, assigned to a byte variable, will be truncated.
- * In an assignment a byte or word variable can be a (mutable) variable or a final variable (constant).
- * In an assignment a string variable is always implicitly a final variable (constant).
- * A string constant is enclosed between double quotes.
- * A string constant consists of a sequence of characters and/or escape sequences.
- * All ASCII printable characters are allowed, except \ (backslash) and " (double quote).
- * In a string constant the \ symbol is the escape token. Supported characters in escape sequences are:
- * - \\ backslash
- * - \' single quote
- * - \" double quote
- * - \n new line
- * - \r carriage return
- * - \t horizontal tab
- * - \b backspace
- * - \f form feed/new page
- * - \a alert/bell
- * The println statement makes a distinction between a string expression and an algorithmic expression.
- *   An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
- *   In a println statement with a string expression, the subsequent operands may be added; other operators are not allowed.
- *   However, subexpressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
- *   Operands in a string expression, including results of subexpressions, are converted to string and then printed.
- * The outputStatement accepts 2 byte value expressions, the port number and the value to be written to the port respectively.
- * The sleep statement lets the target program sleep for N milliseconds.
+ * The currently supported syntax may deviate from the intended definition in syntax.md, 
+ * as can be seen in the comment lines before any each parser method.
  */
 public class pCompiler {
   /* global variables used by the constructor or the interface functions */
