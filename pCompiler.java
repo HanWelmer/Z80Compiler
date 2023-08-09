@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO implement typeDeclaration
 //TODO implement importDeclaration
+//TODO implement typeDeclaration
 //TODO implement classDeclaration
+//TODO implement semantic analysis of packageDeclaration
+//TODO implement semantic analysis of importDeclaration
 //TODO implement void methodDeclaration (parameter less; no global/local variables).
 //TODO implement void methodDeclaration (no global/local variables).
 //TODO Add global variable to function.
@@ -409,13 +411,11 @@ public class pCompiler {
 
     // recognise an optional package declaration.
     lexeme = lexemeReader.getLexeme(sourceCode);
-    //if (checkOrSkip(EnumSet.of(LexemeType.packageLexeme), EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
     if (lexeme.type == LexemeType.packageLexeme) {
       packageDeclaration();
     }
 
     // recognise an optional list of import declaration.
-    //while (checkOrSkip(EnumSet.of(LexemeType.importLexeme), EnumSet.of(LexemeType.publicLexeme, LexemeType.classLexeme))) {
     if (lexeme.type == LexemeType.importLexeme) {
       importDeclaration();
     }
@@ -434,19 +434,19 @@ public class pCompiler {
     //skip "package".
     lexeme = lexemeReader.getLexeme(sourceCode);
 
-    //read identifier.
+    //recognise identifier.
     EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon, LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme);
     if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
       String temp = lexeme.idVal;
       lexeme = lexemeReader.getLexeme(sourceCode);
       
-      //read { "." identifier }.
+      //recognise { "." identifier }.
       while (lexeme.type == LexemeType.period) {
         //skip ".".
         lexeme = lexemeReader.getLexeme(sourceCode);
         temp += ".";
 
-         //read the identifier lexeme.
+         //recognise the identifier lexeme.
         if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
           temp += lexeme.idVal;
           lexeme = lexemeReader.getLexeme(sourceCode);
@@ -459,8 +459,8 @@ public class pCompiler {
       }
     }
 
+    //recognise the semicolon lexeme.
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
-      //eat the semicolon lexeme.
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 

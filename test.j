@@ -2,7 +2,7 @@
  * A small program in the miniJava language.
  * Test something
  */
-package me
+package me;
 
 class TestWrite {
   word zero = 0;
