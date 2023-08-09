@@ -251,8 +251,9 @@ public class LexemeReader {
       }
       lexeme.idVal = name;
     } else {
-      /* try to recognise keywords or symbols , ; | ^ & == != < <= > >= + - * / ( ) */
+      /* try to recognise keywords or symbols . , ; | ^ & == != < <= > >= + - * / ( ) */
       switch (ch) {
+        case '.' : lexeme.type = LexemeType.period; break;
         case ',' : lexeme.type = LexemeType.comma; break;
         case ';' : lexeme.type = LexemeType.semicolon; break;
         case '|' :

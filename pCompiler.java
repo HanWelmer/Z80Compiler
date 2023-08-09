@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO implement classDeclaration
 //TODO implement typeDeclaration
-//TODO implement compilationUnit
-//TODO implement packageDeclaration
 //TODO implement importDeclaration
+//TODO implement classDeclaration
 //TODO implement void methodDeclaration (parameter less; no global/local variables).
 //TODO implement void methodDeclaration (no global/local variables).
 //TODO Add global variable to function.
@@ -28,117 +26,109 @@ import java.util.Stack;
 //TODO Test various expressions for output(byte port, byte value). See ledtest.j.
 //TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
 
-/* comments to be distributed over the parser methods.
- *
- * compilationUnit                      = packageDeclaration? { importDeclaration } { typeDeclaration }.
- * packageDeclaration                   = "package" packageName ";".
- * importDeclaration                    = "import" packageName "." importType ";".
- * importType                           = identifier | "*".
- * typeDeclaration                      = classDeclaration.
- * classDeclaration                     = classModifier? "class" identifier classBody.
- * classModifier                        = "public".
- * classBody                            = "{" { classBodyDeclaration } "}".
- * classBodyDeclaration                 = classMemberDeclaration | staticInitializer.
- * classMemberDeclaration               = fieldDeclaration | methodDeclaration.
- * staticInitializer                    = "static" block.
- * fieldDeclaration                     = { fieldModifier } type variableDeclarators ";".
- * fieldModifier                        = "public" | "private" | "final".
- * methodDeclaration                    = methodHeader methodBody.
- * methodHeader                         = { methodModifier } resultType methodDeclarator.
- * methodModifier                       = "public" | "private".
- * resultType                           = type | "void".
- * methodDeclarator                     = identifier "(" formalParameterList? ")".
- * formalParameterList                  = formalParameter {"," formalParameter}.
- * formalParameter                      = type variableDeclaratorId.
- * methodBody                           = block | ";".
- * block                                = "{" { blockStatement } "}".
- * blockStatement                       = localVariableDeclarationStatement | statement.
- * localVariableDeclarationStatement    = localVariableDeclaration ";".
- * localVariableDeclaration             = type variableDeclarators.
- * type                                 = primitiveType.
- * primitiveType                        = numericType.
- * numericType                          = integralType.
- * integralType                         = "byte" | "word".
- * variableDeclarators                  = variableDeclarator {"," variableDeclarator}.
- * variableDeclarator                   = variableDeclaratorId ["=" variableInitializer].
- * variableDeclaratorId                 = identifier.
- * variableInitializer                  = expression.
- * statement                            = statementExceptIf | ifStatement
- * statementExceptIf                    = statementWithoutTrailingSubstatement | whileStatement | forStatement.
- * statementWithoutTrailingSubstatement = block | emptyStatement | expressionStatement | doStatement | returnStatement.
- * emptyStatement                       = ";".
- * expressionStatement                  = statementExpression ";".
- * statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.
- * preincrementExpression               = "++" unaryExpression.
- * predecrementExpression               = "--" unaryExpression.
- * doStatement                          = "do" statement "while" "(" expression ")" ";".
- * returnStatement                      = "return" expression? ";".
- * whileStatement                       = "while" "(" expression ")" statementExceptIf.
- * forStatement                         = "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.
- * forInit                              = statementExpressionList | localVariableDeclaration.
- * forUpdate                            = statementExpressionList.
- * statementExpressionList              = statementExpression {"," statementExpression}.
- * ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].
- * constantExpression                   = expression.
- * expression                           = assignmentExpression.
- * assignmentExpression                 = assignment | conditionalExpression.
- * assignment                           = leftHandSide assignmentOperator assignmentExpression.
- * leftHandSide                         = expressionName.
- * assignmentOperator                   = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=".
- * conditionalExpression                = conditionalOrExpression [ "?" expression ":" conditionalExpression ].
- * conditionalOrExpression              = conditionalAndExpression { "||" conditionalAndExpression }.
- * conditionalAndExpression             = inclusiveOrExpression { "&&" inclusiveOrExpression }.
- * inclusiveOrExpression                = exclusiveOrExpression { "|" exclusiveOrExpression }.
- * exclusiveOrExpression                = andExpression { "^" andExpression }.
- * andExpression                        = equalityExpression { "&" equalityExpression }.
- * equalityExpression                   = relationalExpression [ equalityOperator equalityExpression ].
- * equalityOperator                     = "==" | "!=".
- * relationalExpression                 = shiftExpression [ relationalOperator shiftExpression ].
- * relationalOperator                   = ">" | ">=" | "<" | "<=".
- * shiftExpression                      = additiveExpression [ shiftOperator additiveExpression].
- * shiftOperator                        = "<<" | ">>" | ">>>".
- * additiveExpression                   = multiplicativeExpression [ additiveOperator multiplicativeExpression ].
- * additiveOperator                     = "+" | "-".
- * multiplicativeExpression             = unaryExpression [ multiplicativeOperator unaryExpression ].
- * multiplicativeOperator               = "*" | "/" | "%".
- * unaryExpression                      = {unaryOperator} postfixExpression.
- * unaryOperator                        = "++" | "--" | "+" | "-" | "~" | "!" | castPrefix.
- * castPrefix                           = "(" primitiveType ")".
- * postfixExpression                    = postincrementExpression | postdecrementExpression | primary | expressionName.
- * postincrementExpression              = postfixExpression "++".
- * postdecrementExpression              = postfixExpression "--".
- * primary                              = primaryNoNewArray.
- * primaryNoNewArray                    = literal | "this" | "(" expression ")" | fieldAccess | methodInvocation.
- * fieldAccess                          = primary "." identifier.
- * methodInvocation                     = methodName "(" argumentList? ")".
- * argumentList                         = expression { "," expression }.
- * packageName                          = identifier { "." identifier }.
- * expressionName                       = [ ambiguousName "." ] identifier.
- * methodName                           = [ ambiguousName "." ] identifier.
- * ambiguousName                        = identifier { "." identifier }.
- * literal                              = integerLiteral | characterLiteral | stringLiteral.
- * integerLiteral                       = decimalIntegerLiteral | hexIntegerLiteral | octalIntegerLiteral.
- * decimalIntegerLiteral                = decimalNumeral.
- * hexIntegerLiteral                    = hexNumeral.
- * octalIntegerLiteral                  = octalNumeral.
- * decimalNumeral                       = "0" | nonZeroDigit { digit }.
- * digit                                = "0" | nonZeroDigit.
- * nonZeroDigit                         = "(1-9)".
- * hexNumeral                           = "0x" hexDigit { hexDigit } | "0X" hexDigit { hexDigit }.
- * hexDigit                             = "(0-9a-fAF)".
- * octalNumeral                         = "0" octalDigit { octalDigit }.
- * octalDigit                           = "(0-7)".
- * characterLiteral                     = "'" singleCharacter "'" | "'" escapeSequence "'".
- * singleCharacter                      = inputCharacter - ("'" | "\" ).
- * stringLiteral                        = '"' { stringCharacter } '"'.
- * stringCharacter                      = escapeSequence | inputCharacter - ( '"' or '\').
- * escapeSequence                       = "\\" | "\'" | "\"" | "\n" | "\r" | "\t" | "\b" | "\f" | "\a".
- * keyword                              = "abstract" | "boolean" | "break" | "byte" | "case" | "catch" | "char" | "class" | "const" | "continue"
-                                       | "default" | "do" | "double" | "else" | "extends" | "final" | "finally" | "float" | "for" | "goto"
-                                       | "if" | "implements" | "import" | "instanceof" | "int" | "interface" | "long" | "native" | "new"
-                                       | "package" | "private" | "protected" | "public" | "return" | "short" | "static" | "super" | "switch" | "synchronized"
-                                       | "this" | "throw" | "throws" | "transient" | "try" | "void" | "volatile" | "while".
- **/
+  /* comments to be distributed over the parser methods.
+   *
+   * classBody                            = "{" { classBodyDeclaration } "}".
+   * classBodyDeclaration                 = classMemberDeclaration | staticInitializer.
+   * classMemberDeclaration               = fieldDeclaration | methodDeclaration.
+   * staticInitializer                    = "static" block.
+   * fieldDeclaration                     = { fieldModifier } type variableDeclarators ";".
+   * fieldModifier                        = "public" | "private" | "final".
+   * methodDeclaration                    = methodHeader methodBody.
+   * methodHeader                         = { methodModifier } resultType methodDeclarator.
+   * methodModifier                       = "public" | "private".
+   * resultType                           = type | "void".
+   * methodDeclarator                     = identifier "(" formalParameterList? ")".
+   * formalParameterList                  = formalParameter {"," formalParameter}.
+   * formalParameter                      = type variableDeclaratorId.
+   * methodBody                           = block | ";".
+   * block                                = "{" { blockStatement } "}".
+   * blockStatement                       = localVariableDeclarationStatement | statement.
+   * localVariableDeclarationStatement    = localVariableDeclaration ";".
+   * localVariableDeclaration             = type variableDeclarators.
+   * type                                 = primitiveType.
+   * primitiveType                        = numericType.
+   * numericType                          = integralType.
+   * integralType                         = "byte" | "word".
+   * variableDeclarators                  = variableDeclarator {"," variableDeclarator}.
+   * variableDeclarator                   = variableDeclaratorId ["=" variableInitializer].
+   * variableDeclaratorId                 = identifier.
+   * variableInitializer                  = expression.
+   * statement                            = statementExceptIf | ifStatement
+   * statementExceptIf                    = statementWithoutTrailingSubstatement | whileStatement | forStatement.
+   * statementWithoutTrailingSubstatement = block | emptyStatement | expressionStatement | doStatement | returnStatement.
+   * emptyStatement                       = ";".
+   * expressionStatement                  = statementExpression ";".
+   * statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.
+   * preincrementExpression               = "++" unaryExpression.
+   * predecrementExpression               = "--" unaryExpression.
+   * doStatement                          = "do" statement "while" "(" expression ")" ";".
+   * returnStatement                      = "return" expression? ";".
+   * whileStatement                       = "while" "(" expression ")" statementExceptIf.
+   * forStatement                         = "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.
+   * forInit                              = statementExpressionList | localVariableDeclaration.
+   * forUpdate                            = statementExpressionList.
+   * statementExpressionList              = statementExpression {"," statementExpression}.
+   * ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].
+   * constantExpression                   = expression.
+   * expression                           = assignmentExpression.
+   * assignmentExpression                 = assignment | conditionalExpression.
+   * assignment                           = leftHandSide assignmentOperator assignmentExpression.
+   * leftHandSide                         = expressionName.
+   * assignmentOperator                   = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=".
+   * conditionalExpression                = conditionalOrExpression [ "?" expression ":" conditionalExpression ].
+   * conditionalOrExpression              = conditionalAndExpression { "||" conditionalAndExpression }.
+   * conditionalAndExpression             = inclusiveOrExpression { "&&" inclusiveOrExpression }.
+   * inclusiveOrExpression                = exclusiveOrExpression { "|" exclusiveOrExpression }.
+   * exclusiveOrExpression                = andExpression { "^" andExpression }.
+   * andExpression                        = equalityExpression { "&" equalityExpression }.
+   * equalityExpression                   = relationalExpression [ equalityOperator equalityExpression ].
+   * equalityOperator                     = "==" | "!=".
+   * relationalExpression                 = shiftExpression [ relationalOperator shiftExpression ].
+   * relationalOperator                   = ">" | ">=" | "<" | "<=".
+   * shiftExpression                      = additiveExpression [ shiftOperator additiveExpression].
+   * shiftOperator                        = "<<" | ">>" | ">>>".
+   * additiveExpression                   = multiplicativeExpression [ additiveOperator multiplicativeExpression ].
+   * additiveOperator                     = "+" | "-".
+   * multiplicativeExpression             = unaryExpression [ multiplicativeOperator unaryExpression ].
+   * multiplicativeOperator               = "*" | "/" | "%".
+   * unaryExpression                      = {unaryOperator} postfixExpression.
+   * unaryOperator                        = "++" | "--" | "+" | "-" | "~" | "!" | castPrefix.
+   * castPrefix                           = "(" primitiveType ")".
+   * postfixExpression                    = postincrementExpression | postdecrementExpression | primary | expressionName.
+   * postincrementExpression              = postfixExpression "++".
+   * postdecrementExpression              = postfixExpression "--".
+   * primary                              = primaryNoNewArray.
+   * primaryNoNewArray                    = literal | "this" | "(" expression ")" | fieldAccess | methodInvocation.
+   * fieldAccess                          = primary "." identifier.
+   * methodInvocation                     = methodName "(" argumentList? ")".
+   * argumentList                         = expression { "," expression }.
+   * expressionName                       = [ ambiguousName "." ] identifier.
+   * methodName                           = [ ambiguousName "." ] identifier.
+   * ambiguousName                        = identifier { "." identifier }.
+   * literal                              = integerLiteral | characterLiteral | stringLiteral.
+   * integerLiteral                       = decimalIntegerLiteral | hexIntegerLiteral | octalIntegerLiteral.
+   * decimalIntegerLiteral                = decimalNumeral.
+   * hexIntegerLiteral                    = hexNumeral.
+   * octalIntegerLiteral                  = octalNumeral.
+   * decimalNumeral                       = "0" | nonZeroDigit { digit }.
+   * digit                                = "0" | nonZeroDigit.
+   * nonZeroDigit                         = "(1-9)".
+   * hexNumeral                           = "0x" hexDigit { hexDigit } | "0X" hexDigit { hexDigit }.
+   * hexDigit                             = "(0-9a-fAF)".
+   * octalNumeral                         = "0" octalDigit { octalDigit }.
+   * octalDigit                           = "(0-7)".
+   * characterLiteral                     = "'" singleCharacter "'" | "'" escapeSequence "'".
+   * singleCharacter                      = inputCharacter - ("'" | "\" ).
+   * stringLiteral                        = '"' { stringCharacter } '"'.
+   * stringCharacter                      = escapeSequence | inputCharacter - ( '"' or '\').
+   * escapeSequence                       = "\\" | "\'" | "\"" | "\n" | "\r" | "\t" | "\b" | "\f" | "\a".
+   * keyword                              = "abstract" | "boolean" | "break" | "byte" | "case" | "catch" | "char" | "class" | "const" | "continue"
+                                          | "default" | "do" | "double" | "else" | "extends" | "final" | "finally" | "float" | "for" | "goto"
+                                          | "if" | "implements" | "import" | "instanceof" | "int" | "interface" | "long" | "native" | "new"
+                                          | "package" | "private" | "protected" | "public" | "return" | "short" | "static" | "super" | "switch" | "synchronized"
+                                          | "this" | "throw" | "throws" | "transient" | "try" | "void" | "volatile" | "while".
+   */
 
  /*
  * pCompiler; main class for the recursive descent miniJava compiler.
@@ -163,7 +153,12 @@ public class pCompiler {
     this.verboseMode = verboseMode;
   }
   
-  /* Class member methods for lexical analysis phase */
+  /**************************************
+   *
+   * lexical analysis and support methods
+   *
+   *************************************/
+
   public ArrayList<Instruction> compile(String fileName, LexemeReader lexemeReader) {
     this.fileName = fileName;
     this.lexemeReader = lexemeReader;
@@ -171,7 +166,7 @@ public class pCompiler {
 
     try {
       init();
-      prog();
+      compilationUnit();
       plant(new Instruction(FunctionType.stop));
       debug("\n");
       optimize();
@@ -381,7 +376,13 @@ public class pCompiler {
     }
   }
   
-  /*Class member methods for syntax analysis phase */
+  /*************************
+   *
+   * syntax analysis methods
+   *
+   ************************/
+
+  //return true if current lexeme is in okSet, otherwise skip lexemes until current lexeme is in stopSet and return false.
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws FatalError {
     //debug("\ncheckOrSkip: start");
     boolean result = false;
@@ -402,6 +403,139 @@ public class pCompiler {
     return result;
   }
 
+  // compilationUnit = packageDeclaration? { importDeclaration } typeDeclaration.
+  private void compilationUnit() throws FatalError {
+    debug("\ncompilationUnit: start");
+
+    // recognise an optional package declaration.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    //if (checkOrSkip(EnumSet.of(LexemeType.packageLexeme), EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
+    if (lexeme.type == LexemeType.packageLexeme) {
+      packageDeclaration();
+    }
+
+    // recognise an optional list of import declaration.
+    //while (checkOrSkip(EnumSet.of(LexemeType.importLexeme), EnumSet.of(LexemeType.publicLexeme, LexemeType.classLexeme))) {
+    if (lexeme.type == LexemeType.importLexeme) {
+      importDeclaration();
+    }
+
+    // recognise the mandatory single type declaration.
+    typeDeclaration();
+
+    debug("\ncompilationUnit: end");
+  } //compilationUnit
+
+  // packageDeclaration = "package" packageName ";".
+  // packageName = identifier { "." identifier }.
+  private void packageDeclaration() throws FatalError {
+    debug("\npackageDeclaration: start");
+    
+    //skip "package".
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    //read identifier.
+    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon, LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme);
+    if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
+      String temp = lexeme.idVal;
+      lexeme = lexemeReader.getLexeme(sourceCode);
+      
+      //read { "." identifier }.
+      while (lexeme.type == LexemeType.period) {
+        //skip ".".
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        temp += ".";
+
+         //read the identifier lexeme.
+        if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
+          temp += lexeme.idVal;
+          lexeme = lexemeReader.getLexeme(sourceCode);
+        }
+      }
+
+      if (lexeme.type == LexemeType.semicolon) {
+        //TODO: add semantic analysis and assign temp to packageName.
+        debug("\npackageDeclaration: packageName=" + temp);
+      }
+    }
+
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
+      //eat the semicolon lexeme.
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    debug("\npackageDeclaration: end");
+  } //packageDeclaration
+
+  // importDeclaration = "import" packageName "." importType ";".
+  // packageName = identifier { "." identifier }.
+  private void importDeclaration() throws FatalError {
+    debug("\nimportDeclaration: start");
+
+    //skip "import"
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    debug("\nimportDeclaration: end");
+  } //importDeclaration
+
+  // importType = identifier | "*".
+  private void importType() throws FatalError {
+    debug("\nimportType: start");
+    debug("\nimportType: end");
+  } //importType
+
+  // typeDeclaration = classDeclaration.
+  private void typeDeclaration() throws FatalError {
+    debug("\ntypeDeclaration: start");
+
+    classDeclaration();
+
+    debug("\ntypeDeclaration: end");
+  } //typeDeclaration
+
+  
+  //TODO reorder methods below.
+
+  // classDeclaration = classModifier "class" identifier classBody.
+  // classModifier    = "public".
+  //TODO old: program = "class" identifier "{" statements "}".
+  private void classDeclaration() throws FatalError {
+    debug("\nclassDeclaration: start");
+
+    // recognise a class definition.
+    if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginLexeme))) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+      
+      //part of semantic analysis: start a new class level declaration scope.
+      identifiers.newScope();
+
+      if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginLexeme))) {
+        /* next line + debug message is part of semantic analysis */
+        if (identifiers.checkId(lexeme.idVal)) {
+          error(8); /* variable already declared */
+        } else if (identifiers.declareId(lexeme, LexemeType.classLexeme)) {
+          debug("\nclassDeclaration: class declared: " + lexeme.idVal);
+        } else {
+          error();
+          System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
+        }
+
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
+
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        statements(EnumSet.of(LexemeType.endLexeme));
+
+        //lexeme = lexemeReader.getLexeme(sourceCode);
+        checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+      }
+      
+      //part of semantic analysis: close the class level declaration scope.
+      identifiers.closeScope();
+    }
+    debug("\nclassDeclaration: end");
+  } //classDeclaration
+  
   //constantExpression = constant | {addop constant}.
   private Operand constantExpression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nconstantExpression: start with stopSet = " + stopSet);
@@ -818,189 +952,6 @@ public class pCompiler {
     debug("\ncomparisonInDoStatement: end");
   } //comparisonInDoStatement(stopSet, doLabel)
 
-  private boolean plantComparisonCode(Operand leftOperand, Operand rightOperand) {
-    debug("\nplantComparisonCode: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    /*Possible operand types: 
-     * leftOperand:  constant, acc, var, stack16, stack8; NB: var is loaded into acc and acc is pushed onto stack prior to evaluating right hand expression into rightOperand.
-     * rightOperand: constant, acc, var, stack16, stack8
-    */
-
-    boolean reverseCompare = false;
-    //plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-    if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.constant)) {
-      plantAccLoad(leftOperand);
-      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.acc)) {
-      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
-        reverseCompare = true;
-        plant(new Instruction(FunctionType.acc16Compare, leftOperand));
-      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
-        plantAccLoad(leftOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
-        plantAccLoad(leftOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-        reverseCompare = true;
-        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.var)) {
-      plantAccLoad(rightOperand);
-      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
-        reverseCompare = true;
-        plant(new Instruction(FunctionType.acc16Compare, leftOperand));
-      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
-        plantAccLoad(leftOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
-        plantAccLoad(leftOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-        reverseCompare = true;
-        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    /*
-    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.stack8)) {
-      if (leftOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.unstackAcc8));
-        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    */
-    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.constant)) {
-      plantAccLoad(leftOperand);
-      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.acc)) {
-      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
-        reverseCompare = true;
-        plant(new Instruction(FunctionType.acc16Compare, leftOperand));
-      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
-        plantAccLoad(leftOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
-        plantAccLoad(leftOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-        reverseCompare = true;
-        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.var)) {
-      plantAccLoad(leftOperand);
-      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.constant)) {
-      if (rightOperand.datatype == Datatype.word) { 
-        plant(new Instruction(FunctionType.unstackAcc16));
-        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      } else if (rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.unstackAcc16));
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.acc)) {
-      if (rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.revAcc16Compare, leftOperand));
-        reverseCompare = true;
-      } else if (rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.unstackAcc16));
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.var)) {
-      if (rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.unstackAcc16));
-        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-      }else if (rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.unstackAcc16));
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc16CompareAcc8));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.constant)) {
-      if (rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.unstackAcc8));
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (rightOperand.datatype == Datatype.byt) { 
-        plant(new Instruction(FunctionType.unstackAcc8));
-        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.acc)) {
-      if (rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.unstackAcc8));
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.revAcc8Compare, leftOperand));
-        reverseCompare = true;
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.var)) {
-      if (rightOperand.datatype == Datatype.word) {
-        plant(new Instruction(FunctionType.unstackAcc8));
-        plantAccLoad(rightOperand);
-        plant(new Instruction(FunctionType.acc8CompareAcc16));
-      } else if (rightOperand.datatype == Datatype.byt) {
-        plant(new Instruction(FunctionType.unstackAcc8));
-        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
-      } else {
-        throw new RuntimeException("Internal compiler error: abort.");
-      }
-    } else {
-      throw new RuntimeException("Internal compiler error: abort.");
-    }
-    debug("\nplantComparisonCode: end");
-    return reverseCompare;
-  } //plantComparisonCode()
-  
   //parse a block of statements, and return the address of the first object code in the block of statements.
   //block = statement | "{" statements "}".
   private int block(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -1645,82 +1596,195 @@ public class pCompiler {
     return firstAddress;
   } //statements
   
-  //program = "class" identifier "{" statements "}".
-  private void prog() throws FatalError {
-    debug("\nprog: start");
-    /* recognise a class definition */
-    lexeme = lexemeReader.getLexeme(sourceCode);
-    if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginLexeme))) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-      
-      //part of semantic analysis: start a new class level declaration scope.
-      identifiers.newScope();
+  /*****************************
+   *
+   * Code generation methods
+   *
+   ****************************/
 
-      if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginLexeme))) {
-        /* next line + debug message is part of semantic analysis */
-        if (identifiers.checkId(lexeme.idVal)) {
-          error(8); /* variable already declared */
-        } else if (identifiers.declareId(lexeme, LexemeType.classLexeme)) {
-          debug("\nprog: class declared: " + lexeme.idVal);
-        } else {
-          error();
-          System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
-        }
+  private boolean plantComparisonCode(Operand leftOperand, Operand rightOperand) {
+    debug("\nplantComparisonCode: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    /*Possible operand types: 
+     * leftOperand:  constant, acc, var, stack16, stack8; NB: var is loaded into acc and acc is pushed onto stack prior to evaluating right hand expression into rightOperand.
+     * rightOperand: constant, acc, var, stack16, stack8
+    */
 
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
-
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        statements(EnumSet.of(LexemeType.endLexeme));
-
-        //lexeme = lexemeReader.getLexeme(sourceCode);
-        checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+    boolean reverseCompare = false;
+    //plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+    if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.constant)) {
+      plantAccLoad(leftOperand);
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
       }
-      
-      //part of semantic analysis: close the class level declaration scope.
-      identifiers.closeScope();
-    }
-    debug("\nprog: end");
-  }
-  
-  private void optimize() {
-    debug("\noptimize: start m-code optimization. Number of instructions before optimization = " + instructions.size());
-    int pos = 0;
-    while (pos < instructions.size()-2) {
-      if ((instructions.get(pos).function == FunctionType.stackAcc16) && (instructions.get(pos+1).function == FunctionType.unstackAcc16)) {
-        //remove tuple { <acc16; acc16= unstack16 }
-        debug(String.format("\noptimize: removing tuple { <acc16; acc16= unstack16 } at %d-%d", pos, pos+1));
-        relocate(pos, 2);
-      } else if ((instructions.get(pos).function == FunctionType.stackAcc8) && (instructions.get(pos+1).function == FunctionType.unstackAcc8)) {
-        //remove tuple { <acc8; acc8= unstack8 }
-        debug(String.format("\noptimize: removing tuple { <acc8; acc8= unstack8 } at %d-%d", pos, pos+1));
-        relocate(pos, 2);
+    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.acc)) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc16Compare, leftOperand));
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
+        plantAccLoad(leftOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
+        plantAccLoad(leftOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
       }
-      pos++;
-    }
-    debug("\noptimize: end. Number of instructions after optimization = " + instructions.size());
-    debug("\n");
-  } //optimize
-  
-  // remove 'number' instructions, starting at position 'pos', and relocate branch addresses and references to string constants.
-  private void relocate(int pos, int number) {
-    //remove #number instructions.
-    for (int i = 0; i<number; i++) {
-      instructions.remove(pos);
-    }
-
-    //adjust branch instructions.
-    int idx = 0;
-    Instruction instruction;
-    do {
-      instruction = instructions.get(idx++);
-      if (brFunctions.contains(instruction.function) && (instruction.operand.intValue > pos)) {
-        instruction.operand.intValue -= number;
+    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.var)) {
+      plantAccLoad(rightOperand);
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc16Compare, leftOperand));
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
+        plantAccLoad(leftOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
+        plantAccLoad(leftOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
       }
-    } while (instruction.function != FunctionType.stop);
-  } //relocate
+    /*
+    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.stack8)) {
+      if (leftOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    */
+    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.constant)) {
+      plantAccLoad(leftOperand);
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.acc)) {
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc16Compare, leftOperand));
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
+        plantAccLoad(leftOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
+        plantAccLoad(leftOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        reverseCompare = true;
+        plant(new Instruction(FunctionType.acc8Compare, leftOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.var)) {
+      plantAccLoad(leftOperand);
+      if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      } else if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.byt) {
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.word) {
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (leftOperand.datatype == Datatype.byt && rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.constant)) {
+      if (rightOperand.datatype == Datatype.word) { 
+        plant(new Instruction(FunctionType.unstackAcc16));
+        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      } else if (rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.unstackAcc16));
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.acc)) {
+      if (rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.revAcc16Compare, leftOperand));
+        reverseCompare = true;
+      } else if (rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.unstackAcc16));
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.var)) {
+      if (rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.unstackAcc16));
+        plant(new Instruction(FunctionType.acc16Compare, rightOperand));
+      }else if (rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.unstackAcc16));
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc16CompareAcc8));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.constant)) {
+      if (rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (rightOperand.datatype == Datatype.byt) { 
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.acc)) {
+      if (rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.revAcc8Compare, leftOperand));
+        reverseCompare = true;
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.var)) {
+      if (rightOperand.datatype == Datatype.word) {
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plantAccLoad(rightOperand);
+        plant(new Instruction(FunctionType.acc8CompareAcc16));
+      } else if (rightOperand.datatype == Datatype.byt) {
+        plant(new Instruction(FunctionType.unstackAcc8));
+        plant(new Instruction(FunctionType.acc8Compare, rightOperand));
+      } else {
+        throw new RuntimeException("Internal compiler error: abort.");
+      }
+    } else {
+      throw new RuntimeException("Internal compiler error: abort.");
+    }
+    debug("\nplantComparisonCode: end");
+    return reverseCompare;
+  } //plantComparisonCode()
   
-  /*Class member methods for code generation phase */
   private void plantAccLoad(Operand operand) {
     //load acc with operand.
     if (operand.datatype == Datatype.word) {
@@ -1853,15 +1917,6 @@ public class pCompiler {
     debug("\nplantForwardLabel instruction[" + pos + "]=" + address);
   } //plantForwardLabel(pos, address)
 
-  private void plantStringConstants() {
-    for (int id = 0; id < stringConstants.size(); id++) {
-      //plant string constant.
-      Operand operand = new Operand(OperandType.constant, Datatype.string, stringConstants.get(id));
-      operand.intValue = id;
-      instructions.add(new Instruction(FunctionType.stringConstant, operand));
-    }
-  }
-
   private void plantPrintln(Operand operand, boolean withCarriageReturn) {
     //part of code generation.
     if (operand.opType != OperandType.acc) {
@@ -1881,6 +1936,41 @@ public class pCompiler {
     }
   }
   
+  private int saveLabel() {
+    //address of next object code.
+    int address = instructions.size();
+    
+    //compensate address for original source code that will be added as comment before the next instruction.
+    int compensatedAddress = address + sourceCode.size();
+
+    /* for debugging purposes */
+    debug("\nlabel: address = " + address + ", compensated for comments = " + compensatedAddress);
+
+    return compensatedAddress;
+  }
+
+  private void popStackedDatatype(Datatype expectedDataType) {
+    Datatype datatype = stackedDatatypes.pop();
+    if (!(datatype == Datatype.byt || datatype == Datatype.word)) {
+        debug("\npopStackedDatatype: unsupported data type popped from stack: " + datatype);
+        throw new RuntimeException("Internal compiler error: abort.");
+    }
+
+    if (datatype != expectedDataType) {
+        debug("\npopStackedDatatype: unexpected data type popped from stack: popped " + datatype + "; expected "+ expectedDataType);
+        throw new RuntimeException("Internal compiler error: abort.");
+    }
+  } //popStackedDatatype()
+
+  private void plantStringConstants() {
+    for (int id = 0; id < stringConstants.size(); id++) {
+      //plant string constant.
+      Operand operand = new Operand(OperandType.constant, Datatype.string, stringConstants.get(id));
+      operand.intValue = id;
+      instructions.add(new Instruction(FunctionType.stringConstant, operand));
+    }
+  }
+
   private void updateReferencesToStringConstants(int offset) {
     Map<Integer, ArrayList<Integer>> stringReferences = new HashMap<Integer, ArrayList<Integer>>();
     int lineNumber = 0;
@@ -1919,30 +2009,47 @@ public class pCompiler {
     }
   }
   
-  private int saveLabel() {
-    //address of next object code.
-    int address = instructions.size();
-    
-    //compensate address for original source code that will be added as comment before the next instruction.
-    int compensatedAddress = address + sourceCode.size();
+  /*****************************
+   *
+   * Code generation methods
+   *
+   ****************************/
 
-    /* for debugging purposes */
-    debug("\nlabel: address = " + address + ", compensated for comments = " + compensatedAddress);
-
-    return compensatedAddress;
-  }
-
-  private void popStackedDatatype(Datatype expectedDataType) {
-    Datatype datatype = stackedDatatypes.pop();
-    if (!(datatype == Datatype.byt || datatype == Datatype.word)) {
-        debug("\npopStackedDatatype: unsupported data type popped from stack: " + datatype);
-        throw new RuntimeException("Internal compiler error: abort.");
+  private void optimize() {
+    debug("\noptimize: start m-code optimization. Number of instructions before optimization = " + instructions.size());
+    int pos = 0;
+    while (pos < instructions.size()-2) {
+      if ((instructions.get(pos).function == FunctionType.stackAcc16) && (instructions.get(pos+1).function == FunctionType.unstackAcc16)) {
+        //remove tuple { <acc16; acc16= unstack16 }
+        debug(String.format("\noptimize: removing tuple { <acc16; acc16= unstack16 } at %d-%d", pos, pos+1));
+        relocate(pos, 2);
+      } else if ((instructions.get(pos).function == FunctionType.stackAcc8) && (instructions.get(pos+1).function == FunctionType.unstackAcc8)) {
+        //remove tuple { <acc8; acc8= unstack8 }
+        debug(String.format("\noptimize: removing tuple { <acc8; acc8= unstack8 } at %d-%d", pos, pos+1));
+        relocate(pos, 2);
+      }
+      pos++;
+    }
+    debug("\noptimize: end. Number of instructions after optimization = " + instructions.size());
+    debug("\n");
+  } //optimize
+  
+  // remove 'number' instructions, starting at position 'pos', and relocate branch addresses and references to string constants.
+  private void relocate(int pos, int number) {
+    //remove #number instructions.
+    for (int i = 0; i<number; i++) {
+      instructions.remove(pos);
     }
 
-    if (datatype != expectedDataType) {
-        debug("\npopStackedDatatype: unexpected data type popped from stack: popped " + datatype + "; expected "+ expectedDataType);
-        throw new RuntimeException("Internal compiler error: abort.");
-    }
-  } //popStackedDatatype()
-
+    //adjust branch instructions.
+    int idx = 0;
+    Instruction instruction;
+    do {
+      instruction = instructions.get(idx++);
+      if (brFunctions.contains(instruction.function) && (instruction.operand.intValue > pos)) {
+        instruction.operand.intValue -= number;
+      }
+    } while (instruction.function != FunctionType.stop);
+  } //relocate
+  
 }

@@ -10,11 +10,12 @@ The syntax is defined in extended BNF.
 - The iterative appearance (zero or more instances) of the sequence of constructs X and Y is written { X Y }.
 - Possible characters and digits are defined individually, such as "0", or as a range, such as "(1-9)".
 
-##Limitations
+##Limitations and extensions
 Compared to an [original but not official Java syntax](https://cs.au.dk/~amoeller/RegAut/JavaBNF.html), 
 a copy of which is available in JAVA_BNF_Rules.txt, the syntax of miniJava has 
 the following limitations have been imposed:
 - typeDeclaration:      no interfaceDeclaration or ";".
+- classDeclaration      fixed single classModifier.
 - classDeclaration:     no super? or interfaces?.
 - classModifier:        no "abstract" or "final".
 - classBodyDeclaration: no constructorDeclaration.
@@ -27,9 +28,9 @@ the following limitations have been imposed:
 - primitiveType         no "boolean".
 - numericType           no floatingPointType.
 - integralType          no "short", "int", "long" or "char".
-- integralType          added "word".
 - statement             no labeledStatement.
-- statementWithoutTrailingSubstatement no switchStatement, breakStatement, continueStatement, synchronizedStatement, throwsStatements or tryStatement.
+- statementWithoutTrailingSubstatement 
+                        no switchStatement, breakStatement, continueStatement, synchronizedStatement, throwsStatements or tryStatement.
 - statementExpression   no classInstanceCreationExpression.
 - leftHandSide          no fieldAccess or arrayAccess.
 - relationalExpression  no "instanceof" referenceType.
@@ -42,6 +43,10 @@ the following limitations have been imposed:
 - decimalIntegerLiteral no integerTypeSuffix.
 - hexIntegerLiteral     no integerTypeSuffix.
 - octalIntegerLiteral   no integerTypeSuffix.
+
+Compared to an original but not official Java syntax, the syntax of miniJava has the following extensions:
+- compilationUnit       mandatory single typeDeclaration instead of optional sequence ( {...} ).
+- integralType          added "word".
 
 Additionally, in order to avoid ambiguity and at the same time make the sytax LL(1), the 'then' substatement of an
 if statement, the substatement of a whileStatement and the substatement of a forStatement may be
@@ -86,14 +91,14 @@ or:
 ##Synxtax definition
 
 ###Programs
-'compilationUnit                      = packageDeclaration? { importDeclaration } { typeDeclaration }.'
+'compilationUnit                      = packageDeclaration? { importDeclaration } typeDeclaration.'
 
 ###Declarations
 'packageDeclaration                   = "package" packageName ";".
 importDeclaration                    = "import" packageName "." importType ";".
 importType                           = identifier | "*".
 typeDeclaration                      = classDeclaration.
-classDeclaration                     = classModifier? "class" identifier classBody.
+classDeclaration                     = classModifier "class" identifier classBody.
 classModifier                        = "public".
 classBody                            = "{" { classBodyDeclaration } "}".
 classBodyDeclaration                 = classMemberDeclaration | staticInitializer.
@@ -230,6 +235,8 @@ input              = "input" "(" constantExpression ")".'
 ##Semantics 
 Multi-line comment may contain end of line comment.
 Multi-line comment may not be nested.
+The identifiers in a packageName must be in lower case.
+TODO: reorder according to syntax definition above. 
 A variable must be declared before it is used.
 A function must be declared before it is used.
 An executable program must contain a "void main()" function.

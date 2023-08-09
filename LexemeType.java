@@ -9,6 +9,7 @@ public enum LexemeType {
   constant("constant"),
   stringConstant("stringConstant"),
   //from here until beginlexeme are the special characters...
+  period("."),
   comma(","),
   assign("="),
   semicolon(";"),
@@ -23,6 +24,10 @@ public enum LexemeType {
   mulop("* or /"),
   //from here until unknown are the keywords...
   beginLexeme("{"),
+  packageLexeme("package"),
+  importLexeme("import"),
+  publicLexeme("public"),
+  classLexeme("class"),
   finalLexeme("final"),
   byteLexeme("byte"),
   wordLexeme("word"),
@@ -39,7 +44,6 @@ public enum LexemeType {
   whileLexeme("while"),
   outputLexeme("output"),
   sleepLexeme("sleep"),
-  classLexeme("class"),
   endLexeme("}"),
   //unknown is a special lexemeType.
   unknown("?");

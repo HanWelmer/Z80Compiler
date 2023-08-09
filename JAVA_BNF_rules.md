@@ -1,9 +1,9 @@
-Java Syntax Specification
+#Java Syntax Specification
 
-Programs
+##Programs
 <compilation unit> ::= <package declaration>? <import declarations>? <type declarations>?
 
-Declarations
+##Declarations
 <package declaration> ::= package <package name> ;
 <import declarations> ::= <import declaration> | <import declarations> <import declaration>
 <import declaration> ::= <single type import declaration> | <type import on demand declaration>
@@ -62,7 +62,7 @@ Declarations
 <variable initializers> ::= <variable initializer> | <variable initializers> , <variable initializer>
 <variable initializer> ::= <expression> | <array initializer>
 
-Types
+##Types
 <type> ::= <primitive type> | <reference type>
 <primitive type> ::= <numeric type> | boolean
 <numeric type> ::= <integral type> | <floating-point type>
@@ -74,7 +74,7 @@ Types
 <interface type> ::= <type name>
 <array type> ::= <type> [ ]
 
-Blocks and Commands
+##Blocks and Commands
 <block> ::= { <block statements>? }
 <block statements> ::= <block statement> | <block statements> <block statement>
 <block statement> ::= <local variable declaration statement> | <statement>
@@ -115,7 +115,7 @@ Blocks and Commands
 <catch clause> ::= catch ( <formal parameter> ) <block>
 <finally > ::= finally <block>
 
-Expressions
+##Expressions
 <constant expression> ::= <expression>
 <expression> ::= <assignment expression>
 <assignment expression> ::= <conditional expression> | <assignment>
@@ -153,7 +153,7 @@ Expressions
 <dims> ::= [ ] | <dims> [ ]
 <array access> ::= <expression name> [ <expression> ] | <primary no new array> [ <expression>]
 
-Tokens
+##Tokens
 <package name> ::= <identifier> | <package name> . <identifier>
 <type name> ::= <identifier> | <package name> . <identifier>
 <simple type name> ::= <identifier>
@@ -190,8 +190,9 @@ Tokens
 <null literal> ::= null
 <keyword> ::= abstract | boolean | break | byte | case | catch | char | class | const | continue | default | do | double | else | extends | final | finally | float | for | goto | if | implements | import | instanceof | int | interface | long | native | new | package | private | protected | public | return | short | static | super | switch | synchronized | this | throw | throws | transient | try | void | volatile | while
 
-
+##comments
 The character set for Java is Unicode, a 16-bit character set. This is the set denoted by <input character>. Unicode effectively contains the familiar 7-bit ASCII characters as a subset, and includes "escape code" designations of the form \udddd (where each d is from <hex digit>). In the extended BNF for Java the optional appearance of X is written X?, and the iterative appearance of X is written {X}.
+
 The syntax category <identifier> consists of strings that must start with a letter - including underscore (_) and dollar sign ($) - followed by any number of letters and digits. Characters of numerous international languages are recognized as "letters" in Java. A Java letter is a character for which the method Character.isJavaLetter returns true. A Java letter-or-digit is a character for which the method Character.isJaveLetterOrDigit returns true. Also, <identifier> includes none of the keywords given above - these are reserved words in Java.
 
 The only BNF extention used here is the optional construct which is written with '?' added as a suffix to a terminal or non-terminal. Note that '*', '{', and '}' are all terminal symbols. This BNF definition does not address such pragmatic issues as comment conventions and the use of "white space" to delimit tokens. This BNF also does not express numerous "context-sensitive" restrictions on syntax. For instance, type use of identifiers must be consistent with the required declarations, there are size limitations on numerical literals, etc.
