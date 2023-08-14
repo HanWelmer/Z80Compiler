@@ -54,34 +54,34 @@ a block of statements or a single statement, but in the latter case not an if-st
 As a consequence the 'NoShortIf' variants from the original Java syntax are no longer needed.
 
 As a consequence, for example, the following Java code is not allowed:
-`if (x > 0)
-  if (x < 10)
-    flag = true;
-  else
+`if (x > 0)  
+  if (x < 10)  
+    flag = true;  
+  else  
     flag = false;`
 
 An alternative is to use a block instead of a single statement:
-`if (x > 0) {
-    if (x < 10)
-      flag = true;
-    else
-      flag = false;
+`if (x > 0) {  
+    if (x < 10)  
+      flag = true;  
+    else  
+      flag = false;  
 };`
 
 The shorter version:
-`if (x > 0)
-    if (x < 10)
+`if (x > 0)  
+    if (x < 10)  
       flag = true;`
 
 could be replaced by either:
-`if (x > 0) {
-    if (x < 10)
-      flag = true;
+`if (x > 0) {  
+    if (x < 10)  
+      flag = true;  
 };`
 
 or:
-`if (x > 0 && x < 10)
-  flag = true;
+`if (x > 0 && x < 10)  
+  flag = true;  
 };`
 
 ## Questions:
