@@ -1,6 +1,6 @@
-#Syntax and semantics of the miniJava language.
+#Syntax and semantics of the miniJava language.#
 
-##Extended BNF
+##Extended BNF##
 The syntax is defined in extended BNF.
 
 - A non-terminal is a plain text identifier, starting with a character, followed by charactors or digits.
@@ -10,7 +10,7 @@ The syntax is defined in extended BNF.
 - The iterative appearance (zero or more instances) of the sequence of constructs X and Y is written { X Y }.
 - Possible characters and digits are defined individually, such as "0", or as a range, such as "(1-9)".
 
-##Limitations and extensions
+##Limitations and extensions##
 Compared to an [original but not official Java syntax](https://cs.au.dk/~amoeller/RegAut/JavaBNF.html), 
 a copy of which is available in JAVA_BNF_Rules.txt, the syntax of miniJava has 
 the following limitations have been imposed:
