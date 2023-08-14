@@ -1,6 +1,6 @@
 # Z80Compiler
 Java command line application that compiles miniJava programs to Z80 assembler and binary.
-See syntax.md for a description of the miniJava syntax and semantics.
+See [syntax.md](./syntax.md) for a description of the miniJava syntax and semantics.
 
 Development:
 All you need is Java JDK and Maven. More is better.

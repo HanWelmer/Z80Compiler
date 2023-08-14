@@ -1,6 +1,6 @@
-#Syntax and semantics of the miniJava language.#
+# Syntax and semantics of the miniJava language.
 
-##Extended BNF##
+## Extended BNF
 The syntax is defined in extended BNF.
 
 - A non-terminal is a plain text identifier, starting with a character, followed by charactors or digits.
@@ -10,7 +10,7 @@ The syntax is defined in extended BNF.
 - The iterative appearance (zero or more instances) of the sequence of constructs X and Y is written { X Y }.
 - Possible characters and digits are defined individually, such as "0", or as a range, such as "(1-9)".
 
-##Limitations and extensions##
+## Limitations and extensions
 Compared to an [original but not official Java syntax](https://cs.au.dk/~amoeller/RegAut/JavaBNF.html), 
 a copy of which is available in JAVA_BNF_Rules.txt, the syntax of miniJava has 
 the following limitations have been imposed:
@@ -84,16 +84,16 @@ or:
   flag = true;
 };'
 
-##Questions:
+## Questions:
 1. Can a class be something else than puclic, abstract or final, e.g. protected or private?
 2. classBodyDeclaration with or without staticInitializer?
 
-##Synxtax definition
+## Synxtax definition
 
-###Programs
+### Programs
 'compilationUnit                      = packageDeclaration? { importDeclaration } typeDeclaration.'
 
-###Declarations
+### Declarations
 'packageDeclaration                   = "package" packageName ";".
 importDeclaration                    = "import" packageName "." importType ";".
 importType                           = identifier | "*".
@@ -115,13 +115,13 @@ formalParameterList                  = formalParameter {"," formalParameter}.
 formalParameter                      = type variableDeclaratorId.
 methodBody                           = block | ";".'
 
-###Blocks and Commands
+### Blocks and Commands
 'block                                = "{" { blockStatement } "}".
 blockStatement                       = localVariableDeclarationStatement | statement.
 localVariableDeclarationStatement    = localVariableDeclaration ";".
 localVariableDeclaration             = type variableDeclarators.'
 
-###Types
+### Types
 'type                                 = primitiveType.
 primitiveType                        = numericType.
 numericType                          = integralType.
@@ -148,7 +148,7 @@ statementExpressionList              = statementExpression {"," statementExpress
 ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].
 constantExpression                   = expression.'
 
-###Expressions
+### Expressions
 'expression                           = assignmentExpression.
 assignmentExpression                 = assignment | conditionalExpression.
 assignment                           = leftHandSide assignmentOperator assignmentExpression.
@@ -182,7 +182,7 @@ fieldAccess                          = primary "." identifier.
 methodInvocation                     = methodName "(" argumentList? ")".
 argumentList                         = expression { "," expression }.'
 
-###Tokens
+### Tokens
 'packageName                          = identifier { "." identifier }.
 expressionName                       = [ ambiguousName "." ] identifier.
 methodName                           = [ ambiguousName "." ] identifier.
@@ -210,7 +210,7 @@ keyword                              = "abstract" | "boolean" | "break" | "byte"
                                      | "package" | "private" | "protected" | "public" | "return" | "short" | "static" | "super" | "switch" | "synchronized"
                                      | "this" | "throw" | "throws" | "transient" | "try" | "void" | "volatile" | "while".'
 
-###miscellaneous
+### miscellaneous
 This BNF definition does not describe whitespace and comments, which my be inserted between any terminal.
 
 Java style end of line comment: //... comment
@@ -224,7 +224,7 @@ An *inputCharacter* is letter-or-digit if the method Character.isJaveLetterOrDig
 
 An <identifier> may not be any of the keywords given above - these are reserved words in miniJava.
 
-##Built in methods
+## Built in methods
 'builtInMethods     = printlnStatement | outputStatement | sleepStatement | read | input.
 printlnStatement   = "println" "(" expression ")".
 outputStatement    = "output" "(" constantExpression "," expression ")".
@@ -232,7 +232,7 @@ sleepStatement     = "sleep" "(" expression ")".
 read               = "read".
 input              = "input" "(" constantExpression ")".'
 
-##Semantics 
+## Semantics 
 Multi-line comment may contain end of line comment.
 Multi-line comment may not be nested.
 The identifiers in a packageName must be in lower case.
