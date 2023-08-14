@@ -3,11 +3,9 @@ Java command line application that compiles miniJava programs to Z80 assembler a
 See syntax.md for a description of the miniJava syntax and semantics.
 
 Development:
-All you need is Java JDK. More is better.
-* javac *.java
-* java RegressionTest
-
-See file RegressionTest.txt for the list of *.j files with unit tests.
+All you need is Java JDK and Maven. More is better.
+* mvn compile
+* mvn test
 
 Usage:
 * java Z80Compiler
