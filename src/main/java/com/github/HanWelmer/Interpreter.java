@@ -23,10 +23,11 @@ import java.util.EnumSet;
 import java.util.Stack;
 
 /**
- * Interpreter for the M machine, as described in Compiler Engineering Using Pascal by P.C. Capon and P.J. Jinks.
+ * Interpreter for the M machine, as described in Compiler Engineering Using
+ * Pascal by P.C. Capon and P.J. Jinks.
  */
 public class Interpreter {
-  
+
   /* global variables set by the constructor */
   private ArrayList<Instruction> instructions;
   private String[] inputParts;
@@ -34,7 +35,7 @@ public class Interpreter {
   /* constants */
   private static final int MAX_STACK = 128;
   private static final int MAX_VARS = 26;
-  
+
   /* global variables */
   private EnumSet<FunctionType> branchSet = EnumSet.noneOf(FunctionType.class);
   private boolean debugMode = false;
@@ -45,13 +46,13 @@ public class Interpreter {
   private int acc16;
   private int acc8;
 
-  //constructor
+  // constructor
   public Interpreter(boolean debugMode, ArrayList<Instruction> instructions, String[] inputParts) {
     this.debugMode = debugMode;
     this.instructions = instructions;
     this.inputParts = inputParts;
-    
-    /* initialize interpreter*/
+
+    /* initialize interpreter */
     machineStack = new Stack<Integer>();
 
     vars = new int[MAX_VARS];
@@ -66,28 +67,45 @@ public class Interpreter {
     boolean consoleInput = !debugMode;
     boolean stopRun = false;
 
-    //get next instruction
+    // get next instruction
     Instruction instr = instructions.get(pc);
-    //execute instruction
+    // execute instruction
     int operand;
     int portNumber = 0;
     String str;
-    switch(instr.function){
+    switch (instr.function) {
       // single line comment
-      case comment : break;
+      case comment:
+        break;
       // 16-bit arithmetic:
-      case acc16Load: acc16 = getOp(instr.operand); break;
+      case acc16Load:
+        acc16 = getOp(instr.operand);
+        break;
       case stackAcc16Load:
         push(acc16);
         acc16 = getOp(instr.operand);
         break;
-      case acc16Or: acc16 |= getOp(instr.operand); break;
-      case acc16Xor: acc16 ^= getOp(instr.operand); break;
-      case acc16And: acc16 &= getOp(instr.operand); break;
-      case acc16Plus: acc16 += getOp(instr.operand); break;
-      case acc16Minus: acc16 -= getOp(instr.operand); break;
-      case minusAcc16: acc16 = getOp(instr.operand) - acc16; break;
-      case acc16Times: acc16 *= getOp(instr.operand); break;
+      case acc16Or:
+        acc16 |= getOp(instr.operand);
+        break;
+      case acc16Xor:
+        acc16 ^= getOp(instr.operand);
+        break;
+      case acc16And:
+        acc16 &= getOp(instr.operand);
+        break;
+      case acc16Plus:
+        acc16 += getOp(instr.operand);
+        break;
+      case acc16Minus:
+        acc16 -= getOp(instr.operand);
+        break;
+      case minusAcc16:
+        acc16 = getOp(instr.operand) - acc16;
+        break;
+      case acc16Times:
+        acc16 *= getOp(instr.operand);
+        break;
       case acc16Div:
         operand = getOp(instr.operand);
         if (operand == 0) {
@@ -102,7 +120,7 @@ public class Interpreter {
         acc16 = getOp(instr.operand) / acc16;
         break;
       case acc16Store:
-        switch(instr.operand.opType) {
+        switch (instr.operand.opType) {
           case constant:
             runError("illegal operand");
             break;
@@ -126,7 +144,7 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case increment16:
-        switch(instr.operand.opType) {
+        switch (instr.operand.opType) {
           case var:
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
@@ -141,7 +159,7 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case decrement16:
-        switch(instr.operand.opType) {
+        switch (instr.operand.opType) {
           case var:
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
@@ -155,11 +173,11 @@ public class Interpreter {
             runError("invalid operand type for decrement instruction");
         } // switch(instr.operand.opType)
         break;
-      case acc16Compare: //normal compare
+      case acc16Compare: // normal compare
         debug("        acc16=" + acc16 + ", operand=" + getOp(instr.operand) + "\n");
         branchSet = compare(acc16, getOp(instr.operand));
         break;
-      case revAcc16Compare: //reverse compare
+      case revAcc16Compare: // reverse compare
         debug(" acc16=" + acc16 + ", operand=");
         if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
           debug("" + peek() + "\n");
@@ -168,27 +186,43 @@ public class Interpreter {
         }
         branchSet = compare(acc16, getOp(instr.operand));
         break;
-      case acc16CompareAcc8: //normal compare
+      case acc16CompareAcc8: // normal compare
         debug(" acc16=" + acc16 + ", acc8=" + acc8 + "\n");
         branchSet = compare(acc16, acc8);
         break;
-      case acc8CompareAcc16: //reverse compare
+      case acc8CompareAcc16: // reverse compare
         debug(" acc8=" + acc8 + ", acc16=" + acc16 + "\n");
         branchSet = compare(acc8, acc16);
         break;
       // 8-bit arithmetic:
-      case acc8Load: acc8 = getOp(instr.operand); break;
+      case acc8Load:
+        acc8 = getOp(instr.operand);
+        break;
       case stackAcc8Load:
         push(acc8);
         acc8 = getOp(instr.operand);
         break;
-      case acc8Or: acc8 |= getOp(instr.operand); break;
-      case acc8Xor: acc8 ^= getOp(instr.operand); break;
-      case acc8And: acc8 &= getOp(instr.operand); break;
-      case acc8Plus: acc8 += getOp(instr.operand); break;
-      case acc8Minus: acc8 -= getOp(instr.operand); break;
-      case minusAcc8: acc8 = getOp(instr.operand) - acc8; break;
-      case acc8Times: acc8 *= getOp(instr.operand); break;
+      case acc8Or:
+        acc8 |= getOp(instr.operand);
+        break;
+      case acc8Xor:
+        acc8 ^= getOp(instr.operand);
+        break;
+      case acc8And:
+        acc8 &= getOp(instr.operand);
+        break;
+      case acc8Plus:
+        acc8 += getOp(instr.operand);
+        break;
+      case acc8Minus:
+        acc8 -= getOp(instr.operand);
+        break;
+      case minusAcc8:
+        acc8 = getOp(instr.operand) - acc8;
+        break;
+      case acc8Times:
+        acc8 *= getOp(instr.operand);
+        break;
       case acc8Div:
         operand = getOp(instr.operand);
         if (operand == 0) {
@@ -203,7 +237,7 @@ public class Interpreter {
         acc8 = getOp(instr.operand) / acc8;
         break;
       case acc8Store:
-        switch(instr.operand.opType) {
+        switch (instr.operand.opType) {
           case constant:
             runError("illegal operand");
             break;
@@ -221,7 +255,7 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case increment8:
-        switch(instr.operand.opType) {
+        switch (instr.operand.opType) {
           case var:
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
@@ -236,7 +270,7 @@ public class Interpreter {
         } // switch(instr.operand.opType)
         break;
       case decrement8:
-        switch(instr.operand.opType) {
+        switch (instr.operand.opType) {
           case var:
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
@@ -250,11 +284,11 @@ public class Interpreter {
             runError("invalid operand type for decrement instruction");
         } // switch(instr.operand.opType)
         break;
-      case acc8Compare: //normal compare
+      case acc8Compare: // normal compare
         debug(" acc8=" + acc8 + ", operand=" + getOp(instr.operand) + "\n");
         branchSet = compare(acc8, getOp(instr.operand));
         break;
-      case revAcc8Compare: //reverse compare
+      case revAcc8Compare: // reverse compare
         debug(" acc8=" + acc8 + ", operand=");
         if (getOpType() == OperandType.stack16 || getOpType() == OperandType.stack8) {
           debug("" + peek() + "\n");
@@ -290,8 +324,8 @@ public class Interpreter {
         acc8 = pop();
         break;
       // branch instructions:
-      case br: 
-          pc = instr.operand.intValue - 1;
+      case br:
+        pc = instr.operand.intValue - 1;
         break;
       case brEq:
       case brNe:
@@ -306,7 +340,7 @@ public class Interpreter {
         break;
       // special instructions:
       case sleep:
-        try{
+        try {
           Thread.sleep(getOp(instr.operand));
         } catch (InterruptedException e) {
           System.out.println(e);
@@ -315,101 +349,103 @@ public class Interpreter {
       case call:
         pc = instr.operand.intValue - 1;
         break;
-      //Input and output instructions:
+      // Input and output instructions:
       case output:
-          //port must be a constant or a final variable
-          str = String.format("\noutput 0x%1$02X to port 0x%2$02X", getOp(instr.operand2), getOp(instr.operand));
-          if (consoleInput) {
-            System.out.print(str);
-            System.out.print(" Press enter to confirm:");
-            System.console().readLine();
-          } else {
-            debug(str);
-          }
-          break;
+        // port must be a constant or a final variable
+        portNumber = getOp(instr.operand);
+        str = String.format("\noutput 0x%1$02X to port 0x%2$02X", getOp(instr.operand2), portNumber);
+        if (consoleInput) {
+          System.out.print(str);
+          System.out.print(" Press enter to confirm:");
+          System.console().readLine();
+        } else {
+          debug(str);
+        }
+        break;
       case input:
-          //port must be a constant or a final variable
-          System.out.print(String.format("\ninput from port 0x%1$02X: ", getOp(instr.operand)));
-          if (consoleInput) {
-            try {
-              acc8 = Integer.parseInt(System.console().readLine());
-            } catch (RuntimeException e) {
-              runError("read exception:" + e.getMessage());
-              acc8 = 0;
-              stopRun = true;
-            }
-          } else {
-            if (inputIndex >= inputParts.length) {
-              runError("read beyond input");
-              acc8 = 0;
-              stopRun = true;
-            }
-            acc8 = Integer.parseInt(inputParts[inputIndex++]);
+        // port must be a constant or a final variable
+        portNumber = getOp(instr.operand);
+        System.out.print(String.format("\ninput from port 0x%1$02X: ", portNumber));
+        if (consoleInput) {
+          try {
+            acc8 = Integer.parseInt(System.console().readLine());
+          } catch (RuntimeException e) {
+            runError("read exception:" + e.getMessage());
+            acc8 = 0;
+            stopRun = true;
           }
-          break;
+        } else {
+          if (inputIndex >= inputParts.length) {
+            runError("read beyond input");
+            acc8 = 0;
+            stopRun = true;
+          }
+          acc8 = Integer.parseInt(inputParts[inputIndex++]);
+        }
+        break;
       case read:
-          System.out.print("\nread:");
-          if (consoleInput) {
-            try {
-              acc16 = Integer.parseInt(System.console().readLine());
-            } catch (RuntimeException e) {
-              runError("read exception:" + e.getMessage());
-              acc16 = 0;
-              stopRun = true;
-            }
-          } else {
-            if (inputIndex >= inputParts.length) {
-              runError("read beyond input");
-              acc16 = 0;
-              stopRun = true;
-            }
-            acc16 = Integer.parseInt(inputParts[inputIndex++]);
+        System.out.print("\nread:");
+        if (consoleInput) {
+          try {
+            acc16 = Integer.parseInt(System.console().readLine());
+          } catch (RuntimeException e) {
+            runError("read exception:" + e.getMessage());
+            acc16 = 0;
+            stopRun = true;
           }
-          break;
+        } else {
+          if (inputIndex >= inputParts.length) {
+            runError("read beyond input");
+            acc16 = 0;
+            stopRun = true;
+          }
+          acc16 = Integer.parseInt(inputParts[inputIndex++]);
+        }
+        break;
       case writeAcc8:
-          if (debugMode) {
-            debug("" + acc8);
-          } else {
-            System.out.print(acc8);
-          }
-          break;
+        if (debugMode) {
+          debug("" + acc8);
+        } else {
+          System.out.print(acc8);
+        }
+        break;
       case writeAcc16:
-          if (debugMode) {
-            debug("" + acc16);
-          } else {
-            System.out.print(acc16);
-          }
-          break;
+        if (debugMode) {
+          debug("" + acc16);
+        } else {
+          System.out.print(acc16);
+        }
+        break;
       case writeString:
-          str = instructions.get(acc16).operand.strValue;
-          if (debugMode) {
-            debug(str);
-          } else {
-            System.out.print(str);
-          }
-          break;
+        str = instructions.get(acc16).operand.strValue;
+        if (debugMode) {
+          debug(str);
+        } else {
+          System.out.print(str);
+        }
+        break;
       case writeLineAcc8:
-          if (debugMode) {
-            debug(acc8 + "\n");
-          } else {
-            System.out.println(acc8);
-          }
-          break;
+        if (debugMode) {
+          debug(acc8 + "\n");
+        } else {
+          System.out.println(acc8);
+        }
+        break;
       case writeLineAcc16:
-          if (debugMode) {
-            debug(acc16 + "\n");
-          } else {
-            System.out.println(acc16);
-          }
-          break;
+        if (debugMode) {
+          debug(acc16 + "\n");
+        } else {
+          System.out.println(acc16);
+        }
+        break;
       case writeLineString:
-          str = instructions.get(acc16).operand.strValue;
-          if (debugMode) {
-            debug(str + "\n");
-          } else {
-            System.out.println(str);
-          }
-          break;
+        str = instructions.get(acc16).operand.strValue;
+        if (debugMode) {
+          debug(str + "\n");
+        } else {
+          System.out.println(str);
+        }
+        break;
       case stop:
         stopRun = true;
         break;
@@ -417,8 +453,8 @@ public class Interpreter {
         runError("unknown function " + instr.function);
         break;
     } // switch(instr.function)
-    
-    //truncate 8=bit and 16-bit accumulator
+
+    // truncate 8=bit and 16-bit accumulator
     acc8 %= 256;
     while (acc16 > 32767) {
       acc16 -= 65536;
@@ -427,15 +463,16 @@ public class Interpreter {
       acc16 += 65536;
     }
 
-    //log pc, instruction and registers (latter after executing the instruction).
-    debug(String.format("pc= %4d %-80s sp=%4d acc16=%5d acc8=%3d stack=%s", 
-      pc, instr.toString().substring(0, Math.min(instr.toString().length(), 80)), 
-      machineStack.size(), acc16, acc8, machineStack));
+    // log pc, instruction and registers (latter after executing the
+    // instruction).
+    debug(String.format("pc= %4d %-80s sp=%4d acc16=%5d acc8=%3d stack=%s", pc,
+        instr.toString().substring(0, Math.min(instr.toString().length(), 80)), machineStack.size(), acc16, acc8, machineStack));
 
-    //proceed to next instruction
+    // proceed to next instruction
     pc++;
 
-    //return true if Stop instruction has been executed or if a fatal error occurred.
+    // return true if Stop instruction has been executed or if a fatal error
+    // occurred.
     debug("\n");
     return stopRun;
   } // interpret()
@@ -462,49 +499,51 @@ public class Interpreter {
     System.out.println();
 
     /* dump stack */
-    int spDigits = (int)(java.lang.Math.log(machineStack.size()) / java.lang.Math.log(10)) + 1;
+    int spDigits = (int) (java.lang.Math.log(machineStack.size()) / java.lang.Math.log(10)) + 1;
     String spFormat = "%" + spDigits + "d";
-    for (int i = 0; i<machineStack.size(); i++) {
+    for (int i = 0; i < machineStack.size(); i++) {
       System.out.println("stack item " + String.format(spFormat, i) + " = " + machineStack.get(i));
     }
     System.out.println();
 
     System.exit(1);
   }
-  
+
   private void push(int data) {
     if (machineStack.size() == MAX_STACK) {
       runError("stack overflow");
     }
     machineStack.push(data);
   }
-  
+
   private int pop() {
     if (machineStack.size() == 0) {
       runError("stack underflow");
     }
     return machineStack.pop();
   }
-  
+
   private int peek() {
     if (machineStack.size() == 0) {
       runError("stack underflow");
     }
     return machineStack.get(machineStack.size() - 1);
   }
-  
+
   private OperandType getOpType() {
     return instructions.get(pc).operand.opType;
   }
-  
+
   private int getOp(Operand operand) {
     int result = 0;
-    switch(operand.opType) {
+    switch (operand.opType) {
       case stack8:
       case stack16:
         result = pop();
         break;
-      case constant: result = operand.intValue; break;
+      case constant:
+        result = operand.intValue;
+        break;
       case var:
         if (operand.isFinal) {
           debug("pc=" + pc + " final var " + operand.strValue + " = " + operand.intValue + "\n");
@@ -528,7 +567,7 @@ public class Interpreter {
     }
     return result;
   }
-  
+
   private EnumSet<FunctionType> compare(int accu, int operand) {
     EnumSet<FunctionType> result = EnumSet.noneOf(FunctionType.class);
     if (accu == operand) {
@@ -550,5 +589,5 @@ public class Interpreter {
     }
     return result;
   }
-  
+
 }

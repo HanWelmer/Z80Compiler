@@ -19,15 +19,18 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 package com.github.HanWelmer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 /*
 * This class implements a single line of assembly code
 */
 public class AssemblyInstruction {
-  
-  private String code;            /* assembler code */
-  private int address;           /* start address of the assembled instruction. */
-  private ArrayList<Byte> bytes;  /* assembler instruction coded as an array of bytes. */
+
+  private String code; /* assembler code */
+  private int address; /* start address of the assembled instruction. */
+  private ArrayList<Byte> bytes; /*
+                                  * assembler instruction coded as an array of
+                                  * bytes.
+                                  */
 
   /* constructor */
   public AssemblyInstruction(int address, String code, int... bytes) {
@@ -36,11 +39,11 @@ public class AssemblyInstruction {
     if (bytes != null && bytes.length > 0) {
       this.bytes = new ArrayList<Byte>(bytes.length);
     }
-    for (int newByte: bytes) {
-      this.bytes.add((byte)newByte);
+    for (int newByte : bytes) {
+      this.bytes.add((byte) newByte);
     }
   }
-  
+
   public String getCode() {
     return code;
   }
@@ -48,9 +51,9 @@ public class AssemblyInstruction {
   public int getAddress() {
     return address;
   }
-  
+
   public ArrayList<Byte> getBytes() {
     return bytes;
   }
-  
+
 }

@@ -29,9 +29,9 @@ import java.util.Map;
 public class LexemeReader {
 
   /* Class member variables for lexical analysis phase */
-  private String jCodeLocation;
+  private String jCodePath;
   private String fileName;
-  private FileReader fr; 
+  private FileReader fr;
   private BufferedReader input;
   protected boolean debugMode = false;
   private int lastLinePrinted;
@@ -44,18 +44,19 @@ public class LexemeReader {
   /* Constants for lexical analysis phase */
   protected static final int MAX_LINE_WIDTH = 128;
   protected static final int MAX_IDENTIFIER_LENGTH = MAX_LINE_WIDTH;
-  protected static final int MAX_BYT_CONSTANT = 255; //8 bit constant
-  protected static final int MAX_INT_CONSTANT = 65535; //16 bit constant
-  protected static final String VALID_IDENTIFIER_CHARACTERS ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
-  protected static final String VALID_DECIMAL_DIGITS ="0123456789";
-  protected static final String VALID_HEXADECIMAL_DIGITS ="ABCDEF0123456789";
+  protected static final int MAX_BYT_CONSTANT = 255; // 8 bit constant
+  protected static final int MAX_INT_CONSTANT = 65535; // 16 bit constant
+  protected static final String VALID_IDENTIFIER_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+  protected static final String VALID_DECIMAL_DIGITS = "0123456789";
+  protected static final String VALID_HEXADECIMAL_DIGITS = "ABCDEF0123456789";
 
   /**
-  * return true if opening the file as lexeme reader is successfull, false otherwise.
-  **/
-  protected boolean init(boolean debugMode, String jCodeLocation, String fileName) {
+   * return true if opening the file as lexeme reader is successfull, false
+   * otherwise.
+   **/
+  protected boolean init(boolean debugMode, String jCodePath, String fileName) {
     this.debugMode = debugMode;
-    this.jCodeLocation = jCodeLocation;
+    this.jCodePath = jCodePath;
     this.fileName = fileName;
 
     lastLinePrinted = 0;
@@ -70,7 +71,7 @@ public class LexemeReader {
 
     boolean result = false;
     try {
-      this.fr = new FileReader(jCodeLocation + fileName); 
+      this.fr = new FileReader(jCodePath + fileName);
       this.input = new BufferedReader(fr);
       result = true;
     } catch (FileNotFoundException e) {
@@ -79,7 +80,7 @@ public class LexemeReader {
 
     return result;
   }
-  
+
   protected String getLine() throws FatalError {
     String line;
     try {
@@ -89,29 +90,31 @@ public class LexemeReader {
       System.out.println(e.getMessage());
       System.out.println();
       e.printStackTrace();
-      throw new FatalError(4); //unknown character
+      throw new FatalError(4); // unknown character
     }
     return line;
   }
-  
+
   protected char nextChar(ArrayList<String> sourceCode) throws FatalError {
     if (linePos >= lineSize) {
       line = getLine();
       if (line == null) {
-        throw new FatalError(1); //end of file encountered
-      };
-      
-      //when in debug mode, make sure the echoed source code starts on a new line.
+        throw new FatalError(1); // end of file encountered
+      }
+      ;
+
+      // when in debug mode, make sure the echoed source code starts on a new
+      // line.
       if (debugMode) {
         System.out.println();
         System.out.print("<-");
         System.out.print(line);
       }
       sourceCode.add(String.format("%s(%d) %s", fileName, lineNumber, line));
- 
+
       lineSize = line.length();
       if (lineSize > MAX_LINE_WIDTH) {
-        throw new FatalError(2); //line too long
+        throw new FatalError(2); // line too long
       }
       line += "\n";
       lineSize++;
@@ -119,50 +122,61 @@ public class LexemeReader {
       linePos = 0;
     }
     return line.charAt(linePos);
-  } //nextChar()
+  } // nextChar()
 
   protected char getChar(ArrayList<String> sourceCode) throws FatalError {
     char result = nextChar(sourceCode);
     linePos++;
     return result;
-  } //getChar()
-  
+  } // getChar()
+
   public void error() {
     if (lastLinePrinted != lineNumber) {
-      //when in debug mode, make sure error message starts at a new line
-      if (debugMode) System.out.println();
-      System.out.println(fileName + ":" + jCodeLocation + lineNumber);
-      System.out.print(line); //when line of source code was read, it was extended with a linefeed.
+      // when in debug mode, make sure error message starts at a new line
+      if (debugMode)
+        System.out.println();
+      System.out.println(fileName + ":" + jCodePath + lineNumber);
+      System.out.print(line); // when line of source code was read, it was
+                              // extended with a linefeed.
       lastLinePrinted = lineNumber;
     }
-    for (int i=0; i<linePos-1; i++) {
+    for (int i = 0; i < linePos - 1; i++) {
       System.out.print(' ');
     }
     System.out.print('^');
   }
 
   protected int toDecimalDigit(char ch) {
-    return (int)ch - (int)'0';
+    return (int) ch - (int) '0';
   }
 
   protected int toHexadecimalDigit(char ch) {
     int digit = 0;
     if (Character.isDigit(ch)) {
-      digit = (int)ch - (int)'0';
+      digit = (int) ch - (int) '0';
     } else if (ch >= 'A' && ch <= 'F') {
-      digit = 10 + (int)ch - (int)'A';
+      digit = 10 + (int) ch - (int) 'A';
     }
     return digit;
   }
 
+  public String getPath() {
+    return jCodePath;
+  }
+
+  public String getFileName() {
+    return fileName;
+  }
+
   /**
-  * return the next lexeme from the lexeme reader.
-  * parm sourceCode: this list will be extended by any lines of source code that have been read while getting the next lexeme.
-  **/
+   * return the next lexeme from the lexeme reader. parm sourceCode: this list
+   * will be extended by any lines of source code that have been read while
+   * getting the next lexeme.
+   **/
   public Lexeme getLexeme(ArrayList<String> sourceCode) throws FatalError {
     Lexeme lexeme = new Lexeme(LexemeType.unknown);
     char ch;
-    //ignore white space and comments
+    // ignore white space and comments
     ch = getChar(sourceCode);
     while (ch == ' ' || ch == '\t' || ch == '\n' || (ch == '/' && (nextChar(sourceCode) == '*' || nextChar(sourceCode) == '/'))) {
       if (ch == '/' && nextChar(sourceCode) == '*') {
@@ -183,20 +197,20 @@ public class LexemeReader {
 
     if (ch >= '0' && ch <= '9') {
       // try to recognise a constant.
-      // constant         = decimalConstant | hexadecimalConstant.
-      // decimalConstant  = "(0-9)*".
+      // constant = decimalConstant | hexadecimalConstant.
+      // decimalConstant = "(0-9)*".
       // hexadecimalConstant = "(0-9)x(A-F0-()*".
       lexeme.type = LexemeType.constant;
-      lexeme.constVal = (int)ch - (int)'0';
+      lexeme.constVal = (int) ch - (int) '0';
       boolean error = false;
       boolean isHexadecimal = (nextChar(sourceCode) == 'x');
       if (isHexadecimal) {
-        //eat the 'x' character.
+        // eat the 'x' character.
         ch = getChar(sourceCode);
         while (VALID_HEXADECIMAL_DIGITS.contains("" + nextChar(sourceCode)) && !error) {
           ch = getChar(sourceCode);
           lexeme.constVal = lexeme.constVal * 16 + toHexadecimalDigit(ch);
-          //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
+          // assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
           if (lexeme.constVal > MAX_INT_CONSTANT) {
             error = true;
           }
@@ -205,7 +219,7 @@ public class LexemeReader {
         while (VALID_DECIMAL_DIGITS.contains("" + nextChar(sourceCode)) && !error) {
           ch = getChar(sourceCode);
           lexeme.constVal = lexeme.constVal * 10 + toDecimalDigit(ch);
-          //assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
+          // assumption: lexeme.constVal can be larger than MAX_INT_CONSTANT.
           if (lexeme.constVal > MAX_INT_CONSTANT) {
             error = true;
           }
@@ -227,21 +241,50 @@ public class LexemeReader {
       lexeme.stringVal = "";
       while (nextChar(sourceCode) != '"') {
         ch = getChar(sourceCode);
-        //handle escape sequences
+        // handle escape sequences
         if (ch != '\\') {
           lexeme.stringVal += ch;
         } else {
           switch (nextChar(sourceCode)) {
-            case '\\': lexeme.stringVal += '\\'; ch = getChar(sourceCode); break;  // backslash
-            case '\'': lexeme.stringVal += '\''; ch = getChar(sourceCode); break;  // single quote
-            case '"': lexeme.stringVal += '\"'; ch = getChar(sourceCode); break;   // double quotes
-            case 'n': lexeme.stringVal += '\n'; ch = getChar(sourceCode); break;   // newline
-            case 'r': lexeme.stringVal += '\r'; ch = getChar(sourceCode); break;   // carriage return
-            case 't': lexeme.stringVal += '\t'; ch = getChar(sourceCode); break;   // horizondal tab
-            case 'b': lexeme.stringVal += '\b'; ch = getChar(sourceCode); break;   // backspace
-            case 'f': lexeme.stringVal += '\012'; ch = getChar(sourceCode); break; // form feed
-            case 'a': lexeme.stringVal += '\007'; ch = getChar(sourceCode); break; // alert/bell
-            default : error(); System.out.println("illegal character " + nextChar(sourceCode) + " after escape character '\'.");
+            case '\\':
+              lexeme.stringVal += '\\';
+              ch = getChar(sourceCode);
+              break; // backslash
+            case '\'':
+              lexeme.stringVal += '\'';
+              ch = getChar(sourceCode);
+              break; // single quote
+            case '"':
+              lexeme.stringVal += '\"';
+              ch = getChar(sourceCode);
+              break; // double quotes
+            case 'n':
+              lexeme.stringVal += '\n';
+              ch = getChar(sourceCode);
+              break; // newline
+            case 'r':
+              lexeme.stringVal += '\r';
+              ch = getChar(sourceCode);
+              break; // carriage return
+            case 't':
+              lexeme.stringVal += '\t';
+              ch = getChar(sourceCode);
+              break; // horizondal tab
+            case 'b':
+              lexeme.stringVal += '\b';
+              ch = getChar(sourceCode);
+              break; // backspace
+            case 'f':
+              lexeme.stringVal += '\012';
+              ch = getChar(sourceCode);
+              break; // form feed
+            case 'a':
+              lexeme.stringVal += '\007';
+              ch = getChar(sourceCode);
+              break; // alert/bell
+            default:
+              error();
+              System.out.println("illegal character " + nextChar(sourceCode) + " after escape character '\'.");
           }
         }
       }
@@ -251,11 +294,11 @@ public class LexemeReader {
       lexeme.type = LexemeType.beginLexeme;
     } else if (ch == '}') {
       lexeme.type = LexemeType.endLexeme;
-    } else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)){
+    } else if (VALID_IDENTIFIER_CHARACTERS.contains("" + ch)) {
       /* try to recognise an identifier or a keyword */
       String name = String.valueOf(ch);
       int charno = 0;
-      while ( VALID_IDENTIFIER_CHARACTERS.contains("" + nextChar(sourceCode)) && charno <= MAX_IDENTIFIER_LENGTH) {
+      while (VALID_IDENTIFIER_CHARACTERS.contains("" + nextChar(sourceCode)) && charno <= MAX_IDENTIFIER_LENGTH) {
         if (charno <= MAX_IDENTIFIER_LENGTH) {
           name += String.valueOf(getChar(sourceCode));
           charno++;
@@ -267,30 +310,38 @@ public class LexemeReader {
       LexemeType keyword = keywords.get(name);
       if (keyword == null) {
         lexeme.type = LexemeType.identifier;
-      }
-      else {
+      } else {
         lexeme.type = keyword;
       }
       lexeme.idVal = name;
     } else {
-      /* try to recognise keywords or symbols . , ; | ^ & == != < <= > >= + - * / ( ) */
+      /*
+       * try to recognise keywords or symbols . , ; | ^ & == != < <= > >= + - *
+       * / ( )
+       */
       switch (ch) {
-        case '.' : lexeme.type = LexemeType.period; break;
-        case ',' : lexeme.type = LexemeType.comma; break;
-        case ';' : lexeme.type = LexemeType.semicolon; break;
-        case '|' :
+        case '.':
+          lexeme.type = LexemeType.period;
+          break;
+        case ',':
+          lexeme.type = LexemeType.comma;
+          break;
+        case ';':
+          lexeme.type = LexemeType.semicolon;
+          break;
+        case '|':
           lexeme.type = LexemeType.bitwiseOrOp;
           lexeme.operator = OperatorType.bitwiseOr;
           break;
-        case '^' :
+        case '^':
           lexeme.type = LexemeType.bitwiseXorOp;
           lexeme.operator = OperatorType.bitwiseXor;
           break;
-        case '&' :
+        case '&':
           lexeme.type = LexemeType.bitwiseAndOp;
           lexeme.operator = OperatorType.bitwiseAnd;
           break;
-        case '=' :
+        case '=':
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
             lexeme.type = LexemeType.relop;
@@ -299,7 +350,7 @@ public class LexemeReader {
             lexeme.type = LexemeType.assign;
           }
           break;
-        case '!' :
+        case '!':
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
             lexeme.type = LexemeType.relop;
@@ -310,7 +361,7 @@ public class LexemeReader {
             System.out.println("! not followed by = ");
           }
           break;
-        case '<' :
+        case '<':
           lexeme.type = LexemeType.relop;
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
@@ -319,7 +370,7 @@ public class LexemeReader {
             lexeme.operator = OperatorType.lt;
           }
           break;
-        case '>' :
+        case '>':
           lexeme.type = LexemeType.relop;
           if (nextChar(sourceCode) == '=') {
             ch = getChar(sourceCode);
@@ -328,25 +379,29 @@ public class LexemeReader {
             lexeme.operator = OperatorType.gt;
           }
           break;
-        case '+' :
+        case '+':
           lexeme.type = LexemeType.addop;
           lexeme.operator = OperatorType.add;
           break;
-        case '-' :
+        case '-':
           lexeme.type = LexemeType.addop;
           lexeme.operator = OperatorType.sub;
           break;
-        case '*' :
+        case '*':
           lexeme.type = LexemeType.mulop;
           lexeme.operator = OperatorType.mul;
           break;
-        case '/' :
+        case '/':
           lexeme.type = LexemeType.mulop;
           lexeme.operator = OperatorType.div;
           break;
-        case '(' : lexeme.type = LexemeType.lbracket; break;
-        case ')' : lexeme.type = LexemeType.rbracket; break;
-        default :
+        case '(':
+          lexeme.type = LexemeType.lbracket;
+          break;
+        case ')':
+          lexeme.type = LexemeType.rbracket;
+          break;
+        default:
           lexeme.type = LexemeType.unknown;
           error();
           System.out.println("unknown character");
@@ -357,6 +412,6 @@ public class LexemeReader {
     }
     lexeme.sourceLineNr = lineNumber;
     return lexeme;
-  } //getLexeme()
+  } // getLexeme()
 
 }

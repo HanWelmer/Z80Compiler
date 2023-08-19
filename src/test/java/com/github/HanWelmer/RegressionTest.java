@@ -21,11 +21,11 @@ package com.github.HanWelmer;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -33,67 +33,100 @@ import org.junit.Test;
 /**
  * Regression test for the Z80Compiler.
  */
-public class RegressionTest
-{
+public class RegressionTest {
   private final static String jCodeLocation = "/src/test/resources/jCode/";
   private final static String expectedLocation = "/src/test/resources/expected/";
   private final static boolean debugMode = false;
   private final static boolean verboseMode = false;
 
-  @Test
-  public void test() { assertTrue( singleTest("test.j") ); }
+  // @Test
+  public void test() {
+    assertTrue(singleTest("me/test.j"));
+  }
 
   @Test
-  public void test0() { assertTrue( singleTest("test0.j") ); }
+  public void test0() {
+    assertTrue(singleTest("test0.j"));
+  }
 
   @Test
-  public void test1() { assertTrue( singleTest("test1.j") ); }
+  public void test1() {
+    assertTrue(singleTest("test1.j"));
+  }
 
   @Test
-  public void test2() { assertTrue( singleTest("test2.j") ); }
+  public void test2() {
+    assertTrue(singleTest("test2.j"));
+  }
 
   @Test
-  public void test3() { assertTrue( singleTest("test3.j") ); }
+  public void test3() {
+    assertTrue(singleTest("test3.j"));
+  }
 
   @Test
-  public void test4() { assertTrue( singleTest("test4.j") ); }
+  public void test4() {
+    assertTrue(singleTest("test4.j"));
+  }
 
   @Test
-  public void test5() { assertTrue( singleTest("test5.j") ); }
+  public void test5() {
+    assertTrue(singleTest("test5.j"));
+  }
 
   @Test
-  public void test6() { assertTrue( singleTest("test6.j") ); }
+  public void test6() {
+    assertTrue(singleTest("test6.j"));
+  }
 
   @Test
-  public void test7() { assertTrue( singleTest("test7.j") ); }
+  public void test7() {
+    assertTrue(singleTest("test7.j"));
+  }
 
   @Test
-  public void test8() { assertTrue( singleTest("test8.j") ); }
+  public void test8() {
+    assertTrue(singleTest("test8.j"));
+  }
 
   @Test
-  public void test9() { assertTrue( singleTest("test9.j") ); }
+  public void test9() {
+    assertTrue(singleTest("test9.j"));
+  }
 
   @Test
-  public void test10() { assertTrue( singleTest("test10.j") ); }
+  public void test10() {
+    assertTrue(singleTest("test10.j"));
+  }
 
   @Test
-  public void test11() { assertTrue( singleTest("test11.j") ); }
+  public void test11() {
+    assertTrue(singleTest("test11.j"));
+  }
 
   @Test
-  public void test12() { assertTrue( singleTest("test12.j") ); }
+  public void test12() {
+    assertTrue(singleTest("test12.j"));
+  }
 
   @Test
-  public void test13() { assertTrue( singleTest("test13.j") ); }
+  public void test13() {
+    assertTrue(singleTest("test13.j"));
+  }
 
   @Test
-  public void test14() { assertTrue( singleTest("test14.j") ); }
+  public void test14() {
+    assertTrue(singleTest("test14.j"));
+  }
 
   @Test
-  public void test15() { assertTrue( singleTest("test15.j") ); }
+  public void test15() {
+    assertTrue(singleTest("test15.j"));
+  }
 
   /*
-  * Run a single test in the regression test suite.
-  */
+   * Run a single test in the regression test suite.
+   */
   private boolean singleTest(String fileName) {
     // Compile miniJava-code to M-code instructions.
     LexemeReader lexemeReader = new LexemeReader();
@@ -108,96 +141,109 @@ public class RegressionTest
     ArrayList<Instruction> instructions = pCompiler.compile(lexemeReader);
 
     // Compare M-code from compiler against expected M-code.
-    FileReader fr; 
+    FileReader fr;
     BufferedReader br;
     boolean result = false;
     try {
-      int pos=0;
-      fr = new FileReader(System.getProperty("user.dir") + expectedLocation + fileName.replace(".j", ".exp")); 
+      int pos = 0;
+      fr = new FileReader(System.getProperty("user.dir") + expectedLocation + fileName.replace(".j", ".exp"));
       br = new BufferedReader(fr);
       String actual = "";
       String expected = "";
-      while (br.ready() && pos < instructions.size()) {
-        //actual M-Code.
+      boolean proceed = true;
+      while (br.ready() && pos < instructions.size() && proceed) {
+        // actual M-Code.
         actual = String.format("%4d %s", pos, instructions.get(pos).toString());
 
-        //expected M-Code.expected
+        // expected M-Code.expected
         expected = br.readLine();
-        
-        //for debugging purposes
-        //System.out.println("actual   " + actual);
-        //System.out.println("expected " + expected);
 
-        //compared
+        // for debugging purposes
+        // System.out.println("actual " + actual);
+        // System.out.println("expected " + expected);
+
+        // compared
         if (actual.equals(expected)) {
           pos++;
-        //special cases for string comparisons
+          // special cases for string comparisons
         } else if (actual.contains("\r")) {
           List<String> actualLines = Arrays.asList(actual.split("\r", -1));
           // for debugging purposes
-          //System.out.println("actual contains carriage return.");
-          //for (int i = 0; i<actualLines.size(); i++) {
-          //  System.out.println(i + " " + actualLines.get(i));
-          //}
+          // System.out.println("actual contains carriage return.");
+          // for (int i = 0; i<actualLines.size(); i++) {
+          // System.out.println(i + " " + actualLines.get(i));
+          // }
           // compare string sequences
-          //System.out.println("actual 0 " + actualLines.get(0));
-          //System.out.println("expected " + expected);
+          // System.out.println("actual 0 " + actualLines.get(0));
+          // System.out.println("expected " + expected);
           if (!actualLines.get(0).equals(expected)) {
-            System.out.println(String.format("Error : %s(%d)\n  received: 0 %s\n  expected: %s", fileName, pos, actualLines.get(0), expected));
-            return false;
+            System.out.println(
+                String.format("Error : %s(%d)\n  received: 0 %s\n  expected: %s", fileName, pos, actualLines.get(0), expected));
+            result = false;
+            proceed = false;
           }
           expected = br.readLine();
-          //System.out.println("actual 1 " + actualLines.get(1));
-          //System.out.println("expected " + expected);
+          // System.out.println("actual 1 " + actualLines.get(1));
+          // System.out.println("expected " + expected);
           if (!actualLines.get(1).equals(expected)) {
-            System.out.println(String.format("Error : %s(%d)\n  received: 1 %s\n  expected: %s", fileName, pos, actualLines.get(1), expected));
-            return false;
+            System.out.println(
+                String.format("Error : %s(%d)\n  received: 1 %s\n  expected: %s", fileName, pos, actualLines.get(1), expected));
+            result = false;
+            proceed = false;
           } else {
             pos++;
           }
         } else if (actual.contains("\n")) {
           List<String> actualLines = Arrays.asList(actual.split("\n", -1));
           // for debugging purposes
-          //System.out.println("actual contains linefeed.");
-          //for (int i = 0; i<actualLines.size(); i++) {
-          //  System.out.println(i + " " + actualLines.get(i));
-          //}
+          // System.out.println("actual contains linefeed.");
+          // for (int i = 0; i<actualLines.size(); i++) {
+          // System.out.println(i + " " + actualLines.get(i));
+          // }
           // compare string sequences
-          //System.out.println("actual 0 " + actualLines.get(0));
-          //System.out.println("expected " + expected);
+          // System.out.println("actual 0 " + actualLines.get(0));
+          // System.out.println("expected " + expected);
           if (!actualLines.get(0).equals(expected)) {
-            System.out.println(String.format("Error : %s(%d)\n  received: 0 %s\n  expected: %s", fileName, pos, actualLines.get(0), expected));
-            return false;
+            System.out.println(
+                String.format("Error : %s(%d)\n  received: 0 %s\n  expected: %s", fileName, pos, actualLines.get(0), expected));
+            result = false;
+            proceed = false;
           }
           expected = br.readLine();
-          //System.out.println("actual 1 " + actualLines.get(1));
-          //System.out.println("expected " + expected);
+          // System.out.println("actual 1 " + actualLines.get(1));
+          // System.out.println("expected " + expected);
           if (!actualLines.get(1).equals(expected)) {
-            System.out.println(String.format("Error : %s(%d)\n  received: 1 %s\n  expected: %s", fileName, pos, actualLines.get(1), expected));
-            return false;
+            System.out.println(
+                String.format("Error : %s(%d)\n  received: 1 %s\n  expected: %s", fileName, pos, actualLines.get(1), expected));
+            result = false;
+            proceed = false;
           } else {
             pos++;
           }
         } else {
           System.out.println(String.format("Error : %s(%d)\n  received: %s\n  expected: %s", fileName, pos, actual, expected));
-          return false;
+          result = false;
+          proceed = false;
         }
       }
-     String error = "Error : %s(%d) received %d lines, which is %s than expected; first %s line: %4d :%s";
-     if (!br.ready() && pos == instructions.size()) {
+      String error = "Error : %s(%d) received %d lines, which is %s than expected; first %s line: %4d :%s";
+      if (!br.ready() && pos == instructions.size()) {
         result = true;
-     } else if (pos == instructions.size()) {
+      } else if (pos == instructions.size()) {
         System.out.println(String.format(error, fileName, pos, pos, "less", "missing", pos, expected));
-     } else {
+        result = false;
+      } else {
         System.out.println(String.format(error, fileName, pos, instructions.size(), "more", "superfluous", pos, actual));
-     }
+        result = false;
+      }
+      br.close();
     } catch (FileNotFoundException e) {
       System.out.println("Error : " + fileName + " : " + e.getMessage());
     } catch (IOException e) {
       System.out.println(e.getMessage());
       System.out.println("Error : " + fileName + " : " + e.getMessage());
     }
-    
+
     return result;
-  } //singleTest
+  } // singleTest
 }

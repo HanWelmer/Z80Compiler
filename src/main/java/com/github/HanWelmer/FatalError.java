@@ -19,19 +19,20 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 package com.github.HanWelmer;
 
 /**
- * This class defines the fatal exception thrown within the compiler of the P language. 
- * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
+ * This class defines the fatal exception thrown within the compiler of the P
+ * language. Used in lexical analysis, semantic analysis and code generation
+ * phases of the compiler.
  */
 public class FatalError extends Exception {
-   private int errorNumber;
-   
-   public FatalError(int error) {
+  private static final long serialVersionUID = -7608810549340442114L;
+  private int errorNumber;
+
+  public FatalError(int error) {
     super();
     errorNumber = error;
   }
-   
-   public int getErrorNumber() {
-      return errorNumber;
-   }
-};
 
+  public int getErrorNumber() {
+    return errorNumber;
+  }
+};

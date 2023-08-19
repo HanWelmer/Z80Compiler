@@ -18,11 +18,10 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.HanWelmer;
 
-import java.util.Map;
-
 /**
- * This class defines the type and value for a lexeme in the p Language.
- * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
+ * This class defines the type and value for a lexeme in the p Language. Used in
+ * lexical analysis, semantic analysis and code generation phases of the
+ * compiler.
  */
 public class Lexeme {
   protected LexemeType type;
@@ -31,10 +30,10 @@ public class Lexeme {
   protected Datatype datatype;
   protected String idVal;
   protected OperatorType operator;
-  //Line number of source code leading up to and including this lexeme.
+  // Line number of source code leading up to and including this lexeme.
   public int sourceLineNr = 0;
-  
-  public Lexeme (LexemeType type) {
+
+  public Lexeme(LexemeType type) {
     this.type = type;
   }
 
@@ -55,9 +54,9 @@ public class Lexeme {
         result += stringVal;
         result += "\"";
         break;
-      case identifier: 
+      case identifier:
         result += " " + idVal;
-        if ((variable != null) && (variable.getAddress() >=0)) {
+        if ((variable != null) && (variable.getAddress() >= 0)) {
           result += "{";
           result += variable.getDatatype().getValue();
           result += "}@";
@@ -68,6 +67,38 @@ public class Lexeme {
       case mulop:
       case relop:
         result += " " + operator;
+        break;
+      case comma:
+      case period:
+      case semicolon:
+      case packageLexeme:
+      case classLexeme:
+      case importLexeme:
+      case publicLexeme:
+      case finalLexeme:
+      case byteLexeme:
+      case wordLexeme:
+      case stringLexeme:
+      case assign:
+      case beginLexeme:
+      case endLexeme:
+      case forLexeme:
+      case ifLexeme:
+      case elseLexeme:
+      case whileLexeme:
+      case doLexeme:
+      case lbracket:
+      case rbracket:
+      case bitwiseAndOp:
+      case bitwiseOrOp:
+      case bitwiseXorOp:
+      case inputLexeme:
+      case outputLexeme:
+      case readLexeme:
+      case printlnLexeme:
+      case sleepLexeme:
+      case unknown:
+        // nothing todo
         break;
     }
     return result;
