@@ -94,143 +94,261 @@ or:
 `compilationUnit                      = packageDeclaration? { importDeclaration } typeDeclaration.`
 
 ### Declarations
-`packageDeclaration                   = "package" packageName ";".
-importDeclaration                    = "import" packageName "." importType ";".
-importType                           = identifier | "*".
-typeDeclaration                      = classDeclaration.
-classDeclaration                     = classModifier "class" identifier classBody.
-classModifier                        = "public".
-classBody                            = "{" { classBodyDeclaration } "}".
-classBodyDeclaration                 = classMemberDeclaration | staticInitializer.
-classMemberDeclaration               = fieldDeclaration | methodDeclaration.
-staticInitializer                    = "static" block.
-fieldDeclaration                     = { fieldModifier } type variableDeclarators ";".
-fieldModifier                        = "public" | "private" | "final".
-methodDeclaration                    = methodHeader methodBody.
-methodHeader                         = { methodModifier } resultType methodDeclarator.
-methodModifier                       = "public" | "private".
-resultType                           = type | "void".
-methodDeclarator                     = identifier "(" formalParameterList? ")".
-formalParameterList                  = formalParameter {"," formalParameter}.
-formalParameter                      = type variableDeclaratorId.
-methodBody                           = block | ";".`
+`packageDeclaration                   = "package" packageName ";".`
+
+`importDeclaration                    = "import" packageName "." importType ";".`
+
+`importType                           = identifier | "*".`
+
+`typeDeclaration                      = classDeclaration.`
+
+`classDeclaration                     = classModifier "class" identifier classBody.`
+
+`classModifier                        = "public".`
+
+`classBody                            = "{" { classBodyDeclaration } "}".`
+
+`classBodyDeclaration                 = classMemberDeclaration | staticInitializer.`
+
+`classMemberDeclaration               = fieldDeclaration | methodDeclaration.`
+
+`staticInitializer                    = "static" block.`
+
+`fieldDeclaration                     = { fieldModifier } type variableDeclarators ";".`
+
+`fieldModifier                        = "public" | "private" | "final".`
+
+`methodDeclaration                    = methodHeader methodBody.`
+
+`methodHeader                         = { methodModifier } resultType methodDeclarator.`
+
+`methodModifier                       = "public" | "private".`
+
+`resultType                           = type | "void".`
+
+`methodDeclarator                     = identifier "(" formalParameterList? ")".`
+
+`formalParameterList                  = formalParameter {"," formalParameter}.`
+
+`formalParameter                      = type variableDeclaratorId.`
+
+`methodBody                           = block | ";".`
 
 ### Blocks and Commands
-`block                                = "{" { blockStatement } "}".
-blockStatement                       = localVariableDeclarationStatement | statement.
-localVariableDeclarationStatement    = localVariableDeclaration ";".
-localVariableDeclaration             = type variableDeclarators.`
+`block                                = "{" { blockStatement } "}".`
+
+`blockStatement                       = localVariableDeclarationStatement | statement.`
+
+`localVariableDeclarationStatement    = localVariableDeclaration ";".`
+
+`localVariableDeclaration             = type variableDeclarators.`
 
 ### Types
-`type                                 = primitiveType.
-primitiveType                        = numericType.
-numericType                          = integralType.
-integralType                         = "byte" | "word".
-variableDeclarators                  = variableDeclarator {"," variableDeclarator}.
-variableDeclarator                   = variableDeclaratorId ["=" variableInitializer].
-variableDeclaratorId                 = identifier.
-variableInitializer                  = expression.
-statement                            = statementExceptIf | ifStatement
-statementExceptIf                    = statementWithoutTrailingSubstatement | whileStatement | forStatement.
-statementWithoutTrailingSubstatement = block | emptyStatement | expressionStatement | doStatement | returnStatement.
-emptyStatement                       = ";".
-expressionStatement                  = statementExpression ";".
-statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.
-preincrementExpression               = "++" unaryExpression.
-predecrementExpression               = "--" unaryExpression.
-doStatement                          = "do" statement "while" "(" expression ")" ";".
-returnStatement                      = "return" expression? ";".
-whileStatement                       = "while" "(" expression ")" statementExceptIf.
-forStatement                         = "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.
-forInit                              = statementExpressionList | localVariableDeclaration.
-forUpdate                            = statementExpressionList.
-statementExpressionList              = statementExpression {"," statementExpression}.
-ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].
-constantExpression                   = expression.`
+`type                                 = primitiveType.`
+
+`primitiveType                        = numericType.`
+
+`numericType                          = integralType.`
+
+`integralType                         = "byte" | "word".`
+
+`variableDeclarators                  = variableDeclarator {"," variableDeclarator}.`
+
+`variableDeclarator                   = variableDeclaratorId ["=" variableInitializer].`
+
+`variableDeclaratorId                 = identifier.`
+
+`variableInitializer                  = expression.`
+
+`statement                            = statementExceptIf | ifStatement.`
+
+`statementExceptIf                    = statementWithoutTrailingSubstatement | whileStatement | forStatement.`
+
+`statementWithoutTrailingSubstatement = block | emptyStatement | expressionStatement | doStatement | returnStatement.`
+
+`emptyStatement                       = ";".`
+
+`expressionStatement                  = statementExpression ";".`
+
+`statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.`
+
+`preincrementExpression               = "++" unaryExpression.`
+
+`predecrementExpression               = "--" unaryExpression.`
+
+`doStatement                          = "do" statement "while" "(" expression ")" ";".`
+
+`returnStatement                      = "return" expression? ";".`
+
+`whileStatement                       = "while" "(" expression ")" statementExceptIf.`
+
+`forStatement                         = "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.`
+
+`forInit                              = statementExpressionList | localVariableDeclaration.`
+
+`forUpdate                            = statementExpressionList.`
+
+`statementExpressionList              = statementExpression {"," statementExpression}.`
+
+`ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].`
+
+`constantExpression                   = expression.`
 
 ### Expressions
-`expression                           = assignmentExpression.
-assignmentExpression                 = assignment | conditionalExpression.
-assignment                           = leftHandSide assignmentOperator assignmentExpression.
-leftHandSide                         = expressionName.
-assignmentOperator                   = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=".
-conditionalExpression                = conditionalOrExpression [ "?" expression ":" conditionalExpression ].
-conditionalOrExpression              = conditionalAndExpression { "||" conditionalAndExpression }.
-conditionalAndExpression             = inclusiveOrExpression { "&&" inclusiveOrExpression }.
-inclusiveOrExpression                = exclusiveOrExpression { "|" exclusiveOrExpression }.
-exclusiveOrExpression                = andExpression { "^" andExpression }.
-andExpression                        = equalityExpression { "&" equalityExpression }.
-equalityExpression                   = relationalExpression [ equalityOperator equalityExpression ].
-equalityOperator                     = "==" | "!=".
-relationalExpression                 = shiftExpression [ relationalOperator shiftExpression ].
-relationalOperator                   = ">" | ">=" | "<" | "<=".
-shiftExpression                      = additiveExpression [ shiftOperator additiveExpression].
-shiftOperator                        = "<<" | ">>" | ">>>".
-additiveExpression                   = multiplicativeExpression [ additiveOperator multiplicativeExpression ].
-additiveOperator                     = "+" | "-".
-multiplicativeExpression             = unaryExpression [ multiplicativeOperator unaryExpression ].
-multiplicativeOperator               = "*" | "/" | "%".
-unaryExpression                      = {unaryOperator} postfixExpression.
-unaryOperator                        = "++" | "--" | "+" | "-" | "~" | "!" | castPrefix.
-castPrefix                           = "(" primitiveType ")".
-postfixExpression                    = postincrementExpression | postdecrementExpression | primary | expressionName.
-postincrementExpression              = postfixExpression "++".
-postdecrementExpression              = postfixExpression "--".
-primary                              = primaryNoNewArray.
-primaryNoNewArray                    = literal | "this" | "(" expression ")" | fieldAccess | methodInvocation.
-fieldAccess                          = primary "." identifier.
-methodInvocation                     = methodName "(" argumentList? ")".
-argumentList                         = expression { "," expression }.`
+`expression                           = assignmentExpression.`
+
+`assignmentExpression                 = assignment | conditionalExpression.`
+
+`assignment                           = leftHandSide assignmentOperator assignmentExpression.`
+
+`leftHandSide                         = expressionName.`
+
+`assignmentOperator                   = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=".`
+
+`conditionalExpression                = conditionalOrExpression [ "?" expression ":" conditionalExpression ].`
+
+`conditionalOrExpression              = conditionalAndExpression { "||" conditionalAndExpression }.`
+
+`conditionalAndExpression             = inclusiveOrExpression { "&&" inclusiveOrExpression }.`
+
+`inclusiveOrExpression                = exclusiveOrExpression { "|" exclusiveOrExpression }.`
+
+`exclusiveOrExpression                = andExpression { "^" andExpression }.`
+
+`andExpression                        = equalityExpression { "&" equalityExpression }.`
+
+`equalityExpression                   = relationalExpression [ equalityOperator equalityExpression ].`
+
+`equalityOperator                     = "==" | "!=".`
+
+`relationalExpression                 = shiftExpression [ relationalOperator shiftExpression ].`
+
+`relationalOperator                   = ">" | ">=" | "<" | "<=".`
+
+`shiftExpression                      = additiveExpression [ shiftOperator additiveExpression].`
+
+`shiftOperator                        = "<<" | ">>" | ">>>".`
+
+`additiveExpression                   = multiplicativeExpression [ additiveOperator multiplicativeExpression ].`
+
+`additiveOperator                     = "+" | "-".`
+
+`multiplicativeExpression             = unaryExpression [ multiplicativeOperator unaryExpression ].`
+
+`multiplicativeOperator               = "*" | "/" | "%".`
+
+`unaryExpression                      = {unaryOperator} postfixExpression.`
+
+`unaryOperator                        = "++" | "--" | "+" | "-" | "~" | "!" | castPrefix.`
+
+`castPrefix                           = "(" primitiveType ")".`
+
+`postfixExpression                    = postincrementExpression | postdecrementExpression | primary | expressionName.`
+
+`postincrementExpression              = postfixExpression "++".`
+
+`postdecrementExpression              = postfixExpression "--".`
+
+`primary                              = primaryNoNewArray.`
+
+`primaryNoNewArray                    = literal | "this" | "(" expression ")" | fieldAccess | methodInvocation.`
+
+`fieldAccess                          = primary "." identifier.`
+
+`methodInvocation                     = methodName "(" argumentList? ")".`
+
+`argumentList                         = expression { "," expression }.`
 
 ### Tokens
-`packageName                          = identifier { "." identifier }.
-expressionName                       = [ ambiguousName "." ] identifier.
-methodName                           = [ ambiguousName "." ] identifier.
-ambiguousName                        = identifier { "." identifier }.
-literal                              = integerLiteral | characterLiteral | stringLiteral.
-integerLiteral                       = decimalIntegerLiteral | hexIntegerLiteral | octalIntegerLiteral.
-decimalIntegerLiteral                = decimalNumeral.
-hexIntegerLiteral                    = hexNumeral.
-octalIntegerLiteral                  = octalNumeral.
-decimalNumeral                       = "0" | nonZeroDigit { digit }.
-digit                                = "0" | nonZeroDigit.
-nonZeroDigit                         = "(1-9)".
-hexNumeral                           = "0x" hexDigit { hexDigit } | "0X" hexDigit { hexDigit }.
-hexDigit                             = "(0-9a-fAF)".
-octalNumeral                         = "0" octalDigit { octalDigit }.
-octalDigit                           = "(0-7)".
-characterLiteral                     = "'" singleCharacter "'" | "'" escapeSequence "'".
-singleCharacter                      = inputCharacter - ("'" | "\" ).
-stringLiteral                        = '"' { stringCharacter } '"'.
-stringCharacter                      = escapeSequence | inputCharacter - ( '"' or '\').
-escapeSequence                       = "\\" | "\'" | "\"" | "\n" | "\r" | "\t" | "\b" | "\f" | "\a".
-keyword                              = "abstract" | "boolean" | "break" | "byte" | "case" | "catch" | "char" | "class" | "const" | "continue"
-                                     | "default" | "do" | "double" | "else" | "extends" | "final" | "finally" | "float" | "for" | "goto"
-                                     | "if" | "implements" | "import" | "instanceof" | "int" | "interface" | "long" | "native" | "new"
-                                     | "package" | "private" | "protected" | "public" | "return" | "short" | "static" | "super" | "switch" | "synchronized"
-                                     | "this" | "throw" | "throws" | "transient" | "try" | "void" | "volatile" | "while".`
+`packageName                          = identifier { "." identifier }.`
+
+`expressionName                       = [ ambiguousName "." ] identifier.`
+
+`methodName                           = [ ambiguousName "." ] identifier.`
+
+`ambiguousName                        = identifier { "." identifier }.`
+
+`literal                              = integerLiteral | characterLiteral | stringLiteral.`
+
+`integerLiteral                       = decimalIntegerLiteral | hexIntegerLiteral | octalIntegerLiteral.`
+
+`decimalIntegerLiteral                = decimalNumeral.`
+
+`hexIntegerLiteral                    = hexNumeral.`
+
+`octalIntegerLiteral                  = octalNumeral.`
+
+`decimalNumeral                       = "0" | nonZeroDigit { digit }.`
+
+`digit                                = "0" | nonZeroDigit.`
+
+`nonZeroDigit                         = "(1-9)".`
+
+`hexNumeral                           = "0x" hexDigit { hexDigit } | "0X" hexDigit { hexDigit }.`
+
+`hexDigit                             = "(0-9a-fAF)".`
+
+`octalNumeral                         = "0" octalDigit { octalDigit }.`
+
+`octalDigit                           = "(0-7)".`
+
+`characterLiteral                     = "'" singleCharacter "'" | "'" escapeSequence "'".`
+
+`singleCharacter                      = inputCharacter - ("'" | "\" ).`
+
+`stringLiteral                        = '"' { stringCharacter } '"'.`
+
+`stringCharacter                      = escapeSequence | inputCharacter - ( '"' or '\').`
+
+`escapeSequence                       = "\\" | "\'" | "\"" | "\n" | "\r" | "\t" | "\b" | "\f" | "\a".`
+
+`keyword                              = "abstract" | "boolean" | "break" | "byte" | "case" | "catch" | "char" | "class"`
+
+`                                     | "const" | "continue" | "default" | "do" | "double" | "else" | "extends"`
+
+`                                     | "final" | "finally" | "float" | "for" | "goto" | "if" | "implements" | "import"`
+
+`                                     | "instanceof" | "int" | "interface" | "long" | "native" | "new" | "package"`
+
+`                                     | "private" | "protected" | "public" | "return" | "short" | "static" | "super"`
+
+`                                     | "switch" | "synchronized" | "this" | "throw" | "throws" | "transient" | "try"`
+
+`                                     | "void" | "volatile" | "while".`
 
 ### miscellaneous
 This BNF definition does not describe whitespace and comments, which my be inserted between any terminal.
 
+
 Java style end of line comment:` //... comment`
+
 Java style multi-line comment:`  /*... comment ...*/`
+
 
 The character set for miniJava is standard 7-bit ASCII character set. This is the set denoted by *inputCharacter*.
 
+
 An *inputCharacter* is a letter if the method Character.isJavaLetter returns true. 
+
 An *inputCharacter* is digit if the method Character.isJaveDigit returns true. 
+
 An *inputCharacter* is letter-or-digit if the method Character.isJaveLetterOrDigit returns true. 
+
 
 An <identifier> may not be any of the keywords given above - these are reserved words in miniJava.
 
 ## Built in methods
-`builtInMethods     = printlnStatement | outputStatement | sleepStatement | read | input.
-printlnStatement   = "println" "(" expression ")".
-outputStatement    = "output" "(" constantExpression "," expression ")".
-sleepStatement     = "sleep" "(" expression ")".
-read               = "read".
-input              = "input" "(" constantExpression ")".`
+`builtInMethods     = printlnStatement | outputStatement | sleepStatement | read | input.`
+
+`printlnStatement   = "println" "(" expression ")".`
+
+`outputStatement    = "output" "(" constantExpression "," expression ")".`
+
+`sleepStatement     = "sleep" "(" expression ")".`
+
+`read               = "read".`
+
+`input              = "input" "(" constantExpression ")".`
 
 ## Semantics 
 Multi-line comment may contain end of line comment.
