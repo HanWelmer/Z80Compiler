@@ -24,6 +24,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+//TODO Add unit test for packageDeclaration.
+//TODO Add unit test for importDeclaration.
+//TODO Add unit test for typeDeclaration.
+//TODO implement packageDeclaration
 //TODO implement importDeclaration
 //TODO implement typeDeclaration
 //TODO implement classDeclaration
@@ -418,8 +422,10 @@ public class pCompiler {
    *
    ************************/
 
-  // return true if current lexeme is in okSet, otherwise skip lexemes until
-  // current lexeme is in stopSet and return false.
+  /*
+   * return true if current lexeme is in okSet, otherwise skip lexemes until
+   * current lexeme is in stopSet and return false.
+   */
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws FatalError {
     // debug("\ncheckOrSkip: start");
     boolean result = false;
@@ -446,18 +452,18 @@ public class pCompiler {
   private void compilationUnit() throws FatalError {
     debug("\ncompilationUnit: start");
 
-    // recognise an optional package declaration.
+    // recognize an optional package declaration.
     lexeme = lexemeReader.getLexeme(sourceCode);
     if (lexeme.type == LexemeType.packageLexeme) {
       packageDeclaration();
     }
 
-    // recognise an optional list of import declaration.
-    if (lexeme.type == LexemeType.importLexeme) {
+    // recognize an optional list of import declaration.
+    while (lexeme.type == LexemeType.importLexeme) {
       importDeclaration();
     }
 
-    // recognise the mandatory single type declaration.
+    // recognize the mandatory single type declaration.
     typeDeclaration();
 
     debug("\ncompilationUnit: end");
@@ -471,20 +477,20 @@ public class pCompiler {
     // skip "package".
     lexeme = lexemeReader.getLexeme(sourceCode);
 
-    // recognise identifier.
+    // recognize identifier.
     EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon, LexemeType.importLexeme, LexemeType.publicLexeme,
         LexemeType.classLexeme);
     if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
       String temp = lexeme.idVal;
       lexeme = lexemeReader.getLexeme(sourceCode);
 
-      // recognise { "." identifier }.
+      // recognize { "." identifier }.
       while (lexeme.type == LexemeType.period) {
         // skip ".".
         lexeme = lexemeReader.getLexeme(sourceCode);
         temp += ".";
 
-        // recognise the identifier lexeme.
+        // recognize the identifier lexeme.
         if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
           temp += lexeme.idVal;
           lexeme = lexemeReader.getLexeme(sourceCode);
@@ -505,7 +511,7 @@ public class pCompiler {
       }
     }
 
-    // recognise the semicolon lexeme.
+    // recognize the semicolon lexeme.
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon),
         EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -548,7 +554,7 @@ public class pCompiler {
   private void classDeclaration() throws FatalError {
     debug("\nclassDeclaration: start");
 
-    // recognise a class definition.
+    // recognize a class definition.
     if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginLexeme))) {
       lexeme = lexemeReader.getLexeme(sourceCode);
 
