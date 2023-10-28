@@ -45,6 +45,7 @@ class TestOutputInput {
   output(21, finalValue);
   println(22);
   
+  //TODO enable test on output() with port number as constant expression
   /*
   //byte constant expression + decimal constant
   output(4 * 5 + 4, 23);

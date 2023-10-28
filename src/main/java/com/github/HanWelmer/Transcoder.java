@@ -44,7 +44,6 @@ public class Transcoder {
                                               * Z80 assembled bytes start at
                                               * 2000
                                               */
-  private static final int MAX_BIN = 0x5000; /* max Z80 assembled bytes */
   private static final String INDENT = "        ";
   @SuppressWarnings("serial")
   private static final Set<Byte> LONG_JUMP_INSTRUCTIONS = new HashSet<Byte>(18) {
