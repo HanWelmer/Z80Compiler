@@ -21,8 +21,10 @@ package com.github.HanWelmer;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,13 +37,14 @@ import org.junit.Test;
  */
 public class RegressionTest {
   private final static String jCodeLocation = "/src/test/resources/jCode/";
+  private final static String mCodeLocation = "/src/test/resources/mCode/";
   private final static String expectedLocation = "/src/test/resources/expected/";
   private final static boolean debugMode = false;
   private final static boolean verboseMode = false;
 
-  // @Test
-  public void test() {
-    assertTrue(singleTest("me/test.j"));
+  @Test
+  public void TestPackageMe() {
+    assertTrue(singleTest("me/TestPackageMe.j"));
   }
 
   @Test
@@ -111,6 +114,7 @@ public class RegressionTest {
 
   @Test
   public void test13() {
+    // TODO enable test on output() with port number as constant expression
     assertTrue(singleTest("test13.j"));
   }
 
@@ -139,6 +143,11 @@ public class RegressionTest {
     fileName.replace(".J", ".j");
     lexemeReader.init(debugMode, System.getProperty("user.dir") + jCodeLocation, fileName);
     ArrayList<Instruction> instructions = pCompiler.compile(lexemeReader);
+
+    // List compiled code for the M machine.
+    if (!instructions.isEmpty()) {
+      writeListing(fileName, instructions, verboseMode);
+    }
 
     // Compare M-code from compiler against expected M-code.
     FileReader fr;
@@ -246,4 +255,30 @@ public class RegressionTest {
 
     return result;
   } // singleTest
+
+  private static void writeListing(String fileName, ArrayList<Instruction> instructions, boolean verboseMode) {
+    /* write M assembly code to an *.m file */
+    String outputFilename = System.getProperty("user.dir") + mCodeLocation + fileName.replace(".j", ".m");
+    if (verboseMode)
+      System.out.println("Writing M code to " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+      writer = new BufferedWriter(new FileWriter(outputFilename));
+      int pos = 0;
+      for (Instruction instruction : instructions) {
+        writer.write(String.format("%4d %s\n", pos++, instruction.toString()));
+      }
+    } catch (IOException e) {
+      System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
+      }
+    }
+  } // writeListing
+
 }
