@@ -21,7 +21,7 @@
   20 ;test13.j(15) 
   21 ;test13.j(16)   //port as decimal constant
   22 ;test13.j(17)   println("Enter 5");
-  23 acc16= constant 115
+  23 acc16= constant 116
   24 writeLineString
   25 ;test13.j(18)   byte value = input(4);
   26 input port 0x04
@@ -44,7 +44,7 @@
   43 ;test13.j(27)   //port as final variable + value as acc8
   44 ;test13.j(28)   final byte inputPort = 10;
   45 ;test13.j(29)   println("Enter 11");
-  46 acc16= constant 116
+  46 acc16= constant 117
   47 writeLineString
   48 ;test13.j(30)   output(12, input(inputPort));
   49 input port 0x0A
@@ -82,37 +82,38 @@
   81 acc8= constant 22
   82 call writeLineAcc8
   83 ;test13.j(46)   
-  84 ;test13.j(47)   /*
-  85 ;test13.j(48)   //byte constant expression + decimal constant
-  86 ;test13.j(49)   output(4 * 5 + 4, 23);
-  87 ;test13.j(50)   println(15);
-  88 ;test13.j(51)   */
-  89 ;test13.j(52) 
-  90 ;test13.j(53) /*
-  91 ;test13.j(54)   //hexadecimal constant
-  92 ;test13.j(55)   //IN0     A,(0x13)
-  93 ;test13.j(56)   println("Enter 16");
-  94 ;test13.j(57)   value = input(0x0F);
-  95 ;test13.j(58)   println(value);
-  96 ;test13.j(59) 
-  97 ;test13.j(60)   //byte constant expression
-  98 ;test13.j(61)   println("Enter 18");
-  99 ;test13.j(62)   value = input(7 + 5 * 2);
- 100 ;test13.j(63)   println(value);
- 101 ;test13.j(64) 
- 102 ;test13.j(65)   //final variable
- 103 ;test13.j(66)   //IN0     A,(0x13)
- 104 ;test13.j(67)   port = 0x11;
- 105 ;test13.j(68)   println("Enter 20");
- 106 ;test13.j(69)   value = input(port);
- 107 ;test13.j(70)   println(value);
- 108 ;test13.j(71) */
- 109 ;test13.j(72) 
- 110 ;test13.j(73)   println("Klaar");
- 111 acc16= constant 117
- 112 writeLineString
- 113 ;test13.j(74) }
- 114 stop
- 115 stringConstant 0 = "Enter 5"
- 116 stringConstant 1 = "Enter 11"
- 117 stringConstant 2 = "Klaar"
+  84 ;test13.j(47)   //TODO enable test on output() with port number as constant expression
+  85 ;test13.j(48)   /*
+  86 ;test13.j(49)   //byte constant expression + decimal constant
+  87 ;test13.j(50)   output(4 * 5 + 4, 23);
+  88 ;test13.j(51)   println(15);
+  89 ;test13.j(52)   */
+  90 ;test13.j(53) 
+  91 ;test13.j(54) /*
+  92 ;test13.j(55)   //hexadecimal constant
+  93 ;test13.j(56)   //IN0     A,(0x13)
+  94 ;test13.j(57)   println("Enter 16");
+  95 ;test13.j(58)   value = input(0x0F);
+  96 ;test13.j(59)   println(value);
+  97 ;test13.j(60) 
+  98 ;test13.j(61)   //byte constant expression
+  99 ;test13.j(62)   println("Enter 18");
+ 100 ;test13.j(63)   value = input(7 + 5 * 2);
+ 101 ;test13.j(64)   println(value);
+ 102 ;test13.j(65) 
+ 103 ;test13.j(66)   //final variable
+ 104 ;test13.j(67)   //IN0     A,(0x13)
+ 105 ;test13.j(68)   port = 0x11;
+ 106 ;test13.j(69)   println("Enter 20");
+ 107 ;test13.j(70)   value = input(port);
+ 108 ;test13.j(71)   println(value);
+ 109 ;test13.j(72) */
+ 110 ;test13.j(73) 
+ 111 ;test13.j(74)   println("Klaar");
+ 112 acc16= constant 118
+ 113 writeLineString
+ 114 ;test13.j(75) }
+ 115 stop
+ 116 stringConstant 0 = "Enter 5"
+ 117 stringConstant 1 = "Enter 11"
+ 118 stringConstant 2 = "Klaar"

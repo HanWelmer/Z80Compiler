@@ -48,6 +48,11 @@ public class RegressionTest {
   }
 
   @Test
+  public void TestPackageMeTo() {
+    assertTrue(singleTest("me/to/TestPackageMeTo.j"));
+  }
+
+  @Test
   public void test0() {
     assertTrue(singleTest("test0.j"));
   }
