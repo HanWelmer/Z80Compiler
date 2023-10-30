@@ -26,7 +26,6 @@ import java.util.Stack;
 
 //TODO Add unit test for importDeclaration.
 //TODO Add unit test for typeDeclaration.
-//TODO implement packageDeclaration (finish it).
 //TODO implement importDeclaration
 //TODO implement typeDeclaration
 //TODO implement classDeclaration
@@ -481,9 +480,9 @@ public class pCompiler {
         LexemeType.classLexeme);
     if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
       String temp = lexeme.idVal;
-      lexeme = lexemeReader.getLexeme(sourceCode);
 
       // recognize { "." identifier }.
+      lexeme = lexemeReader.getLexeme(sourceCode);
       while (lexeme.type == LexemeType.period) {
         // skip ".".
         lexeme = lexemeReader.getLexeme(sourceCode);
@@ -500,13 +499,10 @@ public class pCompiler {
         packageName = temp;
         debug("\npackageDeclaration: packageName=" + packageName);
 
-        // semantic analysis: source file must reside in folder (tree) defined
-        // by packageName.
-        /*
-         * TODO: add semantic analysis if
-         * (!lexemeReader.getPath().endsWith(temp.replace(".", "/"))) {
-         * error(19); }
-         */
+        // semantic analysis: source file path must equal packageName.
+        if (!lexemeReader.getFileName().startsWith(packageName.replace(".", "/"))) {
+          error(19);
+        }
       }
     }
 

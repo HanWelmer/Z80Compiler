@@ -18,6 +18,7 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.HanWelmer;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -45,6 +46,11 @@ public class RegressionTest {
   @Test
   public void TestPackageMe() {
     assertTrue(singleTest("me/TestPackageMe.j"));
+  }
+
+  @Test
+  public void TestPackageYou() {
+    assertFalse(singleTest("me/TestPackageYou.j"));
   }
 
   @Test
