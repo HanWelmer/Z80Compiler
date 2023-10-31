@@ -18,6 +18,7 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.HanWelmer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -29,7 +30,6 @@ import java.util.Stack;
 //TODO implement importDeclaration
 //TODO implement typeDeclaration
 //TODO implement classDeclaration
-//TODO implement semantic analysis of packageDeclaration
 //TODO implement semantic analysis of importDeclaration
 //TODO implement void methodDeclaration (parameter less; no global/local variables).
 //TODO implement void methodDeclaration (no global/local variables).
@@ -500,8 +500,11 @@ public class pCompiler {
         debug("\npackageDeclaration: packageName=" + packageName);
 
         // semantic analysis: source file path must equal packageName.
-        if (!lexemeReader.getFileName().startsWith(packageName.replace(".", "/"))) {
+        if (!lexemeReader.getFileName().startsWith(packageName.replace(".", File.separator))) {
           error(19);
+          debug("\npackage: " + packageName);
+          debug("\nexpected: " + packageName.replace(".", File.separator));
+          debug("\nfound: " + lexemeReader.getFileName());
         }
       }
     }
@@ -517,6 +520,9 @@ public class pCompiler {
 
   // importDeclaration = "import" packageName "." importType ";".
   // packageName = identifier { "." identifier }.
+  // importType = identifier | "*".
+  // Note: packageName identifiers are lowerCamelCase.
+  // Note: importType identifier is UpperCamelCase.
   private void importDeclaration() throws FatalError {
     debug("\nimportDeclaration: start");
 
@@ -525,12 +531,6 @@ public class pCompiler {
 
     debug("\nimportDeclaration: end");
   } // importDeclaration
-
-  /*
-   * TODO complete me // importType = identifier | "*". private void
-   * importType() throws FatalError { debug("\nimportType: start");
-   * debug("\nimportType: end"); } //importType
-   */
 
   // typeDeclaration = classDeclaration.
   private void typeDeclaration() throws FatalError {

@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -45,17 +46,17 @@ public class RegressionTest {
 
   @Test
   public void TestPackageMe() {
-    assertTrue(singleTest("me/TestPackageMe.j"));
+    assertTrue(singleTest("me" + File.separator + "TestPackageMe.j"));
   }
 
   @Test
   public void TestPackageYou() {
-    assertFalse(singleTest("me/TestPackageYou.j"));
+    assertFalse(singleTest("me" + File.separator + "TestPackageYou.j"));
   }
 
   @Test
   public void TestPackageMeTo() {
-    assertTrue(singleTest("me/to/TestPackageMeTo.j"));
+    assertTrue(singleTest("me" + File.separator + "to" + File.separator + "TestPackageMeTo.j"));
   }
 
   @Test
