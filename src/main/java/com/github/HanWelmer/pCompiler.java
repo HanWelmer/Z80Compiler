@@ -467,44 +467,24 @@ public class pCompiler {
   } // compilationUnit
 
   // packageDeclaration = "package" packageName ";".
-  // packageName = identifier { "." identifier }.
   private void packageDeclaration() throws FatalError {
     debug("\npackageDeclaration: start");
 
     // skip "package".
     lexeme = lexemeReader.getLexeme(sourceCode);
 
-    // recognize identifier.
-    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon, LexemeType.importLexeme, LexemeType.publicLexeme,
-        LexemeType.classLexeme);
-    if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
-      String temp = lexeme.idVal;
+    // recognize packageName.
+    packageName = packageName();
 
-      // recognize { "." identifier }.
-      lexeme = lexemeReader.getLexeme(sourceCode);
-      while (lexeme.type == LexemeType.period) {
-        // skip ".".
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        temp += ".";
+    if (lexeme.type == LexemeType.semicolon) {
+      debug("\npackageDeclaration: packageName=" + packageName);
 
-        // recognize the identifier lexeme.
-        if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
-          temp += lexeme.idVal;
-          lexeme = lexemeReader.getLexeme(sourceCode);
-        }
-      }
-
-      if (lexeme.type == LexemeType.semicolon) {
-        packageName = temp;
-        debug("\npackageDeclaration: packageName=" + packageName);
-
-        // semantic analysis: source file path must equal packageName.
-        if (!lexemeReader.getFileName().startsWith(packageName.replace(".", File.separator))) {
-          error(19);
-          debug("\npackage: " + packageName);
-          debug("\nexpected: " + packageName.replace(".", File.separator));
-          debug("\nfound: " + lexemeReader.getFileName());
-        }
+      // semantic analysis: source file path must equal packageName.
+      if (!lexemeReader.getFileName().startsWith(packageName.replace(".", File.separator))) {
+        error(19);
+        debug("\npackage: " + packageName);
+        debug("\nexpected: " + packageName.replace(".", File.separator));
+        debug("\nfound: " + lexemeReader.getFileName());
       }
     }
 
@@ -516,6 +496,36 @@ public class pCompiler {
 
     debug("\npackageDeclaration: end; packageName=" + packageName);
   } // packageDeclaration
+
+  // packageName = identifier { "." identifier }.
+  // Note: packageName identifiers are lowerCamelCase.
+  private String packageName() throws FatalError {
+    debug("\npackageName: start");
+    String result = "";
+
+    // recognize identifier.
+    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon, LexemeType.importLexeme, LexemeType.publicLexeme,
+        LexemeType.classLexeme);
+    if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
+      result = lexeme.idVal;
+
+      // recognize { "." identifier }.
+      lexeme = lexemeReader.getLexeme(sourceCode);
+      while (lexeme.type == LexemeType.period) {
+        // skip another ".".
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        result += ".";
+
+        // recognize another identifier.
+        if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
+          result += lexeme.idVal;
+          lexeme = lexemeReader.getLexeme(sourceCode);
+        }
+      }
+    }
+    debug("\npackageName: end; packageName=" + packageName);
+    return result;
+  }
 
   // importDeclaration = "import" packageName "." importType ";".
   // packageName = identifier { "." identifier }.

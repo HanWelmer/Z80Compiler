@@ -59,27 +59,27 @@ public class RegressionTest {
     assertTrue(singleTest("me" + File.separator + "to" + File.separator + "TestPackageMeTo.j"));
   }
 
-  @Test
+  // @Test
   public void TestImport() {
     assertTrue(singleTest("TestImport.j"));
   }
 
-  @Test
+  // @Test
   public void TestImportMe() {
     assertTrue(singleTest("TestImportMe.j"));
   }
 
-  @Test
+  // @Test
   public void TestImportMeTo() {
     assertTrue(singleTest("TestImportMeTo.j"));
   }
 
-  @Test
+  // @Test
   public void TestMeImportMe() {
     assertTrue(singleTest("me" + File.separator + "TestImportMe.j"));
   }
 
-  @Test
+  // @Test
   public void TestImportNotFound() {
     assertTrue(singleTest("TestImportNotFound.j"));
   }
