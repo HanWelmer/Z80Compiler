@@ -59,7 +59,7 @@ public class RegressionTest {
     assertTrue(singleTest("me" + File.separator + "to" + File.separator + "TestPackageMeTo.j"));
   }
 
-  // @Test
+  @Test
   public void TestImport() {
     assertTrue(singleTest("TestImport.j"));
   }

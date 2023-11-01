@@ -467,6 +467,8 @@ public class pCompiler {
   } // compilationUnit
 
   // packageDeclaration = "package" packageName ";".
+  // packageName = identifier { "." identifier }.
+  // Note: packageName identifiers are lowerCamelCase.
   private void packageDeclaration() throws FatalError {
     debug("\npackageDeclaration: start");
 
@@ -475,6 +477,7 @@ public class pCompiler {
 
     // recognize packageName.
     packageName = packageName();
+    // TODO add constraint lowerCamelCase identifier.
 
     if (lexeme.type == LexemeType.semicolon) {
       debug("\npackageDeclaration: packageName=" + packageName);
@@ -498,7 +501,12 @@ public class pCompiler {
   } // packageDeclaration
 
   // packageName = identifier { "." identifier }.
-  // Note: packageName identifiers are lowerCamelCase.
+  /*
+   * Note: packageName ends when: next lexeme is LexemeType.semicolon (ico
+   * packageDeclaration) or next lexeme is LexemeType.mulop and "*" (ico
+   * importDeclaration) or next lexeme is LexemeType.identifier and
+   * UpperCamelCase (ico importDeclaration).
+   */
   private String packageName() throws FatalError {
     debug("\npackageName: start");
     String result = "";
@@ -513,17 +521,24 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
       while (lexeme.type == LexemeType.period) {
         // skip another ".".
-        lexeme = lexemeReader.getLexeme(sourceCode);
         result += ".";
+        lexeme = lexemeReader.getLexeme(sourceCode);
 
-        // recognize another identifier.
-        if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
+        // recognize another identifier or "*" (import type).
+        if (lexeme.type == LexemeType.identifier || lexeme.type == LexemeType.mulop && "*".equals(lexeme.idVal)) {
           result += lexeme.idVal;
           lexeme = lexemeReader.getLexeme(sourceCode);
+        } else {
+          error(3);
+          System.out.println(" found " + lexeme.type + ", expected identifer or '*'");
+          while (!stopSet.contains(lexeme.type)) {
+            error(7); // lexeme skipped after error.
+            lexeme = lexemeReader.getLexeme(sourceCode);
+          }
         }
       }
     }
-    debug("\npackageName: end; packageName=" + packageName);
+    debug("\npackageName: end; packageName=" + result);
     return result;
   }
 
@@ -538,7 +553,17 @@ public class pCompiler {
     // skip "import"
     lexeme = lexemeReader.getLexeme(sourceCode);
 
-    debug("\nimportDeclaration: end");
+    // recognize packageName.
+    String importPackageName = packageName();
+    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme);
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      // skip ";"
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // TODO implement parsing importType.
+      // TODO implement constraint that importType identifier is UpperCamelCase.
+    }
+    debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
   } // importDeclaration
 
   // typeDeclaration = classDeclaration.
