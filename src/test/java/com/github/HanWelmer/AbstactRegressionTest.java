@@ -18,12 +18,10 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.HanWelmer;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -32,143 +30,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
 /**
  * Regression test for the Z80Compiler.
  */
-public class RegressionTest {
-  private final static String jCodeLocation = "/src/test/resources/jCode/";
-  private final static String mCodeLocation = "/src/test/resources/mCode/";
-  private final static String expectedLocation = "/src/test/resources/expected/";
-  private final static boolean debugMode = false;
-  private final static boolean verboseMode = false;
-
-  @Test
-  public void TestPackageMe() {
-    assertTrue(singleTest("me" + File.separator + "TestPackageMe.j"));
-  }
-
-  @Test
-  public void TestPackageYou() {
-    assertFalse(singleTest("me" + File.separator + "TestPackageYou.j"));
-  }
-
-  @Test
-  public void TestPackageMeTo() {
-    assertTrue(singleTest("me" + File.separator + "to" + File.separator + "TestPackageMeTo.j"));
-  }
-
-  @Test
-  public void TestImport() {
-    assertTrue(singleTest("TestImport.j"));
-  }
-
-  // @Test
-  public void TestImportMe() {
-    assertTrue(singleTest("TestImportMe.j"));
-  }
-
-  // @Test
-  public void TestImportMeTo() {
-    assertTrue(singleTest("TestImportMeTo.j"));
-  }
-
-  // @Test
-  public void TestMeImportMe() {
-    assertTrue(singleTest("me" + File.separator + "TestImportMe.j"));
-  }
-
-  // @Test
-  public void TestImportNotFound() {
-    assertTrue(singleTest("TestImportNotFound.j"));
-  }
-
-  @Test
-  public void test0() {
-    assertTrue(singleTest("test0.j"));
-  }
-
-  @Test
-  public void test1() {
-    assertTrue(singleTest("test1.j"));
-  }
-
-  @Test
-  public void test2() {
-    assertTrue(singleTest("test2.j"));
-  }
-
-  @Test
-  public void test3() {
-    assertTrue(singleTest("test3.j"));
-  }
-
-  @Test
-  public void test4() {
-    assertTrue(singleTest("test4.j"));
-  }
-
-  @Test
-  public void test5() {
-    assertTrue(singleTest("test5.j"));
-  }
-
-  @Test
-  public void test6() {
-    assertTrue(singleTest("test6.j"));
-  }
-
-  @Test
-  public void test7() {
-    assertTrue(singleTest("test7.j"));
-  }
-
-  @Test
-  public void test8() {
-    assertTrue(singleTest("test8.j"));
-  }
-
-  @Test
-  public void test9() {
-    assertTrue(singleTest("test9.j"));
-  }
-
-  @Test
-  public void test10() {
-    assertTrue(singleTest("test10.j"));
-  }
-
-  @Test
-  public void test11() {
-    assertTrue(singleTest("test11.j"));
-  }
-
-  @Test
-  public void test12() {
-    assertTrue(singleTest("test12.j"));
-  }
-
-  @Test
-  public void test13() {
-    // TODO enable test on output() with port number as constant expression
-    assertTrue(singleTest("test13.j"));
-  }
-
-  @Test
-  public void test14() {
-    assertTrue(singleTest("test14.j"));
-  }
-
-  @Test
-  public void test15() {
-    assertTrue(singleTest("test15.j"));
-  }
+public abstract class AbstactRegressionTest {
+  protected String jCodeLocation = "/src/test/resources/jCode/";
+  protected String mCodeLocation = "/src/test/resources/mCode/";
+  protected String expectedLocation = "/src/test/resources/expected/";
+  protected boolean debugMode = false;
+  protected boolean verboseMode = false;
 
   /*
    * Run a single test in the regression test suite.
    */
-  private boolean singleTest(String fileName) {
+  protected boolean singleTest(String fileName) {
     // Compile miniJava-code to M-code instructions.
     LexemeReader lexemeReader = new LexemeReader();
     pCompiler pCompiler = new pCompiler(debugMode, verboseMode);
@@ -293,7 +168,7 @@ public class RegressionTest {
     return result;
   } // singleTest
 
-  private static void writeListing(String fileName, ArrayList<Instruction> instructions, boolean verboseMode) {
+  private void writeListing(String fileName, ArrayList<Instruction> instructions, boolean verboseMode) {
     /* write M assembly code to an *.m file */
     String outputFilename = System.getProperty("user.dir") + mCodeLocation + fileName.replace(".j", ".m");
     if (verboseMode)
