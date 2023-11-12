@@ -30,7 +30,12 @@ import org.junit.Test;
 public class TestImportDeclaration extends AbstactRegressionTest {
 
   protected void init() {
-    // Accept default configuration values.
+    // Override default configuration values.
+    jCodeLocation = "/src/test/resources/jCode/ImportDeclaration/";
+    mCodeLocation = "/src/test/resources/mCode/ImportDeclaration/";
+    expectedLocation = "/src/test/resources/expected/ImportDeclaration/";
+    debugMode = false;
+    verboseMode = false;
   }
 
   @Test
@@ -57,86 +62,4 @@ public class TestImportDeclaration extends AbstactRegressionTest {
   public void TestImportNotFound() {
     assertTrue(singleTest("TestImportNotFound.j"));
   }
-
-  @Test
-  public void test0() {
-    assertTrue(singleTest("test0.j"));
-  }
-
-  @Test
-  public void test1() {
-    assertTrue(singleTest("test1.j"));
-  }
-
-  @Test
-  public void test2() {
-    assertTrue(singleTest("test2.j"));
-  }
-
-  @Test
-  public void test3() {
-    assertTrue(singleTest("test3.j"));
-  }
-
-  @Test
-  public void test4() {
-    assertTrue(singleTest("test4.j"));
-  }
-
-  @Test
-  public void test5() {
-    assertTrue(singleTest("test5.j"));
-  }
-
-  @Test
-  public void test6() {
-    assertTrue(singleTest("test6.j"));
-  }
-
-  @Test
-  public void test7() {
-    assertTrue(singleTest("test7.j"));
-  }
-
-  @Test
-  public void test8() {
-    assertTrue(singleTest("test8.j"));
-  }
-
-  @Test
-  public void test9() {
-    assertTrue(singleTest("test9.j"));
-  }
-
-  @Test
-  public void test10() {
-    assertTrue(singleTest("test10.j"));
-  }
-
-  @Test
-  public void test11() {
-    assertTrue(singleTest("test11.j"));
-  }
-
-  @Test
-  public void test12() {
-    assertTrue(singleTest("test12.j"));
-  }
-
-  @Test
-  public void test13() {
-    // TODO enable test on output() with port number as constant expression
-    assertTrue(singleTest("test13.j"));
-  }
-
-  @Test
-  public void test14() {
-    assertTrue(singleTest("test14.j"));
-  }
-
-  @Test
-  public void test15() {
-    assertTrue(singleTest("test15.j"));
-  }
-
 }
