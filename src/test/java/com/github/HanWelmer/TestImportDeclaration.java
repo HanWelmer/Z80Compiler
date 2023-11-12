@@ -28,11 +28,10 @@ import org.junit.Test;
  * Regression test for the Z80Compiler.
  */
 public class TestImportDeclaration extends AbstactRegressionTest {
-  protected String jCodeLocation = "/src/test/resources/jCode/";
-  protected String mCodeLocation = "/src/test/resources/mCode/";
-  protected String expectedLocation = "/src/test/resources/expected/";
-  protected boolean debugMode = false;
-  protected boolean verboseMode = false;
+
+  protected void init() {
+    // Accept default configuration values.
+  }
 
   @Test
   public void TestImport() {

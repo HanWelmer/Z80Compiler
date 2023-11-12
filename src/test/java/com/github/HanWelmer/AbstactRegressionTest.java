@@ -34,16 +34,22 @@ import java.util.List;
  * Regression test for the Z80Compiler.
  */
 public abstract class AbstactRegressionTest {
+  // Configuration values.
   protected String jCodeLocation = "/src/test/resources/jCode/";
   protected String mCodeLocation = "/src/test/resources/mCode/";
   protected String expectedLocation = "/src/test/resources/expected/";
   protected boolean debugMode = false;
   protected boolean verboseMode = false;
 
+  // Optionally override default configuration values.
+  protected abstract void init();
+
   /*
    * Run a single test in the regression test suite.
    */
   protected boolean singleTest(String fileName) {
+    // Optionally override default configuration values.
+    init();
     // Compile miniJava-code to M-code instructions.
     LexemeReader lexemeReader = new LexemeReader();
     pCompiler pCompiler = new pCompiler(debugMode, verboseMode);

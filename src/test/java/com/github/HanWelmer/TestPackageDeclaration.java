@@ -29,11 +29,15 @@ import org.junit.Test;
  * Regression test for the Z80Compiler.
  */
 public class TestPackageDeclaration extends AbstactRegressionTest {
-  protected String jCodeLocation = "/src/test/resources/jCode/";
-  protected String mCodeLocation = "/src/test/resources/mCode/";
-  protected String expectedLocation = "/src/test/resources/expected/";
-  protected boolean debugMode = false;
-  protected boolean verboseMode = false;
+
+  protected void init() {
+    // Override default configuration values.
+    jCodeLocation = "/src/test/resources/jCode/PackageDeclaration/";
+    mCodeLocation = "/src/test/resources/mCode/PackageDeclaration/";
+    expectedLocation = "/src/test/resources/expected/PackageDeclaration/";
+    debugMode = false;
+    verboseMode = false;
+  }
 
   @Test
   public void TestNoPackage() {
