@@ -477,9 +477,10 @@ public class pCompiler {
 
     // recognize packageName.
     packageName = packageName();
-    // TODO add constraint lowerCamelCase identifier.
-
-    if (lexeme.type == LexemeType.semicolon) {
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon),
+        EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
+      // skip ";"
+      lexeme = lexemeReader.getLexeme(sourceCode);
       debug("\npackageDeclaration: packageName=" + packageName);
 
       // semantic analysis: source file path must equal packageName.
@@ -489,12 +490,8 @@ public class pCompiler {
         debug("\nexpected: " + packageName.replace(".", File.separator));
         debug("\nfound: " + lexemeReader.getFileName());
       }
-    }
-
-    // recognize the semicolon lexeme.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon),
-        EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      // TODO add constraint lowerCamelCase identifier.
+      // TODO implement semantics for package declaration.
     }
 
     debug("\npackageDeclaration: end; packageName=" + packageName);
@@ -502,11 +499,13 @@ public class pCompiler {
 
   // packageName = identifier { "." identifier }.
   /*
-   * Note: packageName ends when: next lexeme is LexemeType.semicolon (ico
-   * packageDeclaration) or next lexeme is LexemeType.mulop and "*" (ico
-   * importDeclaration) or next lexeme is LexemeType.identifier and
-   * UpperCamelCase (ico importDeclaration).
+   * Note: packageName ends when next lexeme is ";" (ico packageDeclaration) or
+   * next lexeme is "." followed by importType (UpperCamelCase identifier or
+   * "*"; ico importDeclaration). We want to avoid LL(2) (look ahead), so we
+   * extend package definition to:
    */
+  // packageName = identifier { "." identifier } { "." importType }.
+  // importType = identifier | "*".
   private String packageName() throws FatalError {
     debug("\npackageName: start");
     String result = "";
@@ -525,8 +524,11 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
 
         // recognize another identifier or "*" (import type).
-        if (lexeme.type == LexemeType.identifier || lexeme.type == LexemeType.mulop && "*".equals(lexeme.idVal)) {
+        if (lexeme.type == LexemeType.identifier) {
           result += lexeme.idVal;
+          lexeme = lexemeReader.getLexeme(sourceCode);
+        } else if (lexeme.type == LexemeType.mulop && lexeme.operator == OperatorType.mul) {
+          result += "*";
           lexeme = lexemeReader.getLexeme(sourceCode);
         } else {
           error(3);
@@ -562,6 +564,7 @@ public class pCompiler {
 
       // TODO implement parsing importType.
       // TODO implement constraint that importType identifier is UpperCamelCase.
+      // TODO implement semantics for import declaration.
     }
     debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
   } // importDeclaration
