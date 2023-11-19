@@ -408,6 +408,9 @@ public class pCompiler {
         System.out.println("datatype must be byte or word");
         break;
       case 19:
+        System.out.println("packageName identifiers must be lowerCamelCase");
+        break;
+      case 20:
         System.out.println("source code file is not located in path defined by package name");
         break;
     }
@@ -444,6 +447,36 @@ public class pCompiler {
     return result;
   }
 
+  // return true if all identifiers in the packageName are lowerCamelCase.
+  protected boolean validPackageName(String packageName) {
+    boolean result = true;
+    for (String identifier : packageName.split("\\.")) {
+      result &= validLowerCamelCaseIdentifier(identifier);
+    }
+    return result;
+  }
+
+  /*
+   * The syntax category <identifier> consists of strings that must start with a
+   * letter - including underscore (_) and dollar sign ($) - followed by any
+   * number of letters and digits. Characters of numerous international
+   * languages are recognized as "letters" in Java. A Java letter is a character
+   * for which the method Character.isJavaLetter returns true. A Java
+   * letter-or-digit is a character for which the method
+   * Character.isJaveLetterOrDigit returns true. Also, <identifier> includes
+   * none of the keywords given above - these are reserved words in Java.
+   */
+  private boolean validLowerCamelCaseIdentifier(String identifier) {
+    // not a valid identifier if it is a keyword.
+    if (LexemeType.isLexemeType(identifier)) {
+      return false;
+    }
+
+    // valid identifier if it matches the regular expression.
+    // return identifier.matches("\\p{javaLowerCase}*");
+    return identifier.matches("^(_|\\$)*[a-z][a-zA-Z0-9_$]*$");
+  }
+
   // compilationUnit = packageDeclaration? { importDeclaration }
   // typeDeclaration.
   private void compilationUnit() throws FatalError {
@@ -468,7 +501,6 @@ public class pCompiler {
 
   // packageDeclaration = "package" packageName ";".
   // packageName = identifier { "." identifier }.
-  // Note: packageName identifiers are lowerCamelCase.
   private void packageDeclaration() throws FatalError {
     debug("\npackageDeclaration: start");
 
@@ -483,9 +515,14 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
       debug("\npackageDeclaration: packageName=" + packageName);
 
+      // semantic analysis: packageName identifiers are lowerCamelCase.
+      if (!validPackageName(packageName)) {
+        error(19);
+      }
+
       // semantic analysis: source file path must equal packageName.
       if (!lexemeReader.getFileName().startsWith(packageName.replace(".", File.separator))) {
-        error(19);
+        error(20);
         debug("\npackage: " + packageName);
         debug("\nexpected: " + packageName.replace(".", File.separator));
         debug("\nfound: " + lexemeReader.getFileName());
