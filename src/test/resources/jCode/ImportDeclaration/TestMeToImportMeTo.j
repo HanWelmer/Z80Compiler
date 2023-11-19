@@ -2,8 +2,8 @@
  * A small program in the miniJava language.
  * Test something
  */
-import me.to.TestPackageMeTo;
+import me.to.TestImportMeTo;
 
-class TestImportMeTo {
+class TestMeToImportMeTo {
   println("TestImportMeTo Klaar");
 }

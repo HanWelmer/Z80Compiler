@@ -26,11 +26,10 @@ import java.util.Map;
 import java.util.Stack;
 
 //TODO Add unit test for typeDeclaration.
-//TODO implement importDeclaration
 //TODO implement typeDeclaration
 //TODO implement classDeclaration
-//TODO implement semantic analysis of importDeclaration
 //TODO implement void methodDeclaration (parameter less; no global/local variables).
+//TODO implement semantic analysis of importDeclaration
 //TODO implement void methodDeclaration (no global/local variables).
 //TODO Add global variable to function.
 //TODO Add local variable to function.
@@ -351,67 +350,70 @@ public class pCompiler {
     error();
     switch (n) {
       case 0:
-        System.out.println("error opening source code file");
+        System.out.println("error opening source code file.");
         break;
       case 1:
-        System.out.println("end of input encountered");
+        System.out.println("end of input encountered.");
         break;
       case 2:
-        System.out.println("line too long");
+        System.out.println("line too long.");
         break;
       case 3:
-        System.out.print("unexpected symbol;");
+        System.out.print("unexpected symbol ; .");
         break;
       case 4:
-        System.out.println("unknown character");
+        System.out.println("unknown character.");
         break;
       case 5:
-        System.out.println("'=' expected after '=' or '!' ");
+        System.out.println("'=' expected after '=' or '!' .");
         break;
       case 6:
-        System.out.print("unknown keyword : ");
+        System.out.print("unknown keyword : .");
         break;
       case 7:
-        System.out.println("lexeme skipped after error");
+        System.out.println("lexeme skipped after error.");
         break;
       case 8:
-        System.out.println("variable already declared");
+        System.out.println("variable already declared.");
         break;
       case 9:
-        System.out.println("variable not declared");
+        System.out.println("variable not declared.");
         break;
       case 10:
-        System.out.println("code overflow");
+        System.out.println("code overflow.");
         break;
       case 11:
-        System.out.println("lexemetype is null");
+        System.out.println("lexemetype is null.");
         break;
       case 12:
-        System.out.println("internal compiler error during code generation");
+        System.out.println("internal compiler error during code generation.");
         break;
       case 13:
-        System.out.println("constant too big");
+        System.out.println("constant too big.");
         break;
       case 14:
-        System.out.println("incompatible datatype between assignment variable and expression");
+        System.out.println("incompatible datatype between assignment variable and expression.");
         break;
       case 15:
-        System.out.println("incompatible datatype in println statement");
+        System.out.println("incompatible datatype in println statement.");
         break;
       case 16:
-        System.out.println("port expression must be a constant or a final variable");
+        System.out.println("port expression must be a constant or a final variable.");
         break;
       case 17:
-        System.out.println("final variable must be a byte or a word");
+        System.out.println("final variable must be a byte or a word.");
         break;
       case 18:
-        System.out.println("datatype must be byte or word");
+        System.out.println("datatype must be byte or word.");
         break;
       case 19:
-        System.out.println("packageName identifiers must be lowerCamelCase");
+        System.out.println("packageName identifiers must be lowerCamelCase.");
         break;
       case 20:
-        System.out.println("source code file is not located in path defined by package name");
+        System.out.println("source code file is not located in path defined by package name.");
+        break;
+      case 21:
+        System.out.println("import must consist of package name (optional) followed by either * or UpperCamelCase Class name.");
         break;
     }
   }
@@ -474,7 +476,39 @@ public class pCompiler {
 
     // valid identifier if it matches the regular expression.
     // return identifier.matches("\\p{javaLowerCase}*");
-    return identifier.matches("^(_|\\$)*[a-z][a-zA-Z0-9_$]*$");
+    return identifier.matches("^(_|\\$)*[a-z][a-zA-Z0-9]*$");
+  }
+
+  // return true if all identifiers in the packageName are lowerCamelCase and
+  // importType is either * or UpperCamelCase.
+  protected boolean validImport(String importPackageName) {
+    String[] identifiers = importPackageName.split("\\.");
+    boolean result = true;
+    int index = 0;
+    while (result && index < identifiers.length - 1) {
+      result = validLowerCamelCaseIdentifier(identifiers[index++]);
+    }
+    if (index == identifiers.length - 1) {
+      result &= validImportType(identifiers[index]);
+    }
+    return result;
+  }
+
+  // importType = identifier | "*".
+  // Note: importType identifier is UpperCamelCase.
+  private boolean validImportType(String identifier) {
+    // * is a valid import type.
+    if ("*".equals(identifier)) {
+      return true;
+    }
+    // not a valid identifier if it is a keyword.
+    if (LexemeType.isLexemeType(identifier)) {
+      return false;
+    }
+
+    // valid identifier if it matches the regular expression.
+    // return identifier.matches("\\p{javaUpperCase}*");
+    return identifier.matches("^(_|\\$)*[A-z][a-zA-Z0-9]*$");
   }
 
   // compilationUnit = packageDeclaration? { importDeclaration }
@@ -527,22 +561,27 @@ public class pCompiler {
         debug("\nexpected: " + packageName.replace(".", File.separator));
         debug("\nfound: " + lexemeReader.getFileName());
       }
-      // TODO add constraint lowerCamelCase identifier.
+
       // TODO implement semantics for package declaration.
     }
 
     debug("\npackageDeclaration: end; packageName=" + packageName);
   } // packageDeclaration
 
-  // packageName = identifier { "." identifier }.
-  /*
-   * Note: packageName ends when next lexeme is ";" (ico packageDeclaration) or
-   * next lexeme is "." followed by importType (UpperCamelCase identifier or
-   * "*"; ico importDeclaration). We want to avoid LL(2) (look ahead), so we
-   * extend package definition to:
-   */
   // packageName = identifier { "." identifier } { "." importType }.
   // importType = identifier | "*".
+  /*
+   * Original definition of package name is: packageName = identifier { "."
+   * identifier }. Where packageName is used in several places, such as package
+   * declaration, import declaration, reference to a class or reference to an
+   * interface. Which means that a package name ends when next lexeme is ";"
+   * (i.c.o. packageDeclaration) or next lexeme is "." followed by importType
+   * where importType is either an (UpperCamelCase) identifier or "*" (i.c.o.
+   * all other package name usages). We want to avoid LL(2) (2 level lexeme look
+   * ahead), so we extended the package definition as stated above. Down side is
+   * that users of this method have to implement additional validation during
+   * semantic analysis.
+   */
   private String packageName() throws FatalError {
     debug("\npackageName: start");
     String result = "";
@@ -599,9 +638,13 @@ public class pCompiler {
       // skip ";"
       lexeme = lexemeReader.getLexeme(sourceCode);
 
-      // TODO implement parsing importType.
-      // TODO implement constraint that importType identifier is UpperCamelCase.
-      // TODO implement semantics for import declaration.
+      // semantic analysis: packageName identifiers are lowerCamelCase and
+      // importType is either * or UpperCamelCase.
+      if (!validImport(importPackageName)) {
+        error(21);
+      }
+
+      // TODO: import single class or all classes in the package.
     }
     debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
   } // importDeclaration

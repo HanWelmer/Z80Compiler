@@ -2,8 +2,8 @@
  * A small program in the miniJava language.
  * Test import with wildcard.
  */
-import TestImport.*;
+import me.*;
 
-class TestImportAll {
+class TestImportMeAll {
   println("Klaar");
 }

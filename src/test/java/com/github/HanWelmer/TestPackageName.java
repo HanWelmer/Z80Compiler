@@ -10,7 +10,6 @@ public class TestPackageName extends pCompiler {
   // constructor
   public TestPackageName() {
     super(true, true);
-    // TODO Auto-generated constructor stub
   }
 
   @Test
