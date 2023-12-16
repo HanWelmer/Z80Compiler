@@ -1,6 +1,8 @@
 #Java Syntax Specification
 
-##Source: https://javacc.github.io/javacc/documentation/bnf.html
+##Sources:
+* https://javacc.github.io/javacc/documentation/bnf.html
+* https://docs.oracle.com/javase/specs/jls/se11/html/index.html
 
 ##Whitespace
 <DEFAULT> SKIP : { " "

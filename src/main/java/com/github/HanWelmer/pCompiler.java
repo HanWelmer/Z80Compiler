@@ -490,24 +490,64 @@ public class pCompiler {
     debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
   } // importDeclaration
 
-  // TypeDeclaration ::= ";" | ClassModifiers ( ClassDeclaration |
-  // EnumDeclaration )
+  // TypeDeclaration ::= ";" | ClassModifiers ( ClassDecl | EnumDecl )
   // TODO implement ";".
   // TODO implement ClassModifiers.
-  // TODO implement EnumDeclaration.
+  // TODO implement EnumDecl.
   private void typeDeclaration() throws FatalError {
     debug("\ntypeDeclaration: start");
 
-    classDeclaration();
+    classDecl();
 
     debug("\ntypeDeclaration: end");
   } // typeDeclaration
 
-  // Name ::= JavaIdentifier ( "." JavaIdentifier )*
+  // ClassDecl ::= "class" JavaIdentifier ClassBody
   // TODO change implementation from:
-  // Name ::= identifier ("." identifier)* ("." importType)?
+  // ...classDecl = "class" identifier "{" statements "}".
   // to:
-  // Name ::= JavaIdentifier ( "." JavaIdentifier )*.
+  // ...ClassDecl ::= "class" JavaIdentifier ClassBody
+  // OLD...
+  // classDecl = "class" identifier "{" statements "}".
+  private void classDecl() throws FatalError {
+    debug("\nclassDecl: start");
+
+    // recognize a class definition.
+    if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginLexeme))) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // part of semantic analysis: start a new class level declaration scope.
+      identifiers.newScope();
+
+      if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginLexeme))) {
+        /* next line + debug message is part of semantic analysis */
+        if (identifiers.checkId(lexeme.idVal)) {
+          error(8); /* variable already declared */
+        } else if (identifiers.declareId(lexeme, LexemeType.classLexeme)) {
+          debug("\nclassDecl: class declared: " + lexeme.idVal);
+        } else {
+          error();
+          System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
+        }
+
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
+
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        statements(EnumSet.of(LexemeType.endLexeme));
+
+        // skip end lexeme
+        checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+      }
+
+      // part of semantic analysis: close the class level declaration scope.
+      identifiers.closeScope();
+    }
+    debug("\nclassDecl: end");
+  } // classDecl
+
+  // EnumDecl ::= "enum" JavaIdentifier EnumBody
+  // TODO implement EnumDecl.
 
   /*************************
    * 
@@ -515,15 +555,63 @@ public class pCompiler {
    * 
    *************************/
 
-  // ImportModifiers ::= "static"?
+  // Modifiers ::= "public"? "private"? "static"? "final"? "native"?
+  // "transient"? "volatile"?
+  // TODO implement modifiers.
 
-  // ClassModifiers ::= "public"?
+  /*************************
+   * 
+   * ### EnumBody
+   * 
+   *************************/
 
-  // AttributeModifiers ::= AccessModifiers? "final"? "static"? "volatile"?
+  // EnumBody ::= "{" EnumConstant ( "," EnumConstant )* ( ";" (
+  // ClassBodyDeclaration )* )? "}"
+  // TODO implement EnumBody.
 
-  // MethodModifiers ::= AccessModifiers? "final"? "static"? "synchronized"?
+  // EnumConstant ::= JavaIdentifier ( Arguments )?
+  // TODO implement EnumConstant.
 
-  // AccessModifiers ::= "public" | "private"
+  /*************************
+   * 
+   * ### ClassBody
+   * 
+   *************************/
+
+  // ClassBody ::= "{" ( ClassBodyDeclaration )* "}"
+  // TODO implement ClassBody.
+
+  // ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )
+  // TODO implement ClassBodyDeclaration.
+
+  // FieldDeclaration ::= Type VariableDeclarator ( "," VariableDeclarator )*
+  // ";"
+  // TODO implement FieldDeclaration.
+
+  // VariableDeclarator ::= VariableDeclaratorId ( "=" VariableInitializer )?
+  // TODO implement VariableDeclarator.
+
+  // VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*
+  // TODO implement VariableDeclaratorId.
+
+  // VariableInitializer ::= ArrayInitializer | Expression
+  // TODO implement VariableInitializer.
+
+  // ArrayInitializer ::= "{" ( VariableInitializer ( "," VariableInitializer )*
+  // )? "}"
+  // TODO implement ArrayInitializer.
+
+  // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
+  // TODO implement MethodDeclaration.
+
+  // MethodDeclarator ::= JavaIdentifier FormalParameters
+  // TODO implement MethodDeclarator.
+
+  // FormalParameters ::= "(" ( FormalParameter ( "," FormalParameter )* )? ")"
+  // TODO implement FormalParameters.
+
+  // FormalParameter ::= Modifiers Type VariableDeclaratorId
+  // TODO implement FormalParameter.
 
   /*************************
    * 
@@ -531,6 +619,24 @@ public class pCompiler {
    * 
    *************************/
 
+  // ResultType ::= "void" | ( ( "const" )? Type )
+  // TODO implement ResultType.
+
+  // Type ::= ReferenceType | PrimitiveType
+  // TODO implement Type.
+
+  // ReferenceType ::= PrimitiveType ( "[" "]" )+
+  // TODO implement ReferenceType.
+
+  // PrimitiveType ::= "char" | "string" | "byte" | "word" | "short" | "int" |
+  // "long"
+  // TODO implement PrimitiveType.
+
+  // Name ::= JavaIdentifier ( "." JavaIdentifier )*
+  // TODO change implementation from:
+  // ...Name ::= identifier ("." identifier)* ("." importType)?
+  // to:
+  // ...Name ::= JavaIdentifier ( "." JavaIdentifier )*.
   private String name() throws FatalError {
     debug("\npackageName: start");
     String result = "";
@@ -570,47 +676,15 @@ public class pCompiler {
     return result;
   }
 
-  /************************************
+  /*************************
    * 
-   * Syntax parsing methods still to do
+   * ### Statements
    * 
-   ************************************/
+   *************************/
 
-  // ###Declarations
-  // ClassDeclaration ::= "class" JavaIdentifier ClassBody
-  // EnumDeclaration ::= "enum" JavaIdentifier EnumBody
-
-  // ###EnumBody
-  // EnumBody ::= "{" EnumConstant ( "," EnumConstant )* ( ";" (
-  // ClassBodyDeclaration )* )? "}"
-  // EnumConstant ::= JavaIdentifier ( Arguments )?
-
-  // ###ClassBody
-  // ClassBody ::= "{" ( ClassBodyDeclaration )* "}"
-  // ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )
-  // FieldDeclaration ::= Type VariableDeclarator ( "," VariableDeclarator )*
-  // ";"
-  // VariableDeclarator ::= VariableDeclaratorId ( "=" VariableInitializer )?
-  // VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*
-  // VariableInitializer ::= ArrayInitializer | Expression
-  // ArrayInitializer ::= "{" ( VariableInitializer ( "," VariableInitializer )*
-  // )? "}"
-  // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
-  // MethodDeclarator ::= JavaIdentifier FormalParameters
-  // FormalParameters ::= "(" ( FormalParameter ( "," FormalParameter )* )? ")"
-  // FormalParameter ::= Modifiers Type VariableDeclaratorId
-
-  // ### Types
-  // `ResultType ::= "void" | ( ( "const" )? Type )
-  // `Type ::= ReferenceType | PrimitiveType
-  // `ReferenceType ::= PrimitiveType ( "[" "]" )+
-  // `PrimitiveType ::= "char" | "string" | "byte" | "word" | "short" | "int" |
-  // "long"
-  // `Name ::= JavaIdentifier ( "." JavaIdentifier )*
-
-  // ##Statements
   // Statement ::= Block | EmptyStatement | StatementExpression ";" |
   // IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement
+  // TODO implement Statement.
 
   /*********************************************
    * 
@@ -618,52 +692,7 @@ public class pCompiler {
    * 
    *********************************************/
 
-  // TODO reorder methods below.
-
-  // classDeclaration = classModifier "class" identifier classBody.
-  // EnumDeclaration ::= "enum" JavaIdentifier ( ImplementsList )? EnumBody.
-  // EnumBody ::= "{" ( EnumConstant ( "," EnumConstant )* )? ( "," )? ( ";" (
-  // ClassOrInterfaceBodyDeclaration )* )? "}".
-  // EnumConstant ::= Modifiers JavaIdentifier ( Arguments )? (
-  // ClassOrInterfaceBody )?.
-  // classModifier = "public".
-  // TODO old: program = "class" identifier "{" statements "}".
-  private void classDeclaration() throws FatalError {
-    debug("\nclassDeclaration: start");
-
-    // recognize a class definition.
-    if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginLexeme))) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-
-      // part of semantic analysis: start a new class level declaration scope.
-      identifiers.newScope();
-
-      if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginLexeme))) {
-        /* next line + debug message is part of semantic analysis */
-        if (identifiers.checkId(lexeme.idVal)) {
-          error(8); /* variable already declared */
-        } else if (identifiers.declareId(lexeme, LexemeType.classLexeme)) {
-          debug("\nclassDeclaration: class declared: " + lexeme.idVal);
-        } else {
-          error();
-          System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
-        }
-
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
-
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        statements(EnumSet.of(LexemeType.endLexeme));
-
-        // lexeme = lexemeReader.getLexeme(sourceCode);
-        checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
-      }
-
-      // part of semantic analysis: close the class level declaration scope.
-      identifiers.closeScope();
-    }
-    debug("\nclassDeclaration: end");
-  } // classDeclaration
+  // TODO refactor syntax parsing methods below.
 
   // constantExpression = constant | {addop constant}.
   // TODO Implement constantExpression.

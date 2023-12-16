@@ -56,13 +56,12 @@ TODO:
 
 `TypeDeclaration    ::= ";" | Modifiers ( ClassDeclaration | EnumDeclaration )`
 
-###Modifiers
-`Modifiers          ::= ( "public" | "static" | "private" | "final" | "native" | "transient" | "volatile" )*`
-
-###Declarations
 `ClassDeclaration   ::= "class" JavaIdentifier ClassBody`
 
 `EnumDeclaration    ::= "enum" JavaIdentifier EnumBody`
+
+###Modifiers
+`Modifiers          ::= ( "public" | "private" | "static" | "final" | "native" | "transient" | "volatile" )*`
 
 ###Enum body
 `EnumBody           ::= "{" EnumConstant ( "," EnumConstant )* ( ";" ( ClassBodyDeclaration )* )? "}"`
@@ -323,6 +322,16 @@ Multi-line comment may contain end of line comment.
 
 Multi-line comment may not be nested.
 
+Modifiers in an import statement may be: "static"?.
+
+Modifiers in a class declaration may be: "public"?.
+
+Modifiers in an attribute declaration may be: AccessModifiers? "final"? "static"? "volatile"?.
+
+Modifiers in a method declaration may be: AccessModifiers? "final"? "static"? "synchronized"?.
+
+Access modifiers may be: "public" | "private".
+
 The identifiers in a packageName must be in lower case.
 
 TODO: reorder according to syntax definition above. 
@@ -339,13 +348,13 @@ The name of a valid declaration may only be declared once within its scope (over
 
 A variable declaration must include the datatype.
 
-A variable of type byte takes one byte (8 bit).
+A variable of type byte takes one byte (8 bit) in memory.
 
-A variable of type word takes two bytes (16 bit).
+A variable of type word takes two bytes (16 bit) in memory.
 
-A variable of type byte has a range from 0 to 255.
+A variable of type byte is an unsigned integer number with a range from 0 to 255.
 
-A variable of type word has a range from 0 to 65535.
+A variable of type word is an unsigned integer number with a range from 0 to 65535.
 
 An expression is initially evaluated in the type of the first (left most) factor.
 
@@ -355,9 +364,7 @@ A byte expression is promoted to a word expression if a right-hand factor requir
 
 The read() function returns a word value.
 
-In an addop, mulop or relop the type of the lefthand operand and the right hand operand must be the same.
-
-The value of the lefthand operand of an addop, mulop or relop is changed from byte to word if the type of the righthand operand is a word.
+The type of the lefthand operand of an addop, mulop or relop is changed from byte to word if the type of the righthand operand is a word.
 
 In an assignment the value of a byte expression can be assigned to a word variable.
 
@@ -370,11 +377,9 @@ In an assignment a string variable is always implicitly a final variable (consta
 A string constant is enclosed between double quotes.
 
 A string constant consists of a sequence of characters and/or escape sequences.
-
 All ASCII printable characters are allowed, except \ (backslash) and " (double quote).
 
 In a string constant the \ symbol is the escape token. Supported characters in escape sequences are:
-
 - \\\\ backslash
 - \\' single quote
 - \\" double quote
@@ -386,16 +391,16 @@ In a string constant the \ symbol is the escape token. Supported characters in e
 - \a alert/bell
 
 The println statement makes a distinction between a string expression and an algorithmic expression.
--  An expression is a string expression if the leftmost operand is a string constant or the identifier of a string variable, otherwise it is an algorithmic expression.
--  In a println statement with a string expression, the subsequent operands may be added; other operators are not allowed.
+-  An expression is a string expression if the leftmost operand is a string constant or a string variable; otherwise it is an algorithmic expression.
+-  In a println statement with a string expression, the subsequent operands may be added (concatenated); other operators are not allowed.
 -  However, subexpressions (expression between left ( and right ) parenthesis, may be string expressions or algorithmic expressions.
--  Operands in a string expression, including results of subexpressions, are converted to string and then printed.
+-  Operands in a string expression, including results of subexpressions, are converted to string and then concatenated (printed).
 
 The outputStatement accepts 2 byte value expressions, the port number and the value to be written to the port respectively.
 
 The sleep statement lets the target program sleep for N milliseconds.
 
-Additionally, in order to avoid ambiguity, a sub-statement may be a block of statements or a single statement but not an if-statement in case of:  
+A sub-statement may be a block of statements or a single statement but not an if-statement in case of:  
 * the 'then' sub-statement of an if statement,
 * the sub-statement of a whileStatement,
 * the sub-statement of a forStatement.
@@ -418,5 +423,3 @@ or:
 
 ## Open issues:
 1. classBodyDeclaration with or without staticInitializer?
-
-
