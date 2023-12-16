@@ -27,16 +27,24 @@ public enum LexemeType {
   identifier("identifier"), constant("constant"), stringConstant("stringConstant"),
   // from here until beginlexeme are the special characters...
   period("."), comma(","), assign("="), semicolon(";"), lbracket("("), rbracket(")"),
-  // Lexeme types for operators are enumerated in order of increasing
-  // precedence.
+  // Lexeme types for operators in order of increasing precedence.
   bitwiseOrOp("|"), bitwiseXorOp("^"), bitwiseAndOp("&"), relop("<!=>"), addop("+ or -"), mulop("* or /"),
   // from here until unknown are the keywords...
-  beginLexeme("{"), packageLexeme("package"), importLexeme("import"), publicLexeme("public"), classLexeme("class"), finalLexeme(
-      "final"), byteLexeme("byte"), wordLexeme("word"),
-  // shortLexeme("short"),
-  // intLexeme("int"),
-  stringLexeme("String"), readLexeme("read"), inputLexeme("input"), printlnLexeme("println"), ifLexeme("if"), elseLexeme(
-      "else"), forLexeme("for"), doLexeme("do"), whileLexeme("while"), outputLexeme("output"), sleepLexeme("sleep"), endLexeme("}"),
+  beginLexeme("{"), packageLexeme("package"), importLexeme("import"),
+  // declaration
+  publicLexeme("public"), classLexeme("class"), finalLexeme("final"),
+  // datatypes
+  byteLexeme("byte"), wordLexeme("word"),
+  // shortLexeme("short"), intLexeme("int"),
+  stringLexeme("String"),
+  // IO
+  readLexeme("read"), printlnLexeme("println"), inputLexeme("input"), outputLexeme("output"),
+  // conditional
+  ifLexeme("if"), elseLexeme("else"),
+  // loops
+  forLexeme("for"), doLexeme("do"), whileLexeme("while"),
+  // miscellaneous
+  sleepLexeme("sleep"), endLexeme("}"),
   // unknown is a special lexemeType.
   unknown("?");
 

@@ -25,133 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-//TODO Add unit test for typeDeclaration.
-//TODO implement typeDeclaration
-//TODO implement classDeclaration
-//TODO implement void methodDeclaration (parameter less; no global/local variables).
-//TODO implement semantic analysis of importDeclaration
-//TODO implement void methodDeclaration (no global/local variables).
-//TODO Add global variable to function.
-//TODO Add local variable to function.
-//TODO Add 'static' qualifier to global variables.
-//TODO Add non-constant port value to output/input (IN0 A,(C); OUT0 (C),A).
-//TODO Introduce built in function malloc() (see test1, test5, test10, test11).
-//TODO Refactor StringConstants.
-//TODO Fix runtime error: too many variables
-//TODO Add support for input data (see Z80Compiler.class; call to Interpreter).
-//TODO Merge comparison with expression.
-//TODO Add bitwise NOT.
-//TODO Add logical OR, XOR and AND.
-//TODO Add logical NOT.
-//TODO Implement constantExpression.
-//TODO Allow algorithmic expression as value for 'final' qualifier. See test13.j.
-//TODO Test various expressions for output(byte port, byte value). See ledtest.j.
-//TODO Generate constant in Z80 code in hex notation if the constant was written in hex notation in J-code. See ledtest.j.
-
-/* comments to be distributed over the parser methods.
- *
- * classBody                            = "{" { classBodyDeclaration } "}".
- * classBodyDeclaration                 = classMemberDeclaration | staticInitializer.
- * classMemberDeclaration               = fieldDeclaration | methodDeclaration.
- * staticInitializer                    = "static" block.
- * fieldDeclaration                     = { fieldModifier } type variableDeclarators ";".
- * fieldModifier                        = "public" | "private" | "final".
- * methodDeclaration                    = methodHeader methodBody.
- * methodHeader                         = { methodModifier } resultType methodDeclarator.
- * methodModifier                       = "public" | "private".
- * resultType                           = type | "void".
- * methodDeclarator                     = identifier "(" formalParameterList? ")".
- * formalParameterList                  = formalParameter {"," formalParameter}.
- * formalParameter                      = type variableDeclaratorId.
- * methodBody                           = block | ";".
- * block                                = "{" { blockStatement } "}".
- * blockStatement                       = localVariableDeclarationStatement | statement.
- * localVariableDeclarationStatement    = localVariableDeclaration ";".
- * localVariableDeclaration             = type variableDeclarators.
- * type                                 = primitiveType.
- * primitiveType                        = numericType.
- * numericType                          = integralType.
- * integralType                         = "byte" | "word".
- * variableDeclarators                  = variableDeclarator {"," variableDeclarator}.
- * variableDeclarator                   = variableDeclaratorId ["=" variableInitializer].
- * variableDeclaratorId                 = identifier.
- * variableInitializer                  = expression.
- * statement                            = statementExceptIf | ifStatement
- * statementExceptIf                    = statementWithoutTrailingSubstatement | whileStatement | forStatement.
- * statementWithoutTrailingSubstatement = block | emptyStatement | expressionStatement | doStatement | returnStatement.
- * emptyStatement                       = ";".
- * expressionStatement                  = statementExpression ";".
- * statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.
- * preincrementExpression               = "++" unaryExpression.
- * predecrementExpression               = "--" unaryExpression.
- * doStatement                          = "do" statement "while" "(" expression ")" ";".
- * returnStatement                      = "return" expression? ";".
- * whileStatement                       = "while" "(" expression ")" statementExceptIf.
- * forStatement                         = "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.
- * forInit                              = statementExpressionList | localVariableDeclaration.
- * forUpdate                            = statementExpressionList.
- * statementExpressionList              = statementExpression {"," statementExpression}.
- * ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].
- * constantExpression                   = expression.
- * expression                           = assignmentExpression.
- * assignmentExpression                 = assignment | conditionalExpression.
- * assignment                           = leftHandSide assignmentOperator assignmentExpression.
- * leftHandSide                         = expressionName.
- * assignmentOperator                   = "=" | "*=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=".
- * conditionalExpression                = conditionalOrExpression [ "?" expression ":" conditionalExpression ].
- * conditionalOrExpression              = conditionalAndExpression { "||" conditionalAndExpression }.
- * conditionalAndExpression             = inclusiveOrExpression { "&&" inclusiveOrExpression }.
- * inclusiveOrExpression                = exclusiveOrExpression { "|" exclusiveOrExpression }.
- * exclusiveOrExpression                = andExpression { "^" andExpression }.
- * andExpression                        = equalityExpression { "&" equalityExpression }.
- * equalityExpression                   = relationalExpression [ equalityOperator equalityExpression ].
- * equalityOperator                     = "==" | "!=".
- * relationalExpression                 = shiftExpression [ relationalOperator shiftExpression ].
- * relationalOperator                   = ">" | ">=" | "<" | "<=".
- * shiftExpression                      = additiveExpression [ shiftOperator additiveExpression].
- * shiftOperator                        = "<<" | ">>" | ">>>".
- * additiveExpression                   = multiplicativeExpression [ additiveOperator multiplicativeExpression ].
- * additiveOperator                     = "+" | "-".
- * multiplicativeExpression             = unaryExpression [ multiplicativeOperator unaryExpression ].
- * multiplicativeOperator               = "*" | "/" | "%".
- * unaryExpression                      = {unaryOperator} postfixExpression.
- * unaryOperator                        = "++" | "--" | "+" | "-" | "~" | "!" | castPrefix.
- * castPrefix                           = "(" primitiveType ")".
- * postfixExpression                    = postincrementExpression | postdecrementExpression | primary | expressionName.
- * postincrementExpression              = postfixExpression "++".
- * postdecrementExpression              = postfixExpression "--".
- * primary                              = primaryNoNewArray.
- * primaryNoNewArray                    = literal | "this" | "(" expression ")" | fieldAccess | methodInvocation.
- * fieldAccess                          = primary "." identifier.
- * methodInvocation                     = methodName "(" argumentList? ")".
- * argumentList                         = expression { "," expression }.
- * expressionName                       = [ ambiguousName "." ] identifier.
- * methodName                           = [ ambiguousName "." ] identifier.
- * ambiguousName                        = identifier { "." identifier }.
- * literal                              = integerLiteral | characterLiteral | stringLiteral.
- * integerLiteral                       = decimalIntegerLiteral | hexIntegerLiteral | octalIntegerLiteral.
- * decimalIntegerLiteral                = decimalNumeral.
- * hexIntegerLiteral                    = hexNumeral.
- * octalIntegerLiteral                  = octalNumeral.
- * decimalNumeral                       = "0" | nonZeroDigit { digit }.
- * digit                                = "0" | nonZeroDigit.
- * nonZeroDigit                         = "(1-9)".
- * hexNumeral                           = "0x" hexDigit { hexDigit } | "0X" hexDigit { hexDigit }.
- * hexDigit                             = "(0-9a-fAF)".
- * octalNumeral                         = "0" octalDigit { octalDigit }.
- * octalDigit                           = "(0-7)".
- * characterLiteral                     = "'" singleCharacter "'" | "'" escapeSequence "'".
- * singleCharacter                      = inputCharacter - ("'" | "\" ).
- * stringLiteral                        = '"' { stringCharacter } '"'.
- * stringCharacter                      = escapeSequence | inputCharacter - ( '"' or '\').
- * escapeSequence                       = "\\" | "\'" | "\"" | "\n" | "\r" | "\t" | "\b" | "\f" | "\a".
- * keyword                              = "abstract" | "boolean" | "break" | "byte" | "case" | "catch" | "char" | "class" | "const" | "continue"
-                                        | "default" | "do" | "double" | "else" | "extends" | "final" | "finally" | "float" | "for" | "goto"
-                                        | "if" | "implements" | "import" | "instanceof" | "int" | "interface" | "long" | "native" | "new"
-                                        | "package" | "private" | "protected" | "public" | "return" | "short" | "static" | "super" | "switch" | "synchronized"
-                                        | "this" | "throw" | "throws" | "transient" | "try" | "void" | "volatile" | "while".
- */
-
 /*
 * pCompiler; main class for the recursive descent miniJava compiler.
 *
@@ -346,6 +219,7 @@ public class pCompiler {
     lexemeReader.error();
   }
 
+  // TODO Fix runtime error: too many variables
   private void error(int n) {
     error();
     switch (n) {
@@ -511,8 +385,18 @@ public class pCompiler {
     return identifier.matches("^(_|\\$)*[A-z][a-zA-Z0-9]*$");
   }
 
-  // compilationUnit = packageDeclaration? { importDeclaration }
-  // typeDeclaration.
+  /*************************
+   * 
+   * Syntax parsing methods.
+   * 
+   *************************/
+
+  /*************************
+   * 
+   * ### Programs
+   * 
+   *************************/
+  // CompilationUnit ::= PackageDeclaration? ImportDeclaration* TypeDeclaration
   private void compilationUnit() throws FatalError {
     debug("\ncompilationUnit: start");
 
@@ -533,16 +417,22 @@ public class pCompiler {
     debug("\ncompilationUnit: end");
   } // compilationUnit
 
-  // packageDeclaration = "package" packageName ";".
-  // packageName = identifier { "." identifier }.
+  /*************************
+   * 
+   * ### Declarations
+   * 
+   *************************/
+
+  // PackageDeclaration ::= Modifiers "package" Name ";"
+  // TODO implement Modifiers.
   private void packageDeclaration() throws FatalError {
     debug("\npackageDeclaration: start");
 
     // skip "package".
     lexeme = lexemeReader.getLexeme(sourceCode);
 
-    // recognize packageName.
-    packageName = packageName();
+    // recognize Name.
+    packageName = name();
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon),
         EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
       // skip ";"
@@ -565,24 +455,83 @@ public class pCompiler {
       // TODO implement semantics for package declaration.
     }
 
-    debug("\npackageDeclaration: end; packageName=" + packageName);
+    debug("\npackageDeclaration: end; package name=" + packageName);
   } // packageDeclaration
 
-  // packageName = identifier { "." identifier } { "." importType }.
+  // ImportDeclaration ::= "import" ImportModifiers Name ( "." "*" )? ";"
+  // TODO implement ( "static" )?.
+  // importDeclaration ::= "import" Name "." importType ";".
+  // packageName = identifier { "." identifier }.
   // importType = identifier | "*".
-  /*
-   * Original definition of package name is: packageName = identifier { "."
-   * identifier }. Where packageName is used in several places, such as package
-   * declaration, import declaration, reference to a class or reference to an
-   * interface. Which means that a package name ends when next lexeme is ";"
-   * (i.c.o. packageDeclaration) or next lexeme is "." followed by importType
-   * where importType is either an (UpperCamelCase) identifier or "*" (i.c.o.
-   * all other package name usages). We want to avoid LL(2) (2 level lexeme look
-   * ahead), so we extended the package definition as stated above. Down side is
-   * that users of this method have to implement additional validation during
-   * semantic analysis.
-   */
-  private String packageName() throws FatalError {
+  // Note: packageName identifiers are lowerCamelCase.
+  // Note: importType identifier is UpperCamelCase.
+  // TODO implement semantic analysis of importDeclaration
+  private void importDeclaration() throws FatalError {
+    debug("\nimportDeclaration: start");
+
+    // skip "import"
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    // recognize Name.
+    String importPackageName = name();
+    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme);
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      // skip ";"
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // semantic analysis: packageName identifiers are lowerCamelCase and
+      // importType is either * or UpperCamelCase.
+      if (!validImport(importPackageName)) {
+        error(21);
+      }
+
+      // TODO: import single class or all classes in the package.
+    }
+    debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
+  } // importDeclaration
+
+  // TypeDeclaration ::= ";" | ClassModifiers ( ClassDeclaration |
+  // EnumDeclaration )
+  // TODO implement ";".
+  // TODO implement ClassModifiers.
+  // TODO implement EnumDeclaration.
+  private void typeDeclaration() throws FatalError {
+    debug("\ntypeDeclaration: start");
+
+    classDeclaration();
+
+    debug("\ntypeDeclaration: end");
+  } // typeDeclaration
+
+  // Name ::= JavaIdentifier ( "." JavaIdentifier )*
+  // TODO change implementation from:
+  // Name ::= identifier ("." identifier)* ("." importType)?
+  // to:
+  // Name ::= JavaIdentifier ( "." JavaIdentifier )*.
+
+  /*************************
+   * 
+   * ### Modifiers
+   * 
+   *************************/
+
+  // ImportModifiers ::= "static"?
+
+  // ClassModifiers ::= "public"?
+
+  // AttributeModifiers ::= AccessModifiers? "final"? "static"? "volatile"?
+
+  // MethodModifiers ::= AccessModifiers? "final"? "static"? "synchronized"?
+
+  // AccessModifiers ::= "public" | "private"
+
+  /*************************
+   * 
+   * ### Types
+   * 
+   *************************/
+
+  private String name() throws FatalError {
     debug("\npackageName: start");
     String result = "";
 
@@ -616,51 +565,67 @@ public class pCompiler {
         }
       }
     }
+
     debug("\npackageName: end; packageName=" + result);
     return result;
   }
 
-  // importDeclaration = "import" packageName "." importType ";".
-  // packageName = identifier { "." identifier }.
-  // importType = identifier | "*".
-  // Note: packageName identifiers are lowerCamelCase.
-  // Note: importType identifier is UpperCamelCase.
-  private void importDeclaration() throws FatalError {
-    debug("\nimportDeclaration: start");
+  /************************************
+   * 
+   * Syntax parsing methods still to do
+   * 
+   ************************************/
 
-    // skip "import"
-    lexeme = lexemeReader.getLexeme(sourceCode);
+  // ###Declarations
+  // ClassDeclaration ::= "class" JavaIdentifier ClassBody
+  // EnumDeclaration ::= "enum" JavaIdentifier EnumBody
 
-    // recognize packageName.
-    String importPackageName = packageName();
-    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme);
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      // skip ";"
-      lexeme = lexemeReader.getLexeme(sourceCode);
+  // ###EnumBody
+  // EnumBody ::= "{" EnumConstant ( "," EnumConstant )* ( ";" (
+  // ClassBodyDeclaration )* )? "}"
+  // EnumConstant ::= JavaIdentifier ( Arguments )?
 
-      // semantic analysis: packageName identifiers are lowerCamelCase and
-      // importType is either * or UpperCamelCase.
-      if (!validImport(importPackageName)) {
-        error(21);
-      }
+  // ###ClassBody
+  // ClassBody ::= "{" ( ClassBodyDeclaration )* "}"
+  // ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )
+  // FieldDeclaration ::= Type VariableDeclarator ( "," VariableDeclarator )*
+  // ";"
+  // VariableDeclarator ::= VariableDeclaratorId ( "=" VariableInitializer )?
+  // VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*
+  // VariableInitializer ::= ArrayInitializer | Expression
+  // ArrayInitializer ::= "{" ( VariableInitializer ( "," VariableInitializer )*
+  // )? "}"
+  // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
+  // MethodDeclarator ::= JavaIdentifier FormalParameters
+  // FormalParameters ::= "(" ( FormalParameter ( "," FormalParameter )* )? ")"
+  // FormalParameter ::= Modifiers Type VariableDeclaratorId
 
-      // TODO: import single class or all classes in the package.
-    }
-    debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
-  } // importDeclaration
+  // ### Types
+  // `ResultType ::= "void" | ( ( "const" )? Type )
+  // `Type ::= ReferenceType | PrimitiveType
+  // `ReferenceType ::= PrimitiveType ( "[" "]" )+
+  // `PrimitiveType ::= "char" | "string" | "byte" | "word" | "short" | "int" |
+  // "long"
+  // `Name ::= JavaIdentifier ( "." JavaIdentifier )*
 
-  // typeDeclaration = classDeclaration.
-  private void typeDeclaration() throws FatalError {
-    debug("\ntypeDeclaration: start");
+  // ##Statements
+  // Statement ::= Block | EmptyStatement | StatementExpression ";" |
+  // IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement
 
-    classDeclaration();
-
-    debug("\ntypeDeclaration: end");
-  } // typeDeclaration
+  /*********************************************
+   * 
+   * Old syntax parsing methods to be refactored.
+   * 
+   *********************************************/
 
   // TODO reorder methods below.
 
   // classDeclaration = classModifier "class" identifier classBody.
+  // EnumDeclaration ::= "enum" JavaIdentifier ( ImplementsList )? EnumBody.
+  // EnumBody ::= "{" ( EnumConstant ( "," EnumConstant )* )? ( "," )? ( ";" (
+  // ClassOrInterfaceBodyDeclaration )* )? "}".
+  // EnumConstant ::= Modifiers JavaIdentifier ( Arguments )? (
+  // ClassOrInterfaceBody )?.
   // classModifier = "public".
   // TODO old: program = "class" identifier "{" statements "}".
   private void classDeclaration() throws FatalError {
@@ -701,6 +666,11 @@ public class pCompiler {
   } // classDeclaration
 
   // constantExpression = constant | {addop constant}.
+  // TODO Implement constantExpression.
+  // TODO Allow algorithmic expression as value for 'final' qualifier. See
+  // test13.j.
+  // TODO Generate constant in Z80 code in hex notation if the constant was
+  // written in hex notation in J-code. See ledtest.j.
   private Operand constantExpression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nconstantExpression: start with stopSet = " + stopSet);
 
@@ -724,6 +694,8 @@ public class pCompiler {
   } // constantExpression()
 
   // inputFactor = "input" "(" constantExpression ")".
+  // TODO Add support for input data (see Z80Compiler.class; call to
+  // Interpreter).
   private Operand inputFactor(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ninputFactor: start with stopSet = " + stopSet);
 
@@ -770,6 +742,9 @@ public class pCompiler {
 
   // factor = identifier | constant | stringConstant | "read" | "inputFactor" |
   // "(" expression ")".
+  // TODO Introduce built in function malloc() (see test1, test5, test10,
+  // test11).
+  // TODO Refactor StringConstants.
   private Operand factor(EnumSet<LexemeType> stopSet) throws FatalError {
     Operand operand = new Operand(OperandType.unknown);
     debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
@@ -991,6 +966,7 @@ public class pCompiler {
   // parse a comparison, and return the address of the jump instruction to be
   // filled with the label at the end of the control statement block.
   // comparison = expression relop expression
+  // TODO Merge comparison with expression.
   private int comparison(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ncomparison: start with stopSet = " + stopSet);
 
@@ -1328,6 +1304,9 @@ public class pCompiler {
   } // whileStatement()
 
   // outputStatement = "output" "(" constantExpression "," expression ")".
+  // TODO Add non-constant port value to output/input (IN0 A,(C); OUT0 (C),A).
+  // TODO Test various expressions for output(byte port, byte value). See
+  // ledtest.j.
   private void outputStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\noutputStatement: start with stopSet = " + stopSet);
 

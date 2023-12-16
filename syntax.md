@@ -2,35 +2,35 @@
 
 ## Extended BNF
 The syntax is defined in extended BNF.
-
-- A non-terminal is a plain text identifier, starting with a character, followed by charactors or digits.
-- Terminal symbols are between qutotes (')  or double quotes (").
+- A non-terminal is a plain text identifier, starting with a character, followed by characters or digits.
+- Terminal symbols are between quotes (')  or double quotes (").
 - The optional appearance of a single construct (terminal or non-terminal) X is written as X?.
 - The optional appearance (zero or one instance) of the sequence of constructs X and Y is written [ X Y ].
 - The iterative appearance (zero or more instances) of the sequence of constructs X and Y is written { X Y }.
 - Possible characters and digits are defined individually, such as "0", or as a range, such as "(1-9)".
 
 ## Limitations and extensions
-Compared to an [original but not official Java syntax](https://cs.au.dk/~amoeller/RegAut/JavaBNF.html), 
-a copy of which is available in JAVA_BNF_Rules.txt, the syntax of miniJava has 
-the following limitations have been imposed:
-- typeDeclaration:      no interfaceDeclaration or ";".
-- classDeclaration      fixed single classModifier.
-- classDeclaration:     no super? or interfaces?.
-- classModifier:        no "abstract" or "final".
-- classBodyDeclaration: no constructorDeclaration.
-- fieldModifier:        no "protected", "static", "transient" or "volatile".
-- variableDeclaratorId: no arrays (sequence of: variableDeclaratorId "[" "]").
-- variableInitializer:  no arrayInitializer.
-- methodHeader:         no throws?.
-- methodModifier:       no "protected", "static", "abstract", "final", "synchronized" or "native".
-- type:                 no referenceType.
-- primitiveType:        no "boolean".
-- numericType:          no floatingPointType.
-- integralType:         no "short", "int", "long" or "char".
-- statement:            no labeledStatement.
-- statementWithoutTrailingSubstatement:
-                        no switchStatement, breakStatement, continueStatement, synchronizedStatement, throwsStatements or tryStatement.
+Compared to an [original but not official Java syntax](see https://javacc.github.io/javacc/documentation/bnf.html),
+the syntax of miniJava has the following limitations:
+- CompilationUnit      single TypeDeclaration
+- typeDeclaration:      no interface declaration or ";".
+- classDeclaration:     no super?, interfaces?, extends?, TypeParameters? or implements?.
+- modifiers:            no "abstract", "protected", "synchronized", "strictfp" or Annotation.
+- EnumDeclaration       no ImplementsList?.
+- EnumBody              no ( "," )?
+- EnumConstant          no Modifiers, no ClassBody?
+- ClassBodyDeclaration  no Initializer, no ClassDeclaration, no EnumDeclaration, no ConstructorDeclaration, no ";".
+- ArrayInitializer      no ( "," )?.
+- MethodDeclaration     no TypeParameters, no "throws".
+- MethodDeclarator      no [].
+- FormalParameter       no "&", "*" or "...". 
+- ResultType            no "*" or "&"
+- ReferenceType         no ClassOrInterfaceType.
+- PrimitiveType         no "char" | "byte" | "short" | "int" | "long"
+- PrimitiveType:        added "word" | "string"
+- Statement             no LabeledStatement, AssertStatement, SwitchStatement, BreakStatement, ContinueStatement, ThrowStatement, SynchronizedStatement or TryStatement.
+
+TODO:
 - statementExpression:  no classInstanceCreationExpression.
 - leftHandSide:         no fieldAccess or arrayAccess.
 - relationalExpression: no "instanceof" referenceType.
@@ -44,97 +44,73 @@ the following limitations have been imposed:
 - hexIntegerLiteral:    no integerTypeSuffix.
 - octalIntegerLiteral:  no integerTypeSuffix.
 
-Compared to an original but not official Java syntax, the syntax of miniJava has the following extensions:
-- compilationUnit:      mandatory single typeDeclaration instead of optional sequence ( {...} ).
-- integralType:         added "word".
-
-Additionally, in order to avoid ambiguity and at the same time make the sytax LL(1), the 'then' substatement of an
-if statement, the substatement of a whileStatement and the substatement of a forStatement may be
-a block of statements or a single statement, but in the latter case not an if-statement.
-As a consequence the 'NoShortIf' variants from the original Java syntax are no longer needed.
-
-As a consequence, for example, the following Java code is not allowed:
-`if (x > 0)  
-  if (x < 10)  
-    flag = true;  
-  else  
-    flag = false;`
-
-An alternative is to use a block instead of a single statement:
-`if (x > 0) {  
-    if (x < 10)  
-      flag = true;  
-    else  
-      flag = false;  
-};`
-
-The shorter version:
-`if (x > 0)  
-    if (x < 10)  
-      flag = true;`
-
-could be replaced by either:
-`if (x > 0) {  
-    if (x < 10)  
-      flag = true;  
-};`
-
-or:
-`if (x > 0 && x < 10)  
-  flag = true;  
-};`
-
-## Questions:
-1. Can a class be something else than puclic, abstract or final, e.g. protected or private?
-2. classBodyDeclaration with or without staticInitializer?
-
-## Synxtax definition
+## Syntax definition
 
 ### Programs
-`compilationUnit                      = packageDeclaration? { importDeclaration } typeDeclaration.`
+`CompilationUnit    ::= PackageDeclaration? ImportDeclaration* TypeDeclaration`
 
 ### Declarations
-`packageDeclaration                   = "package" packageName ";".`
+`PackageDeclaration ::= Modifiers "package" Name ";"`
 
-`importDeclaration                    = "import" packageName "." importType ";".`
+`ImportDeclaration  ::= "import" ( "static" )? Name ( "." "*" )? ";"`
 
-`importType                           = identifier | "*".`
+`TypeDeclaration    ::= ";" | Modifiers ( ClassDeclaration | EnumDeclaration )`
 
-`typeDeclaration                      = classDeclaration.`
+###Modifiers
+`Modifiers          ::= ( "public" | "static" | "private" | "final" | "native" | "transient" | "volatile" )*`
 
-`classDeclaration                     = classModifier "class" identifier classBody.`
+###Declarations
+`ClassDeclaration   ::= "class" JavaIdentifier ClassBody`
 
-`classModifier                        = "public".`
+`EnumDeclaration    ::= "enum" JavaIdentifier EnumBody`
 
-`classBody                            = "{" { classBodyDeclaration } "}".`
+###Enum body
+`EnumBody           ::= "{" EnumConstant ( "," EnumConstant )* ( ";" ( ClassBodyDeclaration )* )? "}"`
 
-`classBodyDeclaration                 = classMemberDeclaration | staticInitializer.`
+`EnumConstant       ::= JavaIdentifier ( Arguments )?`
 
-`classMemberDeclaration               = fieldDeclaration | methodDeclaration.`
+###Class body
+`ClassBody            ::= "{" ( ClassBodyDeclaration )* "}"`
 
-`staticInitializer                    = "static" block.`
+`ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )`
 
-`fieldDeclaration                     = { fieldModifier } type variableDeclarators ";".`
+`FieldDeclaration     ::= Type VariableDeclarator ( "," VariableDeclarator )* ";"`
 
-`fieldModifier                        = "public" | "private" | "final".`
+`VariableDeclarator   ::= VariableDeclaratorId ( "=" VariableInitializer )?`
 
-`methodDeclaration                    = methodHeader methodBody.`
+`VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*`
 
-`methodHeader                         = { methodModifier } resultType methodDeclarator.`
+`VariableInitializer  ::= ArrayInitializer | Expression`
 
-`methodModifier                       = "public" | "private".`
+`ArrayInitializer     ::= "{" ( VariableInitializer ( "," VariableInitializer )* )? "}"`
 
-`resultType                           = type | "void".`
+`MethodDeclaration    ::= ResultType MethodDeclarator ( Block | ";" )`
 
-`methodDeclarator                     = identifier "(" formalParameterList? ")".`
+`MethodDeclarator     ::= JavaIdentifier FormalParameters`
 
-`formalParameterList                  = formalParameter {"," formalParameter}.`
+`FormalParameters     ::= "(" ( FormalParameter ( "," FormalParameter )* )? ")"`
 
-`formalParameter                      = type variableDeclaratorId.`
+`FormalParameter      ::= Modifiers Type VariableDeclaratorId`
 
-`methodBody                           = block | ";".`
+### Types
+`ResultType           ::= "void" | ( ( "const" )? Type )`
 
-### Blocks and Commands
+`Type                 ::= ReferenceType | PrimitiveType`
+
+`ReferenceType        ::= PrimitiveType ( "[" "]" )+`
+
+`PrimitiveType        ::= "char" | "string" | "byte" | "word" | "short" | "int" | "long"`
+
+`Name                 ::= JavaIdentifier ( "." JavaIdentifier )*`
+
+##Statements
+`Statement        ::= Block | EmptyStatement | StatementExpression ";" | IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement`
+
+``
+
+TODO
+Block
+
 `block                                = "{" { blockStatement } "}".`
 
 `blockStatement                       = localVariableDeclarationStatement | statement.`
@@ -142,15 +118,6 @@ or:
 `localVariableDeclarationStatement    = localVariableDeclaration ";".`
 
 `localVariableDeclaration             = type variableDeclarators.`
-
-### Types
-`type                                 = primitiveType.`
-
-`primitiveType                        = numericType.`
-
-`numericType                          = integralType.`
-
-`integralType                         = "byte" | "word".`
 
 `variableDeclarators                  = variableDeclarator {"," variableDeclarator}.`
 
@@ -194,7 +161,12 @@ or:
 
 `constantExpression                   = expression.`
 
+TODO
+Arguments
+Expression
+JavaIdentifier
 ### Expressions
+
 `expression                           = assignmentExpression.`
 
 `assignmentExpression                 = assignment | conditionalExpression.`
@@ -319,21 +291,17 @@ or:
 ### miscellaneous
 This BNF definition does not describe whitespace and comments, which my be inserted between any terminal.
 
-
 Java style end of line comment:` //... comment`
 
 Java style multi-line comment:`  /*... comment ...*/`
 
-
 The character set for miniJava is standard 7-bit ASCII character set. This is the set denoted by *inputCharacter*.
-
 
 An *inputCharacter* is a letter if the method Character.isJavaLetter returns true. 
 
 An *inputCharacter* is digit if the method Character.isJaveDigit returns true. 
 
 An *inputCharacter* is letter-or-digit if the method Character.isJaveLetterOrDigit returns true. 
-
 
 An <identifier> may not be any of the keywords given above - these are reserved words in miniJava.
 
@@ -426,3 +394,29 @@ The println statement makes a distinction between a string expression and an alg
 The outputStatement accepts 2 byte value expressions, the port number and the value to be written to the port respectively.
 
 The sleep statement lets the target program sleep for N milliseconds.
+
+Additionally, in order to avoid ambiguity, a sub-statement may be a block of statements or a single statement but not an if-statement in case of:  
+* the 'then' sub-statement of an if statement,
+* the sub-statement of a whileStatement,
+* the sub-statement of a forStatement.
+As a consequence the 'NoShortIf' variants from the original Java syntax are not supported.
+
+As a consequence, for example, the following Java code is not allowed:
+`if (x > 0) if (x < 10) flag = true; else flag = false;`
+
+An alternative is to use a block instead of a single statement:
+`if (x > 0) { if (x < 10) flag = true else flag = false; };`
+
+The shorter version:
+`if (x > 0) if (x < 10) flag = true;`
+
+could be replaced by either:
+`if (x > 0) { if (x < 10) flag = true; };`
+
+or:
+`if (x > 0 && x < 10) flag = true; };`
+
+## Open issues:
+1. classBodyDeclaration with or without staticInitializer?
+
+
