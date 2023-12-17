@@ -459,7 +459,7 @@ public class pCompiler {
   } // packageDeclaration
 
   // ImportDeclaration ::= "import" ImportModifiers Name ( "." "*" )? ";"
-  // TODO implement ( "static" )?.
+  // TODO implement ( "static" )? in ImportDeclaration.
   // importDeclaration ::= "import" Name "." importType ";".
   // packageName = identifier { "." identifier }.
   // importType = identifier | "*".
@@ -491,20 +491,34 @@ public class pCompiler {
   } // importDeclaration
 
   // TypeDeclaration ::= ";" | ClassModifiers ( ClassDecl | EnumDecl )
-  // TODO implement ";".
-  // TODO implement ClassModifiers.
-  // TODO implement EnumDecl.
+  // TODO implement ClassModifiers in TypeDeclaration.
+  // TODO implement EnumDecl in TypeDeclaration.
   private void typeDeclaration() throws FatalError {
     debug("\ntypeDeclaration: start");
 
-    classDecl();
+    if (lexeme.type == LexemeType.semicolon) {
+      // skip ";".
+
+      // check we are at the end of the file, barring comments and white space.
+      try {
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      } catch (FatalError e) {
+        // accept EOF, otherwise re-throw the fatal error.
+        if (e.getErrorNumber() == 1) {
+          return;
+        }
+        throw e;
+      }
+    } else {
+      classDecl();
+    }
 
     debug("\ntypeDeclaration: end");
   } // typeDeclaration
 
   // ClassDecl ::= "class" JavaIdentifier ClassBody
   // TODO change implementation from:
-  // ...classDecl = "class" identifier "{" statements "}".
+  // ...classDecl ::= "class" identifier "{" statements "}".
   // to:
   // ...ClassDecl ::= "class" JavaIdentifier ClassBody
   // OLD...
@@ -557,7 +571,7 @@ public class pCompiler {
 
   // Modifiers ::= "public"? "private"? "static"? "final"? "native"?
   // "transient"? "volatile"?
-  // TODO implement modifiers.
+  // TODO implement Modifiers.
 
   /*************************
    * 
