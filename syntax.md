@@ -324,7 +324,9 @@ Multi-line comment may not be nested.
 
 Modifiers in an import statement may be: "static"?.
 
-Modifiers in a class declaration may be: "public"?.
+Modifiers in a class declaration may be: "public"?. Default is none, i.e. the class is only accessible by classes or enums in the same package.
+
+Modifiers in an enum declaration may be: "public"?. Default is none, i.e. the enum is only accessible by classes or enums in the same package.
 
 Modifiers in an attribute declaration may be: AccessModifiers? "final"? "static"? "volatile"?.
 

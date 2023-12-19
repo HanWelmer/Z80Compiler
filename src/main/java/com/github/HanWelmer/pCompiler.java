@@ -289,6 +289,12 @@ public class pCompiler {
       case 21:
         System.out.println("import must consist of package name (optional) followed by either * or UpperCamelCase Class name.");
         break;
+      case 22:
+        System.out.println("illegal modifer in class or enum declaration.");
+        break;
+      case 23:
+        System.out.println("too many modifers in class or enum declaration.");
+        break;
     }
   }
 
@@ -490,8 +496,7 @@ public class pCompiler {
     debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
   } // importDeclaration
 
-  // TypeDeclaration ::= ";" | ClassModifiers ( ClassDecl | EnumDecl )
-  // TODO implement ClassModifiers in TypeDeclaration.
+  // TypeDeclaration ::= ";" | Modifiers ( ClassDecl | EnumDecl )
   // TODO implement EnumDecl in TypeDeclaration.
   private void typeDeclaration() throws FatalError {
     debug("\ntypeDeclaration: start");
@@ -503,14 +508,26 @@ public class pCompiler {
       try {
         lexeme = lexemeReader.getLexeme(sourceCode);
       } catch (FatalError e) {
-        // accept EOF, otherwise re-throw the fatal error.
-        if (e.getErrorNumber() == 1) {
-          return;
+        // accept EOF; re-throw any other fatal error.
+        if (e.getErrorNumber() != 1) {
+          throw e;
         }
-        throw e;
       }
     } else {
-      classDecl();
+      EnumSet<LexemeType> modifiers = modifiers();
+
+      // Semantic analysis: Modifiers in a class/enum declaration must be none
+      // or "public".
+      // Default is none, i.e. the class is only accessible by classes or enums
+      // in the same package.
+      boolean isPublic = modifiers.contains(LexemeType.publicLexeme);
+      if (modifiers.size() == 1 && !isPublic) {
+        error(23);
+      } else if (modifiers.size() > 1) {
+        error(24);
+      }
+
+      classDecl(isPublic);
     }
 
     debug("\ntypeDeclaration: end");
@@ -523,8 +540,8 @@ public class pCompiler {
   // ...ClassDecl ::= "class" JavaIdentifier ClassBody
   // OLD...
   // classDecl = "class" identifier "{" statements "}".
-  private void classDecl() throws FatalError {
-    debug("\nclassDecl: start");
+  private void classDecl(boolean isPublic) throws FatalError {
+    debug("\nclassDecl: " + (isPublic ? "public" : ""));
 
     // recognize a class definition.
     if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginLexeme))) {
@@ -537,8 +554,8 @@ public class pCompiler {
         /* next line + debug message is part of semantic analysis */
         if (identifiers.checkId(lexeme.idVal)) {
           error(8); /* variable already declared */
-        } else if (identifiers.declareId(lexeme, LexemeType.classLexeme)) {
-          debug("\nclassDecl: class declared: " + lexeme.idVal);
+        } else if (identifiers.declareId(lexeme, LexemeType.classLexeme, isPublic, false)) {
+          debug("\nclassDecl: " + (isPublic ? "public " : "") + "class declared: " + lexeme.idVal);
         } else {
           error();
           System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
@@ -571,7 +588,46 @@ public class pCompiler {
 
   // Modifiers ::= "public"? "private"? "static"? "final"? "native"?
   // "transient"? "volatile"?
-  // TODO implement Modifiers.
+  protected EnumSet<LexemeType> modifiers() throws FatalError {
+    EnumSet<LexemeType> result = EnumSet.noneOf(LexemeType.class);
+
+    // "public"?
+    if (lexeme.type == LexemeType.publicLexeme) {
+      result.add(LexemeType.publicLexeme);
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // "private"?
+    if (lexeme.type == LexemeType.privateLexeme) {
+      result.add(LexemeType.privateLexeme);
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // "static"?
+    if (lexeme.type == LexemeType.staticLexeme) {
+      result.add(LexemeType.staticLexeme);
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // "final"?
+    if (lexeme.type == LexemeType.finalLexeme) {
+      result.add(LexemeType.finalLexeme);
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // "native"?
+    if (lexeme.type == LexemeType.nativeLexeme) {
+      result.add(LexemeType.nativeLexeme);
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // "transient"?
+    if (lexeme.type == LexemeType.transientLexeme) {
+      result.add(LexemeType.transientLexeme);
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // "volatile"?
+    if (lexeme.type == LexemeType.volatileLexeme) {
+      result.add(LexemeType.volatileLexeme);
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    return result;
+  }
 
   /*************************
    * 
@@ -1522,6 +1578,7 @@ public class pCompiler {
   // declaration = [qualifier] datatype.
   // qualifier = "final".
   // datatype = "byte" | "word" | "String".
+  // TODO implement isPublic
   private String assignment(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nassignment: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
@@ -1530,6 +1587,7 @@ public class pCompiler {
     stopAssignmentSet.add(LexemeType.semicolon);
 
     // part of lexical analysis.
+    boolean isPublic = false;
     boolean isFinal = false;
     if (lexeme.type == LexemeType.finalLexeme) {
       isFinal = true;
@@ -1547,11 +1605,9 @@ public class pCompiler {
         // part of semantic analysis.
         if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != null) {
           error(8); // variable already declared.
-        } else if (identifiers.declareId(lexeme, datatype, isFinal)) {
-          debug("\nassignment: ");
-          if (isFinal)
-            debug("final ");
-          debug(lexeme.makeString(identifiers.getId(lexeme.idVal)));
+        } else if (identifiers.declareId(lexeme, datatype, isPublic, isFinal)) {
+          debug("\nassignment: " + (isPublic ? "public " : "") + (isFinal ? "final " : "")
+              + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
           error();

@@ -31,8 +31,11 @@ public enum LexemeType {
   bitwiseOrOp("|"), bitwiseXorOp("^"), bitwiseAndOp("&"), relop("<!=>"), addop("+ or -"), mulop("* or /"),
   // from here until unknown are the keywords...
   beginLexeme("{"), packageLexeme("package"), importLexeme("import"),
+  // modifiers
+  publicLexeme("public"), privateLexeme("private"), staticLexeme("static"), finalLexeme("final"), nativeLexeme(
+      "native"), transientLexeme("transient"), volatileLexeme("volatile"),
   // declaration
-  publicLexeme("public"), classLexeme("class"), finalLexeme("final"),
+  classLexeme("class"),
   // datatypes
   byteLexeme("byte"), wordLexeme("word"),
   // shortLexeme("short"), intLexeme("int"),

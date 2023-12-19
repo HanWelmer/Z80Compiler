@@ -72,10 +72,15 @@ public class Lexeme {
       case period:
       case semicolon:
       case packageLexeme:
-      case classLexeme:
       case importLexeme:
       case publicLexeme:
+      case privateLexeme:
+      case staticLexeme:
       case finalLexeme:
+      case nativeLexeme:
+      case transientLexeme:
+      case volatileLexeme:
+      case classLexeme:
       case byteLexeme:
       case wordLexeme:
       case stringLexeme:

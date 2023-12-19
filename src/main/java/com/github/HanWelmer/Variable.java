@@ -22,6 +22,7 @@ public class Variable {
 
   private String name;
   private Datatype datatype;
+  private boolean isPublic = false;
   private boolean isFinal = false;
   private int intValue = 0;
   private int address;
@@ -42,6 +43,14 @@ public class Variable {
 
   public Datatype getDatatype() {
     return datatype;
+  }
+
+  public void setPublic(boolean isPublic) {
+    this.isPublic = isPublic;
+  }
+
+  public boolean isPublic() {
+    return isPublic;
   }
 
   public void setFinal(boolean isFinal) {
@@ -70,6 +79,7 @@ public class Variable {
 
   public String toString() {
     String result = "var(" + name + ", datatype=" + datatype;
+    result += ", isPublic=" + isPublic;
     result += ", isFinal=" + isFinal;
     result += ", intValue=" + intValue;
     result += ", address=" + address;
