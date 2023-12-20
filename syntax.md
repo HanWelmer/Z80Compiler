@@ -50,7 +50,7 @@ TODO:
 `CompilationUnit    ::= PackageDeclaration? ImportDeclaration* TypeDeclaration`
 
 ### Declarations
-`PackageDeclaration ::= Modifiers "package" Name ";"`
+`PackageDeclaration ::= "package" Name ";"`
 
 `ImportDeclaration  ::= "import" ( "static" )? Name ( "." "*" )? ";"`
 
@@ -321,6 +321,8 @@ An <identifier> may not be any of the keywords given above - these are reserved 
 Multi-line comment may contain end of line comment.
 
 Multi-line comment may not be nested.
+
+Modifiers in a package declaration are not supported (their purpose could not be found).
 
 Modifiers in an import statement may be: "static"?.
 

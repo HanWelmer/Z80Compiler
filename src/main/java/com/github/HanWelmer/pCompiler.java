@@ -429,8 +429,7 @@ public class pCompiler {
    * 
    *************************/
 
-  // PackageDeclaration ::= Modifiers "package" Name ";"
-  // TODO implement Modifiers.
+  // PackageDeclaration ::= "package" Name ";"
   private void packageDeclaration() throws FatalError {
     debug("\npackageDeclaration: start");
 
