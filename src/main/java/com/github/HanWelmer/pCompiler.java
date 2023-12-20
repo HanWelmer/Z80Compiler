@@ -536,12 +536,6 @@ public class pCompiler {
   } // typeDeclaration
 
   // ClassDecl ::= "class" JavaIdentifier ClassBody
-  // TODO change implementation from:
-  // ...classDecl ::= "class" identifier "{" statements "}".
-  // to:
-  // ...ClassDecl ::= "class" JavaIdentifier ClassBody
-  // OLD...
-  // classDecl = "class" identifier "{" statements "}".
   private void classDecl(boolean isPublic) throws FatalError {
     debug("\nclassDecl: " + (isPublic ? "public" : ""));
 
@@ -563,14 +557,7 @@ public class pCompiler {
           System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
         }
 
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
-
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        statements(EnumSet.of(LexemeType.endLexeme));
-
-        // skip end lexeme
-        checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+        ClassBody();
       }
 
       // part of semantic analysis: close the class level declaration scope.
@@ -581,6 +568,10 @@ public class pCompiler {
 
   // EnumDecl ::= "enum" JavaIdentifier EnumBody
   // TODO implement EnumDecl.
+  private void EnumDecl() throws FatalError {
+    debug("\nEnumDecl: start");
+    debug("\nEnumDecl: end");
+  }
 
   /*************************
    * 
@@ -651,10 +642,31 @@ public class pCompiler {
    *************************/
 
   // ClassBody ::= "{" ( ClassBodyDeclaration )* "}"
-  // TODO implement ClassBody.
+  // TODO change ClassBody implementation from:
+  // ..."{" statements "}".
+  // to:
+  // ..."{" ( ClassBodyDeclaration )* "}"
+  private void ClassBody() throws FatalError {
+    debug("\nClassBody: start");
+
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
+
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    statements(EnumSet.of(LexemeType.endLexeme));
+
+    // skip end lexeme
+    checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+
+    debug("\nClassBody: end");
+  }
 
   // ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )
   // TODO implement ClassBodyDeclaration.
+  private void ClassBodyDeclaration() throws FatalError {
+    debug("\nClassBodyDeclaration: start");
+    debug("\nClassBodyDeclaration: end");
+  }
 
   // FieldDeclaration ::= Type VariableDeclarator ( "," VariableDeclarator )*
   // ";"
