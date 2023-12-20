@@ -463,9 +463,12 @@ public class pCompiler {
     debug("\npackageDeclaration: end; package name=" + packageName);
   } // packageDeclaration
 
-  // ImportDeclaration ::= "import" ImportModifiers Name ( "." "*" )? ";"
+  // ImportDeclaration ::= "import" ( "static" )? Name ( "." "*" )? ";"
   // TODO implement ( "static" )? in ImportDeclaration.
-  // importDeclaration ::= "import" Name "." importType ";".
+  // TODO change implementation from:
+  // ....importDeclaration ::= "import" Name "." importType ";".
+  // to:
+  // ... "import" ( "static" )? Name ( "." "*" )? ";"
   // packageName = identifier { "." identifier }.
   // importType = identifier | "*".
   // Note: packageName identifiers are lowerCamelCase.
