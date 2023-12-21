@@ -642,18 +642,13 @@ public class pCompiler {
    *************************/
 
   // ClassBody ::= "{" ( ClassBodyDeclaration )* "}"
-  // TODO change ClassBody implementation from:
-  // ..."{" statements "}".
-  // to:
-  // ..."{" ( ClassBodyDeclaration )* "}"
   private void ClassBody() throws FatalError {
     debug("\nClassBody: start");
 
     lexeme = lexemeReader.getLexeme(sourceCode);
     checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
 
-    lexeme = lexemeReader.getLexeme(sourceCode);
-    statements(EnumSet.of(LexemeType.endLexeme));
+    ClassBodyDeclaration();
 
     // skip end lexeme
     checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
@@ -662,9 +657,13 @@ public class pCompiler {
   }
 
   // ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )
-  // TODO implement ClassBodyDeclaration.
+  // TODO Implemented ClassBodyDeclaration.
   private void ClassBodyDeclaration() throws FatalError {
     debug("\nClassBodyDeclaration: start");
+
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    statements(EnumSet.of(LexemeType.endLexeme));
+
     debug("\nClassBodyDeclaration: end");
   }
 
@@ -687,6 +686,10 @@ public class pCompiler {
 
   // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
   // TODO implement MethodDeclaration.
+  private void MethodDeclaration() throws FatalError {
+    debug("\nMethodDeclaration: start");
+    debug("\nMethodDeclaration: end");
+  }
 
   // MethodDeclarator ::= JavaIdentifier FormalParameters
   // TODO implement MethodDeclarator.

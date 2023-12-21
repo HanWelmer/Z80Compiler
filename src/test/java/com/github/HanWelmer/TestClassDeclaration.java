@@ -21,8 +21,6 @@ package com.github.HanWelmer;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-
 import org.junit.Test;
 
 /**
