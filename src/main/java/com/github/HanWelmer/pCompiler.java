@@ -691,8 +691,9 @@ public class pCompiler {
   private void MethodDeclaration() throws FatalError {
     debug("\nMethodDeclaration: start");
 
-    // semantic analysis: modifiers may be: "public", "private", "final" or
-    // "synchronized".
+    // semantic analysis:
+    // - modifier "static" is mandatory (no class instantiation).
+    // - modifiers may be: "public", "private" or "synchronized".
     /*
      * EnumSet<LexemeType> temp = modifiers.clone();
      * temp.removeAll(METHOD_MODIFIERS); if (!temp.isEmpty()) { error(24); }

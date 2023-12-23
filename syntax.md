@@ -357,7 +357,7 @@ Modifiers in a field declaration may be: "public", "private", "final" or "volati
 ### Methods
 No class instantiation, so "static" modifier is mandatory.
 
-Modifiers in a field declaration may be: "public", "private", "final" or "synchronized".
+Modifiers in a method declaration may be: "public", "private" or "synchronized".
 
 Method name must be lowerCamelCase.
 
