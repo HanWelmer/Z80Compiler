@@ -16,23 +16,32 @@ You should have received a copy of the GNU General Public License along with
 Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.HanWelmer;
+package com.github.hanwelmer;
 
-/**
- * This class defines the fatal exception thrown within the compiler of the P
- * language. Used in lexical analysis, semantic analysis and code generation
- * phases of the compiler.
- */
-public class FatalError extends Exception {
-  private static final long serialVersionUID = -7608810549340442114L;
-  private int errorNumber;
+import java.util.HashMap;
+//import java.util.Iterator;
+import java.util.Map;
+//import java.util.Stack;
 
-  public FatalError(int error) {
-    super();
-    errorNumber = error;
+public class Scope {
+
+  /* Constants and class member variables for semantic analysis phase */
+  private Map<String, Variable> variables = new HashMap<String, Variable>();
+  private int nextAddress = 0;
+
+  public int getAddress() {
+    return nextAddress;
   }
-
-  public int getErrorNumber() {
-    return errorNumber;
+  
+  public void setAddress(int address) {
+    this.nextAddress = address;
   }
-};
+  
+  public Variable getVariable(String name) {
+    return variables.get(name);
+  }
+  
+  public void addVariable(String name) {
+    variables.put(name, new Variable(name));
+  }
+}

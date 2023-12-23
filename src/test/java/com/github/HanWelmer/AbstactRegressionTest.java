@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.hanwelmer.Instruction;
+import com.github.hanwelmer.LexemeReader;
+import com.github.hanwelmer.pCompiler;
+
 /**
  * Regression test for the Z80Compiler.
  */

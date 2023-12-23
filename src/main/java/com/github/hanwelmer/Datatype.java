@@ -16,33 +16,33 @@ You should have received a copy of the GNU General Public License along with
 Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.HanWelmer;
+package com.github.hanwelmer;
 
 /**
- * This class defines an accumulator.
- * Used during code generation to keep track of the contents of an accumulator.
+ * Enumeration for the pCompiler.
+ * This class defines the lexemes of the P language. 
+ * Used in lexical analysis, semantic analysis and code generation phases of the compiler.
  */
-public class Accumulator {
+public enum Datatype {
+  clazz("class", 0),
+  byt("byte", 1),
+  word("word", 2),
+  string("String", 2);
+
+  private String value;
+  private int size;
   
-  private boolean inUse = false;
-  private Operand operand;
+  private Datatype (String value, int size) {
+    this.value = value;
+    this.size = size;
+  }
   
-  public void clear() {
-    inUse = false;
-    operand = null;
+  public String getValue() {
+    return value;
   }
 
-  public boolean inUse() {
-    return this.inUse;
-  }
-  
-  public Operand operand() {
-    return this.operand;
-  }
-
-  public void setOperand(Operand value) {
-    this.operand = value;
-    inUse = true;
+  public int getSize() {
+    return size;
   }
 
 };

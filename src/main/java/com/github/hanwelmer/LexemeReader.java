@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with
 Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.HanWelmer;
+package com.github.hanwelmer;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -54,7 +54,7 @@ public class LexemeReader {
    * return true if opening the file as lexeme reader is successfull, false
    * otherwise.
    **/
-  protected boolean init(boolean debugMode, String jCodePath, String fileName) {
+  public boolean init(boolean debugMode, String jCodePath, String fileName) {
     this.debugMode = debugMode;
     this.jCodePath = jCodePath;
     this.fileName = fileName;

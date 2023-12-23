@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.github.hanwelmer.pCompiler;
+
 public class TestPackageName extends pCompiler {
 
   // constructor

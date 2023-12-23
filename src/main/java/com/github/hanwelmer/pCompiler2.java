@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with
 Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.HanWelmer;
+package com.github.hanwelmer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.Stack;
 * The currently supported syntax may deviate from the intended definition in syntax.md, 
 * as can be seen in the comment lines before any each parser method.
 */
-public class pCompiler {
+public class pCompiler2 {
   /* global variables used by the constructor or the interface functions */
   private boolean debugMode;
   private boolean verboseMode;
@@ -42,7 +42,7 @@ public class pCompiler {
   private ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 
   // constructor
-  public pCompiler(boolean debugMode, boolean verboseMode) {
+  public pCompiler2(boolean debugMode, boolean verboseMode) {
     this.debugMode = debugMode;
     this.verboseMode = verboseMode;
   }
@@ -104,6 +104,9 @@ public class pCompiler {
   private ArrayList<String> sourceCode;
   private int lastSourceLineNr = 0;
   private Lexeme lexeme;
+  // Possible modifiers for member methods.
+  private static final EnumSet<LexemeType> METHOD_MODIFIERS = EnumSet.of(LexemeType.publicLexeme, LexemeType.privateLexeme,
+      LexemeType.staticLexeme, LexemeType.finalLexeme, LexemeType.synchronizedLexeme);
   // Lexeme types in an expression in increasing order of precedence.
   private LexemeType[] lexemeTypeAtLevel = { LexemeType.bitwiseOrOp, LexemeType.bitwiseXorOp, LexemeType.bitwiseAndOp,
       LexemeType.addop, LexemeType.mulop };
@@ -294,6 +297,9 @@ public class pCompiler {
         break;
       case 23:
         System.out.println("too many modifers in class or enum declaration.");
+        break;
+      case 24:
+        System.out.println("static modifier is mandatory for member variables and member methods.");
         break;
     }
   }
@@ -646,23 +652,34 @@ public class pCompiler {
     debug("\nClassBody: start");
 
     lexeme = lexemeReader.getLexeme(sourceCode);
-    checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
+    if (checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class))) {
+      // skip begin lexeme
+      lexeme = lexemeReader.getLexeme(sourceCode);
 
-    ClassBodyDeclaration();
+      ClassBodyDeclaration();
 
-    // skip end lexeme
-    checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+      // skip end lexeme
+      if (checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class))) {
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      }
+
+    }
 
     debug("\nClassBody: end");
   }
 
   // ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )
-  // TODO Implement Modifiers in ClassBodyDeclaration.
-  // TODO Implement FieldDeclaration in ClassBodyDeclaration.
+  // TODO Implemented ClassBodyDeclaration.
   private void ClassBodyDeclaration() throws FatalError {
     debug("\nClassBodyDeclaration: start");
 
-    MethodDeclaration();
+    EnumSet<LexemeType> modifiers = modifiers();
+    // semantic analysis
+    /*
+     * if (!modifiers.contains(LexemeType.staticLexeme)) { error(24); }
+     */
+
+    MethodDeclaration(modifiers);
 
     debug("\nClassBodyDeclaration: end");
   }
@@ -685,21 +702,19 @@ public class pCompiler {
   // TODO implement ArrayInitializer.
 
   // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
-  // TODO implement ResultType in MethodDeclaration.
-  // TODO implement MethodDeclarator in MethodDeclaration.
-  // TODO implement ( Block | ";" ) in MethodDeclaration.
-  private void MethodDeclaration() throws FatalError {
+  // TODO implement MethodDeclaration.
+  private void MethodDeclaration(EnumSet<LexemeType> modifiers) throws FatalError {
     debug("\nMethodDeclaration: start");
 
-    // semantic analysis:
-    // - modifier "static" is mandatory (no class instantiation).
-    // - modifiers may be: "public", "private" or "synchronized".
+    // semantic analysis: modifiers may be: "public", "private", "final" or
+    // "synchronized".
     /*
      * EnumSet<LexemeType> temp = modifiers.clone();
      * temp.removeAll(METHOD_MODIFIERS); if (!temp.isEmpty()) { error(24); }
      */
 
-    block();
+    // lexeme = lexemeReader.getLexeme(sourceCode);
+    statements(EnumSet.of(LexemeType.endLexeme));
 
     debug("\nMethodDeclaration: end");
   }
@@ -785,18 +800,6 @@ public class pCompiler {
   // Statement ::= Block | EmptyStatement | StatementExpression ";" |
   // IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement
   // TODO implement Statement.
-
-  // block ::= "{" { blockStatement } "}".
-  private void block() throws FatalError {
-    debug("\nblock: start");
-
-    lexeme = lexemeReader.getLexeme(sourceCode);
-    statements(EnumSet.of(LexemeType.endLexeme));
-
-    debug("\nblock: end");
-  }
-
-  // blockStatement ::= localVariableDeclarationStatement | statement.
 
   /*********************************************
    * 

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with
 Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.HanWelmer;
+package com.github.hanwelmer;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
