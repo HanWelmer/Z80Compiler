@@ -657,12 +657,12 @@ public class pCompiler {
   }
 
   // ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )
-  // TODO Implemented ClassBodyDeclaration.
+  // TODO Implement Modifiers in ClassBodyDeclaration.
+  // TODO Implement FieldDeclaration in ClassBodyDeclaration.
   private void ClassBodyDeclaration() throws FatalError {
     debug("\nClassBodyDeclaration: start");
 
-    lexeme = lexemeReader.getLexeme(sourceCode);
-    statements(EnumSet.of(LexemeType.endLexeme));
+    MethodDeclaration();
 
     debug("\nClassBodyDeclaration: end");
   }
@@ -688,6 +688,17 @@ public class pCompiler {
   // TODO implement MethodDeclaration.
   private void MethodDeclaration() throws FatalError {
     debug("\nMethodDeclaration: start");
+
+    // semantic analysis: modifiers may be: "public", "private", "final" or
+    // "synchronized".
+    /*
+     * EnumSet<LexemeType> temp = modifiers.clone();
+     * temp.removeAll(METHOD_MODIFIERS); if (!temp.isEmpty()) { error(24); }
+     */
+
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    statements(EnumSet.of(LexemeType.endLexeme));
+
     debug("\nMethodDeclaration: end");
   }
 
