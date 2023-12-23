@@ -355,9 +355,9 @@ ImportDeclaration ::= "import"
 Modifiers ::= (
   (
       "public"
-    | "static"
     | "protected"
     | "private"
+    | "static"
     | "final"
     | "abstract"
     | "synchronized"
@@ -368,7 +368,6 @@ Modifiers ::= (
     | Annotation
   )
 )*
-
 
 ##Declarations
 TypeDeclaration ::= ";"
