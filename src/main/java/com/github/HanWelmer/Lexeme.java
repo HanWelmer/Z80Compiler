@@ -77,6 +77,7 @@ public class Lexeme {
       case privateLexeme:
       case staticLexeme:
       case finalLexeme:
+      case synchronizedLexeme:
       case nativeLexeme:
       case transientLexeme:
       case volatileLexeme:

@@ -32,8 +32,8 @@ public enum LexemeType {
   // from here until unknown are the keywords...
   beginLexeme("{"), packageLexeme("package"), importLexeme("import"),
   // modifiers
-  publicLexeme("public"), privateLexeme("private"), staticLexeme("static"), finalLexeme("final"), nativeLexeme(
-      "native"), transientLexeme("transient"), volatileLexeme("volatile"),
+  publicLexeme("public"), privateLexeme("private"), staticLexeme("static"), finalLexeme("final"), synchronizedLexeme(
+      "synchronized"), nativeLexeme("native"), transientLexeme("transient"), volatileLexeme("volatile"),
   // declaration
   classLexeme("class"),
   // datatypes
