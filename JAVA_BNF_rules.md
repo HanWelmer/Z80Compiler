@@ -590,7 +590,7 @@ Statement ::= LabeledStatement
             | TryStatement
 AssertStatement ::= "assert" Expression ( ":" Expression )? ";"
 LabeledStatement ::= JavaIdentifier ":" Statement
-Block ::= "{" ( BlockStatement )* "}"
+Block ::= "{" { BlockStatement } "}"
 BlockStatement ::= LocalVariableDeclaration ";"
                  | Statement
                  | ClassOrInterfaceDeclaration
@@ -658,7 +658,9 @@ AnnotationTypeMemberDeclaration ::= Modifiers
 DefaultValue ::= "default" MemberValue
 
 ##comments
-The character set for Java is Unicode, a 16-bit character set. This is the set denoted by <input character>. Unicode effectively contains the familiar 7-bit ASCII characters as a subset, and includes "escape code" designations of the form \udddd (where each d is from <hex digit>). In the extended BNF for Java the optional appearance of X is written X?, and the iterative appearance of X is written {X}.
+The character set for Java is Unicode, a 16-bit character set. This is the set denoted by <input character>. Unicode effectively contains the familiar 7-bit ASCII characters as a subset, and includes "escape code" designations of the form \udddd (where each d is from <hex digit>).
+
+In the extended BNF for Java the optional appearance of X is written X?, and the iterative appearance of X is written {X}.
 
 The syntax category <identifier> consists of strings that must start with a letter - including underscore (_) and dollar sign ($) - followed by any number of letters and digits. Characters of numerous international languages are recognized as "letters" in Java. A Java letter is a character for which the method Character.isJavaLetter returns true. A Java letter-or-digit is a character for which the method Character.isJaveLetterOrDigit returns true. Also, <identifier> includes none of the keywords given above - these are reserved words in Java.
 

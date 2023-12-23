@@ -3,7 +3,7 @@
 ## Extended BNF
 The syntax is defined in extended BNF.
 - A non-terminal is a plain text identifier, starting with a character, followed by characters or digits.
-- Terminal symbols are between quotes (')  or double quotes (").
+- Terminal symbols are between quotes (') or double quotes (").
 - The optional appearance of a single construct (terminal or non-terminal) X is written as X?.
 - The optional appearance (zero or one instance) of the sequence of constructs X and Y is written [ X Y ].
 - The iterative appearance (zero or more instances) of the sequence of constructs X and Y is written { X Y }.
@@ -103,16 +103,15 @@ TODO:
 `Name                 ::= JavaIdentifier ( "." JavaIdentifier )*`
 
 ##Statements
-`Statement        ::= Block | EmptyStatement | StatementExpression ";" | IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement`
+`Statement            ::= Block | EmptyStatement | StatementExpression ";" | IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement`
+
+`block                ::= "{" { blockStatement } "}".`
+
+`blockStatement       ::= localVariableDeclarationStatement | statement.`
 
 ``
 
 TODO
-Block
-
-`block                                = "{" { blockStatement } "}".`
-
-`blockStatement                       = localVariableDeclarationStatement | statement.`
 
 `localVariableDeclarationStatement    = localVariableDeclaration ";".`
 

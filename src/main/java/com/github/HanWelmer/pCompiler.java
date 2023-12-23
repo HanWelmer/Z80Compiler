@@ -784,6 +784,9 @@ public class pCompiler {
   // IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement
   // TODO implement Statement.
 
+  // block ::= "{" { blockStatement } "}".
+  // blockStatement ::= localVariableDeclarationStatement | statement.
+
   /*********************************************
    * 
    * Old syntax parsing methods to be refactored.
