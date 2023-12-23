@@ -685,7 +685,9 @@ public class pCompiler {
   // TODO implement ArrayInitializer.
 
   // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
-  // TODO implement MethodDeclaration.
+  // TODO implement ResultType in MethodDeclaration.
+  // TODO implement MethodDeclarator in MethodDeclaration.
+  // TODO implement ( Block | ";" ) in MethodDeclaration.
   private void MethodDeclaration() throws FatalError {
     debug("\nMethodDeclaration: start");
 
@@ -696,8 +698,7 @@ public class pCompiler {
      * temp.removeAll(METHOD_MODIFIERS); if (!temp.isEmpty()) { error(24); }
      */
 
-    lexeme = lexemeReader.getLexeme(sourceCode);
-    statements(EnumSet.of(LexemeType.endLexeme));
+    block();
 
     debug("\nMethodDeclaration: end");
   }
@@ -785,6 +786,15 @@ public class pCompiler {
   // TODO implement Statement.
 
   // block ::= "{" { blockStatement } "}".
+  private void block() throws FatalError {
+    debug("\nblock: start");
+
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    statements(EnumSet.of(LexemeType.endLexeme));
+
+    debug("\nblock: end");
+  }
+
   // blockStatement ::= localVariableDeclarationStatement | statement.
 
   /*********************************************
