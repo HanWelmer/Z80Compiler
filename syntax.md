@@ -12,7 +12,7 @@ The syntax is defined in extended BNF.
 ## Limitations and extensions
 Compared to an [original but not official Java syntax](see https://javacc.github.io/javacc/documentation/bnf.html),
 the syntax of miniJava has the following limitations:
-- CompilationUnit      single TypeDeclaration
+- CompilationUnit       single TypeDeclaration
 - typeDeclaration:      no interface declaration or ";".
 - classDeclaration:     no super?, interfaces?, extends?, TypeParameters? or implements?.
 - modifiers:            no "abstract", "protected", "synchronized", "strictfp" or Annotation.
@@ -317,34 +317,56 @@ An <identifier> may not be any of the keywords given above - these are reserved 
 
 `input              = "input" "(" constantExpression ")".`
 
-## Semantics 
+## Semantics
+
+### Comments
 Multi-line comment may contain end of line comment.
 
 Multi-line comment may not be nested.
 
+### Package
 Modifiers in a package declaration are not supported (their purpose could not be found).
 
-Modifiers in an import statement may be: "static"?.
+The identifiers in a packageName must be lowerCamelCase.
 
-Modifiers in a class declaration may be: "public"?. Default is none, i.e. the class is only accessible by classes or enums in the same package.
+### Import
+Modifiers in an import statement may only be: "static"?.
 
-Modifiers in an enum declaration may be: "public"?. Default is none, i.e. the enum is only accessible by classes or enums in the same package.
+### Class
+Modifiers in a class declaration may only be: "public". Default is none, i.e. the class is only accessible by classes or enums in the same package.
 
-Modifiers in an attribute declaration may be: AccessModifiers? "final"? "static"? "volatile"?.
+No inheritance, so no abstract or final modifier.
 
-Modifiers in a method declaration may be: AccessModifiers? "final"? "static"? "synchronized"?.
+Class name must be UpperCamelCase and equal to the filename (except for the file extension).
 
-Access modifiers may be: "public" | "private".
+No inheritance, so no extends.
 
-The identifiers in a packageName must be in lower case.
+No interfaces, so no implements.
+
+No class instantiation, so no ConstructorDeclaration.
+
+An executable class (program or application) must contain a "void main()" method.
+
+### Enum
+Modifiers in an enum declaration may only be: "public". Default is none, i.e. the enum is only accessible by classes or enums in the same package.
+
+### Fields (member variables)
+No class instantiation, so "static" modifier is mandatory.
+
+Modifiers in a field declaration may be: "public", "private", "final" or "volatile".
+
+### Methods
+No class instantiation, so "static" modifier is mandatory.
+
+Modifiers in a field declaration may be: "public", "private", "final" or "synchronized".
+
+Method name must be lowerCamelCase.
 
 TODO: reorder according to syntax definition above. 
 
-A variable must be declared before it is used.
+A field must be declared before it is used.
 
-A function must be declared before it is used.
-
-An executable program must contain a "void main()" function.
+A method must be declared before it is used.
 
 A declaration is valid within the scope within which it is defined (class, for statement, statement block) and it's sub-scopes.
 
