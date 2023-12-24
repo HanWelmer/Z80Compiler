@@ -5,5 +5,8 @@
 import TestImport;
 
 class TestImport {
-  println("TestImport Klaar");
+  
+  main() {
+    println("TestImport Klaar");
+  }
 }

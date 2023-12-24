@@ -159,10 +159,12 @@ TODO
 
 `constantExpression                   = expression.`
 
+`JavaIdentifier                       = identifiwer.`
+
 TODO
 Arguments
 Expression
-JavaIdentifier
+
 ### Expressions
 
 `expression                           = assignmentExpression.`

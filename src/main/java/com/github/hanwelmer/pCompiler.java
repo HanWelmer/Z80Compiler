@@ -646,12 +646,15 @@ public class pCompiler {
     debug("\nClassBody: start");
 
     lexeme = lexemeReader.getLexeme(sourceCode);
-    checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class));
+    if (checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class))) {
+      // skip beginLexeme
+      lexeme = lexemeReader.getLexeme(sourceCode);
 
-    ClassBodyDeclaration();
+      ClassBodyDeclaration();
 
-    // skip end lexeme
-    checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+      // skip end lexeme
+      checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+    }
 
     debug("\nClassBody: end");
   }
@@ -686,7 +689,7 @@ public class pCompiler {
 
   // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
   // TODO implement ResultType in MethodDeclaration.
-  // TODO implement MethodDeclarator in MethodDeclaration.
+  // TODO implement semantic analysis of modifiers in MethodDeclaration.
   // TODO implement ( Block | ";" ) in MethodDeclaration.
   private void MethodDeclaration() throws FatalError {
     debug("\nMethodDeclaration: start");
@@ -698,7 +701,9 @@ public class pCompiler {
      * EnumSet<LexemeType> temp = modifiers.clone();
      * temp.removeAll(METHOD_MODIFIERS); if (!temp.isEmpty()) { error(24); }
      */
+    boolean isPublic = true;
 
+    methodDeclarator(isPublic);
     block();
 
     debug("\nMethodDeclaration: end");
@@ -706,9 +711,48 @@ public class pCompiler {
 
   // MethodDeclarator ::= JavaIdentifier FormalParameters
   // TODO implement MethodDeclarator.
+  private void methodDeclarator(boolean isPublic) throws FatalError {
+    debug("\nmethodDeclarator: start");
+
+    if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.lbracket, LexemeType.beginLexeme))) {
+      // semantic analysis of the identifier.
+      if (identifiers.checkId(lexeme.idVal)) {
+        error(8); /* variable already declared */
+      } else if (identifiers.declareId(lexeme, LexemeType.classLexeme, isPublic, false)) {
+        debug("\nclassDecl: " + (isPublic ? "public " : "") + "class declared: " + lexeme.idVal);
+      } else {
+        error();
+        System.out.println("Error declaring variable " + lexeme.idVal + " as a class.");
+      }
+      // skip identifier
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      formalParameters();
+    }
+
+    debug("\nmethodDeclarator: end");
+  }
 
   // FormalParameters ::= "(" ( FormalParameter ( "," FormalParameter )* )? ")"
-  // TODO implement FormalParameters.
+  // TODO implement list of FormalParameters.
+  private void formalParameters() throws FatalError {
+    debug("\nformalParameters: start");
+
+    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), EnumSet.of(LexemeType.rbracket, LexemeType.beginLexeme))) {
+      // skip left bracket
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // ignore formal parameters for now;
+      if (checkOrSkip(EnumSet.of(LexemeType.rbracket), EnumSet.of(LexemeType.semicolon, LexemeType.beginLexeme))) {
+        // skip right bracket
+        lexeme = lexemeReader.getLexeme(sourceCode);
+
+        // This may be the place to set the frame pointer.
+      }
+    }
+
+    debug("\nformalParameters: end");
+  }
 
   // FormalParameter ::= Modifiers Type VariableDeclaratorId
   // TODO implement FormalParameter.

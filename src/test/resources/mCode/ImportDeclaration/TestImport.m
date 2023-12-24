@@ -5,9 +5,11 @@
    4 ;TestImport.j(4) import TestImport;
    5 ;TestImport.j(5) 
    6 ;TestImport.j(6) class TestImport {
-   7 ;TestImport.j(7)   println("TestImport Klaar");
-   8 acc16= constant 12
-   9 writeLineString
-  10 ;TestImport.j(8) }
-  11 stop
-  12 stringConstant 0 = "TestImport Klaar"
+   7 ;TestImport.j(7)   
+   8 ;TestImport.j(8)   main() {
+   9 ;TestImport.j(9)     println("TestImport Klaar");
+  10 acc16= constant 14
+  11 writeLineString
+  12 ;TestImport.j(10)   }
+  13 stop
+  14 stringConstant 0 = "TestImport Klaar"
