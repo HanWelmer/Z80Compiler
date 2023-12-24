@@ -6,7 +6,7 @@ import TestImport;
 
 class TestImport {
   
-  main() {
+  void main() {
     println("TestImport Klaar");
   }
 }

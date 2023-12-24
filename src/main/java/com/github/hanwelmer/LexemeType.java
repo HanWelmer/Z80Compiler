@@ -37,7 +37,7 @@ public enum LexemeType {
   // declaration
   classLexeme("class"),
   // datatypes
-  byteLexeme("byte"), wordLexeme("word"),
+  voidLexeme("void"), byteLexeme("byte"), wordLexeme("word"),
   // shortLexeme("short"), intLexeme("int"),
   stringLexeme("String"),
   // IO

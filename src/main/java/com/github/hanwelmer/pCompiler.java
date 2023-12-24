@@ -295,6 +295,9 @@ public class pCompiler {
       case 23:
         System.out.println("too many modifers in class or enum declaration.");
         break;
+      case 24:
+        System.out.println("return type missing.");
+        break;
     }
   }
 
@@ -304,9 +307,9 @@ public class pCompiler {
    *
    ************************/
 
-  /*
-   * return true if current lexeme is in okSet, otherwise skip lexemes until
-   * current lexeme is in stopSet and return false.
+  /**
+   * return true if current lexeme is in okSet, otherwise skip until current
+   * lexeme is in stopSet and return false.
    */
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws FatalError {
     // debug("\ncheckOrSkip: start");
@@ -703,6 +706,7 @@ public class pCompiler {
      */
     boolean isPublic = true;
 
+    resultType();
     methodDeclarator(isPublic);
     block();
 
@@ -765,7 +769,20 @@ public class pCompiler {
 
   // ResultType ::= "void" | ( ( "const" )? Type )
   // TODO implement ResultType.
+  private void resultType() throws FatalError {
+    debug("\nresultType: start");
 
+    // for now accept void only.
+    if (checkOrSkip(EnumSet.of(LexemeType.voidLexeme),
+        EnumSet.of(LexemeType.identifier, LexemeType.lbracket, LexemeType.beginLexeme, LexemeType.semicolon))) {
+      // skip void
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    } else {
+      error(24);
+    }
+
+    debug("\nresultType: end");
+  }
   // Type ::= ReferenceType | PrimitiveType
   // TODO implement Type.
 

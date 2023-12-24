@@ -43,6 +43,9 @@ public class Lexeme {
     }
     String result = type.getValue();
     switch (type) {
+      case voidLexeme:
+        result += " void ";
+        break;
       case constant:
         result += " ";
         result += datatype.getValue();
