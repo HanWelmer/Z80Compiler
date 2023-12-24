@@ -104,6 +104,9 @@ public class pCompiler {
   private ArrayList<String> sourceCode;
   private int lastSourceLineNr = 0;
   private Lexeme lexeme;
+  // Possible modifiers for member methods.
+  private static final EnumSet<LexemeType> METHOD_MODIFIERS = EnumSet.of(LexemeType.publicLexeme, LexemeType.privateLexeme,
+      LexemeType.staticLexeme, LexemeType.synchronizedLexeme);
   // Lexeme types in an expression in increasing order of precedence.
   private LexemeType[] lexemeTypeAtLevel = { LexemeType.bitwiseOrOp, LexemeType.bitwiseXorOp, LexemeType.bitwiseAndOp,
       LexemeType.addop, LexemeType.mulop };
@@ -296,6 +299,9 @@ public class pCompiler {
         System.out.println("too many modifers in class or enum declaration.");
         break;
       case 24:
+        System.out.println("static modifier is mandatory for member variables and member methods.");
+        break;
+      case 26:
         System.out.println("return type missing.");
         break;
     }
@@ -668,7 +674,13 @@ public class pCompiler {
   private void ClassBodyDeclaration() throws FatalError {
     debug("\nClassBodyDeclaration: start");
 
-    MethodDeclaration();
+    EnumSet<LexemeType> modifiers = modifiers();
+    // semantic analysis
+    if (!modifiers.contains(LexemeType.staticLexeme)) {
+      error(24);
+    }
+
+    MethodDeclaration(modifiers);
 
     debug("\nClassBodyDeclaration: end");
   }
@@ -691,20 +703,19 @@ public class pCompiler {
   // TODO implement ArrayInitializer.
 
   // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
-  // TODO implement ResultType in MethodDeclaration.
   // TODO implement semantic analysis of modifiers in MethodDeclaration.
   // TODO implement ( Block | ";" ) in MethodDeclaration.
-  private void MethodDeclaration() throws FatalError {
+  private void MethodDeclaration(EnumSet<LexemeType> modifiers) throws FatalError {
     debug("\nMethodDeclaration: start");
 
     // semantic analysis:
     // - modifier "static" is mandatory (no class instantiation).
-    // - modifiers may be: "public", "private" or "synchronized".
+    // - modifiers may be: "public", "private", "static" or "synchronized".
     /*
      * EnumSet<LexemeType> temp = modifiers.clone();
      * temp.removeAll(METHOD_MODIFIERS); if (!temp.isEmpty()) { error(24); }
      */
-    boolean isPublic = true;
+    boolean isPublic = modifiers.contains(LexemeType.publicLexeme);
 
     resultType();
     methodDeclarator(isPublic);
@@ -768,7 +779,7 @@ public class pCompiler {
    *************************/
 
   // ResultType ::= "void" | ( ( "const" )? Type )
-  // TODO implement ResultType.
+  // TODO implement ResultType other than void.
   private void resultType() throws FatalError {
     debug("\nresultType: start");
 
