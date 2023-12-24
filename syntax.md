@@ -15,7 +15,7 @@ the syntax of miniJava has the following limitations:
 - CompilationUnit       single TypeDeclaration
 - typeDeclaration:      no interface declaration or ";".
 - classDeclaration:     no super?, interfaces?, extends?, TypeParameters? or implements?.
-- modifiers:            no "abstract", "protected", "synchronized", "strictfp" or Annotation.
+- modifiers:            no "abstract", "protected", "strictfp" or Annotation.
 - EnumDeclaration       no ImplementsList?.
 - EnumBody              no ( "," )?
 - EnumConstant          no Modifiers, no ClassBody?
@@ -61,7 +61,7 @@ TODO:
 `EnumDeclaration    ::= "enum" JavaIdentifier EnumBody`
 
 ###Modifiers
-`Modifiers          ::= ( "public" | "private" | "static" | "final" | "native" | "transient" | "volatile" )*`
+`Modifiers          ::= ( "public" | "private" | "static" | "final" | "synchronized" | "native" | "transient" | "volatile" )*`
 
 ###Enum body
 `EnumBody           ::= "{" EnumConstant ( "," EnumConstant )* ( ";" ( ClassBodyDeclaration )* )? "}"`

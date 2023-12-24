@@ -31,10 +31,11 @@ import org.junit.Test;
 public class TestPackageDeclaration extends AbstactRegressionTest {
 
   protected void init() {
+    final String testName = "packageDeclaration";
     // Override default configuration values.
-    jCodeLocation = "/src/test/resources/jCode/PackageDeclaration/";
-    mCodeLocation = "/src/test/resources/mCode/PackageDeclaration/";
-    expectedLocation = "/src/test/resources/expected/PackageDeclaration/";
+    jCodeLocation = "/src/test/resources/jCode/" + testName + "/";
+    mCodeLocation = "/src/test/resources/mCode/" + testName + "/";
+    expectedLocation = "/src/test/resources/expected/" + testName + "/";
     debugMode = false;
     verboseMode = false;
   }

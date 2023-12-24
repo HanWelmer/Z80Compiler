@@ -30,7 +30,7 @@ import org.junit.Test;
 public class TestTypeDeclaration extends AbstactRegressionTest {
 
   protected void init() {
-    final String testName = "TypeDeclaration";
+    final String testName = "typeDeclaration";
     // Override default configuration values.
     jCodeLocation = "/src/test/resources/jCode/" + testName + "/";
     mCodeLocation = "/src/test/resources/mCode/" + testName + "/";

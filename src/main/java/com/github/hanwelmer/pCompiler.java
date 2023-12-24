@@ -301,6 +301,9 @@ public class pCompiler {
       case 24:
         System.out.println("static modifier is mandatory for member variables and member methods.");
         break;
+      case 25:
+        System.out.println("unexpected modifier in method declaration.");
+        break;
       case 26:
         System.out.println("return type missing.");
         break;
@@ -675,11 +678,6 @@ public class pCompiler {
     debug("\nClassBodyDeclaration: start");
 
     EnumSet<LexemeType> modifiers = modifiers();
-    // semantic analysis
-    if (!modifiers.contains(LexemeType.staticLexeme)) {
-      error(24);
-    }
-
     MethodDeclaration(modifiers);
 
     debug("\nClassBodyDeclaration: end");
@@ -711,10 +709,14 @@ public class pCompiler {
     // semantic analysis:
     // - modifier "static" is mandatory (no class instantiation).
     // - modifiers may be: "public", "private", "static" or "synchronized".
-    /*
-     * EnumSet<LexemeType> temp = modifiers.clone();
-     * temp.removeAll(METHOD_MODIFIERS); if (!temp.isEmpty()) { error(24); }
-     */
+    if (!modifiers.contains(LexemeType.staticLexeme)) {
+      error(24);
+    }
+    EnumSet<LexemeType> temp = modifiers.clone();
+    temp.removeAll(METHOD_MODIFIERS);
+    if (!temp.isEmpty()) {
+      error(25);
+    }
     boolean isPublic = modifiers.contains(LexemeType.publicLexeme);
 
     resultType();
