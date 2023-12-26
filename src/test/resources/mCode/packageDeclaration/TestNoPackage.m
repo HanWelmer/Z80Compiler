@@ -5,8 +5,9 @@
    4 ;TestNoPackage.j(4) class TestNoPackage {
    5 ;TestNoPackage.j(5)   public static void main() {
    6 ;TestNoPackage.j(6)     println("Klaar");
-   7 acc16= constant 11
+   7 acc16= constant 12
    8 writeLineString
    9 ;TestNoPackage.j(7)   }
-  10 stop
-  11 stringConstant 0 = "Klaar"
+  10 ;TestNoPackage.j(8) }
+  11 stop
+  12 stringConstant 0 = "Klaar"

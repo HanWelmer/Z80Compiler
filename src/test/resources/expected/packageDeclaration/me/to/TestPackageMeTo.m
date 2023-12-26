@@ -7,8 +7,9 @@
    6 ;me\to\TestPackageMeTo.j(6) class TestPackageMeTo {
    7 ;me\to\TestPackageMeTo.j(7)   public static void main() {
    8 ;me\to\TestPackageMeTo.j(8)     println("Klaar");
-   9 acc16= constant 13
+   9 acc16= constant 14
   10 writeLineString
   11 ;me\to\TestPackageMeTo.j(9)   }
-  12 stop
-  13 stringConstant 0 = "Klaar"
+  12 ;me\to\TestPackageMeTo.j(10) }
+  13 stop
+  14 stringConstant 0 = "Klaar"

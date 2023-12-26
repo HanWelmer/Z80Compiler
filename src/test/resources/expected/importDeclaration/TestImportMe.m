@@ -7,8 +7,9 @@
    6 ;TestImportMe.j(6) class TestMeImportMe {
    7 ;TestImportMe.j(7)   public static void main() {
    8 ;TestImportMe.j(8)     println("TestImportMe Klaar");
-   9 acc16= constant 13
+   9 acc16= constant 14
   10 writeLineString
   11 ;TestImportMe.j(9)   }
-  12 stop
-  13 stringConstant 0 = "TestImportMe Klaar"
+  12 ;TestImportMe.j(10) }
+  13 stop
+  14 stringConstant 0 = "TestImportMe Klaar"

@@ -670,7 +670,10 @@ public class pCompiler {
       ClassBodyDeclaration();
 
       // skip end lexeme
-      checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class));
+      if (checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class))) {
+        // skip endLexeme
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      }
     }
 
     debug("\nClassBody: end");
