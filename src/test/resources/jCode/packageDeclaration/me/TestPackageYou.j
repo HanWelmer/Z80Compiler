@@ -5,5 +5,7 @@
 package you;
 
 class TestPackageYou {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

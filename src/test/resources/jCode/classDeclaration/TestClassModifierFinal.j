@@ -3,5 +3,7 @@
  * Test ClassDeclaration with final modifier.
  */
 final class TestClassModifierFinal {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

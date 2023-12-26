@@ -5,7 +5,6 @@
 import TestImport;
 
 class TestImport {
-  
   public static final void main() {
     println("TestImport Klaar");
   }

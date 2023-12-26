@@ -6,6 +6,8 @@ import ImportSomething;
 import me.ImportSomething;
 import me.to.ImportSomething;
 
-class TestImportNotFound.j {
-  println("TestImportNotFound Klaar");
+class TestImportNotFound {
+  public static void main() {
+    println("TestImportNotFound Klaar");
+  }
 }

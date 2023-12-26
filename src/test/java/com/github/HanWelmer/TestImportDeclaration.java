@@ -49,23 +49,23 @@ public class TestImportDeclaration extends AbstactRegressionTest {
     assertTrue(singleTest("TestImportMeAll.j"));
   }
 
-  // @Test
-  public void TestImportMe() {
-    assertTrue(singleTest("TestImportMe.j"));
-  }
-
-  // @Test
-  public void TestImportMeTo() {
-    assertTrue(singleTest("TestImportMeTo.j"));
-  }
-
-  // @Test
+  @Test
   public void TestImportNotFound() {
     assertTrue(singleTest("TestImportNotFound.j"));
   }
 
-  // @Test
+  @Test
+  public void TestImportMe() {
+    assertTrue(singleTest("TestImportMe.j"));
+  }
+
+  @Test
+  public void TestImportMeTo() {
+    assertTrue(singleTest("TestImportMeTo.j"));
+  }
+
+  @Test
   public void TestMeImportMe() {
-    assertTrue(singleTest("me" + File.separator + "TestImportMe.j"));
+    assertTrue(singleTest("me" + File.separator + "TestMeImportMe.j"));
   }
 }

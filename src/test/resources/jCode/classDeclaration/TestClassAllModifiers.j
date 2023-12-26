@@ -3,5 +3,7 @@
  * Test ClassDeclaration with all modifiers.
  */
 public private static final native transient volatile class TestClassAllModifiers {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

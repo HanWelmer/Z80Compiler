@@ -54,4 +54,8 @@ public class TestTypeDeclaration extends AbstactRegressionTest {
     assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageName.j"));
   }
 
+  @Test
+  public void TestEmptyTypeButWithPackageNameAndImport() {
+    assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageNameAndImport.j"));
+  }
 }

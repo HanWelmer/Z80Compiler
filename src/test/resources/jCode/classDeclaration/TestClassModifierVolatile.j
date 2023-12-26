@@ -3,5 +3,7 @@
  * Test ClassDeclaration with volatile modifier.
  */
 volatile class TestClassModifierVolatile {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

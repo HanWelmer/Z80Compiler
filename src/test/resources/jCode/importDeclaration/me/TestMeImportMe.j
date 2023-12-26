@@ -7,5 +7,7 @@ package me;
 import me.TestPackageMe;
 
 class TestImportMe {
-  println("TestImportMe Klaar");
+  public static void main() {
+    println("TestImportMe Klaar");
+  }
 }

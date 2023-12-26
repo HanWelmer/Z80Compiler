@@ -5,5 +5,7 @@
 import me.to.TestImportMeTo;
 
 class TestMeToImportMeTo {
-  println("TestImportMeTo Klaar");
+  public static void main() {
+    println("TestImportMeTo Klaar");
+  }
 }

@@ -5,9 +5,10 @@
    4 ;me\to\TestPackageMeTo.j(4) package me.to;
    5 ;me\to\TestPackageMeTo.j(5) 
    6 ;me\to\TestPackageMeTo.j(6) class TestPackageMeTo {
-   7 ;me\to\TestPackageMeTo.j(7)   println("Klaar");
-   8 acc16= constant 12
-   9 writeLineString
-  10 ;me\to\TestPackageMeTo.j(8) }
-  11 stop
-  12 stringConstant 0 = "Klaar"
+   7 ;me\to\TestPackageMeTo.j(7)   public static void main() {
+   8 ;me\to\TestPackageMeTo.j(8)     println("Klaar");
+   9 acc16= constant 13
+  10 writeLineString
+  11 ;me\to\TestPackageMeTo.j(9)   }
+  12 stop
+  13 stringConstant 0 = "Klaar"

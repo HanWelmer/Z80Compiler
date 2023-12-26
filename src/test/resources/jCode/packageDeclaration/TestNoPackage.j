@@ -3,5 +3,7 @@
  * Test class without package declaration.
  */
 class TestNoPackage {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

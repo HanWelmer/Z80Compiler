@@ -5,5 +5,7 @@
 import me.TestImportMe;
 
 class TestMeImportMe {
-  println("TestImportMe Klaar");
+  public static void main() {
+    println("TestImportMe Klaar");
+  }
 }

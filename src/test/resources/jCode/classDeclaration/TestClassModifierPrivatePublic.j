@@ -3,5 +3,7 @@
  * Test ClassDeclaration with private public modifier.
  */
 private public class TestClassModifierPrivatePublic {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

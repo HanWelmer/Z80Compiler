@@ -5,13 +5,15 @@
 package me;
 
 class TestPackageMe {
-  word zero = 0;
-  byte one = 1;
-  println(0);
-  println(one);
-  println("2 Hallo wereld");
-  String str = "3 Hello too.";
-  println(str);
-  println(4);
-  println("Klaar");
+  static word zero = 0;
+  static byte one = 1;
+  public static void main() {
+    println(zero);
+    println(one);
+    println("2 Hallo wereld");
+    String str = "3 Hello too.";
+    println(str);
+    println(4);
+    println("Klaar");
+  }
 }

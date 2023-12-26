@@ -3,5 +3,7 @@
  * Test something
  */
 class TestImport {
-  println("TestImport Klaar");
+  public static void main() {
+    println("TestImport Klaar");
+  }
 }

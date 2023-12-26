@@ -3,5 +3,7 @@
  * Test ClassDeclaration with native modifier.
  */
 native class TestClassModifierNative {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

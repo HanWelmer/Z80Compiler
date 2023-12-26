@@ -3,5 +3,7 @@
  * Test ClassDeclaration with static modifier.
  */
 static class TestClassModifierStatic {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

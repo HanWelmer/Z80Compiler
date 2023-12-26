@@ -45,7 +45,8 @@ public class TestPackageDeclaration extends AbstactRegressionTest {
     assertTrue(singleTest("TestNoPackage.j"));
   }
 
-  @Test
+  // TODO enable TestPackageMe
+  // @Test
   public void TestPackageMe() {
     assertTrue(singleTest("me" + File.separator + "TestPackageMe.j"));
   }

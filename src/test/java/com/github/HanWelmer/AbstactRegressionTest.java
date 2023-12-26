@@ -62,7 +62,6 @@ public abstract class AbstactRegressionTest {
     assertTrue(lexemeReader != null);
     assertTrue(pCompiler != null);
 
-    fileName.replace(".J", ".j");
     lexemeReader.init(debugMode, System.getProperty("user.dir") + jCodeLocation, fileName);
     ArrayList<Instruction> instructions = pCompiler.compile(lexemeReader);
 
@@ -77,7 +76,7 @@ public abstract class AbstactRegressionTest {
     boolean result = false;
     try {
       int pos = 0;
-      fr = new FileReader(System.getProperty("user.dir") + expectedLocation + fileName.replace(".j", ".exp"));
+      fr = new FileReader(System.getProperty("user.dir") + expectedLocation + fileName.replace(".j", ".m"));
       br = new BufferedReader(fr);
       String actual = "";
       String expected = "";

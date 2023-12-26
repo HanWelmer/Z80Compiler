@@ -5,5 +5,7 @@
 package me.to;
 
 class TestPackageMeTo {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

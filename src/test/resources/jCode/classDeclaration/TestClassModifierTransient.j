@@ -3,5 +3,7 @@
  * Test ClassDeclaration with transient modifier.
  */
 transient class TestClassModifierTransient {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }

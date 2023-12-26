@@ -5,5 +5,7 @@
 import me.*;
 
 class TestImportMeAll {
-  println("Klaar");
+  public static void main() {
+    println("Klaar");
+  }
 }
