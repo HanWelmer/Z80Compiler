@@ -7,8 +7,9 @@
    6 ;StaticMain.j(6) class TestImport {
    7 ;StaticMain.j(7)   static void main() {
    8 ;StaticMain.j(8)     println("TestImport Klaar");
-   9 acc16= constant 13
+   9 acc16= constant 14
   10 writeLineString
   11 ;StaticMain.j(9)   }
-  12 stop
-  13 stringConstant 0 = "TestImport Klaar"
+  12 ;StaticMain.j(10) }
+  13 stop
+  14 stringConstant 0 = "TestImport Klaar"
