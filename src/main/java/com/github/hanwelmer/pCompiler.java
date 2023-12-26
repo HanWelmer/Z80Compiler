@@ -299,12 +299,15 @@ public class pCompiler {
         System.out.println("too many modifers in class or enum declaration.");
         break;
       case 24:
-        System.out.println("static modifier is mandatory for member variables and member methods.");
+        System.out.println("unexpected modifier in class or enum declaration.");
         break;
       case 25:
-        System.out.println("unexpected modifier in method declaration.");
+        System.out.println("static modifier is mandatory for member variables and member methods.");
         break;
       case 26:
+        System.out.println("unexpected modifier in method declaration.");
+        break;
+      case 27:
         System.out.println("return type missing.");
         break;
     }
@@ -530,15 +533,17 @@ public class pCompiler {
     } else {
       EnumSet<LexemeType> modifiers = modifiers();
 
-      // Semantic analysis: Modifiers in a class/enum declaration must be none
-      // or "public".
-      // Default is none, i.e. the class is only accessible by classes or enums
-      // in the same package.
+      // Semantic analysis: Modifiers in a class/enum declaration must be
+      // none or "public". Default is none, i.e. the class is only
+      // accessible by classes or enums in the same package.
       boolean isPublic = modifiers.contains(LexemeType.publicLexeme);
-      if (modifiers.size() == 1 && !isPublic) {
-        error(23);
-      } else if (modifiers.size() > 1) {
-        error(24);
+      // valid: modifiers.size() == 0 || (modifiers.size() == 1 && isPublic)
+      if (!((modifiers.size() == 0) || ((modifiers.size() == 1) && isPublic))) {
+        if (modifiers.size() > 1) {
+          error(23);
+        } else if (!isPublic) {
+          error(24);
+        }
       }
 
       classDecl(isPublic);
@@ -710,12 +715,12 @@ public class pCompiler {
     // - modifier "static" is mandatory (no class instantiation).
     // - modifiers may be: "public", "private", "static" or "synchronized".
     if (!modifiers.contains(LexemeType.staticLexeme)) {
-      error(24);
+      error(25);
     }
     EnumSet<LexemeType> temp = modifiers.clone();
     temp.removeAll(METHOD_MODIFIERS);
     if (!temp.isEmpty()) {
-      error(25);
+      error(26);
     }
     boolean isPublic = modifiers.contains(LexemeType.publicLexeme);
 
@@ -791,7 +796,7 @@ public class pCompiler {
       // skip void
       lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
-      error(24);
+      error(27);
     }
 
     debug("\nresultType: end");
