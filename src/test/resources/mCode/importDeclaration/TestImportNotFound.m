@@ -9,8 +9,9 @@
    8 ;TestImportNotFound.j(8) class TestImportNotFound {
    9 ;TestImportNotFound.j(9)   public static void main() {
   10 ;TestImportNotFound.j(10)     println("TestImportNotFound Klaar");
-  11 acc16= constant 15
+  11 acc16= constant 16
   12 writeLineString
   13 ;TestImportNotFound.j(11)   }
-  14 stop
-  15 stringConstant 0 = "TestImportNotFound Klaar"
+  14 ;TestImportNotFound.j(12) }
+  15 stop
+  16 stringConstant 0 = "TestImportNotFound Klaar"

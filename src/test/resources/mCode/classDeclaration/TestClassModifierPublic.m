@@ -5,8 +5,9 @@
    4 ;TestClassModifierPublic.j(4) public class TestClassModifierPublic {
    5 ;TestClassModifierPublic.j(5)   public static void main() {
    6 ;TestClassModifierPublic.j(6)     println("Klaar");
-   7 acc16= constant 11
+   7 acc16= constant 12
    8 writeLineString
    9 ;TestClassModifierPublic.j(7)   }
-  10 stop
-  11 stringConstant 0 = "Klaar"
+  10 ;TestClassModifierPublic.j(8) }
+  11 stop
+  12 stringConstant 0 = "Klaar"

@@ -9,8 +9,9 @@
    8 ;me\TestMeImportMe.j(8) class TestImportMe {
    9 ;me\TestMeImportMe.j(9)   public static void main() {
   10 ;me\TestMeImportMe.j(10)     println("TestImportMe Klaar");
-  11 acc16= constant 15
+  11 acc16= constant 16
   12 writeLineString
   13 ;me\TestMeImportMe.j(11)   }
-  14 stop
-  15 stringConstant 0 = "TestImportMe Klaar"
+  14 ;me\TestMeImportMe.j(12) }
+  15 stop
+  16 stringConstant 0 = "TestImportMe Klaar"
