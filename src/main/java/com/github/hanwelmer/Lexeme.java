@@ -85,6 +85,7 @@ public class Lexeme {
       case transientLexeme:
       case volatileLexeme:
       case classLexeme:
+      case enumLexeme:
       case byteLexeme:
       case wordLexeme:
       case stringLexeme:
@@ -106,6 +107,7 @@ public class Lexeme {
       case readLexeme:
       case printlnLexeme:
       case sleepLexeme:
+      case eof:
       case unknown:
         // nothing todo
         break;

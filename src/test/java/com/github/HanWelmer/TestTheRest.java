@@ -49,8 +49,7 @@ public class TestTheRest extends AbstactRegressionTest {
     assertTrue(singleTest("test2.j"));
   }
 
-  // TODO enable regression test
-  // @Test
+  @Test
   public void test3() {
     assertTrue(singleTest("test3.j"));
   }

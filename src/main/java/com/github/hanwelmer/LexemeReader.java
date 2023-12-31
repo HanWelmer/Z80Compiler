@@ -42,6 +42,7 @@ public class LexemeReader {
   protected Map<String, LexemeType> keywords = new HashMap<String, LexemeType>();
 
   /* Constants for lexical analysis phase */
+  protected static final char EOF = '\u001a';
   protected static final int MAX_LINE_WIDTH = 128;
   protected static final int MAX_IDENTIFIER_LENGTH = MAX_LINE_WIDTH;
   protected static final int MAX_BYT_CONSTANT = 255; // 8 bit constant
@@ -99,9 +100,8 @@ public class LexemeReader {
     if (linePos >= lineSize) {
       line = getLine();
       if (line == null) {
-        throw new FatalError(1); // end of file encountered
+        return EOF; // end of file encountered
       }
-      ;
 
       // when in debug mode, make sure the echoed source code starts on a new
       // line.
@@ -195,7 +195,9 @@ public class LexemeReader {
       ch = getChar(sourceCode);
     }
 
-    if (ch >= '0' && ch <= '9') {
+    if (ch == EOF) {
+      lexeme.type = LexemeType.eof;
+    } else if (ch >= '0' && ch <= '9') {
       // try to recognise a constant.
       // constant = decimalConstant | hexadecimalConstant.
       // decimalConstant = "(0-9)*".
@@ -239,10 +241,13 @@ public class LexemeReader {
       lexeme.type = LexemeType.stringConstant;
       lexeme.datatype = Datatype.string;
       lexeme.stringVal = "";
-      while (nextChar(sourceCode) != '"') {
+      while (nextChar(sourceCode) != '"' && nextChar(sourceCode) != EOF) {
         ch = getChar(sourceCode);
         // handle escape sequences
-        if (ch != '\\') {
+        if (ch == EOF) {
+          error();
+          System.out.println("End of file encountered while reading string constant: \"" + lexeme.stringVal);
+        } else if (ch != '\\') {
           lexeme.stringVal += ch;
         } else {
           switch (nextChar(sourceCode)) {

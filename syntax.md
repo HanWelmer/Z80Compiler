@@ -21,6 +21,7 @@ the syntax of miniJava has the following limitations:
 - EnumConstant          no Modifiers, no ClassBody?
 - ClassBodyDeclaration  no Initializer, no ClassDeclaration, no EnumDeclaration, no ConstructorDeclaration, no ";".
 - ArrayInitializer      no ( "," )?.
+- MethodDeclaration     no const in ResultType.
 - MethodDeclaration     no TypeParameters, no "throws".
 - MethodDeclarator      no [].
 - FormalParameter       no "&", "*" or "...". 
@@ -92,7 +93,7 @@ TODO:
 `FormalParameter      ::= Modifiers Type VariableDeclaratorId`
 
 ### Types
-`ResultType           ::= "void" | ( ( "const" )? Type )`
+`ResultType           ::= "void" | Type`
 
 `Type                 ::= ReferenceType | PrimitiveType`
 
@@ -352,12 +353,12 @@ An executable class (program or application) must contain a "void main()" method
 Modifiers in an enum declaration may only be: "public". Default is none, i.e. the enum is only accessible by classes or enums in the same package.
 
 ### Fields (member variables)
-No class instantiation, so "static" modifier is mandatory.
+Modifier "static" is mandatory (no class instantiation).
 
 Modifiers in a field declaration may be: "public", "private", "final" or "volatile".
 
 ### Methods
-No class instantiation, so "static" modifier is mandatory.
+Modifier "static" is mandatory (no class instantiation).
 
 Modifiers in a method declaration may be: "public", "private" or "synchronized".
 

@@ -18,6 +18,7 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.hanwelmer;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -76,13 +77,16 @@ public class Identifiers {
 
   /**
    * Check if an identifier with that value has already been declared. Method is
-   * used during semantic analysis phase. Param: identifier : check if an
-   * identifier with this value already exists. Returns : true if declared;
-   * false if not declared.
+   * used during semantic analysis phase.
+   * 
+   * @param identifier:
+   *          check if an identifier with this value already exists.
+   * @return true if declared; false if not declared.
    */
   public boolean checkId(String identifier) {
     boolean found = getId(identifier) != null;
 
+    // if not found, add it so we get an error message only once.
     if (!found) {
       stackOfScopes.peek().addVariable(identifier);
     }
@@ -92,34 +96,30 @@ public class Identifiers {
   }
 
   /**
-   * Declare an identifier. Method is used during semantic analysis phase. Param
-   * lexeme : for the idVal of this lexeme an indentifier will be declared.
-   * Param datatype : datatype of variable. Returns : true if OK; false if such
-   * an identifier already declared.
+   * Declare an identifier. Method is used during semantic analysis phase.
+   *
+   * @param identifier:
+   *          this indentifier will be declared
+   * @param identifierType:
+   *          type of identifier.
+   * @param datatype:
+   *          datatype of variable.
+   * @param modifiers
+   * @return true if OK; false if such an identifier already declared.
    */
-  public boolean declareId(Lexeme lexeme, LexemeType datatype) {
-    return declareId(lexeme, datatype, false, false);
-  }
-
-  /**
-   * Declare an identifier. Method is used during semantic analysis phase. Param
-   * lexeme : for the idVal of this lexeme an indentifier will be declared.
-   * Param datatype : datatype of variable. Param isPublic : true if the
-   * identifier is public. Param isFinal : true if the identifier is a final
-   * variable. Returns : true if OK; false if such an identifier already
-   * declared.
-   */
-  public boolean declareId(Lexeme lexeme, LexemeType datatype, boolean isPublic, boolean isFinal) {
+  public boolean declareId(String identifier, IdentifierType identifierType, LexemeType datatype, EnumSet<LexemeType> modifiers) {
     boolean result = true;
     // make sure the variable is declared.
     debug("\ndeclareId() calling checkId(");
-    checkId(lexeme.idVal);
+    checkId(identifier);
 
     // If it wasn't declared yet, override default datatype and set other
     // properties.
-    Variable var = getId(lexeme.idVal);
+    Variable var = getId(identifier);
     if (var.getDatatype() == null) {
       debug(String.format("declareId() overriding default datatype and other properties."));
+      // set type of identifier
+      var.setIdentifierType(identifierType);
       // set datatype
       if (datatype == LexemeType.byteLexeme) {
         var.setDatatype(Datatype.byt);
@@ -129,12 +129,13 @@ public class Identifiers {
         var.setDatatype(Datatype.string);
       } else if (datatype == LexemeType.classLexeme) {
         var.setDatatype(Datatype.clazz);
+      } else if (datatype == LexemeType.voidLexeme) {
+        var.setDatatype(Datatype.voidd);
       } else {
         result = false;
       }
       // set modifiers
-      var.setPublic(isPublic);
-      var.setFinal(isFinal);
+      var.setModifiers(modifiers);
       // this scheme assumes that memory allocation can only occur in the
       // current top level scope.
       int address = stackOfScopes.peek().getAddress();

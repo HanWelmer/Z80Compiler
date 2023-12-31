@@ -19,27 +19,20 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 package com.github.hanwelmer;
 
 /**
- * Enumeration for the pCompiler. This class defines the lexemes of the P
- * language. Used in lexical analysis, semantic analysis and code generation
- * phases of the compiler.
+ * Enumeration for the pCompiler. This class defines the types of identifiers in
+ * the P language. Used in lexical analysis, semantic analysis and code
+ * generation phases of the compiler.
  */
-public enum Datatype {
-  clazz("class", 0), voidd("void", 0), byt("byte", 1), word("word", 2), string("String", 2);
+public enum IdentifierType {
+  clazz("class"), field("field"), method("method"), variable("variable");
 
   private String value;
-  private int size;
 
-  private Datatype(String value, int size) {
+  private IdentifierType(String value) {
     this.value = value;
-    this.size = size;
   }
 
   public String getValue() {
     return value;
   }
-
-  public int getSize() {
-    return size;
-  }
-
 };

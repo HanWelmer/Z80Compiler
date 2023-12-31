@@ -18,12 +18,14 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.hanwelmer;
 
+import java.util.EnumSet;
+
 public class Variable {
 
   private String name;
+  private IdentifierType identifierType;
   private Datatype datatype;
-  private boolean isPublic = false;
-  private boolean isFinal = false;
+  private EnumSet<LexemeType> modifiers;
   private int intValue = 0;
   private int address;
 
@@ -37,6 +39,14 @@ public class Variable {
     return name;
   }
 
+  public void setIdentifierType(IdentifierType identifierType) {
+    this.identifierType = identifierType;
+  }
+
+  public IdentifierType getIdentifierType() {
+    return identifierType;
+  }
+
   public void setDatatype(Datatype datatype) {
     this.datatype = datatype;
   }
@@ -45,20 +55,12 @@ public class Variable {
     return datatype;
   }
 
-  public void setPublic(boolean isPublic) {
-    this.isPublic = isPublic;
+  public void setModifiers(EnumSet<LexemeType> modifiers) {
+    this.modifiers = modifiers;
   }
 
-  public boolean isPublic() {
-    return isPublic;
-  }
-
-  public void setFinal(boolean isFinal) {
-    this.isFinal = isFinal;
-  }
-
-  public boolean isFinal() {
-    return isFinal;
+  public EnumSet<LexemeType> getModifiers() {
+    return modifiers;
   }
 
   public void setIntValue(int intValue) {
@@ -77,10 +79,15 @@ public class Variable {
     return address;
   }
 
+  public boolean isFinal() {
+    return modifiers.contains(LexemeType.finalLexeme);
+  }
+
   public String toString() {
-    String result = "var(" + name + ", datatype=" + datatype;
-    result += ", isPublic=" + isPublic;
-    result += ", isFinal=" + isFinal;
+    String result = "var(" + name;
+    result += ", identifierType=" + identifierType;
+    result += ", datatype=" + datatype;
+    result += ", modifiers=" + modifiers;
     result += ", intValue=" + intValue;
     result += ", address=" + address;
     result += ")";

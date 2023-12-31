@@ -35,7 +35,7 @@ public enum LexemeType {
   publicLexeme("public"), privateLexeme("private"), staticLexeme("static"), finalLexeme("final"), synchronizedLexeme(
       "synchronized"), nativeLexeme("native"), transientLexeme("transient"), volatileLexeme("volatile"),
   // declaration
-  classLexeme("class"),
+  classLexeme("class"), enumLexeme("enum"),
   // datatypes
   voidLexeme("void"), byteLexeme("byte"), wordLexeme("word"),
   // shortLexeme("short"), intLexeme("int"),
@@ -48,8 +48,8 @@ public enum LexemeType {
   forLexeme("for"), doLexeme("do"), whileLexeme("while"),
   // miscellaneous
   sleepLexeme("sleep"), endLexeme("}"),
-  // unknown is a special lexemeType.
-  unknown("?");
+  // final 2 special lexeme types.
+  eof("EOF"), unknown("?");
 
   private String value;
   private static LexemeType[] vals = values();
