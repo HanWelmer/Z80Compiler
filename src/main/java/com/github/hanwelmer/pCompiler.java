@@ -235,6 +235,12 @@ public class pCompiler {
     lexemeReader.error();
   }
 
+  // error TODO Fix runtime error: too many variables
+  private void errorUnexpectedSymbol(String message) {
+    error(3);
+    System.out.println(message);
+  }
+
   // TODO Fix runtime error: too many variables
   private void error(int n) {
     error();
@@ -259,9 +265,6 @@ public class pCompiler {
         break;
       case 6:
         System.out.print("unknown keyword : .");
-        break;
-      case 7:
-        System.out.println("lexeme skipped after error.");
         break;
       case 8:
         System.out.println("variable already declared.");
@@ -323,12 +326,6 @@ public class pCompiler {
       case 27:
         System.out.println("return type missing.");
         break;
-      case 28:
-        System.out.println("unexpected symbol; expected void or Type");
-        break;
-      case 29:
-        System.out.println("unexpected symbol; expected an identifier");
-        break;
       case 30:
         System.out.println("static modifier is mandatory for fields.");
         break;
@@ -362,12 +359,11 @@ public class pCompiler {
       // okSet);
       result = true;
     } else {
-      error(3); /* okset expected */
-      System.out.println("found " + lexeme.type + ", expected " + okSet);
+      // okset expected
+      errorUnexpectedSymbol("found " + lexeme.type + ", expected " + okSet);
       stopSet.add(LexemeType.eof);
       while (!stopSet.contains(lexeme.type)) {
-        error(7); /* lexeme skipped after error */
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = lexemeReader.skipAfterError(sourceCode);
       }
     }
     // debug("\ncheckOrSkip: end");
@@ -751,7 +747,7 @@ public class pCompiler {
         fieldDeclaration(modifiers, resultType, identifier);
       }
     } else {
-      error(29);
+      errorUnexpectedSymbol("expected an identifier");
     }
 
     debug("\nClassBodyDeclaration: end");
@@ -814,8 +810,8 @@ public class pCompiler {
       // skip semicolon
       lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
-      error();
-      System.out.println("Unsuppprted parts in field declaration.");
+      // skip the semicolon after a syntax error
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     debug("\nFieldDeclaration: end");
@@ -909,7 +905,8 @@ public class pCompiler {
       // skip void or type lexeme.
       lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
-      error(28);
+      errorUnexpectedSymbol("expected void or Type");
+      ;
     }
 
     debug("\nresultType: end; type=" + result.getType());
@@ -955,11 +952,9 @@ public class pCompiler {
           result += "*";
           lexeme = lexemeReader.getLexeme(sourceCode);
         } else {
-          error(3);
-          System.out.println(" found " + lexeme.type + ", expected identifer or '*'");
+          errorUnexpectedSymbol("found " + lexeme.type + ", expected identifer or '*'");
           while (!stopSet.contains(lexeme.type)) {
-            error(7); // lexeme skipped after error.
-            lexeme = lexemeReader.getLexeme(sourceCode);
+            lexeme = lexemeReader.skipAfterError(sourceCode);
           }
         }
       }
@@ -2006,8 +2001,8 @@ public class pCompiler {
           operand = factor(startExpressionSet);
         } else if (lexeme.type != LexemeType.rbracket) {
           // part of lexical analysis.
-          error(3); // only + symbol allowed between terms in string expression.
-          System.out.println(" " + lexeme.makeString(null));
+          // only + symbol allowed between terms in string expression.
+          errorUnexpectedSymbol(" " + lexeme.makeString(null));
           // skip unexpected symbol.
           if (checkOrSkip(EnumSet.of(lexeme.type), stopWriteSet)) {
             lexeme = lexemeReader.getLexeme(sourceCode);

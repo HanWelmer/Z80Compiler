@@ -419,4 +419,10 @@ public class LexemeReader {
     return lexeme;
   } // getLexeme()
 
+  public Lexeme skipAfterError(ArrayList<String> sourceCode) throws FatalError {
+    error();
+    System.out.println("lexeme skipped after error.");
+    return getLexeme(sourceCode);
+  }
+
 }

@@ -2,6 +2,7 @@
 class TestPrint {
   private static final word i = 1;
   private static final byte b = 2;
+  
   public static void main() {
     println(0);
     println(i);
