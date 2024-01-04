@@ -439,23 +439,25 @@ public class pCompiler {
    * 
    *************************/
   // CompilationUnit ::= PackageDeclaration? ImportDeclaration* TypeDeclaration
-  // TODO implement ImportDeclaration* instead of ImportDeclaration.
   private void compilationUnit() throws FatalError {
     debug("\ncompilationUnit: start");
 
     // recognize an optional package declaration.
     lexeme = lexemeReader.getLexeme(sourceCode);
+    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme,
+        LexemeType.enumLexeme);
     if (lexeme.type == LexemeType.packageLexeme) {
-      packageDeclaration();
+      packageDeclaration(stopSet);
     }
 
     // recognize an optional list of import declaration.
     while (lexeme.type == LexemeType.importLexeme) {
-      importDeclaration();
+      importDeclaration(stopSet);
     }
 
     // recognize the mandatory single type declaration.
-    typeDeclaration();
+    stopSet.remove(LexemeType.importLexeme);
+    typeDeclaration(stopSet);
 
     // check we are at the end of the file, barring comments and white space.
     if (lexeme.type != LexemeType.eof) {
@@ -472,16 +474,15 @@ public class pCompiler {
    *************************/
 
   // PackageDeclaration ::= "package" Name ";"
-  private void packageDeclaration() throws FatalError {
+  private void packageDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\npackageDeclaration: start");
 
     // skip "package".
     lexeme = lexemeReader.getLexeme(sourceCode);
 
     // recognize Name.
-    packageName = name();
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon),
-        EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme))) {
+    packageName = name(stopSet);
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
       // skip ";"
       lexeme = lexemeReader.getLexeme(sourceCode);
       debug("\npackageDeclaration: packageName=" + packageName);
@@ -516,15 +517,14 @@ public class pCompiler {
   // Note: packageName identifiers are lowerCamelCase.
   // Note: importType identifier is UpperCamelCase.
   // TODO implement semantic analysis of importDeclaration
-  private void importDeclaration() throws FatalError {
+  private void importDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nimportDeclaration: start");
 
     // skip "import"
     lexeme = lexemeReader.getLexeme(sourceCode);
 
     // recognize Name.
-    String importPackageName = name();
-    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.importLexeme, LexemeType.publicLexeme, LexemeType.classLexeme);
+    String importPackageName = name(stopSet);
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
       // skip ";"
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -542,7 +542,8 @@ public class pCompiler {
 
   // TypeDeclaration ::= ";" | ( Modifiers ( ClassDecl | EnumDecl ) )
   // TODO implement EnumDecl in TypeDeclaration.
-  private void typeDeclaration() throws FatalError {
+  // TODO use stopSet in typeDeclaration.
+  private void typeDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ntypeDeclaration: start");
 
     if (lexeme.type == LexemeType.semicolon) {
@@ -954,13 +955,11 @@ public class pCompiler {
   // ...Name ::= identifier ("." identifier)* ("." importType)?
   // to:
   // ...Name ::= JavaIdentifier ( "." JavaIdentifier )*.
-  private String name() throws FatalError {
+  private String name(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\npackageName: start");
     String result = "";
 
     // recognize identifier.
-    EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon, LexemeType.importLexeme, LexemeType.publicLexeme,
-        LexemeType.classLexeme);
     if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
       result = lexeme.idVal;
 
