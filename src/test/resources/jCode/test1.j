@@ -1,10 +1,10 @@
 /* Program to test generated Z80 assembler code */
 class TestWhile {
-  byte b = 0;
-  byte b2 = 32;
-  word i = 110;
-  word i2 = 105;
-  word p = 12;
+  private static byte b = 0;
+  private static byte b2 = 32;
+  private static word i = 110;
+  private static word i2 = 105;
+  private static word p = 12;
   public static void main() {
     /*Possible operand types: 
      * constant, acc, var, stack8, stack16

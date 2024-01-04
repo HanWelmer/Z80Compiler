@@ -160,7 +160,7 @@ TODO
 
 `constantExpression                   = expression.`
 
-`JavaIdentifier                       = identifiwer.`
+`JavaIdentifier                       = identifier.`
 
 TODO
 Arguments

@@ -31,8 +31,7 @@ public class TestTheRest extends AbstactRegressionTest {
     // Accept default configuration values.
   }
 
-  // TODO enable regression test
-  // @Test
+  @Test
   public void test0() {
     assertTrue(singleTest("test0.j"));
   }

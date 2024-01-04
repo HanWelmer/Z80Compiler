@@ -715,6 +715,7 @@ public class pCompiler {
   // ResultType ::= "void" | Type
   // MethodDeclarator ::= JavaIdentifier FormalParameters
   // FieldDeclaration ::= Type VariableDeclarator ( "," VariableDeclarator )*
+  // ";"
   // VariableDeclarator ::= VariableDeclaratorId ( "=" VariableInitializer )?.
   // VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*.
   //
@@ -724,7 +725,7 @@ public class pCompiler {
   // RestOfMethodDeclarator ::= ( FormalParameters* )? ")"
   // FormalParameters ::= ( FormalParameter ( "," FormalParameter )* )?
   // RestOfVariableDeclarator ::= ( "[" "]" )* ( "=" VariableInitializer )? (
-  // "," VariableDeclarator )*
+  // "," VariableDeclarator )* ";"
   // VariableDeclarator ::= JavaIdentifier ( "[" "]" )* ( "="
   // VariableInitializer )?
   //
@@ -744,7 +745,7 @@ public class pCompiler {
       if (lexeme.type == LexemeType.lbracket) {
         methodDeclaration(modifiers, resultType, identifier);
       } else {
-        fieldDeclaration(modifiers, resultType, identifier);
+        restOfVariableDeclarator(modifiers, resultType, identifier);
       }
     } else {
       errorUnexpectedSymbol("expected an identifier");
@@ -754,28 +755,32 @@ public class pCompiler {
   }
 
   /**
-   * Parse a field declaration, given that the modifiers, type and the
-   * identifier of the first VariableDeclarator have already been read. Global
+   * Parse the rest of variable declarator after the modifiers, type and the
+   * identifier of the first variable declarator have already been read. Global
    * variable lexeme holds the first lexeme after the first identifier.
    * 
    * @param modifiers
-   * @param resultType
+   * @param type
+   *          holds the ResultType as the type of the list of variables, where
+   *          the value void is not allowed.
    * @param firstIdentifier
    * @throws FatalError
    */
-  // FieldDeclaration ::= Type VariableDeclarator ( "," VariableDeclarator )*
-  // ";".
-  // VariableDeclarator ::= VariableDeclaratorId ( "=" VariableInitializer )?.
-  // VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*.
-  // VariableInitializer ::= ArrayInitializer | Expression.
-  // ArrayInitializer ::= "{" ( VariableInitializer ( "," VariableInitializer )*
-  // )? "}".
+  // RestOfVariableDeclarator ::= ( "[" "]" )* ( "=" VariableInitializer )? (
+  // "," VariableDeclarator )* ";"
+  // VariableInitializer ::= ArrayInitializer | Expression
+  //
+  // For now only:
+  // RestOfVariableDeclarator ::= ( "=" Expression )? ( ","
+  // VariableDeclarator )* ";"
   //
   // field modifiers ::= "public", "private", "static", "final" or "volatile"
   //
-  // TODO implement semantic analysis of identifier in FieldDeclaration.
-  // TODO implement remainder of FieldDeclaration.
-  private void fieldDeclaration(EnumSet<LexemeType> modifiers, ResultType resultType, String firstIdentifier) throws FatalError {
+  // TODO Define stopSet within RestOfVariableDeclarator.
+  // TODO Support list of variable declarators, i.e. support ( "," VariableDeclarator )*.
+  // TODO Add array declarators ( "[" "]" )* to RestOfVariableDeclarator.
+  // TODO Add ArrayInitializer to RestOfVariableDeclarator.
+  private void restOfVariableDeclarator(EnumSet<LexemeType> modifiers, ResultType type, String firstIdentifier) throws FatalError {
     debug("\nFieldDeclaration: start " + firstIdentifier);
 
     // semantic analysis of modifiers:
@@ -791,25 +796,54 @@ public class pCompiler {
     }
 
     // semantic analysis of field type:
-    if (resultType.getType() == LexemeType.voidLexeme) {
+    if (type.getType() == LexemeType.voidLexeme) {
       error(32);
     }
 
     // semantic analysis of identifier:
     if (identifiers.checkId(firstIdentifier)) {
       error(8); /* variable already declared */
-    } else if (identifiers.declareId(firstIdentifier, IdentifierType.field, resultType.getType(), modifiers)) {
-      debug("\nFieldDeclaration: " + modifiers + " " + resultType.getType() + " " + firstIdentifier);
+    } else if (identifiers.declareId(firstIdentifier, IdentifierType.field, type.getType(), modifiers)) {
+      debug("\nFieldDeclaration: " + modifiers + " " + type.getType() + " " + firstIdentifier);
     } else {
       error();
       System.out.println("Error declaring identifier " + firstIdentifier + " as a field.");
     }
 
-    // for now accept only a single variable declarator without initializer.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), EnumSet.of(LexemeType.semicolon))) {
+    // semicolon indicates single primitive variable declarator without initializer.
+    if (lexeme.type == LexemeType.semicolon) {
       // skip semicolon
       lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
+      // Add array declarators here...
+      int numberOfDimensions = 0;
+
+      // parse ( "=" VariableInitializer )?
+      if (lexeme.type == LexemeType.assign) {
+        // skip assignment sign
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        if (numberOfDimensions == 0) {
+          Variable var = identifiers.getId(firstIdentifier);
+          Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+          leftOperand.isFinal = var.isFinal();
+          debug("\nFieldDeclaration: leftOperand = " + leftOperand);
+
+          EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon);
+          Operand rightOperand = expression(stopSet);
+
+          // part of code generation.
+          generateAssignment(leftOperand, rightOperand);
+
+          // part of syntax analysis.
+          if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+            // skip semicolon
+            lexeme = lexemeReader.getLexeme(sourceCode);
+          }
+        } else {
+          throw new RuntimeException("Internal compiler error in restOfVariableDeclarator(): abort.");
+        }
+      }
+
       // skip the semicolon after a syntax error
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
@@ -1913,38 +1947,55 @@ public class pCompiler {
     } else if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
       // identifier "=" expression
       lexeme = lexemeReader.getLexeme(sourceCode);
-      Operand operand = expression(stopSet);
+      Operand rightOperand = expression(stopSet);
 
-      /* part of code generation */
-      debug("\nupdate assignment: var = " + var + ", operand = " + operand);
+      // part of code generation.
       if (var.isFinal()) {
         // no assignment but constant definition.
-        if (var.getDatatype() != operand.datatype) {
+        if (var.getDatatype() != rightOperand.datatype) {
           error(14);
-        } else if (operand.opType == OperandType.constant) {
-          var.setIntValue(operand.intValue);
+        } else if (rightOperand.opType == OperandType.constant) {
+          var.setIntValue(rightOperand.intValue);
           debug("\nupdate: final var [" + var.getName() + "] = " + var.getIntValue());
         } else {
           error(17);
         }
       } else {
-        // operand to accu.
-        if (operand.opType != OperandType.acc) {
-          plantAccLoad(operand);
-        }
-        // actual assignment.
-        if (operand.datatype == Datatype.word || operand.datatype == Datatype.string) {
-          plant(new Instruction(FunctionType.acc16Store, leftOperand));
-        } else if (operand.datatype == Datatype.byt) {
-          plant(new Instruction(FunctionType.acc8Store, leftOperand));
-        } else {
-          error(12);
-        }
+        generateAssignment(leftOperand, rightOperand);
       }
     }
 
     debug("\nupdate: end");
   } // update()
+
+  /**
+   * Generate M-code for an assignment.
+   * 
+   * @param leftOperand
+   * @param rightOperand
+   */
+  private void generateAssignment(Operand leftOperand, Operand rightOperand) {
+    // part of code generation.
+    debug("\ngenerateAssignment: leftOperand = " + leftOperand + ", operand = " + rightOperand);
+    // operand to accu.
+    if (rightOperand.opType != OperandType.acc) {
+      plantAccLoad(rightOperand);
+    }
+    // actual assignment.
+    if (rightOperand.datatype == Datatype.word || rightOperand.datatype == Datatype.string) {
+      plant(new Instruction(FunctionType.acc16Store, leftOperand));
+    } else if (rightOperand.datatype == Datatype.byt) {
+      plant(new Instruction(FunctionType.acc8Store, leftOperand));
+    } else {
+      error(12);
+    }
+    // clear acc
+    if (acc8.inUse()) {
+      acc8.clear();
+    } else if (acc16.inUse()) {
+      acc16.clear();
+    }
+  }
 
   // printlnStatement = "println" "(" expression ")" ";".
   // The println statement makes a distinction between a string expression and

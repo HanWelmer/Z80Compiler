@@ -1,7 +1,7 @@
 /* Program to test generated Z80 assembler code */
 class TestPrint {
-  private static final word i = 1;
-  private static final byte b = 2;
+  private static word i = 1;
+  private static byte b = 2;
   
   public static void main() {
     println(0);
