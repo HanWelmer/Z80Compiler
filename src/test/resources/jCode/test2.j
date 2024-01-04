@@ -1,11 +1,12 @@
-/* Program to test branch instructions */
-class TestBranches {
-  word i = 2000;
-  word i1 = 1000;
-  word i3 = 3000;
-  byte b = 20;
-  byte b1 = 10;
-  byte b3 = 30;
+/* Program to test branch instructions in an if statement */
+class TestIf {
+  private static word i = 2000;
+  private static word i1 = 1000;
+  private static word i3 = 3000;
+  private static byte b = 20;
+  private static byte b1 = 10;
+  private static byte b3 = 30;
+
   public static void main() {
     /*Possible operand types: 
      * constant, acc, var, stack8, stack16

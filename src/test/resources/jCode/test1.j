@@ -5,6 +5,7 @@ class TestWhile {
   private static word i = 110;
   private static word i2 = 105;
   private static word p = 12;
+
   public static void main() {
     /*Possible operand types: 
      * constant, acc, var, stack8, stack16

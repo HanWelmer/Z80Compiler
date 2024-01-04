@@ -1,5 +1,5 @@
    0 ;test4.j(0) /* Program to test division */
-   1 ;test4.j(1) class TestMultiplyDivide {
+   1 ;test4.j(1) class TestDivide {
    2 ;test4.j(2)   public static void main() {
    3 ;test4.j(3)     println(0 * 1);
    4 acc8= constant 0

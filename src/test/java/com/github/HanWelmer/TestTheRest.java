@@ -32,35 +32,35 @@ public class TestTheRest extends AbstactRegressionTest {
   }
 
   @Test
-  public void test0() {
+  public void testPrint() {
     assertTrue(singleTest("test0.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test1() {
+  // Note: has local variables!
+  @Test
+  public void testWhile() {
     assertTrue(singleTest("test1.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test2() {
-    assertTrue(singleTest("test2.j"));
-  }
-
   @Test
-  public void test3() {
+  public void testMultiply() {
     assertTrue(singleTest("test3.j"));
   }
 
   @Test
-  public void test4() {
+  public void testDivide() {
     assertTrue(singleTest("test4.j"));
   }
 
+  @Test
+  public void testIf() {
+    assertTrue(singleTest("test2.j"));
+  }
+
+  // Note: has local variables!
   // TODO enable regression test
   // @Test
-  public void test5() {
+  public void testComparison() {
     assertTrue(singleTest("test5.j"));
   }
 

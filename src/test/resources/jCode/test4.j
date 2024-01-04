@@ -1,5 +1,5 @@
 /* Program to test division */
-class TestMultiplyDivide {
+class TestDivide {
   public static void main() {
     println(0 * 1);
     println(1 * 1);

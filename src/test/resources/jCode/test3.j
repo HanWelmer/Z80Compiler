@@ -1,6 +1,7 @@
 /* Program to test multiplication */
 class TestMultiply {
   private static word a;
+
   public static void main() {
     println(1 * 0);
     println(1 * 1);

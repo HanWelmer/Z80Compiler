@@ -352,21 +352,16 @@ public class pCompiler {
    * lexeme is in stopSet and return false.
    */
   private boolean checkOrSkip(EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws FatalError {
-    // debug("\ncheckOrSkip: start");
     boolean result = false;
     if (okSet.contains(lexeme.type)) {
-      // debug("\ncheckOrSkip: lexeme \"" + lexeme.type + "\" in okSet " +
-      // okSet);
       result = true;
     } else {
-      // okset expected
       errorUnexpectedSymbol("found " + lexeme.type + ", expected " + okSet);
       stopSet.add(LexemeType.eof);
       while (!stopSet.contains(lexeme.type)) {
         lexeme = lexemeReader.skipAfterError(sourceCode);
       }
     }
-    // debug("\ncheckOrSkip: end");
     return result;
   }
 
@@ -777,7 +772,8 @@ public class pCompiler {
   // field modifiers ::= "public", "private", "static", "final" or "volatile"
   //
   // TODO Define stopSet within RestOfVariableDeclarator.
-  // TODO Support list of variable declarators, i.e. support ( "," VariableDeclarator )*.
+  // TODO Support list of variable declarators, i.e. support ( ","
+  // VariableDeclarator )*.
   // TODO Add array declarators ( "[" "]" )* to RestOfVariableDeclarator.
   // TODO Add ArrayInitializer to RestOfVariableDeclarator.
   private void restOfVariableDeclarator(EnumSet<LexemeType> modifiers, ResultType type, String firstIdentifier) throws FatalError {
@@ -810,7 +806,8 @@ public class pCompiler {
       System.out.println("Error declaring identifier " + firstIdentifier + " as a field.");
     }
 
-    // semicolon indicates single primitive variable declarator without initializer.
+    // semicolon indicates single primitive variable declarator without
+    // initializer.
     if (lexeme.type == LexemeType.semicolon) {
       // skip semicolon
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -928,19 +925,15 @@ public class pCompiler {
    *************************/
 
   // ResultType ::= "void" | Type
-  // TODO implement result types other than void.
+  // TODO implement other return types than void, byte or word.
   private ResultType resultType() throws FatalError {
     debug("\nresultType: start");
     ResultType result = new ResultType();
 
-    // for now accept void only.
-    if (RESULT_TYPE_LEXEME_TYPES.contains(lexeme.type)) {
+    if (checkOrSkip(RESULT_TYPE_LEXEME_TYPES, EnumSet.of(LexemeType.semicolon, LexemeType.rbracket, LexemeType.beginLexeme))) {
       result.setType(lexeme.type);
       // skip void or type lexeme.
       lexeme = lexemeReader.getLexeme(sourceCode);
-    } else {
-      errorUnexpectedSymbol("expected void or Type");
-      ;
     }
 
     debug("\nresultType: end; type=" + result.getType());
