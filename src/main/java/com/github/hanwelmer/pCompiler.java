@@ -125,7 +125,7 @@ public class pCompiler {
   private static final EnumSet<LexemeType> START_ASSIGNMENT = EnumSet.of(LexemeType.finalLexeme, LexemeType.identifier,
       LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme);
   // Lexeme types that start an expression.
-  private static final EnumSet<LexemeType> START_EXPRESSION = EnumSet.of(LexemeType.lbracket, LexemeType.identifier,
+  private static final EnumSet<LexemeType> START_EXPRESSION = EnumSet.of(LexemeType.LPAREN, LexemeType.identifier,
       LexemeType.constant, LexemeType.stringConstant, LexemeType.inputLexeme, LexemeType.readLexeme);
 
   /* Class variables for lexical analysis phase */
@@ -324,7 +324,7 @@ public class pCompiler {
         System.out.println("unexpected modifier in method declaration.");
         break;
       case 27:
-        System.out.println("return type missing.");
+        System.out.println("type missing.");
         break;
       case 30:
         System.out.println("static modifier is mandatory for fields.");
@@ -542,7 +542,6 @@ public class pCompiler {
 
   // TypeDeclaration ::= ";" | ( Modifiers ( ClassDecl | EnumDecl ) )
   // TODO implement EnumDecl in TypeDeclaration.
-  // TODO use stopSet in typeDeclaration.
   private void typeDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ntypeDeclaration: start");
 
@@ -565,14 +564,14 @@ public class pCompiler {
         }
       }
 
-      classDecl(isPublic);
+      classDecl(isPublic, stopSet);
     }
 
     debug("\ntypeDeclaration: end");
   } // typeDeclaration
 
   // ClassDecl ::= "class" JavaIdentifier ClassBody
-  private void classDecl(boolean isPublic) throws FatalError {
+  private void classDecl(boolean isPublic, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nclassDecl: " + (isPublic ? "public" : ""));
     EnumSet<LexemeType> modifiers = EnumSet.noneOf(LexemeType.class);
     if (isPublic) {
@@ -580,16 +579,22 @@ public class pCompiler {
     }
 
     // recognize a class definition.
-    if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), EnumSet.of(LexemeType.identifier, LexemeType.beginLexeme))) {
+    EnumSet<LexemeType> localSet = stopSet.clone();
+    localSet.add(LexemeType.identifier);
+    localSet.add(LexemeType.beginLexeme);
+    if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), localSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
 
       // part of semantic analysis: start a new class level declaration scope.
       identifiers.newScope();
 
-      if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginLexeme))) {
+      localSet = stopSet.clone();
+      localSet.add(LexemeType.beginLexeme);
+      if (checkOrSkip(EnumSet.of(LexemeType.identifier), localSet)) {
         /* next line + debug message is part of semantic analysis */
         if (identifiers.checkId(lexeme.idVal)) {
-          error(8); /* variable already declared */
+          error();
+          System.out.println("variable " + lexeme.idVal + " already declared.");
         } else if (identifiers.declareId(lexeme.idVal, IdentifierType.clazz, LexemeType.classLexeme, modifiers)) {
           debug("\nclassDecl: " + (isPublic ? "public " : "") + "class declared: " + lexeme.idVal);
         } else {
@@ -597,7 +602,7 @@ public class pCompiler {
           System.out.println("Error declaring identifier " + lexeme.idVal + " as a class.");
         }
 
-        ClassBody();
+        ClassBody(stopSet);
       }
 
       // part of semantic analysis: close the class level declaration scope.
@@ -682,22 +687,25 @@ public class pCompiler {
    *************************/
 
   // ClassBody ::= "{" ( ClassBodyDeclaration )* "}"
-  // TODO implement list of ClassBodyDeclarations in ClassBody
-  private void ClassBody() throws FatalError {
+  private void ClassBody(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nClassBody: start");
 
     lexeme = lexemeReader.getLexeme(sourceCode);
-    if (checkOrSkip(EnumSet.of(LexemeType.beginLexeme), EnumSet.noneOf(LexemeType.class))) {
+    EnumSet<LexemeType> classBodyStopSet = stopSet.clone();
+    classBodyStopSet.addAll(CLASS_BODY_START_SET);
+    classBodyStopSet.add(LexemeType.endLexeme);
+    EnumSet<LexemeType> classDeclStopSet = stopSet.clone();
+    classDeclStopSet.add(LexemeType.endLexeme);
+    if (checkOrSkip(EnumSet.of(LexemeType.beginLexeme), classBodyStopSet)) {
       // skip beginLexeme
       lexeme = lexemeReader.getLexeme(sourceCode);
 
       while (CLASS_BODY_START_SET.contains(lexeme.type)) {
-        ClassBodyDeclaration();
+        ClassBodyDeclaration(classDeclStopSet);
       }
 
       // skip end lexeme
-      if (checkOrSkip(EnumSet.of(LexemeType.endLexeme),
-          EnumSet.of(LexemeType.packageLexeme, LexemeType.importLexeme, LexemeType.enumLexeme, LexemeType.classLexeme))) {
+      if (checkOrSkip(EnumSet.of(LexemeType.endLexeme), stopSet)) {
         // skip endLexeme
         lexeme = lexemeReader.getLexeme(sourceCode);
       }
@@ -730,20 +738,35 @@ public class pCompiler {
   // - Field modifiers ::= "public"? "private"? "static" "final"? "volatile"?
   // - Method resultType ::= "void" | Type
   // - Field resultType ::= Type
-  private void ClassBodyDeclaration() throws FatalError {
+  private void ClassBodyDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nClassBodyDeclaration: start");
 
     EnumSet<LexemeType> modifiers = modifiers();
-    ResultType resultType = resultType();
-    if (checkOrSkip(EnumSet.of(LexemeType.identifier), EnumSet.of(LexemeType.beginLexeme, LexemeType.assign))) {
+    EnumSet<LexemeType> resultTypeStopSet = stopSet.clone();
+    resultTypeStopSet.add(LexemeType.identifier);
+    ResultType resultType = resultType(resultTypeStopSet);
+
+    EnumSet<LexemeType> localSet = stopSet.clone();
+    localSet.add(LexemeType.LPAREN);
+    localSet.add(LexemeType.beginLexeme);
+    localSet.add(LexemeType.LBRACKET);
+    localSet.add(LexemeType.assign);
+    if (checkOrSkip(EnumSet.of(LexemeType.identifier), localSet)) {
       String identifier = lexeme.idVal;
       lexeme = lexemeReader.getLexeme(sourceCode);
-      if (lexeme.type == LexemeType.lbracket) {
-        methodDeclaration(modifiers, resultType, identifier);
+      if (lexeme.type == LexemeType.LPAREN) {
+        EnumSet<LexemeType> methodStopSet = stopSet.clone();
+        methodStopSet.add(LexemeType.semicolon);
+        methodStopSet.add(LexemeType.RPAREN);
+        methodDeclaration(modifiers, resultType, identifier, methodStopSet);
       } else {
-        restOfVariableDeclarator(modifiers, resultType, identifier);
+        EnumSet<LexemeType> fieldStopSet = stopSet.clone();
+        fieldStopSet.add(LexemeType.semicolon);
+        restOfVariableDeclarator(modifiers, resultType, identifier, fieldStopSet);
       }
     } else {
+      // TODO extend error handling in ClassBodyDeclaration; use lexeme types in
+      // localSet as a guidance.
       errorUnexpectedSymbol("expected an identifier");
     }
 
@@ -760,6 +783,7 @@ public class pCompiler {
    *          holds the ResultType as the type of the list of variables, where
    *          the value void is not allowed.
    * @param firstIdentifier
+   * @param stopSet
    * @throws FatalError
    */
   // RestOfVariableDeclarator ::= ( "[" "]" )* ( "=" VariableInitializer )? (
@@ -777,7 +801,9 @@ public class pCompiler {
   // VariableDeclarator )*.
   // TODO Add array declarators ( "[" "]" )* to RestOfVariableDeclarator.
   // TODO Add ArrayInitializer to RestOfVariableDeclarator.
-  private void restOfVariableDeclarator(EnumSet<LexemeType> modifiers, ResultType type, String firstIdentifier) throws FatalError {
+  // TODO implement stopSet in restOfVariableDeclarator
+  private void restOfVariableDeclarator(EnumSet<LexemeType> modifiers, ResultType type, String firstIdentifier,
+      EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nFieldDeclaration: start " + firstIdentifier);
 
     // semantic analysis of modifiers:
@@ -793,13 +819,16 @@ public class pCompiler {
     }
 
     // semantic analysis of field type:
-    if (type.getType() == LexemeType.voidLexeme) {
+    if (type.getType() == LexemeType.unknown) {
+      error(27);
+    } else if (type.getType() == LexemeType.voidLexeme) {
       error(32);
     }
 
     // semantic analysis of identifier:
     if (identifiers.checkId(firstIdentifier)) {
-      error(8); /* variable already declared */
+      error();
+      System.out.println("variable " + firstIdentifier + " already declared.");
     } else if (identifiers.declareId(firstIdentifier, IdentifierType.field, type.getType(), modifiers)) {
       debug("\nFieldDeclaration: " + modifiers + " " + type.getType() + " " + firstIdentifier);
     } else {
@@ -817,7 +846,7 @@ public class pCompiler {
       int numberOfDimensions = 0;
 
       // parse ( "=" VariableInitializer )?
-      if (lexeme.type == LexemeType.assign) {
+      if (checkOrSkip(EnumSet.of(LexemeType.assign), stopSet)) {
         // skip assignment sign
         lexeme = lexemeReader.getLexeme(sourceCode);
         if (numberOfDimensions == 0) {
@@ -826,14 +855,14 @@ public class pCompiler {
           leftOperand.isFinal = var.isFinal();
           debug("\nFieldDeclaration: leftOperand = " + leftOperand);
 
-          EnumSet<LexemeType> stopSet = EnumSet.of(LexemeType.semicolon);
-          Operand rightOperand = expression(stopSet);
+          EnumSet<LexemeType> localSet = EnumSet.of(LexemeType.semicolon);
+          Operand rightOperand = expression(localSet);
 
           // part of code generation.
           generateAssignment(leftOperand, rightOperand);
 
           // part of syntax analysis.
-          if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+          if (checkOrSkip(EnumSet.of(LexemeType.semicolon), localSet)) {
             // skip semicolon
             lexeme = lexemeReader.getLexeme(sourceCode);
           }
@@ -857,6 +886,7 @@ public class pCompiler {
    * @param modifiers
    * @param resultType
    * @param identifier
+   * @param stopSet
    * @throws FatalError
    */
   // MethodDeclaration ::= ResultType JavaIdentifier FormalParameters ( Block |
@@ -865,7 +895,9 @@ public class pCompiler {
   //
   // TODO implement semantic analysis of modifiers in MethodDeclaration.
   // TODO implement ( Block | ";" ) in MethodDeclaration.
-  private void methodDeclaration(EnumSet<LexemeType> modifiers, ResultType resultType, String identifier) throws FatalError {
+  // TODO implement stopSet in methodDeclaration
+  private void methodDeclaration(EnumSet<LexemeType> modifiers, ResultType resultType, String identifier,
+      EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nMethodDeclaration: start " + identifier);
 
     // semantic analysis of modifiers:
@@ -880,9 +912,15 @@ public class pCompiler {
       error(26);
     }
 
+    // semantic analysis of method return type:
+    if (resultType.getType() == LexemeType.unknown) {
+      error(27); // return type missing.
+    }
+
     // semantic analysis of identifier:
     if (identifiers.checkId(identifier)) {
-      error(8); /* variable already declared */
+      error();
+      System.out.println("variable " + identifier + " already declared.");
     } else if (identifiers.declareId(identifier, IdentifierType.method, resultType.getType(), modifiers)) {
       debug("\nMethodDeclaration: " + modifiers + " " + identifier + "(...)");
     } else {
@@ -906,7 +944,7 @@ public class pCompiler {
     debug("\nformalParameters: start");
 
     // ignore formal parameters for now;
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), EnumSet.of(LexemeType.semicolon, LexemeType.beginLexeme))) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), EnumSet.of(LexemeType.semicolon, LexemeType.beginLexeme))) {
       // skip right bracket
       lexeme = lexemeReader.getLexeme(sourceCode);
 
@@ -927,11 +965,15 @@ public class pCompiler {
 
   // ResultType ::= "void" | Type
   // TODO implement other return types than void, byte or word.
-  private ResultType resultType() throws FatalError {
+  private ResultType resultType(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nresultType: start");
     ResultType result = new ResultType();
 
-    if (checkOrSkip(RESULT_TYPE_LEXEME_TYPES, EnumSet.of(LexemeType.semicolon, LexemeType.rbracket, LexemeType.beginLexeme))) {
+    EnumSet<LexemeType> localSet = stopSet.clone();
+    localSet.add(LexemeType.semicolon);
+    localSet.add(LexemeType.RPAREN);
+    localSet.add(LexemeType.beginLexeme);
+    if (checkOrSkip(RESULT_TYPE_LEXEME_TYPES, localSet)) {
       result.setType(lexeme.type);
       // skip void or type lexeme.
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1063,11 +1105,11 @@ public class pCompiler {
 
     EnumSet<LexemeType> stopInputSet = stopSet.clone();
     stopInputSet.addAll(START_EXPRESSION);
-    stopInputSet.add(LexemeType.rbracket);
+    stopInputSet.add(LexemeType.RPAREN);
     stopInputSet.add(LexemeType.semicolon);
 
     // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopInputSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopInputSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1080,7 +1122,7 @@ public class pCompiler {
     Operand port = constantExpression(stopInputSet);
 
     // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopInputSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopInputSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1159,14 +1201,14 @@ public class pCompiler {
         acc16.setOperand(operand);
       } else if (lexeme.type == LexemeType.inputLexeme) {
         operand = inputFactor(stopSet);
-      } else if (lexeme.type == LexemeType.lbracket) {
+      } else if (lexeme.type == LexemeType.LPAREN) {
         // skip left bracket.
         lexeme = lexemeReader.getLexeme(sourceCode);
         EnumSet<LexemeType> stopSetCopy = stopSet.clone();
-        stopSetCopy.add(LexemeType.rbracket);
+        stopSetCopy.add(LexemeType.RPAREN);
         operand = expression(stopSetCopy);
         // skip right bracket.
-        if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
+        if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
           lexeme = lexemeReader.getLexeme(sourceCode);
         }
       }
@@ -1511,8 +1553,8 @@ public class pCompiler {
     /* part of lexical analysis: "for" "(" initialization ";" */
     lexeme = lexemeReader.getLexeme(sourceCode);
     EnumSet<LexemeType> stopForSet = stopSet.clone();
-    stopForSet.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopForSet)) {
+    stopForSet.add(LexemeType.RPAREN);
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopForSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1560,7 +1602,7 @@ public class pCompiler {
     /* part of lexical analysis: ")" */
     stopForSet = stopSet.clone();
     stopForSet.addAll(START_STATEMENT);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopForSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopForSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1598,11 +1640,11 @@ public class pCompiler {
 
     // expect "while" followed by "(".
     EnumSet<LexemeType> stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.rbracket);
+    stopWhileSet.add(LexemeType.RPAREN);
     if (checkOrSkip(EnumSet.of(LexemeType.whileLexeme), stopWhileSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWhileSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1618,7 +1660,7 @@ public class pCompiler {
     // expect ")" ";"
     stopWhileSet = stopSet.clone();
     stopWhileSet.add(LexemeType.semicolon);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
@@ -1638,8 +1680,8 @@ public class pCompiler {
 
     /* part of lexical analysis */
     EnumSet<LexemeType> stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWhileSet)) {
+    stopWhileSet.add(LexemeType.RPAREN);
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWhileSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1650,7 +1692,7 @@ public class pCompiler {
 
     stopWhileSet = stopSet.clone();
     stopWhileSet.addAll(START_STATEMENT);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopWhileSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopWhileSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
     block(stopSet);
@@ -1675,17 +1717,17 @@ public class pCompiler {
     EnumSet<LexemeType> stopOutputSet = stopSet.clone();
     stopOutputSet.addAll(START_EXPRESSION);
     stopOutputSet.add(LexemeType.comma);
-    stopOutputSet.add(LexemeType.rbracket);
+    stopOutputSet.add(LexemeType.RPAREN);
     stopOutputSet.add(LexemeType.semicolon);
 
     // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopOutputSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopOutputSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.comma);
-    stopExpressionSet.add(LexemeType.rbracket);
+    stopExpressionSet.add(LexemeType.RPAREN);
     stopExpressionSet.add(LexemeType.semicolon);
 
     // read constant expression.
@@ -1694,7 +1736,7 @@ public class pCompiler {
     // part of lexical analysis.
     stopOutputSet = stopSet.clone();
     stopOutputSet.addAll(START_EXPRESSION);
-    stopOutputSet.add(LexemeType.rbracket);
+    stopOutputSet.add(LexemeType.RPAREN);
     stopOutputSet.add(LexemeType.semicolon);
 
     // skip comma.
@@ -1703,7 +1745,7 @@ public class pCompiler {
     }
 
     stopExpressionSet = stopSet.clone();
-    stopExpressionSet.add(LexemeType.rbracket);
+    stopExpressionSet.add(LexemeType.RPAREN);
     stopExpressionSet.add(LexemeType.semicolon);
 
     // read second expression.
@@ -1718,7 +1760,7 @@ public class pCompiler {
 
     // part of lexical analysis.
     // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1740,11 +1782,11 @@ public class pCompiler {
 
     EnumSet<LexemeType> stopSleepSet = stopSet.clone();
     stopSleepSet.addAll(START_EXPRESSION);
-    stopSleepSet.add(LexemeType.rbracket);
+    stopSleepSet.add(LexemeType.RPAREN);
     stopSleepSet.add(LexemeType.semicolon);
 
     // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopSleepSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSleepSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1763,7 +1805,7 @@ public class pCompiler {
 
     // part of lexical analysis.
     // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1783,14 +1825,14 @@ public class pCompiler {
 
     // expect (
     EnumSet<LexemeType> stopSetIf = stopSet.clone();
-    stopSetIf.add(LexemeType.rbracket);
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopSetIf)) {
+    stopSetIf.add(LexemeType.RPAREN);
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSetIf)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     // expect comparison
     stopSetIf = stopSet.clone();
-    stopSetIf.add(LexemeType.rbracket);
+    stopSetIf.add(LexemeType.RPAREN);
     stopSetIf.addAll(START_STATEMENT);
     stopSetIf.remove(LexemeType.identifier);
     int ifLabel = comparison(stopSetIf);
@@ -1799,7 +1841,7 @@ public class pCompiler {
     // expect )
     stopSetIf = stopSet.clone();
     stopSetIf.addAll(START_STATEMENT);
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopSetIf)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSetIf)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -1862,7 +1904,8 @@ public class pCompiler {
 
         // part of semantic analysis.
         if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != null) {
-          error(8); // variable already declared.
+          error();
+          System.out.println("variable " + lexeme.idVal + " already declared.");
         } else if (identifiers.declareId(lexeme.idVal, IdentifierType.variable, datatype, modifiers)) {
           debug("\nassignment: " + modifiers + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
@@ -2010,17 +2053,17 @@ public class pCompiler {
 
     EnumSet<LexemeType> stopWriteSet = stopSet.clone();
     stopWriteSet.addAll(START_EXPRESSION);
-    stopWriteSet.add(LexemeType.rbracket);
+    stopWriteSet.add(LexemeType.RPAREN);
     stopWriteSet.add(LexemeType.semicolon);
 
     // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.lbracket), stopWriteSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWriteSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     // read first operand.
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
-    stopExpressionSet.add(LexemeType.rbracket);
+    stopExpressionSet.add(LexemeType.RPAREN);
     stopExpressionSet.add(LexemeType.semicolon);
     Operand operand = factor(stopExpressionSet);
     EnumSet<LexemeType> startExpressionSet = stopExpressionSet.clone();
@@ -2042,7 +2085,7 @@ public class pCompiler {
 
           // read next factor.
           operand = factor(startExpressionSet);
-        } else if (lexeme.type != LexemeType.rbracket) {
+        } else if (lexeme.type != LexemeType.RPAREN) {
           // part of lexical analysis.
           // only + symbol allowed between terms in string expression.
           errorUnexpectedSymbol(" " + lexeme.makeString(null));
@@ -2051,7 +2094,7 @@ public class pCompiler {
             lexeme = lexemeReader.getLexeme(sourceCode);
           }
         }
-      } while (lexeme.type != LexemeType.rbracket);
+      } while (lexeme.type != LexemeType.RPAREN);
 
       debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
       // part of code generation.
@@ -2067,7 +2110,7 @@ public class pCompiler {
 
     // part of lexical analysis.
     // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.rbracket), stopExpressionSet)) {
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 

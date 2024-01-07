@@ -97,8 +97,10 @@ public class Lexeme {
       case elseLexeme:
       case whileLexeme:
       case doLexeme:
-      case lbracket:
-      case rbracket:
+      case LPAREN:
+      case RPAREN:
+      case LBRACKET:
+      case RBRACKET:
       case bitwiseAndOp:
       case bitwiseOrOp:
       case bitwiseXorOp:

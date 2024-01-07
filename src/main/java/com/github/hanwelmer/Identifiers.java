@@ -136,11 +136,14 @@ public class Identifiers {
       }
       // set modifiers
       var.setModifiers(modifiers);
-      // this scheme assumes that memory allocation can only occur in the
-      // current top level scope.
-      int address = stackOfScopes.peek().getAddress();
-      var.setAddress(address);
-      stackOfScopes.peek().setAddress(address + var.getDatatype().getSize());
+
+      if (result) {
+        // this scheme assumes that memory allocation can only occur in the
+        // current top level scope.
+        int address = stackOfScopes.peek().getAddress();
+        var.setAddress(address);
+        stackOfScopes.peek().setAddress(address + var.getDatatype().getSize());
+      }
     }
     return result;
   }

@@ -1,7 +1,7 @@
 package com.github.hanwelmer;
 
 public class ResultType {
-  private LexemeType type = LexemeType.voidLexeme;
+  private LexemeType type = LexemeType.unknown;
 
   public LexemeType getType() {
     return type;

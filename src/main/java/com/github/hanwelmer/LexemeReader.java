@@ -401,10 +401,10 @@ public class LexemeReader {
           lexeme.operator = OperatorType.div;
           break;
         case '(':
-          lexeme.type = LexemeType.lbracket;
+          lexeme.type = LexemeType.LPAREN;
           break;
         case ')':
-          lexeme.type = LexemeType.rbracket;
+          lexeme.type = LexemeType.RPAREN;
           break;
         default:
           lexeme.type = LexemeType.unknown;
