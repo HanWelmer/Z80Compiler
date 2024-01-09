@@ -68,6 +68,7 @@ public class pCompiler {
       plantStringConstants();
     } catch (FatalError e) {
       error(e.getErrorNumber());
+      System.out.println("compilation aborted.");
       System.exit(1);
     }
 
@@ -1151,21 +1152,23 @@ public class pCompiler {
     if (checkOrSkip(START_EXPRESSION, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
         // part of semantic analysis.
-        if (!identifiers.checkId(lexeme.idVal))
-          error(9); /* variable not declared */
-        // part of code generation.
-        Variable var = identifiers.getId(lexeme.idVal);
-        // treat final var as a constant
-        if (var.isFinal()) {
-          operand.opType = OperandType.constant;
-          operand.intValue = var.getIntValue();
+        if (identifiers.checkId(lexeme.idVal)) {
+          // part of code generation.
+          Variable var = identifiers.getId(lexeme.idVal);
+          // treat final var as a constant
+          if (var.isFinal()) {
+            operand.opType = OperandType.constant;
+            operand.intValue = var.getIntValue();
+          } else {
+            operand.opType = OperandType.var;
+            operand.intValue = var.getAddress();
+          }
+          operand.datatype = var.getDatatype();
+          operand.isFinal = var.isFinal();
+          operand.strValue = lexeme.idVal;
         } else {
-          operand.opType = OperandType.var;
-          operand.intValue = var.getAddress();
+          throw new FatalError(9); /* variable not declared */
         }
-        operand.datatype = var.getDatatype();
-        operand.isFinal = var.isFinal();
-        operand.strValue = lexeme.idVal;
         // part of lexical analysis.
         lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.constant) {
