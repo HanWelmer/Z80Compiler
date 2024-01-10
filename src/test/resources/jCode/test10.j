@@ -1,8 +1,9 @@
 /* Program to test generated Z80 assembler code */
 class TestDo {
-  byte b = 1;
-  word i = 12;
-  word p = 12;
+  private static byte b = 1;
+  private static word i = 12;
+  private static word p = 12;
+
   public static void main() {
     println(0);
   

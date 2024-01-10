@@ -1,7 +1,8 @@
 /* Program to test multiplication */
-class TestMultiply {
-  byte b = 9;
-  word i = 6561;
+class TestMultiplyComparison {
+  private static byte b = 9;
+  private static word i = 6561;
+
   public static void main() {
     println(0);
     println(1);

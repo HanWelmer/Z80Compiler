@@ -2,13 +2,14 @@
  * A small program in the miniJava language.
  * Test 8-bit and 16-bit expressions.
  */
-class Test8And16BitExpressions {
-  byte b;
-  byte c;
-  word i;
-  word j;
-  byte byteHex;
-  word wordHex;
+class TestExpression {
+  private static byte b;
+  private static byte c;
+  private static word i;
+  private static word j;
+  private static byte byteHex;
+  private static word wordHex;
+
   public static void main() {
     println(0);         // 0
     //LD    A,0

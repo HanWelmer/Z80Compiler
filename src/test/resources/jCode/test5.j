@@ -1,17 +1,18 @@
 /*
  * A small program in the miniJava language.
- * Test comparisons
+ * Test comparison
  */
-class TestIf {
-  word zero = 0;
-  word one = 1;
-  word three = 3;
-  word four = 4;
-  word five = 5;
-  word twelve = 12;
-  byte byteOne = 1;
-  byte byteSix = 262;
-  byte b;
+class TestComparison {
+  private static word zero = 0;
+  private static word one = 1;
+  private static word three = 3;
+  private static word four = 4;
+  private static word five = 5;
+  private static word twelve = 12;
+  private static byte byteOne = 1;
+  private static byte byteSix = 262;
+  private static byte b;
+  
   public static void main() {
     //stack level 1
     //byte-byte

@@ -1,9 +1,10 @@
 /* Program to test generated Z80 assembler code for output and input statements*/
 class TestOutputInput {
-  byte value;
-  final static byte OUTPUT_PORT = 0x08;
-  final static byte INPUT_PORT = 10;
-  final static byte FINAL_VALUE = 20;
+  private static byte value;
+  private static final byte OUTPUT_PORT = 0x08;
+  private static final byte INPUT_PORT = 10;
+  private static final byte FINAL_VALUE = 20;
+
   public static void main() {
     println(0);
   

@@ -3,8 +3,9 @@
  * Test something
  */
 class TestWrite {
-  word zero = 0;
-  byte one = 1;
+  private static word zero = 0;
+  private static byte one = 1;
+
   public static void main() {
     println(zero);
     println(one);

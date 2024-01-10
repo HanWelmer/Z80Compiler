@@ -2,13 +2,14 @@
  * A small program in the miniJava language.
  * Test 8-bit and 16-bit expressions.
  */
-class Test8And16BitExpressions {
-  byte b;
-  byte c;
-  byte d;
-  word i;
-  word j;
-  word k;
+class TestReverseSubtractDivision {
+  private static byte b;
+  private static byte c;
+  private static byte d;
+  private static word i;
+  private static word j;
+  private static word k;
+
   public static void main() {
     println(0);
     /*************************/

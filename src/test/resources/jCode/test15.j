@@ -1,13 +1,14 @@
 /* Program to test bitwise operators and, or and xor. */
 class TestBitwiseOperators {
-  byte b1 = 0x1C;
-  byte b2 = 0x07;
-  word w1 = 0x032C;
-  word w2 = 0x1234;
-  final byte fb1 = 0x1C;
-  final byte fb2 = 0x07;
-  final word fw1 = 0x032C;
-  final word fw2 = 0x1234;
+  private static byte b1 = 0x1C;
+  private static byte b2 = 0x07;
+  private static word w1 = 0x032C;
+  private static word w2 = 0x1234;
+  private static final byte fb1 = 0x1C;
+  private static final byte fb2 = 0x07;
+  private static final word fw1 = 0x032C;
+  private static final word fw2 = 0x1234;
+
   public static void main() {
     println(0);
     

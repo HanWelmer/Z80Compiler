@@ -2,9 +2,10 @@
  * A small program in the miniJava language.
  * Test 8-bit and 16-bit expressions.
  */
-class Test8And16BitExpressions {
-  byte b;
-  word i;
+class TestRead {
+  private static byte b;
+  private static word i;
+
   public static void main() {
     println(0);
   

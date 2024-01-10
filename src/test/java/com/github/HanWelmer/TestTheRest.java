@@ -58,70 +58,62 @@ public class TestTheRest extends AbstactRegressionTest {
   }
 
   // Note: has local variables!
-  // TODO enable regression test
-  // @Test
+  @Test
   public void testComparison() {
     assertTrue(singleTest("test5.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test6() {
+  @Test
+  public void testExpression() {
     assertTrue(singleTest("test6.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test7() {
+  @Test
+  public void testRead() {
     assertTrue(singleTest("test7.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test8() {
+  @Test
+  public void testReverseSubtractDivision() {
     assertTrue(singleTest("test8.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test9() {
+  @Test
+  public void testMultiplyComparison() {
     assertTrue(singleTest("test9.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test10() {
+  // Note: has local variables!
+  @Test
+  public void testDo() {
     assertTrue(singleTest("test10.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test11() {
+  // Note: has local variables!
+  @Test
+  public void testFor() {
     assertTrue(singleTest("test11.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test12() {
+  @Test
+  public void testWrite() {
     assertTrue(singleTest("test12.j"));
   }
 
-  // TODO enable regression test
   // @Test
-  public void test13() {
+  public void testOutputInput() {
     // TODO enable test on output() with port number as constant expression
     assertTrue(singleTest("test13.j"));
   }
 
-  // TODO enable regression test
-  // @Test
-  public void test14() {
+  @Test
+  public void testSleep() {
     assertTrue(singleTest("test14.j"));
   }
 
   // TODO enable regression test
   // @Test
-  public void test15() {
+  public void testBitwiseOperators() {
     assertTrue(singleTest("test15.j"));
   }
 

@@ -1,9 +1,10 @@
 /* Program to test generated Z80 assembler code */
 class TestFor {
-  byte b1 = 1;
-  byte b2 = 1;
-  word i2 = 1;
-  word p = 1;
+  private static byte b1 = 1;
+  private static byte b2 = 1;
+  private static word i2 = 1;
+  private static word p = 1;
+
   public static void main() {
     println(0);
   
