@@ -18,16 +18,6 @@ public class TestMethodDeclaration extends AbstactRegressionTest {
   }
 
   @Test
-  public void TestFinalMain() {
-    assertFalse(singleTest("FinalMain.j"));
-  }
-
-  @Test
-  public void TestPublicMain() {
-    assertFalse(singleTest("PublicMain.j"));
-  }
-
-  @Test
   public void TestPublicStaticMain() {
     assertTrue(singleTest("PublicStaticMain.j"));
   }
@@ -38,8 +28,23 @@ public class TestMethodDeclaration extends AbstactRegressionTest {
   }
 
   @Test
+  public void TestNoMain() {
+    assertTrue(singleTest("NoMain.j"));
+  }
+
+  @Test
   public void TestStaticPublicMain() {
     assertFalse(singleTest("StaticPublicMain.j"));
+  }
+
+  @Test
+  public void TestFinalMain() {
+    assertFalse(singleTest("FinalMain.j"));
+  }
+
+  @Test
+  public void TestPublicMain() {
+    assertFalse(singleTest("PublicMain.j"));
   }
 
 }
