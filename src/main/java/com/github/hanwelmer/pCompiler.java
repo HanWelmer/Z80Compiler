@@ -850,17 +850,48 @@ public class pCompiler {
       if (checkOrSkip(EnumSet.of(LexemeType.assign), stopSet)) {
         // skip assignment sign
         lexeme = lexemeReader.getLexeme(sourceCode);
+
+        /*
+         */
         if (numberOfDimensions == 0) {
+          // EnumSet<LexemeType> localSet = stopSet.clone();
+          // localSet.add(LexemeType.semicolon);
+          EnumSet<LexemeType> localSet = EnumSet.of(LexemeType.semicolon);
+
+          // part of semantic analysis.
           Variable var = identifiers.getId(firstIdentifier);
           Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
           leftOperand.isFinal = var.isFinal();
           debug("\nFieldDeclaration: leftOperand = " + leftOperand);
 
-          EnumSet<LexemeType> localSet = EnumSet.of(LexemeType.semicolon);
-          Operand rightOperand = expression(localSet);
+          if (modifiers.contains(LexemeType.staticLexeme) && modifiers.contains(LexemeType.finalLexeme)) {
+            // static final field is treated as compile time constant.
+            // VariableDeclarator must be a compile time resolvable constant
+            // expression.
 
-          // part of code generation.
-          generateAssignment(leftOperand, rightOperand);
+            // read constant expression.
+            // TODO support constant expression, not just a constant, for static
+            // final fields.
+            Operand rightOperand = constantExpression(localSet);
+
+            // part of semantic analysis.
+            // no assignment but constant definition.
+            if (var.getDatatype() != rightOperand.datatype) {
+              error(14);
+            } else if (rightOperand.opType == OperandType.constant) {
+              var.setIntValue(rightOperand.intValue);
+              debug("\nFieldDeclaration: static final " + var.getName() + " = " + var.getIntValue());
+            } else {
+              error(17);
+            }
+          } else {
+            // read expression.
+            Operand rightOperand = expression(localSet);
+
+            // part of code generation.
+            generateAssignment(leftOperand, rightOperand);
+            debug("\nFieldDeclaration: " + var.getName() + " = " + rightOperand);
+          }
 
           // part of syntax analysis.
           if (checkOrSkip(EnumSet.of(LexemeType.semicolon), localSet)) {

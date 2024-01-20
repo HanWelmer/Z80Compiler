@@ -100,7 +100,7 @@ public class TestTheRest extends AbstactRegressionTest {
     assertTrue(singleTest("test12.j"));
   }
 
-  // @Test
+  @Test
   public void testOutputInput() {
     // TODO enable test on output() with port number as constant expression
     assertTrue(singleTest("test13.j"));
@@ -111,8 +111,7 @@ public class TestTheRest extends AbstactRegressionTest {
     assertTrue(singleTest("test14.j"));
   }
 
-  // TODO enable regression test
-  // @Test
+  @Test
   public void testBitwiseOperators() {
     assertTrue(singleTest("test15.j"));
   }
