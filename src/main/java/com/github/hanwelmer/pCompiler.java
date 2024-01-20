@@ -715,18 +715,18 @@ public class pCompiler {
   }
 
   // ClassBodyDeclaration ::= Modifiers ( MethodDeclaration | FieldDeclaration )
-  // MethodDeclaration ::= ResultType MethodDeclarator ( Block | ";" )
+  // MethodDeclaration ::= ResultType MethodDeclarator Block
   // ResultType ::= "void" | Type
   // MethodDeclarator ::= JavaIdentifier FormalParameters
-  // FieldDeclaration ::= Type VariableDeclarator ( "," VariableDeclarator )*
-  // ";"
+  // FieldDeclaration ::= Type VariableDeclarators ";"
+  // VariableDeclarators ::= VariableDeclarator ( "," VariableDeclarator )*
   // VariableDeclarator ::= VariableDeclaratorId ( "=" VariableInitializer )?.
   // VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*.
   //
   // In order to avoid look ahead, this can be rewritten as:
   // ClassBodyDeclaration ::= Modifiers ResultType JavaIdentifier ( ( "("
   // RestOfMethodDeclarator ) | RestOfVariableDeclarator )
-  // RestOfMethodDeclarator ::= ( FormalParameters* )? ")"
+  // RestOfMethodDeclarator ::= ( FormalParameters* )? ")" Block
   // FormalParameters ::= ( FormalParameter ( "," FormalParameter )* )?
   // RestOfVariableDeclarator ::= ( "[" "]" )* ( "=" VariableInitializer )? (
   // "," VariableDeclarator )* ";"
@@ -758,7 +758,7 @@ public class pCompiler {
         EnumSet<LexemeType> methodStopSet = stopSet.clone();
         methodStopSet.add(LexemeType.semicolon);
         methodStopSet.add(LexemeType.RPAREN);
-        methodDeclaration(modifiers, resultType, identifier, methodStopSet);
+        restOfMethodDeclaration(modifiers, resultType, identifier, methodStopSet);
       } else {
         EnumSet<LexemeType> fieldStopSet = stopSet.clone();
         fieldStopSet.add(LexemeType.semicolon);
@@ -918,14 +918,12 @@ public class pCompiler {
    * @param stopSet
    * @throws FatalError
    */
-  // MethodDeclaration ::= ResultType JavaIdentifier FormalParameters ( Block |
-  // ";" )
+  // MethodDeclaration ::= ResultType JavaIdentifier FormalParameters Block
   // method modifiers ::= "public", "private", "static" or "synchronized"
   //
   // TODO implement semantic analysis of modifiers in MethodDeclaration.
-  // TODO implement ( Block | ";" ) in MethodDeclaration.
   // TODO implement stopSet in methodDeclaration
-  private void methodDeclaration(EnumSet<LexemeType> modifiers, ResultType resultType, String identifier,
+  private void restOfMethodDeclaration(EnumSet<LexemeType> modifiers, ResultType resultType, String identifier,
       EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nMethodDeclaration: start " + identifier);
 

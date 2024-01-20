@@ -24,6 +24,7 @@ the syntax of miniJava has the following limitations:
 - FieldDeclaration      static final is treated as compile time constant.
 - FieldDeclaration      VariableDeclarator in a static final field must be a compile time resolvable constant expression.
 - MethodDeclaration     no const in ResultType.
+- MethodDeclaration     no empty block.
 - MethodDeclaration     no TypeParameters, no "throws".
 - MethodDeclarator      no [].
 - FormalParameter       no "&", "*" or "...". 
@@ -86,7 +87,7 @@ TODO:
 
 `ArrayInitializer     ::= "{" ( VariableInitializer ( "," VariableInitializer )* )? "}"`
 
-`MethodDeclaration    ::= ResultType MethodDeclarator ( Block | ";" )`
+`MethodDeclaration    ::= ResultType MethodDeclarator Block`
 
 `MethodDeclarator     ::= JavaIdentifier FormalParameters`
 
