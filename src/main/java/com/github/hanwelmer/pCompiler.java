@@ -236,7 +236,6 @@ public class pCompiler {
     lexemeReader.error();
   }
 
-  // error TODO Fix runtime error: too many variables
   private void errorUnexpectedSymbol(String message) {
     error(3);
     System.out.println(message);
@@ -766,8 +765,7 @@ public class pCompiler {
         restOfVariableDeclarator(modifiers, resultType, identifier, fieldStopSet);
       }
     } else {
-      // TODO extend error handling in ClassBodyDeclaration; use lexeme types in
-      // localSet as a guidance.
+      // extend error reporting, using lexeme types in localSet as a guidance.
       errorUnexpectedSymbol("expected an identifier");
     }
 
@@ -797,7 +795,6 @@ public class pCompiler {
   //
   // field modifiers ::= "public", "private", "static", "final" or "volatile"
   //
-  // TODO Define stopSet within RestOfVariableDeclarator.
   // TODO Support list of variable declarators, i.e. support ( ","
   // VariableDeclarator )*.
   // TODO Add array declarators ( "[" "]" )* to RestOfVariableDeclarator.
@@ -971,7 +968,7 @@ public class pCompiler {
 
   // FormalParameters ::= "(" ( FormalParameter ( "," FormalParameter )* )? ")"
   // Global variable lexeme holds the lexeme after the left bracket.
-  // TODO implement list of FormalParameters.
+  // TODO implement FormalParameters.
   private void formalParameters() throws FatalError {
     debug("\nformalParameters: start");
 
@@ -996,7 +993,12 @@ public class pCompiler {
    *************************/
 
   // ResultType ::= "void" | Type
-  // TODO implement other return types than void, byte or word.
+  // Type ::= ReferenceType | PrimitiveType
+  // ReferenceType ::= PrimitiveType ( "[" "]" )+
+  // PrimitiveType ::= "char" | "string" | "byte" | "word" | "short" | "int" |
+  // "long"
+  // TODO implement ReferenceType as possible ResultType.
+  // TODO implement char, string, short, int or long as possible ResultType.
   private ResultType resultType(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nresultType: start");
     ResultType result = new ResultType();
@@ -1014,15 +1016,6 @@ public class pCompiler {
     debug("\nresultType: end; type=" + result.getType());
     return result;
   }
-  // Type ::= ReferenceType | PrimitiveType
-  // TODO implement Type.
-
-  // ReferenceType ::= PrimitiveType ( "[" "]" )+
-  // TODO implement ReferenceType.
-
-  // PrimitiveType ::= "char" | "string" | "byte" | "word" | "short" | "int" |
-  // "long"
-  // TODO implement PrimitiveType.
 
   // Name ::= JavaIdentifier ( "." JavaIdentifier )*
   // TODO change implementation from:
