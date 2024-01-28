@@ -3,11 +3,13 @@
    2 ;TestNoPackage.j(2)  * Test class without package declaration.
    3 ;TestNoPackage.j(3)  */
    4 ;TestNoPackage.j(4) class TestNoPackage {
-   5 ;TestNoPackage.j(5)   public static void main() {
-   6 ;TestNoPackage.j(6)     println("Klaar");
-   7 acc16= constant 12
-   8 writeLineString
-   9 ;TestNoPackage.j(7)   }
-  10 ;TestNoPackage.j(8) }
-  11 stop
-  12 stringConstant 0 = "Klaar"
+   5 class TestNoPackage []
+   6 ;TestNoPackage.j(5)   public static void main() {
+   7 method main [public, static] void
+   8 ;TestNoPackage.j(6)     println("Klaar");
+   9 acc16= constant 14
+  10 writeLineString
+  11 ;TestNoPackage.j(7)   }
+  12 ;TestNoPackage.j(8) }
+  13 stop
+  14 stringConstant 0 = "Klaar"

@@ -28,6 +28,8 @@ public class Instruction {
   public FunctionType function;
   public Operand operand;
   public Operand operand2;
+  public EnumSet<LexemeType> modifiers;
+  public ResultType resultType;
 
   private EnumSet<FunctionType> noOperand = EnumSet.of(
       // special instructions:
@@ -68,6 +70,9 @@ public class Instruction {
   private EnumSet<FunctionType> twoOperands = EnumSet.of(
       // Input and output instructions:
       FunctionType.output);
+
+  private EnumSet<FunctionType> labelFunctions = EnumSet.of(FunctionType.packageFunction, FunctionType.importFunction,
+      FunctionType.classFunction, FunctionType.method);
 
   public Instruction(FunctionType fn) {
     function = fn;
@@ -329,6 +334,22 @@ public class Instruction {
     this.operand2 = deepCopy(operand2);
   }
 
+  public Instruction(FunctionType fn, String identifier, EnumSet<LexemeType> modifiers, ResultType resultType) {
+    // copy parameter fn to member function.
+    function = fn;
+
+    if (!labelFunctions.contains(function)) {
+      throw new RuntimeException("Internal compiler error: functionType " + fn + " is not a label function.");
+    }
+
+    // operand contains name of the method.
+    operand = new Operand(OperandType.constant, Datatype.string, identifier);
+    // copy parameter modifiers and resultType to member fields.
+    function = fn;
+    this.modifiers = modifiers;
+    this.resultType = resultType;
+  }
+
   protected Operand deepCopy(Operand operand) {
     Operand newOperand;
     if (operand.datatype == Datatype.string) {
@@ -348,6 +369,19 @@ public class Instruction {
     switch (function) {
       case comment:
         result += operand.strValue;
+        break;
+      case packageFunction:
+      case importFunction:
+        // package|import name
+        result += " " + operand.strValue;
+        break;
+      case classFunction:
+        // class identifier [public]
+        result += " " + operand.strValue + " " + modifiers;
+        break;
+      case method:
+        // method main [public, static] void
+        result += " " + operand.strValue + " " + modifiers + " " + resultType.getType();
         break;
       case stringConstant:
         result += " " + operand.intValue + " = \"" + operand.strValue + "\"";

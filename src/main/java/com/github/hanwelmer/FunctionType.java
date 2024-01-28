@@ -24,8 +24,12 @@ package com.github.hanwelmer;
  */
 public enum FunctionType {
   //special instructions:
-  stringConstant("stringConstant"),
   comment(";"),
+  packageFunction("package"),
+  importFunction("import"),
+  classFunction("class"),
+  method("method"),
+  stringConstant("stringConstant"),
   stop("stop"),
   call("call"),
   sleep("sleep"),
@@ -96,11 +100,21 @@ public enum FunctionType {
   
   private String value;
 
-  private FunctionType (String value) {
+  FunctionType (String value) {
     this.value = value;
   }
   
   public String getValue() {
     return value;
   }
-};
+
+  public static FunctionType valueFor(String str) {
+    for (FunctionType functionType : FunctionType.values()) {
+      String functionTypeString = functionType.getValue();
+      if (functionTypeString.equals(str)) {
+        return functionType;
+      }
+    }
+    throw new RuntimeException("Internal error; no FunctionType for " + str);
+  }
+}

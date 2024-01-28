@@ -3,13 +3,16 @@
    2 ;me\to\TestPackageMeTo.j(2)  * Test something
    3 ;me\to\TestPackageMeTo.j(3)  */
    4 ;me\to\TestPackageMeTo.j(4) package me.to;
-   5 ;me\to\TestPackageMeTo.j(5) 
-   6 ;me\to\TestPackageMeTo.j(6) class TestPackageMeTo {
-   7 ;me\to\TestPackageMeTo.j(7)   public static void main() {
-   8 ;me\to\TestPackageMeTo.j(8)     println("Klaar");
-   9 acc16= constant 14
-  10 writeLineString
-  11 ;me\to\TestPackageMeTo.j(9)   }
-  12 ;me\to\TestPackageMeTo.j(10) }
-  13 stop
-  14 stringConstant 0 = "Klaar"
+   5 package me.to
+   6 ;me\to\TestPackageMeTo.j(5) 
+   7 ;me\to\TestPackageMeTo.j(6) class TestPackageMeTo {
+   8 class TestPackageMeTo []
+   9 ;me\to\TestPackageMeTo.j(7)   public static void main() {
+  10 method main [public, static] void
+  11 ;me\to\TestPackageMeTo.j(8)     println("Klaar");
+  12 acc16= constant 17
+  13 writeLineString
+  14 ;me\to\TestPackageMeTo.j(9)   }
+  15 ;me\to\TestPackageMeTo.j(10) }
+  16 stop
+  17 stringConstant 0 = "Klaar"

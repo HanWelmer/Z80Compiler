@@ -11,249 +11,250 @@
   10 ;test8.j(10)   private static word k;
   11 ;test8.j(11) 
   12 ;test8.j(12)   public static void main() {
-  13 ;test8.j(13)     println(0);
-  14 acc8= constant 0
-  15 call writeLineAcc8
-  16 ;test8.j(14)     /*************************/
-  17 ;test8.j(15)     /* reverse subtract byte */
-  18 ;test8.j(16)     /*************************/
-  19 ;test8.j(17)     println(10 - 3*3);         // 1
-  20 acc8= constant 10
-  21 <acc8= constant 3
-  22 acc8* constant 3
-  23 -acc8 unstack8
-  24 call writeLineAcc8
-  25 ;test8.j(18)     b = 11;
-  26 acc8= constant 11
-  27 acc8=> variable 0
-  28 ;test8.j(19)     println(b - 3*3);          // 2
-  29 acc8= variable 0
-  30 <acc8= constant 3
-  31 acc8* constant 3
-  32 -acc8 unstack8
-  33 call writeLineAcc8
-  34 ;test8.j(20)     c = 3;
-  35 acc8= constant 3
-  36 acc8=> variable 1
-  37 ;test8.j(21)     d = 3;
-  38 acc8= constant 3
-  39 acc8=> variable 2
-  40 ;test8.j(22)     println(12 - c*d);         // 3
-  41 acc8= constant 12
-  42 <acc8= variable 1
-  43 acc8* variable 2
-  44 -acc8 unstack8
-  45 call writeLineAcc8
-  46 ;test8.j(23)     b = 13;
-  47 acc8= constant 13
-  48 acc8=> variable 0
-  49 ;test8.j(24)     println(b - c*d);          // 4
-  50 acc8= variable 0
-  51 <acc8= variable 1
-  52 acc8* variable 2
-  53 -acc8 unstack8
-  54 call writeLineAcc8
-  55 ;test8.j(25)   
-  56 ;test8.j(26)     /**************************/
-  57 ;test8.j(27)     /* reverse subtract word  */
-  58 ;test8.j(28)     /**************************/
-  59 ;test8.j(29)     println(1005 - 1000*1);    // 5
-  60 acc16= constant 1005
-  61 <acc16= constant 1000
-  62 acc16* constant 1
-  63 -acc16 unstack16
-  64 call writeLineAcc16
-  65 ;test8.j(30)     i = 1006;
-  66 acc16= constant 1006
-  67 acc16=> variable 3
-  68 ;test8.j(31)     println(i - 1000*1);       // 6
-  69 acc16= variable 3
-  70 <acc16= constant 1000
-  71 acc16* constant 1
-  72 -acc16 unstack16
-  73 call writeLineAcc16
-  74 ;test8.j(32)     j = 1000;
-  75 acc16= constant 1000
-  76 acc16=> variable 5
-  77 ;test8.j(33)     k = 1;
-  78 acc8= constant 1
-  79 acc8=> variable 7
-  80 ;test8.j(34)     println(1007 - j*k);       // 7
-  81 acc16= constant 1007
-  82 <acc16= variable 5
-  83 acc16* variable 7
-  84 -acc16 unstack16
-  85 call writeLineAcc16
-  86 ;test8.j(35)     i = 1008;
-  87 acc16= constant 1008
-  88 acc16=> variable 3
-  89 ;test8.j(36)     println(i - j*k);          // 8
-  90 acc16= variable 3
-  91 <acc16= variable 5
-  92 acc16* variable 7
-  93 -acc16 unstack16
-  94 call writeLineAcc16
-  95 ;test8.j(37)   
-  96 ;test8.j(38)     /***********************/
-  97 ;test8.j(39)     /* reverse divide byte */
-  98 ;test8.j(40)     /***********************/
-  99 ;test8.j(41)     println(36 / (4*1));     // 9
- 100 acc8= constant 36
- 101 <acc8= constant 4
- 102 acc8* constant 1
- 103 /acc8 unstack8
- 104 call writeLineAcc8
- 105 ;test8.j(42)     b = 40;
- 106 acc8= constant 40
- 107 acc8=> variable 0
- 108 ;test8.j(43)     println(b / (4*1));      // 10
- 109 acc8= variable 0
- 110 <acc8= constant 4
- 111 acc8* constant 1
- 112 /acc8 unstack8
- 113 call writeLineAcc8
- 114 ;test8.j(44)     c = 4;
- 115 acc8= constant 4
- 116 acc8=> variable 1
- 117 ;test8.j(45)     d = 1;
- 118 acc8= constant 1
- 119 acc8=> variable 2
- 120 ;test8.j(46)     println(44 / (c*d));     // 11
- 121 acc8= constant 44
- 122 <acc8= variable 1
- 123 acc8* variable 2
- 124 /acc8 unstack8
- 125 call writeLineAcc8
- 126 ;test8.j(47)     b = 48;
- 127 acc8= constant 48
- 128 acc8=> variable 0
- 129 ;test8.j(48)     println(b / (c*d));      // 12
- 130 acc8= variable 0
- 131 <acc8= variable 1
- 132 acc8* variable 2
- 133 /acc8 unstack8
- 134 call writeLineAcc8
- 135 ;test8.j(49)   
- 136 ;test8.j(50)     /************************/
- 137 ;test8.j(51)     /* reverse divide word  */
- 138 ;test8.j(52)     /************************/
- 139 ;test8.j(53)     println(3900 / (300*1)); // 13
- 140 acc16= constant 3900
- 141 <acc16= constant 300
- 142 acc16* constant 1
- 143 /acc16 unstack16
- 144 call writeLineAcc16
- 145 ;test8.j(54)     i = 4200;
- 146 acc16= constant 4200
- 147 acc16=> variable 3
- 148 ;test8.j(55)     println(i / (300*1));    // 14
- 149 acc16= variable 3
- 150 <acc16= constant 300
- 151 acc16* constant 1
- 152 /acc16 unstack16
- 153 call writeLineAcc16
- 154 ;test8.j(56)     j = 300;
- 155 acc16= constant 300
- 156 acc16=> variable 5
- 157 ;test8.j(57)     k = 1;
- 158 acc8= constant 1
- 159 acc8=> variable 7
- 160 ;test8.j(58)     println(4500 / (j*k));   // 15
- 161 acc16= constant 4500
- 162 <acc16= variable 5
- 163 acc16* variable 7
- 164 /acc16 unstack16
- 165 call writeLineAcc16
- 166 ;test8.j(59)     i = 4800;
- 167 acc16= constant 4800
- 168 acc16=> variable 3
- 169 ;test8.j(60)     println(i / (j*k));      // 16
- 170 acc16= variable 3
- 171 <acc16= variable 5
- 172 acc16* variable 7
- 173 /acc16 unstack16
- 174 call writeLineAcc16
- 175 ;test8.j(61)   
- 176 ;test8.j(62)     /**************************/
- 177 ;test8.j(63)     /* reverse subtract mixed */
- 178 ;test8.j(64)     /**************************/
- 179 ;test8.j(65)     i = 21;
- 180 acc8= constant 21
- 181 acc8=> variable 3
- 182 ;test8.j(66)     c = 4;
- 183 acc8= constant 4
- 184 acc8=> variable 1
- 185 ;test8.j(67)     d = 1;
- 186 acc8= constant 1
- 187 acc8=> variable 2
- 188 ;test8.j(68)     println(i - c*d);           // 17
- 189 acc16= variable 3
- 190 acc8= variable 1
- 191 acc8* variable 2
- 192 acc16- acc8
- 193 call writeLineAcc16
- 194 ;test8.j(69)     b = 22;
- 195 acc8= constant 22
- 196 acc8=> variable 0
- 197 ;test8.j(70)     j = 4;
- 198 acc8= constant 4
- 199 acc8=> variable 5
- 200 ;test8.j(71)     k = 1;
- 201 acc8= constant 1
- 202 acc8=> variable 7
- 203 ;test8.j(72)     println(b - j*k);           // 18
- 204 acc8= variable 0
- 205 acc16= variable 5
- 206 acc16* variable 7
- 207 -acc16 acc8
- 208 call writeLineAcc16
- 209 ;test8.j(73)   
- 210 ;test8.j(74)     /**************************/
- 211 ;test8.j(75)     /* reverse divide mixed   */
- 212 ;test8.j(76)     /**************************/
- 213 ;test8.j(77)   
- 214 ;test8.j(78)     /**************************/
- 215 ;test8.j(79)     /* forward divide mixed   */
- 216 ;test8.j(80)     /**************************/
- 217 ;test8.j(81)     i = 19;
- 218 acc8= constant 19
- 219 acc8=> variable 3
- 220 ;test8.j(82)     println(i / (1+0));         // 19
- 221 acc16= variable 3
- 222 acc8= constant 1
- 223 acc8+ constant 0
- 224 acc16/ acc8
- 225 call writeLineAcc16
- 226 ;test8.j(83)     
- 227 ;test8.j(84)     println(i + 1);             // 20
- 228 acc16= variable 3
- 229 acc16+ constant 1
- 230 call writeLineAcc16
- 231 ;test8.j(85)     println(2 + i);             // 21
- 232 acc8= constant 2
- 233 acc8ToAcc16
- 234 acc16+ variable 3
- 235 call writeLineAcc16
- 236 ;test8.j(86)     println(2*5+3*4);           // 22
- 237 acc8= constant 2
- 238 acc8* constant 5
- 239 <acc8= constant 3
- 240 acc8* constant 4
- 241 acc8+ unstack8
- 242 call writeLineAcc8
- 243 ;test8.j(87)     println(120/4-(3+8/2));     // 23
- 244 acc8= constant 120
- 245 acc8/ constant 4
- 246 <acc8= constant 3
- 247 <acc8= constant 8
- 248 acc8/ constant 2
- 249 acc8+ unstack8
- 250 -acc8 unstack8
- 251 call writeLineAcc8
- 252 ;test8.j(88)     println("Klaar");
- 253 acc16= constant 258
- 254 writeLineString
- 255 ;test8.j(89)   }
- 256 ;test8.j(90) }
- 257 stop
- 258 stringConstant 0 = "Klaar"
+  13 method main [publicLexeme, staticLexeme] voidLexeme
+  14 ;test8.j(13)     println(0);
+  15 acc8= constant 0
+  16 call writeLineAcc8
+  17 ;test8.j(14)     /*************************/
+  18 ;test8.j(15)     /* reverse subtract byte */
+  19 ;test8.j(16)     /*************************/
+  20 ;test8.j(17)     println(10 - 3*3);         // 1
+  21 acc8= constant 10
+  22 <acc8= constant 3
+  23 acc8* constant 3
+  24 -acc8 unstack8
+  25 call writeLineAcc8
+  26 ;test8.j(18)     b = 11;
+  27 acc8= constant 11
+  28 acc8=> variable 0
+  29 ;test8.j(19)     println(b - 3*3);          // 2
+  30 acc8= variable 0
+  31 <acc8= constant 3
+  32 acc8* constant 3
+  33 -acc8 unstack8
+  34 call writeLineAcc8
+  35 ;test8.j(20)     c = 3;
+  36 acc8= constant 3
+  37 acc8=> variable 1
+  38 ;test8.j(21)     d = 3;
+  39 acc8= constant 3
+  40 acc8=> variable 2
+  41 ;test8.j(22)     println(12 - c*d);         // 3
+  42 acc8= constant 12
+  43 <acc8= variable 1
+  44 acc8* variable 2
+  45 -acc8 unstack8
+  46 call writeLineAcc8
+  47 ;test8.j(23)     b = 13;
+  48 acc8= constant 13
+  49 acc8=> variable 0
+  50 ;test8.j(24)     println(b - c*d);          // 4
+  51 acc8= variable 0
+  52 <acc8= variable 1
+  53 acc8* variable 2
+  54 -acc8 unstack8
+  55 call writeLineAcc8
+  56 ;test8.j(25)   
+  57 ;test8.j(26)     /**************************/
+  58 ;test8.j(27)     /* reverse subtract word  */
+  59 ;test8.j(28)     /**************************/
+  60 ;test8.j(29)     println(1005 - 1000*1);    // 5
+  61 acc16= constant 1005
+  62 <acc16= constant 1000
+  63 acc16* constant 1
+  64 -acc16 unstack16
+  65 call writeLineAcc16
+  66 ;test8.j(30)     i = 1006;
+  67 acc16= constant 1006
+  68 acc16=> variable 3
+  69 ;test8.j(31)     println(i - 1000*1);       // 6
+  70 acc16= variable 3
+  71 <acc16= constant 1000
+  72 acc16* constant 1
+  73 -acc16 unstack16
+  74 call writeLineAcc16
+  75 ;test8.j(32)     j = 1000;
+  76 acc16= constant 1000
+  77 acc16=> variable 5
+  78 ;test8.j(33)     k = 1;
+  79 acc8= constant 1
+  80 acc8=> variable 7
+  81 ;test8.j(34)     println(1007 - j*k);       // 7
+  82 acc16= constant 1007
+  83 <acc16= variable 5
+  84 acc16* variable 7
+  85 -acc16 unstack16
+  86 call writeLineAcc16
+  87 ;test8.j(35)     i = 1008;
+  88 acc16= constant 1008
+  89 acc16=> variable 3
+  90 ;test8.j(36)     println(i - j*k);          // 8
+  91 acc16= variable 3
+  92 <acc16= variable 5
+  93 acc16* variable 7
+  94 -acc16 unstack16
+  95 call writeLineAcc16
+  96 ;test8.j(37)   
+  97 ;test8.j(38)     /***********************/
+  98 ;test8.j(39)     /* reverse divide byte */
+  99 ;test8.j(40)     /***********************/
+ 100 ;test8.j(41)     println(36 / (4*1));     // 9
+ 101 acc8= constant 36
+ 102 <acc8= constant 4
+ 103 acc8* constant 1
+ 104 /acc8 unstack8
+ 105 call writeLineAcc8
+ 106 ;test8.j(42)     b = 40;
+ 107 acc8= constant 40
+ 108 acc8=> variable 0
+ 109 ;test8.j(43)     println(b / (4*1));      // 10
+ 110 acc8= variable 0
+ 111 <acc8= constant 4
+ 112 acc8* constant 1
+ 113 /acc8 unstack8
+ 114 call writeLineAcc8
+ 115 ;test8.j(44)     c = 4;
+ 116 acc8= constant 4
+ 117 acc8=> variable 1
+ 118 ;test8.j(45)     d = 1;
+ 119 acc8= constant 1
+ 120 acc8=> variable 2
+ 121 ;test8.j(46)     println(44 / (c*d));     // 11
+ 122 acc8= constant 44
+ 123 <acc8= variable 1
+ 124 acc8* variable 2
+ 125 /acc8 unstack8
+ 126 call writeLineAcc8
+ 127 ;test8.j(47)     b = 48;
+ 128 acc8= constant 48
+ 129 acc8=> variable 0
+ 130 ;test8.j(48)     println(b / (c*d));      // 12
+ 131 acc8= variable 0
+ 132 <acc8= variable 1
+ 133 acc8* variable 2
+ 134 /acc8 unstack8
+ 135 call writeLineAcc8
+ 136 ;test8.j(49)   
+ 137 ;test8.j(50)     /************************/
+ 138 ;test8.j(51)     /* reverse divide word  */
+ 139 ;test8.j(52)     /************************/
+ 140 ;test8.j(53)     println(3900 / (300*1)); // 13
+ 141 acc16= constant 3900
+ 142 <acc16= constant 300
+ 143 acc16* constant 1
+ 144 /acc16 unstack16
+ 145 call writeLineAcc16
+ 146 ;test8.j(54)     i = 4200;
+ 147 acc16= constant 4200
+ 148 acc16=> variable 3
+ 149 ;test8.j(55)     println(i / (300*1));    // 14
+ 150 acc16= variable 3
+ 151 <acc16= constant 300
+ 152 acc16* constant 1
+ 153 /acc16 unstack16
+ 154 call writeLineAcc16
+ 155 ;test8.j(56)     j = 300;
+ 156 acc16= constant 300
+ 157 acc16=> variable 5
+ 158 ;test8.j(57)     k = 1;
+ 159 acc8= constant 1
+ 160 acc8=> variable 7
+ 161 ;test8.j(58)     println(4500 / (j*k));   // 15
+ 162 acc16= constant 4500
+ 163 <acc16= variable 5
+ 164 acc16* variable 7
+ 165 /acc16 unstack16
+ 166 call writeLineAcc16
+ 167 ;test8.j(59)     i = 4800;
+ 168 acc16= constant 4800
+ 169 acc16=> variable 3
+ 170 ;test8.j(60)     println(i / (j*k));      // 16
+ 171 acc16= variable 3
+ 172 <acc16= variable 5
+ 173 acc16* variable 7
+ 174 /acc16 unstack16
+ 175 call writeLineAcc16
+ 176 ;test8.j(61)   
+ 177 ;test8.j(62)     /**************************/
+ 178 ;test8.j(63)     /* reverse subtract mixed */
+ 179 ;test8.j(64)     /**************************/
+ 180 ;test8.j(65)     i = 21;
+ 181 acc8= constant 21
+ 182 acc8=> variable 3
+ 183 ;test8.j(66)     c = 4;
+ 184 acc8= constant 4
+ 185 acc8=> variable 1
+ 186 ;test8.j(67)     d = 1;
+ 187 acc8= constant 1
+ 188 acc8=> variable 2
+ 189 ;test8.j(68)     println(i - c*d);           // 17
+ 190 acc16= variable 3
+ 191 acc8= variable 1
+ 192 acc8* variable 2
+ 193 acc16- acc8
+ 194 call writeLineAcc16
+ 195 ;test8.j(69)     b = 22;
+ 196 acc8= constant 22
+ 197 acc8=> variable 0
+ 198 ;test8.j(70)     j = 4;
+ 199 acc8= constant 4
+ 200 acc8=> variable 5
+ 201 ;test8.j(71)     k = 1;
+ 202 acc8= constant 1
+ 203 acc8=> variable 7
+ 204 ;test8.j(72)     println(b - j*k);           // 18
+ 205 acc8= variable 0
+ 206 acc16= variable 5
+ 207 acc16* variable 7
+ 208 -acc16 acc8
+ 209 call writeLineAcc16
+ 210 ;test8.j(73)   
+ 211 ;test8.j(74)     /**************************/
+ 212 ;test8.j(75)     /* reverse divide mixed   */
+ 213 ;test8.j(76)     /**************************/
+ 214 ;test8.j(77)   
+ 215 ;test8.j(78)     /**************************/
+ 216 ;test8.j(79)     /* forward divide mixed   */
+ 217 ;test8.j(80)     /**************************/
+ 218 ;test8.j(81)     i = 19;
+ 219 acc8= constant 19
+ 220 acc8=> variable 3
+ 221 ;test8.j(82)     println(i / (1+0));         // 19
+ 222 acc16= variable 3
+ 223 acc8= constant 1
+ 224 acc8+ constant 0
+ 225 acc16/ acc8
+ 226 call writeLineAcc16
+ 227 ;test8.j(83)     
+ 228 ;test8.j(84)     println(i + 1);             // 20
+ 229 acc16= variable 3
+ 230 acc16+ constant 1
+ 231 call writeLineAcc16
+ 232 ;test8.j(85)     println(2 + i);             // 21
+ 233 acc8= constant 2
+ 234 acc8ToAcc16
+ 235 acc16+ variable 3
+ 236 call writeLineAcc16
+ 237 ;test8.j(86)     println(2*5+3*4);           // 22
+ 238 acc8= constant 2
+ 239 acc8* constant 5
+ 240 <acc8= constant 3
+ 241 acc8* constant 4
+ 242 acc8+ unstack8
+ 243 call writeLineAcc8
+ 244 ;test8.j(87)     println(120/4-(3+8/2));     // 23
+ 245 acc8= constant 120
+ 246 acc8/ constant 4
+ 247 <acc8= constant 3
+ 248 <acc8= constant 8
+ 249 acc8/ constant 2
+ 250 acc8+ unstack8
+ 251 -acc8 unstack8
+ 252 call writeLineAcc8
+ 253 ;test8.j(88)     println("Klaar");
+ 254 acc16= constant 259
+ 255 writeLineString
+ 256 ;test8.j(89)   }
+ 257 ;test8.j(90) }
+ 258 stop
+ 259 stringConstant 0 = "Klaar"

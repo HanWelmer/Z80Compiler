@@ -73,4 +73,18 @@ public enum LexemeType {
     }
     return found;
   }
-};
+
+  public String toString() {
+    return getValue();
+  }
+
+  public static LexemeType valueFor(String str) {
+    for (LexemeType lexeme : LexemeType.values()) {
+      String lexemeString = lexeme.getValue();
+      if (lexemeString.equals(str)) {
+        return lexeme;
+      }
+    }
+    throw new RuntimeException("Internal error; no LexemeType for " + str);
+  }
+}
