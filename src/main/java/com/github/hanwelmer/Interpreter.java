@@ -40,6 +40,7 @@ public class Interpreter {
   private EnumSet<FunctionType> branchSet = EnumSet.noneOf(FunctionType.class);
   private boolean debugMode = false;
   private int inputIndex = 0;
+  private ArrayList<Symbol> methodSymbolTable;
   private Stack<Integer> machineStack;
   private int[] vars;
   private int pc;
@@ -54,12 +55,70 @@ public class Interpreter {
 
     /* initialize interpreter */
     machineStack = new Stack<Integer>();
-
+    methodSymbolTable = collectMethods(instructions);
     vars = new int[MAX_VARS];
     branchSet.clear();
-    pc = 0;
     acc16 = 0;
     acc8 = 0;
+    pc = findMainMethod(methodSymbolTable);
+  }
+
+  private ArrayList<Symbol> collectMethods(ArrayList<Instruction> instructions2) {
+    // collect method declarations from the M-code instructions.
+    String packageName = "";
+    String symbolName = "";
+    ArrayList<Symbol> result = new ArrayList<Symbol>();
+    int address = 0;
+    while (address < instructions.size()) {
+      Instruction instr = instructions.get(address);
+      switch (instr.function) {
+        case packageFunction:
+          System.out.println("Unsupported declaration function: " + instr.function);
+          System.exit(1);
+        case importFunction:
+          System.out.println("Unsupported declaration function: " + instr.function);
+          System.exit(1);
+        case classFunction:
+          symbolName += instr.operand.strValue;
+          break;
+        case method:
+          // operand.strValue + " " + modifiers + " " + resultType.getType();
+          Symbol newSymbol = new Symbol();
+          newSymbol.address = address;
+          newSymbol.packageName = packageName;
+          newSymbol.name = instr.operand.strValue;
+          newSymbol.resultType = instr.resultType;
+          newSymbol.modifiers = instr.modifiers;
+          result.add(newSymbol);
+          break;
+        default:
+          // ignore all other functions
+          break;
+      }
+      address++;
+    }
+
+    System.out.println();
+    System.out.println("list of methods:");
+    for (Symbol symbol : result) {
+      System.out.println(symbol);
+    }
+    System.out.println();
+    return result;
+  }
+
+  private int findMainMethod(ArrayList<Symbol> symbolTable) {
+    int result = 0;
+    for (Symbol symbol : symbolTable) {
+      // TODO add package name, return type and modifiers to the search
+      // condition.
+      if ("main".equals(symbol.name)) {
+        result = symbol.address;
+        break;
+      }
+    }
+    // TODO Auto-generated method stub
+    return result;
   }
 
   /* interface method: execute a single instruction */
@@ -68,6 +127,10 @@ public class Interpreter {
     boolean stopRun = false;
 
     // get next instruction
+    if (pc >= instructions.size()) {
+      stopRun = true;
+      return stopRun;
+    }
     Instruction instr = instructions.get(pc);
     // execute instruction
     int operand;
@@ -76,6 +139,13 @@ public class Interpreter {
     switch (instr.function) {
       // single line comment
       case comment:
+        break;
+      // declarations
+      case packageFunction:
+      case importFunction:
+      case classFunction:
+      case method:
+        // ignore declaration functions during execution phase.
         break;
       // 16-bit arithmetic:
       case acc16Load:

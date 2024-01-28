@@ -1,0 +1,309 @@
+package com.github.hanwelmer;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.EnumSet;
+
+public class MachineCodeParser {
+  private int pos;
+
+  public MachineCodeParser() {
+  }
+
+  public ArrayList<Instruction> readMachineCode(String qualifiedFileName) {
+    ArrayList<Instruction> result = new ArrayList<Instruction>();
+    try {
+      FileReader fr = new FileReader(qualifiedFileName);
+      BufferedReader br = new BufferedReader(fr);
+
+      try {
+        String line = br.readLine();
+        while (line != null) {
+          pos = 0;
+          result.add(parseLine(line));
+          line = br.readLine();
+        }
+      } catch (IOException e) {
+        System.out.println(e.getMessage());
+      } finally {
+        try {
+          br.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  protected Instruction parseLine(String line) {
+    Instruction result = new Instruction(FunctionType.stop);
+
+    // ignore whitespace and line number
+    skipSpaces(line);
+    int lineNumber = parseNumber(line);
+    skipSpaces(line);
+
+    if (pos < line.length() && line.charAt(pos) == ';') {
+      pos++;
+      if (pos == line.length()) {
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, ""));
+      } else {
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line.substring(pos)));
+      }
+    } else {
+      String keyword = parseKeyword(line);
+      FunctionType functionType = FunctionType.valueFor(keyword);
+      switch (functionType) {
+        // instructions without operands.
+        case acc16CompareAcc8:
+        case acc16ToAcc8:
+        case acc8CompareAcc16:
+        case acc8ToAcc16:
+        case read:
+        case stackAcc16:
+        case stackAcc16ToAcc8:
+        case stackAcc8:
+        case stackAcc8ToAcc16:
+        case stop:
+        case unstackAcc16:
+        case unstackAcc8:
+        case writeAcc16:
+        case writeAcc8:
+        case writeLineAcc16:
+        case writeLineAcc8:
+        case writeLineString:
+        case writeString:
+          result = new Instruction(functionType);
+          break;
+        // instructions with one or more operands.
+        case classFunction:
+          result = parseClassFunction(line, functionType);
+          break;
+        case importFunction:
+        case packageFunction:
+          result = parsePackageOrImportFunction(line, functionType);
+          break;
+        case method:
+          result = parseMethod(line, functionType);
+          break;
+        case acc16Load:
+          result = parseAcc16Load(line, functionType);
+          break;
+        case stringConstant:
+          result = parseStringConstant(line, lineNumber);
+          break;
+        // TODO
+        case acc16And:
+        case acc16Compare:
+        case acc16Div:
+        case acc16Minus:
+        case acc16Or:
+        case acc16Plus:
+        case acc16Store:
+        case acc16Times:
+        case acc16Xor:
+        case acc8And:
+        case acc8Compare:
+        case acc8Div:
+        case acc8Load:
+        case acc8Minus:
+        case acc8Or:
+        case acc8Plus:
+        case acc8Store:
+        case acc8Times:
+        case acc8Xor:
+        case br:
+        case brEq:
+        case brGe:
+        case brGt:
+        case brLe:
+        case brLt:
+        case brNe:
+        case call:
+        case decrement16:
+        case decrement8:
+        case divAcc16:
+        case divAcc8:
+        case increment16:
+        case increment8:
+        case input:
+        case minusAcc16:
+        case minusAcc8:
+        case output:
+        case revAcc16Compare:
+        case revAcc8Compare:
+        case sleep:
+        case stackAcc16Load:
+        case stackAcc8Load:
+          throw new RuntimeException("Internal error; not supported functionType " + keyword);
+        default:
+          throw new RuntimeException("Internal error; not supported functionType " + keyword);
+      }
+      skipSpaces(line);
+      // TODO Auto-generated method stub
+    }
+    return result;
+
+  }
+
+  private Instruction parseStringConstant(String line, int lineNumber) {
+    // stringConstant 0 = "TestImport Klaar"
+    skipSpaces(line);
+    // skip string ID.
+    parseNumber(line);
+    skipUntil(line, '"');
+    // skip ".
+    pos++;
+
+    String string = "";
+    while (pos < line.length() && line.charAt(pos) != '"') {
+      string += line.charAt(pos++);
+    }
+
+    Operand operand = new Operand(OperandType.constant, Datatype.string, string);
+    operand.intValue = lineNumber;
+    return new Instruction(FunctionType.stringConstant, operand);
+  }
+
+  /**
+   * Parse acc16= operand function.
+   * 
+   * @param line
+   * @param functionType
+   * @return
+   */
+  private Instruction parseAcc16Load(String line, FunctionType functionType) {
+    Instruction result;
+    skipSpaces(line);
+    Operand operand = parseOperand(line, Datatype.word);
+    result = new Instruction(functionType, operand);
+    return result;
+  }
+
+  /**
+   * Parse operand.
+   * 
+   * @param line
+   * @return
+   */
+  private Operand parseOperand(String line, Datatype datatype) {
+    Operand result;
+    skipSpaces(line);
+    String keyword = parseKeyword(line);
+    if ("constant".equals(keyword)) {
+      skipSpaces(line);
+      int value = parseNumber(line);
+      result = new Operand(OperandType.constant, datatype, value);
+    } else {
+      throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
+    }
+
+    // TODO Auto-generated method stub
+    return result;
+  }
+
+  /**
+   * @param line
+   * @param functionType
+   * @return
+   */
+  protected Instruction parsePackageOrImportFunction(String line, FunctionType functionType) {
+    Instruction result;
+    skipSpaces(line);
+    String name = skipUntil(line, ';');
+    result = new Instruction(functionType, name, null, null);
+    return result;
+  }
+
+  /**
+   * @param line
+   * @param functionType
+   * @return
+   */
+  protected Instruction parseMethod(String line, FunctionType functionType) {
+    Instruction result;
+    EnumSet<LexemeType> modifiers;
+    String identifier;
+    skipSpaces(line);
+    identifier = parseKeyword(line);
+    skipSpaces(line);
+    modifiers = parseModifiers(line);
+    ResultType resultType = new ResultType();
+    // TODO read resultType
+    resultType.setType(LexemeType.voidLexeme);
+    result = new Instruction(functionType, identifier, modifiers, resultType);
+    return result;
+  }
+
+  /**
+   * @param line
+   * @param functionType
+   * @return
+   */
+  protected Instruction parseClassFunction(String line, FunctionType functionType) {
+    Instruction result;
+    EnumSet<LexemeType> modifiers;
+    String identifier;
+    skipSpaces(line);
+    identifier = parseKeyword(line);
+    skipSpaces(line);
+    modifiers = parseModifiers(line);
+    result = new Instruction(functionType, identifier, modifiers, null);
+    return result;
+  }
+
+  protected EnumSet<LexemeType> parseModifiers(String line) {
+    EnumSet<LexemeType> result = EnumSet.noneOf(LexemeType.class);
+    skipUntil(line, '[');
+    pos++;
+    String modifiers = skipUntil(line, ']');
+    if (modifiers.length() > 0) {
+      for (String modifier : modifiers.split(",")) {
+        result.add(LexemeType.valueFor(modifier.trim()));
+      }
+    }
+    pos++;
+    return result;
+  }
+
+  protected String parseKeyword(String line) {
+    String result = "";
+    while (pos < line.length() && !Character.isWhitespace(line.charAt(pos))) {
+      result += line.charAt(pos);
+      pos++;
+    }
+    return result;
+  }
+
+  protected int parseNumber(String line) {
+    int result = 0;
+    while (pos < line.length() && Character.isDigit(line.charAt(pos))) {
+      result = result * 10 + ((int) line.charAt(pos) - (int) '0');
+      pos++;
+    }
+    return result;
+  }
+
+  protected String skipUntil(String line, char stopChar) {
+    String result = "";
+    while (pos < line.length() && line.charAt(pos) != stopChar) {
+      result += line.charAt(pos);
+      pos++;
+    }
+    return result;
+  }
+
+  protected int skipSpaces(String line) {
+    while (pos < line.length() && Character.isWhitespace(line.charAt(pos))) {
+      pos++;
+    }
+    return pos;
+  }
+}
