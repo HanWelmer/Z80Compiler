@@ -33,6 +33,11 @@ public class TestMethodDeclaration extends AbstactRegressionTest {
   }
 
   @Test
+  public void Test2Methods() {
+    assertTrue(singleTest("TwoMethods.j"));
+  }
+
+  @Test
   public void TestStaticPublicMain() {
     assertFalse(singleTest("StaticPublicMain.j"));
   }
