@@ -3,11 +3,13 @@
    2 ;TestClassModifierDefault.j(2)  * Test ClassDeclaration without modifier.
    3 ;TestClassModifierDefault.j(3)  */
    4 ;TestClassModifierDefault.j(4) class TestClassModifierDefault {
-   5 ;TestClassModifierDefault.j(5)   public static void main() {
-   6 ;TestClassModifierDefault.j(6)     println("Klaar");
-   7 acc16= constant 12
-   8 writeLineString
-   9 ;TestClassModifierDefault.j(7)   }
-  10 ;TestClassModifierDefault.j(8) }
-  11 stop
-  12 stringConstant 0 = "Klaar"
+   5 class TestClassModifierDefault []
+   6 ;TestClassModifierDefault.j(5)   public static void main() {
+   7 method main [public, static] void
+   8 ;TestClassModifierDefault.j(6)     println("Klaar");
+   9 acc16= constant 14
+  10 writeLineString
+  11 ;TestClassModifierDefault.j(7)   }
+  12 ;TestClassModifierDefault.j(8) }
+  13 stop
+  14 stringConstant 0 = "Klaar"

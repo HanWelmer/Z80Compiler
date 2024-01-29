@@ -3,10 +3,10 @@
  * Test something
  */
 import me.TestImportMe;
-import me.to.TestMeToImportMeTo;
+import me.to.TestImportMe;
 
-class TestImportMeTo {
+class TestImportTwo {
   public static void main() {
-    println("TestImportMeTo Klaar");
+    println("TestImportTwo Klaar");
   }
 }

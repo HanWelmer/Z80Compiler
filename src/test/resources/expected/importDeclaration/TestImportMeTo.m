@@ -3,13 +3,16 @@
    2 ;TestImportMeTo.j(2)  * Test something
    3 ;TestImportMeTo.j(3)  */
    4 ;TestImportMeTo.j(4) import me.to.TestMeToImportMeTo;
-   5 ;TestImportMeTo.j(5) 
-   6 ;TestImportMeTo.j(6) class TestImportMeTo {
-   7 ;TestImportMeTo.j(7)   public static void main() {
-   8 ;TestImportMeTo.j(8)     println("TestImportMeTo Klaar");
-   9 acc16= constant 14
-  10 writeLineString
-  11 ;TestImportMeTo.j(9)   }
-  12 ;TestImportMeTo.j(10) }
-  13 stop
-  14 stringConstant 0 = "TestImportMeTo Klaar"
+   5 import me.to.TestMeToImportMeTo
+   6 ;TestImportMeTo.j(5) 
+   7 ;TestImportMeTo.j(6) class TestImportMeTo {
+   8 class TestImportMeTo []
+   9 ;TestImportMeTo.j(7)   public static void main() {
+  10 method main [public, static] void
+  11 ;TestImportMeTo.j(8)     println("TestImportMeTo Klaar");
+  12 acc16= constant 17
+  13 writeLineString
+  14 ;TestImportMeTo.j(9)   }
+  15 ;TestImportMeTo.j(10) }
+  16 stop
+  17 stringConstant 0 = "TestImportMeTo Klaar"

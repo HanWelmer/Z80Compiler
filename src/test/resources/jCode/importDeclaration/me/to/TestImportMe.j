@@ -2,10 +2,10 @@
  * A small program in the miniJava language.
  * Test something
  */
-import me.to.TestImportMeTo;
+package me.to;
 
-class TestMeToImportMeTo {
+class TestImportMe {
   public static void main() {
-    println("TestImportMeTo Klaar");
+    println("me.to.TestImportMe Klaar");
   }
 }

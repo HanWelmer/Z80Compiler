@@ -1,253 +1,255 @@
    0 ;test9.j(0) /* Program to test multiplication */
    1 ;test9.j(1) class TestMultiplyComparison {
-   2 ;test9.j(2)   private static byte b = 9;
-   3 acc8= constant 9
-   4 acc8=> variable 0
-   5 ;test9.j(3)   private static word i = 6561;
-   6 acc16= constant 6561
-   7 acc16=> variable 1
-   8 ;test9.j(4) 
-   9 ;test9.j(5)   public static void main() {
-  10 ;test9.j(6)     println(0);
-  11 acc8= constant 0
-  12 call writeLineAcc8
-  13 ;test9.j(7)     println(1);
-  14 acc8= constant 1
-  15 call writeLineAcc8
-  16 ;test9.j(8)     if (6561 > 9) println (2); else println (999);
-  17 acc16= constant 6561
-  18 acc8= constant 9
-  19 acc16CompareAcc8
-  20 brle 24
-  21 acc8= constant 2
-  22 call writeLineAcc8
-  23 br 27
-  24 acc16= constant 999
-  25 call writeLineAcc16
-  26 ;test9.j(9)     if (9 < 6561) println (3); else println (999);
-  27 acc8= constant 9
-  28 acc16= constant 6561
-  29 acc8CompareAcc16
-  30 brge 34
-  31 acc8= constant 3
-  32 call writeLineAcc8
-  33 br 37
-  34 acc16= constant 999
-  35 call writeLineAcc16
-  36 ;test9.j(10)     if (3 * 3 < 6561) println (4); else println (999);
-  37 acc8= constant 3
-  38 acc8* constant 3
-  39 acc16= constant 6561
-  40 acc8CompareAcc16
-  41 brge 45
-  42 acc8= constant 4
-  43 call writeLineAcc8
-  44 br 48
-  45 acc16= constant 999
-  46 call writeLineAcc16
-  47 ;test9.j(11)     if (6561 > 3 * 3) println (5); else println (999);
-  48 acc8= constant 3
-  49 acc8* constant 3
-  50 acc16= constant 6561
-  51 acc16CompareAcc8
-  52 brle 56
-  53 acc8= constant 5
-  54 call writeLineAcc8
-  55 br 59
-  56 acc16= constant 999
-  57 call writeLineAcc16
-  58 ;test9.j(12)     if (6561 * 1 > 9) println (6); else println (999);
-  59 acc16= constant 6561
-  60 acc16* constant 1
-  61 acc8= constant 9
-  62 acc16CompareAcc8
-  63 brle 67
-  64 acc8= constant 6
-  65 call writeLineAcc8
-  66 br 70
-  67 acc16= constant 999
-  68 call writeLineAcc16
-  69 ;test9.j(13)     if (9 < 6561 * 1) println (7); else println (999);
-  70 acc16= constant 6561
-  71 acc16* constant 1
-  72 acc8= constant 9
-  73 acc8CompareAcc16
-  74 brge 78
-  75 acc8= constant 7
-  76 call writeLineAcc8
-  77 br 81
-  78 acc16= constant 999
-  79 call writeLineAcc16
-  80 ;test9.j(14)     if (6561 * 1 > 3 * 3) println (8); else println (999);
-  81 acc16= constant 6561
-  82 acc16* constant 1
-  83 <acc16
-  84 acc8= constant 3
-  85 acc8* constant 3
-  86 acc16= unstack16
-  87 acc16CompareAcc8
-  88 brle 92
-  89 acc8= constant 8
-  90 call writeLineAcc8
-  91 br 95
-  92 acc16= constant 999
-  93 call writeLineAcc16
-  94 ;test9.j(15)     if (3 * 3 < 6561 * 1) println (9); else println (999);
-  95 acc8= constant 3
-  96 acc8* constant 3
-  97 <acc8
-  98 acc16= constant 6561
-  99 acc16* constant 1
- 100 acc8= unstack8
- 101 acc8CompareAcc16
- 102 brge 106
- 103 acc8= constant 9
- 104 call writeLineAcc8
- 105 br 110
- 106 acc16= constant 999
- 107 call writeLineAcc16
- 108 ;test9.j(16)   
- 109 ;test9.j(17)     if (b < i) println (10); else println (999);
- 110 acc8= variable 0
- 111 acc16= variable 1
- 112 acc8CompareAcc16
- 113 brge 117
- 114 acc8= constant 10
- 115 call writeLineAcc8
- 116 br 120
- 117 acc16= constant 999
- 118 call writeLineAcc16
- 119 ;test9.j(18)     if (i > b) println (11); else println (999);
- 120 acc16= variable 1
- 121 acc8= variable 0
- 122 acc16CompareAcc8
- 123 brle 127
- 124 acc8= constant 11
- 125 call writeLineAcc8
- 126 br 130
- 127 acc16= constant 999
- 128 call writeLineAcc16
- 129 ;test9.j(19)     if (b < 6561 * 1) println (12); else println (999);
- 130 acc16= constant 6561
- 131 acc16* constant 1
- 132 acc8= variable 0
- 133 acc8CompareAcc16
- 134 brge 138
- 135 acc8= constant 12
- 136 call writeLineAcc8
- 137 br 141
- 138 acc16= constant 999
- 139 call writeLineAcc16
- 140 ;test9.j(20)     if (i > 3 * 3) println (13); else println (999);
- 141 acc8= constant 3
- 142 acc8* constant 3
- 143 acc16= variable 1
- 144 acc16CompareAcc8
- 145 brle 149
- 146 acc8= constant 13
- 147 call writeLineAcc8
- 148 br 152
- 149 acc16= constant 999
- 150 call writeLineAcc16
- 151 ;test9.j(21)     if (6561 * 1 > b) println (14); else println (999);
- 152 acc16= constant 6561
- 153 acc16* constant 1
- 154 acc8= variable 0
- 155 acc16CompareAcc8
- 156 brle 160
- 157 acc8= constant 14
- 158 call writeLineAcc8
- 159 br 163
- 160 acc16= constant 999
- 161 call writeLineAcc16
- 162 ;test9.j(22)     if (3 * 3 < i) println (15); else println (999);
- 163 acc8= constant 3
- 164 acc8* constant 3
- 165 acc16= variable 1
- 166 acc8CompareAcc16
- 167 brge 171
- 168 acc8= constant 15
- 169 call writeLineAcc8
- 170 br 174
- 171 acc16= constant 999
- 172 call writeLineAcc16
- 173 ;test9.j(23)     if (b < i * 1) println (16); else println (999);
- 174 acc16= variable 1
- 175 acc16* constant 1
- 176 acc8= variable 0
- 177 acc8CompareAcc16
- 178 brge 182
- 179 acc8= constant 16
- 180 call writeLineAcc8
- 181 br 185
- 182 acc16= constant 999
- 183 call writeLineAcc16
- 184 ;test9.j(24)     if (i > b * 1) println (17); else println (999);
- 185 acc8= variable 0
- 186 acc8* constant 1
- 187 acc16= variable 1
- 188 acc16CompareAcc8
- 189 brle 193
- 190 acc8= constant 17
- 191 call writeLineAcc8
- 192 br 196
- 193 acc16= constant 999
- 194 call writeLineAcc16
- 195 ;test9.j(25)     if (b * 1 < i) println (18); else println (999);
- 196 acc8= variable 0
- 197 acc8* constant 1
- 198 acc16= variable 1
- 199 acc8CompareAcc16
- 200 brge 204
- 201 acc8= constant 18
- 202 call writeLineAcc8
- 203 br 207
- 204 acc16= constant 999
- 205 call writeLineAcc16
- 206 ;test9.j(26)     if (i * 1 > b) println (19); else println (999);
- 207 acc16= variable 1
- 208 acc16* constant 1
- 209 acc8= variable 0
- 210 acc16CompareAcc8
- 211 brle 215
- 212 acc8= constant 19
- 213 call writeLineAcc8
- 214 br 218
- 215 acc16= constant 999
- 216 call writeLineAcc16
- 217 ;test9.j(27)     if (b * 1 < i * 1) println (20); else println (999);
- 218 acc8= variable 0
- 219 acc8* constant 1
- 220 <acc8
- 221 acc16= variable 1
- 222 acc16* constant 1
- 223 acc8= unstack8
- 224 acc8CompareAcc16
- 225 brge 229
- 226 acc8= constant 20
- 227 call writeLineAcc8
- 228 br 232
- 229 acc16= constant 999
- 230 call writeLineAcc16
- 231 ;test9.j(28)     if (i * 1 > b * 1) println (21); else println (999);
- 232 acc16= variable 1
- 233 acc16* constant 1
- 234 <acc16
- 235 acc8= variable 0
- 236 acc8* constant 1
- 237 acc16= unstack16
- 238 acc16CompareAcc8
- 239 brle 243
- 240 acc8= constant 21
- 241 call writeLineAcc8
- 242 br 247
- 243 acc16= constant 999
- 244 call writeLineAcc16
- 245 ;test9.j(29)   
- 246 ;test9.j(30)     println("Klaar");
- 247 acc16= constant 252
- 248 writeLineString
- 249 ;test9.j(31)   }
- 250 ;test9.j(32) }
- 251 stop
- 252 stringConstant 0 = "Klaar"
+   2 class TestMultiplyComparison []
+   3 ;test9.j(2)   private static byte b = 9;
+   4 acc8= constant 9
+   5 acc8=> variable 0
+   6 ;test9.j(3)   private static word i = 6561;
+   7 acc16= constant 6561
+   8 acc16=> variable 1
+   9 ;test9.j(4) 
+  10 ;test9.j(5)   public static void main() {
+  11 method main [public, static] void
+  12 ;test9.j(6)     println(0);
+  13 acc8= constant 0
+  14 call writeLineAcc8
+  15 ;test9.j(7)     println(1);
+  16 acc8= constant 1
+  17 call writeLineAcc8
+  18 ;test9.j(8)     if (6561 > 9) println (2); else println (999);
+  19 acc16= constant 6561
+  20 acc8= constant 9
+  21 acc16CompareAcc8
+  22 brle 26
+  23 acc8= constant 2
+  24 call writeLineAcc8
+  25 br 29
+  26 acc16= constant 999
+  27 call writeLineAcc16
+  28 ;test9.j(9)     if (9 < 6561) println (3); else println (999);
+  29 acc8= constant 9
+  30 acc16= constant 6561
+  31 acc8CompareAcc16
+  32 brge 36
+  33 acc8= constant 3
+  34 call writeLineAcc8
+  35 br 39
+  36 acc16= constant 999
+  37 call writeLineAcc16
+  38 ;test9.j(10)     if (3 * 3 < 6561) println (4); else println (999);
+  39 acc8= constant 3
+  40 acc8* constant 3
+  41 acc16= constant 6561
+  42 acc8CompareAcc16
+  43 brge 47
+  44 acc8= constant 4
+  45 call writeLineAcc8
+  46 br 50
+  47 acc16= constant 999
+  48 call writeLineAcc16
+  49 ;test9.j(11)     if (6561 > 3 * 3) println (5); else println (999);
+  50 acc8= constant 3
+  51 acc8* constant 3
+  52 acc16= constant 6561
+  53 acc16CompareAcc8
+  54 brle 58
+  55 acc8= constant 5
+  56 call writeLineAcc8
+  57 br 61
+  58 acc16= constant 999
+  59 call writeLineAcc16
+  60 ;test9.j(12)     if (6561 * 1 > 9) println (6); else println (999);
+  61 acc16= constant 6561
+  62 acc16* constant 1
+  63 acc8= constant 9
+  64 acc16CompareAcc8
+  65 brle 69
+  66 acc8= constant 6
+  67 call writeLineAcc8
+  68 br 72
+  69 acc16= constant 999
+  70 call writeLineAcc16
+  71 ;test9.j(13)     if (9 < 6561 * 1) println (7); else println (999);
+  72 acc16= constant 6561
+  73 acc16* constant 1
+  74 acc8= constant 9
+  75 acc8CompareAcc16
+  76 brge 80
+  77 acc8= constant 7
+  78 call writeLineAcc8
+  79 br 83
+  80 acc16= constant 999
+  81 call writeLineAcc16
+  82 ;test9.j(14)     if (6561 * 1 > 3 * 3) println (8); else println (999);
+  83 acc16= constant 6561
+  84 acc16* constant 1
+  85 <acc16
+  86 acc8= constant 3
+  87 acc8* constant 3
+  88 acc16= unstack16
+  89 acc16CompareAcc8
+  90 brle 94
+  91 acc8= constant 8
+  92 call writeLineAcc8
+  93 br 97
+  94 acc16= constant 999
+  95 call writeLineAcc16
+  96 ;test9.j(15)     if (3 * 3 < 6561 * 1) println (9); else println (999);
+  97 acc8= constant 3
+  98 acc8* constant 3
+  99 <acc8
+ 100 acc16= constant 6561
+ 101 acc16* constant 1
+ 102 acc8= unstack8
+ 103 acc8CompareAcc16
+ 104 brge 108
+ 105 acc8= constant 9
+ 106 call writeLineAcc8
+ 107 br 112
+ 108 acc16= constant 999
+ 109 call writeLineAcc16
+ 110 ;test9.j(16)   
+ 111 ;test9.j(17)     if (b < i) println (10); else println (999);
+ 112 acc8= variable 0
+ 113 acc16= variable 1
+ 114 acc8CompareAcc16
+ 115 brge 119
+ 116 acc8= constant 10
+ 117 call writeLineAcc8
+ 118 br 122
+ 119 acc16= constant 999
+ 120 call writeLineAcc16
+ 121 ;test9.j(18)     if (i > b) println (11); else println (999);
+ 122 acc16= variable 1
+ 123 acc8= variable 0
+ 124 acc16CompareAcc8
+ 125 brle 129
+ 126 acc8= constant 11
+ 127 call writeLineAcc8
+ 128 br 132
+ 129 acc16= constant 999
+ 130 call writeLineAcc16
+ 131 ;test9.j(19)     if (b < 6561 * 1) println (12); else println (999);
+ 132 acc16= constant 6561
+ 133 acc16* constant 1
+ 134 acc8= variable 0
+ 135 acc8CompareAcc16
+ 136 brge 140
+ 137 acc8= constant 12
+ 138 call writeLineAcc8
+ 139 br 143
+ 140 acc16= constant 999
+ 141 call writeLineAcc16
+ 142 ;test9.j(20)     if (i > 3 * 3) println (13); else println (999);
+ 143 acc8= constant 3
+ 144 acc8* constant 3
+ 145 acc16= variable 1
+ 146 acc16CompareAcc8
+ 147 brle 151
+ 148 acc8= constant 13
+ 149 call writeLineAcc8
+ 150 br 154
+ 151 acc16= constant 999
+ 152 call writeLineAcc16
+ 153 ;test9.j(21)     if (6561 * 1 > b) println (14); else println (999);
+ 154 acc16= constant 6561
+ 155 acc16* constant 1
+ 156 acc8= variable 0
+ 157 acc16CompareAcc8
+ 158 brle 162
+ 159 acc8= constant 14
+ 160 call writeLineAcc8
+ 161 br 165
+ 162 acc16= constant 999
+ 163 call writeLineAcc16
+ 164 ;test9.j(22)     if (3 * 3 < i) println (15); else println (999);
+ 165 acc8= constant 3
+ 166 acc8* constant 3
+ 167 acc16= variable 1
+ 168 acc8CompareAcc16
+ 169 brge 173
+ 170 acc8= constant 15
+ 171 call writeLineAcc8
+ 172 br 176
+ 173 acc16= constant 999
+ 174 call writeLineAcc16
+ 175 ;test9.j(23)     if (b < i * 1) println (16); else println (999);
+ 176 acc16= variable 1
+ 177 acc16* constant 1
+ 178 acc8= variable 0
+ 179 acc8CompareAcc16
+ 180 brge 184
+ 181 acc8= constant 16
+ 182 call writeLineAcc8
+ 183 br 187
+ 184 acc16= constant 999
+ 185 call writeLineAcc16
+ 186 ;test9.j(24)     if (i > b * 1) println (17); else println (999);
+ 187 acc8= variable 0
+ 188 acc8* constant 1
+ 189 acc16= variable 1
+ 190 acc16CompareAcc8
+ 191 brle 195
+ 192 acc8= constant 17
+ 193 call writeLineAcc8
+ 194 br 198
+ 195 acc16= constant 999
+ 196 call writeLineAcc16
+ 197 ;test9.j(25)     if (b * 1 < i) println (18); else println (999);
+ 198 acc8= variable 0
+ 199 acc8* constant 1
+ 200 acc16= variable 1
+ 201 acc8CompareAcc16
+ 202 brge 206
+ 203 acc8= constant 18
+ 204 call writeLineAcc8
+ 205 br 209
+ 206 acc16= constant 999
+ 207 call writeLineAcc16
+ 208 ;test9.j(26)     if (i * 1 > b) println (19); else println (999);
+ 209 acc16= variable 1
+ 210 acc16* constant 1
+ 211 acc8= variable 0
+ 212 acc16CompareAcc8
+ 213 brle 217
+ 214 acc8= constant 19
+ 215 call writeLineAcc8
+ 216 br 220
+ 217 acc16= constant 999
+ 218 call writeLineAcc16
+ 219 ;test9.j(27)     if (b * 1 < i * 1) println (20); else println (999);
+ 220 acc8= variable 0
+ 221 acc8* constant 1
+ 222 <acc8
+ 223 acc16= variable 1
+ 224 acc16* constant 1
+ 225 acc8= unstack8
+ 226 acc8CompareAcc16
+ 227 brge 231
+ 228 acc8= constant 20
+ 229 call writeLineAcc8
+ 230 br 234
+ 231 acc16= constant 999
+ 232 call writeLineAcc16
+ 233 ;test9.j(28)     if (i * 1 > b * 1) println (21); else println (999);
+ 234 acc16= variable 1
+ 235 acc16* constant 1
+ 236 <acc16
+ 237 acc8= variable 0
+ 238 acc8* constant 1
+ 239 acc16= unstack16
+ 240 acc16CompareAcc8
+ 241 brle 245
+ 242 acc8= constant 21
+ 243 call writeLineAcc8
+ 244 br 249
+ 245 acc16= constant 999
+ 246 call writeLineAcc16
+ 247 ;test9.j(29)   
+ 248 ;test9.j(30)     println("Klaar");
+ 249 acc16= constant 254
+ 250 writeLineString
+ 251 ;test9.j(31)   }
+ 252 ;test9.j(32) }
+ 253 stop
+ 254 stringConstant 0 = "Klaar"
