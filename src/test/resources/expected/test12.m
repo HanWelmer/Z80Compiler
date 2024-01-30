@@ -129,7 +129,7 @@
  128 stringConstant 2 = "5  Dit is pagina 1.
    En dit is pagina 2."
  129 stringConstant 3 = "6  Dit is guoed."
- 130 stringConstant 4 = "7  Getal na een tab  1."
+ 130 stringConstant 4 = "7  Getal na een tab	1."
  131 stringConstant 5 = "8  Dit zie je niet
 8  Dit zie je wel."
  132 stringConstant 6 = "9  Dit is regel 1.

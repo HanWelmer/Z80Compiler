@@ -18,7 +18,7 @@
   17 acc8=> variable 6
   18 ;test1.j(7) 
   19 ;test1.j(8)   public static void main() {
-  20 method main [static] void
+  20 method main [public, static] void
   21 ;test1.j(9)     /*Possible operand types: 
   22 ;test1.j(10)      * constant, acc, var, stack8, stack16
   23 ;test1.j(11)      *Possible datatype combinations:

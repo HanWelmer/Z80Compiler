@@ -19,7 +19,7 @@
   18 ;test15.j(9)   private static final word fw2 = 0x1234;
   19 ;test15.j(10) 
   20 ;test15.j(11)   public static void main() {
-  21 method main [static] void
+  21 method main [public, static] void
   22 ;test15.j(12)     println(0);
   23 acc8= constant 0
   24 call writeLineAcc8

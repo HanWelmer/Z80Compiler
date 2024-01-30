@@ -7,7 +7,7 @@
    6 ;test13.j(5)   private static final byte FINAL_VALUE = 20;
    7 ;test13.j(6) 
    8 ;test13.j(7)   public static void main() {
-   9 method main [static] void
+   9 method main [public, static] void
   10 ;test13.j(8)     println(0);
   11 acc8= constant 0
   12 call writeLineAcc8

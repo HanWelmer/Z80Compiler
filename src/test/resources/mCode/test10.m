@@ -12,7 +12,7 @@
   11 acc8=> variable 3
   12 ;test10.j(5) 
   13 ;test10.j(6)   public static void main() {
-  14 method main [static] void
+  14 method main [public, static] void
   15 ;test10.j(7)     println(0);
   16 acc8= constant 0
   17 call writeLineAcc8

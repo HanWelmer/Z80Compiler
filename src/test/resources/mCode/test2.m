@@ -21,7 +21,7 @@
   20 acc8=> variable 8
   21 ;test2.j(8) 
   22 ;test2.j(9)   public static void main() {
-  23 method main [static] void
+  23 method main [public, static] void
   24 ;test2.j(10)     /*Possible operand types: 
   25 ;test2.j(11)      * constant, acc, var, stack8, stack16
   26 ;test2.j(12)      *Possible datatype combinations:

@@ -908,9 +908,6 @@ public class pCompiler {
           throw new RuntimeException("Internal compiler error in restOfVariableDeclarator(): abort.");
         }
       }
-
-      // skip the semicolon after a syntax error
-      lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
     debug("\nFieldDeclaration: end");
