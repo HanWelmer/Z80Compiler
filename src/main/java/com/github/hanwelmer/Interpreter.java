@@ -60,7 +60,7 @@ public class Interpreter {
     branchSet.clear();
     acc16 = 0;
     acc8 = 0;
-    pc = findMainMethod(methodSymbolTable);
+    pc = 0;
   }
 
   private ArrayList<Symbol> collectMethods(ArrayList<Instruction> instructions2) {
@@ -107,9 +107,9 @@ public class Interpreter {
     return result;
   }
 
-  private int findMainMethod(ArrayList<Symbol> symbolTable) {
+  public int findMainMethod() {
     int result = 0;
-    for (Symbol symbol : symbolTable) {
+    for (Symbol symbol : methodSymbolTable) {
       // TODO add package name, return type and modifiers to the search
       // condition.
       if ("main".equals(symbol.name)) {
@@ -122,16 +122,18 @@ public class Interpreter {
   }
 
   /* interface method: execute a single instruction */
-  public boolean step() {
+  public int step(int pc) {
     boolean consoleInput = !debugMode;
-    boolean stopRun = false;
 
     // get next instruction
-    if (pc >= instructions.size()) {
-      stopRun = true;
-      return stopRun;
-    }
     Instruction instr = instructions.get(pc);
+
+    // log pc and instruction to be executed.
+    debug(String.format("pc= %4d %-80s", pc, instr.toString().substring(0, Math.min(instr.toString().length(), 80))));
+
+    // by default move PC to next instruction.
+    pc++;
+
     // execute instruction
     int operand;
     int portNumber = 0;
@@ -395,7 +397,7 @@ public class Interpreter {
         break;
       // branch instructions:
       case br:
-        pc = instr.operand.intValue - 1;
+        pc = instr.operand.intValue;
         break;
       case brEq:
       case brNe:
@@ -405,7 +407,7 @@ public class Interpreter {
       case brGe:
         debug(" branch=" + instr.function + " branchSet=" + branchSet + "\n");
         if (branchSet.contains(instr.function)) {
-          pc = instr.operand.intValue - 1;
+          pc = instr.operand.intValue;
         }
         break;
       // special instructions:
@@ -417,7 +419,7 @@ public class Interpreter {
         }
         break;
       case call:
-        pc = instr.operand.intValue - 1;
+        pc = instr.operand.intValue;
         break;
       // Input and output instructions:
       case output:
@@ -442,15 +444,14 @@ public class Interpreter {
           } catch (RuntimeException e) {
             runError("read exception:" + e.getMessage());
             acc8 = 0;
-            stopRun = true;
           }
         } else {
           if (inputIndex >= inputParts.length) {
             runError("read beyond input");
             acc8 = 0;
-            stopRun = true;
+          } else {
+            acc8 = Integer.parseInt(inputParts[inputIndex++]);
           }
-          acc8 = Integer.parseInt(inputParts[inputIndex++]);
         }
         break;
       case read:
@@ -461,15 +462,14 @@ public class Interpreter {
           } catch (RuntimeException e) {
             runError("read exception:" + e.getMessage());
             acc16 = 0;
-            stopRun = true;
           }
         } else {
           if (inputIndex >= inputParts.length) {
             runError("read beyond input");
             acc16 = 0;
-            stopRun = true;
+          } else {
+            acc16 = Integer.parseInt(inputParts[inputIndex++]);
           }
-          acc16 = Integer.parseInt(inputParts[inputIndex++]);
         }
         break;
       case writeAcc8:
@@ -517,7 +517,7 @@ public class Interpreter {
         }
         break;
       case stop:
-        stopRun = true;
+        pc = instructions.size();
         break;
       default:
         runError("unknown function " + instr.function);
@@ -533,18 +533,9 @@ public class Interpreter {
       acc16 += 65536;
     }
 
-    // log pc, instruction and registers (latter after executing the
-    // instruction).
-    debug(String.format("pc= %4d %-80s sp=%4d acc16=%5d acc8=%3d stack=%s", pc,
-        instr.toString().substring(0, Math.min(instr.toString().length(), 80)), machineStack.size(), acc16, acc8, machineStack));
-
-    // proceed to next instruction
-    pc++;
-
-    // return true if Stop instruction has been executed or if a fatal error
-    // occurred.
-    debug("\n");
-    return stopRun;
+    // log registers after instruction has been executed.
+    debug(String.format(" sp=%4d acc16=%5d acc8=%3d stack=%s\n", machineStack.size(), acc16, acc8, machineStack));
+    return pc;
   } // interpret()
 
   private void debug(String message) {

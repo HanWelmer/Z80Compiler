@@ -112,10 +112,10 @@ public class Z80Compiler {
             String[] inputParts = inputString.split(" ");
             System.out.println("\nRunning compiled code ...\n");
             Interpreter interpreter = new Interpreter(debugMode, instructions, inputParts);
-            boolean stop = false;
-            do {
-              stop = interpreter.step();
-            } while (!stop);
+            int pc = interpreter.findMainMethod();
+            while (pc < instructions.size() && instructions.get(pc).function != FunctionType.stop) {
+              pc = interpreter.step(pc);
+            }
           }
         }
       } catch (RuntimeException e) {

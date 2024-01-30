@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import com.github.hanwelmer.FunctionType;
 import com.github.hanwelmer.Instruction;
 import com.github.hanwelmer.Interpreter;
 import com.github.hanwelmer.MachineCodeParser;
@@ -26,9 +27,9 @@ public class TestInterpreter {
     System.out.println("\nRunning compiled code ...\n");
 
     Interpreter interpreter = new Interpreter(debugMode, instructions, inputParts);
-    boolean stop = instructions.size() == 0;
-    while (!stop) {
-      stop = interpreter.step();
+    int pc = interpreter.findMainMethod();
+    while (pc < instructions.size() && instructions.get(pc).function != FunctionType.stop) {
+      pc = interpreter.step(pc);
     }
   }
 }
