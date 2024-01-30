@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with
 Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.HanWelmer;
+package com.github.HanWelmer.compiler;
 
 import static org.junit.Assert.assertTrue;
 
@@ -27,10 +27,10 @@ import org.junit.Test;
 /**
  * Regression test for the Z80Compiler.
  */
-public class TestTypeDeclaration extends AbstactRegressionTest {
+public class TestImportDeclaration extends AbstactRegressionTest {
 
   protected void init() {
-    final String testName = "typeDeclaration";
+    final String testName = "importDeclaration";
     // Override default configuration values.
     jCodeLocation = "/src/test/resources/jCode/" + testName + "/";
     mCodeLocation = "/src/test/resources/mCode/" + testName + "/";
@@ -40,22 +40,37 @@ public class TestTypeDeclaration extends AbstactRegressionTest {
   }
 
   @Test
-  public void TestEmptyType() {
-    assertTrue(singleTest("TestEmptyType.j"));
+  public void TestImport() {
+    assertTrue(singleTest("TestImport.j"));
   }
 
   @Test
-  public void TestEmptyTypeButWithImport() {
-    assertTrue(singleTest("TestEmptyTypeButWithImport.j"));
+  public void TestImportMeAll() {
+    assertTrue(singleTest("TestImportMeAll.j"));
   }
 
   @Test
-  public void TestEmptyTypeButWithPackageName() {
-    assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageName.j"));
+  public void TestImportNotFound() {
+    assertTrue(singleTest("TestImportNotFound.j"));
   }
 
   @Test
-  public void TestEmptyTypeButWithPackageNameAndImport() {
-    assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageNameAndImport.j"));
+  public void TestImportMe() {
+    assertTrue(singleTest("TestImportMe.j"));
+  }
+
+  @Test
+  public void TestImportMeTo() {
+    assertTrue(singleTest("TestImportMeTo.j"));
+  }
+
+  @Test
+  public void TestMeImportMe() {
+    assertTrue(singleTest("me" + File.separator + "TestImportMe.j"));
+  }
+
+  @Test
+  public void TestImportTwo() {
+    assertTrue(singleTest("TestImportTwo.j"));
   }
 }

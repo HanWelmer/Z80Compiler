@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with
 Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.github.HanWelmer;
+package com.github.HanWelmer.compiler;
 
 import static org.junit.Assert.assertTrue;
 
@@ -27,10 +27,10 @@ import org.junit.Test;
 /**
  * Regression test for the Z80Compiler.
  */
-public class TestImportDeclaration extends AbstactRegressionTest {
+public class TestTypeDeclaration extends AbstactRegressionTest {
 
   protected void init() {
-    final String testName = "importDeclaration";
+    final String testName = "typeDeclaration";
     // Override default configuration values.
     jCodeLocation = "/src/test/resources/jCode/" + testName + "/";
     mCodeLocation = "/src/test/resources/mCode/" + testName + "/";
@@ -40,37 +40,22 @@ public class TestImportDeclaration extends AbstactRegressionTest {
   }
 
   @Test
-  public void TestImport() {
-    assertTrue(singleTest("TestImport.j"));
+  public void TestEmptyType() {
+    assertTrue(singleTest("TestEmptyType.j"));
   }
 
   @Test
-  public void TestImportMeAll() {
-    assertTrue(singleTest("TestImportMeAll.j"));
+  public void TestEmptyTypeButWithImport() {
+    assertTrue(singleTest("TestEmptyTypeButWithImport.j"));
   }
 
   @Test
-  public void TestImportNotFound() {
-    assertTrue(singleTest("TestImportNotFound.j"));
+  public void TestEmptyTypeButWithPackageName() {
+    assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageName.j"));
   }
 
   @Test
-  public void TestImportMe() {
-    assertTrue(singleTest("TestImportMe.j"));
-  }
-
-  @Test
-  public void TestImportMeTo() {
-    assertTrue(singleTest("TestImportMeTo.j"));
-  }
-
-  @Test
-  public void TestMeImportMe() {
-    assertTrue(singleTest("me" + File.separator + "TestImportMe.j"));
-  }
-
-  @Test
-  public void TestImportTwo() {
-    assertTrue(singleTest("TestImportTwo.j"));
+  public void TestEmptyTypeButWithPackageNameAndImport() {
+    assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageNameAndImport.j"));
   }
 }

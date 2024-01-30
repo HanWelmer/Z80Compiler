@@ -1,4 +1,4 @@
-package com.github.HanWelmer;
+package com.github.HanWelmer.compiler;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

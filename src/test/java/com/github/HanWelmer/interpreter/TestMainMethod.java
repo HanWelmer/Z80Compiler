@@ -1,4 +1,4 @@
-package com.github.HanWelmer;
+package com.github.HanWelmer.interpreter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import com.github.hanwelmer.Instruction;
 import com.github.hanwelmer.Interpreter;
 import com.github.hanwelmer.MachineCodeParser;
 
-public class TestInterpreter {
+public class TestMainMethod {
 
   protected static final String EXPECTED_LOCATION = "\\src\\test\\resources\\expected\\";
 
