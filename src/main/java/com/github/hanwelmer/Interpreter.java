@@ -108,7 +108,7 @@ public class Interpreter {
   }
 
   public int findMainMethod() {
-    int result = 0;
+    int result = -1;
     for (Symbol symbol : methodSymbolTable) {
       // TODO add package name, return type and modifiers to the search
       // condition.
@@ -117,7 +117,13 @@ public class Interpreter {
         break;
       }
     }
-    // TODO Auto-generated method stub
+
+    if (result == -1) {
+      String errorMessage = "Class does not contain a main method.";
+      System.err.println(errorMessage);
+      throw new RuntimeException(errorMessage);
+    }
+
     return result;
   }
 
