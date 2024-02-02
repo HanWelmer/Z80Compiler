@@ -1071,11 +1071,8 @@ public class pCompiler {
    * 
    *************************/
 
-  // Statement ::= Block | EmptyStatement | StatementExpression ";" |
-  // IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement
-  // TODO implement Statement.
-
   // block ::= "{" { blockStatement } "}".
+  // TODO refactor block.
   private void block() throws FatalError {
     debug("\nblock: start");
 
@@ -1089,6 +1086,50 @@ public class pCompiler {
   }
 
   // blockStatement ::= localVariableDeclarationStatement | statement.
+
+  // statement = block | emptyStatement | statementExpression ";" | ifStatement
+  // | whileStatement | doStatement | forStatement | returnStatement |
+  // printlnStatement | outputStatement | sleepStatement
+  //
+  // TODO add block to Statement.
+  // TODO add emptyStatement to Statement.
+  // TODO add returnStatement to Statement.
+  private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nstatement: start with stopSet = " + stopSet);
+    int firstAddress = 0;
+    /* part of code generation */
+    acc16.clear();
+    acc8.clear();
+
+    /* part of lexical analysis */
+    EnumSet<LexemeType> startSet = stopSet.clone();
+    startSet.addAll(START_STATEMENT);
+    if (checkOrSkip(startSet, stopSet)) {
+      firstAddress = saveLabel();
+      if (START_ASSIGNMENT.contains(lexeme.type)) {
+        statementExpression(stopSet);
+        if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+          lexeme = lexemeReader.getLexeme(sourceCode);
+        }
+      } else if (lexeme.type == LexemeType.ifLexeme) {
+        ifStatement(stopSet);
+      } else if (lexeme.type == LexemeType.whileLexeme) {
+        whileStatement(stopSet);
+      } else if (lexeme.type == LexemeType.doLexeme) {
+        doStatement(stopSet);
+      } else if (lexeme.type == LexemeType.forLexeme) {
+        forStatement(stopSet);
+      } else if (lexeme.type == LexemeType.printlnLexeme) {
+        printlnStatement(stopSet);
+      } else if (lexeme.type == LexemeType.outputLexeme) {
+        outputStatement(stopSet);
+      } else if (lexeme.type == LexemeType.sleepLexeme) {
+        sleepStatement(stopSet);
+      }
+    }
+    debug("\nstatement: end, firstAddress = " + firstAddress);
+    return firstAddress;
+  } // statement
 
   /*********************************************
    * 
@@ -1596,12 +1637,14 @@ public class pCompiler {
     EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
     stopInitializationSet.add(LexemeType.semicolon);
     // in the initialization part a new variable must be declared.
-    String variable = assignment(stopInitializationSet);
+    String variable = statementExpression(stopInitializationSet);
     if (variable == null) {
       error();
       System.out.println("Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
     }
-
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
     // release acc after initialization part.
     acc16.clear();
     acc8.clear();
@@ -1614,7 +1657,6 @@ public class pCompiler {
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopInitializationSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
-
     // order of steps in p-sourcecode: comparison - update - block.
     // order of steps during execution: comparison - block - update.
 
@@ -1910,13 +1952,14 @@ public class pCompiler {
     debug("\nifStatement: end");
   } // ifStatement()
 
-  // assignment = [declaration] update ";".
+  // statementExpression = [declaration] update ";".
   // declaration = [qualifier] datatype.
   // qualifier = "final".
   // datatype = "byte" | "word" | "String".
+  //
   // TODO implement isPublic
-  private String assignment(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nassignment: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
+  private String statementExpression(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
     stopAssignmentSet.addAll(START_EXPRESSION);
@@ -1942,7 +1985,7 @@ public class pCompiler {
           error();
           System.out.println("variable " + lexeme.idVal + " already declared.");
         } else if (identifiers.declareId(lexeme.idVal, IdentifierType.variable, datatype, modifiers)) {
-          debug("\nassignment: " + modifiers + lexeme.makeString(identifiers.getId(lexeme.idVal)));
+          debug("\nstatementExpression: " + modifiers + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
           error();
@@ -1959,14 +2002,9 @@ public class pCompiler {
 
     update(stopSet);
 
-    // part of lexical analysis.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    debug("\nassignment: end");
+    debug("\nstatementExpression: end");
     return variable;
-  } // assignment()
+  } // statementExpression()
 
   // update = identifier++ | identifier-- | identifier "=" expression
   private void update(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -2156,44 +2194,6 @@ public class pCompiler {
 
     debug("\nprintlnStatement: end");
   } // printlnStatement
-
-  // parse a statement, and return the address of the first object code in the
-  // statement.
-  // statement = assignment | printlnStatement | ifStatement | forStatement |
-  // doStatement | whileStatement | outputStatement | sleepStatement.
-  private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nstatement: start with stopSet = " + stopSet);
-    int firstAddress = 0;
-    /* part of code generation */
-    acc16.clear();
-    acc8.clear();
-
-    /* part of lexical analysis */
-    EnumSet<LexemeType> startSet = stopSet.clone();
-    startSet.addAll(START_STATEMENT);
-    if (checkOrSkip(startSet, stopSet)) {
-      firstAddress = saveLabel();
-      if (START_ASSIGNMENT.contains(lexeme.type)) {
-        assignment(stopSet);
-      } else if (lexeme.type == LexemeType.printlnLexeme) {
-        printlnStatement(stopSet);
-      } else if (lexeme.type == LexemeType.ifLexeme) {
-        ifStatement(stopSet);
-      } else if (lexeme.type == LexemeType.forLexeme) {
-        forStatement(stopSet);
-      } else if (lexeme.type == LexemeType.doLexeme) {
-        doStatement(stopSet);
-      } else if (lexeme.type == LexemeType.whileLexeme) {
-        whileStatement(stopSet);
-      } else if (lexeme.type == LexemeType.outputLexeme) {
-        outputStatement(stopSet);
-      } else if (lexeme.type == LexemeType.sleepLexeme) {
-        sleepStatement(stopSet);
-      }
-    }
-    debug("\nstatement: end, firstAddress = " + firstAddress);
-    return firstAddress;
-  } // statement
 
   // parse a sequence of statements, and return the address of the first object
   // code in the sequence of statements.

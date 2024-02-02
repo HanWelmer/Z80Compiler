@@ -107,11 +107,12 @@ TODO:
 `Name                 ::= JavaIdentifier ( "." JavaIdentifier )*`
 
 ##Statements
-`Statement            ::= Block | EmptyStatement | StatementExpression ";" | IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement`
 
 `block                ::= "{" { blockStatement } "}".`
 
 `blockStatement       ::= localVariableDeclarationStatement | statement.`
+
+`Statement            ::= Block | EmptyStatement | StatementExpression ";" | IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement`
 
 ``
 
