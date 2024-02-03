@@ -588,8 +588,8 @@ Statement ::= LabeledStatement
             | ThrowStatement
             | SynchronizedStatement
             | TryStatement
-AssertStatement ::= "assert" Expression ( ":" Expression )? ";"
 LabeledStatement ::= JavaIdentifier ":" Statement
+AssertStatement ::= "assert" Expression ( ":" Expression )? ";"
 Block ::= "{" { BlockStatement } "}"
 BlockStatement ::= LocalVariableDeclaration ";"
                  | Statement

@@ -4,8 +4,9 @@
 The syntax is defined in extended BNF.
 - A non-terminal is a plain text identifier, starting with a character, followed by characters or digits.
 - Terminal symbols are between quotes (') or double quotes (").
-- The optional appearance of a single construct (terminal or non-terminal) X is written as X?.
+- The optional appearance (zero or one instance) of a single construct X is written as X?.
 - The optional appearance (zero or one instance) of the sequence of constructs X and Y is written [ X Y ].
+- The iterative appearance (zero or more instances) of a single construct X is written as X*.
 - The iterative appearance (zero or more instances) of the sequence of constructs X and Y is written { X Y }.
 - Possible characters and digits are defined individually, such as "0", or as a range, such as "(1-9)".
 
@@ -33,6 +34,7 @@ the syntax of miniJava has the following limitations:
 - PrimitiveType         no "char" | "byte" | "short" | "int" | "long"
 - PrimitiveType:        added "word" | "string"
 - Statement             no LabeledStatement, AssertStatement, SwitchStatement, BreakStatement, ContinueStatement, ThrowStatement, SynchronizedStatement or TryStatement.
+- LocalVarDecl					possible modifiers: "final"? "volatile"?.
 
 TODO:
 - statementExpression:  no classInstanceCreationExpression.
@@ -51,94 +53,84 @@ TODO:
 ## Syntax definition
 
 ### Programs
-`CompilationUnit    ::= PackageDeclaration? ImportDeclaration* TypeDeclaration`
+`compilationUnit      ::= packageDeclaration? importDeclaration* typeDeclaration.`
 
 ### Declarations
-`PackageDeclaration ::= "package" Name ";"`
+`packageDeclaration   ::= "package" name ";".`
 
-`ImportDeclaration  ::= "import" ( "static" )? Name ( "." "*" )? ";"`
+`importDeclaration    ::= "import" "static"? name ["." "*"] ";".`
 
-`TypeDeclaration    ::= ";" | Modifiers ( ClassDeclaration | EnumDeclaration )`
+`typeDeclaration      ::= ";" | modifiers ( classDeclaration | enumDeclaration ).`
 
-`ClassDeclaration   ::= "class" JavaIdentifier ClassBody`
+`classDeclaration     ::= "class" javaIdentifier classBody.`
 
-`EnumDeclaration    ::= "enum" JavaIdentifier EnumBody`
+`enumDeclaration      ::= "enum" javaIdentifier enumBody.`
 
 ###Modifiers
-`Modifiers          ::= ( "public" | "private" | "static" | "final" | "synchronized" | "native" | "transient" | "volatile" )*`
+`modifiers            ::= "public"? "private"? "static"? "final"? "synchronized"? "native"? "transient"? "volatile"?.`
 
 ###Enum body
-`EnumBody           ::= "{" EnumConstant ( "," EnumConstant )* ( ";" ( ClassBodyDeclaration )* )? "}"`
+`enumBody             ::= "{" enumConstant { "," enumConstant } [ ";" classBodyDeclaration* ] "}".`
 
-`EnumConstant       ::= JavaIdentifier ( Arguments )?`
+`enumConstant         ::= javaIdentifier arguments?.`
 
 ###Class body
-`ClassBody            ::= "{" ( ClassBodyDeclaration )* "}"`
+`classBody            ::= "{" classBodyDeclaration* "}".`
 
-`ClassBodyDeclaration ::= Modifiers ( FieldDeclaration | MethodDeclaration )`
+`classBodyDeclaration ::= modifiers ( fieldDeclaration | methodDeclaration ).`
 
-`FieldDeclaration     ::= Type VariableDeclarator ( "," VariableDeclarator )* ";"`
+`fieldDeclaration     ::= type variableDeclarator { "," variableDeclarator } ";".`
 
-`VariableDeclarator   ::= VariableDeclaratorId ( "=" VariableInitializer )?`
+`variableDeclarator   ::= variableDeclaratorId [ "=" variableInitializer ].`
 
-`VariableDeclaratorId ::= JavaIdentifier ( "[" "]" )*`
+`variableDeclaratorId ::= javaIdentifier { "[" "]" }.`
 
-`VariableInitializer  ::= ArrayInitializer | Expression`
+`variableInitializer  ::= arrayInitializer | expression.`
 
-`ArrayInitializer     ::= "{" ( VariableInitializer ( "," VariableInitializer )* )? "}"`
+`arrayInitializer     ::= "{" [ variableInitializer { "," variableInitializer } ] "}".`
 
-`MethodDeclaration    ::= ResultType MethodDeclarator Block`
+`methodDeclaration    ::= resultType methodDeclarator block.`
 
-`MethodDeclarator     ::= JavaIdentifier FormalParameters`
+`methodDeclarator     ::= javaIdentifier formalParameters.`
 
-`FormalParameters     ::= "(" ( FormalParameter ( "," FormalParameter )* )? ")"`
+`formalParameters     ::= "(" [ formalParameter { "," formalParameter } ] ")".`
 
-`FormalParameter      ::= Modifiers Type VariableDeclaratorId`
+`formalParameter      ::= modifiers type variableDeclaratorId.`
 
 ### Types
-`ResultType           ::= "void" | Type`
+`resultType           ::= "void" | type.`
 
-`Type                 ::= ReferenceType | PrimitiveType`
+`type                 ::= referenceType | primitiveType.`
 
-`ReferenceType        ::= PrimitiveType ( "[" "]" )+`
+`referenceType        ::= primitiveType ( "[" "]" )+.`
 
-`PrimitiveType        ::= "char" | "string" | "byte" | "word" | "short" | "int" | "long"`
+`primitiveType        ::= "char" | "string" | "byte" | "word" | "short" | "int" | "long".`
 
-`Name                 ::= JavaIdentifier ( "." JavaIdentifier )*`
+`name                 ::= javaIdentifier { "." javaIdentifier }.`
 
 ##Statements
 
 `block                ::= "{" { blockStatement } "}".`
 
-`blockStatement       ::= localVariableDeclarationStatement | statement.`
+`blockStatement       ::= localVarDeclSttmnt | statement.`
 
-`Statement            ::= Block | EmptyStatement | StatementExpression ";" | IfStatement | WhileStatement | DoStatement | ForStatement | ReturnStatement`
+`localVarDeclSttmnt   ::= localVariableDecl ";".`
 
-``
+`localVariableDecl    ::= modifiers type variableDeclarator {"," variableDeclarator}.`
+
+`statement            ::= ifStatement | statementExceptIf.`
 
 TODO
 
-`localVariableDeclarationStatement    = localVariableDeclaration ";".`
+``
 
-`localVariableDeclaration             = type variableDeclarators.`
+`ifStatement          ;;= "if" "(" expression ")" statementExceptIf ["else" statement].`
 
-`variableDeclarators                  = variableDeclarator {"," variableDeclarator}.`
+`statementExceptIf    ::= block | emptyStatement | expressionStatement | doStatement | returnStatement | whileStatement | forStatement.`
 
-`variableDeclarator                   = variableDeclaratorId ["=" variableInitializer].`
+`emptyStatement       ::= ";".`
 
-`variableDeclaratorId                 = identifier.`
-
-`variableInitializer                  = expression.`
-
-`statement                            = statementExceptIf | ifStatement.`
-
-`statementExceptIf                    = statementWithoutTrailingSubstatement | whileStatement | forStatement.`
-
-`statementWithoutTrailingSubstatement = block | emptyStatement | expressionStatement | doStatement | returnStatement.`
-
-`emptyStatement                       = ";".`
-
-`expressionStatement                  = statementExpression ";".`
+`expressionStatement  ::= statementExpression ";".`
 
 `statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.`
 
@@ -159,8 +151,6 @@ TODO
 `forUpdate                            = statementExpressionList.`
 
 `statementExpressionList              = statementExpression {"," statementExpression}.`
-
-`ifStatement                          = "if" "(" expression ")" statementExceptIf ["else" statement].`
 
 `constantExpression                   = expression.`
 
