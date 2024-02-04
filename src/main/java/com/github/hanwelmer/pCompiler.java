@@ -984,7 +984,7 @@ public class pCompiler {
     plant(new Instruction(FunctionType.method, identifier, modifiers, resultType));
 
     // part of syntax analysis
-    block();
+    block(stopSet);
 
     debug("\nmethodDeclaration: end");
   } // restOfMethodDeclaration()
@@ -1092,17 +1092,59 @@ public class pCompiler {
 
   // block ::= "{" { blockStatement } "}".
   // TODO refactor block look elsewhere; there is another block() method).
-  private void block() throws FatalError {
-    debug("\nblock: start");
+  /*
+   * private void block(EnumSet<LexemeType> stopSet) throws FatalError {
+   * debug("\nblock: start with stopSet = " + stopSet);
+   * 
+   * // skip begin lexeme lexeme = lexemeReader.getLexeme(sourceCode);
+   * statements(EnumSet.of(LexemeType.endLexeme)); // skip end lexeme lexeme =
+   * lexemeReader.getLexeme(sourceCode);
+   * 
+   * debug("\nblock: end"); } // block
+   */
 
-    // skip begin lexeme
-    lexeme = lexemeReader.getLexeme(sourceCode);
-    statements(EnumSet.of(LexemeType.endLexeme));
-    // skip end lexeme
-    lexeme = lexemeReader.getLexeme(sourceCode);
+  // block ::= "{" { blockStatement } "}".
+  //
+  // parse a block of statements, and return the address of the first object
+  // code in the block of statements.
+  //
+  // TODO refactor block, it is ...
+  // block = statement | "{" statements "}".
+  private int block(EnumSet<LexemeType> stopSet) throws FatalError {
+    int firstAddress = 0;
+    debug("\nblock: start with stopSet = " + stopSet);
 
-    debug("\nblock: end");
-  }
+    // part of semantic analysis: start a new class level declaration scope for
+    // the statement block.
+    identifiers.newScope();
+
+    // part of lexical analysis.
+    EnumSet<LexemeType> startSet = stopSet.clone();
+    startSet.addAll(START_STATEMENT);
+    startSet.add(LexemeType.beginLexeme);
+
+    EnumSet<LexemeType> stopBlockSet = startSet.clone();
+    stopBlockSet.add(LexemeType.semicolon);
+    stopBlockSet.add(LexemeType.endLexeme);
+
+    checkOrSkip(startSet, stopBlockSet);
+    if (lexeme.type == LexemeType.beginLexeme) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+      firstAddress = statements(EnumSet.of(LexemeType.endLexeme));
+      if (checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class))) {
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      }
+    } else {
+      firstAddress = statement(stopSet);
+    }
+
+    // part of semantic analysis: close the declaration scope of the statement
+    // block.
+    identifiers.closeScope();
+
+    debug("\nblock: end, firstAddress = " + firstAddress);
+    return firstAddress;
+  } // block2
 
   // blockStatement ::= localVarDeclSttmnt | statement.`
   // TODO implement blockStatement.
@@ -1601,45 +1643,6 @@ public class pCompiler {
 
     debug("\ncomparisonInDoStatement: end");
   } // comparisonInDoStatement(stopSet, doLabel)
-
-  // parse a block of statements, and return the address of the first object
-  // code in the block of statements.
-  // block = statement | "{" statements "}".
-  private int block(EnumSet<LexemeType> stopSet) throws FatalError {
-    int firstAddress = 0;
-    debug("\nblock: start with stopSet = " + stopSet);
-
-    // part of semantic analysis: start a new class level declaration scope for
-    // the statement block.
-    identifiers.newScope();
-
-    // part of lexical analysis.
-    EnumSet<LexemeType> startSet = stopSet.clone();
-    startSet.addAll(START_STATEMENT);
-    startSet.add(LexemeType.beginLexeme);
-
-    EnumSet<LexemeType> stopBlockSet = startSet.clone();
-    stopBlockSet.add(LexemeType.semicolon);
-    stopBlockSet.add(LexemeType.endLexeme);
-
-    checkOrSkip(startSet, stopBlockSet);
-    if (lexeme.type == LexemeType.beginLexeme) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-      firstAddress = statements(EnumSet.of(LexemeType.endLexeme));
-      if (checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class))) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
-      }
-    } else {
-      firstAddress = statement(stopSet);
-    }
-
-    // part of semantic analysis: close the declaration scope of the statement
-    // block.
-    identifiers.closeScope();
-
-    debug("\nblock: end, firstAddress = " + firstAddress);
-    return firstAddress;
-  } // block
 
   // forStatement = "for" "(" initialization ";" comparison ";" update ")"
   // block.
