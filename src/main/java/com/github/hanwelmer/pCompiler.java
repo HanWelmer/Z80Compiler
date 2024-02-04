@@ -1091,63 +1091,54 @@ public class pCompiler {
    *************************/
 
   // block ::= "{" { blockStatement } "}".
-  // TODO refactor block look elsewhere; there is another block() method).
-  /*
-   * private void block(EnumSet<LexemeType> stopSet) throws FatalError {
-   * debug("\nblock: start with stopSet = " + stopSet);
-   * 
-   * // skip begin lexeme lexeme = lexemeReader.getLexeme(sourceCode);
-   * statements(EnumSet.of(LexemeType.endLexeme)); // skip end lexeme lexeme =
-   * lexemeReader.getLexeme(sourceCode);
-   * 
-   * debug("\nblock: end"); } // block
-   */
-
-  // block ::= "{" { blockStatement } "}".
   //
   // parse a block of statements, and return the address of the first object
   // code in the block of statements.
-  //
-  // TODO refactor block, it is ...
-  // block = statement | "{" statements "}".
   private int block(EnumSet<LexemeType> stopSet) throws FatalError {
-    int firstAddress = 0;
     debug("\nblock: start with stopSet = " + stopSet);
 
-    // part of semantic analysis: start a new class level declaration scope for
-    // the statement block.
-    identifiers.newScope();
+    // semantic analysis: address of next object code instruction.
+    int firstAddress = saveLabel();
 
-    // part of lexical analysis.
-    EnumSet<LexemeType> startSet = stopSet.clone();
-    startSet.addAll(START_STATEMENT);
-    startSet.add(LexemeType.beginLexeme);
-
-    EnumSet<LexemeType> stopBlockSet = startSet.clone();
+    // lexical analysis.
+    EnumSet<LexemeType> stopBlockSet = stopSet.clone();
     stopBlockSet.add(LexemeType.semicolon);
     stopBlockSet.add(LexemeType.endLexeme);
-
-    checkOrSkip(startSet, stopBlockSet);
-    if (lexeme.type == LexemeType.beginLexeme) {
+    if (checkOrSkip(EnumSet.of(LexemeType.beginLexeme), stopBlockSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
-      firstAddress = statements(EnumSet.of(LexemeType.endLexeme));
-      if (checkOrSkip(EnumSet.of(LexemeType.endLexeme), EnumSet.noneOf(LexemeType.class))) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
-      }
-    } else {
-      firstAddress = statement(stopSet);
-    }
 
-    // part of semantic analysis: close the declaration scope of the statement
-    // block.
-    identifiers.closeScope();
+      // semantic analysis: start a new declaration scope.
+      identifiers.newScope();
+
+      // lexical analysis.
+      while (lexeme.type != LexemeType.endLexeme) {
+        blockStatement(EnumSet.of(LexemeType.endLexeme));
+      }
+
+      // semantic analysis: close the declaration scope.
+      identifiers.closeScope();
+
+      // lexical analysis: skip endLexeme
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
 
     debug("\nblock: end, firstAddress = " + firstAddress);
     return firstAddress;
-  } // block2
+  } // block
 
   // blockStatement ::= localVarDeclSttmnt | statement.`
   // TODO implement blockStatement.
+  private void blockStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nblockStatement: start with stopSet = " + stopSet);
+
+    // lexical analysis.
+    EnumSet<LexemeType> stopBlockSet = stopSet.clone();
+    stopBlockSet.add(LexemeType.semicolon);
+
+    statement(stopSet);
+
+    debug("\nblockStatement");
+  }// blockStatement
 
   // localVarDeclSttmnt ::= localVariableDeclaration ";".`
   // TODO implement localVarDeclSttmnt.
@@ -1158,10 +1149,100 @@ public class pCompiler {
   // TODO implement localVariableDeclaration.
 
   // statement ::= ifStatement | statementExceptIf.
-  //
-  // TODO refactor statement.
   private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
+    int firstAddress = saveLabel();
+
+    if (lexeme.type == LexemeType.ifLexeme) {
+      ifStatement(stopSet);
+    } else {
+      statementExceptIf(stopSet);
+    }
+
+    debug("\nstatement: end, firstAddress = " + firstAddress);
+    return firstAddress;
+  }// statement
+
+  // ifStatement ;;= "if" "(" expression ")" statementExceptIf ["else"
+  // statement].
+  //
+  // TODO refactor ifStatement
+  // ifStatement = "if" "(" comparison ")" block [ "else" block ].
+  //
+  // TODO optimize branch instruction in ifStatement
+  // See test5.j 163: if (b>132) {
+  // 1326 acc8= variable 14
+  // 1327 acc8Comp constant 132
+  // 1328 brle 1345
+  // received: 1328 brle 1345
+  // expected: 1328 brle 1346
+  private void ifStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nifStatement: start with stopSet = " + stopSet);
+    // code generation.
+    acc16.clear();
+    acc8.clear();
+
+    // lexical analysis.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    // expect (
+    EnumSet<LexemeType> stopSetIf = stopSet.clone();
+    stopSetIf.add(LexemeType.RPAREN);
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSetIf)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // expect comparison
+    stopSetIf = stopSet.clone();
+    stopSetIf.add(LexemeType.RPAREN);
+    stopSetIf.addAll(START_STATEMENT);
+    stopSetIf.remove(LexemeType.identifier);
+    int ifLabel = comparison(stopSetIf);
+    debug("\nifStatement: ifLabel = " + ifLabel);
+
+    // expect )
+    stopSetIf = stopSet.clone();
+    stopSetIf.addAll(START_STATEMENT);
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSetIf)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // expect any statement or block, but not an if statement.
+    EnumSet<LexemeType> stopSetElse = stopSet.clone();
+    stopSetElse.add(LexemeType.elseLexeme);
+    statementExceptIf(stopSetElse);
+
+    if (lexeme.type == LexemeType.elseLexeme) {
+      // expect else
+      checkOrSkip(EnumSet.of(LexemeType.elseLexeme), stopSetElse);
+
+      // code generation.
+      int elseLabel = saveLabel();
+      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
+      debug("\nifStatement: elselabel=" + elseLabel);
+      debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
+
+      // lexical analysis.
+      // expect statement block
+      lexeme = lexemeReader.getLexeme(sourceCode);
+      plantForwardLabel(ifLabel, statement(stopSet));
+
+      // code generation.
+      plantForwardLabel(elseLabel, saveLabel());
+    } else {
+      // code generation.
+      debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
+      plantForwardLabel(ifLabel, saveLabel());
+    }
+    debug("\nifStatement: end");
+  } // ifStatement()
+
+  // statementExceptIf ::= block | emptyStatement | expressionStatement |
+  // whileStatement | doStatement | forStatement | returnStatement.
+  //
+  // TODO refactor statementExceptIf
+  private int statementExceptIf(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nstatementExceptIf: start with stopSet = " + stopSet);
     int firstAddress = 0;
     // part of code generation.
     acc16.clear();
@@ -1170,15 +1251,16 @@ public class pCompiler {
     // part of lexical analysis.
     EnumSet<LexemeType> startSet = stopSet.clone();
     startSet.addAll(START_STATEMENT);
+    startSet.add(LexemeType.beginLexeme);
     if (checkOrSkip(startSet, stopSet)) {
       firstAddress = saveLabel();
-      if (START_ASSIGNMENT.contains(lexeme.type)) {
+      if (lexeme.type == LexemeType.beginLexeme) {
+        block(stopSet);
+      } else if (START_ASSIGNMENT.contains(lexeme.type)) {
         statementExpression(stopSet);
         if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
           lexeme = lexemeReader.getLexeme(sourceCode);
         }
-      } else if (lexeme.type == LexemeType.ifLexeme) {
-        ifStatement(stopSet);
       } else if (lexeme.type == LexemeType.whileLexeme) {
         whileStatement(stopSet);
       } else if (lexeme.type == LexemeType.doLexeme) {
@@ -1193,9 +1275,9 @@ public class pCompiler {
         sleepStatement(stopSet);
       }
     }
-    debug("\nstatement: end, firstAddress = " + firstAddress);
+    debug("\nstatementExceptIf: end, firstAddress = " + firstAddress);
     return firstAddress;
-  } // statement
+  } // statementExceptIf
 
   /*********************************************
    * 
@@ -1920,64 +2002,6 @@ public class pCompiler {
 
     debug("\nsleep: end");
   } // sleepStatement
-
-  // ifStatement = "if" "(" comparison ")" block [ "else" block ].
-  private void ifStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nifStatement: start with stopSet = " + stopSet);
-
-    lexeme = lexemeReader.getLexeme(sourceCode);
-
-    // expect (
-    EnumSet<LexemeType> stopSetIf = stopSet.clone();
-    stopSetIf.add(LexemeType.RPAREN);
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSetIf)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // expect comparison
-    stopSetIf = stopSet.clone();
-    stopSetIf.add(LexemeType.RPAREN);
-    stopSetIf.addAll(START_STATEMENT);
-    stopSetIf.remove(LexemeType.identifier);
-    int ifLabel = comparison(stopSetIf);
-    debug("\nifStatement: ifLabel = " + ifLabel);
-
-    // expect )
-    stopSetIf = stopSet.clone();
-    stopSetIf.addAll(START_STATEMENT);
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSetIf)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // expect statement block
-    EnumSet<LexemeType> stopSetElse = stopSet.clone();
-    stopSetElse.add(LexemeType.elseLexeme);
-    block(stopSetElse);
-
-    if (lexeme.type == LexemeType.elseLexeme) {
-      // expect else
-      checkOrSkip(EnumSet.of(LexemeType.elseLexeme), stopSetElse);
-
-      // part of code generation.
-      int elseLabel = saveLabel();
-      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
-      debug("\nifStatement: elselabel=" + elseLabel);
-      debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
-
-      // part of lexical analysis.
-      // expect statement block
-      lexeme = lexemeReader.getLexeme(sourceCode);
-      plantForwardLabel(ifLabel, block(stopSet));
-
-      // part of code generation.
-      plantForwardLabel(elseLabel, saveLabel());
-    } else {
-      // part of code generation.
-      debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
-      plantForwardLabel(ifLabel, saveLabel());
-    }
-    debug("\nifStatement: end");
-  } // ifStatement()
 
   // statementExpression ::= assignment | preincrementExpression |
   // postincrementExpression | predecrementExpression | postdecrementExpression

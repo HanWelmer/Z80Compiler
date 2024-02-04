@@ -39,8 +39,8 @@
   38 call writeLineAcc8
   39 ;test11.j(15)       b1++;
   40 incr8 variable 0
-  41 ;test11.j(16)     }
-  42 br 31
+  41 br 31
+  42 ;test11.j(16)     }
   43 ;test11.j(17)   
   44 ;test11.j(18)     /************************/
   45 ;test11.j(19)     // constant - constant

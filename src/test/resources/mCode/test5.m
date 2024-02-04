@@ -1326,7 +1326,7 @@
 1325 ;test5.j(163)     if (b>132) {
 1326 acc8= variable 14
 1327 acc8Comp constant 132
-1328 brle 1346
+1328 brle 1345
 1329 ;test5.j(164)       word j = 1001;
 1330 acc16= constant 1001
 1331 acc16=> variable 15

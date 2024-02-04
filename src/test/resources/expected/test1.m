@@ -57,8 +57,8 @@
   56 ;test1.j(29)       println (c);
   57 acc8= variable 10
   58 call writeLineAcc8
-  59 ;test1.j(30)     }
-  60 br 42
+  59 br 42
+  60 ;test1.j(30)     }
   61 ;test1.j(31)   
   62 ;test1.j(32)     /************************/
   63 ;test1.j(33)     // constant - constant

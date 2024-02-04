@@ -120,13 +120,13 @@ TODO:
 
 `statement            ::= ifStatement | statementExceptIf.`
 
+`ifStatement          ;;= "if" "(" expression ")" statementExceptIf ["else" statement].`
+
+`statementExceptIf    ::= block | emptyStatement | expressionStatement | whileStatement | doStatement | forStatement | returnStatement.`
+
 TODO
 
 ``
-
-`ifStatement          ;;= "if" "(" expression ")" statementExceptIf ["else" statement].`
-
-`statementExceptIf    ::= block | emptyStatement | expressionStatement | doStatement | returnStatement | whileStatement | forStatement.`
 
 `emptyStatement       ::= ";".`
 
