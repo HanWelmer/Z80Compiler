@@ -124,13 +124,13 @@ TODO:
 
 `statementExceptIf    ::= block | emptyStatement | expressionStatement | whileStatement | doStatement | forStatement | returnStatement.`
 
-TODO
-
-``
-
 `emptyStatement       ::= ";".`
 
 `expressionStatement  ::= statementExpression ";".`
+
+TODO
+
+``
 
 `statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.`
 

@@ -118,9 +118,11 @@ public class pCompiler {
   private static final LexemeType[] LEXEME_TYPE_AT_LEVEL = { LexemeType.bitwiseOrOp, LexemeType.bitwiseXorOp,
       LexemeType.bitwiseAndOp, LexemeType.addop, LexemeType.mulop };
   // Lexeme types that start a statement.
-  private static final EnumSet<LexemeType> START_STATEMENT = EnumSet.of(LexemeType.finalLexeme, LexemeType.identifier,
-      LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme, LexemeType.printlnLexeme, LexemeType.ifLexeme,
-      LexemeType.forLexeme, LexemeType.doLexeme, LexemeType.whileLexeme, LexemeType.outputLexeme, LexemeType.sleepLexeme);
+  private static final EnumSet<LexemeType> START_STATEMENT = EnumSet.of(LexemeType.beginLexeme, LexemeType.semicolon,
+      LexemeType.finalLexeme, LexemeType.identifier, LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme,
+      LexemeType.ifLexeme, LexemeType.whileLexeme, LexemeType.doLexeme, LexemeType.forLexeme
+      // , LexemeType.returnLexeme
+      , LexemeType.printlnLexeme, LexemeType.outputLexeme, LexemeType.sleepLexeme);
   // Lexeme types that start an assignmenr.
   private static final EnumSet<LexemeType> START_ASSIGNMENT = EnumSet.of(LexemeType.finalLexeme, LexemeType.identifier,
       LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme);
@@ -1163,7 +1165,7 @@ public class pCompiler {
     return firstAddress;
   }// statement
 
-  // ifStatement ;;= "if" "(" expression ")" statementExceptIf ["else"
+  // ifStatement ::= "if" "(" expression ")" statementExceptIf ["else"
   // statement].
   //
   // TODO refactor ifStatement
@@ -1240,44 +1242,73 @@ public class pCompiler {
   // statementExceptIf ::= block | emptyStatement | expressionStatement |
   // whileStatement | doStatement | forStatement | returnStatement.
   //
-  // TODO refactor statementExceptIf
+  // TODO add returnStatement to statementExceptIf.
   private int statementExceptIf(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExceptIf: start with stopSet = " + stopSet);
     int firstAddress = 0;
     // part of code generation.
     acc16.clear();
     acc8.clear();
+    firstAddress = saveLabel();
 
     // part of lexical analysis.
-    EnumSet<LexemeType> startSet = stopSet.clone();
-    startSet.addAll(START_STATEMENT);
-    startSet.add(LexemeType.beginLexeme);
-    if (checkOrSkip(startSet, stopSet)) {
-      firstAddress = saveLabel();
-      if (lexeme.type == LexemeType.beginLexeme) {
-        block(stopSet);
-      } else if (START_ASSIGNMENT.contains(lexeme.type)) {
-        statementExpression(stopSet);
-        if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-          lexeme = lexemeReader.getLexeme(sourceCode);
-        }
-      } else if (lexeme.type == LexemeType.whileLexeme) {
-        whileStatement(stopSet);
-      } else if (lexeme.type == LexemeType.doLexeme) {
-        doStatement(stopSet);
-      } else if (lexeme.type == LexemeType.forLexeme) {
-        forStatement(stopSet);
-      } else if (lexeme.type == LexemeType.printlnLexeme) {
-        printlnStatement(stopSet);
-      } else if (lexeme.type == LexemeType.outputLexeme) {
-        outputStatement(stopSet);
-      } else if (lexeme.type == LexemeType.sleepLexeme) {
-        sleepStatement(stopSet);
-      }
+    if (lexeme.type == LexemeType.beginLexeme) {
+      block(stopSet);
+    } else if (lexeme.type == LexemeType.semicolon) {
+      emptyStatement(stopSet);
+    } else if (START_ASSIGNMENT.contains(lexeme.type)) {
+      expressionStatement(stopSet);
+    } else if (lexeme.type == LexemeType.whileLexeme) {
+      whileStatement(stopSet);
+    } else if (lexeme.type == LexemeType.doLexeme) {
+      doStatement(stopSet);
+    } else if (lexeme.type == LexemeType.forLexeme) {
+      forStatement(stopSet);
+      // } else if (lexeme.type == LexemeType.returnLexeme) {
+      // returnStatement(stopSet);
+    } else if (lexeme.type == LexemeType.printlnLexeme) {
+      printlnStatement(stopSet);
+    } else if (lexeme.type == LexemeType.outputLexeme) {
+      outputStatement(stopSet);
+    } else if (lexeme.type == LexemeType.sleepLexeme) {
+      sleepStatement(stopSet);
+    } else {
+      error(3);
+      // skip unexpected symbol
+      lexeme = lexemeReader.getLexeme(sourceCode);
     }
     debug("\nstatementExceptIf: end, firstAddress = " + firstAddress);
     return firstAddress;
   } // statementExceptIf
+
+  // emptyStatement ::= ";".
+  private void emptyStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nemptyStatement: start with stopSet = " + stopSet);
+    // lexeme.type is ";". Skip it.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    debug("\nemptyStatement: end");
+  }
+
+  // expressionStatement ::= statementExpression ";".
+  private void expressionStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nexpressionStatement: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
+    statementExpression(stopSet);
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    debug("\nexpressionStatement: end");
+  }
+
+  // statementExpression ::= assignment | preincrementExpression |
+  // postincrementExpression | predecrementExpression | postdecrementExpression
+  // | methodInvocation.
+  //
+  // TODO refactor statementExpression.
+  private void statementExpression(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
+    assignment(stopSet);
+    debug("\nstatementExpression: end");
+  }
 
   /*********************************************
    * 
@@ -1726,6 +1757,10 @@ public class pCompiler {
     debug("\ncomparisonInDoStatement: end");
   } // comparisonInDoStatement(stopSet, doLabel)
 
+  // forStatement ::= "for" "(" forInit? ";" expression? ";" forUpdate? ")"
+  // statementExceptIf.
+  //
+  // TODO refactor forStatement
   // forStatement = "for" "(" initialization ";" comparison ";" update ")"
   // block.
   private void forStatement(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -1746,7 +1781,7 @@ public class pCompiler {
     EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
     stopInitializationSet.add(LexemeType.semicolon);
     // in the initialization part a new variable must be declared.
-    String variable = statementExpression(stopInitializationSet);
+    String variable = assignment(stopInitializationSet);
     if (variable == null) {
       error();
       System.out.println("Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
@@ -1780,7 +1815,9 @@ public class pCompiler {
 
     // part of lexical analysis: update.
     stopForSet.add(LexemeType.beginLexeme);
-    update(stopForSet);
+    if (lexeme.type != LexemeType.RPAREN) {
+      update(stopForSet);
+    }
 
     // part of code generation: jump back to comparison.
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, forLabel)));
@@ -1796,7 +1833,8 @@ public class pCompiler {
     plantForwardLabel(gotoBlock, saveLabel());
 
     // part of lexical analysis: block.
-    block(stopSet);
+    // block(stopSet);
+    statementExceptIf(stopSet);
 
     // part of code generation; jump back to update.
     plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, updateLabel)));
@@ -1810,6 +1848,9 @@ public class pCompiler {
     debug("\nforStatement: end");
   } // forStatement()
 
+  // doStatement ::= "do" statement "while" "(" expression ")" ";".
+  //
+  // TODO refactor doStatement
   // doStatement = "do" block "while" "(" comparison ")" ";".
   private void doStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ndoStatement: start with stopSet = " + stopSet);
@@ -1822,7 +1863,7 @@ public class pCompiler {
     // expect block, terminated by "while".
     EnumSet<LexemeType> stopDoSet = stopSet.clone();
     stopDoSet.add(LexemeType.whileLexeme);
-    block(stopSet);
+    statement(stopSet);
 
     // expect "while" followed by "(".
     EnumSet<LexemeType> stopWhileSet = stopSet.clone();
@@ -1856,6 +1897,9 @@ public class pCompiler {
     debug("\ndoStatement: end");
   } // doStatement()
 
+  // whileStatement ::= "while" "(" expression ")" statementExceptIf.
+  //
+  // TODO refactor whileStatement.
   // whileStatement = "while" "(" comparison ")" block.
   private void whileStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwhileStatement: start with stopSet = " + stopSet);
@@ -1881,7 +1925,8 @@ public class pCompiler {
     if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopWhileSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
-    block(stopSet);
+    // block(stopSet);
+    statementExceptIf(stopSet);
 
     // part of code generation.
     plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, whileLabel)));
@@ -2003,18 +2048,13 @@ public class pCompiler {
     debug("\nsleep: end");
   } // sleepStatement
 
-  // statementExpression ::= assignment | preincrementExpression |
-  // postincrementExpression | predecrementExpression | postdecrementExpression
-  // | methodInvocation.
-  //
-  // is:
-  // statementExpression = [declaration] update ";".
+  // assigment = [declaration] update ";".
   // declaration = [qualifier] datatype.
   // qualifier = "final".
   // datatype = "byte" | "word" | "String".
   //
   // TODO implement isPublic
-  private String statementExpression(EnumSet<LexemeType> stopSet) throws FatalError {
+  private String assignment(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
