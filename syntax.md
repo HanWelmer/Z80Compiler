@@ -35,6 +35,7 @@ the syntax of miniJava has the following limitations:
 - PrimitiveType:        added "word" | "string"
 - Statement             no LabeledStatement, AssertStatement, SwitchStatement, BreakStatement, ContinueStatement, ThrowStatement, SynchronizedStatement or TryStatement.
 - LocalVarDecl					possible modifiers: "final"? "volatile"?.
+- ForStatement          no for-each loop: for (type variableName : arrayName) {...}.
 
 TODO:
 - statementExpression:  no classInstanceCreationExpression.
@@ -122,14 +123,25 @@ TODO:
 
 `ifStatement          ;;= "if" "(" expression ")" statementExceptIf ["else" statement].`
 
-`statementExceptIf    ::= block | emptyStatement | expressionStatement | whileStatement | doStatement | forStatement | returnStatement.`
+`statementExceptIf    ::= block | emptyStatement | whileStatement | doStatement | forStatement | returnStatement | expressionStatement.`
 
 `emptyStatement       ::= ";".`
 
+`whileStatement       ::= "while" "(" expression ")" statementExceptIf.`
+
+`doStatement          ::= "do" statement "while" "(" expression ")" ";".`
+
+`forStatement         ::= "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.`
+`forInit                 ::= localVariableDeclaration | statementExpressionList.`
+`forUpdate               ::= statementExpressionList.`
+`statementExpressionList ::= statementExpression {"," statementExpression}.`
+
+`returnStatement      ::= "return" expression? ";".`
+
 `expressionStatement  ::= statementExpression ";".`
 
-TODO
 
+TODO
 ``
 
 `statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.`
@@ -137,20 +149,6 @@ TODO
 `preincrementExpression               = "++" unaryExpression.`
 
 `predecrementExpression               = "--" unaryExpression.`
-
-`doStatement                          = "do" statement "while" "(" expression ")" ";".`
-
-`returnStatement                      = "return" expression? ";".`
-
-`whileStatement                       = "while" "(" expression ")" statementExceptIf.`
-
-`forStatement                         = "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.`
-
-`forInit                              = statementExpressionList | localVariableDeclaration.`
-
-`forUpdate                            = statementExpressionList.`
-
-`statementExpressionList              = statementExpression {"," statementExpression}.`
 
 `constantExpression                   = expression.`
 

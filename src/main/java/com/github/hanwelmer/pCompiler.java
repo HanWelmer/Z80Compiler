@@ -1239,44 +1239,50 @@ public class pCompiler {
     debug("\nifStatement: end");
   } // ifStatement()
 
-  // statementExceptIf ::= block | emptyStatement | expressionStatement |
-  // whileStatement | doStatement | forStatement | returnStatement.
-  //
-  // TODO add returnStatement to statementExceptIf.
+  // statementExceptIf ::= block | emptyStatement | whileStatement | doStatement
+  // | forStatement | returnStatement | printlnStatement |
+  // outputStatement | sleepStatement | expressionStatement.
   private int statementExceptIf(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExceptIf: start with stopSet = " + stopSet);
-    int firstAddress = 0;
+
     // part of code generation.
     acc16.clear();
     acc8.clear();
-    firstAddress = saveLabel();
+    int firstAddress = saveLabel();
 
     // part of lexical analysis.
-    if (lexeme.type == LexemeType.beginLexeme) {
-      block(stopSet);
-    } else if (lexeme.type == LexemeType.semicolon) {
-      emptyStatement(stopSet);
-    } else if (START_ASSIGNMENT.contains(lexeme.type)) {
-      expressionStatement(stopSet);
-    } else if (lexeme.type == LexemeType.whileLexeme) {
-      whileStatement(stopSet);
-    } else if (lexeme.type == LexemeType.doLexeme) {
-      doStatement(stopSet);
-    } else if (lexeme.type == LexemeType.forLexeme) {
-      forStatement(stopSet);
-      // } else if (lexeme.type == LexemeType.returnLexeme) {
-      // returnStatement(stopSet);
-    } else if (lexeme.type == LexemeType.printlnLexeme) {
-      printlnStatement(stopSet);
-    } else if (lexeme.type == LexemeType.outputLexeme) {
-      outputStatement(stopSet);
-    } else if (lexeme.type == LexemeType.sleepLexeme) {
-      sleepStatement(stopSet);
-    } else {
-      error(3);
-      // skip unexpected symbol
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    switch (lexeme.type) {
+      case beginLexeme:
+        block(stopSet);
+        break;
+      case semicolon:
+        emptyStatement(stopSet);
+        break;
+      case whileLexeme:
+        whileStatement(stopSet);
+        break;
+      case doLexeme:
+        doStatement(stopSet);
+        break;
+      case forLexeme:
+        forStatement(stopSet);
+        break;
+      case returnLexeme:
+        returnStatement(stopSet);
+        break;
+      case printlnLexeme:
+        printlnStatement(stopSet);
+        break;
+      case outputLexeme:
+        outputStatement(stopSet);
+        break;
+      case sleepLexeme:
+        sleepStatement(stopSet);
+        break;
+      default:
+        expressionStatement(stopSet);
     }
+
     debug("\nstatementExceptIf: end, firstAddress = " + firstAddress);
     return firstAddress;
   } // statementExceptIf
@@ -1288,6 +1294,405 @@ public class pCompiler {
     lexeme = lexemeReader.getLexeme(sourceCode);
     debug("\nemptyStatement: end");
   }
+
+  // whileStatement ::= "while" "(" expression ")" statementExceptIf.
+  //
+  // TODO refactor whileStatement.
+  // whileStatement = "while" "(" comparison ")" block.
+  private void whileStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nwhileStatement: start with stopSet = " + stopSet);
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    // part of code generation.
+    int whileLabel = saveLabel();
+
+    // part of lexical analysis.
+    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
+    stopWhileSet.add(LexemeType.RPAREN);
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWhileSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // part of lexical analysis.
+    stopWhileSet.addAll(START_STATEMENT);
+    stopWhileSet.remove(LexemeType.identifier);
+    int endLabel = comparison(stopWhileSet);
+
+    stopWhileSet = stopSet.clone();
+    stopWhileSet.addAll(START_STATEMENT);
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopWhileSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // block(stopSet);
+    statementExceptIf(stopSet);
+
+    // part of code generation.
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, whileLabel)));
+    plantForwardLabel(endLabel, saveLabel());
+    debug("\nwhileStatement: end");
+  } // whileStatement()
+
+  // doStatement ::= "do" statement "while" "(" expression ")" ";".
+  //
+  // TODO refactor doStatement
+  // doStatement = "do" block "while" "(" comparison ")" ";".
+  private void doStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\ndoStatement: start with stopSet = " + stopSet);
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    // part of code generation.
+    int doLabel = saveLabel();
+
+    // part of lexical analysis.
+    // expect block, terminated by "while".
+    EnumSet<LexemeType> stopDoSet = stopSet.clone();
+    stopDoSet.add(LexemeType.whileLexeme);
+    statement(stopSet);
+
+    // expect "while" followed by "(".
+    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
+    stopWhileSet.add(LexemeType.RPAREN);
+    if (checkOrSkip(EnumSet.of(LexemeType.whileLexeme), stopWhileSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWhileSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // release acc after block part.
+    acc16.clear();
+    acc8.clear();
+
+    // expect comparison, terminated by ")"
+    stopWhileSet.addAll(START_STATEMENT);
+    stopWhileSet.remove(LexemeType.identifier);
+    comparisonInDoStatement(stopWhileSet, doLabel);
+
+    // expect ")" ";"
+    stopWhileSet = stopSet.clone();
+    stopWhileSet.add(LexemeType.semicolon);
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    debug("\ndoStatement: end");
+  } // doStatement()
+
+  // forStatement ::= "for" "(" forInit? ";" expression? ";" forUpdate? ")"
+  // statementExceptIf.
+  //
+  // forInit ::= localVariableDeclaration | statementExpressionList.
+  // forUpdate ::= statementExpressionList.
+  // statementExpressionList ::= statementExpression {"," statementExpression}.
+  //
+  // TODO refactor forStatement
+  // forStatement = "for" "(" initialization ";" comparison ";" update ")"
+  // block.
+  private void forStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nforStatement: start with stopSet = " + stopSet);
+
+    // part of semantic analysis: start a new declaration scope for the for
+    // statement.
+    identifiers.newScope();
+
+    // part of lexical analysis: "for" "(" initialization ";".
+    lexeme = lexemeReader.getLexeme(sourceCode);
+    EnumSet<LexemeType> stopForSet = stopSet.clone();
+    stopForSet.add(LexemeType.RPAREN);
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopForSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
+    stopInitializationSet.add(LexemeType.semicolon);
+    // in the initialization part a new variable must be declared.
+    String variable = assignment(stopInitializationSet);
+    if (variable == null) {
+      error();
+      System.out.println("Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
+    }
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // release acc after initialization part.
+    acc16.clear();
+    acc8.clear();
+
+    // part of lexical analysis: comparison ";".
+    stopInitializationSet.addAll(START_STATEMENT);
+    stopInitializationSet.remove(LexemeType.identifier);
+    int forLabel = saveLabel();
+    int gotoEnd = comparison(stopInitializationSet);
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopInitializationSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    // order of steps in p-sourcecode: comparison - update - block.
+    // order of steps during execution: comparison - block - update.
+
+    // part of code generation: skip update and jump forward to block.
+    int gotoBlock = saveLabel();
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
+    int updateLabel = saveLabel();
+
+    // release acc after comparison part.
+    acc16.clear();
+    acc8.clear();
+
+    // part of lexical analysis: update.
+    stopForSet.add(LexemeType.beginLexeme);
+    if (lexeme.type != LexemeType.RPAREN) {
+      update(stopForSet);
+    }
+
+    // part of code generation: jump back to comparison.
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, forLabel)));
+
+    // part of lexical analysis: ")".
+    stopForSet = stopSet.clone();
+    stopForSet.addAll(START_STATEMENT);
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopForSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // part of code generation: start of block.
+    plantForwardLabel(gotoBlock, saveLabel());
+
+    // part of lexical analysis: block.
+    // block(stopSet);
+    statementExceptIf(stopSet);
+
+    // part of code generation; jump back to update.
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, updateLabel)));
+    plantForwardLabel(gotoEnd, saveLabel());
+
+    // todo: getLexeme na bovenstaande code generatie.
+
+    // part of semantic analysis: close the declaration scope of the for
+    // statement.
+    identifiers.closeScope();
+    debug("\nforStatement: end");
+  } // forStatement()
+
+  // returnStatement ::= "return" expression? ";".
+  private void returnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nreturnStatement: start with stopSet = " + stopSet);
+
+    // TODO implement returnStatement.
+    while (lexeme.type != LexemeType.semicolon) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    debug("\nreturnStatement: end");
+  }
+
+  // printlnStatement = "println" "(" expression ")" ";".
+  //
+  // The println statement makes a distinction between a string expression and
+  // an algorithmic expression.
+  // An expression is a string expression if the first operand is a string
+  // constant or the identifier of a string variable, otherwise it is an
+  // algorithmic expression.
+  // In a println statement with a string expression, the subsequent operands
+  // may be added; other operators are not allowed.
+  // However, sub expressions (expression between left ( and right )
+  // parenthesis, may be string expressions or algorithmic expressions.
+  // Operands in a string expression, including results of subexpressions, are
+  // converted to string and then printed.
+  private void printlnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nprintlnStatement: start with stopSet = " + stopSet);
+
+    // part of lexical analysis.
+    // skip println symbol.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    EnumSet<LexemeType> stopWriteSet = stopSet.clone();
+    stopWriteSet.addAll(START_EXPRESSION);
+    stopWriteSet.add(LexemeType.RPAREN);
+    stopWriteSet.add(LexemeType.semicolon);
+
+    // skip left bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWriteSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // read first operand.
+    EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
+    stopExpressionSet.add(LexemeType.RPAREN);
+    stopExpressionSet.add(LexemeType.semicolon);
+    Operand operand = factor(stopExpressionSet);
+    EnumSet<LexemeType> startExpressionSet = stopExpressionSet.clone();
+    startExpressionSet.add(LexemeType.addop);
+
+    // handle string expression or algorithmic expression.
+    if (operand.datatype == Datatype.string) {
+      // string expression.
+      do {
+        // part of lexical analysis.
+        if ((lexeme.type == LexemeType.addop) && (lexeme.operator == OperatorType.add)) {
+          debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
+          // part of code generation.
+          plantPrintln(operand, false);
+
+          // part of lexical analysis.
+          // skip addop symbol.
+          lexeme = lexemeReader.getLexeme(sourceCode);
+
+          // read next factor.
+          operand = factor(startExpressionSet);
+        } else if (lexeme.type != LexemeType.RPAREN) {
+          // part of lexical analysis.
+          // only + symbol allowed between terms in string expression.
+          errorUnexpectedSymbol(" " + lexeme.makeString(null));
+          // skip unexpected symbol.
+          if (checkOrSkip(EnumSet.of(lexeme.type), stopWriteSet)) {
+            lexeme = lexemeReader.getLexeme(sourceCode);
+          }
+        }
+      } while (lexeme.type != LexemeType.RPAREN);
+
+      debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
+      // part of code generation.
+      plantPrintln(operand, true);
+    } else {
+      // algorithmic expression.
+      operand = termWithOperand(0, operand, startExpressionSet);
+      debug("\nprintlnStatement: " + operand);
+
+      // part of code generation.
+      plantPrintln(operand, true);
+    }
+
+    // part of lexical analysis.
+    // skip right bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // skip semicolon.
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    debug("\nprintlnStatement: end");
+  } // printlnStatement
+
+  // outputStatement = "output" "(" constantExpression "," expression ")".
+  // TODO Add non-constant port value to output/input (IN0 A,(C); OUT0 (C),A).
+  // TODO Test various expressions for output(byte port, byte value). See
+  // ledtest.j.
+  private void outputStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\noutputStatement: start with stopSet = " + stopSet);
+
+    // part of lexical analysis.
+    // skip output symbol.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    EnumSet<LexemeType> stopOutputSet = stopSet.clone();
+    stopOutputSet.addAll(START_EXPRESSION);
+    stopOutputSet.add(LexemeType.comma);
+    stopOutputSet.add(LexemeType.RPAREN);
+    stopOutputSet.add(LexemeType.semicolon);
+
+    // skip left bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopOutputSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
+    stopExpressionSet.add(LexemeType.comma);
+    stopExpressionSet.add(LexemeType.RPAREN);
+    stopExpressionSet.add(LexemeType.semicolon);
+
+    // read constant expression.
+    Operand port = constantExpression(stopExpressionSet);
+
+    // part of lexical analysis.
+    stopOutputSet = stopSet.clone();
+    stopOutputSet.addAll(START_EXPRESSION);
+    stopOutputSet.add(LexemeType.RPAREN);
+    stopOutputSet.add(LexemeType.semicolon);
+
+    // skip comma.
+    if (checkOrSkip(EnumSet.of(LexemeType.comma), stopOutputSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    stopExpressionSet = stopSet.clone();
+    stopExpressionSet.add(LexemeType.RPAREN);
+    stopExpressionSet.add(LexemeType.semicolon);
+
+    // read second expression.
+    Operand value = expression(stopExpressionSet);
+
+    // part of semantic analysis.
+    debug("\noutputStatement: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    // TODO check value is a byte expression.
+
+    // part of code generation.
+    plant(new Instruction(FunctionType.output, port, value));
+
+    // part of lexical analysis.
+    // skip right bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // skip semicolon.
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    debug("\noutput: end");
+  } // outputStatement
+
+  // sleepStatement = "sleep" "(" expression ")".
+  private void sleepStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nsleep: start with stopSet = " + stopSet);
+
+    // part of lexical analysis.
+    // skip sleep symbol.
+    lexeme = lexemeReader.getLexeme(sourceCode);
+
+    EnumSet<LexemeType> stopSleepSet = stopSet.clone();
+    stopSleepSet.addAll(START_EXPRESSION);
+    stopSleepSet.add(LexemeType.RPAREN);
+    stopSleepSet.add(LexemeType.semicolon);
+
+    // skip left bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSleepSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // read second expression.
+    Operand value = expression(stopSleepSet);
+
+    // part of semantic analysis.
+    debug("\nsleep: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
+    // check value has type byte or word.
+    if (value.datatype != Datatype.byt && value.datatype != Datatype.word) {
+      error(18);
+    }
+
+    // part of code generation.
+    plant(new Instruction(FunctionType.sleep, value));
+
+    // part of lexical analysis.
+    // skip right bracket.
+    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    // skip semicolon.
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+    }
+
+    debug("\nsleep: end");
+  } // sleepStatement
 
   // expressionStatement ::= statementExpression ";".
   private void expressionStatement(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -1306,7 +1711,15 @@ public class pCompiler {
   // TODO refactor statementExpression.
   private void statementExpression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
-    assignment(stopSet);
+    if (START_ASSIGNMENT.contains(lexeme.type)) {
+      assignment(stopSet);
+    } else {
+      errorUnexpectedSymbol(" " + lexeme.makeString(null));
+      // skip unexpected symbol.
+      if (checkOrSkip(EnumSet.of(lexeme.type), stopSet)) {
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      }
+    }
     debug("\nstatementExpression: end");
   }
 
@@ -1757,297 +2170,6 @@ public class pCompiler {
     debug("\ncomparisonInDoStatement: end");
   } // comparisonInDoStatement(stopSet, doLabel)
 
-  // forStatement ::= "for" "(" forInit? ";" expression? ";" forUpdate? ")"
-  // statementExceptIf.
-  //
-  // TODO refactor forStatement
-  // forStatement = "for" "(" initialization ";" comparison ";" update ")"
-  // block.
-  private void forStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nforStatement: start with stopSet = " + stopSet);
-
-    // part of semantic analysis: start a new declaration scope for the for
-    // statement.
-    identifiers.newScope();
-
-    // part of lexical analysis: "for" "(" initialization ";".
-    lexeme = lexemeReader.getLexeme(sourceCode);
-    EnumSet<LexemeType> stopForSet = stopSet.clone();
-    stopForSet.add(LexemeType.RPAREN);
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopForSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
-    stopInitializationSet.add(LexemeType.semicolon);
-    // in the initialization part a new variable must be declared.
-    String variable = assignment(stopInitializationSet);
-    if (variable == null) {
-      error();
-      System.out.println("Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
-    }
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-    // release acc after initialization part.
-    acc16.clear();
-    acc8.clear();
-
-    // part of lexical analysis: comparison ";".
-    stopInitializationSet.addAll(START_STATEMENT);
-    stopInitializationSet.remove(LexemeType.identifier);
-    int forLabel = saveLabel();
-    int gotoEnd = comparison(stopInitializationSet);
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopInitializationSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-    // order of steps in p-sourcecode: comparison - update - block.
-    // order of steps during execution: comparison - block - update.
-
-    // part of code generation: skip update and jump forward to block.
-    int gotoBlock = saveLabel();
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
-    int updateLabel = saveLabel();
-
-    // release acc after comparison part.
-    acc16.clear();
-    acc8.clear();
-
-    // part of lexical analysis: update.
-    stopForSet.add(LexemeType.beginLexeme);
-    if (lexeme.type != LexemeType.RPAREN) {
-      update(stopForSet);
-    }
-
-    // part of code generation: jump back to comparison.
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, forLabel)));
-
-    // part of lexical analysis: ")".
-    stopForSet = stopSet.clone();
-    stopForSet.addAll(START_STATEMENT);
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopForSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // part of code generation: start of block.
-    plantForwardLabel(gotoBlock, saveLabel());
-
-    // part of lexical analysis: block.
-    // block(stopSet);
-    statementExceptIf(stopSet);
-
-    // part of code generation; jump back to update.
-    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, updateLabel)));
-    plantForwardLabel(gotoEnd, saveLabel());
-
-    // todo: getLexeme na bovenstaande code generatie.
-
-    // part of semantic analysis: close the declaration scope of the for
-    // statement.
-    identifiers.closeScope();
-    debug("\nforStatement: end");
-  } // forStatement()
-
-  // doStatement ::= "do" statement "while" "(" expression ")" ";".
-  //
-  // TODO refactor doStatement
-  // doStatement = "do" block "while" "(" comparison ")" ";".
-  private void doStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\ndoStatement: start with stopSet = " + stopSet);
-    lexeme = lexemeReader.getLexeme(sourceCode);
-
-    // part of code generation.
-    int doLabel = saveLabel();
-
-    // part of lexical analysis.
-    // expect block, terminated by "while".
-    EnumSet<LexemeType> stopDoSet = stopSet.clone();
-    stopDoSet.add(LexemeType.whileLexeme);
-    statement(stopSet);
-
-    // expect "while" followed by "(".
-    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.RPAREN);
-    if (checkOrSkip(EnumSet.of(LexemeType.whileLexeme), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // release acc after block part.
-    acc16.clear();
-    acc8.clear();
-
-    // expect comparison, terminated by ")"
-    stopWhileSet.addAll(START_STATEMENT);
-    stopWhileSet.remove(LexemeType.identifier);
-    comparisonInDoStatement(stopWhileSet, doLabel);
-
-    // expect ")" ";"
-    stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.semicolon);
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    debug("\ndoStatement: end");
-  } // doStatement()
-
-  // whileStatement ::= "while" "(" expression ")" statementExceptIf.
-  //
-  // TODO refactor whileStatement.
-  // whileStatement = "while" "(" comparison ")" block.
-  private void whileStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nwhileStatement: start with stopSet = " + stopSet);
-    lexeme = lexemeReader.getLexeme(sourceCode);
-
-    // part of code generation.
-    int whileLabel = saveLabel();
-
-    // part of lexical analysis.
-    EnumSet<LexemeType> stopWhileSet = stopSet.clone();
-    stopWhileSet.add(LexemeType.RPAREN);
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // part of lexical analysis.
-    stopWhileSet.addAll(START_STATEMENT);
-    stopWhileSet.remove(LexemeType.identifier);
-    int endLabel = comparison(stopWhileSet);
-
-    stopWhileSet = stopSet.clone();
-    stopWhileSet.addAll(START_STATEMENT);
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopWhileSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-    // block(stopSet);
-    statementExceptIf(stopSet);
-
-    // part of code generation.
-    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, whileLabel)));
-    plantForwardLabel(endLabel, saveLabel());
-    debug("\nwhileStatement: end");
-  } // whileStatement()
-
-  // outputStatement = "output" "(" constantExpression "," expression ")".
-  // TODO Add non-constant port value to output/input (IN0 A,(C); OUT0 (C),A).
-  // TODO Test various expressions for output(byte port, byte value). See
-  // ledtest.j.
-  private void outputStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\noutputStatement: start with stopSet = " + stopSet);
-
-    // part of lexical analysis.
-    // skip output symbol.
-    lexeme = lexemeReader.getLexeme(sourceCode);
-
-    EnumSet<LexemeType> stopOutputSet = stopSet.clone();
-    stopOutputSet.addAll(START_EXPRESSION);
-    stopOutputSet.add(LexemeType.comma);
-    stopOutputSet.add(LexemeType.RPAREN);
-    stopOutputSet.add(LexemeType.semicolon);
-
-    // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopOutputSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
-    stopExpressionSet.add(LexemeType.comma);
-    stopExpressionSet.add(LexemeType.RPAREN);
-    stopExpressionSet.add(LexemeType.semicolon);
-
-    // read constant expression.
-    Operand port = constantExpression(stopExpressionSet);
-
-    // part of lexical analysis.
-    stopOutputSet = stopSet.clone();
-    stopOutputSet.addAll(START_EXPRESSION);
-    stopOutputSet.add(LexemeType.RPAREN);
-    stopOutputSet.add(LexemeType.semicolon);
-
-    // skip comma.
-    if (checkOrSkip(EnumSet.of(LexemeType.comma), stopOutputSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    stopExpressionSet = stopSet.clone();
-    stopExpressionSet.add(LexemeType.RPAREN);
-    stopExpressionSet.add(LexemeType.semicolon);
-
-    // read second expression.
-    Operand value = expression(stopExpressionSet);
-
-    // part of semantic analysis.
-    debug("\noutputStatement: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    // TODO check value is a byte expression.
-
-    // part of code generation.
-    plant(new Instruction(FunctionType.output, port, value));
-
-    // part of lexical analysis.
-    // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // skip semicolon.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    debug("\noutput: end");
-  } // outputStatement
-
-  // sleepStatement = "sleep" "(" expression ")".
-  private void sleepStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nsleep: start with stopSet = " + stopSet);
-
-    // part of lexical analysis.
-    // skip sleep symbol.
-    lexeme = lexemeReader.getLexeme(sourceCode);
-
-    EnumSet<LexemeType> stopSleepSet = stopSet.clone();
-    stopSleepSet.addAll(START_EXPRESSION);
-    stopSleepSet.add(LexemeType.RPAREN);
-    stopSleepSet.add(LexemeType.semicolon);
-
-    // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSleepSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // read second expression.
-    Operand value = expression(stopSleepSet);
-
-    // part of semantic analysis.
-    debug("\nsleep: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    // check value has type byte or word.
-    if (value.datatype != Datatype.byt && value.datatype != Datatype.word) {
-      error(18);
-    }
-
-    // part of code generation.
-    plant(new Instruction(FunctionType.sleep, value));
-
-    // part of lexical analysis.
-    // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // skip semicolon.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    debug("\nsleep: end");
-  } // sleepStatement
-
   // assigment = [declaration] update ";".
   // declaration = [qualifier] datatype.
   // qualifier = "final".
@@ -2200,96 +2322,6 @@ public class pCompiler {
       acc16.clear();
     }
   }
-
-  // printlnStatement = "println" "(" expression ")" ";".
-  // The println statement makes a distinction between a string expression and
-  // an algorithmic expression.
-  // An expression is a string expression if the first operand is a string
-  // constant or the identifier of a string variable, otherwise it is an
-  // algorithmic expression.
-  // In a println statement with a string expression, the subsequent operands
-  // may be added; other operators are not allowed.
-  // However, sub expressions (expression between left ( and right )
-  // parenthesis, may be string expressions or algorithmic expressions.
-  // Operands in a string expression, including results of subexpressions, are
-  // converted to string and then printed.
-  private void printlnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nprintlnStatement: start with stopSet = " + stopSet);
-
-    // part of lexical analysis.
-    // skip println symbol.
-    lexeme = lexemeReader.getLexeme(sourceCode);
-
-    EnumSet<LexemeType> stopWriteSet = stopSet.clone();
-    stopWriteSet.addAll(START_EXPRESSION);
-    stopWriteSet.add(LexemeType.RPAREN);
-    stopWriteSet.add(LexemeType.semicolon);
-
-    // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWriteSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // read first operand.
-    EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
-    stopExpressionSet.add(LexemeType.RPAREN);
-    stopExpressionSet.add(LexemeType.semicolon);
-    Operand operand = factor(stopExpressionSet);
-    EnumSet<LexemeType> startExpressionSet = stopExpressionSet.clone();
-    startExpressionSet.add(LexemeType.addop);
-
-    // handle string expression or algorithmic expression.
-    if (operand.datatype == Datatype.string) {
-      // string expression.
-      do {
-        // part of lexical analysis.
-        if ((lexeme.type == LexemeType.addop) && (lexeme.operator == OperatorType.add)) {
-          debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
-          // part of code generation.
-          plantPrintln(operand, false);
-
-          // part of lexical analysis.
-          // skip addop symbol.
-          lexeme = lexemeReader.getLexeme(sourceCode);
-
-          // read next factor.
-          operand = factor(startExpressionSet);
-        } else if (lexeme.type != LexemeType.RPAREN) {
-          // part of lexical analysis.
-          // only + symbol allowed between terms in string expression.
-          errorUnexpectedSymbol(" " + lexeme.makeString(null));
-          // skip unexpected symbol.
-          if (checkOrSkip(EnumSet.of(lexeme.type), stopWriteSet)) {
-            lexeme = lexemeReader.getLexeme(sourceCode);
-          }
-        }
-      } while (lexeme.type != LexemeType.RPAREN);
-
-      debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
-      // part of code generation.
-      plantPrintln(operand, true);
-    } else {
-      // algorithmic expression.
-      operand = termWithOperand(0, operand, startExpressionSet);
-      debug("\nprintlnStatement: " + operand);
-
-      // part of code generation.
-      plantPrintln(operand, true);
-    }
-
-    // part of lexical analysis.
-    // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // skip semicolon.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    debug("\nprintlnStatement: end");
-  } // printlnStatement
 
   // parse a sequence of statements, and return the address of the first object
   // code in the sequence of statements.

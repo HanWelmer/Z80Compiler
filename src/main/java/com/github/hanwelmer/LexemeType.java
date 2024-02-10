@@ -47,8 +47,8 @@ public enum LexemeType {
   // loops
   forLexeme("for"), doLexeme("do"), whileLexeme("while"),
   // miscellaneous
-  sleepLexeme("sleep"), endLexeme("}"),
-  // final 2 special lexeme types.
+  returnLexeme("retrun"), sleepLexeme("sleep"), endLexeme("}"),
+  // finally 2 special lexeme types.
   eof("EOF"), unknown("?");
 
   private String value;

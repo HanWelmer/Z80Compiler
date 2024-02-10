@@ -95,8 +95,9 @@ public class Lexeme {
       case forLexeme:
       case ifLexeme:
       case elseLexeme:
-      case whileLexeme:
       case doLexeme:
+      case whileLexeme:
+      case returnLexeme:
       case LPAREN:
       case RPAREN:
       case LBRACKET:
