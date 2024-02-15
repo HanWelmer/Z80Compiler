@@ -116,4 +116,9 @@ public class TestTheRest extends AbstactRegressionTest {
     assertTrue(singleTest("test15.j"));
   }
 
+  @Test
+  public void testStatementExpression() {
+    assertTrue(singleTest("TestStatementExpression.j"));
+  }
+
 }

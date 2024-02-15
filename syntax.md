@@ -36,6 +36,7 @@ the syntax of miniJava has the following limitations:
 - Statement             no LabeledStatement, AssertStatement, SwitchStatement, BreakStatement, ContinueStatement, ThrowStatement, SynchronizedStatement or TryStatement.
 - LocalVarDecl					possible modifiers: "final"? "volatile"?.
 - ForStatement          no for-each loop: for (type variableName : arrayName) {...}.
+- PrimaryExpression     (as part of statementExpression) limited to Name | ( Name Arguments ) | ( Name { "[" Expression "]" } )
 
 TODO:
 - statementExpression:  no classInstanceCreationExpression.
@@ -140,15 +141,24 @@ TODO:
 
 `expressionStatement  ::= statementExpression ";".`
 
+##Expressions
+
+`statementExpression  ::= preincrementExpression | predecrementExpression | postincrementExpression | postdecrementExpression | methodInvocation | arraySelector | assignment.`
+
+`preincrementExpression			::= "++" name.`
+
+`predecrementExpression    ::= "--" name.`
+
+`postincrementExpression   ::= name "++".`
+
+`postdecrementExpression   ::= name "--".`
 
 TODO
 ``
 
-`statementExpression                  = assignment | preincrementExpression | postincrementExpression | predecrementExpression | postdecrementExpression | methodInvocation.`
-
-`preincrementExpression               = "++" unaryExpression.`
-
-`predecrementExpression               = "--" unaryExpression.`
+`methodInvocation          ::= name arguments.`
+`arraySelector             ::= name { "[" Expression "]" }.`
+`assignment                ::= name assignmentOperator expression.`
 
 `constantExpression                   = expression.`
 

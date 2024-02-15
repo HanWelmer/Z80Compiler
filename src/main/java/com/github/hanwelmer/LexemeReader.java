@@ -169,31 +169,17 @@ public class LexemeReader {
   }
 
   /**
-   * return the next lexeme from the lexeme reader. parm sourceCode: this list
-   * will be extended by any lines of source code that have been read while
-   * getting the next lexeme.
+   * Return the next lexeme from the lexeme reader.
+   * 
+   * @param sourceCode:
+   *          this list will be extended by any lines of source code that have
+   *          been read while getting the next lexeme.
+   * @return next lexeme.
+   * @throws FatalError
    **/
   public Lexeme getLexeme(ArrayList<String> sourceCode) throws FatalError {
     Lexeme lexeme = new Lexeme(LexemeType.unknown);
-    char ch;
-    // ignore white space and comments
-    ch = getChar(sourceCode);
-    while (ch == ' ' || ch == '\t' || ch == '\n' || (ch == '/' && (nextChar(sourceCode) == '*' || nextChar(sourceCode) == '/'))) {
-      if (ch == '/' && nextChar(sourceCode) == '*') {
-        ch = getChar(sourceCode);
-        ch = getChar(sourceCode);
-        while (ch != '*' || nextChar(sourceCode) != '/') {
-          ch = getChar(sourceCode);
-        }
-        ch = getChar(sourceCode);
-      } else if (ch == '/' && nextChar(sourceCode) == '/') {
-        ch = getChar(sourceCode);
-        while (nextChar(sourceCode) != '\n') {
-          ch = getChar(sourceCode);
-        }
-      }
-      ch = getChar(sourceCode);
-    }
+    char ch = skipWhiteSpace(sourceCode);
 
     if (ch == EOF) {
       lexeme.type = LexemeType.eof;
@@ -385,12 +371,22 @@ public class LexemeReader {
           }
           break;
         case '+':
-          lexeme.type = LexemeType.addop;
-          lexeme.operator = OperatorType.add;
+          if (nextChar(sourceCode) == '+') {
+            ch = getChar(sourceCode);
+            lexeme.type = LexemeType.increment;
+          } else {
+            lexeme.type = LexemeType.addop;
+            lexeme.operator = OperatorType.add;
+          }
           break;
         case '-':
-          lexeme.type = LexemeType.addop;
-          lexeme.operator = OperatorType.sub;
+          if (nextChar(sourceCode) == '-') {
+            ch = getChar(sourceCode);
+            lexeme.type = LexemeType.decrement;
+          } else {
+            lexeme.type = LexemeType.addop;
+            lexeme.operator = OperatorType.sub;
+          }
           break;
         case '*':
           lexeme.type = LexemeType.mulop;
@@ -418,6 +414,35 @@ public class LexemeReader {
     lexeme.sourceLineNr = lineNumber;
     return lexeme;
   } // getLexeme()
+
+  /**
+   * Read next char and skip white space.
+   * 
+   * @param sourceCode:
+   *          array of source code lines that have been read so far.
+   * @return first next char which is not white space.
+   * @throws FatalError
+   */
+  protected char skipWhiteSpace(ArrayList<String> sourceCode) throws FatalError {
+    char ch = getChar(sourceCode);
+    while (ch == ' ' || ch == '\t' || ch == '\n' || (ch == '/' && (nextChar(sourceCode) == '*' || nextChar(sourceCode) == '/'))) {
+      if (ch == '/' && nextChar(sourceCode) == '*') {
+        ch = getChar(sourceCode);
+        ch = getChar(sourceCode);
+        while (ch != '*' || nextChar(sourceCode) != '/') {
+          ch = getChar(sourceCode);
+        }
+        ch = getChar(sourceCode);
+      } else if (ch == '/' && nextChar(sourceCode) == '/') {
+        ch = getChar(sourceCode);
+        while (nextChar(sourceCode) != '\n') {
+          ch = getChar(sourceCode);
+        }
+      }
+      ch = getChar(sourceCode);
+    }
+    return ch;
+  }
 
   public Lexeme skipAfterError(ArrayList<String> sourceCode) throws FatalError {
     error();

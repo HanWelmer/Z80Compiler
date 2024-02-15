@@ -113,17 +113,16 @@ public class pCompiler {
       LexemeType.staticLexeme, LexemeType.synchronizedLexeme);
   // Possible lexeme types in ResultType.
   private static final EnumSet<LexemeType> RESULT_TYPE_LEXEME_TYPES = EnumSet.of(LexemeType.voidLexeme, LexemeType.byteLexeme,
-      LexemeType.wordLexeme);
+      LexemeType.wordLexeme, LexemeType.stringLexeme);
   // Lexeme types in an expression in increasing order of precedence.
   private static final LexemeType[] LEXEME_TYPE_AT_LEVEL = { LexemeType.bitwiseOrOp, LexemeType.bitwiseXorOp,
       LexemeType.bitwiseAndOp, LexemeType.addop, LexemeType.mulop };
   // Lexeme types that start a statement.
   private static final EnumSet<LexemeType> START_STATEMENT = EnumSet.of(LexemeType.beginLexeme, LexemeType.semicolon,
       LexemeType.finalLexeme, LexemeType.identifier, LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme,
-      LexemeType.ifLexeme, LexemeType.whileLexeme, LexemeType.doLexeme, LexemeType.forLexeme
-      // , LexemeType.returnLexeme
-      , LexemeType.printlnLexeme, LexemeType.outputLexeme, LexemeType.sleepLexeme);
-  // Lexeme types that start an assignmenr.
+      LexemeType.ifLexeme, LexemeType.whileLexeme, LexemeType.doLexeme, LexemeType.forLexeme, LexemeType.returnLexeme,
+      LexemeType.printlnLexeme, LexemeType.outputLexeme, LexemeType.sleepLexeme);
+  // Lexeme types that start an assignment.
   private static final EnumSet<LexemeType> START_ASSIGNMENT = EnumSet.of(LexemeType.finalLexeme, LexemeType.identifier,
       LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme);
   // Lexeme types that start an expression.
@@ -338,6 +337,9 @@ public class pCompiler {
         break;
       case 33:
         System.out.println("superfluous text between end of type declaration and end of file.");
+        break;
+      case 34:
+        System.out.println("assignment to a final variable.");
         break;
     }
   }
@@ -1406,9 +1408,9 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
+    // In the initialization part a new variable must be declared.
     EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
     stopInitializationSet.add(LexemeType.semicolon);
-    // in the initialization part a new variable must be declared.
     String variable = assignment(stopInitializationSet);
     if (variable == null) {
       error();
@@ -1704,15 +1706,38 @@ public class pCompiler {
     debug("\nexpressionStatement: end");
   }
 
-  // statementExpression ::= assignment | preincrementExpression |
-  // postincrementExpression | predecrementExpression | postdecrementExpression
-  // | methodInvocation.
+  /*************************
+   * 
+   * ### Expressions
+   * 
+   *************************/
+
+  // statementExpression ::= preincrementExpression | predecrementExpression |
+  // postincrementExpression | postdecrementExpression | methodInvocation |
+  // arraySelector | assignment.
   //
-  // TODO refactor statementExpression.
+  // TODO implement methodInvocation.
+  // TODO implement arraySelector.
   private void statementExpression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
-    if (START_ASSIGNMENT.contains(lexeme.type)) {
-      assignment(stopSet);
+    if (lexeme.type == LexemeType.increment) {
+      preincrementExpression(stopSet);
+    } else if (lexeme.type == LexemeType.decrement) {
+      predecrementExpression(stopSet);
+    } else if (lexeme.type == LexemeType.identifier) {
+      // Semantic analysis.
+      // TODO support fully qualified name instead of just an identifier.
+      String name = lexeme.idVal;
+
+      // Syntax analysis.
+      lexeme = lexemeReader.getLexeme(sourceCode);
+      if (lexeme.type == LexemeType.increment) {
+        postincrementExpression(name, stopSet);
+      } else if (lexeme.type == LexemeType.decrement) {
+        postdecrementExpression(name, stopSet);
+      } else {
+        assignment(name, stopSet);
+      }
     } else {
       errorUnexpectedSymbol(" " + lexeme.makeString(null));
       // skip unexpected symbol.
@@ -1720,8 +1745,162 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
       }
     }
+
     debug("\nstatementExpression: end");
-  }
+  } // statementExpression
+
+  // preincrementExpression ::= "++" name.
+  private void preincrementExpression(EnumSet<LexemeType> stopSet) throws FatalError {
+    if (checkOrSkip(EnumSet.of(LexemeType.increment), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // TODO support fully qualified name instead of just an identifier.
+      if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
+        // part of semantic analysis.
+        Variable var = identifiers.getId(lexeme.idVal);
+        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        leftOperand.isFinal = var.isFinal();
+        debug("\nupdate: leftOperand = " + leftOperand);
+
+        // part of code generation.
+        if (var.getDatatype() == Datatype.word) {
+          plant(new Instruction(FunctionType.increment16, leftOperand));
+        } else if (var.getDatatype() == Datatype.byt) {
+          plant(new Instruction(FunctionType.increment8, leftOperand));
+        } else {
+          error(12);
+        }
+
+        // part of syntax analysis.
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      }
+    }
+  } // preincrementExpression
+
+  // predecrementExpression ::= "--" name.
+  private void predecrementExpression(EnumSet<LexemeType> stopSet) throws FatalError {
+    if (checkOrSkip(EnumSet.of(LexemeType.decrement), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // TODO support fully qualified name instead of just an identifier.
+      if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
+        // part of semantic analysis.
+        Variable var = identifiers.getId(lexeme.idVal);
+        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        leftOperand.isFinal = var.isFinal();
+        debug("\nupdate: leftOperand = " + leftOperand);
+
+        // part of code generation.
+        if (var.getDatatype() == Datatype.word) {
+          plant(new Instruction(FunctionType.decrement16, leftOperand));
+        } else if (var.getDatatype() == Datatype.byt) {
+          plant(new Instruction(FunctionType.decrement8, leftOperand));
+        } else {
+          error(12);
+        }
+
+        // part of syntax analysis.
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      }
+    }
+  } // predecrementExpression
+
+  // postincrementExpression ::= name "++".
+  private void postincrementExpression(String name, EnumSet<LexemeType> stopSet) throws FatalError {
+    // semantic analysis.
+    if (identifiers.checkId(name)) {
+      Variable var = identifiers.getId(name);
+      debug("\nassignment: variable = " + var);
+
+      // syntax analysis.
+      if (checkOrSkip(EnumSet.of(LexemeType.increment), stopSet)) {
+        lexeme = lexemeReader.getLexeme(sourceCode);
+
+        // part of semantic analysis.
+        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        leftOperand.isFinal = var.isFinal();
+        debug("\npostincrementExpression: leftOperand = " + leftOperand);
+
+        // part of code generation.
+        if (var.getDatatype() == Datatype.word) {
+          plant(new Instruction(FunctionType.increment16, leftOperand));
+        } else if (var.getDatatype() == Datatype.byt) {
+          plant(new Instruction(FunctionType.increment8, leftOperand));
+        } else {
+          error(12);
+        }
+      }
+    } else {
+      error(9); // variable not declared.
+    }
+  } // postincrementExpression
+
+  // postdecrementExpression ::= name "--".
+  private void postdecrementExpression(String name, EnumSet<LexemeType> stopSet) throws FatalError {
+    // semantic analysis.
+    if (identifiers.checkId(name)) {
+      Variable var = identifiers.getId(name);
+      debug("\nassignment: variable = " + var);
+
+      // syntax analysis.
+      if (checkOrSkip(EnumSet.of(LexemeType.decrement), stopSet)) {
+        lexeme = lexemeReader.getLexeme(sourceCode);
+
+        // part of semantic analysis.
+        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        leftOperand.isFinal = var.isFinal();
+        debug("\npostdecrementExpression: leftOperand = " + leftOperand);
+
+        // part of code generation.
+        if (var.getDatatype() == Datatype.word) {
+          plant(new Instruction(FunctionType.decrement16, leftOperand));
+        } else if (var.getDatatype() == Datatype.byt) {
+          plant(new Instruction(FunctionType.decrement8, leftOperand));
+        } else {
+          error(12);
+        }
+      }
+    } else {
+      error(9); // variable not declared.
+    }
+  } // postdecrementExpression
+
+  // TODO refactor assignment.
+  private void assignment(String name, EnumSet<LexemeType> stopSet) throws FatalError {
+    debug("\nassignment: start with stopSet = " + stopSet + "; variable e=" + name);
+
+    // semantic analysis.
+    if (identifiers.checkId(name)) {
+      Variable var = identifiers.getId(name);
+      debug("\nassignment: variable = " + var);
+      Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+      leftOperand.isFinal = var.isFinal();
+      debug("\nassignment: leftOperand = " + leftOperand);
+
+      // syntax analysis.
+      EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
+      stopAssignmentSet.addAll(START_EXPRESSION);
+      stopAssignmentSet.add(LexemeType.semicolon);
+      if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
+        // identifier "=" expression
+        lexeme = lexemeReader.getLexeme(sourceCode);
+        Operand rightOperand = expression(stopSet);
+
+        // syntax analysis.
+        if (var.isFinal()) {
+          // assignment to a final variable.
+          error(34);
+        } else {
+          // code generation.
+          generateAssignment(leftOperand, rightOperand);
+        }
+      }
+    } else {
+      error(9); // variable not declared.
+    }
+
+    debug("\nassignment: end");
+  } // assignment()
 
   /*********************************************
    * 
@@ -2240,35 +2419,29 @@ public class pCompiler {
 
     // part of lexical analysis.
     lexeme = lexemeReader.getLexeme(sourceCode);
-    if (lexeme.type == LexemeType.addop && lexeme.operator == OperatorType.sub) {
-      // identifier--
-      lexeme = lexemeReader.getLexeme(sourceCode);
-      if (lexeme.type == LexemeType.addop && lexeme.operator == OperatorType.sub) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
-
-        // part of code generation.
-        if (var.getDatatype() == Datatype.word) {
-          plant(new Instruction(FunctionType.decrement16, leftOperand));
-        } else if (var.getDatatype() == Datatype.byt) {
-          plant(new Instruction(FunctionType.decrement8, leftOperand));
-        } else {
-          error(12);
-        }
-      }
-    } else if (lexeme.type == LexemeType.addop && lexeme.operator == OperatorType.add) {
+    if (lexeme.type == LexemeType.increment) {
       // identifier++
       lexeme = lexemeReader.getLexeme(sourceCode);
-      if (lexeme.type == LexemeType.addop && lexeme.operator == OperatorType.add) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
 
-        // part of code generation.
-        if (var.getDatatype() == Datatype.word) {
-          plant(new Instruction(FunctionType.increment16, leftOperand));
-        } else if (var.getDatatype() == Datatype.byt) {
-          plant(new Instruction(FunctionType.increment8, leftOperand));
-        } else {
-          error(12);
-        }
+      // part of code generation.
+      if (var.getDatatype() == Datatype.word) {
+        plant(new Instruction(FunctionType.increment16, leftOperand));
+      } else if (var.getDatatype() == Datatype.byt) {
+        plant(new Instruction(FunctionType.increment8, leftOperand));
+      } else {
+        error(12);
+      }
+    } else if (lexeme.type == LexemeType.decrement) {
+      // identifier--
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // part of code generation.
+      if (var.getDatatype() == Datatype.word) {
+        plant(new Instruction(FunctionType.decrement16, leftOperand));
+      } else if (var.getDatatype() == Datatype.byt) {
+        plant(new Instruction(FunctionType.decrement8, leftOperand));
+      } else {
+        error(12);
       }
     } else if (checkOrSkip(EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
       // identifier "=" expression

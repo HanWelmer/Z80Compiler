@@ -89,6 +89,8 @@ public class Lexeme {
       case byteLexeme:
       case wordLexeme:
       case stringLexeme:
+      case increment:
+      case decrement:
       case assign:
       case beginLexeme:
       case endLexeme:
