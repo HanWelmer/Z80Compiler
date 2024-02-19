@@ -613,8 +613,9 @@ ForStatement ::= "for" "("
                  ")"
                  Statement
 ForInit ::= LocalVariableDeclaration | StatementExpressionList
-StatementExpressionList ::= StatementExpression ( "," StatementExpression )*
 ForUpdate ::= StatementExpressionList
+StatementExpressionList ::= StatementExpression ( "," StatementExpression )*
+
 BreakStatement ::= "break" ( JavaIdentifier )? ";"
 ContinueStatement ::= "continue" ( JavaIdentifier )? ";"
 ReturnStatement ::= "return" ( Expression )? ";"

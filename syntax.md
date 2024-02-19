@@ -112,34 +112,34 @@ TODO:
 
 ##Statements
 
-`block                ::= "{" { blockStatement } "}".`
+`block                    ::= "{" { blockStatement } "}".`
 
-`blockStatement       ::= localVarDeclSttmnt | statement.`
+`blockStatement           ::= localVariableStatement | statement.`
 
-`localVarDeclSttmnt   ::= localVariableDecl ";".`
+`localVariableStatement   ::= localVariableDeclaration ";".`
 
-`localVariableDecl    ::= modifiers type variableDeclarator {"," variableDeclarator}.`
+`localVariableDeclaration ::= modifiers type variableDeclarator { "," variableDeclarator }.`
 
-`statement            ::= ifStatement | statementExceptIf.`
+`statement                ::= ifStatement | statementExceptIf.`
 
-`ifStatement          ;;= "if" "(" expression ")" statementExceptIf ["else" statement].`
+`ifStatement              ::= "if" "(" expression ")" statementExceptIf ["else" statement].`
 
-`statementExceptIf    ::= block | emptyStatement | whileStatement | doStatement | forStatement | returnStatement | expressionStatement.`
+`statementExceptIf        ::= block | emptyStatement | whileStatement | doStatement | forStatement | returnStatement | expressionStatement.`
 
-`emptyStatement       ::= ";".`
+`emptyStatement           ::= ";".`
 
-`whileStatement       ::= "while" "(" expression ")" statementExceptIf.`
+`whileStatement           ::= "while" "(" expression ")" statementExceptIf.`
 
-`doStatement          ::= "do" statement "while" "(" expression ")" ";".`
+`doStatement              ::= "do" statement "while" "(" expression ")" ";".`
 
-`forStatement         ::= "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.`
-`forInit                 ::= localVariableDeclaration | statementExpressionList.`
-`forUpdate               ::= statementExpressionList.`
-`statementExpressionList ::= statementExpression {"," statementExpression}.`
+`forStatement             ::= "for" "(" forInit? ";" expression? ";" forUpdate? ")" statementExceptIf.`
+`forInit                  ::= localVariableDeclaration | statementExpressionList.`
+`forUpdate                ::= statementExpressionList.`
+`statementExpressionList  ::= statementExpression { "," statementExpression }.`
 
-`returnStatement      ::= "return" expression? ";".`
+`returnStatement          ::= "return" expression? ";".`
 
-`expressionStatement  ::= statementExpression ";".`
+`expressionStatement      ::= statementExpression ";".`
 
 ##Expressions
 

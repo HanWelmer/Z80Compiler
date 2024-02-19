@@ -114,6 +114,11 @@ public class pCompiler {
   // Possible lexeme types in ResultType.
   private static final EnumSet<LexemeType> RESULT_TYPE_LEXEME_TYPES = EnumSet.of(LexemeType.voidLexeme, LexemeType.byteLexeme,
       LexemeType.wordLexeme, LexemeType.stringLexeme);
+  // Possible lexeme types that start a local variable declaration.
+  private static final EnumSet<LexemeType> LOCAL_VARIABLE_MODIFIER_OR_TYPE = EnumSet.of(LexemeType.finalLexeme,
+      LexemeType.volatileLexeme, LexemeType.voidLexeme, LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme);
+  // Possible lexeme types as local variable modifiers.
+  private static final EnumSet<LexemeType> LOCAL_VARIABLE_MODIFIERS = EnumSet.of(LexemeType.finalLexeme, LexemeType.volatileLexeme);
   // Lexeme types in an expression in increasing order of precedence.
   private static final LexemeType[] LEXEME_TYPE_AT_LEVEL = { LexemeType.bitwiseOrOp, LexemeType.bitwiseXorOp,
       LexemeType.bitwiseAndOp, LexemeType.addop, LexemeType.mulop };
@@ -171,8 +176,7 @@ public class pCompiler {
     stringConstants.init();
 
     // initialisation of code generation variables.
-    acc16.clear();
-    acc8.clear();
+    clearRegisters();
     stackedDatatypes.clear();
 
     forwardOperation16.clear();
@@ -229,6 +233,14 @@ public class pCompiler {
     reverseSkip.put(OperatorType.lt, FunctionType.brLe);
     reverseSkip.put(OperatorType.ge, FunctionType.brGt);
     reverseSkip.put(OperatorType.le, FunctionType.brLt);
+  }
+
+  /**
+   * Clear runtime registers.
+   */
+  protected void clearRegisters() {
+    acc16.clear();
+    acc8.clear();
   }
 
   private void error() {
@@ -333,13 +345,16 @@ public class pCompiler {
         System.out.println("unexpected modifier in field declaration.");
         break;
       case 32:
-        System.out.println("unexpected type in field declaration.");
+        System.out.println("unexpected type in field or local variable declaration.");
         break;
       case 33:
         System.out.println("superfluous text between end of type declaration and end of file.");
         break;
       case 34:
         System.out.println("assignment to a final variable.");
+        break;
+      case 35:
+        System.out.println("unexpected modifier in local variable declaration.");
         break;
     }
   }
@@ -785,9 +800,18 @@ public class pCompiler {
         methodStopSet.add(LexemeType.RPAREN);
         restOfMethodDeclaration(modifiers, resultType, identifier, methodStopSet);
       } else {
+        // semantic analysis
+        checkFieldModifiers(modifiers);
+
+        // syntax analysis
         EnumSet<LexemeType> fieldStopSet = stopSet.clone();
         fieldStopSet.add(LexemeType.semicolon);
         restOfVariableDeclarator(modifiers, resultType, identifier, fieldStopSet);
+
+        if (checkOrSkip(EnumSet.of(LexemeType.semicolon), localSet)) {
+          // skip semicolon
+          lexeme = lexemeReader.getLexeme(sourceCode);
+        }
       }
     } else {
       // extend error reporting, using lexeme types in localSet as a guidance.
@@ -795,6 +819,20 @@ public class pCompiler {
     }
 
     debug("\nclassBodyDeclaration: end");
+  }
+
+  protected void checkFieldModifiers(EnumSet<LexemeType> modifiers) {
+    // semantic analysis of modifiers:
+    // - modifier "static" is mandatory (no class instantiation).
+    // - modifiers may be: "public", "private", "static", "final" or "volatile"
+    if (!modifiers.contains(LexemeType.staticLexeme)) {
+      error(30);
+    }
+    EnumSet<LexemeType> temp = modifiers.clone();
+    temp.removeAll(FIELD_MODIFIERS);
+    if (!temp.isEmpty()) {
+      error(31);
+    }
   }
 
   /**
@@ -811,13 +849,12 @@ public class pCompiler {
    * @throws FatalError
    */
   // restOfVariableDeclarator ::= { "[" "]" } [ "=" variableInitializer ] {
-  // "," variableDeclarator } ";".
+  // "," variableDeclarator }.
   //
   // variableInitializer ::= arrayInitializer | expression.
   //
   // For now only:
-  // restOfVariableDeclarator ::= [ "=" expression ] { ","
-  // variableDeclarator } ";".
+  // restOfVariableDeclarator ::= [ "=" expression ].
   //
   // field modifiers ::= "public", "private", "static", "final" or "volatile".
   //
@@ -831,26 +868,14 @@ public class pCompiler {
       EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nfieldDeclaration: start " + firstIdentifier);
 
-    // semantic analysis of modifiers:
-    // - modifier "static" is mandatory (no class instantiation).
-    // - modifiers may be: "public", "private", "static", "final" or "volatile"
-    if (!modifiers.contains(LexemeType.staticLexeme)) {
-      error(30);
-    }
-    EnumSet<LexemeType> temp = modifiers.clone();
-    temp.removeAll(FIELD_MODIFIERS);
-    if (!temp.isEmpty()) {
-      error(31);
-    }
-
-    // semantic analysis of field type:
+    // semantic analysis
     if (type.getType() == LexemeType.unknown) {
       error(27);
     } else if (type.getType() == LexemeType.voidLexeme) {
       error(32);
     }
 
-    // semantic analysis of identifier:
+    // semantic analysis
     if (identifiers.checkId(firstIdentifier)) {
       error();
       System.out.println("variable " + firstIdentifier + " already declared.");
@@ -865,7 +890,7 @@ public class pCompiler {
     // initializer.
     if (lexeme.type == LexemeType.semicolon) {
       // skip semicolon
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      // lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
       // Add array declarators here...
       int numberOfDimensions = 0;
@@ -915,12 +940,6 @@ public class pCompiler {
             // part of code generation.
             generateAssignment(leftOperand, rightOperand);
             debug("\nFieldDeclaration: " + var.getName() + " = " + rightOperand);
-          }
-
-          // part of syntax analysis.
-          if (checkOrSkip(EnumSet.of(LexemeType.semicolon), localSet)) {
-            // skip semicolon
-            lexeme = lexemeReader.getLexeme(sourceCode);
           }
         } else {
           throw new RuntimeException("Internal compiler error in restOfVariableDeclarator(): abort.");
@@ -984,10 +1003,10 @@ public class pCompiler {
 
     formalParameters();
 
-    // part of code generation
+    // code generation
     plant(new Instruction(FunctionType.method, identifier, modifiers, resultType));
 
-    // part of syntax analysis
+    // syntax analysis
     block(stopSet);
 
     debug("\nmethodDeclaration: end");
@@ -1130,27 +1149,70 @@ public class pCompiler {
     return firstAddress;
   } // block
 
-  // blockStatement ::= localVarDeclSttmnt | statement.`
-  // TODO implement blockStatement.
+  // blockStatement ::= localVariableStatement | statement.`
   private void blockStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nblockStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
-    EnumSet<LexemeType> stopBlockSet = stopSet.clone();
-    stopBlockSet.add(LexemeType.semicolon);
-
-    statement(stopSet);
+    if (LOCAL_VARIABLE_MODIFIER_OR_TYPE.contains(lexeme.type)) {
+      localVariableStatement(stopSet);
+    } else {
+      statement(stopSet);
+    }
 
     debug("\nblockStatement");
   }// blockStatement
 
-  // localVarDeclSttmnt ::= localVariableDeclaration ";".`
-  // TODO implement localVarDeclSttmnt.
+  // localVariableStatement ::= localVariableDeclaration ";".`
+  private void localVariableStatement(EnumSet<LexemeType> stopSet) throws FatalError {
+    EnumSet<LexemeType> localStopSet = stopSet.clone();
+    localStopSet.add(LexemeType.semicolon);
+    localVariableDeclaration(localStopSet);
+    checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet);
+  }
 
-  // localVariableDeclaration ::= modifiers type variableDeclarator {","
-  // variableDeclarator}.
-  // Possible modifiers: "final"? "volatile"?.
-  // TODO implement localVariableDeclaration.
+  // localVariableDeclaration ::= modifiers type variableDeclarator { ","
+  // variableDeclarator }.
+  private void localVariableDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
+    // syntax analysis
+    EnumSet<LexemeType> modifiers = modifiers();
+
+    // semantic analysis
+    // Possible modifiers for a local variable: "final"? "volatile"?.
+    EnumSet<LexemeType> temp = modifiers.clone();
+    temp.removeAll(LOCAL_VARIABLE_MODIFIERS);
+    if (!temp.isEmpty()) {
+      error(35);
+    }
+
+    // syntax analysis
+    EnumSet<LexemeType> localStopSet = stopSet.clone();
+    localStopSet.add(LexemeType.identifier);
+    ResultType type = resultType(localStopSet);
+
+    // semantic analysis
+    if (type.getType() == LexemeType.unknown) {
+      error(27);
+    } else if (type.getType() == LexemeType.voidLexeme) {
+      error(32);
+    }
+
+    // TODO don't treat local variables as global variables but put them on the
+    // stack.
+    // syntax analysis
+    localStopSet = stopSet.clone();
+    localStopSet.add(LexemeType.LBRACKET);
+    localStopSet.add(LexemeType.assign);
+    if (checkOrSkip(EnumSet.of(LexemeType.identifier), localStopSet)) {
+      String identifier = lexeme.idVal;
+      lexeme = lexemeReader.getLexeme(sourceCode);
+      localStopSet.add(LexemeType.semicolon);
+      restOfVariableDeclarator(modifiers, type, identifier, localStopSet);
+    } else {
+      // extend error reporting, using lexeme types in localSet as a guidance.
+      errorUnexpectedSymbol("expected an identifier");
+    }
+  }
 
   // statement ::= ifStatement | statementExceptIf.
   private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -1182,9 +1244,7 @@ public class pCompiler {
   // expected: 1328 brle 1346
   private void ifStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nifStatement: start with stopSet = " + stopSet);
-    // code generation.
-    acc16.clear();
-    acc8.clear();
+    clearRegisters();
 
     // lexical analysis.
     lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1247,9 +1307,7 @@ public class pCompiler {
   private int statementExceptIf(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExceptIf: start with stopSet = " + stopSet);
 
-    // part of code generation.
-    acc16.clear();
-    acc8.clear();
+    clearRegisters();
     int firstAddress = saveLabel();
 
     // part of lexical analysis.
@@ -1361,14 +1419,14 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    // release acc after block part.
-    acc16.clear();
-    acc8.clear();
+    clearRegisters();
 
     // expect comparison, terminated by ")"
     stopWhileSet.addAll(START_STATEMENT);
     stopWhileSet.remove(LexemeType.identifier);
     comparisonInDoStatement(stopWhileSet, doLabel);
+
+    clearRegisters();
 
     // expect ")" ";"
     stopWhileSet = stopSet.clone();
@@ -1419,9 +1477,7 @@ public class pCompiler {
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
-    // release acc after initialization part.
-    acc16.clear();
-    acc8.clear();
+    clearRegisters();
 
     // part of lexical analysis: comparison ";".
     stopInitializationSet.addAll(START_STATEMENT);
@@ -1439,9 +1495,7 @@ public class pCompiler {
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
     int updateLabel = saveLabel();
 
-    // release acc after comparison part.
-    acc16.clear();
-    acc8.clear();
+    clearRegisters();
 
     // part of lexical analysis: update.
     stopForSet.add(LexemeType.beginLexeme);
