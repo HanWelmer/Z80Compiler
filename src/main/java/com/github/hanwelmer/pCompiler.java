@@ -944,6 +944,9 @@ public class pCompiler {
         } else {
           throw new RuntimeException("Internal compiler error in restOfVariableDeclarator(): abort.");
         }
+
+        // code generation.
+        clearRegisters();
       }
     }
 
@@ -1212,7 +1215,10 @@ public class pCompiler {
       // extend error reporting, using lexeme types in localSet as a guidance.
       errorUnexpectedSymbol("expected an identifier");
     }
-  }
+
+    // code generation.
+    clearRegisters();
+  } // localVariableDeclaration
 
   // statement ::= ifStatement | statementExceptIf.
   private int statement(EnumSet<LexemeType> stopSet) throws FatalError {
@@ -1244,7 +1250,6 @@ public class pCompiler {
   // expected: 1328 brle 1346
   private void ifStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nifStatement: start with stopSet = " + stopSet);
-    clearRegisters();
 
     // lexical analysis.
     lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1270,6 +1275,9 @@ public class pCompiler {
     if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSetIf)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
+
+    // code generation.
+    clearRegisters();
 
     // expect any statement or block, but not an if statement.
     EnumSet<LexemeType> stopSetElse = stopSet.clone();
@@ -1343,6 +1351,9 @@ public class pCompiler {
         expressionStatement(stopSet);
     }
 
+    // code generation.
+    clearRegisters();
+
     debug("\nstatementExceptIf: end, firstAddress = " + firstAddress);
     return firstAddress;
   } // statementExceptIf
@@ -1363,21 +1374,25 @@ public class pCompiler {
     debug("\nwhileStatement: start with stopSet = " + stopSet);
     lexeme = lexemeReader.getLexeme(sourceCode);
 
-    // part of code generation.
+    // code generation.
     int whileLabel = saveLabel();
 
-    // part of lexical analysis.
+    // lexical analysis.
     EnumSet<LexemeType> stopWhileSet = stopSet.clone();
     stopWhileSet.add(LexemeType.RPAREN);
     if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopWhileSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    // part of lexical analysis.
+    // lexical analysis.
     stopWhileSet.addAll(START_STATEMENT);
     stopWhileSet.remove(LexemeType.identifier);
     int endLabel = comparison(stopWhileSet);
 
+    // code generation.
+    clearRegisters();
+
+    // lexical analysis.
     stopWhileSet = stopSet.clone();
     stopWhileSet.addAll(START_STATEMENT);
     if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopWhileSet)) {
@@ -1386,7 +1401,7 @@ public class pCompiler {
     // block(stopSet);
     statementExceptIf(stopSet);
 
-    // part of code generation.
+    // code generation.
     plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, whileLabel)));
     plantForwardLabel(endLabel, saveLabel());
     debug("\nwhileStatement: end");
@@ -1419,6 +1434,7 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
+    // code generation.
     clearRegisters();
 
     // expect comparison, terminated by ")"
@@ -1426,6 +1442,7 @@ public class pCompiler {
     stopWhileSet.remove(LexemeType.identifier);
     comparisonInDoStatement(stopWhileSet, doLabel);
 
+    // code generation.
     clearRegisters();
 
     // expect ")" ";"
@@ -1477,6 +1494,7 @@ public class pCompiler {
     if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
+    // code generation.
     clearRegisters();
 
     // part of lexical analysis: comparison ";".
@@ -1495,6 +1513,7 @@ public class pCompiler {
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
     int updateLabel = saveLabel();
 
+    // code generation.
     clearRegisters();
 
     // part of lexical analysis: update.
@@ -1505,6 +1524,9 @@ public class pCompiler {
 
     // part of code generation: jump back to comparison.
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, forLabel)));
+
+    // code generation.
+    clearRegisters();
 
     // part of lexical analysis: ")".
     stopForSet = stopSet.clone();
@@ -2541,12 +2563,6 @@ public class pCompiler {
       plant(new Instruction(FunctionType.acc8Store, leftOperand));
     } else {
       error(12);
-    }
-    // clear acc
-    if (acc8.inUse()) {
-      acc8.clear();
-    } else if (acc16.inUse()) {
-      acc16.clear();
     }
   }
 
