@@ -168,7 +168,7 @@ public class pCompiler {
     errors = 0;
     lexeme = new Lexeme(LexemeType.unknown);
 
-    // initialisation of syntax analysis variables.
+    // initialisation of lexical analysis variables.
 
     // initialisation of semantic analysis variables.
     packageName = "";
@@ -361,7 +361,7 @@ public class pCompiler {
 
   /*************************
    *
-   * syntax analysis methods
+   * lexical analysis methods
    *
    ************************/
 
@@ -447,7 +447,7 @@ public class pCompiler {
 
   /*************************
    * 
-   * Syntax parsing methods.
+   * lexical parsing methods.
    * 
    *************************/
 
@@ -514,7 +514,7 @@ public class pCompiler {
         debug("\nfound: " + lexemeReader.getFileName());
       }
 
-      // part of code generation
+      // code generation
       plant(new Instruction(FunctionType.packageFunction, packageName, null, null));
 
       // TODO implement semantics for package declaration.
@@ -557,7 +557,7 @@ public class pCompiler {
         error(21);
       }
 
-      // part of code generation
+      // code generation
       plant(new Instruction(FunctionType.importFunction, importPackageName, null, null));
 
       // TODO: import single class or all classes in the package.
@@ -614,7 +614,7 @@ public class pCompiler {
     if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), localSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
 
-      // part of semantic analysis: start a new class level declaration scope.
+      // semantic analysis: start a new class level declaration scope.
       identifiers.newScope();
 
       localSet = stopSet.clone();
@@ -632,13 +632,13 @@ public class pCompiler {
           System.out.println("Error declaring identifier " + identifier + " as a class.");
         }
 
-        // part of code generation
+        // code generation
         plant(new Instruction(FunctionType.classFunction, identifier, modifiers, null));
 
         classBody(stopSet);
       }
 
-      // part of semantic analysis: close the class level declaration scope.
+      // semantic analysis: close the class level declaration scope.
       identifiers.closeScope();
     }
     debug("\nclassDecl: end");
@@ -803,7 +803,7 @@ public class pCompiler {
         // semantic analysis
         checkFieldModifiers(modifiers);
 
-        // syntax analysis
+        // lexical analysis
         EnumSet<LexemeType> fieldStopSet = stopSet.clone();
         fieldStopSet.add(LexemeType.semicolon);
         restOfVariableDeclarator(modifiers, resultType, identifier, fieldStopSet);
@@ -907,7 +907,7 @@ public class pCompiler {
           // localSet.add(LexemeType.semicolon);
           EnumSet<LexemeType> localSet = EnumSet.of(LexemeType.semicolon);
 
-          // part of semantic analysis.
+          // semantic analysis.
           Variable var = identifiers.getId(firstIdentifier);
           Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
           leftOperand.isFinal = var.isFinal();
@@ -923,7 +923,7 @@ public class pCompiler {
             // final fields.
             Operand rightOperand = constantExpression(localSet);
 
-            // part of semantic analysis.
+            // semantic analysis.
             // no assignment but constant definition.
             if (var.getDatatype() != rightOperand.datatype) {
               error(14);
@@ -937,7 +937,7 @@ public class pCompiler {
             // read expression.
             Operand rightOperand = expression(localSet);
 
-            // part of code generation.
+            // code generation.
             generateAssignment(leftOperand, rightOperand);
             debug("\nFieldDeclaration: " + var.getName() + " = " + rightOperand);
           }
@@ -1009,7 +1009,7 @@ public class pCompiler {
     // code generation
     plant(new Instruction(FunctionType.method, identifier, modifiers, resultType));
 
-    // syntax analysis
+    // lexical analysis
     block(stopSet);
 
     debug("\nmethodDeclaration: end");
@@ -1177,7 +1177,7 @@ public class pCompiler {
   // localVariableDeclaration ::= modifiers type variableDeclarator { ","
   // variableDeclarator }.
   private void localVariableDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
-    // syntax analysis
+    // lexical analysis
     EnumSet<LexemeType> modifiers = modifiers();
 
     // semantic analysis
@@ -1188,7 +1188,7 @@ public class pCompiler {
       error(35);
     }
 
-    // syntax analysis
+    // lexical analysis
     EnumSet<LexemeType> localStopSet = stopSet.clone();
     localStopSet.add(LexemeType.identifier);
     ResultType type = resultType(localStopSet);
@@ -1202,7 +1202,7 @@ public class pCompiler {
 
     // TODO don't treat local variables as global variables but put them on the
     // stack.
-    // syntax analysis
+    // lexical analysis
     localStopSet = stopSet.clone();
     localStopSet.add(LexemeType.LBRACKET);
     localStopSet.add(LexemeType.assign);
@@ -1315,10 +1315,10 @@ public class pCompiler {
   private int statementExceptIf(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExceptIf: start with stopSet = " + stopSet);
 
-    clearRegisters();
+    // code generation.
     int firstAddress = saveLabel();
 
-    // part of lexical analysis.
+    // lexical analysis.
     switch (lexeme.type) {
       case beginLexeme:
         block(stopSet);
@@ -1415,10 +1415,10 @@ public class pCompiler {
     debug("\ndoStatement: start with stopSet = " + stopSet);
     lexeme = lexemeReader.getLexeme(sourceCode);
 
-    // part of code generation.
+    // code generation.
     int doLabel = saveLabel();
 
-    // part of lexical analysis.
+    // lexical analysis.
     // expect block, terminated by "while".
     EnumSet<LexemeType> stopDoSet = stopSet.clone();
     stopDoSet.add(LexemeType.whileLexeme);
@@ -1471,11 +1471,11 @@ public class pCompiler {
   private void forStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nforStatement: start with stopSet = " + stopSet);
 
-    // part of semantic analysis: start a new declaration scope for the for
+    // semantic analysis: start a new declaration scope for the for
     // statement.
     identifiers.newScope();
 
-    // part of lexical analysis: "for" "(" initialization ";".
+    // lexical analysis: "for" "(" initialization ";".
     lexeme = lexemeReader.getLexeme(sourceCode);
     EnumSet<LexemeType> stopForSet = stopSet.clone();
     stopForSet.add(LexemeType.RPAREN);
@@ -1497,7 +1497,7 @@ public class pCompiler {
     // code generation.
     clearRegisters();
 
-    // part of lexical analysis: comparison ";".
+    // lexical analysis: comparison ";".
     stopInitializationSet.addAll(START_STATEMENT);
     stopInitializationSet.remove(LexemeType.identifier);
     int forLabel = saveLabel();
@@ -1508,7 +1508,7 @@ public class pCompiler {
     // order of steps in p-sourcecode: comparison - update - block.
     // order of steps during execution: comparison - block - update.
 
-    // part of code generation: skip update and jump forward to block.
+    // code generation: skip update and jump forward to block.
     int gotoBlock = saveLabel();
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
     int updateLabel = saveLabel();
@@ -1516,39 +1516,39 @@ public class pCompiler {
     // code generation.
     clearRegisters();
 
-    // part of lexical analysis: update.
+    // lexical analysis: update.
     stopForSet.add(LexemeType.beginLexeme);
     if (lexeme.type != LexemeType.RPAREN) {
       update(stopForSet);
     }
 
-    // part of code generation: jump back to comparison.
+    // code generation: jump back to comparison.
     plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, forLabel)));
 
     // code generation.
     clearRegisters();
 
-    // part of lexical analysis: ")".
+    // lexical analysis: ")".
     stopForSet = stopSet.clone();
     stopForSet.addAll(START_STATEMENT);
     if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopForSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    // part of code generation: start of block.
+    // code generation: start of block.
     plantForwardLabel(gotoBlock, saveLabel());
 
-    // part of lexical analysis: block.
+    // lexical analysis: block.
     // block(stopSet);
     statementExceptIf(stopSet);
 
-    // part of code generation; jump back to update.
+    // code generation; jump back to update.
     plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, updateLabel)));
     plantForwardLabel(gotoEnd, saveLabel());
 
     // todo: getLexeme na bovenstaande code generatie.
 
-    // part of semantic analysis: close the declaration scope of the for
+    // semantic analysis: close the declaration scope of the for
     // statement.
     identifiers.closeScope();
     debug("\nforStatement: end");
@@ -1583,7 +1583,7 @@ public class pCompiler {
   private void printlnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nprintlnStatement: start with stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     // skip println symbol.
     lexeme = lexemeReader.getLexeme(sourceCode);
 
@@ -1609,20 +1609,20 @@ public class pCompiler {
     if (operand.datatype == Datatype.string) {
       // string expression.
       do {
-        // part of lexical analysis.
+        // lexical analysis.
         if ((lexeme.type == LexemeType.addop) && (lexeme.operator == OperatorType.add)) {
           debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
-          // part of code generation.
+          // code generation.
           plantPrintln(operand, false);
 
-          // part of lexical analysis.
+          // lexical analysis.
           // skip addop symbol.
           lexeme = lexemeReader.getLexeme(sourceCode);
 
           // read next factor.
           operand = factor(startExpressionSet);
         } else if (lexeme.type != LexemeType.RPAREN) {
-          // part of lexical analysis.
+          // lexical analysis.
           // only + symbol allowed between terms in string expression.
           errorUnexpectedSymbol(" " + lexeme.makeString(null));
           // skip unexpected symbol.
@@ -1633,18 +1633,18 @@ public class pCompiler {
       } while (lexeme.type != LexemeType.RPAREN);
 
       debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
-      // part of code generation.
+      // code generation.
       plantPrintln(operand, true);
     } else {
       // algorithmic expression.
       operand = termWithOperand(0, operand, startExpressionSet);
       debug("\nprintlnStatement: " + operand);
 
-      // part of code generation.
+      // code generation.
       plantPrintln(operand, true);
     }
 
-    // part of lexical analysis.
+    // lexical analysis.
     // skip right bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1665,7 +1665,7 @@ public class pCompiler {
   private void outputStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\noutputStatement: start with stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     // skip output symbol.
     lexeme = lexemeReader.getLexeme(sourceCode);
 
@@ -1688,7 +1688,7 @@ public class pCompiler {
     // read constant expression.
     Operand port = constantExpression(stopExpressionSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     stopOutputSet = stopSet.clone();
     stopOutputSet.addAll(START_EXPRESSION);
     stopOutputSet.add(LexemeType.RPAREN);
@@ -1706,14 +1706,14 @@ public class pCompiler {
     // read second expression.
     Operand value = expression(stopExpressionSet);
 
-    // part of semantic analysis.
+    // semantic analysis.
     debug("\noutputStatement: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     // TODO check value is a byte expression.
 
-    // part of code generation.
+    // code generation.
     plant(new Instruction(FunctionType.output, port, value));
 
-    // part of lexical analysis.
+    // lexical analysis.
     // skip right bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1731,7 +1731,7 @@ public class pCompiler {
   private void sleepStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nsleep: start with stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     // skip sleep symbol.
     lexeme = lexemeReader.getLexeme(sourceCode);
 
@@ -1748,17 +1748,17 @@ public class pCompiler {
     // read second expression.
     Operand value = expression(stopSleepSet);
 
-    // part of semantic analysis.
+    // semantic analysis.
     debug("\nsleep: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     // check value has type byte or word.
     if (value.datatype != Datatype.byt && value.datatype != Datatype.word) {
       error(18);
     }
 
-    // part of code generation.
+    // code generation.
     plant(new Instruction(FunctionType.sleep, value));
 
-    // part of lexical analysis.
+    // lexical analysis.
     // skip right bracket.
     if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1805,7 +1805,7 @@ public class pCompiler {
       // TODO support fully qualified name instead of just an identifier.
       String name = lexeme.idVal;
 
-      // Syntax analysis.
+      // lexical analysis.
       lexeme = lexemeReader.getLexeme(sourceCode);
       if (lexeme.type == LexemeType.increment) {
         postincrementExpression(name, stopSet);
@@ -1832,13 +1832,13 @@ public class pCompiler {
 
       // TODO support fully qualified name instead of just an identifier.
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
-        // part of semantic analysis.
+        // semantic analysis.
         Variable var = identifiers.getId(lexeme.idVal);
         Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\nupdate: leftOperand = " + leftOperand);
 
-        // part of code generation.
+        // code generation.
         if (var.getDatatype() == Datatype.word) {
           plant(new Instruction(FunctionType.increment16, leftOperand));
         } else if (var.getDatatype() == Datatype.byt) {
@@ -1847,7 +1847,7 @@ public class pCompiler {
           error(12);
         }
 
-        // part of syntax analysis.
+        // lexical analysis.
         lexeme = lexemeReader.getLexeme(sourceCode);
       }
     }
@@ -1860,13 +1860,13 @@ public class pCompiler {
 
       // TODO support fully qualified name instead of just an identifier.
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
-        // part of semantic analysis.
+        // semantic analysis.
         Variable var = identifiers.getId(lexeme.idVal);
         Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\nupdate: leftOperand = " + leftOperand);
 
-        // part of code generation.
+        // code generation.
         if (var.getDatatype() == Datatype.word) {
           plant(new Instruction(FunctionType.decrement16, leftOperand));
         } else if (var.getDatatype() == Datatype.byt) {
@@ -1875,7 +1875,7 @@ public class pCompiler {
           error(12);
         }
 
-        // part of syntax analysis.
+        // lexical analysis.
         lexeme = lexemeReader.getLexeme(sourceCode);
       }
     }
@@ -1888,16 +1888,16 @@ public class pCompiler {
       Variable var = identifiers.getId(name);
       debug("\nassignment: variable = " + var);
 
-      // syntax analysis.
+      // lexical analysis.
       if (checkOrSkip(EnumSet.of(LexemeType.increment), stopSet)) {
         lexeme = lexemeReader.getLexeme(sourceCode);
 
-        // part of semantic analysis.
+        // semantic analysis.
         Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\npostincrementExpression: leftOperand = " + leftOperand);
 
-        // part of code generation.
+        // code generation.
         if (var.getDatatype() == Datatype.word) {
           plant(new Instruction(FunctionType.increment16, leftOperand));
         } else if (var.getDatatype() == Datatype.byt) {
@@ -1918,16 +1918,16 @@ public class pCompiler {
       Variable var = identifiers.getId(name);
       debug("\nassignment: variable = " + var);
 
-      // syntax analysis.
+      // lexical analysis.
       if (checkOrSkip(EnumSet.of(LexemeType.decrement), stopSet)) {
         lexeme = lexemeReader.getLexeme(sourceCode);
 
-        // part of semantic analysis.
+        // semantic analysis.
         Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\npostdecrementExpression: leftOperand = " + leftOperand);
 
-        // part of code generation.
+        // code generation.
         if (var.getDatatype() == Datatype.word) {
           plant(new Instruction(FunctionType.decrement16, leftOperand));
         } else if (var.getDatatype() == Datatype.byt) {
@@ -1953,7 +1953,7 @@ public class pCompiler {
       leftOperand.isFinal = var.isFinal();
       debug("\nassignment: leftOperand = " + leftOperand);
 
-      // syntax analysis.
+      // lexical analysis.
       EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
       stopAssignmentSet.addAll(START_EXPRESSION);
       stopAssignmentSet.add(LexemeType.semicolon);
@@ -1962,7 +1962,7 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
         Operand rightOperand = expression(stopSet);
 
-        // syntax analysis.
+        // lexical analysis.
         if (var.isFinal()) {
           // assignment to a final variable.
           error(34);
@@ -1980,11 +1980,11 @@ public class pCompiler {
 
   /*********************************************
    * 
-   * Old syntax parsing methods to be refactored.
+   * Old lexical parsing methods to be refactored.
    * 
    *********************************************/
 
-  // TODO refactor syntax parsing methods below.
+  // TODO refactor lexical parsing methods below.
 
   // constantExpression = constant | {addop constant}.
   // TODO Implement constantExpression.
@@ -1995,10 +1995,10 @@ public class pCompiler {
   private Operand constantExpression(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nconstantExpression: start with stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     Operand port = factor(stopSet);
 
-    // part of semantic analysis.
+    // semantic analysis.
     debug("\nconstantExpression: port = " + port + ", final = " + port.isFinal + ", acc16InUse = " + acc16.inUse()
         + ", acc8InUse = " + acc8.inUse());
     // port must be a constant or a final variable
@@ -2020,7 +2020,7 @@ public class pCompiler {
   private Operand inputFactor(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ninputFactor: start with stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     // skip input symbol.
     lexeme = lexemeReader.getLexeme(sourceCode);
 
@@ -2034,7 +2034,7 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    // part of code generation.
+    // code generation.
     if (acc8.inUse()) {
       plant(new Instruction(FunctionType.stackAcc8));
     }
@@ -2047,10 +2047,10 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    // part of semantic analysis.
+    // semantic analysis.
     debug("\ninputFactor: port = " + port + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
-    // part of code generation.
+    // code generation.
     plant(new Instruction(FunctionType.input, port));
     // The input() function always returns a byte value.
     Operand operand = new Operand(OperandType.acc);
@@ -2071,9 +2071,9 @@ public class pCompiler {
     debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     if (checkOrSkip(START_EXPRESSION, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
-        // part of semantic analysis.
+        // semantic analysis.
         if (identifiers.checkId(lexeme.idVal)) {
-          // part of code generation.
+          // code generation.
           Variable var = identifiers.getId(lexeme.idVal);
           // treat final var as a constant
           if (var.isFinal()) {
@@ -2089,31 +2089,31 @@ public class pCompiler {
         } else {
           throw new FatalError(9); // variable not declared.
         }
-        // part of lexical analysis.
+        // lexical analysis.
         lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.constant) {
-        // part of code generation.
+        // code generation.
         operand.opType = OperandType.constant;
         operand.datatype = lexeme.datatype;
         operand.intValue = lexeme.constVal;
-        // part of lexical analysis.
+        // lexical analysis.
         lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.stringConstant) {
         debug("\nlexeme = " + lexeme.makeString(null));
-        // part of semantic analysis.
+        // semantic analysis.
         int constantId = stringConstants.add(lexeme.stringVal, instructions.size() + 1);
         debug("\nfactor: string constant " + constantId + " = \"" + lexeme.stringVal + "\"");
-        // part of code generation.
+        // code generation.
         operand.opType = OperandType.constant;
         operand.datatype = Datatype.string;
         operand.strValue = lexeme.stringVal;
         operand.intValue = constantId;
-        // part of lexical analysis.
+        // lexical analysis.
         lexeme = lexemeReader.getLexeme(sourceCode);
         debug("\nlexeme = " + lexeme.makeString(null));
       } else if (lexeme.type == LexemeType.readLexeme) {
         lexeme = lexemeReader.getLexeme(sourceCode);
-        // part of code generation.
+        // code generation.
         // The read() function always returns a word value.
         if (acc16.inUse()) {
           plant(new Instruction(FunctionType.stackAcc16));
@@ -2160,7 +2160,7 @@ public class pCompiler {
   private Operand term(int level, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nterm start: level = " + level + ", stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LEXEME_TYPE_AT_LEVEL[level]);
     Operand leftOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(followSet) : term(level + 1, followSet);
@@ -2176,21 +2176,21 @@ public class pCompiler {
     debug("\ntermWithOperand start: level = " + level + ", lexeme = " + lexeme + ", followSet = " + followSet);
     debug("\ntermWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
-    // part of lexical analysis.
+    // lexical analysis.
     // process the first operand at the next level if it is followed by an
     // operator with higher precedence.
     if (level < LEXEME_TYPE_AT_LEVEL.length - 1 && lexeme.type.ordinal() > LEXEME_TYPE_AT_LEVEL[level].ordinal()) {
       leftOperand = termWithOperand(level + 1, leftOperand, followSet);
     }
 
-    // part of code generation.
+    // code generation.
     OperatorType operator;
     boolean leftOperandNotLoaded = true;
     while (lexeme.type == LEXEME_TYPE_AT_LEVEL[level]) {
-      // part of lexical analysis.
+      // lexical analysis.
       operator = lexeme.operator;
 
-      // part of code generation.
+      // code generation.
       if (leftOperandNotLoaded) {
         if (leftOperand.opType != OperandType.acc) {
           plantAccLoad(leftOperand);
@@ -2198,13 +2198,13 @@ public class pCompiler {
         leftOperandNotLoaded = false;
       }
 
-      // part of lexical analysis.
+      // lexical analysis.
       lexeme = lexemeReader.getLexeme(sourceCode);
       // process the right hand operand and subsequent operators/operands at the
       // next level, ultimately parsing a factor.
       Operand rOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(followSet) : term(level + 1, followSet);
 
-      // part of code generation.
+      // code generation.
       debug("\ntermWithOperand loop: level = " + level + ", leftOperand=" + leftOperand + ", rightOperand=" + rOperand
           + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
       /*
@@ -2293,13 +2293,13 @@ public class pCompiler {
   private int comparison(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ncomparison: start with stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
     Operand leftOperand = expression(localSet);
     debug("\ncomparison: leftOperand=" + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
-    // part of code generation.
+    // code generation.
     if (leftOperand.opType == OperandType.acc) {
       debug("\ncomparison: push leftOperand to the stack; " + leftOperand);
       if (leftOperand.datatype == Datatype.word) {
@@ -2311,27 +2311,27 @@ public class pCompiler {
       }
     }
 
-    // part of lexical analysis.
+    // lexical analysis.
     localSet = stopSet.clone();
     localSet.addAll(START_EXPRESSION);
     OperatorType compareOp;
     if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
-      // part of code generation.
+      // code generation.
       compareOp = lexeme.operator;
-      // part of lexical analysis.
+      // lexical analysis.
       lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
-      // part of code generation.
+      // code generation.
       compareOp = OperatorType.eq;
     }
 
-    // part of lexical analysis.
+    // lexical analysis.
     localSet = stopSet.clone();
     localSet.addAll(START_STATEMENT);
     localSet.remove(LexemeType.identifier);
     Operand rightOperand = expression(localSet);
 
-    // part of code generation.
+    // code generation.
     boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);
     int ifLabel = saveLabel();
     Operand labelOperand = new Operand(OperandType.label, Datatype.word, 0);
@@ -2351,12 +2351,12 @@ public class pCompiler {
   private void comparisonInDoStatement(EnumSet<LexemeType> stopSet, int doLabel) throws FatalError {
     debug("\ncomparisonInDoStatement: start with stopSet = " + stopSet);
 
-    // part of lexical analysis.
+    // lexical analysis.
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
     Operand leftOperand = expression(localSet);
 
-    // part of code generation.
+    // code generation.
     if (leftOperand.opType == OperandType.acc) {
       debug("\ncomparisonInDoStatement: push leftOperand to the stack; " + leftOperand);
       if (leftOperand.datatype == Datatype.word) {
@@ -2368,27 +2368,27 @@ public class pCompiler {
       }
     }
 
-    // part of lexical analysis.
+    // lexical analysis.
     localSet = stopSet.clone();
     localSet.addAll(START_EXPRESSION);
     OperatorType compareOp;
     if (checkOrSkip(EnumSet.of(LexemeType.relop), localSet)) {
-      // part of code generation.
+      // code generation.
       compareOp = lexeme.operator;
-      // part of lexical analysis.
+      // lexical analysis.
       lexeme = lexemeReader.getLexeme(sourceCode);
     } else {
-      // part of code generation.
+      // code generation.
       compareOp = OperatorType.eq;
     }
 
-    // part of lexical analysis.
+    // lexical analysis.
     localSet = stopSet.clone();
     localSet.addAll(START_STATEMENT);
     localSet.remove(LexemeType.identifier);
     Operand rightOperand = expression(localSet);
 
-    // part of code generation.
+    // code generation.
     boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);
     Operand labelOperand = new Operand(OperandType.label, Datatype.word, doLabel);
     if (reverseCompare) {
@@ -2438,7 +2438,7 @@ public class pCompiler {
     stopAssignmentSet.addAll(START_EXPRESSION);
     stopAssignmentSet.add(LexemeType.semicolon);
 
-    // part of lexical analysis.
+    // lexical analysis.
     EnumSet<LexemeType> modifiers = EnumSet.noneOf(LexemeType.class);
     if (lexeme.type == LexemeType.finalLexeme) {
       modifiers.add(lexeme.type);
@@ -2446,14 +2446,14 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    // part of lexical analysis.
+    // lexical analysis.
     String variable = null;
     if (lexeme.type == LexemeType.byteLexeme || lexeme.type == LexemeType.wordLexeme || lexeme.type == LexemeType.stringLexeme) {
       LexemeType datatype = lexeme.type;
       lexeme = lexemeReader.getLexeme(sourceCode);
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
-        // part of semantic analysis.
+        // semantic analysis.
         if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != null) {
           error();
           System.out.println("variable " + lexeme.idVal + " already declared.");
@@ -2468,7 +2468,7 @@ public class pCompiler {
     } else {
       checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet);
 
-      // part of semantic analysis.
+      // semantic analysis.
       if (!identifiers.checkId(lexeme.idVal))
         error(9); // variable not declared.
     }
@@ -2487,19 +2487,19 @@ public class pCompiler {
     stopAssignmentSet.addAll(START_EXPRESSION);
     stopAssignmentSet.add(LexemeType.semicolon);
 
-    // part of semantic analysis.
+    // semantic analysis.
     Variable var = identifiers.getId(lexeme.idVal);
     Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
     leftOperand.isFinal = var.isFinal();
     debug("\nupdate: leftOperand = " + leftOperand);
 
-    // part of lexical analysis.
+    // lexical analysis.
     lexeme = lexemeReader.getLexeme(sourceCode);
     if (lexeme.type == LexemeType.increment) {
       // identifier++
       lexeme = lexemeReader.getLexeme(sourceCode);
 
-      // part of code generation.
+      // code generation.
       if (var.getDatatype() == Datatype.word) {
         plant(new Instruction(FunctionType.increment16, leftOperand));
       } else if (var.getDatatype() == Datatype.byt) {
@@ -2511,7 +2511,7 @@ public class pCompiler {
       // identifier--
       lexeme = lexemeReader.getLexeme(sourceCode);
 
-      // part of code generation.
+      // code generation.
       if (var.getDatatype() == Datatype.word) {
         plant(new Instruction(FunctionType.decrement16, leftOperand));
       } else if (var.getDatatype() == Datatype.byt) {
@@ -2524,7 +2524,7 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
       Operand rightOperand = expression(stopSet);
 
-      // part of code generation.
+      // code generation.
       if (var.isFinal()) {
         // no assignment but constant definition.
         if (var.getDatatype() != rightOperand.datatype) {
@@ -2550,7 +2550,7 @@ public class pCompiler {
    * @param rightOperand
    */
   private void generateAssignment(Operand leftOperand, Operand rightOperand) {
-    // part of code generation.
+    // code generation.
     debug("\ngenerateAssignment: leftOperand = " + leftOperand + ", operand = " + rightOperand);
     // operand to accu.
     if (rightOperand.opType != OperandType.acc) {
@@ -2905,7 +2905,7 @@ public class pCompiler {
   }
 
   private void plantPrintln(Operand operand, boolean withCarriageReturn) {
-    // part of code generation.
+    // code generation.
     if (operand.opType != OperandType.acc) {
       plantAccLoad(operand);
     }

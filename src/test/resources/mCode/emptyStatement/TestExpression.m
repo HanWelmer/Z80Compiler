@@ -8,7 +8,7 @@
    7 acc8= constant 1
    8 call writeLineAcc8
    9 ;TestExpression.j(5)     byte b = 1;
-  10 <acc8= constant 1
+  10 acc8= constant 1
   11 acc8=> variable 0
   12 ;TestExpression.j(6)     ;
   13 ;TestExpression.j(7)     println(2);
