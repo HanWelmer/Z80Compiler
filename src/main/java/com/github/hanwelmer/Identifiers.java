@@ -48,7 +48,7 @@ public class Identifiers {
       newScope.setAddress(stackOfScopes.peek().getAddress());
     }
     stackOfScopes.push(newScope);
-  }
+  } // newScope
 
   // Close the top level scope.
   public void closeScope() {
@@ -56,7 +56,7 @@ public class Identifiers {
     if (stackOfScopes.size() > 0) {
       stackOfScopes.pop();
     }
-  }
+  } // closeScope
 
   /**
    * Get a variable by its name. Method is used during semantic analysis phase.
@@ -73,7 +73,7 @@ public class Identifiers {
       variable = scope.getVariable(name);
     }
     return variable;
-  }
+  } // getId
 
   /**
    * Check if an identifier with that value has already been declared. Method is
@@ -93,13 +93,13 @@ public class Identifiers {
     debug(String.format("\ncheckId(" + identifier + ") returns " + found + "."));
 
     return found;
-  }
+  } // checkId
 
   /**
    * Declare an identifier. Method is used during semantic analysis phase.
    *
    * @param identifier:
-   *          this indentifier will be declared
+   *          this identifier will be declared
    * @param identifierType:
    *          type of identifier.
    * @param datatype:
@@ -146,5 +146,5 @@ public class Identifiers {
       }
     }
     return result;
-  }
+  } // declareId
 }
