@@ -62,9 +62,7 @@ public class pCompiler {
       init();
 
       // code generation.
-      int mainLabel = saveLabel();
-      Operand mainLabelOperand = new Operand("main", 0);
-      plant(new Instruction(FunctionType.call, mainLabelOperand));
+      plant(new Instruction(FunctionType.call, new Operand("main", 0)));
       plant(new Instruction(FunctionType.stop));
 
       // lexical analysis, semantic analysis and code generation.
