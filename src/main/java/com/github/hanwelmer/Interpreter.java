@@ -107,26 +107,6 @@ public class Interpreter {
     return result;
   }
 
-  public int findMainMethod() {
-    int result = -1;
-    for (Symbol symbol : methodSymbolTable) {
-      // TODO add package name, return type and modifiers to the search
-      // condition.
-      if ("main".equals(symbol.name)) {
-        result = symbol.address;
-        break;
-      }
-    }
-
-    if (result == -1) {
-      String errorMessage = "Class does not contain a main method.";
-      System.err.println(errorMessage);
-      throw new RuntimeException(errorMessage);
-    }
-
-    return result;
-  }
-
   /* interface method: execute a single instruction */
   public int step(int pc) {
     boolean consoleInput = !debugMode;
@@ -425,6 +405,10 @@ public class Interpreter {
         }
         break;
       case call:
+        if (instr.operand.intValue == 0) {
+          runError("runtime error: call to address 0 at " + pc);
+        }
+        push(pc);
         pc = instr.operand.intValue;
         break;
       // Input and output instructions:
@@ -477,6 +461,9 @@ public class Interpreter {
             acc16 = Integer.parseInt(inputParts[inputIndex++]);
           }
         }
+        break;
+      case returnFunction:
+        pc = pop();
         break;
       case writeAcc8:
         if (debugMode) {

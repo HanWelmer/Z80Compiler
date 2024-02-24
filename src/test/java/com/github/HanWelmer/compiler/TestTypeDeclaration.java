@@ -41,21 +41,45 @@ public class TestTypeDeclaration extends AbstactRegressionTest {
 
   @Test
   public void TestEmptyType() {
-    assertTrue(singleTest("TestEmptyType.j"));
+    String testOutput = testWithRedirectedSystemOut("TestEmptyType.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 4);
+    assertTrue("symbol not found: main\r".equals(lines[1]));
+    assertTrue("1 error.\r".equals(lines[3]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestEmptyTypeButWithImport() {
-    assertTrue(singleTest("TestEmptyTypeButWithImport.j"));
+    String testOutput = testWithRedirectedSystemOut("TestEmptyTypeButWithImport.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 4);
+    assertTrue("symbol not found: main\r".equals(lines[1]));
+    assertTrue("1 error.\r".equals(lines[3]));
+    System.out.println("As expected.\\n");
   }
 
   @Test
   public void TestEmptyTypeButWithPackageName() {
-    assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageName.j"));
+    String testOutput = testWithRedirectedSystemOut("me" + File.separator + "TestEmptyTypeButWithPackageName.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 4);
+    assertTrue("symbol not found: main\r".equals(lines[1]));
+    assertTrue("1 error.\r".equals(lines[3]));
+    System.out.println("As expected.\\n");
   }
 
   @Test
   public void TestEmptyTypeButWithPackageNameAndImport() {
-    assertTrue(singleTest("me" + File.separator + "TestEmptyTypeButWithPackageNameAndImport.j"));
+    String testOutput = testWithRedirectedSystemOut("me" + File.separator + "TestEmptyTypeButWithPackageNameAndImport.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 4);
+    assertTrue("symbol not found: main\r".equals(lines[1]));
+    assertTrue("1 error.\r".equals(lines[3]));
+    System.out.println("As expected.\\n");
   }
 }

@@ -1,8 +1,12 @@
 public class TestStatementExpression {
   
   private static byte b;
-  
-  public static void mein() {
+
+  private static void doIt() {
+    println("doIt");
+  }
+
+  public static void main() {
     // assignment: Name AssignmentOperator Expression
     b = 1;
     // ImportedClass.b = 2;
@@ -29,6 +33,6 @@ public class TestStatementExpression {
     // postdecrementExpression
     b--;
     // methodInvocation
-    //doIt()
+    doIt();
   }
 }

@@ -29,6 +29,7 @@ public enum FunctionType {
   importFunction("import"),
   classFunction("class"),
   method("method"),
+  returnFunction("return"),
   stringConstant("stringConstant"),
   stop("stop"),
   call("call"),

@@ -133,17 +133,20 @@ public class LexemeReader {
   public void error() {
     if (lastLinePrinted != lineNumber) {
       // when in debug mode, make sure error message starts at a new line
-      if (debugMode)
+      if (debugMode) {
         System.out.println();
+      }
       System.out.println(fileName + ":" + jCodePath + lineNumber);
-      System.out.print(line); // when line of source code was read, it was
-                              // extended with a linefeed.
       lastLinePrinted = lineNumber;
     }
-    for (int i = 0; i < linePos - 1; i++) {
-      System.out.print(' ');
+    if (line != null) {
+      System.out.print(line); // when line of source code was read, it was
+                              // extended with a linefeed.
+      for (int i = 0; i < linePos - 1; i++) {
+        System.out.print(' ');
+      }
+      System.out.print('^');
     }
-    System.out.print('^');
   }
 
   protected int toDecimalDigit(char ch) {

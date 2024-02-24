@@ -153,10 +153,15 @@ TODO:
 
 `postdecrementExpression   ::= name "--".`
 
+`methodInvocation          ::= name arguments.`
+
+`arguments                 ::= "(" argumentList? ")".`
+
 TODO
 ``
 
-`methodInvocation          ::= name arguments.`
+`argumentList              ::= expression { "," expression }.`
+
 `arraySelector             ::= name { "[" Expression "]" }.`
 `assignment                ::= name assignmentOperator expression.`
 
@@ -165,7 +170,6 @@ TODO
 `JavaIdentifier                       = identifier.`
 
 TODO
-Arguments
 Expression
 
 ### Expressions
@@ -229,10 +233,6 @@ Expression
 `primaryNoNewArray                    = literal | "this" | "(" expression ")" | fieldAccess | methodInvocation.`
 
 `fieldAccess                          = primary "." identifier.`
-
-`methodInvocation                     = methodName "(" argumentList? ")".`
-
-`argumentList                         = expression { "," expression }.`
 
 ### Tokens
 `packageName                          = identifier { "." identifier }.`

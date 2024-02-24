@@ -22,10 +22,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +51,9 @@ public abstract class AbstactRegressionTest {
   protected abstract void init();
 
   /*
-   * Run a single test in the regression test suite.
+   * Run a single test in the regression test suite. Compare the generated
+   * M-code file against a file with the expected M-code. Return true if
+   * generated M-code is as expected.
    */
   protected boolean singleTest(String fileName) {
     // Optionally override default configuration values.
@@ -65,11 +69,47 @@ public abstract class AbstactRegressionTest {
     lexemeReader.init(debugMode, System.getProperty("user.dir") + jCodeLocation, fileName);
     ArrayList<Instruction> instructions = pCompiler.compile(lexemeReader);
 
-    // List compiled code for the M machine.
+    // List compiled M-code and compare against expected M-code.
+    boolean asExpected = false;
     if (!instructions.isEmpty()) {
       writeListing(fileName, instructions, verboseMode);
+      asExpected = compareMCode(fileName, instructions);
     }
 
+    return asExpected;
+  } // singleTest
+
+  /*
+   * Run a single test in the regression test suite. Redirect, capture and
+   * return the System.out console output. Calling test case may the assert the
+   * console output against expected console output.
+   */
+  protected String testWithRedirectedSystemOut(String fileName) {
+    // Create a stream to hold the output
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream ps = new PrintStream(baos);
+    // IMPORTANT: Save the old System.out!
+    PrintStream old = System.out;
+    // Tell Java to use your special stream
+    System.setOut(ps);
+
+    // Do the test, with System.out redirected to our ps PrintStream.
+    singleTest(fileName);
+
+    // Put things back
+    System.out.flush();
+    System.setOut(old);
+
+    // Return what happened
+    return baos.toString();
+  }
+
+  /**
+   * @param fileName
+   * @param instructions
+   * @return
+   */
+  protected boolean compareMCode(String fileName, ArrayList<Instruction> instructions) {
     // Compare M-code from compiler against expected M-code.
     FileReader fr;
     BufferedReader br;
@@ -173,9 +213,8 @@ public abstract class AbstactRegressionTest {
       System.out.println(e.getMessage());
       System.out.println("Error : " + fileName + " : " + e.getMessage());
     }
-
     return result;
-  } // singleTest
+  }
 
   private void writeListing(String fileName, ArrayList<Instruction> instructions, boolean verboseMode) {
     /* write M assembly code to an *.m file */

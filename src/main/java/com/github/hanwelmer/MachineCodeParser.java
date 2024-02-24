@@ -67,6 +67,7 @@ public class MachineCodeParser {
         case acc8CompareAcc16:
         case acc8ToAcc16:
         case read:
+        case returnFunction:
         case stackAcc16:
         case stackAcc16ToAcc8:
         case stackAcc8:
@@ -82,19 +83,24 @@ public class MachineCodeParser {
         case writeString:
           result = new Instruction(functionType);
           break;
-        // instructions with one or more operands.
-        case classFunction:
-          result = parseClassFunction(line, functionType);
+        // instructions with address operand.
+        case call:
+          result = parseCallFunction(line, functionType);
           break;
+        // instructions with one word operand.
+        case acc16Load:
+          result = parseFunctionWithWordOperand(line, functionType);
+          break;
+        // other instructions with one or more operands.
         case importFunction:
         case packageFunction:
           result = parsePackageOrImportFunction(line, functionType);
           break;
+        case classFunction:
+          result = parseClassFunction(line, functionType);
+          break;
         case method:
           result = parseMethod(line, functionType);
-          break;
-        case acc16Load:
-          result = parseAcc16Load(line, functionType);
           break;
         case stringConstant:
           result = parseStringConstant(line, lineNumber);
@@ -126,7 +132,6 @@ public class MachineCodeParser {
         case brLe:
         case brLt:
         case brNe:
-        case call:
         case decrement16:
         case decrement8:
         case divAcc16:
@@ -151,6 +156,13 @@ public class MachineCodeParser {
     }
     return result;
 
+  }
+
+  // Parse call n.
+  private Instruction parseCallFunction(String line, FunctionType functionType) {
+    skipSpaces(line);
+    int value = parseNumber(line);
+    return new Instruction(functionType, new Operand(OperandType.label, Datatype.word, value));
   }
 
   private Instruction parseStringConstant(String line, int lineNumber) {
@@ -179,7 +191,7 @@ public class MachineCodeParser {
    * @param functionType
    * @return
    */
-  private Instruction parseAcc16Load(String line, FunctionType functionType) {
+  private Instruction parseFunctionWithWordOperand(String line, FunctionType functionType) {
     Instruction result;
     skipSpaces(line);
     Operand operand = parseOperand(line, Datatype.word);

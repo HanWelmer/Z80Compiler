@@ -60,10 +60,20 @@ public class pCompiler {
 
     try {
       init();
-      compilationUnit();
+
+      // code generation.
+      int mainLabel = saveLabel();
+      Operand mainLabelOperand = new Operand("main", 0);
+      plant(new Instruction(FunctionType.call, mainLabelOperand));
       plant(new Instruction(FunctionType.stop));
+
+      // lexical analysis, semantic analysis and code generation.
+      compilationUnit();
       debug("\n");
+
+      // post processing.
       optimize();
+      updateReferencesToMethods();
       updateReferencesToStringConstants(instructions.size());
       plantStringConstants();
     } catch (FatalError e) {
@@ -142,6 +152,8 @@ public class pCompiler {
 
   // Constants and class variables for semantic analysis phase.
   private String packageName;
+  private ArrayList<Symbol> methodSymbolTable = new ArrayList<Symbol>();
+  Map<String, ArrayList<Integer>> methodReferences = new HashMap<String, ArrayList<Integer>>();
   private Identifiers identifiers = new Identifiers();
   private StringConstants stringConstants = new StringConstants();
 
@@ -248,8 +260,8 @@ public class pCompiler {
     lexemeReader.error();
   }
 
-  private void errorUnexpectedSymbol(String message) {
-    error(3);
+  private void error(int n, String message) {
+    error(n);
     System.out.println(message);
   }
 
@@ -356,8 +368,17 @@ public class pCompiler {
       case 35:
         System.out.println("unexpected modifier in local variable declaration.");
         break;
+      case 36:
+        System.out.println("method not declared.");
+        break;
+      case 37:
+        System.out.println("incompatible return type.");
+        break;
+      case 38:
+        System.out.print("symbol not found: ");
+        break;
     }
-  }
+  } // error
 
   /*************************
    *
@@ -374,7 +395,7 @@ public class pCompiler {
     if (okSet.contains(lexeme.type)) {
       result = true;
     } else {
-      errorUnexpectedSymbol("found " + lexeme.type + ", expected " + okSet);
+      error(3, "found " + lexeme.type + ", expected " + okSet);
       stopSet.add(LexemeType.eof);
       while (!stopSet.contains(lexeme.type)) {
         lexeme = lexemeReader.skipAfterError(sourceCode);
@@ -815,7 +836,7 @@ public class pCompiler {
       }
     } else {
       // extend error reporting, using lexeme types in localSet as a guidance.
-      errorUnexpectedSymbol("expected an identifier");
+      error(3, "expected an identifier");
     }
 
     debug("\nclassBodyDeclaration: end");
@@ -836,6 +857,11 @@ public class pCompiler {
   }
 
   /**
+   * restOfVariableDeclarator ::= { "[" "]" } [ "=" variableInitializer ] { ","
+   * variableDeclarator }.
+   * 
+   * variableInitializer ::= arrayInitializer | expression.
+   * 
    * Parse the rest of variable declarator after the modifiers, type and the
    * identifier of the first variable declarator have already been read. Global
    * variable lexeme holds the first lexeme after the first identifier.
@@ -848,11 +874,6 @@ public class pCompiler {
    * @param stopSet
    * @throws FatalError
    */
-  // restOfVariableDeclarator ::= { "[" "]" } [ "=" variableInitializer ] {
-  // "," variableDeclarator }.
-  //
-  // variableInitializer ::= arrayInitializer | expression.
-  //
   // For now only:
   // restOfVariableDeclarator ::= [ "=" expression ].
   //
@@ -954,6 +975,10 @@ public class pCompiler {
   }
 
   /**
+   * methodDeclaration ::= resultType javaIdentifier formalParameters block.
+   * 
+   * method modifiers ::= "public", "private", "static" or "synchronized".
+   * 
    * Parse a method declaration, given that the modifiers, result type and
    * identifier have already been read. Global variable lexeme holds the left
    * bracket.
@@ -964,12 +989,9 @@ public class pCompiler {
    * @param stopSet
    * @throws FatalError
    */
-  // methodDeclaration ::= resultType javaIdentifier formalParameters block.
-  //
-  // method modifiers ::= "public", "private", "static" or "synchronized".
-  //
   // TODO implement semantic analysis of modifiers in methodDeclaration.
   // TODO implement stopSet in methodDeclaration.
+  // TODO implement code generation for less than trivial return statement.
   private void restOfMethodDeclaration(EnumSet<LexemeType> modifiers, ResultType resultType, String identifier,
       EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nmethodDeclaration: start " + identifier);
@@ -1007,10 +1029,24 @@ public class pCompiler {
     formalParameters();
 
     // code generation
+    int methodAddress = saveLabel();
     plant(new Instruction(FunctionType.method, identifier, modifiers, resultType));
+    // set start address for this method.
+    identifiers.getId(identifier).setIntValue(methodAddress);
+    // add method to symbol table.
+    Symbol newSymbol = new Symbol();
+    newSymbol.address = methodAddress;
+    newSymbol.packageName = packageName;
+    newSymbol.name = identifier;
+    newSymbol.resultType = resultType;
+    newSymbol.modifiers = modifiers;
+    methodSymbolTable.add(newSymbol);
 
     // lexical analysis
     block(stopSet);
+
+    // code generation
+    plantThenSource(new Instruction(FunctionType.returnFunction));
 
     debug("\nmethodDeclaration: end");
   } // restOfMethodDeclaration()
@@ -1098,7 +1134,7 @@ public class pCompiler {
           result += "*";
           lexeme = lexemeReader.getLexeme(sourceCode);
         } else {
-          errorUnexpectedSymbol("found " + lexeme.type + ", expected identifer or '*'");
+          error(3, "found " + lexeme.type + ", expected identifer or '*'");
           while (!stopSet.contains(lexeme.type)) {
             lexeme = lexemeReader.skipAfterError(sourceCode);
           }
@@ -1213,7 +1249,7 @@ public class pCompiler {
       restOfVariableDeclarator(modifiers, type, identifier, localStopSet);
     } else {
       // extend error reporting, using lexeme types in localSet as a guidance.
-      errorUnexpectedSymbol("expected an identifier");
+      error(3, "expected an identifier");
     }
 
     // code generation.
@@ -1361,7 +1397,8 @@ public class pCompiler {
   // emptyStatement ::= ";".
   private void emptyStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nemptyStatement: start with stopSet = " + stopSet);
-    // lexeme.type is ";". Skip it.
+    // lexeme.type is ";". Add it to m-code output and Skip it.
+    plantSource();
     lexeme = lexemeReader.getLexeme(sourceCode);
     debug("\nemptyStatement: end");
   }
@@ -1624,7 +1661,7 @@ public class pCompiler {
         } else if (lexeme.type != LexemeType.RPAREN) {
           // lexical analysis.
           // only + symbol allowed between terms in string expression.
-          errorUnexpectedSymbol(" " + lexeme.makeString(null));
+          error(3, " " + lexeme.makeString(null));
           // skip unexpected symbol.
           if (checkOrSkip(EnumSet.of(lexeme.type), stopWriteSet)) {
             lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1811,11 +1848,13 @@ public class pCompiler {
         postincrementExpression(name, stopSet);
       } else if (lexeme.type == LexemeType.decrement) {
         postdecrementExpression(name, stopSet);
+      } else if (lexeme.type == LexemeType.LPAREN) {
+        methodInvocation(name, stopSet);
       } else {
         assignment(name, stopSet);
       }
     } else {
-      errorUnexpectedSymbol(" " + lexeme.makeString(null));
+      error(3, " " + lexeme.makeString(null));
       // skip unexpected symbol.
       if (checkOrSkip(EnumSet.of(lexeme.type), stopSet)) {
         lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1941,6 +1980,36 @@ public class pCompiler {
     }
   } // postdecrementExpression
 
+  // methodInvocation ::= name arguments.
+  private void methodInvocation(String name, EnumSet<LexemeType> stopSet) throws FatalError {
+    // semantic analysis.
+    if (identifiers.checkId(name)) {
+      // TODO support method call before method declaration.
+      // get the method signature from the list of identifiers.
+      Variable method = identifiers.getId(name);
+      debug("\nmethod invocation: " + method);
+
+      // lexical analysis.
+      // get the optional list of actual parameters.
+      ArrayList<Datatype> arguments = arguments(stopSet);
+
+      // semantic analysis: check actual parameters against formal parameters.
+      // TODO add check of actual parameters against formal parameters.
+
+      // semantic analysis: check return type.
+      // TODO add check of return type.
+      if (method.getDatatype() != Datatype.voidd) {
+        error(37); // incompatible return type.
+      }
+
+      // code generation.
+      // TODO support method arguments (actual parameters).
+      plant(new Instruction(FunctionType.call, new Operand(name, method.getIntValue())));
+    } else {
+      error(36); // method not declared.
+    }
+  } // methodInvocation
+
   // TODO refactor assignment.
   private void assignment(String name, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nassignment: start with stopSet = " + stopSet + "; variable e=" + name);
@@ -1977,6 +2046,22 @@ public class pCompiler {
 
     debug("\nassignment: end");
   } // assignment()
+
+  // arguments ::= "(" argumentList? ")".
+  private ArrayList<Datatype> arguments(EnumSet<LexemeType> stopSet) throws FatalError {
+    ArrayList<Datatype> result = new ArrayList<Datatype>();
+    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSet)) {
+      lexeme = lexemeReader.getLexeme(sourceCode);
+
+      // TODO implement argumentList.
+
+      // skip closing right parenthesis.
+      if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
+        lexeme = lexemeReader.getLexeme(sourceCode);
+      }
+    }
+    return result;
+  } // arguments
 
   /*********************************************
    * 
@@ -2639,6 +2724,15 @@ public class pCompiler {
       debug(" " + instruction.operand);
     }
 
+    // update references to method symbols.
+    if (instruction.function == FunctionType.call) {
+      String name = instruction.operand.strValue;
+      if (methodReferences.get(name) == null) {
+        methodReferences.put(name, new ArrayList<Integer>());
+      }
+      methodReferences.get(name).add(instructions.size());
+    }
+
     // insert M-code (virtual machine code) into memory.
     instructions.add(instruction);
 
@@ -2687,6 +2781,19 @@ public class pCompiler {
     // for debugging purposes.
     debug(" ;" + " stackedDatatypes=" + stackedDatatypes);
   } // plantCode
+
+  private int findSymbol(String name) {
+    int address = 0;
+    for (Symbol symbol : methodSymbolTable) {
+      // TODO add package name, return type and modifiers to the search
+      // condition.
+      if (name.equals(symbol.name)) {
+        address = symbol.address;
+        break;
+      }
+    }
+    return address;
+  }
 
   private boolean plantComparisonCode(Operand leftOperand, Operand rightOperand) {
     debug("\nplantComparisonCode: leftOperand=" + leftOperand + ", rightOperand=" + rightOperand + ", acc16InUse = " + acc16.inUse()
@@ -2973,33 +3080,62 @@ public class pCompiler {
     }
   } // plantStringConstants
 
+  private void updateReferencesToMethods() {
+    methodReferences.forEach((name, references) -> {
+      int address = findSymbol(name);
+      if (address == 0) {
+        error(38, name);
+      }
+      // update references to label <name>.
+      for (Integer reference : references) {
+        Instruction instruction = instructions.get(reference);
+        if (instruction.function != FunctionType.call) {
+          throw new RuntimeException(String.format("One of the instructions to symbol %s is not a call function", name));
+        } else if (instruction.operand == null) {
+          throw new RuntimeException(String.format("One of the instructions to symbol %s does not have an operand", name));
+        } else if (instruction.operand.opType != OperandType.label) {
+          throw new RuntimeException(String.format("One of the instructions to symbol %s does not have a label operand", name));
+        } else if (instruction.operand.intValue == 0) {
+          instruction.operand.intValue = address;
+        } else if (instruction.operand.intValue != address) {
+          throw new RuntimeException(String.format(
+              "One of the instructions to symbol %s already has %d as address which is different from expected value %d", name,
+              instruction.operand.intValue, address));
+        }
+      }
+    });
+  }
+
   private void updateReferencesToStringConstants(int offset) {
     Map<Integer, ArrayList<Integer>> stringReferences = new HashMap<Integer, ArrayList<Integer>>();
     int lineNumber = 0;
-    Instruction instruction;
-    do {
-      instruction = instructions.get(lineNumber);
+    for (Instruction instruction : instructions) {
+      lineNumber++;
       if (STRING_CONSTANT_FUNCTIONS.contains(instruction.function) && instruction.operand != null
           && instruction.operand.opType == OperandType.constant && instruction.operand.datatype == Datatype.string) {
+
+        // error detection
         if (instruction.operand.intValue == null) {
           throw new RuntimeException(String.format("operand.intValue is null at instruction %d: instruction: %s operand: %s",
               +lineNumber, instruction, instruction.operand));
         }
+
+        // update reference to string constant.
         int oldAddress = instruction.operand.intValue;
         int newAddress = instruction.operand.intValue + offset;
         debug("\nUpdating reference to string constant at " + lineNumber + " from " + oldAddress + " to " + newAddress);
         instruction.operand.intValue = newAddress;
+
+        // add reference to the list of references to the string constant.
         if (debugMode) {
           // add index of string constant to the cross references list.
           if (stringReferences.get(newAddress) == null) {
             stringReferences.put(newAddress, new ArrayList<Integer>());
           }
-          // add reference to the list of references to the string constant.
           stringReferences.get(newAddress).add(lineNumber);
         }
       }
-      lineNumber++;
-    } while (instruction.function != FunctionType.stop);
+    }
 
     // log string constants and references to them.
     if (debugMode) {

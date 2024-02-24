@@ -33,7 +33,7 @@ public class Instruction {
 
   private EnumSet<FunctionType> noOperand = EnumSet.of(
       // special instructions:
-      FunctionType.stop
+      FunctionType.stop, FunctionType.returnFunction
       // Input and output instructions:
       , FunctionType.read, FunctionType.writeAcc8, FunctionType.writeAcc16, FunctionType.writeString, FunctionType.writeLineAcc8,
       FunctionType.writeLineAcc16, FunctionType.writeLineString
@@ -84,7 +84,7 @@ public class Instruction {
     if (twoOperands.contains(function)) {
       throw new RuntimeException("Internal compiler error: functionType " + fn + " expects two operands.");
     }
-  }
+  } // Instruction(FunctionType fn)
 
   public Instruction(FunctionType fn, Operand operand) {
     if (noOperand.contains(function)) {
@@ -107,9 +107,6 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte or word value.");
         }
         break;
-      case call:
-        throw new RuntimeException("Internal compiler error: functionType " + fn + " not yet implemented.");
-      // break;
       case comment:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
@@ -284,6 +281,7 @@ public class Instruction {
       case brLe:
       case brGt:
       case brGe:
+      case call:
         if (operand != null && operand.opType == OperandType.label) {
           if (operand.intValue == null) {
             throw new RuntimeException(
@@ -303,7 +301,7 @@ public class Instruction {
     // deep copy of parameter operand to member operand, otherwise a reference
     // to the mutable object operand is copied into the Instruction.
     this.operand = deepCopy(operand);
-  }
+  } // Instruction(FunctionType fn, Operand operand)
 
   public Instruction(FunctionType fn, Operand operand1, Operand operand2) {
     // error detection (internal compiler errors):
@@ -332,7 +330,7 @@ public class Instruction {
     // to the mutable object operand is copied into the Instruction.
     this.operand = deepCopy(operand1);
     this.operand2 = deepCopy(operand2);
-  }
+  } // Instruction(FunctionType fn, Operand operand1, Operand operand2)
 
   public Instruction(FunctionType fn, String identifier, EnumSet<LexemeType> modifiers, ResultType resultType) {
     // copy parameter fn to member function.
@@ -348,11 +346,11 @@ public class Instruction {
     function = fn;
     this.modifiers = modifiers;
     this.resultType = resultType;
-  }
+  } // Instruction(fn, identifier, modifiers, resultType)
 
   protected Operand deepCopy(Operand operand) {
     Operand newOperand;
-    if (operand.datatype == Datatype.string) {
+    if (operand.opType == OperandType.label || operand.datatype == Datatype.string) {
       newOperand = new Operand(operand.opType, operand.datatype, operand.intValue);
       newOperand.strValue = operand.strValue;
     } else if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
@@ -362,7 +360,7 @@ public class Instruction {
     }
     newOperand.isFinal = operand.isFinal;
     return newOperand;
-  }
+  } // deepCopy
 
   public String toString() {
     String result = function.getValue();
@@ -500,6 +498,7 @@ public class Instruction {
         result = "writeLineString";
         break;
       case stop:
+      case returnFunction:
       case acc16CompareAcc8:
       case acc8CompareAcc16:
       case acc16ToAcc8:
@@ -575,5 +574,5 @@ public class Instruction {
         throw new RuntimeException("unsupported instruction");
     }
     return result;
-  }
+  } // toString
 }

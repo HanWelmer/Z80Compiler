@@ -8,6 +8,7 @@ class TwoMethods {
   }
 
   public static void main() {
+    doIt();
     println("TwoMethods Klaar");
   }
 }

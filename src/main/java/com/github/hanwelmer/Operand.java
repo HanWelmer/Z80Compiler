@@ -29,16 +29,16 @@ public class Operand {
   public String strValue;
   public boolean isFinal = false;
   /*
-   * opType    | datatype    | intValue | strValue   |
-   *-----------+-------------+----------+------------+
-   * unknown   |     X       |    X     |     X      |
-   * stack     | byt,integer |    X     |     X      |
-   * constant  | byt,integer | value    |     X      |
-   * constant  | string      |    X     | string     |
-   * var       | byt,integer | address  |     X      |
-   * final var | byt,integer |    X     | identifier |
-   * label     | byt,integer | address  |     X      |
-   * acc       | byt,integer |    X     |     X      |
+   * opType    | datatype    | strValue   | intValue |
+   *-----------+-------------+------------+----------+
+   * unknown   |     X       |     X      |    X     |
+   * stack     | byt,integer |     X      |    X     |
+   * constant  | byt,integer |     X      | value    |
+   * constant  | string      |  string    |    X     |
+   * var       | byt,integer |     X      | address  |
+   * final var | byt,integer | identifier |    X     |
+   * label     | byt,integer |   name     | address  |
+   * acc       | byt,integer |     X      |    X     |
   */
   
   public Operand(OperandType opType) {
@@ -62,13 +62,17 @@ public class Operand {
     this.strValue = value;
   }
   
+  public Operand(String labelName, Integer address) {
+    this.opType = OperandType.label;
+    this.datatype = Datatype.word;
+    this.strValue = labelName;
+    this.intValue = address;
+  }
+
   public String toString() {
     String result = "operand(" + opType;
     if (datatype != null) {
       result += ", type=" + datatype;
-    }
-    if (intValue != null) {
-      result += ", intValue=" + intValue;
     }
     if (strValue != null) {
       if (datatype == Datatype.string) {
@@ -76,6 +80,9 @@ public class Operand {
       } else {
         result += ", strValue=" + strValue;
       }
+    }
+    if (intValue != null) {
+      result += ", intValue=" + intValue;
     }
     result += ", final=" + isFinal;
     result += ")";
