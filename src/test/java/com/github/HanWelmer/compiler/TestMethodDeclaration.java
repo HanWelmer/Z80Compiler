@@ -1,6 +1,5 @@
 package com.github.HanWelmer.compiler;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -45,17 +44,35 @@ public class TestMethodDeclaration extends AbstactRegressionTest {
 
   @Test
   public void TestStaticPublicMain() {
-    assertFalse(singleTest("StaticPublicMain.j"));
+    String testOutput = testWithRedirectedSystemOut("StaticPublicMain.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 11);
+    assertTrue("              ^unexpected symbol; found public, expected [void, byte, word, String]\r".equals(lines[2]));
+    assertTrue("4 errors.\r".equals(lines[10]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestFinalMain() {
-    assertFalse(singleTest("FinalMain.j"));
+    String testOutput = testWithRedirectedSystemOut("FinalMain.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("                               ^unexpected modifier in method declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestPublicMain() {
-    assertFalse(singleTest("PublicMain.j"));
+    String testOutput = testWithRedirectedSystemOut("PublicMain.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("                  ^static modifier is mandatory for methods.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
 }

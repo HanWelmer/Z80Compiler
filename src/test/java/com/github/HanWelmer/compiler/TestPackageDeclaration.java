@@ -18,7 +18,6 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.HanWelmer.compiler;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -53,7 +52,13 @@ public class TestPackageDeclaration extends AbstactRegressionTest {
 
   @Test
   public void TestPackageYou() {
-    assertFalse(singleTest("me" + File.separator + "TestPackageYou.j"));
+    String testOutput = testWithRedirectedSystemOut("me" + File.separator + "TestPackageYou.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("           ^package name does not match path of source code file.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test

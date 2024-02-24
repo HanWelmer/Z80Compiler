@@ -18,7 +18,6 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.HanWelmer.compiler;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -50,52 +49,112 @@ public class TestClassDeclaration extends AbstactRegressionTest {
 
   @Test
   public void TestClassModifierFinal() {
-    assertFalse(singleTest("TestClassModifierFinal.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierFinal.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("          ^unexpected modifier in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierNative() {
-    assertFalse(singleTest("TestClassModifierNative.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierNative.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("           ^unexpected modifier in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierPrivate() {
-    assertFalse(singleTest("TestClassModifierPrivate.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierPrivate.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("            ^unexpected modifier in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierStatic() {
-    assertFalse(singleTest("TestClassModifierStatic.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierStatic.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("           ^unexpected modifier in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierTransient() {
-    assertFalse(singleTest("TestClassModifierTransient.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierTransient.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("              ^unexpected modifier in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierVolatile() {
-    assertFalse(singleTest("TestClassModifierVolatile.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierVolatile.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("             ^unexpected modifier in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierPrivatePublic() {
-    assertFalse(singleTest("TestClassModifierPrivatePublic.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierPrivatePublic.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 11);
+    assertTrue("             ^unexpected modifier in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("4 errors.\r".equals(lines[10]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierPublicPrivate() {
-    assertFalse(singleTest("TestClassModifierPublicPrivate.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierPublicPrivate.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue("                   ^too many modifers in class or enum declaration.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassModifierPublicPublic() {
-    assertFalse(singleTest("TestClassModifierPublicPublic.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassModifierPublicPublic.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 9);
+    assertTrue("            ^unexpected symbol; found public, expected [class]\r".equals(lines[2]));
+    assertTrue("3 errors.\r".equals(lines[8]));
+    System.out.println("As expected.\n");
   }
 
   @Test
   public void TestClassAllModifiers() {
-    assertFalse(singleTest("TestClassAllModifiers.j"));
+    String testOutput = testWithRedirectedSystemOut("TestClassAllModifiers.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length == 5);
+    assertTrue(lines[2].contains("^too many modifers in class or enum declaration.\r"));
+    assertTrue("1 error.\r".equals(lines[4]));
+    System.out.println("As expected.\n");
   }
 
 }
