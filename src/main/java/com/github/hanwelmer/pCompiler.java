@@ -372,6 +372,9 @@ public class pCompiler {
       case 38:
         System.out.print("symbol not found: ");
         break;
+      case 39:
+        System.out.print("number of actual parameters does not match number of formal parameters.");
+        break;
     }
   } // error
 
@@ -609,7 +612,13 @@ public class pCompiler {
         }
       }
 
-      classDecl(isPublic, stopSet);
+      if (lexeme.type == LexemeType.classLexeme) {
+        classDecl(isPublic, stopSet);
+      } else if (lexeme.type == LexemeType.enumLexeme) {
+        enumDecl();
+      } else {
+        error(3, lexeme.makeString(null));
+      }
     }
 
     debug("\ntypeDeclaration: end");
@@ -1990,6 +1999,9 @@ public class pCompiler {
 
       // semantic analysis: check actual parameters against formal parameters.
       // TODO add check of actual parameters against formal parameters.
+      if (arguments.size() != 0) {
+        error(39);
+      }
 
       // semantic analysis: check return type.
       // TODO add check of return type.

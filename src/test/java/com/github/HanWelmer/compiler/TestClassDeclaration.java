@@ -141,7 +141,7 @@ public class TestClassDeclaration extends AbstactRegressionTest {
     System.out.println(testOutput);
     String[] lines = testOutput.split("\n");
     assertTrue(lines.length == 9);
-    assertTrue("            ^unexpected symbol; found public, expected [class]\r".equals(lines[2]));
+    assertTrue("            ^unexpected symbol; public\r".equals(lines[2]));
     assertTrue("3 errors.\r".equals(lines[8]));
     System.out.println("As expected.\n");
   }
