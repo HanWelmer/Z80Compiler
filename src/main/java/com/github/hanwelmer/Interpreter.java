@@ -40,7 +40,6 @@ public class Interpreter {
   private EnumSet<FunctionType> branchSet = EnumSet.noneOf(FunctionType.class);
   private boolean debugMode = false;
   private int inputIndex = 0;
-  private ArrayList<Symbol> methodSymbolTable;
   private Stack<Integer> machineStack;
   private int[] vars;
   private int pc;
@@ -55,56 +54,11 @@ public class Interpreter {
 
     /* initialize interpreter */
     machineStack = new Stack<Integer>();
-    methodSymbolTable = collectMethods(instructions);
     vars = new int[MAX_VARS];
     branchSet.clear();
     acc16 = 0;
     acc8 = 0;
     pc = 0;
-  }
-
-  private ArrayList<Symbol> collectMethods(ArrayList<Instruction> instructions2) {
-    // collect method declarations from the M-code instructions.
-    String packageName = "";
-    String symbolName = "";
-    ArrayList<Symbol> result = new ArrayList<Symbol>();
-    int address = 0;
-    while (address < instructions.size()) {
-      Instruction instr = instructions.get(address);
-      switch (instr.function) {
-        case packageFunction:
-          System.out.println("Unsupported declaration function: " + instr.function);
-          System.exit(1);
-        case importFunction:
-          System.out.println("Unsupported declaration function: " + instr.function);
-          System.exit(1);
-        case classFunction:
-          symbolName += instr.operand.strValue;
-          break;
-        case method:
-          // operand.strValue + " " + modifiers + " " + resultType.getType();
-          Symbol newSymbol = new Symbol();
-          newSymbol.address = address;
-          newSymbol.packageName = packageName;
-          newSymbol.name = instr.operand.strValue;
-          newSymbol.resultType = instr.resultType;
-          newSymbol.modifiers = instr.modifiers;
-          result.add(newSymbol);
-          break;
-        default:
-          // ignore all other functions
-          break;
-      }
-      address++;
-    }
-
-    System.out.println();
-    System.out.println("list of methods:");
-    for (Symbol symbol : result) {
-      System.out.println(symbol);
-    }
-    System.out.println();
-    return result;
   }
 
   /* interface method: execute a single instruction */
