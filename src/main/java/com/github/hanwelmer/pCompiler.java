@@ -2651,29 +2651,6 @@ public class pCompiler {
     }
   }
 
-  // parse a sequence of statements, and return the address of the first object
-  // code in the sequence of statements.
-  // statements = statement*.
-  private int statements(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nstatements: start with stopSet = " + stopSet);
-    int firstAddress = 0;
-
-    // while (checkOrSkip(START_STATEMENT, stopSet)) {
-    while (START_STATEMENT.contains(lexeme.type)) {
-      int nextAddress = statement(stopSet);
-      if (firstAddress == 0)
-        firstAddress = nextAddress;
-      // lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-    debug("\nstatements: end, firstAddress = " + firstAddress);
-
-    // first source } as comment, then branch, then next source as comment.
-    if (lexeme.type == LexemeType.endLexeme) {
-      plantSource();
-    }
-    return firstAddress;
-  } // statements
-
   /*****************************
    *
    * Code generation methods
