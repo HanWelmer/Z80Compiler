@@ -137,9 +137,6 @@ public class pCompiler {
       LexemeType.finalLexeme, LexemeType.identifier, LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme,
       LexemeType.ifLexeme, LexemeType.whileLexeme, LexemeType.doLexeme, LexemeType.forLexeme, LexemeType.returnLexeme,
       LexemeType.printlnLexeme, LexemeType.outputLexeme, LexemeType.sleepLexeme);
-  // Lexeme types that start an assignment.
-  private static final EnumSet<LexemeType> START_ASSIGNMENT = EnumSet.of(LexemeType.finalLexeme, LexemeType.identifier,
-      LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme);
   // Lexeme types that start an expression.
   private static final EnumSet<LexemeType> START_EXPRESSION = EnumSet.of(LexemeType.LPAREN, LexemeType.identifier,
       LexemeType.constant, LexemeType.stringConstant, LexemeType.inputLexeme, LexemeType.readLexeme);
