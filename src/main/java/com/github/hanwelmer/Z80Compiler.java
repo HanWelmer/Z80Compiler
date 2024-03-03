@@ -97,8 +97,8 @@ public class Z80Compiler {
             transcoder.writeZ80Assembler(fileName.replace(".j", ".asm"), z80Instructions, verboseMode);
 
             if (binary) {
-              transcoder.writeZ80toListing(fileName.replace(".j", ".hex"), z80Instructions, verboseMode);
-              transcoder.writeZ80toIntelHex(fileName.replace(".j", ".lst"), z80Instructions, verboseMode);
+              transcoder.writeZ80toListing(fileName.replace(".j", ".lst"), z80Instructions, verboseMode);
+              transcoder.writeZ80toIntelHex(fileName.replace(".j", ".hex"), z80Instructions, verboseMode);
             }
           }
 
