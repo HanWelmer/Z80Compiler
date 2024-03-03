@@ -28,7 +28,7 @@
   27 acc8= constant 3
   28 call writeLineAcc8
   29 ;TestWhile.j(11)     println("Klaar.");
-  30 acc16= constant 35
+  30 acc16= stringconstant 35
   31 writeLineString
   32 return
   33 ;TestWhile.j(12)   }

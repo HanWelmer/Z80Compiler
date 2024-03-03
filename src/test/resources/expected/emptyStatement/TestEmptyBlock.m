@@ -16,7 +16,7 @@
   15 acc8= constant 2
   16 call writeLineAcc8
   17 ;TestEmptyBlock.j(9)     println("Klaar.");
-  18 acc16= constant 23
+  18 acc16= stringconstant 23
   19 writeLineString
   20 return
   21 ;TestEmptyBlock.j(10)   }

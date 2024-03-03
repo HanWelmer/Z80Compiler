@@ -249,7 +249,7 @@
  248 call writeLineAcc16
  249 ;test9.j(29)   
  250 ;test9.j(30)     println("Klaar");
- 251 acc16= constant 256
+ 251 acc16= stringconstant 256
  252 writeLineString
  253 return
  254 ;test9.j(31)   }

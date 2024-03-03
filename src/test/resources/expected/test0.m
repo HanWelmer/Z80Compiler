@@ -22,38 +22,38 @@
   21 acc8= variable 2
   22 call writeLineAcc8
   23 ;test0.j(9)     println("Hallo" + " wereld.");
-  24 acc16= constant 60
+  24 acc16= stringconstant 60
   25 writeString
-  26 acc16= constant 61
+  26 acc16= stringconstant 61
   27 writeLineString
   28 ;test0.j(10)     println("Nog" + " een" + " bericht.");
-  29 acc16= constant 62
+  29 acc16= stringconstant 62
   30 writeString
-  31 acc16= constant 63
+  31 acc16= stringconstant 63
   32 writeString
-  33 acc16= constant 64
+  33 acc16= stringconstant 64
   34 writeLineString
   35 ;test0.j(11)     println("3 + 2 = " + 5);
-  36 acc16= constant 65
+  36 acc16= stringconstant 65
   37 writeString
   38 acc8= constant 5
   39 call writeLineAcc8
   40 ;test0.j(12)     println("3 + 3 = " + (2 * 3));
-  41 acc16= constant 66
+  41 acc16= stringconstant 66
   42 writeString
   43 acc8= constant 2
   44 acc8* constant 3
   45 call writeLineAcc8
   46 ;test0.j(13)     println("3 + 4 = " + (2 + 5) + ".");
-  47 acc16= constant 67
+  47 acc16= stringconstant 67
   48 writeString
   49 acc8= constant 2
   50 acc8+ constant 5
   51 call writeAcc8
-  52 acc16= constant 68
+  52 acc16= stringconstant 68
   53 writeLineString
   54 ;test0.j(14)     println("Klaar.");
-  55 acc16= constant 69
+  55 acc16= stringconstant 69
   56 writeLineString
   57 return
   58 ;test0.j(15)   }

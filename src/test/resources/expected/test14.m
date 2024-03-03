@@ -17,28 +17,28 @@
   16 call writeLineAcc8
   17 ;test14.j(7)   
   18 ;test14.j(8)     println("sleeping 0.25 second:");
-  19 acc16= constant 45
+  19 acc16= stringconstant 45
   20 writeLineString
   21 ;test14.j(9)     sleep(250);
   22 sleep 250
   23 ;test14.j(10)     println("sleeping 10 second:");
-  24 acc16= constant 46
+  24 acc16= stringconstant 46
   25 writeLineString
   26 ;test14.j(11)     sleep(10000);
   27 sleep 10000
   28 ;test14.j(12)     println("sleeping 0.25 second:");
-  29 acc16= constant 45
+  29 acc16= stringconstant 45
   30 writeLineString
   31 ;test14.j(13)     sleep(value);
   32 sleep 0
   33 ;test14.j(14)     println("sleeping 10 second:");
-  34 acc16= constant 46
+  34 acc16= stringconstant 46
   35 writeLineString
   36 ;test14.j(15)     sleep(bigValue);
   37 sleep 1
   38 ;test14.j(16)   
   39 ;test14.j(17)     println("Klaar");
-  40 acc16= constant 47
+  40 acc16= stringconstant 47
   41 writeLineString
   42 return
   43 ;test14.j(18)   }

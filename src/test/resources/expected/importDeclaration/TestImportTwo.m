@@ -14,7 +14,7 @@
   13 ;TestImportTwo.j(8)   public static void main() {
   14 method main [public, static] void
   15 ;TestImportTwo.j(9)     println("TestImportTwo Klaar");
-  16 acc16= constant 21
+  16 acc16= stringconstant 21
   17 writeLineString
   18 return
   19 ;TestImportTwo.j(10)   }

@@ -255,7 +255,7 @@
  254 -acc8 unstack8
  255 call writeLineAcc8
  256 ;test8.j(88)     println("Klaar");
- 257 acc16= constant 262
+ 257 acc16= stringconstant 262
  258 writeLineString
  259 return
  260 ;test8.j(89)   }

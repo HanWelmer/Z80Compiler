@@ -2277,7 +2277,7 @@
 2276 call writeLineAcc16
 2277 ;test15.j(323)   
 2278 ;test15.j(324)     println("Klaar");
-2279 acc16= constant 2284
+2279 acc16= stringconstant 2284
 2280 writeLineString
 2281 return
 2282 ;test15.j(325)   }

@@ -1349,7 +1349,7 @@
 1348 ;test2.j(351)     // stack16 - stack16
 1349 ;test2.j(352)   
 1350 ;test2.j(353)     println("Klaar");
-1351 acc16= constant 1356
+1351 acc16= stringconstant 1356
 1352 writeLineString
 1353 return
 1354 ;test2.j(354)   }

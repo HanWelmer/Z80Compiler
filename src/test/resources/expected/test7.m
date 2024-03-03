@@ -23,7 +23,7 @@
   22 call writeLineAcc8
   23 ;test7.j(15)   
   24 ;test7.j(16)     println("\nType 2, 3, 4 etc");
-  25 acc16= constant 295
+  25 acc16= stringconstant 295
   26 writeLineString
   27 ;test7.j(17)     println(read);       // 2
   28 call read
@@ -76,7 +76,7 @@
   75 call writeLineAcc16
   76 ;test7.j(32)     
   77 ;test7.j(33)     println("\nType 1048 etc");
-  78 acc16= constant 296
+  78 acc16= stringconstant 296
   79 writeLineString
   80 ;test7.j(34)     /**************************/
   81 ;test7.j(35)     /* Single term read: word */
@@ -95,14 +95,14 @@
   94 ;test7.j(42)     /* Dual term read: word constants */
   95 ;test7.j(43)     /**********************************/
   96 ;test7.j(44)     println("\nType 1050 expect 2050");
-  97 acc16= constant 297
+  97 acc16= stringconstant 297
   98 writeLineString
   99 ;test7.j(45)     println(read + 1000);   // 1050 + 1000 = 2050
  100 call read
  101 acc16+ constant 1000
  102 call writeLineAcc16
  103 ;test7.j(46)     println("\nType 1051 expect 2051");
- 104 acc16= constant 298
+ 104 acc16= stringconstant 298
  105 writeLineString
  106 ;test7.j(47)     println(1000 + read);   // 1000 + 1051 = 2051
  107 acc16= constant 1000
@@ -111,14 +111,14 @@
  110 acc16+ unstack16
  111 call writeLineAcc16
  112 ;test7.j(48)     println("\nType 1052 expect 52");
- 113 acc16= constant 299
+ 113 acc16= stringconstant 299
  114 writeLineString
  115 ;test7.j(49)     println(read - 1000);   // 1052 - 1000 =   52
  116 call read
  117 acc16- constant 1000
  118 call writeLineAcc16
  119 ;test7.j(50)     println("\nType 1053 expect 1053");
- 120 acc16= constant 300
+ 120 acc16= stringconstant 300
  121 writeLineString
  122 ;test7.j(51)     println(2106 - read);   // 2106 - 1053 = 1053
  123 acc16= constant 2106
@@ -127,14 +127,14 @@
  126 -acc16 unstack16
  127 call writeLineAcc16
  128 ;test7.j(52)     println("\nType 1054 expect 5254");
- 129 acc16= constant 301
+ 129 acc16= stringconstant 301
  130 writeLineString
  131 ;test7.j(53)     println(read * 1000);   // 1054 * 1000 = 5254
  132 call read
  133 acc16* constant 1000
  134 call writeLineAcc16
  135 ;test7.j(54)     println("\nType 1055 expect 6424");
- 136 acc16= constant 302
+ 136 acc16= stringconstant 302
  137 writeLineString
  138 ;test7.j(55)     println(1000 * read);   // 1000 * 1055 = 1.055.000 = 6424
  139 acc16= constant 1000
@@ -143,14 +143,14 @@
  142 acc16* unstack16
  143 call writeLineAcc16
  144 ;test7.j(56)     println("\nType 1056 expect 1");
- 145 acc16= constant 303
+ 145 acc16= stringconstant 303
  146 writeLineString
  147 ;test7.j(57)     println(read / 1000);   // 1056 / 1000 = 1
  148 call read
  149 acc16/ constant 1000
  150 call writeLineAcc16
  151 ;test7.j(58)     println("\nType 1057 expect 2");
- 152 acc16= constant 304
+ 152 acc16= stringconstant 304
  153 writeLineString
  154 ;test7.j(59)     println(2114 / read);   // 2114 / 1057 = 2
  155 acc16= constant 2114
@@ -163,7 +163,7 @@
  162 ;test7.j(62)     /* Dual term read: word + byte variable */
  163 ;test7.j(63)     /****************************************/
  164 ;test7.j(64)     println("\nType 1058 etc");
- 165 acc16= constant 305
+ 165 acc16= stringconstant 305
  166 writeLineString
  167 ;test7.j(65)     b = 0;
  168 acc8= constant 0
@@ -182,7 +182,7 @@
  181 acc16- variable 0
  182 call writeLineAcc16
  183 ;test7.j(69)     println("\nType 1061 expect -1061");
- 184 acc16= constant 306
+ 184 acc16= stringconstant 306
  185 writeLineString
  186 ;test7.j(70)     println(b - read);   // 0 - 1061 = -1061
  187 acc8= variable 0
@@ -193,7 +193,7 @@
  192 acc8= constant 1
  193 acc8=> variable 0
  194 ;test7.j(72)     println("\nType 1062 etc");
- 195 acc16= constant 307
+ 195 acc16= stringconstant 307
  196 writeLineString
  197 ;test7.j(73)     println(read * b);   // 1062 * 1 = 1062
  198 call read
@@ -212,7 +212,7 @@
  211 acc8= constant 12
  212 acc8=> variable 0
  213 ;test7.j(77)     println("\nType 3 expect 4");
- 214 acc16= constant 308
+ 214 acc16= stringconstant 308
  215 writeLineString
  216 ;test7.j(78)     println(3);
  217 acc8= constant 3
@@ -230,7 +230,7 @@
  229 acc8= constant 0
  230 acc8=> variable 1
  231 ;test7.j(85)     println("\nType 1066 etc");
- 232 acc16= constant 309
+ 232 acc16= stringconstant 309
  233 writeLineString
  234 ;test7.j(86)     println(read + i);   // 1066 + 0 = 1066
  235 call read
@@ -247,7 +247,7 @@
  246 acc16- variable 1
  247 call writeLineAcc16
  248 ;test7.j(89)     println("\nType 1069 expect -1069");
- 249 acc16= constant 310
+ 249 acc16= stringconstant 310
  250 writeLineString
  251 ;test7.j(90)     println(i - read);   // 0 - 1069 = -1069
  252 acc16= variable 1
@@ -259,7 +259,7 @@
  258 acc8= constant 1
  259 acc8=> variable 1
  260 ;test7.j(92)     println("\nType 1070 etc");
- 261 acc16= constant 311
+ 261 acc16= stringconstant 311
  262 writeLineString
  263 ;test7.j(93)     println(read * i);   // 1070 * 1 = 1070
  264 call read
@@ -279,7 +279,7 @@
  278 acc16= constant 3219
  279 acc16=> variable 1
  280 ;test7.j(97)     println("\nType 3 expect 1073");
- 281 acc16= constant 312
+ 281 acc16= stringconstant 312
  282 writeLineString
  283 ;test7.j(98)     println(i / read);   // 3219 / 3 = 1073  
  284 acc16= variable 1
@@ -288,7 +288,7 @@
  287 /acc16 unstack16
  288 call writeLineAcc16
  289 ;test7.j(99)     println("Klaar");
- 290 acc16= constant 313
+ 290 acc16= stringconstant 313
  291 writeLineString
  292 return
  293 ;test7.j(100)   }

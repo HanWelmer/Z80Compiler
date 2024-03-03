@@ -16,7 +16,7 @@
   15 ;TestImportNotFound.j(9)   public static void main() {
   16 method main [public, static] void
   17 ;TestImportNotFound.j(10)     println("TestImportNotFound Klaar");
-  18 acc16= constant 23
+  18 acc16= stringconstant 23
   19 writeLineString
   20 return
   21 ;TestImportNotFound.j(11)   }

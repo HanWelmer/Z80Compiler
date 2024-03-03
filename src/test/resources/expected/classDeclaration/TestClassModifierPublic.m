@@ -9,7 +9,7 @@
    8 ;TestClassModifierPublic.j(5)   public static void main() {
    9 method main [public, static] void
   10 ;TestClassModifierPublic.j(6)     println("Klaar");
-  11 acc16= constant 16
+  11 acc16= stringconstant 16
   12 writeLineString
   13 return
   14 ;TestClassModifierPublic.j(7)   }

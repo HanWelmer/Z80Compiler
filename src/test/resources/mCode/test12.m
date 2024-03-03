@@ -25,43 +25,43 @@
   24 acc8= constant 2
   25 call writeLineAcc8
   26 ;test12.j(12)     println("3  Drie keer.");
-  27 acc16= constant 128
+  27 acc16= stringconstant 128
   28 writeLineString
   29 ;test12.j(13)     println("3  Drie keer.");
-  30 acc16= constant 128
+  30 acc16= stringconstant 128
   31 writeLineString
   32 ;test12.j(14)     println("3  Drie keer.");
-  33 acc16= constant 128
+  33 acc16= stringconstant 128
   34 writeLineString
   35 ;test12.j(15)     println("4  Hier klinkt een bel\a en dan gaan we door.");
-  36 acc16= constant 129
+  36 acc16= stringconstant 129
   37 writeLineString
   38 ;test12.j(16)     println("5  Dit is pagina 1.\f   En dit is pagina 2.");
-  39 acc16= constant 130
+  39 acc16= stringconstant 130
   40 writeLineString
   41 ;test12.j(17)     println("6  Dit is gu\boed.");
-  42 acc16= constant 131
+  42 acc16= stringconstant 131
   43 writeLineString
   44 ;test12.j(18)     println("7  Getal na een tab\t1.");
-  45 acc16= constant 132
+  45 acc16= stringconstant 132
   46 writeLineString
   47 ;test12.j(19)     println("8  Dit zie je niet\r8  Dit zie je wel.");
-  48 acc16= constant 133
+  48 acc16= stringconstant 133
   49 writeLineString
   50 ;test12.j(20)     println("9  Dit is regel 1.\n   En dit regel 2.");
-  51 acc16= constant 134
+  51 acc16= stringconstant 134
   52 writeLineString
   53 ;test12.j(21)     println("10 Hier komt een dubbele quote \".");
-  54 acc16= constant 135
+  54 acc16= stringconstant 135
   55 writeLineString
   56 ;test12.j(22)     println("11 Hier komt een single quote \'.");
-  57 acc16= constant 136
+  57 acc16= stringconstant 136
   58 writeLineString
   59 ;test12.j(23)     println("12 Hier komt een backslash \\.");
-  60 acc16= constant 137
+  60 acc16= stringconstant 137
   61 writeLineString
   62 ;test12.j(24)     String str = "13 Hallo wereld.";
-  63 acc16= constant 138
+  63 acc16= stringconstant 138
   64 acc16=> variable 3
   65 ;test12.j(25)     println(str);
   66 acc16= variable 3
@@ -90,38 +90,38 @@
   89 acc8+ unstack8
   90 call writeLineAcc8
   91 ;test12.j(30)     println("18 Hallo" + " wereld.");
-  92 acc16= constant 139
+  92 acc16= stringconstant 139
   93 writeString
-  94 acc16= constant 140
+  94 acc16= stringconstant 140
   95 writeLineString
   96 ;test12.j(31)     println("19 Nog" + " een" + " bericht.");
-  97 acc16= constant 141
+  97 acc16= stringconstant 141
   98 writeString
-  99 acc16= constant 142
+  99 acc16= stringconstant 142
  100 writeString
- 101 acc16= constant 143
+ 101 acc16= stringconstant 143
  102 writeLineString
  103 ;test12.j(32)     println("12 + 8 = " + 20);
- 104 acc16= constant 144
+ 104 acc16= stringconstant 144
  105 writeString
  106 acc8= constant 20
  107 call writeLineAcc8
  108 ;test12.j(33)     println("7 * 3 = " + (7 * 3));
- 109 acc16= constant 145
+ 109 acc16= stringconstant 145
  110 writeString
  111 acc8= constant 7
  112 acc8* constant 3
  113 call writeLineAcc8
  114 ;test12.j(34)     println("10 + 12 = " + (10 + 12) + ".");
- 115 acc16= constant 146
+ 115 acc16= stringconstant 146
  116 writeString
  117 acc8= constant 10
  118 acc8+ constant 12
  119 call writeAcc8
- 120 acc16= constant 147
+ 120 acc16= stringconstant 147
  121 writeLineString
  122 ;test12.j(35)     println("Klaar");
- 123 acc16= constant 148
+ 123 acc16= stringconstant 148
  124 writeLineString
  125 return
  126 ;test12.j(36)   }

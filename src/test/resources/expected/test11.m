@@ -931,7 +931,7 @@
  930 ;test11.j(245)     //TODO
  931 ;test11.j(246)   
  932 ;test11.j(247)     println("Klaar.");
- 933 acc16= constant 938
+ 933 acc16= stringconstant 938
  934 writeLineString
  935 return
  936 ;test11.j(248)   }

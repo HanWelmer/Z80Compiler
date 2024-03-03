@@ -778,7 +778,7 @@
  777 ;test10.j(282)     //TODO
  778 ;test10.j(283)   
  779 ;test10.j(284)     println("Klaar");
- 780 acc16= constant 785
+ 780 acc16= stringconstant 785
  781 writeLineString
  782 return
  783 ;test10.j(285)   }

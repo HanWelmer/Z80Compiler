@@ -17,7 +17,7 @@
   16 acc8= constant 2
   17 call writeLineAcc8
   18 ;TestExpression.j(8)     println("Klaar.");
-  19 acc16= constant 24
+  19 acc16= stringconstant 24
   20 writeLineString
   21 return
   22 ;TestExpression.j(9)   }

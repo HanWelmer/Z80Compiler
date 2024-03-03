@@ -9,7 +9,7 @@
    8 ;TwoMethods.j(5)   private static void doIt() {
    9 method doIt [private, static] void
   10 ;TwoMethods.j(6)     println("TwoMethods doIt");
-  11 acc16= constant 26
+  11 acc16= stringconstant 26
   12 writeLineString
   13 return
   14 ;TwoMethods.j(7)   }
@@ -19,7 +19,7 @@
   18 ;TwoMethods.j(10)     doIt();
   19 call 9
   20 ;TwoMethods.j(11)     println("TwoMethods Klaar");
-  21 acc16= constant 27
+  21 acc16= stringconstant 27
   22 writeLineString
   23 return
   24 ;TwoMethods.j(12)   }

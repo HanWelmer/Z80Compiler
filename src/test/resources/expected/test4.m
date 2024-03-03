@@ -61,7 +61,7 @@
   60 acc8= constant 12
   61 call writeLineAcc8
   62 ;test4.j(16)     println("Klaar");
-  63 acc16= constant 68
+  63 acc16= stringconstant 68
   64 writeLineString
   65 return
   66 ;test4.j(17)   }

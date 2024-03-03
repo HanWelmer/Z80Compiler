@@ -12,7 +12,7 @@
   11 ;me\to\TestPackageMeTo.j(7)   public static void main() {
   12 method main [public, static] void
   13 ;me\to\TestPackageMeTo.j(8)     println("Klaar");
-  14 acc16= constant 19
+  14 acc16= stringconstant 19
   15 writeLineString
   16 return
   17 ;me\to\TestPackageMeTo.j(9)   }

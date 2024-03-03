@@ -30,7 +30,7 @@
   29 acc8= constant 3
   30 call writeLineAcc8
   31 ;TestDo.j(15)     println("Klaar.");
-  32 acc16= constant 37
+  32 acc16= stringconstant 37
   33 writeLineString
   34 return
   35 ;TestDo.j(16)   }

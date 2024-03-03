@@ -30,7 +30,7 @@
   29 ;test13.j(20)   
   30 ;test13.j(21)     //port as decimal constant
   31 ;test13.j(22)     println("Enter 5");
-  32 acc16= constant 123
+  32 acc16= stringconstant 123
   33 writeLineString
   34 ;test13.j(23)     value = input(4);
   35 input port 0x04
@@ -51,7 +51,7 @@
   50 ;test13.j(30)   
   51 ;test13.j(31)     //port as final variable + value as acc8
   52 ;test13.j(32)     println("Enter 11");
-  53 acc16= constant 124
+  53 acc16= stringconstant 124
   54 writeLineString
   55 ;test13.j(33)     output(12, input(INPUT_PORT));
   56 input port 0x0A
@@ -116,7 +116,7 @@
  115 ;test13.j(74)   */
  116 ;test13.j(75)   
  117 ;test13.j(76)     println("Klaar");
- 118 acc16= constant 125
+ 118 acc16= stringconstant 125
  119 writeLineString
  120 return
  121 ;test13.j(77)   }

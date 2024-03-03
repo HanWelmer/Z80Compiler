@@ -12,7 +12,7 @@
   11 ;StaticMain.j(7)   static void main() {
   12 method main [static] void
   13 ;StaticMain.j(8)     println("TestImport Klaar");
-  14 acc16= constant 19
+  14 acc16= stringconstant 19
   15 writeLineString
   16 return
   17 ;StaticMain.j(9)   }

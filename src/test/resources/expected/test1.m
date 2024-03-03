@@ -861,7 +861,7 @@
  860 call writeLineAcc8
  861 ;test1.j(299)   
  862 ;test1.j(300)     println("Klaar");
- 863 acc16= constant 868
+ 863 acc16= stringconstant 868
  864 writeLineString
  865 return
  866 ;test1.j(301)   }

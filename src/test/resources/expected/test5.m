@@ -1355,7 +1355,7 @@
 1354 acc8= constant 134
 1355 call writeLineAcc8
 1356 ;test5.j(175)     println("Klaar");
-1357 acc16= constant 1362
+1357 acc16= stringconstant 1362
 1358 writeLineString
 1359 return
 1360 ;test5.j(176)   }

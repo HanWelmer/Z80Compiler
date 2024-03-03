@@ -430,7 +430,17 @@ public class Instruction {
             result += " variable " + operand.intValue;
             break;
           case constant:
-            result += " constant " + operand.intValue;
+            if (operand.datatype == Datatype.string) {
+
+              // error detection
+              if (operand.intValue == null) {
+                throw new RuntimeException(
+                    String.format("operand.intValue is null at instruction: %s operand: %s", function, operand));
+              }
+              result += " stringconstant " + operand.intValue;
+            } else {
+              result += " constant " + operand.intValue;
+            }
             break;
           case stack16:
           case stack8:

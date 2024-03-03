@@ -8,7 +8,7 @@
    7 ;TestStatementExpression.j(4)   private static void doIt() {
    8 method doIt [private, static] void
    9 ;TestStatementExpression.j(5)     println("doIt");
-  10 acc16= constant 54
+  10 acc16= stringconstant 54
   11 writeLineString
   12 return
   13 ;TestStatementExpression.j(6)   }

@@ -56,7 +56,7 @@
   55 acc8= constant 5
   56 call writeLineAcc8
   57 ;TestFor.j(16)     println("Klaar.");
-  58 acc16= constant 63
+  58 acc16= stringconstant 63
   59 writeLineString
   60 return
   61 ;TestFor.j(17)   }

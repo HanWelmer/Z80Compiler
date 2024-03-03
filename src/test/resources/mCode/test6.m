@@ -414,7 +414,7 @@
  413 ;test6.j(158)     /* possible loss of data */
  414 ;test6.j(159)     /*************************/
  415 ;test6.j(160)     println("Nu komen 251 en 252");
- 416 acc16= constant 904
+ 416 acc16= stringconstant 904
  417 writeLineString
  418 ;test6.j(161)     b = 507;
  419 acc16= constant 507
@@ -433,7 +433,7 @@
  432 call writeLineAcc8
  433 ;test6.j(166)   
  434 ;test6.j(167)     println("Nu komen -253 en -254");
- 435 acc16= constant 905
+ 435 acc16= stringconstant 905
  436 writeLineString
  437 ;test6.j(168)     b = b - 505;
  438 acc8= variable 0
@@ -457,7 +457,7 @@
  456 call writeLineAcc8
  457 ;test6.j(173)     
  458 ;test6.j(174)     println("Nu komen 255 en 256");
- 459 acc16= constant 906
+ 459 acc16= stringconstant 906
  460 writeLineString
  461 ;test6.j(175)     b = 255;
  462 acc8= constant 255
@@ -487,7 +487,7 @@
  486 ;test6.j(192)     //OK
  487 ;test6.j(193)   
  488 ;test6.j(194)     println("Nu komen 1000..1047");
- 489 acc16= constant 907
+ 489 acc16= stringconstant 907
  490 writeLineString
  491 ;test6.j(195)     println(1000);      // 1000
  492 acc16= constant 1000
@@ -863,7 +863,7 @@
  862 ;test6.j(314)     /* Overflow */
  863 ;test6.j(315)     /************/
  864 ;test6.j(316)     println("Nu komen 24.764 en 25.064");
- 865 acc16= constant 908
+ 865 acc16= stringconstant 908
  866 writeLineString
  867 ;test6.j(317)     println(300 * 301); // 90.300 % 65536 = 24.764
  868 acc16= constant 300
@@ -881,7 +881,7 @@
  880 ;test6.j(322)     /* hex noatation constants */
  881 ;test6.j(323)     /***************************/
  882 ;test6.j(324)     println("hex notation constants");
- 883 acc16= constant 909
+ 883 acc16= stringconstant 909
  884 writeLineString
  885 ;test6.j(325)     byteHex = 0x41;
  886 acc8= constant 65
@@ -897,7 +897,7 @@
  896 call writeLineAcc16
  897 ;test6.j(329)   
  898 ;test6.j(330)     println("Klaar");
- 899 acc16= constant 910
+ 899 acc16= stringconstant 910
  900 writeLineString
  901 return
  902 ;test6.j(331)   }
