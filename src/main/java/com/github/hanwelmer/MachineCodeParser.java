@@ -213,6 +213,10 @@ public class MachineCodeParser {
       skipSpaces(line);
       int value = parseNumber(line);
       result = new Operand(OperandType.constant, datatype, value);
+    } else if ("stringconstant".equals(keyword)) {
+      skipSpaces(line);
+      int value = parseNumber(line);
+      result = new Operand(OperandType.constant, Datatype.string, value);
     } else {
       throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
     }

@@ -38,10 +38,22 @@ public class AssemblyInstruction {
     this.code = code;
     if (bytes != null && bytes.length > 0) {
       this.bytes = new ArrayList<Byte>(bytes.length);
+      for (int newByte : bytes) {
+        this.bytes.add((byte) newByte);
+      }
     }
-    for (int newByte : bytes) {
-      this.bytes.add((byte) newByte);
+  }
+
+  /* constructor */
+  public AssemblyInstruction(int address, String code, String strValue) {
+    this.address = address;
+    this.code = code;
+    // generate a zero terminated byte sequence for the string
+    this.bytes = new ArrayList<Byte>(strValue.length() + 1);
+    for (byte nextByte : strValue.getBytes()) {
+      this.bytes.add(nextByte);
     }
+    this.bytes.add((byte) 0);
   }
 
   public String getCode() {
@@ -54,6 +66,16 @@ public class AssemblyInstruction {
 
   public ArrayList<Byte> getBytes() {
     return bytes;
+  }
+
+  public String toString() {
+    String result = String.format("%4x %s", address, code);
+    if (bytes != null) {
+      for (byte byteValue : bytes) {
+        result += String.format(" %02x", byteValue);
+      }
+    }
+    return result;
   }
 
 }

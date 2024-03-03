@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Command line fascade for the miniJava programming language compiler, based on
@@ -96,11 +94,11 @@ public class Z80Compiler {
               System.out.println("Generating Z80 assembler code ...");
             Transcoder transcoder = new Transcoder(debugMode);
             ArrayList<AssemblyInstruction> z80Instructions = transcoder.transcode(instructions);
-            writeZ80Assembler(fileName, z80Instructions, verboseMode);
+            transcoder.writeZ80Assembler(fileName.replace(".j", ".asm"), z80Instructions, verboseMode);
 
             if (binary) {
-              writeZ80toIntelHex(fileName, z80Instructions, verboseMode);
-              writeZ80toListing(fileName, z80Instructions, transcoder.labels, transcoder.labelReferences, verboseMode);
+              transcoder.writeZ80toListing(fileName.replace(".j", ".hex"), z80Instructions, verboseMode);
+              transcoder.writeZ80toIntelHex(fileName.replace(".j", ".lst"), z80Instructions, verboseMode);
             }
           }
 
@@ -172,130 +170,6 @@ public class Z80Compiler {
       }
     } catch (IOException e) {
       System.out.println("\nException " + e.getMessage());
-    } finally {
-      if (writer != null) {
-        try {
-          writer.close();
-        } catch (IOException ee) {
-          System.out.println("\nException while closing: " + ee.getMessage());
-        }
-      }
-    }
-  }
-
-  private static void writeZ80Assembler(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
-    /* write Z80S180 assembly code to an asm file */
-    String outputFilename = fileName.replace(".j", ".asm");
-    if (verboseMode)
-      System.out.println("Writing Z80 assembler code to " + outputFilename);
-    BufferedWriter writer = null;
-    try {
-      writer = new BufferedWriter(new FileWriter(outputFilename));
-      for (AssemblyInstruction instruction : z80Instructions) {
-        writer.write(instruction.getCode());
-        writer.write("\n");
-      }
-    } catch (IOException e) {
-      System.out.println("\nException " + e.getMessage());
-    } finally {
-      if (writer != null) {
-        try {
-          writer.close();
-        } catch (IOException ee) {
-          System.out.println("\nException while closing: " + ee.getMessage());
-        }
-      }
-    }
-  }
-
-  private static void writeZ80toListing(String fileName, ArrayList<AssemblyInstruction> z80Instructions,
-      Map<String, Integer> labels, Map<String, ArrayList<Integer>> labelReferences, boolean verboseMode) {
-    /* write Z80S180 assembly and binary code to a Listing file */
-    String outputFilename = fileName.replace(".j", ".lst");
-    if (verboseMode)
-      System.out.println("Writing Z80 assembler and binary code to listing file " + outputFilename);
-    BufferedWriter writer = null;
-    try {
-      writer = new BufferedWriter(new FileWriter(outputFilename));
-      for (AssemblyInstruction instruction : z80Instructions) {
-        writer.write(String.format("%04X", instruction.getAddress()));
-        int nr = 0;
-        if (instruction.getBytes() != null) {
-          for (Byte oneByte : instruction.getBytes()) {
-            if (nr == 4) {
-              writer.write("\n    ");
-              nr = 0;
-            }
-            writer.write(String.format(" %02X", oneByte));
-            nr++;
-          }
-        }
-        while (nr < 4) {
-          writer.write("   ");
-          nr++;
-        }
-        writer.write(String.format(" %s\n", instruction.getCode()));
-      }
-
-      // assembler error: undefined label
-      boolean spacerNeeded = true;
-      for (String key : labelReferences.keySet()) {
-        if (labels.get(key) == null) {
-          if (spacerNeeded) {
-            writer.write("\n");
-            spacerNeeded = false;
-          }
-          writer.write("Error: undefined label: " + key + "\n");
-          System.out.println("Error: undefined label: " + key);
-        }
-      }
-
-      // dump label cross reference list
-      writer.write("\n");
-      writer.write("Labels and cross references:\n");
-      Map<String, Integer> sortedLabels = new TreeMap<String, Integer>(labels);
-      for (Map.Entry<String, Integer> entry : sortedLabels.entrySet()) {
-        writer.write(String.format("%8s = %04X :", entry.getKey(), entry.getValue()));
-        if (labelReferences.get(entry.getKey()) != null) {
-          int refCount = 0;
-          for (Integer address : labelReferences.get(entry.getKey())) {
-            writer.write(String.format(" %04X", address));
-            if (refCount == 11) {
-              writer.write(String.format("\n%16s:", " "));
-              refCount = 0;
-            } else {
-              refCount++;
-            }
-          }
-        }
-        writer.write("\n");
-      }
-    } catch (IOException e) {
-      System.out.println("\nException " + e.getMessage());
-    } finally {
-      if (writer != null) {
-        try {
-          writer.close();
-        } catch (IOException ee) {
-          System.out.println("\nException while closing: " + ee.getMessage());
-        }
-      }
-    }
-  }
-
-  private static void writeZ80toIntelHex(String fileName, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
-    /* write binary Z80S180 code to Intel hex file */
-    String outputFilename = fileName.replace(".j", ".hex");
-    if (verboseMode)
-      System.out.println("Writing Z80 binary code to Intel hex file " + outputFilename);
-    IntelHexWriter writer = null;
-    try {
-      writer = new IntelHexWriter(outputFilename);
-      for (AssemblyInstruction instruction : z80Instructions) {
-        writer.write(instruction.getAddress(), instruction.getBytes());
-      }
-    } catch (IOException e) {
-      System.out.println("\nException: " + e.getMessage());
     } finally {
       if (writer != null) {
         try {

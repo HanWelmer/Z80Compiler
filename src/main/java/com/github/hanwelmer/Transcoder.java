@@ -18,11 +18,15 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.hanwelmer;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /*
 * This class realizes a transcoder. 
@@ -31,50 +35,46 @@ import java.util.Set;
 */
 public class Transcoder {
 
-  /* constants */
-  private static final int MAX_ASM_CODE = 0x3000; /*
-                                                   * max Z80 assembler lines of
-                                                   * code
-                                                   */
-  private static final int MEM_START = 0x5000; /*
-                                                * lowest address for global
-                                                * variables
-                                                */
-  private static final int MIN_BIN = 0x2000; /*
-                                              * Z80 assembled bytes start at
-                                              * 2000
-                                              */
+  // constants.
+  // max Z80 assembler lines of code.
+  private static final int MAX_ASM_CODE = 0x3000;
+  // lowest address for global variables.
+  private static final int MEM_START = 0x5000;
+  // Z80 assembled bytes start at 2000.
+  private static final int MIN_BIN = 0x2000;
   private static final String INDENT = "        ";
   @SuppressWarnings("serial")
-  private static final Set<Byte> LONG_JUMP_INSTRUCTIONS = new HashSet<Byte>(18) {
+  private static final Set<Byte> ABSOLUTE_ADDRESS_INSTRUCTIONS = new HashSet<Byte>(18) {
     {
+      add((byte) 0xC3); // JP
+
       add((byte) 0xC2); // JP NZ
       add((byte) 0xD2); // JP NC
       add((byte) 0xE2); // JP PO
       add((byte) 0xF2); // JP P
-
-      add((byte) 0xC3); // JP
-
-      add((byte) 0xC4); // CALL NZ
-      add((byte) 0xD4); // CALL NC
-      add((byte) 0xE4); // CALL PO
-      add((byte) 0xF4); // CALL P
 
       add((byte) 0xCA); // JP Z
       add((byte) 0xDA); // JP C
       add((byte) 0xEA); // JP PE
       add((byte) 0xFA); // JP M
 
+      add((byte) 0xCD); // CALL
+
+      add((byte) 0xC4); // CALL NZ
+      add((byte) 0xD4); // CALL NC
+      add((byte) 0xE4); // CALL PO
+      add((byte) 0xF4); // CALL P
+
       add((byte) 0xCC); // CALL Z
       add((byte) 0xDC); // CALL C
       add((byte) 0xEC); // CALL PE
       add((byte) 0xFC); // CALL M
 
-      add((byte) 0xCD); // CALL
+      add((byte) 0x21); // LD HL,Lnnnn
     }
   };
   @SuppressWarnings("serial")
-  private static final Set<Byte> RELATIVE_JUMP_INSTRUCTIONS = new HashSet<Byte>(6) {
+  private static final Set<Byte> RELATIVE_ADDRESS_INSTRUCTIONS = new HashSet<Byte>(6) {
     {
       add((byte) 0x10); // DJNZ
       add((byte) 0x18); // JR
@@ -108,7 +108,7 @@ public class Transcoder {
    * assembler instructions.
    */
   public ArrayList<AssemblyInstruction> transcode(ArrayList<Instruction> instructions) {
-    // Initialisation.
+    // Initialization.
     ArrayList<AssemblyInstruction> z80Instructions = new ArrayList<AssemblyInstruction>();
     labels.clear();
     for (String key : labelReferences.keySet()) {
@@ -116,8 +116,10 @@ public class Transcoder {
     }
     labelReferences.clear();
 
+    // Insert runtime library.
     z80Instructions.addAll(plantZ80Runtime());
 
+    // Insert transcoded code.
     labels.put("main", byteAddress);
     z80Instructions.add(new AssemblyInstruction(byteAddress, "main:"));
     for (Instruction instruction : instructions) {
@@ -133,9 +135,130 @@ public class Transcoder {
       }
     }
 
+    // Resolve any unresolved label references.
     resolveLabelReferences(z80Instructions);
     return z80Instructions;
-  }
+  } // transcode
+
+  // write Z80S180 assembly code to an asm file.
+  public void writeZ80Assembler(String outputFilename, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
+    if (verboseMode)
+      System.out.println("Writing Z80 assembler code to " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+      writer = new BufferedWriter(new FileWriter(outputFilename));
+      for (AssemblyInstruction instruction : z80Instructions) {
+        writer.write(instruction.getCode());
+        writer.write("\n");
+      }
+    } catch (IOException e) {
+      System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
+      }
+    }
+  } // writeZ80Assembler
+
+  // write Z80S180 assembly and binary code to a Listing file.
+  public void writeZ80toListing(String outputFilename, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
+    if (verboseMode)
+      System.out.println("Writing Z80 assembler and binary code to listing file " + outputFilename);
+    BufferedWriter writer = null;
+    try {
+      writer = new BufferedWriter(new FileWriter(outputFilename));
+      for (AssemblyInstruction instruction : z80Instructions) {
+        writer.write(String.format("%04X", instruction.getAddress()));
+        int nr = 0;
+        if (instruction.getBytes() != null) {
+          for (Byte oneByte : instruction.getBytes()) {
+            if (nr == 4) {
+              writer.write("\n    ");
+              nr = 0;
+            }
+            writer.write(String.format(" %02X", oneByte));
+            nr++;
+          }
+        }
+        while (nr < 4) {
+          writer.write("   ");
+          nr++;
+        }
+        writer.write(String.format(" %s\n", instruction.getCode()));
+      }
+
+      // assembler error: undefined label
+      boolean spacerNeeded = true;
+      for (String key : labelReferences.keySet()) {
+        if (labels.get(key) == null) {
+          if (spacerNeeded) {
+            writer.write("\n");
+            spacerNeeded = false;
+          }
+          writer.write("Error: undefined label: " + key + "\n");
+          System.out.println("Error: undefined label: " + key);
+        }
+      }
+
+      // dump label cross reference list
+      writer.write("\n");
+      writer.write("Labels and cross references:\n");
+      Map<String, Integer> sortedLabels = new TreeMap<String, Integer>(labels);
+      for (Map.Entry<String, Integer> entry : sortedLabels.entrySet()) {
+        writer.write(String.format("%8s = %04X :", entry.getKey(), entry.getValue()));
+        if (labelReferences.get(entry.getKey()) != null) {
+          int refCount = 0;
+          for (Integer address : labelReferences.get(entry.getKey())) {
+            writer.write(String.format(" %04X", address));
+            if (refCount == 11) {
+              writer.write(String.format("\n%16s:", " "));
+              refCount = 0;
+            } else {
+              refCount++;
+            }
+          }
+        }
+        writer.write("\n");
+      }
+    } catch (IOException e) {
+      System.out.println("\nException " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
+      }
+    }
+  } // writeZ80toListing
+
+  // write binary Z80S180 code to Intel hex file.
+  public void writeZ80toIntelHex(String outputFilename, ArrayList<AssemblyInstruction> z80Instructions, boolean verboseMode) {
+    if (verboseMode)
+      System.out.println("Writing Z80 binary code to Intel hex file " + outputFilename);
+    IntelHexWriter writer = null;
+    try {
+      writer = new IntelHexWriter(outputFilename);
+      for (AssemblyInstruction instruction : z80Instructions) {
+        writer.write(instruction.getAddress(), instruction.getBytes());
+      }
+    } catch (IOException e) {
+      System.out.println("\nException: " + e.getMessage());
+    } finally {
+      if (writer != null) {
+        try {
+          writer.close();
+        } catch (IOException ee) {
+          System.out.println("\nException while closing: " + ee.getMessage());
+        }
+      }
+    }
+  } // writeZ80toIntelHex
 
   private void resolveLabelReferences(ArrayList<AssemblyInstruction> z80Instructions) {
     for (String key : labelReferences.keySet()) {
@@ -146,7 +269,7 @@ public class Transcoder {
         }
       }
     }
-  }
+  } // resolveLabelReferences
 
   private void updateLabelReference(ArrayList<AssemblyInstruction> instructions, int reference, String key, int address) {
     // no code, so nothing to do
@@ -169,11 +292,11 @@ public class Transcoder {
 
     // update address part of the instruction
     int referenceAddress = reference - instruction.getAddress() + 1;
-    if (instruction.getBytes().size() == 3 && LONG_JUMP_INSTRUCTIONS.contains(instruction.getBytes().get(0))) {
+    if (instruction.getBytes().size() == 3 && ABSOLUTE_ADDRESS_INSTRUCTIONS.contains(instruction.getBytes().get(0))) {
       // long jump or call
       instruction.getBytes().set(referenceAddress, (byte) (address % 256));
       instruction.getBytes().set(referenceAddress + 1, (byte) ((address / 256) % 256));
-    } else if (instruction.getBytes().size() == 2 && RELATIVE_JUMP_INSTRUCTIONS.contains(instruction.getBytes().get(0))) {
+    } else if (instruction.getBytes().size() == 2 && RELATIVE_ADDRESS_INSTRUCTIONS.contains(instruction.getBytes().get(0))) {
       long offset = address - instruction.getAddress() - 2L;
       if (offset > 127 || offset < -128) {
         throw new RuntimeException(
@@ -204,12 +327,13 @@ public class Transcoder {
     debug("\ntranscoding to Z80: " + instruction.toString());
 
     FunctionType function = instruction.function;
-    if (function == FunctionType.comment) {
+    if (function == FunctionType.classFunction || function == FunctionType.method || function == FunctionType.comment) {
+      // nothing to do. Just at the M-code instruction as comment.
       result.add(new AssemblyInstruction(byteAddress, INDENT + ';' + instruction));
       return result;
     } else if (function == FunctionType.stringConstant) {
-      String str = instruction.operand.strValue;
       // escape control characters \\, \', \", \n, \r, \t, \b, \f, \a
+      String str = instruction.operand.strValue;
       str = str.replace("\\", "\\\\");
       str = str.replace("\'", "\\'");
       str = str.replace("\"", "\\\"");
@@ -219,7 +343,10 @@ public class Transcoder {
       str = str.replace("\b", "\\b");
       str = str.replace("\f", "\\f");
       str = str.replace("\007", "\\a");
-      result.add(new AssemblyInstruction(byteAddress, INDENT + ".ASCIZ  \"" + str + "\""));
+      // generate assembler code to declare a string constant.
+      result.add(new AssemblyInstruction(byteAddress, INDENT + ".ASCIZ  \"" + str + "\"", instruction.operand.strValue));
+      byteAddress += str.length() + 1;
+
       return result;
     }
 
@@ -236,6 +363,7 @@ public class Transcoder {
     }
     int memAddress = MEM_START + word;
     AssemblyInstruction asm = null;
+
     debug("\n..function: " + function);
 
     // TODO refactor by removing asmCode.
@@ -247,8 +375,10 @@ public class Transcoder {
       asm = new AssemblyInstruction(byteAddress, INDENT + "JP    00171H      ;Jump to Zilog Z80183 Monitor.", 0xC3, 0x71, 0x01);
       debug("\n.." + asm.getCode());
     } else if (function == FunctionType.call) {
-      putLabelReference(word, byteAddress);
-      asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "CALL  0%04XH", word), 0xCD, word % 256, word / 256);
+      putLabelReference("L" + word, byteAddress);
+      asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "CALL  L%d", word), 0xCD, 0, 0);
+    } else if (function == FunctionType.returnFunction) {
+      asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "return"), 0xC9);
     } else if (function == FunctionType.sleep) {
       if (instruction.operand.datatype == Datatype.byt) {
         if (instruction.operand.opType != OperandType.acc) {
@@ -330,6 +460,9 @@ public class Transcoder {
         throw new RuntimeException("illegal M-code instruction: " + instruction + " " + instruction.operand);
       }
     } else if (function == FunctionType.acc16Load) {
+      if (instruction.operand.datatype == Datatype.string && instruction.operand.opType == OperandType.constant) {
+        putLabelReference(word, byteAddress);
+      }
       asm = operandToHL(instruction);
     } else if (function == FunctionType.stackAcc16Load) {
       result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  HL", 0xE6));
@@ -1016,7 +1149,7 @@ public class Transcoder {
       }
     }
     return result;
-  }
+  } // transcode
 
   private AssemblyInstruction operandToA(Operand operand) {
     String asmCode = null;
@@ -1051,7 +1184,11 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
         break;
       case constant:
-        asmCode = INDENT + "LD    HL," + instruction.operand.intValue;
+        if (instruction.operand.datatype == Datatype.string) {
+          asmCode = INDENT + "LD    HL,L" + instruction.operand.intValue;
+        } else {
+          asmCode = INDENT + "LD    HL," + instruction.operand.intValue;
+        }
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, instruction.operand.intValue % 256,
             instruction.operand.intValue / 256);
         break;
