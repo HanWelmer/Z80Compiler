@@ -7,7 +7,7 @@ class LEDTest {
   Assumes the Z80S183 is driven by an 18.432 MHz clock at the XTAL pin
   Assumes that an active-low LED is available at the PWRSWTCH pin:
    - connect anode of low-current LED to VCC
-   - connect cathode of low-currebt LED to 1k8 resistor
+   - connect cathode of low-current LED to 1k8 resistor
    - connect other end of resistor to PWR_SW (pin 13 of J23).
   
   Connect Z80S183 evaluation board via DB9 (male-female) cable to RS232 of host computer.

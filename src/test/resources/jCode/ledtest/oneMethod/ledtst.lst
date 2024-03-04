@@ -345,7 +345,7 @@
 20C9                     ;R = ALhigh+AHlow
 20C9 C5                  PUSH  BC          ;11  11 save BC
 20CA 44                  LD    B,H         ; 4  15
-20CB 47                  LD    C,A         ; 4  19
+20CB 4F                  LD    C,A         ; 4  19
 20CC 67                  LD    H,A         ; 4  23
 20CD ED 6C               MLT   HL          ;17  40 HL = AL
 20CF ED 4C               MLT   BC          ;17  57 BC = AH
@@ -788,7 +788,7 @@
 21D4             L11:
 21D4                     ;;..\src\test\resources\jCode\ledtest\oneClass\ledtst.j(8)    - connect anode of low-current LED to VCC
 21D4             L12:
-21D4                     ;;..\src\test\resources\jCode\ledtest\oneClass\ledtst.j(9)    - connect cathode of low-currebt LED to 1k8 resistor
+21D4                     ;;..\src\test\resources\jCode\ledtest\oneClass\ledtst.j(9)    - connect cathode of low-current LED to 1k8 resistor
 21D4             L13:
 21D4                     ;;..\src\test\resources\jCode\ledtest\oneClass\ledtst.j(10)    - connect other end of resistor to PWR_SW (pin 13 of J23).
 21D4             L14:

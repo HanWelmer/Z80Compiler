@@ -1673,7 +1673,7 @@ public class Transcoder {
     result.add(new AssemblyInstruction(byteAddress, INDENT + ";R = ALhigh+AHlow"));
     result.add(plantAssemblyInstruction(INDENT + "PUSH  BC          ;11  11 save BC", 0xC5));
     result.add(plantAssemblyInstruction(INDENT + "LD    B,H         ; 4  15", 0x44));
-    result.add(plantAssemblyInstruction(INDENT + "LD    C,A         ; 4  19", 0x47));
+    result.add(plantAssemblyInstruction(INDENT + "LD    C,A         ; 4  19", 0x4F));
     result.add(plantAssemblyInstruction(INDENT + "LD    H,A         ; 4  23", 0x67));
     result.add(plantAssemblyInstruction(INDENT + "MLT   HL          ;17  40 HL = AL", 0xED, 0x6C));
     result.add(plantAssemblyInstruction(INDENT + "MLT   BC          ;17  57 BC = AH", 0xED, 0x4C));
