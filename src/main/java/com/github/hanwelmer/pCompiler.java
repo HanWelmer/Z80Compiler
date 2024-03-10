@@ -109,6 +109,12 @@ public class pCompiler {
   private static final EnumSet<FunctionType> STRING_CONSTANT_FUNCTIONS = EnumSet.of(FunctionType.acc16Load);
 
   // Constants for lexical analysis phase
+  // Possible lexeme types for Type.
+  private static final EnumSet<LexemeType> TYPE_LEXEME_TYPES = EnumSet.of(LexemeType.byteLexeme, LexemeType.wordLexeme,
+      LexemeType.stringLexeme);
+  // Possible lexeme types in ResultType.
+  private static final EnumSet<LexemeType> RESULT_TYPE_LEXEME_TYPES = EnumSet.of(LexemeType.voidLexeme, LexemeType.byteLexeme,
+      LexemeType.wordLexeme, LexemeType.stringLexeme);
   // Lexemes that start a class body declaration.
   private static final EnumSet<LexemeType> CLASS_BODY_START_SET = EnumSet.of(LexemeType.publicLexeme, LexemeType.privateLexeme,
       LexemeType.staticLexeme, LexemeType.finalLexeme, LexemeType.synchronizedLexeme, LexemeType.volatileLexeme,
@@ -119,9 +125,6 @@ public class pCompiler {
   // Possible modifiers for methods.
   private static final EnumSet<LexemeType> METHOD_MODIFIERS = EnumSet.of(LexemeType.publicLexeme, LexemeType.privateLexeme,
       LexemeType.staticLexeme, LexemeType.synchronizedLexeme);
-  // Possible lexeme types in ResultType.
-  private static final EnumSet<LexemeType> RESULT_TYPE_LEXEME_TYPES = EnumSet.of(LexemeType.voidLexeme, LexemeType.byteLexeme,
-      LexemeType.wordLexeme, LexemeType.stringLexeme);
   // Possible lexeme types that start a local variable declaration.
   private static final EnumSet<LexemeType> LOCAL_VARIABLE_MODIFIER_OR_TYPE = EnumSet.of(LexemeType.finalLexeme,
       LexemeType.volatileLexeme, LexemeType.voidLexeme, LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme);
@@ -1195,12 +1198,12 @@ public class pCompiler {
     return firstAddress;
   } // block
 
-  // blockStatement ::= localVariableStatement | statement.`
+  // blockStatement ::= localVariableStatement | statement.
   private void blockStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nblockStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
-    if (LOCAL_VARIABLE_MODIFIER_OR_TYPE.contains(lexeme.type) || FIELD_MODIFIERS.contains(lexeme.type)) {
+    if (TYPE_LEXEME_TYPES.contains(lexeme.type) || FIELD_MODIFIERS.contains(lexeme.type)) {
       localVariableStatement(stopSet);
     } else {
       statement(stopSet);
