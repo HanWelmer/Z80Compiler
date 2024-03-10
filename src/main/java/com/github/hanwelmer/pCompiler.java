@@ -656,7 +656,7 @@ public class pCompiler {
         if (identifiers.checkId(identifier)) {
           error();
           System.out.println("variable " + identifier + " already declared.");
-        } else if (identifiers.declareId(identifier, IdentifierType.clazz, LexemeType.classLexeme, modifiers)) {
+        } else if (identifiers.declareId(identifier, IdentifierType.CLAZZ, LexemeType.classLexeme, modifiers)) {
           debug("\nclassDecl: " + (isPublic ? "public " : "") + "class declared: " + identifier);
         } else {
           error();
@@ -910,7 +910,7 @@ public class pCompiler {
     if (identifiers.checkId(firstIdentifier)) {
       error();
       System.out.println("variable " + firstIdentifier + " already declared.");
-    } else if (identifiers.declareId(firstIdentifier, IdentifierType.field, type.getType(), modifiers)) {
+    } else if (identifiers.declareId(firstIdentifier, IdentifierType.FIELD_VARIABLE, type.getType(), modifiers)) {
       debug("\nFieldDeclaration: " + modifiers + " " + type.getType() + " " + firstIdentifier);
     } else {
       error();
@@ -1027,7 +1027,7 @@ public class pCompiler {
     if (identifiers.checkId(identifier)) {
       error();
       System.out.println("variable " + identifier + " already declared.");
-    } else if (identifiers.declareId(identifier, IdentifierType.method, resultType.getType(), modifiers)) {
+    } else if (identifiers.declareId(identifier, IdentifierType.METHOD, resultType.getType(), modifiers)) {
       debug("\nmethodDeclaration: " + modifiers + " " + identifier + "(...)");
     } else {
       error();
@@ -2557,7 +2557,7 @@ public class pCompiler {
         if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != null) {
           error();
           System.out.println("variable " + lexeme.idVal + " already declared.");
-        } else if (identifiers.declareId(lexeme.idVal, IdentifierType.variable, datatype, modifiers)) {
+        } else if (identifiers.declareId(lexeme.idVal, IdentifierType.LOCAL_VARIABLE, datatype, modifiers)) {
           debug("\nstatementExpression: " + modifiers + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
