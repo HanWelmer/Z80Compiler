@@ -345,7 +345,7 @@
 20C9                     ;R = ALhigh+AHlow
 20C9 C5                  PUSH  BC          ;11  11 save BC
 20CA 44                  LD    B,H         ; 4  15
-20CB 47                  LD    C,A         ; 4  19
+20CB 4F                  LD    C,A         ; 4  19
 20CC 67                  LD    H,A         ; 4  23
 20CD ED 6C               MLT   HL          ;17  40 HL = AL
 20CF ED 4C               MLT   BC          ;17  57 BC = AH

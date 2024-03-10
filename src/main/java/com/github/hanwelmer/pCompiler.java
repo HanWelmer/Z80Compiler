@@ -375,6 +375,9 @@ public class pCompiler {
       case 39:
         System.out.print("number of actual parameters does not match number of formal parameters.");
         break;
+      case 40:
+        System.out.println("combination of final and volatile modifiers not allowed");
+        break;
     }
   } // error
 
@@ -1197,7 +1200,7 @@ public class pCompiler {
     debug("\nblockStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
-    if (LOCAL_VARIABLE_MODIFIER_OR_TYPE.contains(lexeme.type)) {
+    if (LOCAL_VARIABLE_MODIFIER_OR_TYPE.contains(lexeme.type) || FIELD_MODIFIERS.contains(lexeme.type)) {
       localVariableStatement(stopSet);
     } else {
       statement(stopSet);
@@ -1226,6 +1229,8 @@ public class pCompiler {
     temp.removeAll(LOCAL_VARIABLE_MODIFIERS);
     if (!temp.isEmpty()) {
       error(35);
+    } else if (modifiers.contains(LexemeType.finalLexeme) && modifiers.contains(LexemeType.volatileLexeme)) {
+      error(40);
     }
 
     // lexical analysis
