@@ -889,10 +889,8 @@ public class pCompiler {
   // restOfVariableDeclarator ::= [ "=" expression ].
   //
   // TODO allocate local variables on the stack.
-  //
   // TODO Support list of variable declarators, i.e. support { ","
   // variableDeclarator }.
-  //
   // TODO Add array declarators { "[" "]" } to restOfVariableDeclarator.
   // TODO Add arrayInitializer to restOfVariableDeclarator.
   // TODO implement stopSet in restOfVariableDeclarator.
