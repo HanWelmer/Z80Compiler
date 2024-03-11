@@ -826,6 +826,13 @@ public class pCompiler {
         // semantic analysis
         checkFieldModifiers(modifiers);
 
+        // semantic analysis
+        if (resultType.getType() == LexemeType.unknown) {
+          error(27);
+        } else if (resultType.getType() == LexemeType.voidLexeme) {
+          error(32);
+        }
+
         // lexical analysis
         EnumSet<LexemeType> fieldStopSet = localStopSet.clone();
         fieldStopSet.add(LexemeType.semicolon);
@@ -897,13 +904,6 @@ public class pCompiler {
   private void restOfVariableDeclarator(EnumSet<LexemeType> modifiers, ResultType type, String firstIdentifier,
       IdentifierType identifierType, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nfieldDeclaration: start " + firstIdentifier);
-
-    // semantic analysis
-    if (type.getType() == LexemeType.unknown) {
-      error(27);
-    } else if (type.getType() == LexemeType.voidLexeme) {
-      error(32);
-    }
 
     // semantic analysis
     if (identifiers.checkId(firstIdentifier)) {
