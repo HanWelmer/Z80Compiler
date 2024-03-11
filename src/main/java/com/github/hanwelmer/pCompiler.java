@@ -795,15 +795,6 @@ public class pCompiler {
   // classBodyDeclaration ::= modifiers resultType javaIdentifier ( ( "("
   // restOfMethodDeclarator ) | restOfVariableDeclarator ).
   //
-  // restOfMethodDeclarator ::= ( formalParameters* )? ")" block.
-  //
-  // formalParameters ::= ( formalParameter { "," formalParameter } )?.
-  // restOfVariableDeclarator ::= { "[" "]" } [ "=" variableInitializer ] {
-  // "," variableDeclarator } ";".
-  //
-  // variableDeclarator ::= javaIdentifier { "[" "]" } [ "="
-  // variableInitializer ].
-  //
   // with semantic constraints:
   // - Method modifiers ::= "public"? "private"? "static"? "synchronized"?.
   // - Field modifiers ::= "public"? "private"? "static" "final"? "volatile"?.
@@ -817,12 +808,13 @@ public class pCompiler {
     resultTypeStopSet.add(LexemeType.identifier);
     ResultType resultType = resultType(resultTypeStopSet);
 
-    EnumSet<LexemeType> localSet = stopSet.clone();
-    localSet.add(LexemeType.LPAREN);
-    localSet.add(LexemeType.beginLexeme);
-    localSet.add(LexemeType.LBRACKET);
-    localSet.add(LexemeType.assign);
-    if (checkOrSkip(EnumSet.of(LexemeType.identifier), localSet)) {
+    EnumSet<LexemeType> localStopSet = stopSet.clone();
+    localStopSet.add(LexemeType.LPAREN);
+    localStopSet.add(LexemeType.beginLexeme);
+    localStopSet.add(LexemeType.LBRACKET);
+    localStopSet.add(LexemeType.assign);
+    localStopSet.add(LexemeType.comma);
+    if (checkOrSkip(EnumSet.of(LexemeType.identifier), localStopSet)) {
       String identifier = lexeme.idVal;
       lexeme = lexemeReader.getLexeme(sourceCode);
       if (lexeme.type == LexemeType.LPAREN) {
@@ -835,11 +827,11 @@ public class pCompiler {
         checkFieldModifiers(modifiers);
 
         // lexical analysis
-        EnumSet<LexemeType> fieldStopSet = stopSet.clone();
+        EnumSet<LexemeType> fieldStopSet = localStopSet.clone();
         fieldStopSet.add(LexemeType.semicolon);
-        restOfVariableDeclarator(modifiers, resultType, identifier, fieldStopSet);
+        restOfVariableDeclarator(modifiers, resultType, identifier, IdentifierType.CLASS_VARIABLE, fieldStopSet);
 
-        if (checkOrSkip(EnumSet.of(LexemeType.semicolon), localSet)) {
+        if (checkOrSkip(EnumSet.of(LexemeType.semicolon), localStopSet)) {
           // skip semicolon
           lexeme = lexemeReader.getLexeme(sourceCode);
         }
@@ -870,24 +862,33 @@ public class pCompiler {
    * restOfVariableDeclarator ::= { "[" "]" } [ "=" variableInitializer ] { ","
    * variableDeclarator }.
    * 
-   * variableInitializer ::= arrayInitializer | expression.
-   * 
    * Parse the rest of variable declarator after the modifiers, type and the
-   * identifier of the first variable declarator have already been read. Global
-   * variable lexeme holds the first lexeme after the first identifier.
+   * identifier of the first variable declarator have been read. Global variable
+   * lexeme holds the first lexeme after the first identifier.
    * 
    * @param modifiers
+   *          holds the list of modifiers, i.e. public, private, static, final
+   *          and/or volatile.
    * @param type
    *          holds the resultType as the type of the list of variables, where
    *          the value void is not allowed.
    * @param firstIdentifier
+   *          name of the first identifier in the list of field or variable
+   *          declaration.
+   * @param identifierType
+   *          indicates if the identifiers are class variables (fields) or local
+   *          variables (variables).
    * @param stopSet
    * @throws FatalError
    */
+  // variableDeclarator ::= variableDeclaratorId [ "=" variableInitializer ].
+  // variableDeclaratorId ::= javaIdentifier { "[" "]" }.
+  // variableInitializer ::= arrayInitializer | expression.
+  //
   // For now only:
   // restOfVariableDeclarator ::= [ "=" expression ].
   //
-  // field modifiers ::= "public", "private", "static", "final" or "volatile".
+  // TODO allocate local variables on the stack.
   //
   // TODO Support list of variable declarators, i.e. support { ","
   // variableDeclarator }.
@@ -896,7 +897,7 @@ public class pCompiler {
   // TODO Add arrayInitializer to restOfVariableDeclarator.
   // TODO implement stopSet in restOfVariableDeclarator.
   private void restOfVariableDeclarator(EnumSet<LexemeType> modifiers, ResultType type, String firstIdentifier,
-      EnumSet<LexemeType> stopSet) throws FatalError {
+      IdentifierType identifierType, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nfieldDeclaration: start " + firstIdentifier);
 
     // semantic analysis
@@ -910,7 +911,7 @@ public class pCompiler {
     if (identifiers.checkId(firstIdentifier)) {
       error();
       System.out.println("variable " + firstIdentifier + " already declared.");
-    } else if (identifiers.declareId(firstIdentifier, IdentifierType.FIELD_VARIABLE, type.getType(), modifiers)) {
+    } else if (identifiers.declareId(firstIdentifier, IdentifierType.CLASS_VARIABLE, type.getType(), modifiers)) {
       debug("\nFieldDeclaration: " + modifiers + " " + type.getType() + " " + firstIdentifier);
     } else {
       error();
@@ -999,6 +1000,10 @@ public class pCompiler {
    * @param stopSet
    * @throws FatalError
    */
+  // restOfMethodDeclarator ::= ( formalParameters* )? ")" block.
+  //
+  // formalParameters ::= ( formalParameter { "," formalParameter } )?.
+  //
   // TODO implement semantic analysis of modifiers in methodDeclaration.
   // TODO implement stopSet in methodDeclaration.
   // TODO implement code generation for less than trivial return statement.
@@ -1212,7 +1217,7 @@ public class pCompiler {
     debug("\nblockStatement");
   }// blockStatement
 
-  // localVariableStatement ::= localVariableDeclaration ";".`
+  // localVariableStatement ::= localVariableDeclaration ";".
   private void localVariableStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     EnumSet<LexemeType> localStopSet = stopSet.clone();
     localStopSet.add(LexemeType.semicolon);
@@ -1220,8 +1225,20 @@ public class pCompiler {
     checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet);
   }
 
-  // localVariableDeclaration ::= modifiers type variableDeclarator { ","
-  // variableDeclarator }.
+  // localVariableDeclaration ::= modifiers type variableDeclarators.
+  // variableDeclarators ::= variableDeclarator { "," variableDeclarator }.
+  // variableDeclarator ::= variableDeclaratorId [ "=" variableInitializer ].
+  // variableDeclaratorId ::= javaIdentifier { "[" "]" }.
+  //
+  // In order to reuse restOfVariableDeclarator() as called by
+  // classBodyDeclaration(), this is rewritten as:
+  //
+  // localVariableDeclaration ::= modifiers resultType javaIdentifier
+  // restOfVariableDeclarator.
+  //
+  // with semantic constraints:
+  // - Variable modifiers ::= "final"? "volatile"?.
+  // - Variable resultType ::= type.
   private void localVariableDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
     // lexical analysis
     EnumSet<LexemeType> modifiers = modifiers();
@@ -1248,17 +1265,17 @@ public class pCompiler {
       error(32);
     }
 
-    // TODO don't treat local variables as global variables but put them on the
-    // stack.
     // lexical analysis
     localStopSet = stopSet.clone();
     localStopSet.add(LexemeType.LBRACKET);
     localStopSet.add(LexemeType.assign);
+    localStopSet.add(LexemeType.comma);
     if (checkOrSkip(EnumSet.of(LexemeType.identifier), localStopSet)) {
       String identifier = lexeme.idVal;
       lexeme = lexemeReader.getLexeme(sourceCode);
+
       localStopSet.add(LexemeType.semicolon);
-      restOfVariableDeclarator(modifiers, type, identifier, localStopSet);
+      restOfVariableDeclarator(modifiers, type, identifier, IdentifierType.LOCAL_VARIABLE, localStopSet);
     } else {
       // extend error reporting, using lexeme types in localSet as a guidance.
       error(3, "expected an identifier");

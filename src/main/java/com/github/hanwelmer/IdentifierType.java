@@ -24,7 +24,7 @@ package com.github.hanwelmer;
  * generation phases of the compiler.
  */
 public enum IdentifierType {
-  CLAZZ("class"), METHOD("method"), FIELD_VARIABLE("field"), LOCAL_VARIABLE("variable");
+  CLAZZ("class"), METHOD("method"), CLASS_VARIABLE("field"), LOCAL_VARIABLE("variable");
 
   private String value;
 
