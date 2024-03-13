@@ -109,7 +109,7 @@ public class pCompiler {
   private static final EnumSet<FunctionType> STRING_CONSTANT_FUNCTIONS = EnumSet.of(FunctionType.acc16Load);
 
   // Constants for lexical analysis phase
-  // Possible lexeme types for Type.
+  // Possible lexeme types in Type.
   private static final EnumSet<LexemeType> TYPE_LEXEME_TYPES = EnumSet.of(LexemeType.byteLexeme, LexemeType.wordLexeme,
       LexemeType.stringLexeme);
   // Possible lexeme types in ResultType.
@@ -125,9 +125,6 @@ public class pCompiler {
   // Possible modifiers for methods.
   private static final EnumSet<LexemeType> METHOD_MODIFIERS = EnumSet.of(LexemeType.publicLexeme, LexemeType.privateLexeme,
       LexemeType.staticLexeme, LexemeType.synchronizedLexeme);
-  // Possible lexeme types that start a local variable declaration.
-  private static final EnumSet<LexemeType> LOCAL_VARIABLE_MODIFIER_OR_TYPE = EnumSet.of(LexemeType.finalLexeme,
-      LexemeType.volatileLexeme, LexemeType.voidLexeme, LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme);
   // Possible lexeme types as local variable modifiers.
   private static final EnumSet<LexemeType> LOCAL_VARIABLE_MODIFIERS = EnumSet.of(LexemeType.finalLexeme, LexemeType.volatileLexeme);
   // Lexeme types in an expression in increasing order of precedence.
@@ -895,7 +892,6 @@ public class pCompiler {
   // For now only:
   // restOfVariableDeclarator ::= [ "=" expression ].
   //
-  // TODO allocate local variables on the stack.
   // TODO Support list of variable declarators, i.e. support { ","
   // variableDeclarator }.
   // TODO Add array declarators { "[" "]" } to restOfVariableDeclarator.
@@ -909,8 +905,8 @@ public class pCompiler {
     if (identifiers.checkId(firstIdentifier)) {
       error();
       System.out.println("variable " + firstIdentifier + " already declared.");
-    } else if (identifiers.declareId(firstIdentifier, IdentifierType.CLASS_VARIABLE, type.getType(), modifiers)) {
-      debug("\nFieldDeclaration: " + modifiers + " " + type.getType() + " " + firstIdentifier);
+    } else if (identifiers.declareId(firstIdentifier, identifierType, type.getType(), modifiers)) {
+      debug(String.format("\n%s declaration: $s %s %s", identifierType, modifiers, type.getType(), firstIdentifier));
     } else {
       error();
       System.out.println("Error declaring identifier " + firstIdentifier + " as a field.");
