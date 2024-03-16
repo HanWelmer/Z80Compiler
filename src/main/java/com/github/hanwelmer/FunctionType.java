@@ -80,6 +80,8 @@ public enum FunctionType {
   divAcc16("/acc16"),
   increment16("incr16"),
   decrement16("decr16"),
+  stackPointerPlus("stackPointer+"),
+  basePointerLoad("basePointer="),
   //16/8-bit conversion:
   acc16ToAcc8("acc16ToAcc8"),
   acc8ToAcc16("acc8ToAcc16"),
@@ -88,8 +90,10 @@ public enum FunctionType {
   //stack instructions:
   stackAcc8("<acc8"),
   stackAcc16("<acc16"),
-  unstackAcc8("acc8= unstack8"),
-  unstackAcc16("acc16= unstack16"),
+  stackBasePointer("<basePointer"),
+  unstackAcc8("acc8<"),
+  unstackAcc16("acc16<"),
+  unstackBasePointer("basePointer<"),
   //branch instructions:
   br("br"),
   brEq("breq"),
