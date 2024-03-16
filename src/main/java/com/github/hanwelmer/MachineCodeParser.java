@@ -53,9 +53,9 @@ public class MachineCodeParser {
     if (pos < line.length() && line.charAt(pos) == ';') {
       pos++;
       if (pos == line.length()) {
-        result = new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, ""));
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, Datatype.string, ""));
       } else {
-        result = new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line.substring(pos)));
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, Datatype.string, line.substring(pos)));
       }
     } else {
       String keyword = parseKeyword(line);
@@ -72,9 +72,11 @@ public class MachineCodeParser {
         case stackAcc16ToAcc8:
         case stackAcc8:
         case stackAcc8ToAcc16:
+        case stackBasePointer:
         case stop:
         case unstackAcc16:
         case unstackAcc8:
+        case unstackBasePointer:
         case writeAcc16:
         case writeAcc8:
         case writeLineAcc16:
@@ -87,8 +89,15 @@ public class MachineCodeParser {
         case call:
           result = parseCallFunction(line, functionType);
           break;
+        // instructions with one byte operand.
+        case acc8Load:
+        case acc8Store:
+          result = parseFunctionWithByteOperand(line, functionType);
+          break;
         // instructions with one word operand.
         case acc16Load:
+        case basePointerLoad:
+        case stackPointerPlus:
           result = parseFunctionWithWordOperand(line, functionType);
           break;
         // other instructions with one or more operands.
@@ -118,11 +127,9 @@ public class MachineCodeParser {
         case acc8And:
         case acc8Compare:
         case acc8Div:
-        case acc8Load:
         case acc8Minus:
         case acc8Or:
         case acc8Plus:
-        case acc8Store:
         case acc8Times:
         case acc8Xor:
         case br:
@@ -152,7 +159,6 @@ public class MachineCodeParser {
           throw new RuntimeException("Internal error; not supported functionType " + keyword);
       }
       skipSpaces(line);
-      // TODO Auto-generated method stub
     }
     return result;
 
@@ -162,7 +168,7 @@ public class MachineCodeParser {
   private Instruction parseCallFunction(String line, FunctionType functionType) {
     skipSpaces(line);
     int value = parseNumber(line);
-    return new Instruction(functionType, new Operand(OperandType.label, Datatype.word, value));
+    return new Instruction(functionType, new Operand(OperandType.LABEL, Datatype.word, value));
   }
 
   private Instruction parseStringConstant(String line, int lineNumber) {
@@ -179,9 +185,24 @@ public class MachineCodeParser {
       string += line.charAt(pos++);
     }
 
-    Operand operand = new Operand(OperandType.constant, Datatype.string, string);
+    Operand operand = new Operand(OperandType.CONSTANT, Datatype.string, string);
     operand.intValue = lineNumber;
     return new Instruction(FunctionType.stringConstant, operand);
+  }
+
+  /**
+   * Parse acc16= operand function.
+   * 
+   * @param line
+   * @param functionType
+   * @return
+   */
+  private Instruction parseFunctionWithByteOperand(String line, FunctionType functionType) {
+    Instruction result;
+    skipSpaces(line);
+    Operand operand = parseOperand(line, Datatype.byt);
+    result = new Instruction(functionType, operand);
+    return result;
   }
 
   /**
@@ -209,19 +230,29 @@ public class MachineCodeParser {
     Operand result;
     skipSpaces(line);
     String keyword = parseKeyword(line);
-    if ("constant".equals(keyword)) {
+    if ("(basePointer".equals(keyword)) {
+      skipUntil(line, '+');
+      pos++;
       skipSpaces(line);
       int value = parseNumber(line);
-      result = new Operand(OperandType.constant, datatype, value);
+      skipUntil(line, ')');
+      pos++;
+      result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
+    } else if ("constant".equals(keyword)) {
+      skipSpaces(line);
+      int value = parseNumber(line);
+      result = new Operand(OperandType.CONSTANT, datatype, value);
+    } else if ("stackPointer".equals(keyword)) {
+      skipSpaces(line);
+      result = new Operand(OperandType.STACK_POINTER);
     } else if ("stringconstant".equals(keyword)) {
       skipSpaces(line);
       int value = parseNumber(line);
-      result = new Operand(OperandType.constant, Datatype.string, value);
+      result = new Operand(OperandType.CONSTANT, Datatype.string, value);
     } else {
       throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
     }
 
-    // TODO Auto-generated method stub
     return result;
   }
 
@@ -300,11 +331,16 @@ public class MachineCodeParser {
 
   protected int parseNumber(String line) {
     int result = 0;
+    int sign = 1;
+    if ('-' == line.charAt(pos)) {
+      pos++;
+      sign = -1;
+    }
     while (pos < line.length() && Character.isDigit(line.charAt(pos))) {
       result = result * 10 + ((int) line.charAt(pos) - (int) '0');
       pos++;
     }
-    return result;
+    return sign * result;
   }
 
   protected String skipUntil(String line, char stopChar) {
