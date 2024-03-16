@@ -44,7 +44,8 @@ public class Instruction {
       // 16/8-bit conversion:
       , FunctionType.acc8ToAcc16, FunctionType.acc16ToAcc8, FunctionType.stackAcc8ToAcc16, FunctionType.stackAcc16ToAcc8
       // stack instructions:
-      , FunctionType.stackAcc8, FunctionType.stackAcc16, FunctionType.unstackAcc8, FunctionType.unstackAcc16);
+      , FunctionType.stackAcc8, FunctionType.stackAcc16, FunctionType.stackBasePointer, FunctionType.unstackAcc8,
+      FunctionType.unstackAcc16, FunctionType.unstackBasePointer);
 
   private EnumSet<FunctionType> oneOperand = EnumSet.of(
       // special instructions:
@@ -53,16 +54,23 @@ public class Instruction {
       , FunctionType.input
       // 8-bit instructions:
       , FunctionType.acc8Store, FunctionType.acc8Load, FunctionType.stackAcc8Load, FunctionType.acc8Or, FunctionType.acc8Xor,
-      FunctionType.acc8And, FunctionType.acc8Plus, FunctionType.acc8Minus, FunctionType.minusAcc8, FunctionType.acc8Compare // normal
-                                                                                                                            // compare
-      , FunctionType.revAcc8Compare // reverse compare
-      , FunctionType.acc8Times, FunctionType.acc8Div, FunctionType.divAcc8, FunctionType.increment8, FunctionType.decrement8
+      FunctionType.acc8And, FunctionType.acc8Plus, FunctionType.acc8Minus, FunctionType.minusAcc8, FunctionType.acc8Times,
+      FunctionType.acc8Div, FunctionType.divAcc8, FunctionType.increment8, FunctionType.decrement8
+      // normal 8 bit compare
+      , FunctionType.acc8Compare
+      // reverse 8 bit compare
+      , FunctionType.revAcc8Compare
       // 16-bit instructions:
       , FunctionType.acc16Store, FunctionType.acc16Load, FunctionType.stackAcc16Load, FunctionType.acc16Or, FunctionType.acc16Xor,
-      FunctionType.acc16And, FunctionType.acc16Plus, FunctionType.acc16Minus, FunctionType.minusAcc16, FunctionType.acc16Compare // normal
-                                                                                                                                 // compare
-      , FunctionType.revAcc16Compare // reverse compare
-      , FunctionType.acc16Times, FunctionType.acc16Div, FunctionType.divAcc16, FunctionType.increment16, FunctionType.decrement16
+      FunctionType.acc16And, FunctionType.acc16Plus, FunctionType.acc16Minus, FunctionType.minusAcc16, FunctionType.acc16Times,
+      FunctionType.acc16Div, FunctionType.divAcc16, FunctionType.increment16, FunctionType.decrement16
+      // normal 16 bit compare
+      , FunctionType.acc16Compare
+      // reverse 16 bit compare
+      , FunctionType.revAcc16Compare
+      // stack and base pointer
+      , FunctionType.stackPointerPlus, FunctionType.basePointerLoad
+
       // branch instructions:
       , FunctionType.br, FunctionType.brEq, FunctionType.brNe, FunctionType.brLt, FunctionType.brLe, FunctionType.brGt,
       FunctionType.brGe);
@@ -97,7 +105,7 @@ public class Instruction {
     // error detection (internal compiler errors):
     switch (fn) {
       case input:
-        if ((operand == null) || (operand.opType != OperandType.constant) || (operand.datatype != Datatype.byt)) {
+        if ((operand == null) || (operand.opType != OperandType.CONSTANT) || (operand.datatype != Datatype.byt)) {
           throw new RuntimeException(
               "Internal compiler error: functionType " + fn + " expects constant byte value for port parameter.");
         }
@@ -112,7 +120,7 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
         ;
-        if (operand.opType != OperandType.constant) {
+        if (operand.opType != OperandType.CONSTANT) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a constant operand.");
         }
         ;
@@ -139,30 +147,40 @@ public class Instruction {
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
-        if (operand.opType != OperandType.stack16 && operand.opType != OperandType.var) {
+        if (operand.opType != OperandType.STACK16 && operand.opType != OperandType.GLOBAL_VAR
+            && operand.opType != OperandType.LOCAL_VAR) {
           throw new RuntimeException(
               "Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn + ".");
         }
-        if (operand.opType == OperandType.var && operand.intValue == null) {
+        if (operand.opType == OperandType.GLOBAL_VAR && operand.intValue == null) {
           throw new RuntimeException(
-              "Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+              "Internal compiler error: functionType " + fn + " expects an address for its global variable operand.");
+        }
+        if (operand.opType == OperandType.LOCAL_VAR && operand.intValue == null) {
+          throw new RuntimeException(
+              "Internal compiler error: functionType " + fn + " expects an index for its local variable operand.");
         }
         break;
       case acc8Store:
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
-        if (operand.opType != OperandType.stack8 && operand.opType != OperandType.var) {
+        if (operand.opType != OperandType.STACK8 && operand.opType != OperandType.GLOBAL_VAR
+            && operand.opType != OperandType.LOCAL_VAR) {
           throw new RuntimeException(
               "Internal compiler error: illegal operand type " + operand.opType + " for functionType " + fn + ".");
         }
-        if (operand.opType == OperandType.var && operand.intValue == null) {
+        if (operand.opType == OperandType.GLOBAL_VAR && operand.intValue == null) {
           throw new RuntimeException(
-              "Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+              "Internal compiler error: functionType " + fn + " expects an address for its global variable operand.");
+        }
+        if (operand.opType == OperandType.LOCAL_VAR && operand.intValue == null) {
+          throw new RuntimeException(
+              "Internal compiler error: functionType " + fn + " expects an index for its local variable operand.");
         }
         break;
       case stackAcc16Load:
-        if (operand != null && operand.opType == OperandType.stack16) {
+        if (operand != null && operand.opType == OperandType.STACK16) {
           throw new RuntimeException("Internal compiler error: illegal stack operand for functionType " + fn + ".");
         }
         // ga verder met controles voor non-stack load.
@@ -170,20 +188,22 @@ public class Instruction {
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
-        if (operand.opType == OperandType.stack16) {
+        if (operand.opType == OperandType.STACK16) {
           // no error.
-        } else if (operand.opType == OperandType.constant && operand.intValue != null) {
+        } else if (operand.opType == OperandType.CONSTANT && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.var && operand.intValue != null) {
+        } else if (operand.opType == OperandType.GLOBAL_VAR && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.acc && operand.datatype == Datatype.word) {
+        } else if (operand.opType == OperandType.LOCAL_VAR && operand.intValue != null) {
+          // no error.
+        } else if (operand.opType == OperandType.ACC && operand.datatype == Datatype.word) {
           // no error.
         } else {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
         }
         break;
       case stackAcc8Load:
-        if (operand != null && operand.opType == OperandType.stack8) {
+        if (operand != null && operand.opType == OperandType.STACK8) {
           throw new RuntimeException("Internal compiler error: illegal stack operand for functionType " + fn + ".");
         }
         // ga verder met controles voor non-stack load.
@@ -191,13 +211,15 @@ public class Instruction {
         if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
-        if (operand.opType == OperandType.stack8) {
+        if (operand.opType == OperandType.STACK8) {
           // no error.
-        } else if (operand.opType == OperandType.constant && operand.intValue != null) {
+        } else if (operand.opType == OperandType.CONSTANT && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.var && operand.intValue != null) {
+        } else if (operand.opType == OperandType.GLOBAL_VAR && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.acc && operand.datatype == Datatype.byt) {
+        } else if (operand.opType == OperandType.LOCAL_VAR && operand.intValue != null) {
+          // no error.
+        } else if (operand.opType == OperandType.ACC && operand.datatype == Datatype.byt) {
           // no error.
         } else {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -229,11 +251,11 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects an operand.");
         }
         switch (operand.opType) {
-          case stack8:
+          case STACK8:
             break;
-          case stack16:
+          case STACK16:
             break;
-          case constant:
+          case CONSTANT:
             if (operand.datatype != Datatype.byt && operand.datatype != Datatype.word) {
               throw new RuntimeException(
                   "Internal compiler error: functionType " + fn + " expects an word or byte datatype for its constant operand.");
@@ -243,13 +265,19 @@ public class Instruction {
                   "Internal compiler error: functionType " + fn + " expects an word value for its constant operand.");
             }
             break;
-          case var:
+          case GLOBAL_VAR:
             if (operand.intValue == null) {
               throw new RuntimeException(
-                  "Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
+                  "Internal compiler error: functionType " + fn + " expects an address for its global variable operand.");
             }
             break;
-          case acc:
+          case LOCAL_VAR:
+            if (operand.intValue == null) {
+              throw new RuntimeException(
+                  "Internal compiler error: functionType " + fn + " expects an index for its local variable operand.");
+            }
+            break;
+          case ACC:
             if (operand.datatype == Datatype.byt || operand.datatype == Datatype.word) {
               // no error.
             } else {
@@ -264,15 +292,27 @@ public class Instruction {
       case decrement16:
       case increment8:
       case decrement8:
-        if (operand != null && operand.opType == OperandType.var) {
-          if (operand.intValue == null) {
-            throw new RuntimeException(
-                "Internal compiler error: functionType " + fn + " expects an address for its variable operand.");
-          }
-        } else {
+        if (operand == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a variable as operand.");
         }
-        ;
+        if (operand.opType == OperandType.GLOBAL_VAR && operand.intValue == null) {
+          throw new RuntimeException(
+              "Internal compiler error: functionType " + fn + " expects an address for its global variable operand.");
+        }
+        if (operand.opType == OperandType.LOCAL_VAR && operand.intValue == null) {
+          throw new RuntimeException(
+              "Internal compiler error: functionType " + fn + " expects an index for its local variable operand.");
+        }
+        break;
+      case stackPointerPlus:
+        if ((operand == null) || (operand.opType != OperandType.CONSTANT) || (operand.datatype != Datatype.word)) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects constant word value as operand.");
+        }
+        break;
+      case basePointerLoad:
+        if ((operand == null) || operand.opType != OperandType.STACK_POINTER) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects stack pointer as operand.");
+        }
         break;
       case br:
       case brEq:
@@ -282,7 +322,7 @@ public class Instruction {
       case brGt:
       case brGe:
       case call:
-        if (operand != null && operand.opType == OperandType.label) {
+        if (operand != null && operand.opType == OperandType.LABEL) {
           if (operand.intValue == null) {
             throw new RuntimeException(
                 "Internal compiler error: functionType " + fn + " expects the address of a label to jump to.");
@@ -300,7 +340,9 @@ public class Instruction {
     function = fn;
     // deep copy of parameter operand to member operand, otherwise a reference
     // to the mutable object operand is copied into the Instruction.
-    this.operand = deepCopy(operand);
+    this.operand =
+
+        deepCopy(operand);
   } // Instruction(FunctionType fn, Operand operand)
 
   public Instruction(FunctionType fn, Operand operand1, Operand operand2) {
@@ -341,7 +383,7 @@ public class Instruction {
     }
 
     // operand contains name of the method.
-    operand = new Operand(OperandType.constant, Datatype.string, identifier);
+    operand = new Operand(OperandType.CONSTANT, Datatype.string, identifier);
     // copy parameter modifiers and resultType to member fields.
     function = fn;
     this.modifiers = modifiers;
@@ -350,7 +392,7 @@ public class Instruction {
 
   protected Operand deepCopy(Operand operand) {
     Operand newOperand;
-    if (operand.opType == OperandType.label || operand.datatype == Datatype.string) {
+    if (operand.opType == OperandType.LABEL || operand.datatype == Datatype.string) {
       newOperand = new Operand(operand.opType, operand.datatype, operand.intValue);
       newOperand.strValue = operand.strValue;
     } else if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
@@ -364,6 +406,36 @@ public class Instruction {
 
   public String toString() {
     String result = function.getValue();
+
+    if (noOperand.contains(function)) {
+      switch (function) {
+        case read:
+          result = "call read";
+          break;
+        case writeAcc8:
+          result = "call writeAcc8";
+          break;
+        case writeAcc16:
+          result = "call writeAcc16";
+          break;
+        case writeString:
+          result = "writeString";
+          break;
+        case writeLineAcc8:
+          result = "call writeLineAcc8";
+          break;
+        case writeLineAcc16:
+          result = "call writeLineAcc16";
+          break;
+        case writeLineString:
+          result = "writeLineString";
+          break;
+        default:
+          break;
+      }
+      return result;
+    }
+
     switch (function) {
       case comment:
         result += operand.strValue;
@@ -378,8 +450,9 @@ public class Instruction {
         result += " " + operand.strValue + " " + modifiers;
         break;
       case method:
-        // method main [public, static] void
+        // method identifier [modifiers] returnType (formalParameters)
         result += " " + operand.strValue + " " + modifiers + " " + resultType.getType();
+        result += " ()";
         break;
       case stringConstant:
         result += " " + operand.intValue + " = \"" + operand.strValue + "\"";
@@ -387,11 +460,14 @@ public class Instruction {
       case acc16Store:
       case acc8Store:
         switch (operand.opType) {
-          case var:
+          case GLOBAL_VAR:
             result += " variable " + operand.intValue;
             break;
-          case stack16:
-          case stack8:
+          case LOCAL_VAR:
+            result += String.format(" (basePointer + %d)", operand.intValue);
+            break;
+          case STACK16:
+          case STACK8:
             result += " " + operand.opType;
             break;
           default:
@@ -412,6 +488,8 @@ public class Instruction {
       case divAcc16:
       case acc16Compare: // normal compare
       case revAcc16Compare: // reverse compare
+      case stackPointerPlus:
+      case basePointerLoad:
       case acc8Load:
       case stackAcc8Load:
       case acc8Or:
@@ -426,10 +504,13 @@ public class Instruction {
       case acc8Compare: // normal compare
       case revAcc8Compare: // reverse compare
         switch (operand.opType) {
-          case var:
+          case GLOBAL_VAR:
             result += " variable " + operand.intValue;
             break;
-          case constant:
+          case LOCAL_VAR:
+            result += String.format(" (basePointer + %d)", operand.intValue);
+            break;
+          case CONSTANT:
             if (operand.datatype == Datatype.string) {
 
               // error detection
@@ -442,20 +523,23 @@ public class Instruction {
               result += " constant " + operand.intValue;
             }
             break;
-          case stack16:
-          case stack8:
+          case STACK16:
+          case STACK8:
             if (operand.datatype == Datatype.byt) {
               result += " unstack8";
             } else if (operand.datatype == Datatype.word) {
               result += " unstack16";
             }
             break;
-          case acc:
+          case ACC:
             if (operand.datatype == Datatype.byt) {
               result += " acc8";
             } else if (operand.datatype == Datatype.word) {
               result += " acc16";
             }
+            break;
+          case STACK_POINTER:
+            result += " stackPointer";
             break;
           default:
             throw new RuntimeException("accu related instruction with unsupported operandType");
@@ -467,8 +551,11 @@ public class Instruction {
       case increment8:
       case decrement8:
         switch (operand.opType) {
-          case var:
+          case GLOBAL_VAR:
             result += " variable " + operand.intValue;
+            break;
+          case LOCAL_VAR:
+            result += String.format(" (basePointer + %d)", operand.intValue);
             break;
           default:
             throw new RuntimeException(result + " instruction with non-var operandType");
@@ -486,46 +573,12 @@ public class Instruction {
       case call:
         result += " " + operand.intValue;
         break;
-      case read:
-        result = "call read";
-        break;
-      case writeAcc8:
-        result = "call writeAcc8";
-        break;
-      case writeAcc16:
-        result = "call writeAcc16";
-        break;
-      case writeString:
-        result = "writeString";
-        break;
-      case writeLineAcc8:
-        result = "call writeLineAcc8";
-        break;
-      case writeLineAcc16:
-        result = "call writeLineAcc16";
-        break;
-      case writeLineString:
-        result = "writeLineString";
-        break;
-      case stop:
-      case returnFunction:
-      case acc16CompareAcc8:
-      case acc8CompareAcc16:
-      case acc16ToAcc8:
-      case acc8ToAcc16:
-      case stackAcc16ToAcc8:
-      case stackAcc8ToAcc16:
-      case stackAcc16:
-      case stackAcc8:
-      case unstackAcc16:
-      case unstackAcc8:
-        break;
       case input:
         // input: port = operand.
         // Template Z80S180 code:
         // IN0 A,(port)
         switch (operand.opType) {
-          case constant:
+          case CONSTANT:
             result += String.format(" port 0x%1$02X", operand.intValue);
             break;
           // case var:
@@ -545,7 +598,7 @@ public class Instruction {
         // LD A,value
         // OUT0 (port),A
         switch (operand.opType) {
-          case constant:
+          case CONSTANT:
             result += String.format(" port 0x%1$02X", operand.intValue);
             break;
           // case var:
@@ -559,20 +612,23 @@ public class Instruction {
         }
         ;
         switch (operand2.opType) {
-          case constant:
+          case CONSTANT:
             result += String.format(" value 0x%1$02X", operand2.intValue);
             break;
-          case acc:
+          case ACC:
             if (operand2.datatype == Datatype.byt) {
               result += ", value acc8";
             } else {
               throw new RuntimeException("output with unsupported datatype for value operand");
             }
             break;
-          case var:
+          case GLOBAL_VAR:
             result += ", value variable " + operand2.intValue;
             break;
-          case stack8:
+          case LOCAL_VAR:
+            result += String.format(" (basePointer + %d)", operand.intValue);
+            break;
+          case STACK8:
             result += ", value " + operand2.opType;
             break;
           default:
