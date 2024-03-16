@@ -635,39 +635,31 @@ public class pCompiler {
       modifiers.add(LexemeType.publicLexeme);
     }
 
-    // recognize a class definition.
+    // syntax analysis.
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.identifier);
     localSet.add(LexemeType.beginLexeme);
     if (checkOrSkip(EnumSet.of(LexemeType.classLexeme), localSet)) {
       lexeme = lexemeReader.getLexeme(sourceCode);
 
-      // semantic analysis: start a new class level declaration scope.
-      identifiers.newScope();
-
       localSet = stopSet.clone();
       localSet.add(LexemeType.beginLexeme);
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), localSet)) {
         // semantic analysis.
         String identifier = lexeme.idVal;
-        if (identifiers.checkId(identifier)) {
-          error();
-          System.out.println("variable " + identifier + " already declared.");
-        } else if (identifiers.declareId(identifier, IdentifierType.CLAZZ, LexemeType.classLexeme, modifiers)) {
+        if (identifiers.declareId(identifier, IdentifierType.CLAZZ, LexemeType.classLexeme, modifiers)) {
           debug("\nclassDecl: " + (isPublic ? "public " : "") + "class declared: " + identifier);
         } else {
           error();
-          System.out.println("Error declaring identifier " + identifier + " as a class.");
+          System.out.println("Class identifier " + identifier + " already declared.");
         }
 
         // code generation
         plant(new Instruction(FunctionType.classFunction, identifier, modifiers, null));
 
+        // syntax analysis
         classBody(stopSet);
       }
-
-      // semantic analysis: close the class level declaration scope.
-      identifiers.closeScope();
     }
     debug("\nclassDecl: end");
   } // classDecl
@@ -902,14 +894,11 @@ public class pCompiler {
     debug("\nfieldDeclaration: start " + firstIdentifier);
 
     // semantic analysis
-    if (identifiers.checkId(firstIdentifier)) {
-      error();
-      System.out.println("variable " + firstIdentifier + " already declared.");
-    } else if (identifiers.declareId(firstIdentifier, identifierType, type.getType(), modifiers)) {
+    if (identifiers.declareId(firstIdentifier, identifierType, type.getType(), modifiers)) {
       debug(String.format("\n%s declaration: $s %s %s", identifierType, modifiers, type.getType(), firstIdentifier));
     } else {
       error();
-      System.out.println("Error declaring identifier " + firstIdentifier + " as a field.");
+      System.out.println("variable " + firstIdentifier + " already declared.");
     }
 
     // semicolon indicates single primitive variable declarator without
@@ -935,7 +924,7 @@ public class pCompiler {
 
           // semantic analysis.
           Variable var = identifiers.getId(firstIdentifier);
-          Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+          Operand leftOperand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
           leftOperand.isFinal = var.isFinal();
           debug("\nFieldDeclaration: leftOperand = " + leftOperand);
 
@@ -953,7 +942,7 @@ public class pCompiler {
             // no assignment but constant definition.
             if (var.getDatatype() != rightOperand.datatype) {
               error(14);
-            } else if (rightOperand.opType == OperandType.constant) {
+            } else if (rightOperand.opType == OperandType.CONSTANT) {
               var.setIntValue(rightOperand.intValue);
               debug("\nFieldDeclaration: static final " + var.getName() + " = " + var.getIntValue());
             } else {
@@ -1023,14 +1012,11 @@ public class pCompiler {
     }
 
     // semantic analysis of identifier:
-    if (identifiers.checkId(identifier)) {
-      error();
-      System.out.println("variable " + identifier + " already declared.");
-    } else if (identifiers.declareId(identifier, IdentifierType.METHOD, resultType.getType(), modifiers)) {
+    if (identifiers.declareId(identifier, IdentifierType.METHOD, resultType.getType(), modifiers)) {
       debug("\nmethodDeclaration: " + modifiers + " " + identifier + "(...)");
     } else {
       error();
-      System.out.println("Error declaring identifier " + identifier + " as a method.");
+      System.out.println("identifier " + identifier + " already declared.");
     }
     // skip left bracket
     lexeme = lexemeReader.getLexeme(sourceCode);
@@ -1050,12 +1036,28 @@ public class pCompiler {
     newSymbol.resultType = resultType;
     newSymbol.modifiers = modifiers;
     methodSymbolTable.add(newSymbol);
+    // save current base pointer
+    plant(new Instruction(FunctionType.stackBasePointer));
+    // allocate space on stack for local variables
+    plant(new Instruction(FunctionType.basePointerLoad, new Operand(OperandType.STACK_POINTER)));
+    int moveStackPointerAddress = saveLabel();
+    plant(new Instruction(FunctionType.stackPointerPlus, new Operand(OperandType.CONSTANT, Datatype.word, 0)));
+
+    // semantic analysis: start a new method level declaration scope.
+    identifiers.newScope();
+    identifiers.resetScopeSize();
 
     // lexical analysis
     block(stopSet);
-
     // code generation
+    setScopeSize(moveStackPointerAddress, identifiers.getScopeSize());
+
+    // reset base pointer and return to caller
+    plantCode(new Instruction(FunctionType.unstackBasePointer));
     plantThenSource(new Instruction(FunctionType.returnFunction));
+
+    // semantic analysis: close the method level declaration scope.
+    identifiers.closeScope();
 
     debug("\nmethodDeclaration: end");
   } // restOfMethodDeclaration()
@@ -1349,7 +1351,7 @@ public class pCompiler {
 
       // code generation.
       int elseLabel = saveLabel();
-      plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
+      plant(new Instruction(FunctionType.br, new Operand(OperandType.LABEL, Datatype.word, 0)));
       debug("\nifStatement: elselabel=" + elseLabel);
       debug("\nifStatement: plantForwardLabel(" + ifLabel + ")");
 
@@ -1462,7 +1464,7 @@ public class pCompiler {
     statementExceptIf(stopSet);
 
     // code generation.
-    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, whileLabel)));
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.LABEL, Datatype.word, whileLabel)));
     plantForwardLabel(endLabel, saveLabel());
     debug("\nwhileStatement: end");
   } // whileStatement()
@@ -1570,7 +1572,7 @@ public class pCompiler {
 
     // code generation: skip update and jump forward to block.
     int gotoBlock = saveLabel();
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, 0)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.LABEL, Datatype.word, 0)));
     int updateLabel = saveLabel();
 
     // code generation.
@@ -1583,7 +1585,7 @@ public class pCompiler {
     }
 
     // code generation: jump back to comparison.
-    plant(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, forLabel)));
+    plant(new Instruction(FunctionType.br, new Operand(OperandType.LABEL, Datatype.word, forLabel)));
 
     // code generation.
     clearRegisters();
@@ -1603,7 +1605,7 @@ public class pCompiler {
     statementExceptIf(stopSet);
 
     // code generation; jump back to update.
-    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.label, Datatype.word, updateLabel)));
+    plantThenSource(new Instruction(FunctionType.br, new Operand(OperandType.LABEL, Datatype.word, updateLabel)));
     plantForwardLabel(gotoEnd, saveLabel());
 
     // todo: getLexeme na bovenstaande code generatie.
@@ -1896,7 +1898,7 @@ public class pCompiler {
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
         // semantic analysis.
         Variable var = identifiers.getId(lexeme.idVal);
-        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        Operand leftOperand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\nupdate: leftOperand = " + leftOperand);
 
@@ -1924,7 +1926,7 @@ public class pCompiler {
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopSet)) {
         // semantic analysis.
         Variable var = identifiers.getId(lexeme.idVal);
-        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        Operand leftOperand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\nupdate: leftOperand = " + leftOperand);
 
@@ -1946,8 +1948,10 @@ public class pCompiler {
   // postincrementExpression ::= name "++".
   private void postincrementExpression(String name, EnumSet<LexemeType> stopSet) throws FatalError {
     // semantic analysis.
-    if (identifiers.checkId(name)) {
-      Variable var = identifiers.getId(name);
+    Variable var = identifiers.getId(name);
+    if (var == null) {
+      error(9); // variable not declared.
+    } else {
       debug("\nassignment: variable = " + var);
 
       // lexical analysis.
@@ -1955,7 +1959,7 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
 
         // semantic analysis.
-        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        Operand leftOperand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\npostincrementExpression: leftOperand = " + leftOperand);
 
@@ -1968,16 +1972,16 @@ public class pCompiler {
           error(12);
         }
       }
-    } else {
-      error(9); // variable not declared.
     }
   } // postincrementExpression
 
   // postdecrementExpression ::= name "--".
   private void postdecrementExpression(String name, EnumSet<LexemeType> stopSet) throws FatalError {
     // semantic analysis.
-    if (identifiers.checkId(name)) {
-      Variable var = identifiers.getId(name);
+    Variable var = identifiers.getId(name);
+    if (var == null) {
+      error(9); // variable not declared.
+    } else {
       debug("\nassignment: variable = " + var);
 
       // lexical analysis.
@@ -1985,7 +1989,7 @@ public class pCompiler {
         lexeme = lexemeReader.getLexeme(sourceCode);
 
         // semantic analysis.
-        Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+        Operand leftOperand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\npostdecrementExpression: leftOperand = " + leftOperand);
 
@@ -1998,18 +2002,18 @@ public class pCompiler {
           error(12);
         }
       }
-    } else {
-      error(9); // variable not declared.
     }
   } // postdecrementExpression
 
   // methodInvocation ::= name arguments.
   private void methodInvocation(String name, EnumSet<LexemeType> stopSet) throws FatalError {
     // semantic analysis.
-    if (identifiers.checkId(name)) {
+    Variable method = identifiers.getId(name);
+    if (method == null) {
+      error(36); // method not declared.
+    } else {
       // TODO support method call before method declaration.
       // get the method signature from the list of identifiers.
-      Variable method = identifiers.getId(name);
       debug("\nmethod invocation: " + method);
 
       // lexical analysis.
@@ -2031,8 +2035,6 @@ public class pCompiler {
       // code generation.
       // TODO support method arguments (actual parameters).
       plant(new Instruction(FunctionType.call, new Operand(name, method.getIntValue())));
-    } else {
-      error(36); // method not declared.
     }
   } // methodInvocation
 
@@ -2041,10 +2043,12 @@ public class pCompiler {
     debug("\nassignment: start with stopSet = " + stopSet + "; variable e=" + name);
 
     // semantic analysis.
-    if (identifiers.checkId(name)) {
-      Variable var = identifiers.getId(name);
+    Variable var = identifiers.getId(name);
+    if (var == null) {
+      error(9); // variable not declared.
+    } else {
       debug("\nassignment: variable = " + var);
-      Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+      Operand leftOperand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
       leftOperand.isFinal = var.isFinal();
       debug("\nassignment: leftOperand = " + leftOperand);
 
@@ -2066,8 +2070,6 @@ public class pCompiler {
           generateAssignment(leftOperand, rightOperand);
         }
       }
-    } else {
-      error(9); // variable not declared.
     }
 
     debug("\nassignment: end");
@@ -2114,10 +2116,10 @@ public class pCompiler {
         + ", acc8InUse = " + acc8.inUse());
     // port must be a constant or a final variable
     // convert port operand from final var to constant.
-    if (port.opType == OperandType.var && port.isFinal) {
-      port = new Operand(OperandType.constant, port.datatype, identifiers.getId(port.strValue).getIntValue());
+    if ((port.opType == OperandType.GLOBAL_VAR || port.opType == OperandType.LOCAL_VAR) && port.isFinal) {
+      port = new Operand(OperandType.CONSTANT, port.datatype, identifiers.getId(port.strValue).getIntValue());
     }
-    if (port.opType != OperandType.constant) {
+    if (port.opType != OperandType.CONSTANT) {
       error(16);
     }
 
@@ -2164,7 +2166,7 @@ public class pCompiler {
     // code generation.
     plant(new Instruction(FunctionType.input, port));
     // The input() function always returns a byte value.
-    Operand operand = new Operand(OperandType.acc);
+    Operand operand = new Operand(OperandType.ACC);
     operand.datatype = Datatype.byt;
     acc8.setOperand(operand);
 
@@ -2178,33 +2180,29 @@ public class pCompiler {
   // test11).
   // TODO Refactor StringConstants.
   private Operand factor(EnumSet<LexemeType> stopSet) throws FatalError {
-    Operand operand = new Operand(OperandType.unknown);
+    Operand operand = new Operand(OperandType.UNKNOWN);
     debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     if (checkOrSkip(START_EXPRESSION, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
         // semantic analysis.
-        if (identifiers.checkId(lexeme.idVal)) {
-          // code generation.
-          Variable var = identifiers.getId(lexeme.idVal);
+        Variable var = identifiers.getId(lexeme.idVal);
+        if (var == null) {
+          throw new FatalError(9); // variable not declared.
+        } else {
+          operand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
           // treat final var as a constant
           if (var.isFinal()) {
-            operand.opType = OperandType.constant;
+            operand.opType = OperandType.CONSTANT;
             operand.intValue = var.getIntValue();
-          } else {
-            operand.opType = OperandType.var;
-            operand.intValue = var.getAddress();
           }
-          operand.datatype = var.getDatatype();
           operand.isFinal = var.isFinal();
           operand.strValue = lexeme.idVal;
-        } else {
-          throw new FatalError(9); // variable not declared.
         }
         // lexical analysis.
         lexeme = lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.constant) {
         // code generation.
-        operand.opType = OperandType.constant;
+        operand.opType = OperandType.CONSTANT;
         operand.datatype = lexeme.datatype;
         operand.intValue = lexeme.constVal;
         // lexical analysis.
@@ -2215,7 +2213,7 @@ public class pCompiler {
         int constantId = stringConstants.add(lexeme.stringVal, instructions.size() + 1);
         debug("\nfactor: string constant " + constantId + " = \"" + lexeme.stringVal + "\"");
         // code generation.
-        operand.opType = OperandType.constant;
+        operand.opType = OperandType.CONSTANT;
         operand.datatype = Datatype.string;
         operand.strValue = lexeme.stringVal;
         operand.intValue = constantId;
@@ -2230,7 +2228,7 @@ public class pCompiler {
           plant(new Instruction(FunctionType.stackAcc16));
         }
         plant(new Instruction(FunctionType.read));
-        operand.opType = OperandType.acc;
+        operand.opType = OperandType.ACC;
         operand.datatype = Datatype.word;
         acc16.setOperand(operand);
       } else if (lexeme.type == LexemeType.inputLexeme) {
@@ -2250,7 +2248,7 @@ public class pCompiler {
 
     // consistency check.
     debug("\nfactor: end: " + operand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    if (operand.opType == OperandType.unknown) {
+    if (operand.opType == OperandType.UNKNOWN) {
       throw new FatalError(12);
     }
 
@@ -2303,7 +2301,7 @@ public class pCompiler {
 
       // code generation.
       if (leftOperandNotLoaded) {
-        if (leftOperand.opType != OperandType.acc) {
+        if (leftOperand.opType != OperandType.ACC) {
           plantAccLoad(leftOperand);
         }
         leftOperandNotLoaded = false;
@@ -2322,7 +2320,7 @@ public class pCompiler {
        * leftOperand: constant, acc, var, stack16, stack8 rOperand: constant,
        * acc, var, stack16, stack8
        */
-      if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.constant)) {
+      if ((leftOperand.opType == OperandType.ACC) && (rOperand.opType == OperandType.CONSTANT)) {
         if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.word) {
           plant(new Instruction(forwardOperation16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
@@ -2338,7 +2336,7 @@ public class pCompiler {
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
-      } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.acc)) {
+      } else if ((leftOperand.opType == OperandType.ACC) && (rOperand.opType == OperandType.ACC)) {
         if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
           plant(new Instruction(forwardOperation16.get(operator), rOperand));
           acc8.clear();
@@ -2350,7 +2348,8 @@ public class pCompiler {
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
-      } else if ((leftOperand.opType == OperandType.acc) && (rOperand.opType == OperandType.var)) {
+      } else if ((leftOperand.opType == OperandType.ACC)
+          && (rOperand.opType == OperandType.GLOBAL_VAR || rOperand.opType == OperandType.LOCAL_VAR)) {
         if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.word) {
           plant(new Instruction(forwardOperation16.get(operator), rOperand));
         } else if (leftOperand.datatype == Datatype.word && rOperand.datatype == Datatype.byt) {
@@ -2366,23 +2365,23 @@ public class pCompiler {
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
-      } else if ((leftOperand.opType == OperandType.stack16) && (rOperand.opType == OperandType.acc)) {
+      } else if ((leftOperand.opType == OperandType.STACK16) && (rOperand.opType == OperandType.ACC)) {
         if (rOperand.datatype == Datatype.word) {
           plant(new Instruction(reverseOperation16.get(operator), leftOperand));
-          leftOperand.opType = OperandType.acc;
+          leftOperand.opType = OperandType.ACC;
           leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
-      } else if ((leftOperand.opType == OperandType.stack8) && (rOperand.opType == OperandType.acc)) {
+      } else if ((leftOperand.opType == OperandType.STACK8) && (rOperand.opType == OperandType.ACC)) {
         if (rOperand.datatype == Datatype.byt) {
           plant(new Instruction(reverseOperation8.get(operator), leftOperand));
-          leftOperand.opType = OperandType.acc;
+          leftOperand.opType = OperandType.ACC;
           acc8.setOperand(leftOperand);
         } else if (rOperand.datatype == Datatype.word) {
           plant(new Instruction(reverseOperation16.get(operator), leftOperand));
-          leftOperand.opType = OperandType.acc;
+          leftOperand.opType = OperandType.ACC;
           leftOperand.datatype = Datatype.word;
           acc16.setOperand(leftOperand);
         } else {
@@ -2411,7 +2410,7 @@ public class pCompiler {
     debug("\ncomparison: leftOperand=" + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
     // code generation.
-    if (leftOperand.opType == OperandType.acc) {
+    if (leftOperand.opType == OperandType.ACC) {
       debug("\ncomparison: push leftOperand to the stack; " + leftOperand);
       if (leftOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.stackAcc16));
@@ -2445,7 +2444,7 @@ public class pCompiler {
     // code generation.
     boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);
     int ifLabel = saveLabel();
-    Operand labelOperand = new Operand(OperandType.label, Datatype.word, 0);
+    Operand labelOperand = new Operand(OperandType.LABEL, Datatype.word, 0);
     if (reverseCompare) {
       debug(", reverseCompare");
       plant(new Instruction(reverseSkip.get(compareOp), labelOperand));
@@ -2468,7 +2467,7 @@ public class pCompiler {
     Operand leftOperand = expression(localSet);
 
     // code generation.
-    if (leftOperand.opType == OperandType.acc) {
+    if (leftOperand.opType == OperandType.ACC) {
       debug("\ncomparisonInDoStatement: push leftOperand to the stack; " + leftOperand);
       if (leftOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.stackAcc16));
@@ -2501,7 +2500,7 @@ public class pCompiler {
 
     // code generation.
     boolean reverseCompare = plantComparisonCode(leftOperand, rightOperand);
-    Operand labelOperand = new Operand(OperandType.label, Datatype.word, doLabel);
+    Operand labelOperand = new Operand(OperandType.LABEL, Datatype.word, doLabel);
     if (reverseCompare) {
       debug(", reverseCompare");
       if (compareOp == OperatorType.eq) {
@@ -2565,22 +2564,19 @@ public class pCompiler {
       if (checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
         // semantic analysis.
-        if (identifiers.checkId(lexeme.idVal) && identifiers.getId(lexeme.idVal).getDatatype() != null) {
-          error();
-          System.out.println("variable " + lexeme.idVal + " already declared.");
-        } else if (identifiers.declareId(lexeme.idVal, IdentifierType.LOCAL_VARIABLE, datatype, modifiers)) {
+        if (identifiers.declareId(lexeme.idVal, IdentifierType.LOCAL_VARIABLE, datatype, modifiers)) {
           debug("\nstatementExpression: " + modifiers + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
           error();
-          System.out.println("Error declaring identifier " + lexeme.idVal + " of type " + datatype + " as a variable");
+          System.out.println("variable " + lexeme.idVal + " already declared.");
         }
       }
     } else {
       checkOrSkip(EnumSet.of(LexemeType.identifier), stopAssignmentSet);
 
       // semantic analysis.
-      if (!identifiers.checkId(lexeme.idVal))
+      if (identifiers.getId(lexeme.idVal) == null)
         error(9); // variable not declared.
     }
 
@@ -2600,7 +2596,7 @@ public class pCompiler {
 
     // semantic analysis.
     Variable var = identifiers.getId(lexeme.idVal);
-    Operand leftOperand = new Operand(OperandType.var, var.getDatatype(), var.getAddress());
+    Operand leftOperand = new Operand(var.getIdentifierType(), var.getDatatype(), var.getAddress());
     leftOperand.isFinal = var.isFinal();
     debug("\nupdate: leftOperand = " + leftOperand);
 
@@ -2640,7 +2636,7 @@ public class pCompiler {
         // no assignment but constant definition.
         if (var.getDatatype() != rightOperand.datatype) {
           error(14);
-        } else if (rightOperand.opType == OperandType.constant) {
+        } else if (rightOperand.opType == OperandType.CONSTANT) {
           var.setIntValue(rightOperand.intValue);
           debug("\nupdate: final var [" + var.getName() + "] = " + var.getIntValue());
         } else {
@@ -2664,7 +2660,7 @@ public class pCompiler {
     // code generation.
     debug("\ngenerateAssignment: leftOperand = " + leftOperand + ", operand = " + rightOperand);
     // operand to accu.
-    if (rightOperand.opType != OperandType.acc) {
+    if (rightOperand.opType != OperandType.ACC) {
       plantAccLoad(rightOperand);
     }
     // actual assignment.
@@ -2705,7 +2701,7 @@ public class pCompiler {
       if (debugMode) {
         debug("\n" + String.format(LINE_NR_FORMAT, instructions.size()) + FunctionType.comment.getValue() + line);
       }
-      instructions.add(new Instruction(FunctionType.comment, new Operand(OperandType.constant, Datatype.string, line)));
+      instructions.add(new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, Datatype.string, line)));
     }
     sourceCode.clear();
   } // plantSource
@@ -2748,25 +2744,25 @@ public class pCompiler {
       acc8.clear();
     } else if (instruction.function == FunctionType.stackAcc16Load) {
       stackedDatatypes.push(Datatype.word);
-      acc16.operand().opType = OperandType.stack16;
+      acc16.operand().opType = OperandType.STACK16;
     } else if (instruction.function == FunctionType.stackAcc8Load) {
       stackedDatatypes.push(Datatype.byt);
-      acc8.operand().opType = OperandType.stack8;
+      acc8.operand().opType = OperandType.STACK8;
     } else if (instruction.function == FunctionType.stackAcc16ToAcc8) {
       stackedDatatypes.push(Datatype.byt);
-      acc8.operand().opType = OperandType.stack8;
+      acc8.operand().opType = OperandType.STACK8;
       acc16.clear();
     } else if (instruction.function == FunctionType.stackAcc8ToAcc16) {
       stackedDatatypes.push(Datatype.word);
-      acc16.operand().opType = OperandType.stack16;
+      acc16.operand().opType = OperandType.STACK16;
       acc8.clear();
     } else if (instruction.function == FunctionType.stackAcc16) {
       stackedDatatypes.push(Datatype.word);
-      acc16.operand().opType = OperandType.stack16;
+      acc16.operand().opType = OperandType.STACK16;
       acc16.clear();
     } else if (instruction.function == FunctionType.stackAcc8) {
       stackedDatatypes.push(Datatype.byt);
-      acc8.operand().opType = OperandType.stack8;
+      acc8.operand().opType = OperandType.STACK8;
       acc8.clear();
     }
 
@@ -2775,15 +2771,20 @@ public class pCompiler {
       popStackedDatatype(Datatype.byt);
     } else if (instruction.function == FunctionType.unstackAcc16) {
       popStackedDatatype(Datatype.word);
-    } else if (instruction.operand != null && instruction.operand.opType == OperandType.stack8) {
+    } else if (instruction.operand != null && instruction.operand.opType == OperandType.STACK8) {
       popStackedDatatype(Datatype.byt);
-    } else if (instruction.operand != null && instruction.operand.opType == OperandType.stack16) {
+    } else if (instruction.operand != null && instruction.operand.opType == OperandType.STACK16) {
       popStackedDatatype(Datatype.word);
     }
 
     // for debugging purposes.
     debug(" ;" + " stackedDatatypes=" + stackedDatatypes);
   } // plantCode
+
+  private void setScopeSize(int methodAddress, int scopeSize) {
+    Instruction instruction = instructions.get(methodAddress);
+    instruction.operand.intValue = scopeSize;
+  }
 
   private int findSymbol(String name) {
     int address = 0;
@@ -2810,7 +2811,7 @@ public class pCompiler {
 
     boolean reverseCompare = false;
     // plant(new Instruction(FunctionType.acc16Compare, rightOperand));
-    if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.constant)) {
+    if ((leftOperand.opType == OperandType.CONSTANT) && (rightOperand.opType == OperandType.CONSTANT)) {
       plantAccLoad(leftOperand);
       if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
@@ -2825,7 +2826,7 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.acc)) {
+    } else if ((leftOperand.opType == OperandType.CONSTANT) && (rightOperand.opType == OperandType.ACC)) {
       if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         reverseCompare = true;
         plant(new Instruction(FunctionType.acc16Compare, leftOperand));
@@ -2841,7 +2842,8 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.constant) && (rightOperand.opType == OperandType.var)) {
+    } else if ((leftOperand.opType == OperandType.CONSTANT)
+        && (rightOperand.opType == OperandType.GLOBAL_VAR || rightOperand.opType == OperandType.LOCAL_VAR)) {
       plantAccLoad(rightOperand);
       if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         reverseCompare = true;
@@ -2865,7 +2867,8 @@ public class pCompiler {
        * plant(new Instruction(FunctionType.acc8Compare, leftOperand)); } else {
        * throw new RuntimeException("Internal compiler error: abort."); }
        */
-    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.constant)) {
+    } else if ((leftOperand.opType == OperandType.GLOBAL_VAR || leftOperand.opType == OperandType.LOCAL_VAR)
+        && (rightOperand.opType == OperandType.CONSTANT)) {
       plantAccLoad(leftOperand);
       if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
@@ -2880,7 +2883,8 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.acc)) {
+    } else if ((leftOperand.opType == OperandType.GLOBAL_VAR || leftOperand.opType == OperandType.LOCAL_VAR)
+        && (rightOperand.opType == OperandType.ACC)) {
       if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         reverseCompare = true;
         plant(new Instruction(FunctionType.acc16Compare, leftOperand));
@@ -2896,7 +2900,8 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.var) && (rightOperand.opType == OperandType.var)) {
+    } else if ((leftOperand.opType == OperandType.GLOBAL_VAR || leftOperand.opType == OperandType.LOCAL_VAR)
+        && (rightOperand.opType == OperandType.GLOBAL_VAR || rightOperand.opType == OperandType.LOCAL_VAR)) {
       plantAccLoad(leftOperand);
       if (leftOperand.datatype == Datatype.word && rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
@@ -2911,7 +2916,7 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.constant)) {
+    } else if ((leftOperand.opType == OperandType.STACK16) && (rightOperand.opType == OperandType.CONSTANT)) {
       if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc16));
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
@@ -2922,7 +2927,7 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.acc)) {
+    } else if ((leftOperand.opType == OperandType.STACK16) && (rightOperand.opType == OperandType.ACC)) {
       if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.revAcc16Compare, leftOperand));
         reverseCompare = true;
@@ -2932,7 +2937,8 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.stack16) && (rightOperand.opType == OperandType.var)) {
+    } else if ((leftOperand.opType == OperandType.STACK16)
+        && (rightOperand.opType == OperandType.GLOBAL_VAR || rightOperand.opType == OperandType.LOCAL_VAR)) {
       if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc16));
         plant(new Instruction(FunctionType.acc16Compare, rightOperand));
@@ -2943,7 +2949,7 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.constant)) {
+    } else if ((leftOperand.opType == OperandType.STACK8) && (rightOperand.opType == OperandType.CONSTANT)) {
       if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc8));
         plantAccLoad(rightOperand);
@@ -2954,7 +2960,7 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.acc)) {
+    } else if ((leftOperand.opType == OperandType.STACK8) && (rightOperand.opType == OperandType.ACC)) {
       if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc8));
         plant(new Instruction(FunctionType.acc8CompareAcc16));
@@ -2964,7 +2970,8 @@ public class pCompiler {
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
-    } else if ((leftOperand.opType == OperandType.stack8) && (rightOperand.opType == OperandType.var)) {
+    } else if ((leftOperand.opType == OperandType.STACK8)
+        && (rightOperand.opType == OperandType.GLOBAL_VAR || rightOperand.opType == OperandType.LOCAL_VAR)) {
       if (rightOperand.datatype == Datatype.word) {
         plant(new Instruction(FunctionType.unstackAcc8));
         plantAccLoad(rightOperand);
@@ -2985,23 +2992,23 @@ public class pCompiler {
   private void plantAccLoad(Operand operand) {
     // load acc with operand.
     if (operand.datatype == Datatype.word) {
-      if (operand.opType != OperandType.stack16) {
+      if (operand.opType != OperandType.STACK16) {
         if (acc16.inUse()) {
           plant(new Instruction(FunctionType.stackAcc16Load, operand));
         } else {
           plant(new Instruction(FunctionType.acc16Load, operand));
         }
-        operand.opType = OperandType.acc;
+        operand.opType = OperandType.ACC;
         acc16.setOperand(operand);
       }
     } else if (operand.datatype == Datatype.byt) {
-      if (operand.opType != OperandType.stack8) {
+      if (operand.opType != OperandType.STACK8) {
         if (acc8.inUse()) {
           plant(new Instruction(FunctionType.stackAcc8Load, operand));
         } else {
           plant(new Instruction(FunctionType.acc8Load, operand));
         }
-        operand.opType = OperandType.acc;
+        operand.opType = OperandType.ACC;
         acc8.setOperand(operand);
       }
     } else if (operand.datatype == Datatype.string) {
@@ -3016,7 +3023,7 @@ public class pCompiler {
 
   private void plantPrintln(Operand operand, boolean withCarriageReturn) {
     // code generation.
-    if (operand.opType != OperandType.acc) {
+    if (operand.opType != OperandType.ACC) {
       plantAccLoad(operand);
     }
     switch (operand.datatype) {
@@ -3077,7 +3084,7 @@ public class pCompiler {
   private void plantStringConstants() {
     for (int id = 0; id < stringConstants.size(); id++) {
       // plant string constant.
-      Operand operand = new Operand(OperandType.constant, Datatype.string, stringConstants.get(id));
+      Operand operand = new Operand(OperandType.CONSTANT, Datatype.string, stringConstants.get(id));
       operand.intValue = id;
       instructions.add(new Instruction(FunctionType.stringConstant, operand));
     }
@@ -3096,7 +3103,7 @@ public class pCompiler {
           throw new RuntimeException(String.format("One of the instructions to symbol %s is not a call function", name));
         } else if (instruction.operand == null) {
           throw new RuntimeException(String.format("One of the instructions to symbol %s does not have an operand", name));
-        } else if (instruction.operand.opType != OperandType.label) {
+        } else if (instruction.operand.opType != OperandType.LABEL) {
           throw new RuntimeException(String.format("One of the instructions to symbol %s does not have a label operand", name));
         } else if (instruction.operand.intValue == 0) {
           instruction.operand.intValue = address;
@@ -3115,7 +3122,7 @@ public class pCompiler {
     for (Instruction instruction : instructions) {
       lineNumber++;
       if (STRING_CONSTANT_FUNCTIONS.contains(instruction.function) && instruction.operand != null
-          && instruction.operand.opType == OperandType.constant && instruction.operand.datatype == Datatype.string) {
+          && instruction.operand.opType == OperandType.CONSTANT && instruction.operand.datatype == Datatype.string) {
 
         // error detection
         if (instruction.operand.intValue == null) {
