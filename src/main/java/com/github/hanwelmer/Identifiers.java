@@ -24,76 +24,69 @@ import java.util.Stack;
 
 public class Identifiers {
 
-  /* Constants and class member variables for semantic analysis phase */
-  private Stack<Scope> stackOfScopes = new Stack<>();
+  // Scope with member fields (class variables) for semantic analysis.
+  private Scope classVariables = new Scope();
+  // Stack of scopes with local variables for semantic analysis.
+  private Stack<Scope> localVariables = new Stack<>();
+  private int maxScopeSize = 0;
 
   /**
    * Initialize the table with identifiers. Method is used during semantic
    * analysis phase.
    */
   public void init() {
-    stackOfScopes.clear();
-  }
-
-  private void debug(String message) {
-    // System.out.println(message);
+    classVariables.setAddress(0);
+    localVariables.clear();
+    maxScopeSize = 0;
   }
 
   // Start a new declaration scope.
   public void newScope() {
     Scope newScope = new Scope();
-    if (stackOfScopes.size() == 0) {
+    if (localVariables.size() == 0) {
       newScope.setAddress(0);
     } else {
-      newScope.setAddress(stackOfScopes.peek().getAddress());
+      newScope.setAddress(localVariables.peek().getAddress());
     }
-    stackOfScopes.push(newScope);
+    localVariables.push(newScope);
   } // newScope
 
   // Close the top level scope.
   public void closeScope() {
-    // avoid a run-time error.
-    if (stackOfScopes.size() > 0) {
-      stackOfScopes.pop();
+    // update maximum scope size.
+    // Note that local variable indices are negative but maxScopeSie is
+    // positive.
+    if (maxScopeSize < -localVariables.peek().getAddress()) {
+      maxScopeSize = -localVariables.peek().getAddress();
     }
+    localVariables.pop();
   } // closeScope
+
+  public void resetScopeSize() {
+    maxScopeSize = 0;
+  }
+
+  public int getScopeSize() {
+    return maxScopeSize;
+  }
 
   /**
    * Get a variable by its name. Method is used during semantic analysis phase.
-   * Param: name : name of the variable for which its address is sought. Returns
-   * : null if no variable with that name is not found; -1 if a variable with
-   * that name is used but not yet declared; integer >= 0 if variable with that
-   * name has been declared.
+   * 
+   * Param name : name of the variable for which its address is sought.
+   * 
+   * Returns null if no variable with that name is not found; the variable if a
+   * variable with that name has been declared.
    */
   public Variable getId(String name) {
-    Variable variable = null;
-    Iterator<Scope> iterator = stackOfScopes.iterator();
+    Variable variable = classVariables.getVariable(name);
+    Iterator<Scope> iterator = localVariables.iterator();
     while ((variable == null) && iterator.hasNext()) {
       Scope scope = iterator.next();
       variable = scope.getVariable(name);
     }
     return variable;
   } // getId
-
-  /**
-   * Check if an identifier with that value has already been declared. Method is
-   * used during semantic analysis phase.
-   * 
-   * @param identifier:
-   *          check if an identifier with this value already exists.
-   * @return true if declared; false if not declared.
-   */
-  public boolean checkId(String identifier) {
-    boolean found = getId(identifier) != null;
-
-    // if not found, add it so we get an error message only once.
-    if (!found) {
-      stackOfScopes.peek().addVariable(identifier);
-    }
-    debug(String.format("\ncheckId(" + identifier + ") returns " + found + "."));
-
-    return found;
-  } // checkId
 
   /**
    * Declare an identifier. Method is used during semantic analysis phase.
@@ -108,43 +101,62 @@ public class Identifiers {
    * @return true if OK; false if such an identifier already declared.
    */
   public boolean declareId(String identifier, IdentifierType identifierType, LexemeType datatype, EnumSet<LexemeType> modifiers) {
-    boolean result = true;
-    // make sure the variable is declared.
-    debug("\ndeclareId() calling checkId(");
-    checkId(identifier);
+    // Check if variable (class or local) with that name already exists.
+    if (getId(identifier) != null)
+      return false;
 
-    // If it wasn't declared yet, override default datatype and set other
-    // properties.
-    Variable var = getId(identifier);
-    if (var.getDatatype() == null) {
-      debug(String.format("declareId() overriding default datatype and other properties."));
-      // set type of identifier
-      var.setIdentifierType(identifierType);
-      // set datatype
-      if (datatype == LexemeType.byteLexeme) {
-        var.setDatatype(Datatype.byt);
-      } else if (datatype == LexemeType.wordLexeme) {
-        var.setDatatype(Datatype.word);
-      } else if (datatype == LexemeType.stringLexeme) {
-        var.setDatatype(Datatype.string);
-      } else if (datatype == LexemeType.classLexeme) {
-        var.setDatatype(Datatype.clazz);
-      } else if (datatype == LexemeType.voidLexeme) {
-        var.setDatatype(Datatype.voidd);
-      } else {
-        result = false;
-      }
-      // set modifiers
-      var.setModifiers(modifiers);
+    // Depending on the identifierType, add the identifier (fully qualified
+    // name) to a global scope or to a stack of local scopes (local name).
+    Scope scope = identifierType == IdentifierType.LOCAL_VARIABLE ? localVariables.peek() : classVariables;
 
-      if (result) {
-        // this scheme assumes that memory allocation can only occur in the
-        // current top level scope.
-        int address = stackOfScopes.peek().getAddress();
-        var.setAddress(address);
-        stackOfScopes.peek().setAddress(address + var.getDatatype().getSize());
-      }
+    // Create and get a variable with the required identifier.
+    scope.addVariable(identifier);
+    Variable var = scope.getVariable(identifier);
+
+    // set type of identifier
+    var.setIdentifierType(identifierType);
+
+    // set datatype
+    if (datatype == LexemeType.classLexeme) {
+      var.setDatatype(Datatype.clazz);
+    } else if (datatype == LexemeType.byteLexeme) {
+      var.setDatatype(Datatype.byt);
+    } else if (datatype == LexemeType.wordLexeme) {
+      var.setDatatype(Datatype.word);
+    } else if (datatype == LexemeType.stringLexeme) {
+      var.setDatatype(Datatype.string);
+    } else if (datatype == LexemeType.voidLexeme) {
+      var.setDatatype(Datatype.voidd);
+    } else {
+      throw new RuntimeException("Internal compiler error in Identifiers.declareId(): unknown datatype " + datatype);
     }
-    return result;
+
+    // set modifiers
+    var.setModifiers(modifiers);
+
+    // Allocate an address for a class or local variable.
+    if (identifierType == IdentifierType.CLASS_VARIABLE) {
+      // Allocate class variable (field) in memory at an absolute address.
+      // This scheme assumes memory is allocated from low to high memory
+      // addresses and that the current value is the first
+      // available address.
+      int address = classVariables.getAddress();
+      var.setAddress(address);
+      classVariables.setAddress(address + var.getDatatype().getSize());
+    } else if (identifierType == IdentifierType.LOCAL_VARIABLE) {
+      // Allocate local variable on the stack, relative to the base pointer.
+      // This scheme assumes that memory allocation can only occur in the
+      // current top level scope.
+      // This scheme assumes that the stack grows downwards (from high to low
+      // memory addresses) and that the current value is just above the first
+      // available address.
+      int address = localVariables.peek().getAddress();
+      address = address - var.getDatatype().getSize();
+      var.setAddress(address);
+      localVariables.peek().setAddress(address);
+    }
+
+    return true;
   } // declareId
+
 }
