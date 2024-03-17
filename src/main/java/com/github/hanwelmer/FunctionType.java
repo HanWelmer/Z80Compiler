@@ -80,6 +80,7 @@ public enum FunctionType {
   divAcc16("/acc16"),
   increment16("incr16"),
   decrement16("decr16"),
+  stackPointerLoad("stackPointer="),
   stackPointerPlus("stackPointer+"),
   basePointerLoad("basePointer="),
   //16/8-bit conversion:

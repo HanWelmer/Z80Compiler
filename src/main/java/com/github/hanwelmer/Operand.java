@@ -29,14 +29,17 @@ public class Operand {
   public Integer intValue;
   public String strValue;
   public boolean isFinal = false;
-  /*
-   * opType | datatype | strValue | intValue |
-   * -----------+-------------+------------+----------+ UNKNOWN | X | X | X |
-   * CONSTANT | byt,integer | X | value | CONSTANT | string | string | X | STACK
-   * | byt,integer | X | X | GLOBAL_VAR| byt,integer | X | address | LOCAL_VAR |
-   * byt,integer | X | index | final var | byt,integer | identifier | value |
-   * LABEL | byt,integer | name | address | ACC | byt,integer | X | X |
-   */
+  // opType... | datatype... | strValue.. | intValue |
+  // ----------+-------------+------------+---------+
+  // UNKNOWN.. | X.......... | X......... | X....... |
+  // CONSTANT. | byt,integer | X......... | value... |
+  // CONSTANT. | string..... | string.... | X....... |
+  // STACK.... | byt,integer | X......... | X....... |
+  // GLOBAL_VAR| byt,integer | X......... | address. |
+  // LOCAL_VAR | byt,integer | X......... | index... |
+  // final var | byt,integer | identifier | value... |
+  // LABEL.... | integer.... | name...... | address. |
+  // ACC...... | byt,integer | X......... | X....... |
 
   public Operand(OperandType opType) {
     this.opType = opType;

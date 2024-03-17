@@ -69,7 +69,7 @@ public class Instruction {
       // reverse 16 bit compare
       , FunctionType.revAcc16Compare
       // stack and base pointer
-      , FunctionType.stackPointerPlus, FunctionType.basePointerLoad
+      , FunctionType.basePointerLoad, FunctionType.stackPointerLoad, FunctionType.stackPointerPlus
 
       // branch instructions:
       , FunctionType.br, FunctionType.brEq, FunctionType.brNe, FunctionType.brLt, FunctionType.brLe, FunctionType.brGt,
@@ -314,6 +314,11 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects stack pointer as operand.");
         }
         break;
+      case stackPointerLoad:
+        if ((operand == null) || operand.opType != OperandType.BASE_POINTER) {
+          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects base pointer as operand.");
+        }
+        break;
       case br:
       case brEq:
       case brNe:
@@ -410,22 +415,22 @@ public class Instruction {
     if (noOperand.contains(function)) {
       switch (function) {
         case read:
-          result = "call read";
+          result = "read";
           break;
         case writeAcc8:
-          result = "call writeAcc8";
+          result = "writeAcc8";
           break;
         case writeAcc16:
-          result = "call writeAcc16";
+          result = "writeAcc16";
           break;
         case writeString:
           result = "writeString";
           break;
         case writeLineAcc8:
-          result = "call writeLineAcc8";
+          result = "writeLineAcc8";
           break;
         case writeLineAcc16:
-          result = "call writeLineAcc16";
+          result = "writeLineAcc16";
           break;
         case writeLineString:
           result = "writeLineString";
@@ -488,8 +493,9 @@ public class Instruction {
       case divAcc16:
       case acc16Compare: // normal compare
       case revAcc16Compare: // reverse compare
-      case stackPointerPlus:
       case basePointerLoad:
+      case stackPointerLoad:
+      case stackPointerPlus:
       case acc8Load:
       case stackAcc8Load:
       case acc8Or:
@@ -537,6 +543,9 @@ public class Instruction {
             } else if (operand.datatype == Datatype.word) {
               result += " acc16";
             }
+            break;
+          case BASE_POINTER:
+            result += " basePointer";
             break;
           case STACK_POINTER:
             result += " stackPointer";

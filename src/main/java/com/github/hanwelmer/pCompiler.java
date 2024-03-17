@@ -1038,7 +1038,7 @@ public class pCompiler {
     methodSymbolTable.add(newSymbol);
     // save current base pointer
     plant(new Instruction(FunctionType.stackBasePointer));
-    // allocate space on stack for local variables
+    // allocate space on stack for local variables.
     plant(new Instruction(FunctionType.basePointerLoad, new Operand(OperandType.STACK_POINTER)));
     int moveStackPointerAddress = saveLabel();
     plant(new Instruction(FunctionType.stackPointerPlus, new Operand(OperandType.CONSTANT, Datatype.word, 0)));
@@ -1049,9 +1049,11 @@ public class pCompiler {
 
     // lexical analysis
     block(stopSet);
+
     // code generation
     setScopeSize(moveStackPointerAddress, identifiers.getScopeSize());
-
+    // release space on stack for local variables.
+    plantCode(new Instruction(FunctionType.stackPointerLoad, new Operand(OperandType.BASE_POINTER)));
     // reset base pointer and return to caller
     plantCode(new Instruction(FunctionType.unstackBasePointer));
     plantThenSource(new Instruction(FunctionType.returnFunction));

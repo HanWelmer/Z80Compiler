@@ -61,7 +61,9 @@ public class MachineCodeParser {
       String keyword = parseKeyword(line);
       FunctionType functionType = FunctionType.valueFor(keyword);
       switch (functionType) {
-        // instructions without operands.
+        /*******************************
+         * instructions without operands.
+         */
         case acc16CompareAcc8:
         case acc16ToAcc8:
         case acc8CompareAcc16:
@@ -85,22 +87,33 @@ public class MachineCodeParser {
         case writeString:
           result = new Instruction(functionType);
           break;
-        // instructions with address operand.
+        /*******************************
+         * instructions with address operand.
+         */
         case call:
           result = parseCallFunction(line, functionType);
           break;
         // instructions with one byte operand.
+        /*******************************
+         * instructions without operands.
+         */
         case acc8Load:
         case acc8Store:
           result = parseFunctionWithByteOperand(line, functionType);
           break;
-        // instructions with one word operand.
+        /*******************************
+         * instructions with one word operand.
+         */
         case acc16Load:
+        case acc16Store:
         case basePointerLoad:
+        case stackPointerLoad:
         case stackPointerPlus:
           result = parseFunctionWithWordOperand(line, functionType);
           break;
-        // other instructions with one or more operands.
+        /*******************************
+         * other instructions with one or more operands.
+         */
         case importFunction:
         case packageFunction:
           result = parsePackageOrImportFunction(line, functionType);
@@ -114,14 +127,15 @@ public class MachineCodeParser {
         case stringConstant:
           result = parseStringConstant(line, lineNumber);
           break;
-        // TODO
+        /*******************************
+         * TODO.
+         */
         case acc16And:
         case acc16Compare:
         case acc16Div:
         case acc16Minus:
         case acc16Or:
         case acc16Plus:
-        case acc16Store:
         case acc16Times:
         case acc16Xor:
         case acc8And:
@@ -154,9 +168,9 @@ public class MachineCodeParser {
         case sleep:
         case stackAcc16Load:
         case stackAcc8Load:
-          throw new RuntimeException("Internal error; not supported functionType " + keyword);
+          throw new RuntimeException("Internal error; functionType not implemented yet: " + keyword);
         default:
-          throw new RuntimeException("Internal error; not supported functionType " + keyword);
+          throw new RuntimeException("Internal error; not supported functionType: " + keyword);
       }
       skipSpaces(line);
     }
@@ -168,7 +182,11 @@ public class MachineCodeParser {
   private Instruction parseCallFunction(String line, FunctionType functionType) {
     skipSpaces(line);
     int value = parseNumber(line);
-    return new Instruction(functionType, new Operand(OperandType.LABEL, Datatype.word, value));
+    Operand label = new Operand(OperandType.LABEL, Datatype.word, value);
+    if (value == 0) {
+      label.strValue = parseKeyword(line);
+    }
+    return new Instruction(functionType, label);
   }
 
   private Instruction parseStringConstant(String line, int lineNumber) {
@@ -230,7 +248,9 @@ public class MachineCodeParser {
     Operand result;
     skipSpaces(line);
     String keyword = parseKeyword(line);
-    if ("(basePointer".equals(keyword)) {
+    if ("basePointer".equals(keyword)) {
+      result = new Operand(OperandType.BASE_POINTER);
+    } else if ("(basePointer".equals(keyword)) {
       skipUntil(line, '+');
       pos++;
       skipSpaces(line);
@@ -243,7 +263,6 @@ public class MachineCodeParser {
       int value = parseNumber(line);
       result = new Operand(OperandType.CONSTANT, datatype, value);
     } else if ("stackPointer".equals(keyword)) {
-      skipSpaces(line);
       result = new Operand(OperandType.STACK_POINTER);
     } else if ("stringconstant".equals(keyword)) {
       skipSpaces(line);
