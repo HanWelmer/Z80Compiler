@@ -26,7 +26,7 @@ public abstract class AbstractCompilerTest {
    *          function.
    */
   protected void singleTest(String path, String fileName, String[] inputParts) {
-    boolean debugMode = false;
+    boolean debugMode = true;
     System.out.println("\nRunning compiled code ...");
 
     // determine the full qualified file name.
