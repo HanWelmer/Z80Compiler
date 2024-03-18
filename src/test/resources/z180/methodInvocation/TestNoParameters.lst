@@ -764,7 +764,7 @@
 21CD C9                  RET
 21CE             main:
 21CE             L0:
-21CE CD DB 21            CALL  L14
+21CE CD EE 21            CALL  L19
 21D1             L1:
 21D1 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
 21D4             L2:
@@ -776,52 +776,78 @@
 21D4             L5:
 21D4                     ;;TestNoParameters.j(2)   private static void doIt() {
 21D4             L6:
-21D4                     ;method doIt [private, static] void
+21D4                     ;method doIt [private, static] void ()
 21D4             L7:
-21D4                     ;;TestNoParameters.j(3)     println("Hallo");
-21D4             L8:
-21D4 21 EB 21            LD    HL,L26
-21D7             L9:
-21D7 CD 43 20            CALL  writeLineStr
-21DA             L10:
-21DA C9                  return
-21DB             L11:
-21DB                     ;;TestNoParameters.j(4)   }
-21DB             L12:
-21DB                     ;;TestNoParameters.j(5) 
-21DB             L13:
-21DB                     ;;TestNoParameters.j(6)   public static void main() {
-21DB             L14:
-21DB                     ;method main [public, static] void
-21DB             L15:
-21DB                     ;;TestNoParameters.j(7)     println("");
-21DB             L16:
-21DB 21 F1 21            LD    HL,L27
-21DE             L17:
-21DE CD 43 20            CALL  writeLineStr
-21E1             L18:
-21E1                     ;;TestNoParameters.j(8)     doIt();
-21E1             L19:
-21E1 CD D4 21            CALL  L6
-21E4             L20:
-21E4                     ;;TestNoParameters.j(9)     println("      wereld");
-21E4             L21:
-21E4 21 F2 21            LD    HL,L28
-21E7             L22:
-21E7 CD 43 20            CALL  writeLineStr
-21EA             L23:
-21EA C9                  return
-21EB             L24:
-21EB                     ;;TestNoParameters.j(10)   }
-21EB             L25:
-21EB                     ;;TestNoParameters.j(11) }
-21EB             L26:
-21EB 48 61 6C 6C
+21D4 DD E5               PUSH  IX
+21D7             L8:
+21D7 DD 21 00 00         LD    IX,0x0000
+21DB DD 39               ADD   IX,SP
+21DD             L9:
+21DD 21 00 00            LD    HL,0
+21E0 39                  ADD   HL,SP
+21E1 F9                  LD    SP,HL
+21E2             L10:
+21E2                     ;;TestNoParameters.j(3)     println("Hallo");
+21E2             L11:
+21E2 21 11 22            LD    HL,L36
+21E5             L12:
+21E5 CD 43 20            CALL  writeLineStr
+21E8             L13:
+21E8 DD F9               LD    SP,IX
+21EA             L14:
+21EA DD E1               POP   IX
+21ED             L15:
+21ED C9                  return
+21EE             L16:
+21EE                     ;;TestNoParameters.j(4)   }
+21EE             L17:
+21EE                     ;;TestNoParameters.j(5) 
+21EE             L18:
+21EE                     ;;TestNoParameters.j(6)   public static void main() {
+21EE             L19:
+21EE                     ;method main [public, static] void ()
+21EE             L20:
+21EE DD E5               PUSH  IX
+21F1             L21:
+21F1 DD 21 00 00         LD    IX,0x0000
+21F5 DD 39               ADD   IX,SP
+21F7             L22:
+21F7 21 00 00            LD    HL,0
+21FA 39                  ADD   HL,SP
+21FB F9                  LD    SP,HL
+21FC             L23:
+21FC                     ;;TestNoParameters.j(7)     println("");
+21FC             L24:
+21FC 21 17 22            LD    HL,L37
+21FF             L25:
+21FF CD 43 20            CALL  writeLineStr
+2202             L26:
+2202                     ;;TestNoParameters.j(8)     doIt();
+2202             L27:
+2202 CD D4 21            CALL  L6
+2205             L28:
+2205                     ;;TestNoParameters.j(9)     println("      wereld");
+2205             L29:
+2205 21 18 22            LD    HL,L38
+2208             L30:
+2208 CD 43 20            CALL  writeLineStr
+220B             L31:
+220B DD F9               LD    SP,IX
+220D             L32:
+220D DD E1               POP   IX
+2210             L33:
+2210 C9                  return
+2211             L34:
+2211                     ;;TestNoParameters.j(10)   }
+2211             L35:
+2211                     ;;TestNoParameters.j(11) }
+2211             L36:
+2211 48 61 6C 6C
      6F 00               .ASCIZ  "Hallo"
-21F1             L27:
-21F1 00                  .ASCIZ  ""
-21F2             L28:
-21F2 20 20 20 20
+2217             L37:
+2217 00                  .ASCIZ  ""
+2218             L38:
+2218 20 20 20 20
      20 20 77 65
      72 65 6C 64
      00                  .ASCIZ  "      wereld"
@@ -829,33 +855,43 @@
 Labels and cross references:
       L0 = 21CE :
       L1 = 21D1 :
-     L10 = 21DA :
-     L11 = 21DB :
-     L12 = 21DB :
-     L13 = 21DB :
-     L14 = 21DB : 21CE
-     L15 = 21DB :
-     L16 = 21DB :
-     L17 = 21DE :
-     L18 = 21E1 :
-     L19 = 21E1 :
+     L10 = 21E2 :
+     L11 = 21E2 :
+     L12 = 21E5 :
+     L13 = 21E8 :
+     L14 = 21EA :
+     L15 = 21ED :
+     L16 = 21EE :
+     L17 = 21EE :
+     L18 = 21EE :
+     L19 = 21EE : 21CE
       L2 = 21D4 :
-     L20 = 21E4 :
-     L21 = 21E4 :
-     L22 = 21E7 :
-     L23 = 21EA :
-     L24 = 21EB :
-     L25 = 21EB :
-     L26 = 21EB : 21D4
-     L27 = 21F1 : 21DB
-     L28 = 21F2 : 21E4
+     L20 = 21EE :
+     L21 = 21F1 :
+     L22 = 21F7 :
+     L23 = 21FC :
+     L24 = 21FC :
+     L25 = 21FF :
+     L26 = 2202 :
+     L27 = 2202 :
+     L28 = 2205 :
+     L29 = 2205 :
       L3 = 21D4 :
+     L30 = 2208 :
+     L31 = 220B :
+     L32 = 220D :
+     L33 = 2210 :
+     L34 = 2211 :
+     L35 = 2211 :
+     L36 = 2211 : 21E2
+     L37 = 2217 : 21FC
+     L38 = 2218 : 2205
       L4 = 21D4 :
       L5 = 21D4 :
-      L6 = 21D4 : 21E1
+      L6 = 21D4 : 2202
       L7 = 21D4 :
-      L8 = 21D4 :
-      L9 = 21D7 :
+      L8 = 21D7 :
+      L9 = 21DD :
   WAIT1M = 2018 : 2007 2011
  WAIT1M2 = 201D : 2020
    div16 = 2123 :
@@ -909,5 +945,5 @@ writeHL2 = 21B3 : 21B9
 writeHL3 = 21B4 : 21A6
 writeLineA = 21BE :
 writeLineHL = 2196 :
-writeLineStr = 2043 : 21D7 21DE 21E7
+writeLineStr = 2043 : 21E5 21FF 2208
 writeStr = 204A : 203E 2043

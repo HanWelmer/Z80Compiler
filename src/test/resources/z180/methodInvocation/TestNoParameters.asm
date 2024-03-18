@@ -764,7 +764,7 @@ writeA:
         RET
 main:
 L0:
-        CALL  L14
+        CALL  L19
 L1:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
 L2:
@@ -776,48 +776,74 @@ L4:
 L5:
         ;;TestNoParameters.j(2)   private static void doIt() {
 L6:
-        ;method doIt [private, static] void
+        ;method doIt [private, static] void ()
 L7:
-        ;;TestNoParameters.j(3)     println("Hallo");
+        PUSH  IX
 L8:
-        LD    HL,L26
+        LD    IX,0x0000
+        ADD   IX,SP
 L9:
-        CALL  writeLineStr
+        LD    HL,0
+        ADD   HL,SP
+        LD    SP,HL
 L10:
-        return
+        ;;TestNoParameters.j(3)     println("Hallo");
 L11:
-        ;;TestNoParameters.j(4)   }
+        LD    HL,L36
 L12:
-        ;;TestNoParameters.j(5) 
+        CALL  writeLineStr
 L13:
-        ;;TestNoParameters.j(6)   public static void main() {
+        LD    SP,IX
 L14:
-        ;method main [public, static] void
+        POP   IX
 L15:
-        ;;TestNoParameters.j(7)     println("");
-L16:
-        LD    HL,L27
-L17:
-        CALL  writeLineStr
-L18:
-        ;;TestNoParameters.j(8)     doIt();
-L19:
-        CALL  L6
-L20:
-        ;;TestNoParameters.j(9)     println("      wereld");
-L21:
-        LD    HL,L28
-L22:
-        CALL  writeLineStr
-L23:
         return
+L16:
+        ;;TestNoParameters.j(4)   }
+L17:
+        ;;TestNoParameters.j(5) 
+L18:
+        ;;TestNoParameters.j(6)   public static void main() {
+L19:
+        ;method main [public, static] void ()
+L20:
+        PUSH  IX
+L21:
+        LD    IX,0x0000
+        ADD   IX,SP
+L22:
+        LD    HL,0
+        ADD   HL,SP
+        LD    SP,HL
+L23:
+        ;;TestNoParameters.j(7)     println("");
 L24:
-        ;;TestNoParameters.j(10)   }
+        LD    HL,L37
 L25:
-        ;;TestNoParameters.j(11) }
+        CALL  writeLineStr
 L26:
-        .ASCIZ  "Hallo"
+        ;;TestNoParameters.j(8)     doIt();
 L27:
-        .ASCIZ  ""
+        CALL  L6
 L28:
+        ;;TestNoParameters.j(9)     println("      wereld");
+L29:
+        LD    HL,L38
+L30:
+        CALL  writeLineStr
+L31:
+        LD    SP,IX
+L32:
+        POP   IX
+L33:
+        return
+L34:
+        ;;TestNoParameters.j(10)   }
+L35:
+        ;;TestNoParameters.j(11) }
+L36:
+        .ASCIZ  "Hallo"
+L37:
+        .ASCIZ  ""
+L38:
         .ASCIZ  "      wereld"
