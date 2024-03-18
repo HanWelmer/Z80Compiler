@@ -33,1331 +33,1336 @@
   32 ;test5.j(13)   private static byte b;
   33 ;test5.j(14)   
   34 ;test5.j(15)   public static void main() {
-  35 method main [public, static] void
-  36 ;test5.j(16)     //stack level 1
-  37 ;test5.j(17)     //byte-byte
-  38 ;test5.j(18)     if (4 == 12/(1+2)) println(0);
-  39 acc8= constant 12
-  40 <acc8= constant 1
-  41 acc8+ constant 2
-  42 /acc8 unstack8
-  43 acc8Comp constant 4
-  44 brne 48
-  45 acc8= constant 0
-  46 call writeLineAcc8
-  47 ;test5.j(19)     if (4 == 4) println(1);
-  48 acc8= constant 4
-  49 acc8Comp constant 4
-  50 brne 54
-  51 acc8= constant 1
-  52 call writeLineAcc8
-  53 ;test5.j(20)     if (3 != 12/(1+2)) println(2);
-  54 acc8= constant 12
-  55 <acc8= constant 1
-  56 acc8+ constant 2
-  57 /acc8 unstack8
-  58 acc8Comp constant 3
-  59 breq 63
-  60 acc8= constant 2
-  61 call writeLineAcc8
-  62 ;test5.j(21)     if (3 != 4) println(3);
-  63 acc8= constant 3
-  64 acc8Comp constant 4
-  65 breq 69
+  35 method main [public, static] void ()
+  36 <basePointer
+  37 basePointer= stackPointer
+  38 stackPointer+ constant 4
+  39 ;test5.j(16)     //stack level 1
+  40 ;test5.j(17)     //byte-byte
+  41 ;test5.j(18)     if (4 == 12/(1+2)) println(0);
+  42 acc8= constant 12
+  43 <acc8= constant 1
+  44 acc8+ constant 2
+  45 /acc8 unstack8
+  46 acc8Comp constant 4
+  47 brne 51
+  48 acc8= constant 0
+  49 writeLineAcc8
+  50 ;test5.j(19)     if (4 == 4) println(1);
+  51 acc8= constant 4
+  52 acc8Comp constant 4
+  53 brne 57
+  54 acc8= constant 1
+  55 writeLineAcc8
+  56 ;test5.j(20)     if (3 != 12/(1+2)) println(2);
+  57 acc8= constant 12
+  58 <acc8= constant 1
+  59 acc8+ constant 2
+  60 /acc8 unstack8
+  61 acc8Comp constant 3
+  62 breq 66
+  63 acc8= constant 2
+  64 writeLineAcc8
+  65 ;test5.j(21)     if (3 != 4) println(3);
   66 acc8= constant 3
-  67 call writeLineAcc8
-  68 ;test5.j(22)     if (3 < 12/(1+2)) println(4);
-  69 acc8= constant 12
-  70 <acc8= constant 1
-  71 acc8+ constant 2
-  72 /acc8 unstack8
-  73 acc8Comp constant 3
-  74 brle 78
-  75 acc8= constant 4
-  76 call writeLineAcc8
-  77 ;test5.j(23)     if (3 < 4) println(5);
-  78 acc8= constant 3
-  79 acc8Comp constant 4
-  80 brge 84
-  81 acc8= constant 5
-  82 call writeLineAcc8
-  83 ;test5.j(24)     if (5 > 12/(1+2)) println(6);
-  84 acc8= constant 12
-  85 <acc8= constant 1
-  86 acc8+ constant 2
-  87 /acc8 unstack8
-  88 acc8Comp constant 5
-  89 brge 93
-  90 acc8= constant 6
-  91 call writeLineAcc8
-  92 ;test5.j(25)     if (5 > 4) println(7);
-  93 acc8= constant 5
-  94 acc8Comp constant 4
-  95 brle 99
-  96 acc8= constant 7
-  97 call writeLineAcc8
-  98 ;test5.j(26)     if (3 <= 12/(1+2)) println(8);
-  99 acc8= constant 12
- 100 <acc8= constant 1
- 101 acc8+ constant 2
- 102 /acc8 unstack8
- 103 acc8Comp constant 3
- 104 brlt 108
- 105 acc8= constant 8
- 106 call writeLineAcc8
- 107 ;test5.j(27)     if (3 <= 4) println(9);
- 108 acc8= constant 3
- 109 acc8Comp constant 4
- 110 brgt 114
- 111 acc8= constant 9
- 112 call writeLineAcc8
- 113 ;test5.j(28)     if (4 <= 12/(1+2)) println(10);
- 114 acc8= constant 12
- 115 <acc8= constant 1
- 116 acc8+ constant 2
- 117 /acc8 unstack8
- 118 acc8Comp constant 4
- 119 brlt 123
- 120 acc8= constant 10
- 121 call writeLineAcc8
- 122 ;test5.j(29)     if (4 <= 4) println(11);
- 123 acc8= constant 4
- 124 acc8Comp constant 4
- 125 brgt 129
- 126 acc8= constant 11
- 127 call writeLineAcc8
- 128 ;test5.j(30)     if (5 >= 12/(1+2)) println(12);
- 129 acc8= constant 12
- 130 <acc8= constant 1
- 131 acc8+ constant 2
- 132 /acc8 unstack8
- 133 acc8Comp constant 5
- 134 brgt 138
- 135 acc8= constant 12
- 136 call writeLineAcc8
- 137 ;test5.j(31)     if (5 >= 4) println(13);
- 138 acc8= constant 5
- 139 acc8Comp constant 4
- 140 brlt 144
- 141 acc8= constant 13
- 142 call writeLineAcc8
- 143 ;test5.j(32)     if (4 >= 12/(1+2)) println(14);
- 144 acc8= constant 12
- 145 <acc8= constant 1
- 146 acc8+ constant 2
- 147 /acc8 unstack8
- 148 acc8Comp constant 4
- 149 brgt 153
- 150 acc8= constant 14
- 151 call writeLineAcc8
- 152 ;test5.j(33)     if (4 >= 4) println(15);
- 153 acc8= constant 4
- 154 acc8Comp constant 4
- 155 brlt 161
- 156 acc8= constant 15
- 157 call writeLineAcc8
- 158 ;test5.j(34)     //stack level 1
- 159 ;test5.j(35)     //byte-integer
- 160 ;test5.j(36)     if (4 == twelve/(1+2)) println(16);
- 161 acc16= variable 10
- 162 acc8= constant 1
- 163 acc8+ constant 2
- 164 acc16/ acc8
- 165 acc8= constant 4
- 166 acc8CompareAcc16
- 167 brne 171
- 168 acc8= constant 16
- 169 call writeLineAcc8
- 170 ;test5.j(37)     if (4 == four) println(17);
- 171 acc16= variable 6
- 172 acc8= constant 4
- 173 acc8CompareAcc16
- 174 brne 178
- 175 acc8= constant 17
- 176 call writeLineAcc8
- 177 ;test5.j(38)     if (3 != twelve/(1+2)) println(18);
- 178 acc16= variable 10
- 179 acc8= constant 1
- 180 acc8+ constant 2
- 181 acc16/ acc8
- 182 acc8= constant 3
- 183 acc8CompareAcc16
- 184 breq 188
- 185 acc8= constant 18
- 186 call writeLineAcc8
- 187 ;test5.j(39)     if (3 != four) println(19);
- 188 acc16= variable 6
- 189 acc8= constant 3
- 190 acc8CompareAcc16
- 191 breq 195
- 192 acc8= constant 19
- 193 call writeLineAcc8
- 194 ;test5.j(40)     if (3 < twelve/(1+2)) println(20);
- 195 acc16= variable 10
- 196 acc8= constant 1
- 197 acc8+ constant 2
- 198 acc16/ acc8
- 199 acc8= constant 3
- 200 acc8CompareAcc16
- 201 brge 205
- 202 acc8= constant 20
- 203 call writeLineAcc8
- 204 ;test5.j(41)     if (3 < four) println(21);
- 205 acc16= variable 6
- 206 acc8= constant 3
- 207 acc8CompareAcc16
- 208 brge 212
- 209 acc8= constant 21
- 210 call writeLineAcc8
- 211 ;test5.j(42)     if (5 > twelve/(1+2)) println(22);
- 212 acc16= variable 10
- 213 acc8= constant 1
- 214 acc8+ constant 2
- 215 acc16/ acc8
- 216 acc8= constant 5
- 217 acc8CompareAcc16
- 218 brle 222
- 219 acc8= constant 22
- 220 call writeLineAcc8
- 221 ;test5.j(43)     if (5 > four) println(23);
- 222 acc16= variable 6
- 223 acc8= constant 5
- 224 acc8CompareAcc16
- 225 brle 229
- 226 acc8= constant 23
- 227 call writeLineAcc8
- 228 ;test5.j(44)     if (3 <= twelve/(1+2)) println(24);
- 229 acc16= variable 10
- 230 acc8= constant 1
- 231 acc8+ constant 2
- 232 acc16/ acc8
- 233 acc8= constant 3
- 234 acc8CompareAcc16
- 235 brgt 239
- 236 acc8= constant 24
- 237 call writeLineAcc8
- 238 ;test5.j(45)     if (3 <= four) println(25);
- 239 acc16= variable 6
- 240 acc8= constant 3
- 241 acc8CompareAcc16
- 242 brgt 246
- 243 acc8= constant 25
- 244 call writeLineAcc8
- 245 ;test5.j(46)     if (4 <= twelve/(1+2)) println(26);
- 246 acc16= variable 10
- 247 acc8= constant 1
- 248 acc8+ constant 2
- 249 acc16/ acc8
- 250 acc8= constant 4
- 251 acc8CompareAcc16
- 252 brgt 256
- 253 acc8= constant 26
- 254 call writeLineAcc8
- 255 ;test5.j(47)     if (4 <= four) println(27);
- 256 acc16= variable 6
- 257 acc8= constant 4
- 258 acc8CompareAcc16
- 259 brgt 263
- 260 acc8= constant 27
- 261 call writeLineAcc8
- 262 ;test5.j(48)     if (5 >= twelve/(1+2)) println(28);
- 263 acc16= variable 10
- 264 acc8= constant 1
- 265 acc8+ constant 2
- 266 acc16/ acc8
- 267 acc8= constant 5
- 268 acc8CompareAcc16
- 269 brlt 273
- 270 acc8= constant 28
- 271 call writeLineAcc8
- 272 ;test5.j(49)     if (5 >= four) println(29);
- 273 acc16= variable 6
- 274 acc8= constant 5
- 275 acc8CompareAcc16
- 276 brlt 280
- 277 acc8= constant 29
- 278 call writeLineAcc8
- 279 ;test5.j(50)     if (4 >= twelve/(1+2)) println(30);
- 280 acc16= variable 10
- 281 acc8= constant 1
- 282 acc8+ constant 2
- 283 acc16/ acc8
- 284 acc8= constant 4
- 285 acc8CompareAcc16
- 286 brlt 290
- 287 acc8= constant 30
- 288 call writeLineAcc8
- 289 ;test5.j(51)     if (4 >= four) println(31);
- 290 acc16= variable 6
- 291 acc8= constant 4
- 292 acc8CompareAcc16
- 293 brlt 299
- 294 acc8= constant 31
- 295 call writeLineAcc8
- 296 ;test5.j(52)     //stack level 1
- 297 ;test5.j(53)     //integer-byte
- 298 ;test5.j(54)     if (four == 12/(1+2)) println(32);
- 299 acc8= constant 12
- 300 <acc8= constant 1
- 301 acc8+ constant 2
- 302 /acc8 unstack8
- 303 acc16= variable 6
- 304 acc16CompareAcc8
- 305 brne 309
- 306 acc8= constant 32
- 307 call writeLineAcc8
- 308 ;test5.j(55)     if (four == 4) println(33);
- 309 acc16= variable 6
- 310 acc8= constant 4
- 311 acc16CompareAcc8
- 312 brne 316
- 313 acc8= constant 33
- 314 call writeLineAcc8
- 315 ;test5.j(56)     if (three != 12/(1+2)) println(34);
- 316 acc8= constant 12
- 317 <acc8= constant 1
- 318 acc8+ constant 2
- 319 /acc8 unstack8
- 320 acc16= variable 4
- 321 acc16CompareAcc8
- 322 breq 326
- 323 acc8= constant 34
- 324 call writeLineAcc8
- 325 ;test5.j(57)     if (three != 4) println(35);
- 326 acc16= variable 4
- 327 acc8= constant 4
- 328 acc16CompareAcc8
- 329 breq 333
- 330 acc8= constant 35
- 331 call writeLineAcc8
- 332 ;test5.j(58)     if (three < 12/(1+2)) println(36);
- 333 acc8= constant 12
- 334 <acc8= constant 1
- 335 acc8+ constant 2
- 336 /acc8 unstack8
- 337 acc16= variable 4
- 338 acc16CompareAcc8
- 339 brge 343
- 340 acc8= constant 36
- 341 call writeLineAcc8
- 342 ;test5.j(59)     if (three < 4) println(37);
- 343 acc16= variable 4
- 344 acc8= constant 4
- 345 acc16CompareAcc8
- 346 brge 350
- 347 acc8= constant 37
- 348 call writeLineAcc8
- 349 ;test5.j(60)     if (five > 12/(1+2)) println(38);
- 350 acc8= constant 12
- 351 <acc8= constant 1
- 352 acc8+ constant 2
- 353 /acc8 unstack8
- 354 acc16= variable 8
- 355 acc16CompareAcc8
- 356 brle 360
- 357 acc8= constant 38
- 358 call writeLineAcc8
- 359 ;test5.j(61)     if (five > 4) println(39);
- 360 acc16= variable 8
- 361 acc8= constant 4
- 362 acc16CompareAcc8
- 363 brle 367
- 364 acc8= constant 39
- 365 call writeLineAcc8
- 366 ;test5.j(62)     if (three <= 12/(1+2)) println(40);
- 367 acc8= constant 12
- 368 <acc8= constant 1
- 369 acc8+ constant 2
- 370 /acc8 unstack8
- 371 acc16= variable 4
- 372 acc16CompareAcc8
- 373 brgt 377
- 374 acc8= constant 40
- 375 call writeLineAcc8
- 376 ;test5.j(63)     if (three <= 4) println(41);
- 377 acc16= variable 4
- 378 acc8= constant 4
- 379 acc16CompareAcc8
- 380 brgt 384
- 381 acc8= constant 41
- 382 call writeLineAcc8
- 383 ;test5.j(64)     if (four <= 12/(1+2)) println(42);
- 384 acc8= constant 12
- 385 <acc8= constant 1
- 386 acc8+ constant 2
- 387 /acc8 unstack8
- 388 acc16= variable 6
- 389 acc16CompareAcc8
- 390 brgt 394
- 391 acc8= constant 42
- 392 call writeLineAcc8
- 393 ;test5.j(65)     if (four <= 4) println(43);
- 394 acc16= variable 6
- 395 acc8= constant 4
- 396 acc16CompareAcc8
- 397 brgt 401
- 398 acc8= constant 43
- 399 call writeLineAcc8
- 400 ;test5.j(66)     if (five >= 12/(1+2)) println(44);
- 401 acc8= constant 12
- 402 <acc8= constant 1
- 403 acc8+ constant 2
- 404 /acc8 unstack8
- 405 acc16= variable 8
- 406 acc16CompareAcc8
- 407 brlt 411
- 408 acc8= constant 44
- 409 call writeLineAcc8
- 410 ;test5.j(67)     if (five >= 4) println(45);
- 411 acc16= variable 8
- 412 acc8= constant 4
- 413 acc16CompareAcc8
- 414 brlt 418
- 415 acc8= constant 45
- 416 call writeLineAcc8
- 417 ;test5.j(68)     if (four >= 12/(1+2)) println(46);
- 418 acc8= constant 12
- 419 <acc8= constant 1
- 420 acc8+ constant 2
- 421 /acc8 unstack8
- 422 acc16= variable 6
- 423 acc16CompareAcc8
- 424 brlt 428
- 425 acc8= constant 46
- 426 call writeLineAcc8
- 427 ;test5.j(69)     if (four >= 4) println(47);
- 428 acc16= variable 6
- 429 acc8= constant 4
- 430 acc16CompareAcc8
- 431 brlt 437
- 432 acc8= constant 47
- 433 call writeLineAcc8
- 434 ;test5.j(70)     //stack level 1
- 435 ;test5.j(71)     //integer-integer
- 436 ;test5.j(72)     if (400 == 1200/(1+2)) println(48);
- 437 acc16= constant 1200
- 438 acc8= constant 1
- 439 acc8+ constant 2
- 440 acc16/ acc8
- 441 acc16Comp constant 400
- 442 brne 446
- 443 acc8= constant 48
- 444 call writeLineAcc8
- 445 ;test5.j(73)     if (400 == 400) println(49);
- 446 acc16= constant 400
- 447 acc16Comp constant 400
- 448 brne 452
- 449 acc8= constant 49
- 450 call writeLineAcc8
- 451 ;test5.j(74)     if (300 != 1200/(1+2)) println(50);
- 452 acc16= constant 1200
- 453 acc8= constant 1
- 454 acc8+ constant 2
- 455 acc16/ acc8
- 456 acc16Comp constant 300
- 457 breq 461
- 458 acc8= constant 50
- 459 call writeLineAcc8
- 460 ;test5.j(75)     if (300 != 400) println(51);
- 461 acc16= constant 300
- 462 acc16Comp constant 400
- 463 breq 467
- 464 acc8= constant 51
- 465 call writeLineAcc8
- 466 ;test5.j(76)     if (300 < 1200/(1+2)) println(52);
- 467 acc16= constant 1200
- 468 acc8= constant 1
- 469 acc8+ constant 2
- 470 acc16/ acc8
- 471 acc16Comp constant 300
- 472 brle 476
- 473 acc8= constant 52
- 474 call writeLineAcc8
- 475 ;test5.j(77)     if (300 < 400) println(53);
- 476 acc16= constant 300
- 477 acc16Comp constant 400
- 478 brge 482
- 479 acc8= constant 53
- 480 call writeLineAcc8
- 481 ;test5.j(78)     if (500 > 1200/(1+2)) println(54);
- 482 acc16= constant 1200
- 483 acc8= constant 1
- 484 acc8+ constant 2
- 485 acc16/ acc8
- 486 acc16Comp constant 500
- 487 brge 491
- 488 acc8= constant 54
- 489 call writeLineAcc8
- 490 ;test5.j(79)     if (500 > 400) println(55);
- 491 acc16= constant 500
- 492 acc16Comp constant 400
- 493 brle 497
- 494 acc8= constant 55
- 495 call writeLineAcc8
- 496 ;test5.j(80)     if (300 <= 1200/(1+2)) println(56);
- 497 acc16= constant 1200
- 498 acc8= constant 1
- 499 acc8+ constant 2
- 500 acc16/ acc8
- 501 acc16Comp constant 300
- 502 brlt 506
- 503 acc8= constant 56
- 504 call writeLineAcc8
- 505 ;test5.j(81)     if (300 <= 400) println(57);
- 506 acc16= constant 300
- 507 acc16Comp constant 400
- 508 brgt 512
- 509 acc8= constant 57
- 510 call writeLineAcc8
- 511 ;test5.j(82)     if (400 <= 1200/(1+2)) println(58);
- 512 acc16= constant 1200
- 513 acc8= constant 1
- 514 acc8+ constant 2
- 515 acc16/ acc8
- 516 acc16Comp constant 400
- 517 brlt 521
- 518 acc8= constant 58
- 519 call writeLineAcc8
- 520 ;test5.j(83)     if (400 <= 400) println(59);
- 521 acc16= constant 400
- 522 acc16Comp constant 400
- 523 brgt 527
- 524 acc8= constant 59
- 525 call writeLineAcc8
- 526 ;test5.j(84)     if (500 >= 1200/(1+2)) println(60);
- 527 acc16= constant 1200
- 528 acc8= constant 1
- 529 acc8+ constant 2
- 530 acc16/ acc8
- 531 acc16Comp constant 500
- 532 brgt 536
- 533 acc8= constant 60
- 534 call writeLineAcc8
- 535 ;test5.j(85)     if (500 >= 400) println(61);
- 536 acc16= constant 500
- 537 acc16Comp constant 400
- 538 brlt 542
- 539 acc8= constant 61
- 540 call writeLineAcc8
- 541 ;test5.j(86)     if (400 >= 1200/(1+2)) println(62);
- 542 acc16= constant 1200
- 543 acc8= constant 1
- 544 acc8+ constant 2
- 545 acc16/ acc8
- 546 acc16Comp constant 400
- 547 brgt 551
- 548 acc8= constant 62
- 549 call writeLineAcc8
- 550 ;test5.j(87)     if (400 >= 400) println(63);
- 551 acc16= constant 400
- 552 acc16Comp constant 400
- 553 brlt 559
- 554 acc8= constant 63
- 555 call writeLineAcc8
- 556 ;test5.j(88)   
- 557 ;test5.j(89)     //stack level 2
- 558 ;test5.j(90)     if (one+three == 12/(1+2)) println(64);
- 559 acc16= variable 2
- 560 acc16+ variable 4
- 561 <acc16
- 562 acc8= constant 12
- 563 <acc8= constant 1
- 564 acc8+ constant 2
- 565 /acc8 unstack8
- 566 acc16= unstack16
- 567 acc16CompareAcc8
- 568 brne 572
- 569 acc8= constant 64
- 570 call writeLineAcc8
- 571 ;test5.j(91)     if (one+four  != 12/(1+2)) println(65);
- 572 acc16= variable 2
- 573 acc16+ variable 6
- 574 <acc16
- 575 acc8= constant 12
- 576 <acc8= constant 1
- 577 acc8+ constant 2
- 578 /acc8 unstack8
- 579 acc16= unstack16
- 580 acc16CompareAcc8
- 581 breq 585
- 582 acc8= constant 65
- 583 call writeLineAcc8
- 584 ;test5.j(92)     if (one+one < 12/(1+2)) println(66);
- 585 acc16= variable 2
- 586 acc16+ variable 2
- 587 <acc16
- 588 acc8= constant 12
- 589 <acc8= constant 1
- 590 acc8+ constant 2
- 591 /acc8 unstack8
- 592 acc16= unstack16
- 593 acc16CompareAcc8
- 594 brge 598
- 595 acc8= constant 66
- 596 call writeLineAcc8
- 597 ;test5.j(93)     if (one+four > 12/(1+2)) println(67);
- 598 acc16= variable 2
- 599 acc16+ variable 6
- 600 <acc16
- 601 acc8= constant 12
- 602 <acc8= constant 1
- 603 acc8+ constant 2
- 604 /acc8 unstack8
- 605 acc16= unstack16
- 606 acc16CompareAcc8
- 607 brle 611
- 608 acc8= constant 67
- 609 call writeLineAcc8
- 610 ;test5.j(94)     if (one+one <= 12/(1+2)) println(68);
- 611 acc16= variable 2
- 612 acc16+ variable 2
- 613 <acc16
- 614 acc8= constant 12
- 615 <acc8= constant 1
- 616 acc8+ constant 2
- 617 /acc8 unstack8
- 618 acc16= unstack16
- 619 acc16CompareAcc8
- 620 brgt 624
- 621 acc8= constant 68
- 622 call writeLineAcc8
- 623 ;test5.j(95)     if (one+three <= 12/(1+2)) println(69);
- 624 acc16= variable 2
- 625 acc16+ variable 4
- 626 <acc16
- 627 acc8= constant 12
- 628 <acc8= constant 1
- 629 acc8+ constant 2
- 630 /acc8 unstack8
- 631 acc16= unstack16
- 632 acc16CompareAcc8
- 633 brgt 637
- 634 acc8= constant 69
- 635 call writeLineAcc8
- 636 ;test5.j(96)     if (one+three >= 12/(1+2)) println(70);
- 637 acc16= variable 2
- 638 acc16+ variable 4
- 639 <acc16
- 640 acc8= constant 12
- 641 <acc8= constant 1
- 642 acc8+ constant 2
- 643 /acc8 unstack8
- 644 acc16= unstack16
- 645 acc16CompareAcc8
- 646 brlt 650
- 647 acc8= constant 70
- 648 call writeLineAcc8
- 649 ;test5.j(97)     if (one+four >= 12/(1+2)) println(71);
- 650 acc16= variable 2
- 651 acc16+ variable 6
- 652 <acc16
- 653 acc8= constant 12
- 654 <acc8= constant 1
- 655 acc8+ constant 2
- 656 /acc8 unstack8
- 657 acc16= unstack16
- 658 acc16CompareAcc8
- 659 brlt 663
- 660 acc8= constant 71
- 661 call writeLineAcc8
- 662 ;test5.j(98)     if (one+three == twelve/(one+2)) println(72);
- 663 acc16= variable 2
- 664 acc16+ variable 4
- 665 <acc16
- 666 acc16= variable 10
- 667 <acc16= variable 2
- 668 acc16+ constant 2
- 669 /acc16 unstack16
- 670 revAcc16Comp unstack16
- 671 brne 675
- 672 acc8= constant 72
- 673 call writeLineAcc8
- 674 ;test5.j(99)     if (one+four  != twelve/(one+2)) println(73);
- 675 acc16= variable 2
- 676 acc16+ variable 6
- 677 <acc16
- 678 acc16= variable 10
- 679 <acc16= variable 2
- 680 acc16+ constant 2
- 681 /acc16 unstack16
- 682 revAcc16Comp unstack16
- 683 breq 687
- 684 acc8= constant 73
- 685 call writeLineAcc8
- 686 ;test5.j(100)     if (one+one < twelve/(one+2)) println(74);
- 687 acc16= variable 2
- 688 acc16+ variable 2
- 689 <acc16
- 690 acc16= variable 10
- 691 <acc16= variable 2
- 692 acc16+ constant 2
- 693 /acc16 unstack16
- 694 revAcc16Comp unstack16
- 695 brle 699
- 696 acc8= constant 74
- 697 call writeLineAcc8
- 698 ;test5.j(101)     if (one+four > twelve/(one+2)) println(75);
- 699 acc16= variable 2
- 700 acc16+ variable 6
- 701 <acc16
- 702 acc16= variable 10
- 703 <acc16= variable 2
- 704 acc16+ constant 2
- 705 /acc16 unstack16
- 706 revAcc16Comp unstack16
- 707 brge 711
- 708 acc8= constant 75
- 709 call writeLineAcc8
- 710 ;test5.j(102)     if (one+one <= twelve/(one+2)) println(76);
- 711 acc16= variable 2
- 712 acc16+ variable 2
- 713 <acc16
- 714 acc16= variable 10
- 715 <acc16= variable 2
- 716 acc16+ constant 2
- 717 /acc16 unstack16
- 718 revAcc16Comp unstack16
- 719 brlt 723
- 720 acc8= constant 76
- 721 call writeLineAcc8
- 722 ;test5.j(103)     if (one+three <= twelve/(one+2)) println(77);
- 723 acc16= variable 2
- 724 acc16+ variable 4
- 725 <acc16
- 726 acc16= variable 10
- 727 <acc16= variable 2
- 728 acc16+ constant 2
- 729 /acc16 unstack16
- 730 revAcc16Comp unstack16
- 731 brlt 735
- 732 acc8= constant 77
- 733 call writeLineAcc8
- 734 ;test5.j(104)     if (one+three >= twelve/(one+2)) println(78);
- 735 acc16= variable 2
- 736 acc16+ variable 4
- 737 <acc16
- 738 acc16= variable 10
- 739 <acc16= variable 2
- 740 acc16+ constant 2
- 741 /acc16 unstack16
- 742 revAcc16Comp unstack16
- 743 brgt 747
- 744 acc8= constant 78
- 745 call writeLineAcc8
- 746 ;test5.j(105)     if (one+four >= twelve/(one+2)) println(79);
- 747 acc16= variable 2
- 748 acc16+ variable 6
- 749 <acc16
- 750 acc16= variable 10
- 751 <acc16= variable 2
- 752 acc16+ constant 2
- 753 /acc16 unstack16
- 754 revAcc16Comp unstack16
- 755 brgt 759
- 756 acc8= constant 79
- 757 call writeLineAcc8
- 758 ;test5.j(106)     if (four == 12/(1+2)) println(80);
- 759 acc8= constant 12
- 760 <acc8= constant 1
- 761 acc8+ constant 2
- 762 /acc8 unstack8
- 763 acc16= variable 6
- 764 acc16CompareAcc8
- 765 brne 769
- 766 acc8= constant 80
- 767 call writeLineAcc8
- 768 ;test5.j(107)     if (three != 12/(1+2)) println(81);
- 769 acc8= constant 12
- 770 <acc8= constant 1
- 771 acc8+ constant 2
- 772 /acc8 unstack8
- 773 acc16= variable 4
- 774 acc16CompareAcc8
- 775 breq 779
- 776 acc8= constant 81
- 777 call writeLineAcc8
- 778 ;test5.j(108)     if (three < 12/(1+2)) println(82);
- 779 acc8= constant 12
- 780 <acc8= constant 1
- 781 acc8+ constant 2
- 782 /acc8 unstack8
- 783 acc16= variable 4
- 784 acc16CompareAcc8
- 785 brge 789
- 786 acc8= constant 82
- 787 call writeLineAcc8
- 788 ;test5.j(109)     if (twelve > 12/(1+2)) println(83);
- 789 acc8= constant 12
- 790 <acc8= constant 1
- 791 acc8+ constant 2
- 792 /acc8 unstack8
- 793 acc16= variable 10
- 794 acc16CompareAcc8
- 795 brle 799
- 796 acc8= constant 83
- 797 call writeLineAcc8
- 798 ;test5.j(110)     if (four <= 12/(1+2)) println(84);
- 799 acc8= constant 12
- 800 <acc8= constant 1
- 801 acc8+ constant 2
- 802 /acc8 unstack8
- 803 acc16= variable 6
- 804 acc16CompareAcc8
- 805 brgt 809
- 806 acc8= constant 84
- 807 call writeLineAcc8
- 808 ;test5.j(111)     if (three <= 12/(1+2)) println(85);
- 809 acc8= constant 12
- 810 <acc8= constant 1
- 811 acc8+ constant 2
- 812 /acc8 unstack8
- 813 acc16= variable 4
- 814 acc16CompareAcc8
- 815 brgt 819
- 816 acc8= constant 85
- 817 call writeLineAcc8
- 818 ;test5.j(112)     if (four >= 12/(1+2)) println(86);
- 819 acc8= constant 12
- 820 <acc8= constant 1
- 821 acc8+ constant 2
- 822 /acc8 unstack8
- 823 acc16= variable 6
- 824 acc16CompareAcc8
- 825 brlt 829
- 826 acc8= constant 86
- 827 call writeLineAcc8
- 828 ;test5.j(113)     if (twelve >= 12/(1+2)) println(87);
- 829 acc8= constant 12
- 830 <acc8= constant 1
- 831 acc8+ constant 2
- 832 /acc8 unstack8
- 833 acc16= variable 10
- 834 acc16CompareAcc8
- 835 brlt 839
- 836 acc8= constant 87
- 837 call writeLineAcc8
- 838 ;test5.j(114)     if (four == twelve/(one+2)) println(88);
- 839 acc16= variable 10
- 840 <acc16= variable 2
- 841 acc16+ constant 2
- 842 /acc16 unstack16
- 843 acc16Comp variable 6
- 844 brne 848
- 845 acc8= constant 88
- 846 call writeLineAcc8
- 847 ;test5.j(115)     if (three != twelve/(one+2)) println(89);
- 848 acc16= variable 10
- 849 <acc16= variable 2
- 850 acc16+ constant 2
- 851 /acc16 unstack16
- 852 acc16Comp variable 4
- 853 breq 857
- 854 acc8= constant 89
- 855 call writeLineAcc8
- 856 ;test5.j(116)     if (three < twelve/(one+2)) println(90);
- 857 acc16= variable 10
- 858 <acc16= variable 2
- 859 acc16+ constant 2
- 860 /acc16 unstack16
- 861 acc16Comp variable 4
- 862 brle 866
- 863 acc8= constant 90
- 864 call writeLineAcc8
- 865 ;test5.j(117)     if (twelve > twelve/(one+2)) println(91);
- 866 acc16= variable 10
- 867 <acc16= variable 2
- 868 acc16+ constant 2
- 869 /acc16 unstack16
- 870 acc16Comp variable 10
- 871 brge 875
- 872 acc8= constant 91
- 873 call writeLineAcc8
- 874 ;test5.j(118)     if (four <= twelve/(one+2)) println(92);
- 875 acc16= variable 10
- 876 <acc16= variable 2
- 877 acc16+ constant 2
- 878 /acc16 unstack16
- 879 acc16Comp variable 6
- 880 brlt 884
- 881 acc8= constant 92
- 882 call writeLineAcc8
- 883 ;test5.j(119)     if (three <= twelve/(one+2)) println(93);
- 884 acc16= variable 10
- 885 <acc16= variable 2
- 886 acc16+ constant 2
- 887 /acc16 unstack16
- 888 acc16Comp variable 4
- 889 brlt 893
- 890 acc8= constant 93
- 891 call writeLineAcc8
- 892 ;test5.j(120)     if (four >= twelve/(one+2)) println(94);
- 893 acc16= variable 10
- 894 <acc16= variable 2
- 895 acc16+ constant 2
- 896 /acc16 unstack16
- 897 acc16Comp variable 6
- 898 brgt 902
- 899 acc8= constant 94
- 900 call writeLineAcc8
- 901 ;test5.j(121)     if (twelve >= twelve/(one+2)) println(95);
- 902 acc16= variable 10
- 903 <acc16= variable 2
- 904 acc16+ constant 2
- 905 /acc16 unstack16
- 906 acc16Comp variable 10
- 907 brgt 911
- 908 acc8= constant 95
- 909 call writeLineAcc8
- 910 ;test5.j(122)     if (1+3 == 12/(1+2)) println(96);
- 911 acc8= constant 1
- 912 acc8+ constant 3
- 913 <acc8
- 914 acc8= constant 12
- 915 <acc8= constant 1
- 916 acc8+ constant 2
- 917 /acc8 unstack8
- 918 revAcc8Comp unstack8
- 919 brne 923
- 920 acc8= constant 96
- 921 call writeLineAcc8
- 922 ;test5.j(123)     if (1+2 != 12/(1+2)) println(97);
- 923 acc8= constant 1
- 924 acc8+ constant 2
- 925 <acc8
- 926 acc8= constant 12
- 927 <acc8= constant 1
- 928 acc8+ constant 2
- 929 /acc8 unstack8
- 930 revAcc8Comp unstack8
- 931 breq 935
- 932 acc8= constant 97
- 933 call writeLineAcc8
- 934 ;test5.j(124)     if (1+2 < 12/(1+2)) println(98);
- 935 acc8= constant 1
- 936 acc8+ constant 2
- 937 <acc8
- 938 acc8= constant 12
- 939 <acc8= constant 1
- 940 acc8+ constant 2
- 941 /acc8 unstack8
- 942 revAcc8Comp unstack8
- 943 brle 947
- 944 acc8= constant 98
- 945 call writeLineAcc8
- 946 ;test5.j(125)     if (1+4 > 12/(1+2)) println(99);
- 947 acc8= constant 1
- 948 acc8+ constant 4
- 949 <acc8
- 950 acc8= constant 12
- 951 <acc8= constant 1
- 952 acc8+ constant 2
- 953 /acc8 unstack8
- 954 revAcc8Comp unstack8
- 955 brge 959
- 956 acc8= constant 99
- 957 call writeLineAcc8
- 958 ;test5.j(126)     if (1+2 <= 12/(1+2)) println(100);
- 959 acc8= constant 1
- 960 acc8+ constant 2
- 961 <acc8
- 962 acc8= constant 12
- 963 <acc8= constant 1
- 964 acc8+ constant 2
- 965 /acc8 unstack8
- 966 revAcc8Comp unstack8
- 967 brlt 971
- 968 acc8= constant 100
- 969 call writeLineAcc8
- 970 ;test5.j(127)     if (1+3 <= 12/(1+2)) println(101);
- 971 acc8= constant 1
- 972 acc8+ constant 3
- 973 <acc8
- 974 acc8= constant 12
- 975 <acc8= constant 1
- 976 acc8+ constant 2
- 977 /acc8 unstack8
- 978 revAcc8Comp unstack8
- 979 brlt 983
- 980 acc8= constant 101
- 981 call writeLineAcc8
- 982 ;test5.j(128)     if (1+3 >= 12/(1+2)) println(102);
- 983 acc8= constant 1
- 984 acc8+ constant 3
- 985 <acc8
- 986 acc8= constant 12
- 987 <acc8= constant 1
- 988 acc8+ constant 2
- 989 /acc8 unstack8
- 990 revAcc8Comp unstack8
- 991 brgt 995
- 992 acc8= constant 102
- 993 call writeLineAcc8
- 994 ;test5.j(129)     if (1+4 >= 12/(1+2)) println(103);
- 995 acc8= constant 1
- 996 acc8+ constant 4
- 997 <acc8
- 998 acc8= constant 12
- 999 <acc8= constant 1
-1000 acc8+ constant 2
-1001 /acc8 unstack8
-1002 revAcc8Comp unstack8
-1003 brgt 1007
-1004 acc8= constant 103
-1005 call writeLineAcc8
-1006 ;test5.j(130)     if (1+3 == twelve/(one+2)) println(104);
-1007 acc8= constant 1
-1008 acc8+ constant 3
-1009 <acc8
-1010 acc16= variable 10
-1011 <acc16= variable 2
-1012 acc16+ constant 2
-1013 /acc16 unstack16
-1014 acc8= unstack8
-1015 acc8CompareAcc16
-1016 brne 1020
-1017 acc8= constant 104
-1018 call writeLineAcc8
-1019 ;test5.j(131)     if (1+2 != twelve/(one+2)) println(105);
-1020 acc8= constant 1
-1021 acc8+ constant 2
-1022 <acc8
-1023 acc16= variable 10
-1024 <acc16= variable 2
-1025 acc16+ constant 2
-1026 /acc16 unstack16
-1027 acc8= unstack8
-1028 acc8CompareAcc16
-1029 breq 1033
-1030 acc8= constant 105
-1031 call writeLineAcc8
-1032 ;test5.j(132)     if (1+2 < twelve/(one+2)) println(106);
-1033 acc8= constant 1
-1034 acc8+ constant 2
-1035 <acc8
-1036 acc16= variable 10
-1037 <acc16= variable 2
-1038 acc16+ constant 2
-1039 /acc16 unstack16
-1040 acc8= unstack8
-1041 acc8CompareAcc16
-1042 brge 1046
-1043 acc8= constant 106
-1044 call writeLineAcc8
-1045 ;test5.j(133)     if (1+4 > twelve/(one+2)) println(107);
-1046 acc8= constant 1
-1047 acc8+ constant 4
-1048 <acc8
-1049 acc16= variable 10
-1050 <acc16= variable 2
-1051 acc16+ constant 2
-1052 /acc16 unstack16
-1053 acc8= unstack8
-1054 acc8CompareAcc16
-1055 brle 1059
-1056 acc8= constant 107
-1057 call writeLineAcc8
-1058 ;test5.j(134)     if (1+2 <= twelve/(one+2)) println(108);
-1059 acc8= constant 1
-1060 acc8+ constant 2
-1061 <acc8
-1062 acc16= variable 10
-1063 <acc16= variable 2
-1064 acc16+ constant 2
-1065 /acc16 unstack16
-1066 acc8= unstack8
-1067 acc8CompareAcc16
-1068 brgt 1072
-1069 acc8= constant 108
-1070 call writeLineAcc8
-1071 ;test5.j(135)     if (1+3 <= twelve/(one+2)) println(109);
-1072 acc8= constant 1
-1073 acc8+ constant 3
-1074 <acc8
-1075 acc16= variable 10
-1076 <acc16= variable 2
-1077 acc16+ constant 2
-1078 /acc16 unstack16
-1079 acc8= unstack8
-1080 acc8CompareAcc16
-1081 brgt 1085
-1082 acc8= constant 109
-1083 call writeLineAcc8
-1084 ;test5.j(136)     if (1+3 >= twelve/(one+2)) println(110);
-1085 acc8= constant 1
-1086 acc8+ constant 3
-1087 <acc8
-1088 acc16= variable 10
-1089 <acc16= variable 2
-1090 acc16+ constant 2
-1091 /acc16 unstack16
-1092 acc8= unstack8
-1093 acc8CompareAcc16
-1094 brlt 1098
-1095 acc8= constant 110
-1096 call writeLineAcc8
-1097 ;test5.j(137)     if (1+4 >= twelve/(one+2)) println(111);
-1098 acc8= constant 1
-1099 acc8+ constant 4
-1100 <acc8
-1101 acc16= variable 10
-1102 <acc16= variable 2
-1103 acc16+ constant 2
-1104 /acc16 unstack16
-1105 acc8= unstack8
-1106 acc8CompareAcc16
-1107 brlt 1111
-1108 acc8= constant 111
-1109 call writeLineAcc8
-1110 ;test5.j(138)     if (4 == 12/(1+2)) println(112);
-1111 acc8= constant 12
-1112 <acc8= constant 1
-1113 acc8+ constant 2
-1114 /acc8 unstack8
-1115 acc8Comp constant 4
-1116 brne 1120
-1117 acc8= constant 112
-1118 call writeLineAcc8
-1119 ;test5.j(139)     if (3 != 12/(1+2)) println(113);
-1120 acc8= constant 12
-1121 <acc8= constant 1
-1122 acc8+ constant 2
-1123 /acc8 unstack8
-1124 acc8Comp constant 3
-1125 breq 1129
-1126 acc8= constant 113
-1127 call writeLineAcc8
-1128 ;test5.j(140)     if (3 < 12/(1+2)) println(114);
-1129 acc8= constant 12
-1130 <acc8= constant 1
-1131 acc8+ constant 2
-1132 /acc8 unstack8
-1133 acc8Comp constant 3
-1134 brle 1138
-1135 acc8= constant 114
-1136 call writeLineAcc8
-1137 ;test5.j(141)     if (5 > 12/(1+2)) println(115);
-1138 acc8= constant 12
-1139 <acc8= constant 1
-1140 acc8+ constant 2
-1141 /acc8 unstack8
-1142 acc8Comp constant 5
-1143 brge 1147
-1144 acc8= constant 115
-1145 call writeLineAcc8
-1146 ;test5.j(142)     if (3 <= 12/(1+2)) println(116);
-1147 acc8= constant 12
-1148 <acc8= constant 1
-1149 acc8+ constant 2
-1150 /acc8 unstack8
-1151 acc8Comp constant 3
-1152 brlt 1156
-1153 acc8= constant 116
-1154 call writeLineAcc8
-1155 ;test5.j(143)     if (4 <= 12/(1+2)) println(117);
-1156 acc8= constant 12
-1157 <acc8= constant 1
-1158 acc8+ constant 2
-1159 /acc8 unstack8
-1160 acc8Comp constant 4
-1161 brlt 1165
-1162 acc8= constant 117
-1163 call writeLineAcc8
-1164 ;test5.j(144)     if (4 >= 12/(1+2)) println(118);
-1165 acc8= constant 12
-1166 <acc8= constant 1
-1167 acc8+ constant 2
-1168 /acc8 unstack8
-1169 acc8Comp constant 4
-1170 brgt 1174
-1171 acc8= constant 118
-1172 call writeLineAcc8
-1173 ;test5.j(145)     if (5 >= 12/(1+2)) println(119);
-1174 acc8= constant 12
-1175 <acc8= constant 1
-1176 acc8+ constant 2
-1177 /acc8 unstack8
-1178 acc8Comp constant 5
-1179 brgt 1183
-1180 acc8= constant 119
-1181 call writeLineAcc8
-1182 ;test5.j(146)     if (4 == twelve/(one+2)) println(120);
-1183 acc16= variable 10
-1184 <acc16= variable 2
-1185 acc16+ constant 2
-1186 /acc16 unstack16
-1187 acc8= constant 4
-1188 acc8CompareAcc16
-1189 brne 1193
-1190 acc8= constant 120
-1191 call writeLineAcc8
-1192 ;test5.j(147)     if (3 != twelve/(one+2)) println(121);
-1193 acc16= variable 10
-1194 <acc16= variable 2
-1195 acc16+ constant 2
-1196 /acc16 unstack16
-1197 acc8= constant 3
-1198 acc8CompareAcc16
-1199 breq 1203
-1200 acc8= constant 121
-1201 call writeLineAcc8
-1202 ;test5.j(148)     if (2 < twelve/(one+2)) println(122);
-1203 acc16= variable 10
-1204 <acc16= variable 2
-1205 acc16+ constant 2
-1206 /acc16 unstack16
-1207 acc8= constant 2
-1208 acc8CompareAcc16
-1209 brge 1213
-1210 acc8= constant 122
-1211 call writeLineAcc8
-1212 ;test5.j(149)     if (5 > twelve/(one+2)) println(123);
-1213 acc16= variable 10
-1214 <acc16= variable 2
-1215 acc16+ constant 2
-1216 /acc16 unstack16
-1217 acc8= constant 5
-1218 acc8CompareAcc16
-1219 brle 1223
-1220 acc8= constant 123
-1221 call writeLineAcc8
-1222 ;test5.j(150)     if (3 <= twelve/(one+2)) println(124);
-1223 acc16= variable 10
-1224 <acc16= variable 2
-1225 acc16+ constant 2
-1226 /acc16 unstack16
-1227 acc8= constant 3
-1228 acc8CompareAcc16
-1229 brgt 1233
-1230 acc8= constant 124
-1231 call writeLineAcc8
-1232 ;test5.j(151)     if (4 <= twelve/(one+2)) println(125);
-1233 acc16= variable 10
-1234 <acc16= variable 2
-1235 acc16+ constant 2
-1236 /acc16 unstack16
-1237 acc8= constant 4
-1238 acc8CompareAcc16
-1239 brgt 1243
-1240 acc8= constant 125
-1241 call writeLineAcc8
-1242 ;test5.j(152)     if (4 >= twelve/(one+2)) println(126);
-1243 acc16= variable 10
-1244 <acc16= variable 2
-1245 acc16+ constant 2
-1246 /acc16 unstack16
-1247 acc8= constant 4
-1248 acc8CompareAcc16
-1249 brlt 1253
-1250 acc8= constant 126
-1251 call writeLineAcc8
-1252 ;test5.j(153)     if (5 >= twelve/(one+2)) println(127);
-1253 acc16= variable 10
-1254 <acc16= variable 2
-1255 acc16+ constant 2
-1256 /acc16 unstack16
-1257 acc8= constant 5
-1258 acc8CompareAcc16
-1259 brlt 1263
-1260 acc8= constant 127
-1261 call writeLineAcc8
-1262 ;test5.j(154)     if (four == 0 + 12/(1 + 2)) println(128);
-1263 acc8= constant 0
-1264 <acc8= constant 12
-1265 <acc8= constant 1
-1266 acc8+ constant 2
-1267 /acc8 unstack8
-1268 acc8+ unstack8
-1269 acc16= variable 6
-1270 acc16CompareAcc8
-1271 brne 1275
-1272 acc8= constant 128
-1273 call writeLineAcc8
-1274 ;test5.j(155)     if (four == 0 + 12/(1 + 2)) println(129);
-1275 acc8= constant 0
-1276 <acc8= constant 12
-1277 <acc8= constant 1
-1278 acc8+ constant 2
-1279 /acc8 unstack8
-1280 acc8+ unstack8
-1281 acc16= variable 6
-1282 acc16CompareAcc8
-1283 brne 1287
-1284 acc8= constant 129
-1285 call writeLineAcc8
-1286 ;test5.j(156)     if (four == 0 + 12/(byteOne + 2)) println(130);
-1287 acc8= constant 0
-1288 <acc8= constant 12
-1289 <acc8= variable 12
-1290 acc8+ constant 2
-1291 /acc8 unstack8
-1292 acc8+ unstack8
-1293 acc16= variable 6
-1294 acc16CompareAcc8
-1295 brne 1299
-1296 acc8= constant 130
-1297 call writeLineAcc8
-1298 ;test5.j(157)     if (four == 0 + 12/(one + 2)) println(131);
-1299 acc8= constant 0
-1300 <acc8= constant 12
-1301 acc16= variable 2
-1302 acc16+ constant 2
-1303 /acc16 acc8
-1304 acc16+ unstack8
-1305 acc16Comp variable 6
-1306 brne 1310
-1307 acc8= constant 131
-1308 call writeLineAcc8
-1309 ;test5.j(158)     if (4 == zero + twelve/(1+2)) println(132);
-1310 acc16= variable 0
-1311 <acc16= variable 10
-1312 acc8= constant 1
-1313 acc8+ constant 2
-1314 acc16/ acc8
-1315 acc16+ unstack16
-1316 acc8= constant 4
-1317 acc8CompareAcc16
-1318 brne 1325
-1319 acc8= constant 132
-1320 call writeLineAcc8
-1321 ;test5.j(159)   
-1322 ;test5.j(160)     /************************/
-1323 ;test5.j(161)     // global variable b used within if scope
-1324 ;test5.j(162)     b = 133;
-1325 acc8= constant 133
-1326 acc8=> variable 14
-1327 ;test5.j(163)     if (b>132) {
-1328 acc8= variable 14
-1329 acc8Comp constant 132
-1330 brle 1347
-1331 ;test5.j(164)       word j = 1001;
-1332 acc16= constant 1001
-1333 acc16=> variable 15
-1334 ;test5.j(165)       byte c = b;
-1335 acc8= variable 14
-1336 acc8=> variable 17
-1337 ;test5.j(166)       byte d = c;
-1338 acc8= variable 17
-1339 acc8=> variable 18
-1340 ;test5.j(167)       b--;
-1341 decr8 variable 14
-1342 ;test5.j(168)       println (c);
-1343 acc8= variable 17
-1344 call writeLineAcc8
-1345 ;test5.j(169)     } else {
-1346 br 1354
-1347 ;test5.j(170)       println(999);
-1348 acc16= constant 999
-1349 call writeLineAcc16
-1350 ;test5.j(171)     }
-1351 ;test5.j(172)   
-1352 ;test5.j(173)     /************************/
-1353 ;test5.j(174)     println (134);
-1354 acc8= constant 134
-1355 call writeLineAcc8
-1356 ;test5.j(175)     println("Klaar");
-1357 acc16= stringconstant 1362
-1358 writeLineString
-1359 return
-1360 ;test5.j(176)   }
-1361 ;test5.j(177) }
-1362 stringConstant 0 = "Klaar"
+  67 acc8Comp constant 4
+  68 breq 72
+  69 acc8= constant 3
+  70 writeLineAcc8
+  71 ;test5.j(22)     if (3 < 12/(1+2)) println(4);
+  72 acc8= constant 12
+  73 <acc8= constant 1
+  74 acc8+ constant 2
+  75 /acc8 unstack8
+  76 acc8Comp constant 3
+  77 brle 81
+  78 acc8= constant 4
+  79 writeLineAcc8
+  80 ;test5.j(23)     if (3 < 4) println(5);
+  81 acc8= constant 3
+  82 acc8Comp constant 4
+  83 brge 87
+  84 acc8= constant 5
+  85 writeLineAcc8
+  86 ;test5.j(24)     if (5 > 12/(1+2)) println(6);
+  87 acc8= constant 12
+  88 <acc8= constant 1
+  89 acc8+ constant 2
+  90 /acc8 unstack8
+  91 acc8Comp constant 5
+  92 brge 96
+  93 acc8= constant 6
+  94 writeLineAcc8
+  95 ;test5.j(25)     if (5 > 4) println(7);
+  96 acc8= constant 5
+  97 acc8Comp constant 4
+  98 brle 102
+  99 acc8= constant 7
+ 100 writeLineAcc8
+ 101 ;test5.j(26)     if (3 <= 12/(1+2)) println(8);
+ 102 acc8= constant 12
+ 103 <acc8= constant 1
+ 104 acc8+ constant 2
+ 105 /acc8 unstack8
+ 106 acc8Comp constant 3
+ 107 brlt 111
+ 108 acc8= constant 8
+ 109 writeLineAcc8
+ 110 ;test5.j(27)     if (3 <= 4) println(9);
+ 111 acc8= constant 3
+ 112 acc8Comp constant 4
+ 113 brgt 117
+ 114 acc8= constant 9
+ 115 writeLineAcc8
+ 116 ;test5.j(28)     if (4 <= 12/(1+2)) println(10);
+ 117 acc8= constant 12
+ 118 <acc8= constant 1
+ 119 acc8+ constant 2
+ 120 /acc8 unstack8
+ 121 acc8Comp constant 4
+ 122 brlt 126
+ 123 acc8= constant 10
+ 124 writeLineAcc8
+ 125 ;test5.j(29)     if (4 <= 4) println(11);
+ 126 acc8= constant 4
+ 127 acc8Comp constant 4
+ 128 brgt 132
+ 129 acc8= constant 11
+ 130 writeLineAcc8
+ 131 ;test5.j(30)     if (5 >= 12/(1+2)) println(12);
+ 132 acc8= constant 12
+ 133 <acc8= constant 1
+ 134 acc8+ constant 2
+ 135 /acc8 unstack8
+ 136 acc8Comp constant 5
+ 137 brgt 141
+ 138 acc8= constant 12
+ 139 writeLineAcc8
+ 140 ;test5.j(31)     if (5 >= 4) println(13);
+ 141 acc8= constant 5
+ 142 acc8Comp constant 4
+ 143 brlt 147
+ 144 acc8= constant 13
+ 145 writeLineAcc8
+ 146 ;test5.j(32)     if (4 >= 12/(1+2)) println(14);
+ 147 acc8= constant 12
+ 148 <acc8= constant 1
+ 149 acc8+ constant 2
+ 150 /acc8 unstack8
+ 151 acc8Comp constant 4
+ 152 brgt 156
+ 153 acc8= constant 14
+ 154 writeLineAcc8
+ 155 ;test5.j(33)     if (4 >= 4) println(15);
+ 156 acc8= constant 4
+ 157 acc8Comp constant 4
+ 158 brlt 164
+ 159 acc8= constant 15
+ 160 writeLineAcc8
+ 161 ;test5.j(34)     //stack level 1
+ 162 ;test5.j(35)     //byte-integer
+ 163 ;test5.j(36)     if (4 == twelve/(1+2)) println(16);
+ 164 acc16= variable 10
+ 165 acc8= constant 1
+ 166 acc8+ constant 2
+ 167 acc16/ acc8
+ 168 acc8= constant 4
+ 169 acc8CompareAcc16
+ 170 brne 174
+ 171 acc8= constant 16
+ 172 writeLineAcc8
+ 173 ;test5.j(37)     if (4 == four) println(17);
+ 174 acc16= variable 6
+ 175 acc8= constant 4
+ 176 acc8CompareAcc16
+ 177 brne 181
+ 178 acc8= constant 17
+ 179 writeLineAcc8
+ 180 ;test5.j(38)     if (3 != twelve/(1+2)) println(18);
+ 181 acc16= variable 10
+ 182 acc8= constant 1
+ 183 acc8+ constant 2
+ 184 acc16/ acc8
+ 185 acc8= constant 3
+ 186 acc8CompareAcc16
+ 187 breq 191
+ 188 acc8= constant 18
+ 189 writeLineAcc8
+ 190 ;test5.j(39)     if (3 != four) println(19);
+ 191 acc16= variable 6
+ 192 acc8= constant 3
+ 193 acc8CompareAcc16
+ 194 breq 198
+ 195 acc8= constant 19
+ 196 writeLineAcc8
+ 197 ;test5.j(40)     if (3 < twelve/(1+2)) println(20);
+ 198 acc16= variable 10
+ 199 acc8= constant 1
+ 200 acc8+ constant 2
+ 201 acc16/ acc8
+ 202 acc8= constant 3
+ 203 acc8CompareAcc16
+ 204 brge 208
+ 205 acc8= constant 20
+ 206 writeLineAcc8
+ 207 ;test5.j(41)     if (3 < four) println(21);
+ 208 acc16= variable 6
+ 209 acc8= constant 3
+ 210 acc8CompareAcc16
+ 211 brge 215
+ 212 acc8= constant 21
+ 213 writeLineAcc8
+ 214 ;test5.j(42)     if (5 > twelve/(1+2)) println(22);
+ 215 acc16= variable 10
+ 216 acc8= constant 1
+ 217 acc8+ constant 2
+ 218 acc16/ acc8
+ 219 acc8= constant 5
+ 220 acc8CompareAcc16
+ 221 brle 225
+ 222 acc8= constant 22
+ 223 writeLineAcc8
+ 224 ;test5.j(43)     if (5 > four) println(23);
+ 225 acc16= variable 6
+ 226 acc8= constant 5
+ 227 acc8CompareAcc16
+ 228 brle 232
+ 229 acc8= constant 23
+ 230 writeLineAcc8
+ 231 ;test5.j(44)     if (3 <= twelve/(1+2)) println(24);
+ 232 acc16= variable 10
+ 233 acc8= constant 1
+ 234 acc8+ constant 2
+ 235 acc16/ acc8
+ 236 acc8= constant 3
+ 237 acc8CompareAcc16
+ 238 brgt 242
+ 239 acc8= constant 24
+ 240 writeLineAcc8
+ 241 ;test5.j(45)     if (3 <= four) println(25);
+ 242 acc16= variable 6
+ 243 acc8= constant 3
+ 244 acc8CompareAcc16
+ 245 brgt 249
+ 246 acc8= constant 25
+ 247 writeLineAcc8
+ 248 ;test5.j(46)     if (4 <= twelve/(1+2)) println(26);
+ 249 acc16= variable 10
+ 250 acc8= constant 1
+ 251 acc8+ constant 2
+ 252 acc16/ acc8
+ 253 acc8= constant 4
+ 254 acc8CompareAcc16
+ 255 brgt 259
+ 256 acc8= constant 26
+ 257 writeLineAcc8
+ 258 ;test5.j(47)     if (4 <= four) println(27);
+ 259 acc16= variable 6
+ 260 acc8= constant 4
+ 261 acc8CompareAcc16
+ 262 brgt 266
+ 263 acc8= constant 27
+ 264 writeLineAcc8
+ 265 ;test5.j(48)     if (5 >= twelve/(1+2)) println(28);
+ 266 acc16= variable 10
+ 267 acc8= constant 1
+ 268 acc8+ constant 2
+ 269 acc16/ acc8
+ 270 acc8= constant 5
+ 271 acc8CompareAcc16
+ 272 brlt 276
+ 273 acc8= constant 28
+ 274 writeLineAcc8
+ 275 ;test5.j(49)     if (5 >= four) println(29);
+ 276 acc16= variable 6
+ 277 acc8= constant 5
+ 278 acc8CompareAcc16
+ 279 brlt 283
+ 280 acc8= constant 29
+ 281 writeLineAcc8
+ 282 ;test5.j(50)     if (4 >= twelve/(1+2)) println(30);
+ 283 acc16= variable 10
+ 284 acc8= constant 1
+ 285 acc8+ constant 2
+ 286 acc16/ acc8
+ 287 acc8= constant 4
+ 288 acc8CompareAcc16
+ 289 brlt 293
+ 290 acc8= constant 30
+ 291 writeLineAcc8
+ 292 ;test5.j(51)     if (4 >= four) println(31);
+ 293 acc16= variable 6
+ 294 acc8= constant 4
+ 295 acc8CompareAcc16
+ 296 brlt 302
+ 297 acc8= constant 31
+ 298 writeLineAcc8
+ 299 ;test5.j(52)     //stack level 1
+ 300 ;test5.j(53)     //integer-byte
+ 301 ;test5.j(54)     if (four == 12/(1+2)) println(32);
+ 302 acc8= constant 12
+ 303 <acc8= constant 1
+ 304 acc8+ constant 2
+ 305 /acc8 unstack8
+ 306 acc16= variable 6
+ 307 acc16CompareAcc8
+ 308 brne 312
+ 309 acc8= constant 32
+ 310 writeLineAcc8
+ 311 ;test5.j(55)     if (four == 4) println(33);
+ 312 acc16= variable 6
+ 313 acc8= constant 4
+ 314 acc16CompareAcc8
+ 315 brne 319
+ 316 acc8= constant 33
+ 317 writeLineAcc8
+ 318 ;test5.j(56)     if (three != 12/(1+2)) println(34);
+ 319 acc8= constant 12
+ 320 <acc8= constant 1
+ 321 acc8+ constant 2
+ 322 /acc8 unstack8
+ 323 acc16= variable 4
+ 324 acc16CompareAcc8
+ 325 breq 329
+ 326 acc8= constant 34
+ 327 writeLineAcc8
+ 328 ;test5.j(57)     if (three != 4) println(35);
+ 329 acc16= variable 4
+ 330 acc8= constant 4
+ 331 acc16CompareAcc8
+ 332 breq 336
+ 333 acc8= constant 35
+ 334 writeLineAcc8
+ 335 ;test5.j(58)     if (three < 12/(1+2)) println(36);
+ 336 acc8= constant 12
+ 337 <acc8= constant 1
+ 338 acc8+ constant 2
+ 339 /acc8 unstack8
+ 340 acc16= variable 4
+ 341 acc16CompareAcc8
+ 342 brge 346
+ 343 acc8= constant 36
+ 344 writeLineAcc8
+ 345 ;test5.j(59)     if (three < 4) println(37);
+ 346 acc16= variable 4
+ 347 acc8= constant 4
+ 348 acc16CompareAcc8
+ 349 brge 353
+ 350 acc8= constant 37
+ 351 writeLineAcc8
+ 352 ;test5.j(60)     if (five > 12/(1+2)) println(38);
+ 353 acc8= constant 12
+ 354 <acc8= constant 1
+ 355 acc8+ constant 2
+ 356 /acc8 unstack8
+ 357 acc16= variable 8
+ 358 acc16CompareAcc8
+ 359 brle 363
+ 360 acc8= constant 38
+ 361 writeLineAcc8
+ 362 ;test5.j(61)     if (five > 4) println(39);
+ 363 acc16= variable 8
+ 364 acc8= constant 4
+ 365 acc16CompareAcc8
+ 366 brle 370
+ 367 acc8= constant 39
+ 368 writeLineAcc8
+ 369 ;test5.j(62)     if (three <= 12/(1+2)) println(40);
+ 370 acc8= constant 12
+ 371 <acc8= constant 1
+ 372 acc8+ constant 2
+ 373 /acc8 unstack8
+ 374 acc16= variable 4
+ 375 acc16CompareAcc8
+ 376 brgt 380
+ 377 acc8= constant 40
+ 378 writeLineAcc8
+ 379 ;test5.j(63)     if (three <= 4) println(41);
+ 380 acc16= variable 4
+ 381 acc8= constant 4
+ 382 acc16CompareAcc8
+ 383 brgt 387
+ 384 acc8= constant 41
+ 385 writeLineAcc8
+ 386 ;test5.j(64)     if (four <= 12/(1+2)) println(42);
+ 387 acc8= constant 12
+ 388 <acc8= constant 1
+ 389 acc8+ constant 2
+ 390 /acc8 unstack8
+ 391 acc16= variable 6
+ 392 acc16CompareAcc8
+ 393 brgt 397
+ 394 acc8= constant 42
+ 395 writeLineAcc8
+ 396 ;test5.j(65)     if (four <= 4) println(43);
+ 397 acc16= variable 6
+ 398 acc8= constant 4
+ 399 acc16CompareAcc8
+ 400 brgt 404
+ 401 acc8= constant 43
+ 402 writeLineAcc8
+ 403 ;test5.j(66)     if (five >= 12/(1+2)) println(44);
+ 404 acc8= constant 12
+ 405 <acc8= constant 1
+ 406 acc8+ constant 2
+ 407 /acc8 unstack8
+ 408 acc16= variable 8
+ 409 acc16CompareAcc8
+ 410 brlt 414
+ 411 acc8= constant 44
+ 412 writeLineAcc8
+ 413 ;test5.j(67)     if (five >= 4) println(45);
+ 414 acc16= variable 8
+ 415 acc8= constant 4
+ 416 acc16CompareAcc8
+ 417 brlt 421
+ 418 acc8= constant 45
+ 419 writeLineAcc8
+ 420 ;test5.j(68)     if (four >= 12/(1+2)) println(46);
+ 421 acc8= constant 12
+ 422 <acc8= constant 1
+ 423 acc8+ constant 2
+ 424 /acc8 unstack8
+ 425 acc16= variable 6
+ 426 acc16CompareAcc8
+ 427 brlt 431
+ 428 acc8= constant 46
+ 429 writeLineAcc8
+ 430 ;test5.j(69)     if (four >= 4) println(47);
+ 431 acc16= variable 6
+ 432 acc8= constant 4
+ 433 acc16CompareAcc8
+ 434 brlt 440
+ 435 acc8= constant 47
+ 436 writeLineAcc8
+ 437 ;test5.j(70)     //stack level 1
+ 438 ;test5.j(71)     //integer-integer
+ 439 ;test5.j(72)     if (400 == 1200/(1+2)) println(48);
+ 440 acc16= constant 1200
+ 441 acc8= constant 1
+ 442 acc8+ constant 2
+ 443 acc16/ acc8
+ 444 acc16Comp constant 400
+ 445 brne 449
+ 446 acc8= constant 48
+ 447 writeLineAcc8
+ 448 ;test5.j(73)     if (400 == 400) println(49);
+ 449 acc16= constant 400
+ 450 acc16Comp constant 400
+ 451 brne 455
+ 452 acc8= constant 49
+ 453 writeLineAcc8
+ 454 ;test5.j(74)     if (300 != 1200/(1+2)) println(50);
+ 455 acc16= constant 1200
+ 456 acc8= constant 1
+ 457 acc8+ constant 2
+ 458 acc16/ acc8
+ 459 acc16Comp constant 300
+ 460 breq 464
+ 461 acc8= constant 50
+ 462 writeLineAcc8
+ 463 ;test5.j(75)     if (300 != 400) println(51);
+ 464 acc16= constant 300
+ 465 acc16Comp constant 400
+ 466 breq 470
+ 467 acc8= constant 51
+ 468 writeLineAcc8
+ 469 ;test5.j(76)     if (300 < 1200/(1+2)) println(52);
+ 470 acc16= constant 1200
+ 471 acc8= constant 1
+ 472 acc8+ constant 2
+ 473 acc16/ acc8
+ 474 acc16Comp constant 300
+ 475 brle 479
+ 476 acc8= constant 52
+ 477 writeLineAcc8
+ 478 ;test5.j(77)     if (300 < 400) println(53);
+ 479 acc16= constant 300
+ 480 acc16Comp constant 400
+ 481 brge 485
+ 482 acc8= constant 53
+ 483 writeLineAcc8
+ 484 ;test5.j(78)     if (500 > 1200/(1+2)) println(54);
+ 485 acc16= constant 1200
+ 486 acc8= constant 1
+ 487 acc8+ constant 2
+ 488 acc16/ acc8
+ 489 acc16Comp constant 500
+ 490 brge 494
+ 491 acc8= constant 54
+ 492 writeLineAcc8
+ 493 ;test5.j(79)     if (500 > 400) println(55);
+ 494 acc16= constant 500
+ 495 acc16Comp constant 400
+ 496 brle 500
+ 497 acc8= constant 55
+ 498 writeLineAcc8
+ 499 ;test5.j(80)     if (300 <= 1200/(1+2)) println(56);
+ 500 acc16= constant 1200
+ 501 acc8= constant 1
+ 502 acc8+ constant 2
+ 503 acc16/ acc8
+ 504 acc16Comp constant 300
+ 505 brlt 509
+ 506 acc8= constant 56
+ 507 writeLineAcc8
+ 508 ;test5.j(81)     if (300 <= 400) println(57);
+ 509 acc16= constant 300
+ 510 acc16Comp constant 400
+ 511 brgt 515
+ 512 acc8= constant 57
+ 513 writeLineAcc8
+ 514 ;test5.j(82)     if (400 <= 1200/(1+2)) println(58);
+ 515 acc16= constant 1200
+ 516 acc8= constant 1
+ 517 acc8+ constant 2
+ 518 acc16/ acc8
+ 519 acc16Comp constant 400
+ 520 brlt 524
+ 521 acc8= constant 58
+ 522 writeLineAcc8
+ 523 ;test5.j(83)     if (400 <= 400) println(59);
+ 524 acc16= constant 400
+ 525 acc16Comp constant 400
+ 526 brgt 530
+ 527 acc8= constant 59
+ 528 writeLineAcc8
+ 529 ;test5.j(84)     if (500 >= 1200/(1+2)) println(60);
+ 530 acc16= constant 1200
+ 531 acc8= constant 1
+ 532 acc8+ constant 2
+ 533 acc16/ acc8
+ 534 acc16Comp constant 500
+ 535 brgt 539
+ 536 acc8= constant 60
+ 537 writeLineAcc8
+ 538 ;test5.j(85)     if (500 >= 400) println(61);
+ 539 acc16= constant 500
+ 540 acc16Comp constant 400
+ 541 brlt 545
+ 542 acc8= constant 61
+ 543 writeLineAcc8
+ 544 ;test5.j(86)     if (400 >= 1200/(1+2)) println(62);
+ 545 acc16= constant 1200
+ 546 acc8= constant 1
+ 547 acc8+ constant 2
+ 548 acc16/ acc8
+ 549 acc16Comp constant 400
+ 550 brgt 554
+ 551 acc8= constant 62
+ 552 writeLineAcc8
+ 553 ;test5.j(87)     if (400 >= 400) println(63);
+ 554 acc16= constant 400
+ 555 acc16Comp constant 400
+ 556 brlt 562
+ 557 acc8= constant 63
+ 558 writeLineAcc8
+ 559 ;test5.j(88)   
+ 560 ;test5.j(89)     //stack level 2
+ 561 ;test5.j(90)     if (one+three == 12/(1+2)) println(64);
+ 562 acc16= variable 2
+ 563 acc16+ variable 4
+ 564 <acc16
+ 565 acc8= constant 12
+ 566 <acc8= constant 1
+ 567 acc8+ constant 2
+ 568 /acc8 unstack8
+ 569 acc16<
+ 570 acc16CompareAcc8
+ 571 brne 575
+ 572 acc8= constant 64
+ 573 writeLineAcc8
+ 574 ;test5.j(91)     if (one+four  != 12/(1+2)) println(65);
+ 575 acc16= variable 2
+ 576 acc16+ variable 6
+ 577 <acc16
+ 578 acc8= constant 12
+ 579 <acc8= constant 1
+ 580 acc8+ constant 2
+ 581 /acc8 unstack8
+ 582 acc16<
+ 583 acc16CompareAcc8
+ 584 breq 588
+ 585 acc8= constant 65
+ 586 writeLineAcc8
+ 587 ;test5.j(92)     if (one+one < 12/(1+2)) println(66);
+ 588 acc16= variable 2
+ 589 acc16+ variable 2
+ 590 <acc16
+ 591 acc8= constant 12
+ 592 <acc8= constant 1
+ 593 acc8+ constant 2
+ 594 /acc8 unstack8
+ 595 acc16<
+ 596 acc16CompareAcc8
+ 597 brge 601
+ 598 acc8= constant 66
+ 599 writeLineAcc8
+ 600 ;test5.j(93)     if (one+four > 12/(1+2)) println(67);
+ 601 acc16= variable 2
+ 602 acc16+ variable 6
+ 603 <acc16
+ 604 acc8= constant 12
+ 605 <acc8= constant 1
+ 606 acc8+ constant 2
+ 607 /acc8 unstack8
+ 608 acc16<
+ 609 acc16CompareAcc8
+ 610 brle 614
+ 611 acc8= constant 67
+ 612 writeLineAcc8
+ 613 ;test5.j(94)     if (one+one <= 12/(1+2)) println(68);
+ 614 acc16= variable 2
+ 615 acc16+ variable 2
+ 616 <acc16
+ 617 acc8= constant 12
+ 618 <acc8= constant 1
+ 619 acc8+ constant 2
+ 620 /acc8 unstack8
+ 621 acc16<
+ 622 acc16CompareAcc8
+ 623 brgt 627
+ 624 acc8= constant 68
+ 625 writeLineAcc8
+ 626 ;test5.j(95)     if (one+three <= 12/(1+2)) println(69);
+ 627 acc16= variable 2
+ 628 acc16+ variable 4
+ 629 <acc16
+ 630 acc8= constant 12
+ 631 <acc8= constant 1
+ 632 acc8+ constant 2
+ 633 /acc8 unstack8
+ 634 acc16<
+ 635 acc16CompareAcc8
+ 636 brgt 640
+ 637 acc8= constant 69
+ 638 writeLineAcc8
+ 639 ;test5.j(96)     if (one+three >= 12/(1+2)) println(70);
+ 640 acc16= variable 2
+ 641 acc16+ variable 4
+ 642 <acc16
+ 643 acc8= constant 12
+ 644 <acc8= constant 1
+ 645 acc8+ constant 2
+ 646 /acc8 unstack8
+ 647 acc16<
+ 648 acc16CompareAcc8
+ 649 brlt 653
+ 650 acc8= constant 70
+ 651 writeLineAcc8
+ 652 ;test5.j(97)     if (one+four >= 12/(1+2)) println(71);
+ 653 acc16= variable 2
+ 654 acc16+ variable 6
+ 655 <acc16
+ 656 acc8= constant 12
+ 657 <acc8= constant 1
+ 658 acc8+ constant 2
+ 659 /acc8 unstack8
+ 660 acc16<
+ 661 acc16CompareAcc8
+ 662 brlt 666
+ 663 acc8= constant 71
+ 664 writeLineAcc8
+ 665 ;test5.j(98)     if (one+three == twelve/(one+2)) println(72);
+ 666 acc16= variable 2
+ 667 acc16+ variable 4
+ 668 <acc16
+ 669 acc16= variable 10
+ 670 <acc16= variable 2
+ 671 acc16+ constant 2
+ 672 /acc16 unstack16
+ 673 revAcc16Comp unstack16
+ 674 brne 678
+ 675 acc8= constant 72
+ 676 writeLineAcc8
+ 677 ;test5.j(99)     if (one+four  != twelve/(one+2)) println(73);
+ 678 acc16= variable 2
+ 679 acc16+ variable 6
+ 680 <acc16
+ 681 acc16= variable 10
+ 682 <acc16= variable 2
+ 683 acc16+ constant 2
+ 684 /acc16 unstack16
+ 685 revAcc16Comp unstack16
+ 686 breq 690
+ 687 acc8= constant 73
+ 688 writeLineAcc8
+ 689 ;test5.j(100)     if (one+one < twelve/(one+2)) println(74);
+ 690 acc16= variable 2
+ 691 acc16+ variable 2
+ 692 <acc16
+ 693 acc16= variable 10
+ 694 <acc16= variable 2
+ 695 acc16+ constant 2
+ 696 /acc16 unstack16
+ 697 revAcc16Comp unstack16
+ 698 brle 702
+ 699 acc8= constant 74
+ 700 writeLineAcc8
+ 701 ;test5.j(101)     if (one+four > twelve/(one+2)) println(75);
+ 702 acc16= variable 2
+ 703 acc16+ variable 6
+ 704 <acc16
+ 705 acc16= variable 10
+ 706 <acc16= variable 2
+ 707 acc16+ constant 2
+ 708 /acc16 unstack16
+ 709 revAcc16Comp unstack16
+ 710 brge 714
+ 711 acc8= constant 75
+ 712 writeLineAcc8
+ 713 ;test5.j(102)     if (one+one <= twelve/(one+2)) println(76);
+ 714 acc16= variable 2
+ 715 acc16+ variable 2
+ 716 <acc16
+ 717 acc16= variable 10
+ 718 <acc16= variable 2
+ 719 acc16+ constant 2
+ 720 /acc16 unstack16
+ 721 revAcc16Comp unstack16
+ 722 brlt 726
+ 723 acc8= constant 76
+ 724 writeLineAcc8
+ 725 ;test5.j(103)     if (one+three <= twelve/(one+2)) println(77);
+ 726 acc16= variable 2
+ 727 acc16+ variable 4
+ 728 <acc16
+ 729 acc16= variable 10
+ 730 <acc16= variable 2
+ 731 acc16+ constant 2
+ 732 /acc16 unstack16
+ 733 revAcc16Comp unstack16
+ 734 brlt 738
+ 735 acc8= constant 77
+ 736 writeLineAcc8
+ 737 ;test5.j(104)     if (one+three >= twelve/(one+2)) println(78);
+ 738 acc16= variable 2
+ 739 acc16+ variable 4
+ 740 <acc16
+ 741 acc16= variable 10
+ 742 <acc16= variable 2
+ 743 acc16+ constant 2
+ 744 /acc16 unstack16
+ 745 revAcc16Comp unstack16
+ 746 brgt 750
+ 747 acc8= constant 78
+ 748 writeLineAcc8
+ 749 ;test5.j(105)     if (one+four >= twelve/(one+2)) println(79);
+ 750 acc16= variable 2
+ 751 acc16+ variable 6
+ 752 <acc16
+ 753 acc16= variable 10
+ 754 <acc16= variable 2
+ 755 acc16+ constant 2
+ 756 /acc16 unstack16
+ 757 revAcc16Comp unstack16
+ 758 brgt 762
+ 759 acc8= constant 79
+ 760 writeLineAcc8
+ 761 ;test5.j(106)     if (four == 12/(1+2)) println(80);
+ 762 acc8= constant 12
+ 763 <acc8= constant 1
+ 764 acc8+ constant 2
+ 765 /acc8 unstack8
+ 766 acc16= variable 6
+ 767 acc16CompareAcc8
+ 768 brne 772
+ 769 acc8= constant 80
+ 770 writeLineAcc8
+ 771 ;test5.j(107)     if (three != 12/(1+2)) println(81);
+ 772 acc8= constant 12
+ 773 <acc8= constant 1
+ 774 acc8+ constant 2
+ 775 /acc8 unstack8
+ 776 acc16= variable 4
+ 777 acc16CompareAcc8
+ 778 breq 782
+ 779 acc8= constant 81
+ 780 writeLineAcc8
+ 781 ;test5.j(108)     if (three < 12/(1+2)) println(82);
+ 782 acc8= constant 12
+ 783 <acc8= constant 1
+ 784 acc8+ constant 2
+ 785 /acc8 unstack8
+ 786 acc16= variable 4
+ 787 acc16CompareAcc8
+ 788 brge 792
+ 789 acc8= constant 82
+ 790 writeLineAcc8
+ 791 ;test5.j(109)     if (twelve > 12/(1+2)) println(83);
+ 792 acc8= constant 12
+ 793 <acc8= constant 1
+ 794 acc8+ constant 2
+ 795 /acc8 unstack8
+ 796 acc16= variable 10
+ 797 acc16CompareAcc8
+ 798 brle 802
+ 799 acc8= constant 83
+ 800 writeLineAcc8
+ 801 ;test5.j(110)     if (four <= 12/(1+2)) println(84);
+ 802 acc8= constant 12
+ 803 <acc8= constant 1
+ 804 acc8+ constant 2
+ 805 /acc8 unstack8
+ 806 acc16= variable 6
+ 807 acc16CompareAcc8
+ 808 brgt 812
+ 809 acc8= constant 84
+ 810 writeLineAcc8
+ 811 ;test5.j(111)     if (three <= 12/(1+2)) println(85);
+ 812 acc8= constant 12
+ 813 <acc8= constant 1
+ 814 acc8+ constant 2
+ 815 /acc8 unstack8
+ 816 acc16= variable 4
+ 817 acc16CompareAcc8
+ 818 brgt 822
+ 819 acc8= constant 85
+ 820 writeLineAcc8
+ 821 ;test5.j(112)     if (four >= 12/(1+2)) println(86);
+ 822 acc8= constant 12
+ 823 <acc8= constant 1
+ 824 acc8+ constant 2
+ 825 /acc8 unstack8
+ 826 acc16= variable 6
+ 827 acc16CompareAcc8
+ 828 brlt 832
+ 829 acc8= constant 86
+ 830 writeLineAcc8
+ 831 ;test5.j(113)     if (twelve >= 12/(1+2)) println(87);
+ 832 acc8= constant 12
+ 833 <acc8= constant 1
+ 834 acc8+ constant 2
+ 835 /acc8 unstack8
+ 836 acc16= variable 10
+ 837 acc16CompareAcc8
+ 838 brlt 842
+ 839 acc8= constant 87
+ 840 writeLineAcc8
+ 841 ;test5.j(114)     if (four == twelve/(one+2)) println(88);
+ 842 acc16= variable 10
+ 843 <acc16= variable 2
+ 844 acc16+ constant 2
+ 845 /acc16 unstack16
+ 846 acc16Comp variable 6
+ 847 brne 851
+ 848 acc8= constant 88
+ 849 writeLineAcc8
+ 850 ;test5.j(115)     if (three != twelve/(one+2)) println(89);
+ 851 acc16= variable 10
+ 852 <acc16= variable 2
+ 853 acc16+ constant 2
+ 854 /acc16 unstack16
+ 855 acc16Comp variable 4
+ 856 breq 860
+ 857 acc8= constant 89
+ 858 writeLineAcc8
+ 859 ;test5.j(116)     if (three < twelve/(one+2)) println(90);
+ 860 acc16= variable 10
+ 861 <acc16= variable 2
+ 862 acc16+ constant 2
+ 863 /acc16 unstack16
+ 864 acc16Comp variable 4
+ 865 brle 869
+ 866 acc8= constant 90
+ 867 writeLineAcc8
+ 868 ;test5.j(117)     if (twelve > twelve/(one+2)) println(91);
+ 869 acc16= variable 10
+ 870 <acc16= variable 2
+ 871 acc16+ constant 2
+ 872 /acc16 unstack16
+ 873 acc16Comp variable 10
+ 874 brge 878
+ 875 acc8= constant 91
+ 876 writeLineAcc8
+ 877 ;test5.j(118)     if (four <= twelve/(one+2)) println(92);
+ 878 acc16= variable 10
+ 879 <acc16= variable 2
+ 880 acc16+ constant 2
+ 881 /acc16 unstack16
+ 882 acc16Comp variable 6
+ 883 brlt 887
+ 884 acc8= constant 92
+ 885 writeLineAcc8
+ 886 ;test5.j(119)     if (three <= twelve/(one+2)) println(93);
+ 887 acc16= variable 10
+ 888 <acc16= variable 2
+ 889 acc16+ constant 2
+ 890 /acc16 unstack16
+ 891 acc16Comp variable 4
+ 892 brlt 896
+ 893 acc8= constant 93
+ 894 writeLineAcc8
+ 895 ;test5.j(120)     if (four >= twelve/(one+2)) println(94);
+ 896 acc16= variable 10
+ 897 <acc16= variable 2
+ 898 acc16+ constant 2
+ 899 /acc16 unstack16
+ 900 acc16Comp variable 6
+ 901 brgt 905
+ 902 acc8= constant 94
+ 903 writeLineAcc8
+ 904 ;test5.j(121)     if (twelve >= twelve/(one+2)) println(95);
+ 905 acc16= variable 10
+ 906 <acc16= variable 2
+ 907 acc16+ constant 2
+ 908 /acc16 unstack16
+ 909 acc16Comp variable 10
+ 910 brgt 914
+ 911 acc8= constant 95
+ 912 writeLineAcc8
+ 913 ;test5.j(122)     if (1+3 == 12/(1+2)) println(96);
+ 914 acc8= constant 1
+ 915 acc8+ constant 3
+ 916 <acc8
+ 917 acc8= constant 12
+ 918 <acc8= constant 1
+ 919 acc8+ constant 2
+ 920 /acc8 unstack8
+ 921 revAcc8Comp unstack8
+ 922 brne 926
+ 923 acc8= constant 96
+ 924 writeLineAcc8
+ 925 ;test5.j(123)     if (1+2 != 12/(1+2)) println(97);
+ 926 acc8= constant 1
+ 927 acc8+ constant 2
+ 928 <acc8
+ 929 acc8= constant 12
+ 930 <acc8= constant 1
+ 931 acc8+ constant 2
+ 932 /acc8 unstack8
+ 933 revAcc8Comp unstack8
+ 934 breq 938
+ 935 acc8= constant 97
+ 936 writeLineAcc8
+ 937 ;test5.j(124)     if (1+2 < 12/(1+2)) println(98);
+ 938 acc8= constant 1
+ 939 acc8+ constant 2
+ 940 <acc8
+ 941 acc8= constant 12
+ 942 <acc8= constant 1
+ 943 acc8+ constant 2
+ 944 /acc8 unstack8
+ 945 revAcc8Comp unstack8
+ 946 brle 950
+ 947 acc8= constant 98
+ 948 writeLineAcc8
+ 949 ;test5.j(125)     if (1+4 > 12/(1+2)) println(99);
+ 950 acc8= constant 1
+ 951 acc8+ constant 4
+ 952 <acc8
+ 953 acc8= constant 12
+ 954 <acc8= constant 1
+ 955 acc8+ constant 2
+ 956 /acc8 unstack8
+ 957 revAcc8Comp unstack8
+ 958 brge 962
+ 959 acc8= constant 99
+ 960 writeLineAcc8
+ 961 ;test5.j(126)     if (1+2 <= 12/(1+2)) println(100);
+ 962 acc8= constant 1
+ 963 acc8+ constant 2
+ 964 <acc8
+ 965 acc8= constant 12
+ 966 <acc8= constant 1
+ 967 acc8+ constant 2
+ 968 /acc8 unstack8
+ 969 revAcc8Comp unstack8
+ 970 brlt 974
+ 971 acc8= constant 100
+ 972 writeLineAcc8
+ 973 ;test5.j(127)     if (1+3 <= 12/(1+2)) println(101);
+ 974 acc8= constant 1
+ 975 acc8+ constant 3
+ 976 <acc8
+ 977 acc8= constant 12
+ 978 <acc8= constant 1
+ 979 acc8+ constant 2
+ 980 /acc8 unstack8
+ 981 revAcc8Comp unstack8
+ 982 brlt 986
+ 983 acc8= constant 101
+ 984 writeLineAcc8
+ 985 ;test5.j(128)     if (1+3 >= 12/(1+2)) println(102);
+ 986 acc8= constant 1
+ 987 acc8+ constant 3
+ 988 <acc8
+ 989 acc8= constant 12
+ 990 <acc8= constant 1
+ 991 acc8+ constant 2
+ 992 /acc8 unstack8
+ 993 revAcc8Comp unstack8
+ 994 brgt 998
+ 995 acc8= constant 102
+ 996 writeLineAcc8
+ 997 ;test5.j(129)     if (1+4 >= 12/(1+2)) println(103);
+ 998 acc8= constant 1
+ 999 acc8+ constant 4
+1000 <acc8
+1001 acc8= constant 12
+1002 <acc8= constant 1
+1003 acc8+ constant 2
+1004 /acc8 unstack8
+1005 revAcc8Comp unstack8
+1006 brgt 1010
+1007 acc8= constant 103
+1008 writeLineAcc8
+1009 ;test5.j(130)     if (1+3 == twelve/(one+2)) println(104);
+1010 acc8= constant 1
+1011 acc8+ constant 3
+1012 <acc8
+1013 acc16= variable 10
+1014 <acc16= variable 2
+1015 acc16+ constant 2
+1016 /acc16 unstack16
+1017 acc8<
+1018 acc8CompareAcc16
+1019 brne 1023
+1020 acc8= constant 104
+1021 writeLineAcc8
+1022 ;test5.j(131)     if (1+2 != twelve/(one+2)) println(105);
+1023 acc8= constant 1
+1024 acc8+ constant 2
+1025 <acc8
+1026 acc16= variable 10
+1027 <acc16= variable 2
+1028 acc16+ constant 2
+1029 /acc16 unstack16
+1030 acc8<
+1031 acc8CompareAcc16
+1032 breq 1036
+1033 acc8= constant 105
+1034 writeLineAcc8
+1035 ;test5.j(132)     if (1+2 < twelve/(one+2)) println(106);
+1036 acc8= constant 1
+1037 acc8+ constant 2
+1038 <acc8
+1039 acc16= variable 10
+1040 <acc16= variable 2
+1041 acc16+ constant 2
+1042 /acc16 unstack16
+1043 acc8<
+1044 acc8CompareAcc16
+1045 brge 1049
+1046 acc8= constant 106
+1047 writeLineAcc8
+1048 ;test5.j(133)     if (1+4 > twelve/(one+2)) println(107);
+1049 acc8= constant 1
+1050 acc8+ constant 4
+1051 <acc8
+1052 acc16= variable 10
+1053 <acc16= variable 2
+1054 acc16+ constant 2
+1055 /acc16 unstack16
+1056 acc8<
+1057 acc8CompareAcc16
+1058 brle 1062
+1059 acc8= constant 107
+1060 writeLineAcc8
+1061 ;test5.j(134)     if (1+2 <= twelve/(one+2)) println(108);
+1062 acc8= constant 1
+1063 acc8+ constant 2
+1064 <acc8
+1065 acc16= variable 10
+1066 <acc16= variable 2
+1067 acc16+ constant 2
+1068 /acc16 unstack16
+1069 acc8<
+1070 acc8CompareAcc16
+1071 brgt 1075
+1072 acc8= constant 108
+1073 writeLineAcc8
+1074 ;test5.j(135)     if (1+3 <= twelve/(one+2)) println(109);
+1075 acc8= constant 1
+1076 acc8+ constant 3
+1077 <acc8
+1078 acc16= variable 10
+1079 <acc16= variable 2
+1080 acc16+ constant 2
+1081 /acc16 unstack16
+1082 acc8<
+1083 acc8CompareAcc16
+1084 brgt 1088
+1085 acc8= constant 109
+1086 writeLineAcc8
+1087 ;test5.j(136)     if (1+3 >= twelve/(one+2)) println(110);
+1088 acc8= constant 1
+1089 acc8+ constant 3
+1090 <acc8
+1091 acc16= variable 10
+1092 <acc16= variable 2
+1093 acc16+ constant 2
+1094 /acc16 unstack16
+1095 acc8<
+1096 acc8CompareAcc16
+1097 brlt 1101
+1098 acc8= constant 110
+1099 writeLineAcc8
+1100 ;test5.j(137)     if (1+4 >= twelve/(one+2)) println(111);
+1101 acc8= constant 1
+1102 acc8+ constant 4
+1103 <acc8
+1104 acc16= variable 10
+1105 <acc16= variable 2
+1106 acc16+ constant 2
+1107 /acc16 unstack16
+1108 acc8<
+1109 acc8CompareAcc16
+1110 brlt 1114
+1111 acc8= constant 111
+1112 writeLineAcc8
+1113 ;test5.j(138)     if (4 == 12/(1+2)) println(112);
+1114 acc8= constant 12
+1115 <acc8= constant 1
+1116 acc8+ constant 2
+1117 /acc8 unstack8
+1118 acc8Comp constant 4
+1119 brne 1123
+1120 acc8= constant 112
+1121 writeLineAcc8
+1122 ;test5.j(139)     if (3 != 12/(1+2)) println(113);
+1123 acc8= constant 12
+1124 <acc8= constant 1
+1125 acc8+ constant 2
+1126 /acc8 unstack8
+1127 acc8Comp constant 3
+1128 breq 1132
+1129 acc8= constant 113
+1130 writeLineAcc8
+1131 ;test5.j(140)     if (3 < 12/(1+2)) println(114);
+1132 acc8= constant 12
+1133 <acc8= constant 1
+1134 acc8+ constant 2
+1135 /acc8 unstack8
+1136 acc8Comp constant 3
+1137 brle 1141
+1138 acc8= constant 114
+1139 writeLineAcc8
+1140 ;test5.j(141)     if (5 > 12/(1+2)) println(115);
+1141 acc8= constant 12
+1142 <acc8= constant 1
+1143 acc8+ constant 2
+1144 /acc8 unstack8
+1145 acc8Comp constant 5
+1146 brge 1150
+1147 acc8= constant 115
+1148 writeLineAcc8
+1149 ;test5.j(142)     if (3 <= 12/(1+2)) println(116);
+1150 acc8= constant 12
+1151 <acc8= constant 1
+1152 acc8+ constant 2
+1153 /acc8 unstack8
+1154 acc8Comp constant 3
+1155 brlt 1159
+1156 acc8= constant 116
+1157 writeLineAcc8
+1158 ;test5.j(143)     if (4 <= 12/(1+2)) println(117);
+1159 acc8= constant 12
+1160 <acc8= constant 1
+1161 acc8+ constant 2
+1162 /acc8 unstack8
+1163 acc8Comp constant 4
+1164 brlt 1168
+1165 acc8= constant 117
+1166 writeLineAcc8
+1167 ;test5.j(144)     if (4 >= 12/(1+2)) println(118);
+1168 acc8= constant 12
+1169 <acc8= constant 1
+1170 acc8+ constant 2
+1171 /acc8 unstack8
+1172 acc8Comp constant 4
+1173 brgt 1177
+1174 acc8= constant 118
+1175 writeLineAcc8
+1176 ;test5.j(145)     if (5 >= 12/(1+2)) println(119);
+1177 acc8= constant 12
+1178 <acc8= constant 1
+1179 acc8+ constant 2
+1180 /acc8 unstack8
+1181 acc8Comp constant 5
+1182 brgt 1186
+1183 acc8= constant 119
+1184 writeLineAcc8
+1185 ;test5.j(146)     if (4 == twelve/(one+2)) println(120);
+1186 acc16= variable 10
+1187 <acc16= variable 2
+1188 acc16+ constant 2
+1189 /acc16 unstack16
+1190 acc8= constant 4
+1191 acc8CompareAcc16
+1192 brne 1196
+1193 acc8= constant 120
+1194 writeLineAcc8
+1195 ;test5.j(147)     if (3 != twelve/(one+2)) println(121);
+1196 acc16= variable 10
+1197 <acc16= variable 2
+1198 acc16+ constant 2
+1199 /acc16 unstack16
+1200 acc8= constant 3
+1201 acc8CompareAcc16
+1202 breq 1206
+1203 acc8= constant 121
+1204 writeLineAcc8
+1205 ;test5.j(148)     if (2 < twelve/(one+2)) println(122);
+1206 acc16= variable 10
+1207 <acc16= variable 2
+1208 acc16+ constant 2
+1209 /acc16 unstack16
+1210 acc8= constant 2
+1211 acc8CompareAcc16
+1212 brge 1216
+1213 acc8= constant 122
+1214 writeLineAcc8
+1215 ;test5.j(149)     if (5 > twelve/(one+2)) println(123);
+1216 acc16= variable 10
+1217 <acc16= variable 2
+1218 acc16+ constant 2
+1219 /acc16 unstack16
+1220 acc8= constant 5
+1221 acc8CompareAcc16
+1222 brle 1226
+1223 acc8= constant 123
+1224 writeLineAcc8
+1225 ;test5.j(150)     if (3 <= twelve/(one+2)) println(124);
+1226 acc16= variable 10
+1227 <acc16= variable 2
+1228 acc16+ constant 2
+1229 /acc16 unstack16
+1230 acc8= constant 3
+1231 acc8CompareAcc16
+1232 brgt 1236
+1233 acc8= constant 124
+1234 writeLineAcc8
+1235 ;test5.j(151)     if (4 <= twelve/(one+2)) println(125);
+1236 acc16= variable 10
+1237 <acc16= variable 2
+1238 acc16+ constant 2
+1239 /acc16 unstack16
+1240 acc8= constant 4
+1241 acc8CompareAcc16
+1242 brgt 1246
+1243 acc8= constant 125
+1244 writeLineAcc8
+1245 ;test5.j(152)     if (4 >= twelve/(one+2)) println(126);
+1246 acc16= variable 10
+1247 <acc16= variable 2
+1248 acc16+ constant 2
+1249 /acc16 unstack16
+1250 acc8= constant 4
+1251 acc8CompareAcc16
+1252 brlt 1256
+1253 acc8= constant 126
+1254 writeLineAcc8
+1255 ;test5.j(153)     if (5 >= twelve/(one+2)) println(127);
+1256 acc16= variable 10
+1257 <acc16= variable 2
+1258 acc16+ constant 2
+1259 /acc16 unstack16
+1260 acc8= constant 5
+1261 acc8CompareAcc16
+1262 brlt 1266
+1263 acc8= constant 127
+1264 writeLineAcc8
+1265 ;test5.j(154)     if (four == 0 + 12/(1 + 2)) println(128);
+1266 acc8= constant 0
+1267 <acc8= constant 12
+1268 <acc8= constant 1
+1269 acc8+ constant 2
+1270 /acc8 unstack8
+1271 acc8+ unstack8
+1272 acc16= variable 6
+1273 acc16CompareAcc8
+1274 brne 1278
+1275 acc8= constant 128
+1276 writeLineAcc8
+1277 ;test5.j(155)     if (four == 0 + 12/(1 + 2)) println(129);
+1278 acc8= constant 0
+1279 <acc8= constant 12
+1280 <acc8= constant 1
+1281 acc8+ constant 2
+1282 /acc8 unstack8
+1283 acc8+ unstack8
+1284 acc16= variable 6
+1285 acc16CompareAcc8
+1286 brne 1290
+1287 acc8= constant 129
+1288 writeLineAcc8
+1289 ;test5.j(156)     if (four == 0 + 12/(byteOne + 2)) println(130);
+1290 acc8= constant 0
+1291 <acc8= constant 12
+1292 <acc8= variable 12
+1293 acc8+ constant 2
+1294 /acc8 unstack8
+1295 acc8+ unstack8
+1296 acc16= variable 6
+1297 acc16CompareAcc8
+1298 brne 1302
+1299 acc8= constant 130
+1300 writeLineAcc8
+1301 ;test5.j(157)     if (four == 0 + 12/(one + 2)) println(131);
+1302 acc8= constant 0
+1303 <acc8= constant 12
+1304 acc16= variable 2
+1305 acc16+ constant 2
+1306 /acc16 acc8
+1307 acc16+ unstack8
+1308 acc16Comp variable 6
+1309 brne 1313
+1310 acc8= constant 131
+1311 writeLineAcc8
+1312 ;test5.j(158)     if (4 == zero + twelve/(1+2)) println(132);
+1313 acc16= variable 0
+1314 <acc16= variable 10
+1315 acc8= constant 1
+1316 acc8+ constant 2
+1317 acc16/ acc8
+1318 acc16+ unstack16
+1319 acc8= constant 4
+1320 acc8CompareAcc16
+1321 brne 1328
+1322 acc8= constant 132
+1323 writeLineAcc8
+1324 ;test5.j(159)   
+1325 ;test5.j(160)     /************************/
+1326 ;test5.j(161)     // global variable b used within if scope
+1327 ;test5.j(162)     b = 133;
+1328 acc8= constant 133
+1329 acc8=> variable 14
+1330 ;test5.j(163)     if (b>132) {
+1331 acc8= variable 14
+1332 acc8Comp constant 132
+1333 brle 1350
+1334 ;test5.j(164)       word j = 1001;
+1335 acc16= constant 1001
+1336 acc16=> (basePointer + -2)
+1337 ;test5.j(165)       byte c = b;
+1338 acc8= variable 14
+1339 acc8=> (basePointer + -3)
+1340 ;test5.j(166)       byte d = c;
+1341 acc8= (basePointer + -3)
+1342 acc8=> (basePointer + -4)
+1343 ;test5.j(167)       b--;
+1344 decr8 variable 14
+1345 ;test5.j(168)       println (c);
+1346 acc8= (basePointer + -3)
+1347 writeLineAcc8
+1348 ;test5.j(169)     } else {
+1349 br 1357
+1350 ;test5.j(170)       println(999);
+1351 acc16= constant 999
+1352 writeLineAcc16
+1353 ;test5.j(171)     }
+1354 ;test5.j(172)   
+1355 ;test5.j(173)     /************************/
+1356 ;test5.j(174)     println (134);
+1357 acc8= constant 134
+1358 writeLineAcc8
+1359 ;test5.j(175)     println("Klaar");
+1360 acc16= stringconstant 1367
+1361 writeLineString
+1362 stackPointer= basePointer
+1363 basePointer<
+1364 return
+1365 ;test5.j(176)   }
+1366 ;test5.j(177) }
+1367 stringConstant 0 = "Klaar"

@@ -5,8 +5,13 @@
    4 class TestEmptyClass []
    5 ;TestEmptyClass.j(2) 
    6 ;TestEmptyClass.j(3)   public static void main() {
-   7 method main [public, static] void
-   8 ;TestEmptyClass.j(4)     ;
-   9 return
-  10 ;TestEmptyClass.j(5)   }
-  11 ;TestEmptyClass.j(6) }
+   7 method main [public, static] void ()
+   8 <basePointer
+   9 basePointer= stackPointer
+  10 stackPointer+ constant 0
+  11 ;TestEmptyClass.j(4)     ;
+  12 stackPointer= basePointer
+  13 basePointer<
+  14 return
+  15 ;TestEmptyClass.j(5)   }
+  16 ;TestEmptyClass.j(6) }

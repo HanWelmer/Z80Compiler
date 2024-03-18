@@ -7,7 +7,7 @@
    6 ;FinalVolatileModifier.j(4) class FinalVolatileModifier {
    7 class FinalVolatileModifier []
    8 ;FinalVolatileModifier.j(5)   public static void main() {
-   9 method main [public, static] void
+   9 method main [public, static] void ()
   10 ;FinalVolatileModifier.j(6)     final volatile byte b = 1;
   11 acc8= constant 1
   12 acc8=> variable 0

@@ -5,21 +5,26 @@
    4 class TestExpression []
    5 ;TestExpression.j(2) 
    6 ;TestExpression.j(3)   public static void main() {
-   7 method main [public, static] void
-   8 ;TestExpression.j(4)     println(1);
-   9 acc8= constant 1
-  10 call writeLineAcc8
-  11 ;TestExpression.j(5)     byte b = 1;
+   7 method main [public, static] void ()
+   8 <basePointer
+   9 basePointer= stackPointer
+  10 stackPointer+ constant 1
+  11 ;TestExpression.j(4)     println(1);
   12 acc8= constant 1
-  13 acc8=> variable 0
-  14 ;TestExpression.j(6)     ;
-  15 ;TestExpression.j(7)     println(2);
-  16 acc8= constant 2
-  17 call writeLineAcc8
-  18 ;TestExpression.j(8)     println("Klaar.");
-  19 acc16= stringconstant 24
-  20 writeLineString
-  21 return
-  22 ;TestExpression.j(9)   }
-  23 ;TestExpression.j(10) }
-  24 stringConstant 0 = "Klaar."
+  13 writeLineAcc8
+  14 ;TestExpression.j(5)     byte b = 1;
+  15 acc8= constant 1
+  16 acc8=> (basePointer + -1)
+  17 ;TestExpression.j(6)     ;
+  18 ;TestExpression.j(7)     println(2);
+  19 acc8= constant 2
+  20 writeLineAcc8
+  21 ;TestExpression.j(8)     println("Klaar.");
+  22 acc16= stringconstant 29
+  23 writeLineString
+  24 stackPointer= basePointer
+  25 basePointer<
+  26 return
+  27 ;TestExpression.j(9)   }
+  28 ;TestExpression.j(10) }
+  29 stringConstant 0 = "Klaar."

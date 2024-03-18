@@ -10,11 +10,16 @@
    9 ;TestImportMeAll.j(6) class TestImportMeAll {
   10 class TestImportMeAll []
   11 ;TestImportMeAll.j(7)   public static void main() {
-  12 method main [public, static] void
-  13 ;TestImportMeAll.j(8)     println("Klaar");
-  14 acc16= stringconstant 19
-  15 writeLineString
-  16 return
-  17 ;TestImportMeAll.j(9)   }
-  18 ;TestImportMeAll.j(10) }
-  19 stringConstant 0 = "Klaar"
+  12 method main [public, static] void ()
+  13 <basePointer
+  14 basePointer= stackPointer
+  15 stackPointer+ constant 0
+  16 ;TestImportMeAll.j(8)     println("Klaar");
+  17 acc16= stringconstant 24
+  18 writeLineString
+  19 stackPointer= basePointer
+  20 basePointer<
+  21 return
+  22 ;TestImportMeAll.j(9)   }
+  23 ;TestImportMeAll.j(10) }
+  24 stringConstant 0 = "Klaar"

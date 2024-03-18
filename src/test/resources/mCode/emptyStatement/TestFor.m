@@ -5,60 +5,65 @@
    4 class TestFor []
    5 ;TestFor.j(2) 
    6 ;TestFor.j(3)   public static void main() {
-   7 method main [public, static] void
-   8 ;TestFor.j(4)     println(1);
-   9 acc8= constant 1
-  10 call writeLineAcc8
-  11 ;TestFor.j(5)     for (byte b = 1; b < 2; b++) {
+   7 method main [public, static] void ()
+   8 <basePointer
+   9 basePointer= stackPointer
+  10 stackPointer+ constant 1
+  11 ;TestFor.j(4)     println(1);
   12 acc8= constant 1
-  13 acc8=> variable 0
-  14 acc8= variable 0
-  15 acc8Comp constant 2
-  16 brge 24
-  17 br 20
-  18 incr8 variable 0
-  19 br 14
-  20 ;TestFor.j(6)       ;
-  21 br 18
-  22 ;TestFor.j(7)     }
-  23 ;TestFor.j(8)     println(2);
-  24 acc8= constant 2
-  25 call writeLineAcc8
-  26 ;TestFor.j(9)     for (byte b = 1; b < 2; b++) ;
-  27 acc8= constant 1
-  28 acc8=> variable 0
-  29 acc8= variable 0
-  30 acc8Comp constant 2
-  31 brge 37
-  32 br 35
-  33 incr8 variable 0
-  34 br 29
-  35 br 33
-  36 ;TestFor.j(10)     println(3);
-  37 acc8= constant 3
-  38 call writeLineAcc8
-  39 ;TestFor.j(11)     for (byte b = 1; b < 2;) {
-  40 acc8= constant 1
-  41 acc8=> variable 0
-  42 acc8= variable 0
-  43 acc8Comp constant 2
-  44 brge 55
-  45 br 47
-  46 br 42
-  47 ;TestFor.j(12)       println(4);
-  48 acc8= constant 4
-  49 call writeLineAcc8
-  50 ;TestFor.j(13)       b++;
-  51 incr8 variable 0
-  52 br 46
-  53 ;TestFor.j(14)     }
-  54 ;TestFor.j(15)     println(5);
-  55 acc8= constant 5
-  56 call writeLineAcc8
-  57 ;TestFor.j(16)     println("Klaar.");
-  58 acc16= stringconstant 63
-  59 writeLineString
-  60 return
-  61 ;TestFor.j(17)   }
-  62 ;TestFor.j(18) }
-  63 stringConstant 0 = "Klaar."
+  13 writeLineAcc8
+  14 ;TestFor.j(5)     for (byte b = 1; b < 2; b++) {
+  15 acc8= constant 1
+  16 acc8=> (basePointer + -1)
+  17 acc8= (basePointer + -1)
+  18 acc8Comp constant 2
+  19 brge 27
+  20 br 23
+  21 incr8 (basePointer + -1)
+  22 br 17
+  23 ;TestFor.j(6)       ;
+  24 br 21
+  25 ;TestFor.j(7)     }
+  26 ;TestFor.j(8)     println(2);
+  27 acc8= constant 2
+  28 writeLineAcc8
+  29 ;TestFor.j(9)     for (byte b = 1; b < 2; b++) ;
+  30 acc8= constant 1
+  31 acc8=> (basePointer + -1)
+  32 acc8= (basePointer + -1)
+  33 acc8Comp constant 2
+  34 brge 40
+  35 br 38
+  36 incr8 (basePointer + -1)
+  37 br 32
+  38 br 36
+  39 ;TestFor.j(10)     println(3);
+  40 acc8= constant 3
+  41 writeLineAcc8
+  42 ;TestFor.j(11)     for (byte b = 1; b < 2;) {
+  43 acc8= constant 1
+  44 acc8=> (basePointer + -1)
+  45 acc8= (basePointer + -1)
+  46 acc8Comp constant 2
+  47 brge 58
+  48 br 50
+  49 br 45
+  50 ;TestFor.j(12)       println(4);
+  51 acc8= constant 4
+  52 writeLineAcc8
+  53 ;TestFor.j(13)       b++;
+  54 incr8 (basePointer + -1)
+  55 br 49
+  56 ;TestFor.j(14)     }
+  57 ;TestFor.j(15)     println(5);
+  58 acc8= constant 5
+  59 writeLineAcc8
+  60 ;TestFor.j(16)     println("Klaar.");
+  61 acc16= stringconstant 68
+  62 writeLineString
+  63 stackPointer= basePointer
+  64 basePointer<
+  65 return
+  66 ;TestFor.j(17)   }
+  67 ;TestFor.j(18) }
+  68 stringConstant 0 = "Klaar."

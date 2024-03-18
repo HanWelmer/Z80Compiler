@@ -14,11 +14,16 @@
   13 ;TestImportNotFound.j(8) class TestImportNotFound {
   14 class TestImportNotFound []
   15 ;TestImportNotFound.j(9)   public static void main() {
-  16 method main [public, static] void
-  17 ;TestImportNotFound.j(10)     println("TestImportNotFound Klaar");
-  18 acc16= stringconstant 23
-  19 writeLineString
-  20 return
-  21 ;TestImportNotFound.j(11)   }
-  22 ;TestImportNotFound.j(12) }
-  23 stringConstant 0 = "TestImportNotFound Klaar"
+  16 method main [public, static] void ()
+  17 <basePointer
+  18 basePointer= stackPointer
+  19 stackPointer+ constant 0
+  20 ;TestImportNotFound.j(10)     println("TestImportNotFound Klaar");
+  21 acc16= stringconstant 28
+  22 writeLineString
+  23 stackPointer= basePointer
+  24 basePointer<
+  25 return
+  26 ;TestImportNotFound.j(11)   }
+  27 ;TestImportNotFound.j(12) }
+  28 stringConstant 0 = "TestImportNotFound Klaar"

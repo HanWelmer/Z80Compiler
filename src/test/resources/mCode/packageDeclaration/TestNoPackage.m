@@ -7,11 +7,16 @@
    6 ;TestNoPackage.j(4) class TestNoPackage {
    7 class TestNoPackage []
    8 ;TestNoPackage.j(5)   public static void main() {
-   9 method main [public, static] void
-  10 ;TestNoPackage.j(6)     println("Klaar");
-  11 acc16= stringconstant 16
-  12 writeLineString
-  13 return
-  14 ;TestNoPackage.j(7)   }
-  15 ;TestNoPackage.j(8) }
-  16 stringConstant 0 = "Klaar"
+   9 method main [public, static] void ()
+  10 <basePointer
+  11 basePointer= stackPointer
+  12 stackPointer+ constant 0
+  13 ;TestNoPackage.j(6)     println("Klaar");
+  14 acc16= stringconstant 21
+  15 writeLineString
+  16 stackPointer= basePointer
+  17 basePointer<
+  18 return
+  19 ;TestNoPackage.j(7)   }
+  20 ;TestNoPackage.j(8) }
+  21 stringConstant 0 = "Klaar"

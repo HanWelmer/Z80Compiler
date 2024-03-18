@@ -10,11 +10,16 @@
    9 ;me\to\TestPackageMeTo.j(6) class TestPackageMeTo {
   10 class TestPackageMeTo []
   11 ;me\to\TestPackageMeTo.j(7)   public static void main() {
-  12 method main [public, static] void
-  13 ;me\to\TestPackageMeTo.j(8)     println("Klaar");
-  14 acc16= stringconstant 19
-  15 writeLineString
-  16 return
-  17 ;me\to\TestPackageMeTo.j(9)   }
-  18 ;me\to\TestPackageMeTo.j(10) }
-  19 stringConstant 0 = "Klaar"
+  12 method main [public, static] void ()
+  13 <basePointer
+  14 basePointer= stackPointer
+  15 stackPointer+ constant 0
+  16 ;me\to\TestPackageMeTo.j(8)     println("Klaar");
+  17 acc16= stringconstant 24
+  18 writeLineString
+  19 stackPointer= basePointer
+  20 basePointer<
+  21 return
+  22 ;me\to\TestPackageMeTo.j(9)   }
+  23 ;me\to\TestPackageMeTo.j(10) }
+  24 stringConstant 0 = "Klaar"
