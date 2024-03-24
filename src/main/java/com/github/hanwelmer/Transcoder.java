@@ -402,6 +402,12 @@ public class Transcoder {
       word = instruction.operand.intValue;
       byt = instruction.operand.intValue % 256;
     }
+    if (word < 0) {
+      word = 65536 + word;
+    }
+    if (byt < 0) {
+      byt = 256 + byt;
+    }
     int memAddress = MEM_START + word;
     AssemblyInstruction asm = null;
 
@@ -567,7 +573,7 @@ public class Transcoder {
         if (instruction.operand.datatype == Datatype.string && instruction.operand.opType == OperandType.CONSTANT) {
           putLabelReference(word, byteAddress);
         }
-        asm = operandToHL(instruction);
+        result.addAll(operandToHL(instruction));
         break;
       case acc16Or:
         if (instruction.operand.opType == OperandType.ACC && instruction.operand.datatype == Datatype.byt) {
@@ -673,6 +679,16 @@ public class Transcoder {
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,L", 0x7D));
           asmCode = String.format(INDENT + "LD    (0%04XH),A", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x32, memAddress % 256, memAddress / 256);
+        } else if ((instruction.operand.opType == OperandType.LOCAL_VAR)
+            && (instruction.operand.datatype == Datatype.word || instruction.operand.datatype == Datatype.string)) {
+          asmCode = String.format(INDENT + "LD    (IX + 0%02XH),L", byt);
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x75, byt);
+          result.add(asm);
+          byteAddress += asm.getBytes().size();
+          byt++;
+          asmCode = String.format(INDENT + "LD    (IX + 0%02XH),H", byt);
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x74, byt);
+          byt--;
         } else {
           throw new RuntimeException("illegal M-code instruction: " + instruction + " " + instruction.operand);
         }
@@ -925,6 +941,9 @@ public class Transcoder {
           byteAddress++;
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
+        } else if ((instruction.operand.opType == OperandType.LOCAL_VAR) && (instruction.operand.datatype == Datatype.byt)) {
+          asmCode = String.format(INDENT + "LD    (IX + 0%02XH),A", byt);
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x77, byt);
         } else {
           throw new RuntimeException("illegal M-code instruction: " + instruction);
         }
@@ -1035,9 +1054,7 @@ public class Transcoder {
         break;
       case decrement16:
         if (instruction.operand.opType == OperandType.GLOBAL_VAR) {
-          asm = operandToHL(instruction);
-          result.add(asm);
-          byteAddress += asm.getBytes().size();
+          result.addAll(operandToHL(instruction));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "DEC   HL", 0x2B));
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
@@ -1047,9 +1064,7 @@ public class Transcoder {
         break;
       case decrement8:
         if (instruction.operand.opType == OperandType.GLOBAL_VAR) {
-          asm = operandToHL(instruction);
-          result.add(asm);
-          byteAddress += asm.getBytes().size();
+          result.addAll(operandToHL(instruction));
           asm = new AssemblyInstruction(byteAddress, INDENT + "DEC   (HL)", 0x35);
         } else {
           throw new RuntimeException("output with unsupported operandType for port operand");
@@ -1082,9 +1097,7 @@ public class Transcoder {
         break;
       case increment16:
         if (instruction.operand.opType == OperandType.GLOBAL_VAR) {
-          asm = operandToHL(instruction);
-          result.add(asm);
-          byteAddress += asm.getBytes().size();
+          result.addAll(operandToHL(instruction));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "INC   HL", 0x23));
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
@@ -1094,9 +1107,7 @@ public class Transcoder {
         break;
       case increment8:
         if (instruction.operand.opType == OperandType.GLOBAL_VAR) {
-          asm = operandToHL(instruction);
-          result.add(asm);
-          byteAddress += asm.getBytes().size();
+          result.addAll(operandToHL(instruction));
           asm = new AssemblyInstruction(byteAddress, INDENT + "INC   (HL)", 0x34);
         } else {
           throw new RuntimeException("output with unsupported operandType for port operand");
@@ -1141,9 +1152,7 @@ public class Transcoder {
           asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  sleepA", 0xCD, 0, 0);
         } else if (instruction.operand.datatype == Datatype.word) {
           if (instruction.operand.opType != OperandType.ACC) {
-            asm = operandToHL(instruction);
-            result.add(asm);
-            byteAddress += asm.getBytes().size();
+            result.addAll(operandToHL(instruction));
           }
           putLabelReference("sleepHL", byteAddress);
           asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  sleepHL", 0xCD, 0, 0);
@@ -1159,7 +1168,7 @@ public class Transcoder {
         if (instruction.operand.opType == OperandType.STACK16) {
           throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
         }
-        asm = operandToHL(instruction);
+        result.addAll(operandToHL(instruction));
         break;
       case stackAcc16ToAcc8:
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  AF", 0xF5));
@@ -1181,7 +1190,7 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00);
         break;
       case stackBasePointer:
-        asm = new AssemblyInstruction(byteAddress++, INDENT + "PUSH  IX", 0xDD, 0xE5);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH  IX", 0xDD, 0xE5);
         break;
       case stackPointerLoad:
         if (instruction.operand.opType == OperandType.BASE_POINTER) {
@@ -1192,8 +1201,12 @@ public class Transcoder {
         break;
       case stackPointerPlus:
         if (instruction.operand.opType == OperandType.CONSTANT) {
-          result.add(new AssemblyInstruction(byteAddress, INDENT + "LD    HL," + instruction.operand.intValue, 0x21,
-              instruction.operand.intValue % 256, instruction.operand.intValue / 256));
+          // In the M-code interpreter the stack grows upwards (stackpointer
+          // increases). However, in the Z80 the stack grows downwards
+          // (stackpointer decreases). Therefore, calculate the 2's complement
+          // of the operand value and add that to SP.
+          word = 65536 - word;
+          result.add(new AssemblyInstruction(byteAddress, INDENT + "LD    HL," + word, 0x21, word % 256, word / 256));
           byteAddress += 3;
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "ADD   HL,SP", 0x39));
           asm = new AssemblyInstruction(byteAddress, INDENT + "LD    SP,HL", 0xF9);
@@ -1212,7 +1225,7 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, INDENT + "POP  AF", 0xF1);
         break;
       case unstackBasePointer:
-        asm = new AssemblyInstruction(byteAddress++, INDENT + "POP   IX", 0xDD, 0xE1);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "POP   IX", 0xDD, 0xE1);
         break;
       case writeAcc16:
         putLabelReference("writeHL", byteAddress);
@@ -1243,9 +1256,11 @@ public class Transcoder {
     }
 
     // add assembly code to output and update byte address.
-    result.add(asm);
-    if (asm.getBytes() != null) {
-      byteAddress += asm.getBytes().size();
+    if (asm != null) {
+      result.add(asm);
+      if (asm.getBytes() != null) {
+        byteAddress += asm.getBytes().size();
+      }
     }
 
     // when debugging, log generated assembly code.
@@ -1280,6 +1295,14 @@ public class Transcoder {
         asmCode = String.format(INDENT + "LD    A,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x3A, memAddress % 256, memAddress / 256);
         break;
+      case LOCAL_VAR:
+        int byt = operand.intValue % 256;
+        if (byt < 0) {
+          byt = 256 + byt;
+        }
+        asmCode = String.format(INDENT + "LD    A,(IX + 0%02XH)", byt);
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x7E, byt);
+        break;
       case CONSTANT:
         asmCode = INDENT + "LD    A," + operand.intValue;
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x3E, operand.intValue % 256);
@@ -1294,7 +1317,8 @@ public class Transcoder {
     return asm;
   }
 
-  private AssemblyInstruction operandToHL(Instruction instruction) {
+  private ArrayList<AssemblyInstruction> operandToHL(Instruction instruction) {
+    ArrayList<AssemblyInstruction> result = new ArrayList<AssemblyInstruction>();
     String asmCode = null;
     AssemblyInstruction asm = null;
     switch (instruction.operand.opType) {
@@ -1302,6 +1326,20 @@ public class Transcoder {
         int memAddress = MEM_START + instruction.operand.intValue;
         asmCode = String.format(INDENT + "LD    HL,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
+        break;
+      case LOCAL_VAR:
+        int byt = instruction.operand.intValue % 256;
+        if (byt < 0) {
+          byt = 256 + byt;
+        }
+        asmCode = String.format(INDENT + "LD    L,(IX + 0%02XH)", byt);
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x6E, byt);
+        byt++;
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
+        asmCode = String.format(INDENT + "LD    H,(IX + 0%02XH)", byt);
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x66, byt);
+        byt--;
         break;
       case CONSTANT:
         if (instruction.operand.datatype == Datatype.string) {
@@ -1319,7 +1357,9 @@ public class Transcoder {
       default:
         throw new RuntimeException(String.format("unsupported operand type %s for loading into HL", instruction.operand.opType));
     }
-    return asm;
+    result.add(asm);
+    byteAddress += asm.getBytes().size();
+    return result;
   }
 
   private AssemblyInstruction operandToDE(Instruction instruction) {

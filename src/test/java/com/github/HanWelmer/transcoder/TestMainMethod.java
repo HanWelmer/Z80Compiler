@@ -38,5 +38,4 @@ public class TestMainMethod extends AbstractTranscoderTest {
     assertTrue(code.get(830).getBytes().get(1) == (byte) 0x18);
     assertTrue(code.get(830).getBytes().get(2) == 0x22);
   }
-
 }
