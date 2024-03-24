@@ -23,7 +23,7 @@ public class TestMainMethod extends AbstractTranscoderTest {
     assertTrue("        LD    HL,L36".equals(code.get(791).getCode()));
     assertTrue(code.get(791).getBytes().size() == 3);
     assertTrue(code.get(791).getBytes().get(0) == 0x21);
-    assertTrue(code.get(791).getBytes().get(1) == (byte) 0x11);
+    assertTrue(code.get(791).getBytes().get(1) == (byte) 0x0d);
     assertTrue(code.get(791).getBytes().get(2) == 0x22);
 
     assertTrue("        CALL  L6".equals(code.get(826).getCode()));
@@ -35,7 +35,7 @@ public class TestMainMethod extends AbstractTranscoderTest {
     assertTrue("        LD    HL,L38".equals(code.get(830).getCode()));
     assertTrue(code.get(830).getBytes().size() == 3);
     assertTrue(code.get(830).getBytes().get(0) == 0x21);
-    assertTrue(code.get(830).getBytes().get(1) == (byte) 0x18);
+    assertTrue(code.get(830).getBytes().get(1) == (byte) 0x14);
     assertTrue(code.get(830).getBytes().get(2) == 0x22);
   }
 }

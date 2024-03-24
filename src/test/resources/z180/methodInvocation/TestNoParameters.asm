@@ -783,7 +783,7 @@ L8:
         LD    IX,0x0000
         ADD   IX,SP
 L9:
-        LD    HL,0
+        LD    HL,65536
         ADD   HL,SP
         LD    SP,HL
 L10:
@@ -812,7 +812,7 @@ L21:
         LD    IX,0x0000
         ADD   IX,SP
 L22:
-        LD    HL,0
+        LD    HL,65536
         ADD   HL,SP
         LD    SP,HL
 L23:
