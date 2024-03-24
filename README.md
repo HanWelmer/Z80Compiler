@@ -15,7 +15,7 @@ The project was developed using:
 * mvn test
 
 ## Usage:
-`Z80Compiler [-Z80] [-b] [-d] source.j`
+`Z80Compiler [-b] [-d] [-r] [-v] [-z] source.j`
 
 `where:`
 
@@ -27,6 +27,6 @@ The project was developed using:
 
 `-v verbose: issue feedback messages during compilation`
 
-`-z generate Z80 assembler output`
+`-z generate Z80S180 assembler output`
 
 `source.j input sourcecode file in miniJava programming language`
