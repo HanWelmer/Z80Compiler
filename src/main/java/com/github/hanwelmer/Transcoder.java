@@ -1058,8 +1058,17 @@ public class Transcoder {
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "DEC   HL", 0x2B));
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
+        } else if (instruction.operand.opType == OperandType.LOCAL_VAR) {
+          asmCode = String.format(INDENT + "INC   (IX + 0%02XH)", byt);
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x34, byt));
+          byteAddress += 3;
+          asmCode = String.format(INDENT + "JR    NZ,$+2");
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0x20, 0x02));
+          byteAddress += 2;
+          asmCode = String.format(INDENT + "INC   (IX + 0%02XH)", byt - 1);
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x34, byt - 1);
         } else {
-          throw new RuntimeException("output with unsupported operandType for port operand");
+          throw new RuntimeException("decrement16 with unsupported operandType");
         }
         break;
       case decrement8:
@@ -1067,7 +1076,7 @@ public class Transcoder {
           result.addAll(operandToHL(instruction));
           asm = new AssemblyInstruction(byteAddress, INDENT + "DEC   (HL)", 0x35);
         } else {
-          throw new RuntimeException("output with unsupported operandType for port operand");
+          throw new RuntimeException("decrement8 with unsupported operandType");
         }
         break;
       case divAcc8:
@@ -1102,7 +1111,7 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
         } else {
-          throw new RuntimeException("output with unsupported operandType for port operand");
+          throw new RuntimeException("increment16 with unsupported operandType");
         }
         break;
       case increment8:
@@ -1110,7 +1119,7 @@ public class Transcoder {
           result.addAll(operandToHL(instruction));
           asm = new AssemblyInstruction(byteAddress, INDENT + "INC   (HL)", 0x34);
         } else {
-          throw new RuntimeException("output with unsupported operandType for port operand");
+          throw new RuntimeException("increment8 with unsupported operandType");
         }
         break;
       case input:
