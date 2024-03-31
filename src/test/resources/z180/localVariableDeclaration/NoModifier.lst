@@ -797,11 +797,11 @@
 21E1             L14:
 21E1 3E 01               LD    A,1
 21E3             L15:
-21E3 DD 77 FF            LD    (IX + 0FFH),A
+21E3 DD 77 FF            LD    (IX - 001H),A
 21E6             L16:
 21E6                     ;;NoModifier.j(7)     println(b);
 21E6             L17:
-21E6 DD 7E FF            LD    A,(IX + 0FFH)
+21E6 DD 7E FF            LD    A,(IX - 001H)
 21E9             L18:
 21E9 CD BE 21            CALL  writeLineA
 21EC             L19:
@@ -830,25 +830,25 @@
 21FE             L29:
 21FE 3E 02               LD    A,2
 2200             L30:
-2200 DD 77 FF            LD    (IX + 0FFH),A
+2200 DD 77 FF            LD    (IX - 001H),A
 2203             L31:
 2203                     ;;NoModifier.j(11)     word w = 3333;
 2203             L32:
 2203 21 05 0D            LD    HL,3333
 2206             L33:
-2206 DD 75 FD            LD    (IX + 0FDH),L
-2209 DD 74 FE            LD    (IX + 0FEH),H
+2206 DD 75 FD            LD    (IX - 003H),L
+2209 DD 74 FE            LD    (IX - 002H),H
 220C             L34:
 220C                     ;;NoModifier.j(12)     println(b);
 220C             L35:
-220C DD 7E FF            LD    A,(IX + 0FFH)
+220C DD 7E FF            LD    A,(IX - 001H)
 220F             L36:
 220F CD BE 21            CALL  writeLineA
 2212             L37:
 2212                     ;;NoModifier.j(13)     println(w);
 2212             L38:
-2212 DD 6E FD            LD    L,(IX + 0FDH)
-2215 DD 66 FE            LD    H,(IX + 0FEH)
+2212 DD 6E FD            LD    L,(IX - 003H)
+2215 DD 66 FE            LD    H,(IX - 002H)
 2218             L39:
 2218 CD 96 21            CALL  writeLineHL
 221B             L40:
@@ -877,25 +877,25 @@
 222D             L50:
 222D 21 B3 15            LD    HL,5555
 2230             L51:
-2230 DD 75 FE            LD    (IX + 0FEH),L
-2233 DD 74 FF            LD    (IX + 0FFH),H
+2230 DD 75 FE            LD    (IX - 002H),L
+2233 DD 74 FF            LD    (IX - 001H),H
 2236             L52:
 2236                     ;;NoModifier.j(17)     byte b = 4;
 2236             L53:
 2236 3E 04               LD    A,4
 2238             L54:
-2238 DD 77 FD            LD    (IX + 0FDH),A
+2238 DD 77 FD            LD    (IX - 003H),A
 223B             L55:
 223B                     ;;NoModifier.j(18)     println(b);
 223B             L56:
-223B DD 7E FD            LD    A,(IX + 0FDH)
+223B DD 7E FD            LD    A,(IX - 003H)
 223E             L57:
 223E CD BE 21            CALL  writeLineA
 2241             L58:
 2241                     ;;NoModifier.j(19)     println(w);
 2241             L59:
-2241 DD 6E FE            LD    L,(IX + 0FEH)
-2244 DD 66 FF            LD    H,(IX + 0FFH)
+2241 DD 6E FE            LD    L,(IX - 002H)
+2244 DD 66 FF            LD    H,(IX - 001H)
 2247             L60:
 2247 CD 96 21            CALL  writeLineHL
 224A             L61:
@@ -924,13 +924,13 @@
 225C             L71:
 225C 21 A2 22            LD    HL,L107
 225F             L72:
-225F DD 75 FE            LD    (IX + 0FEH),L
-2262 DD 74 FF            LD    (IX + 0FFH),H
+225F DD 75 FE            LD    (IX - 002H),L
+2262 DD 74 FF            LD    (IX - 001H),H
 2265             L73:
 2265                     ;;NoModifier.j(23)     println(str);
 2265             L74:
-2265 DD 6E FE            LD    L,(IX + 0FEH)
-2268 DD 66 FF            LD    H,(IX + 0FFH)
+2265 DD 6E FE            LD    L,(IX - 002H)
+2268 DD 66 FF            LD    H,(IX - 001H)
 226B             L75:
 226B CD 43 20            CALL  writeLineStr
 226E             L76:
@@ -959,11 +959,11 @@
 2280             L86:
 2280 3E 00               LD    A,0
 2282             L87:
-2282 DD 77 FF            LD    (IX + 0FFH),A
+2282 DD 77 FF            LD    (IX - 001H),A
 2285             L88:
 2285                     ;;NoModifier.j(27)     println(b);
 2285             L89:
-2285 DD 7E FF            LD    A,(IX + 0FFH)
+2285 DD 7E FF            LD    A,(IX - 001H)
 2288             L90:
 2288 CD BE 21            CALL  writeLineA
 228B             L91:

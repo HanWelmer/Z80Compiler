@@ -797,11 +797,11 @@ L13:
 L14:
         LD    A,1
 L15:
-        LD    (IX + 0FFH),A
+        LD    (IX - 001H),A
 L16:
         ;;NoModifier.j(7)     println(b);
 L17:
-        LD    A,(IX + 0FFH)
+        LD    A,(IX - 001H)
 L18:
         CALL  writeLineA
 L19:
@@ -830,25 +830,25 @@ L28:
 L29:
         LD    A,2
 L30:
-        LD    (IX + 0FFH),A
+        LD    (IX - 001H),A
 L31:
         ;;NoModifier.j(11)     word w = 3333;
 L32:
         LD    HL,3333
 L33:
-        LD    (IX + 0FDH),L
-        LD    (IX + 0FEH),H
+        LD    (IX - 003H),L
+        LD    (IX - 002H),H
 L34:
         ;;NoModifier.j(12)     println(b);
 L35:
-        LD    A,(IX + 0FFH)
+        LD    A,(IX - 001H)
 L36:
         CALL  writeLineA
 L37:
         ;;NoModifier.j(13)     println(w);
 L38:
-        LD    L,(IX + 0FDH)
-        LD    H,(IX + 0FEH)
+        LD    L,(IX - 003H)
+        LD    H,(IX - 002H)
 L39:
         CALL  writeLineHL
 L40:
@@ -877,25 +877,25 @@ L49:
 L50:
         LD    HL,5555
 L51:
-        LD    (IX + 0FEH),L
-        LD    (IX + 0FFH),H
+        LD    (IX - 002H),L
+        LD    (IX - 001H),H
 L52:
         ;;NoModifier.j(17)     byte b = 4;
 L53:
         LD    A,4
 L54:
-        LD    (IX + 0FDH),A
+        LD    (IX - 003H),A
 L55:
         ;;NoModifier.j(18)     println(b);
 L56:
-        LD    A,(IX + 0FDH)
+        LD    A,(IX - 003H)
 L57:
         CALL  writeLineA
 L58:
         ;;NoModifier.j(19)     println(w);
 L59:
-        LD    L,(IX + 0FEH)
-        LD    H,(IX + 0FFH)
+        LD    L,(IX - 002H)
+        LD    H,(IX - 001H)
 L60:
         CALL  writeLineHL
 L61:
@@ -924,13 +924,13 @@ L70:
 L71:
         LD    HL,L107
 L72:
-        LD    (IX + 0FEH),L
-        LD    (IX + 0FFH),H
+        LD    (IX - 002H),L
+        LD    (IX - 001H),H
 L73:
         ;;NoModifier.j(23)     println(str);
 L74:
-        LD    L,(IX + 0FEH)
-        LD    H,(IX + 0FFH)
+        LD    L,(IX - 002H)
+        LD    H,(IX - 001H)
 L75:
         CALL  writeLineStr
 L76:
@@ -959,11 +959,11 @@ L85:
 L86:
         LD    A,0
 L87:
-        LD    (IX + 0FFH),A
+        LD    (IX - 001H),A
 L88:
         ;;NoModifier.j(27)     println(b);
 L89:
-        LD    A,(IX + 0FFH)
+        LD    A,(IX - 001H)
 L90:
         CALL  writeLineA
 L91:
