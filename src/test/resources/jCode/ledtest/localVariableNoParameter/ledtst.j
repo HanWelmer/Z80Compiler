@@ -2,6 +2,9 @@
 /* Transcribed from LEDTest.asm to ledtest.j */
 class LEDTest {
   /*******************************
+  To compile this class and generate Z80 asm, listing and hex files:
+  - cd src\test\resources\jCode\ledtest\localVariableNoParameter
+  - java -jar ..\..\..\..\..\..\target\z80Compiler-1.0-SNAPSHOT.jar -z -b ledtst.j
   Assumes that code can be run from internal RAM with 1 wait state.
   Assumes data can be read/written to internal RAM with 1 wait state.
   Assumes the Z80S183 is driven by an 18.432 MHz clock at the XTAL pin
@@ -119,14 +122,17 @@ class LEDTest {
   }
 
   /**
-   * wait 1 msec at 18,432 MHz with no wait states.
-   * With n=834 the routine requires 56+n*22 T-states, 
-   * so 28 clock cycles remain left.
+   * Wait 1 msec at 18,432 MHz with no wait states.
+   * 
+   * With n=255 the routine requires 108 + n * 71 = 18213 T-states, 
+   * which is 219 T-states or 11,8 microseconds short of 1 millisecond.
+   * 
+   * Duplicating the for loop with a total of 257 for n and m 
+   * requires 132 + (n + m) * 71 = 18379 T-states,
+   * which is 53 T-states or 2,8 microseconds short of 1 millisecond.
    */
   public static void sleepOneMillisecond() {
-    for (word n = 834; n!=0; n--) {
-      sleepMillisecond();
-    }
+    for (byte n = 255; n!=0; n--) ;
   }
 
   /**
