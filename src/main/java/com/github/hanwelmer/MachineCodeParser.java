@@ -93,9 +93,8 @@ public class MachineCodeParser {
         case call:
           result = parseCallFunction(line, functionType);
           break;
-        // instructions with one byte operand.
         /*******************************
-         * instructions without operands.
+         * instructions with one byte operand.
          */
         case acc8Load:
         case acc8Store:

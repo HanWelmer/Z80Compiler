@@ -1052,11 +1052,7 @@ public class pCompiler {
 
     // code generation
     setScopeSize(moveStackPointerAddress, identifiers.getScopeSize());
-    // release space on stack for local variables.
-    plantCode(new Instruction(FunctionType.stackPointerLoad, new Operand(OperandType.BASE_POINTER)));
-    // reset base pointer and return to caller
-    plantCode(new Instruction(FunctionType.unstackBasePointer));
-    plantThenSource(new Instruction(FunctionType.returnFunction));
+    generateReturnStatement();
 
     // semantic analysis: close the method level declaration scope.
     identifiers.closeScope();
@@ -1622,11 +1618,19 @@ public class pCompiler {
   private void returnStatement(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nreturnStatement: start with stopSet = " + stopSet);
 
-    // TODO implement returnStatement.
-    while (lexeme.type != LexemeType.semicolon) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
+    // Skip return lexeme.
     lexeme = lexemeReader.getLexeme(sourceCode);
+
+    // TODO implement returnStatement.
+    // For now, accept only empty return statement.
+    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
+      // code generation
+      plantSource();
+      generateReturnStatement();
+    } else {
+      error();
+      System.out.println(" Return statement with return value not supported.");
+    }
 
     debug("\nreturnStatement: end");
   }
@@ -2651,6 +2655,25 @@ public class pCompiler {
 
     debug("\nupdate: end");
   } // update()
+
+  /**
+   * Generate M-code for a return statement.
+   */
+  private void generateReturnStatement() {
+    // code generation
+
+    // do nothing, except logging processed source code lines, if previously
+    // generated statement is a return statement.
+    if (instructions.get(instructions.size() - 1).function == FunctionType.returnFunction) {
+      plantSource();
+    } else {
+      // release space on stack for local variables.
+      plantCode(new Instruction(FunctionType.stackPointerLoad, new Operand(OperandType.BASE_POINTER)));
+      // reset base pointer and return to caller
+      plantCode(new Instruction(FunctionType.unstackBasePointer));
+      plantThenSource(new Instruction(FunctionType.returnFunction));
+    }
+  }
 
   /**
    * Generate M-code for an assignment.

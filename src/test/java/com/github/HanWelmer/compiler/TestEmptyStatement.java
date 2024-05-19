@@ -75,7 +75,7 @@ public class TestEmptyStatement extends AbstactRegressionTest {
   }
 
   // TODO enable regression test TestReturn().
-  // @Test
+  @Test
   public void TestReturn() {
     assertTrue(singleTest("TestReturn.j"));
   }
