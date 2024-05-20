@@ -33,87 +33,87 @@ public class TestTheRest extends AbstactRegressionTest {
 
   @Test
   public void testPrint() {
-    assertTrue(singleTest("test0.j"));
+    assertTrue(singleTest("testPrint.j"));
   }
 
   // Note: has local variables!
   @Test
   public void testWhile() {
-    assertTrue(singleTest("test1.j"));
+    assertTrue(singleTest("testWhile.j"));
   }
 
   @Test
   public void testMultiply() {
-    assertTrue(singleTest("test3.j"));
+    assertTrue(singleTest("testMultiply.j"));
   }
 
   @Test
   public void testDivide() {
-    assertTrue(singleTest("test4.j"));
+    assertTrue(singleTest("testDivide.j"));
   }
 
   @Test
   public void testIf() {
-    assertTrue(singleTest("test2.j"));
+    assertTrue(singleTest("testIf.j"));
   }
 
   // Note: has local variables!
   @Test
   public void testComparison() {
-    assertTrue(singleTest("test5.j"));
+    assertTrue(singleTest("testComparison.j"));
   }
 
   @Test
   public void testExpression() {
-    assertTrue(singleTest("test6.j"));
+    assertTrue(singleTest("testExpression.j"));
   }
 
   @Test
   public void testRead() {
-    assertTrue(singleTest("test7.j"));
+    assertTrue(singleTest("testRead.j"));
   }
 
   @Test
   public void testReverseSubtractDivision() {
-    assertTrue(singleTest("test8.j"));
+    assertTrue(singleTest("testReverseSubtractDivision.j"));
   }
 
   @Test
   public void testMultiplyComparison() {
-    assertTrue(singleTest("test9.j"));
+    assertTrue(singleTest("testMultiplyComparison.j"));
   }
 
   // Note: has local variables!
   @Test
   public void testDo() {
-    assertTrue(singleTest("test10.j"));
+    assertTrue(singleTest("testDo.j"));
   }
 
   // Note: has local variables!
   @Test
   public void testFor() {
-    assertTrue(singleTest("test11.j"));
+    assertTrue(singleTest("testFor.j"));
   }
 
   @Test
   public void testWrite() {
-    assertTrue(singleTest("test12.j"));
+    assertTrue(singleTest("testWrite.j"));
   }
 
   @Test
   public void testOutputInput() {
     // TODO enable test on output() with port number as constant expression
-    assertTrue(singleTest("test13.j"));
+    assertTrue(singleTest("testOutputInput.j"));
   }
 
   @Test
   public void testSleep() {
-    assertTrue(singleTest("test14.j"));
+    assertTrue(singleTest("testSleep.j"));
   }
 
   @Test
   public void testBitwiseOperators() {
-    assertTrue(singleTest("test15.j"));
+    assertTrue(singleTest("testBitwiseOperators.j"));
   }
 
   @Test

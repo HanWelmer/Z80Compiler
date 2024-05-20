@@ -17,8 +17,8 @@
   16 acc8Comp constant 0
   17 brne 22
   18 ;TestWhile.j(6)       ;
-  19 br 15
-  20 ;TestWhile.j(7)     }
+  19 ;TestWhile.j(7)     }
+  20 br 15
   21 ;TestWhile.j(8)     println(2);
   22 acc8= constant 2
   23 writeLineAcc8
@@ -33,9 +33,9 @@
   32 ;TestWhile.j(11)     println("Klaar.");
   33 acc16= stringconstant 40
   34 writeLineString
-  35 stackPointer= basePointer
-  36 basePointer<
-  37 return
-  38 ;TestWhile.j(12)   }
+  35 ;TestWhile.j(12)   }
+  36 stackPointer= basePointer
+  37 basePointer<
+  38 return
   39 ;TestWhile.j(13) }
   40 stringConstant 0 = "Klaar."

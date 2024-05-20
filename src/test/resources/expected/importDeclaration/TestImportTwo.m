@@ -19,9 +19,9 @@
   18 ;TestImportTwo.j(9)     println("TestImportTwo Klaar");
   19 acc16= stringconstant 26
   20 writeLineString
-  21 stackPointer= basePointer
-  22 basePointer<
-  23 return
-  24 ;TestImportTwo.j(10)   }
+  21 ;TestImportTwo.j(10)   }
+  22 stackPointer= basePointer
+  23 basePointer<
+  24 return
   25 ;TestImportTwo.j(11) }
   26 stringConstant 0 = "TestImportTwo Klaar"

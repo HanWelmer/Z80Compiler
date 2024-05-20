@@ -13,10 +13,10 @@
   12 ;TestStatementExpression.j(5)     println("doIt");
   13 acc16= stringconstant 64
   14 writeLineString
-  15 stackPointer= basePointer
-  16 basePointer<
-  17 return
-  18 ;TestStatementExpression.j(6)   }
+  15 ;TestStatementExpression.j(6)   }
+  16 stackPointer= basePointer
+  17 basePointer<
+  18 return
   19 ;TestStatementExpression.j(7) 
   20 ;TestStatementExpression.j(8)   public static void main() {
   21 method main [public, static] void ()
@@ -57,9 +57,9 @@
   56 ;TestStatementExpression.j(34)     // methodInvocation
   57 ;TestStatementExpression.j(35)     doIt();
   58 call 8
-  59 stackPointer= basePointer
-  60 basePointer<
-  61 return
-  62 ;TestStatementExpression.j(36)   }
+  59 ;TestStatementExpression.j(36)   }
+  60 stackPointer= basePointer
+  61 basePointer<
+  62 return
   63 ;TestStatementExpression.j(37) }
   64 stringConstant 0 = "doIt"

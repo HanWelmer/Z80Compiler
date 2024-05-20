@@ -14,9 +14,9 @@
   13 ;TestClassModifierPublic.j(6)     println("Klaar");
   14 acc16= stringconstant 21
   15 writeLineString
-  16 stackPointer= basePointer
-  17 basePointer<
-  18 return
-  19 ;TestClassModifierPublic.j(7)   }
+  16 ;TestClassModifierPublic.j(7)   }
+  17 stackPointer= basePointer
+  18 basePointer<
+  19 return
   20 ;TestClassModifierPublic.j(8) }
   21 stringConstant 0 = "Klaar"

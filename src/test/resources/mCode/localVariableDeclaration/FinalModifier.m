@@ -14,8 +14,8 @@
   13 ;FinalModifier.j(6)     final byte b = 1;
   14 acc8= constant 1
   15 acc8=> (basePointer + -1)
-  16 stackPointer= basePointer
-  17 basePointer<
-  18 return
-  19 ;FinalModifier.j(7)   }
+  16 ;FinalModifier.j(7)   }
+  17 stackPointer= basePointer
+  18 basePointer<
+  19 return
   20 ;FinalModifier.j(8) }

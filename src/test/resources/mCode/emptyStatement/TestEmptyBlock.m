@@ -21,9 +21,9 @@
   20 ;TestEmptyBlock.j(9)     println("Klaar.");
   21 acc16= stringconstant 28
   22 writeLineString
-  23 stackPointer= basePointer
-  24 basePointer<
-  25 return
-  26 ;TestEmptyBlock.j(10)   }
+  23 ;TestEmptyBlock.j(10)   }
+  24 stackPointer= basePointer
+  25 basePointer<
+  26 return
   27 ;TestEmptyBlock.j(11) }
   28 stringConstant 0 = "Klaar."

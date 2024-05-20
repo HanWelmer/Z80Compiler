@@ -21,9 +21,9 @@
   20 ;TestImportNotFound.j(10)     println("TestImportNotFound Klaar");
   21 acc16= stringconstant 28
   22 writeLineString
-  23 stackPointer= basePointer
-  24 basePointer<
-  25 return
-  26 ;TestImportNotFound.j(11)   }
+  23 ;TestImportNotFound.j(11)   }
+  24 stackPointer= basePointer
+  25 basePointer<
+  26 return
   27 ;TestImportNotFound.j(12) }
   28 stringConstant 0 = "TestImportNotFound Klaar"

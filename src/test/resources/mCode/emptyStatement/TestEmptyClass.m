@@ -10,8 +10,8 @@
    9 basePointer= stackPointer
   10 stackPointer+ constant 0
   11 ;TestEmptyClass.j(4)     ;
-  12 stackPointer= basePointer
-  13 basePointer<
-  14 return
-  15 ;TestEmptyClass.j(5)   }
+  12 ;TestEmptyClass.j(5)   }
+  13 stackPointer= basePointer
+  14 basePointer<
+  15 return
   16 ;TestEmptyClass.j(6) }

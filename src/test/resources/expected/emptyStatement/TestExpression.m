@@ -22,9 +22,9 @@
   21 ;TestExpression.j(8)     println("Klaar.");
   22 acc16= stringconstant 29
   23 writeLineString
-  24 stackPointer= basePointer
-  25 basePointer<
-  26 return
-  27 ;TestExpression.j(9)   }
+  24 ;TestExpression.j(9)   }
+  25 stackPointer= basePointer
+  26 basePointer<
+  27 return
   28 ;TestExpression.j(10) }
   29 stringConstant 0 = "Klaar."

@@ -1190,6 +1190,7 @@ public class pCompiler {
       identifiers.closeScope();
 
       // lexical analysis: skip endLexeme
+      plantSource();
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
@@ -2664,7 +2665,7 @@ public class pCompiler {
 
     // do nothing, except logging processed source code lines, if previously
     // generated statement is a return statement.
-    if (instructions.get(instructions.size() - 1).function == FunctionType.returnFunction) {
+    if (instructions.get(instructions.size() - 2).function == FunctionType.returnFunction) {
       plantSource();
     } else {
       // release space on stack for local variables.

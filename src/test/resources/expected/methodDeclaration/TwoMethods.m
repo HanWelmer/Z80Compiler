@@ -14,10 +14,10 @@
   13 ;TwoMethods.j(6)     println("TwoMethods doIt");
   14 acc16= stringconstant 36
   15 writeLineString
-  16 stackPointer= basePointer
-  17 basePointer<
-  18 return
-  19 ;TwoMethods.j(7)   }
+  16 ;TwoMethods.j(7)   }
+  17 stackPointer= basePointer
+  18 basePointer<
+  19 return
   20 ;TwoMethods.j(8) 
   21 ;TwoMethods.j(9)   public static void main() {
   22 method main [public, static] void ()
@@ -29,10 +29,10 @@
   28 ;TwoMethods.j(11)     println("TwoMethods Klaar");
   29 acc16= stringconstant 37
   30 writeLineString
-  31 stackPointer= basePointer
-  32 basePointer<
-  33 return
-  34 ;TwoMethods.j(12)   }
+  31 ;TwoMethods.j(12)   }
+  32 stackPointer= basePointer
+  33 basePointer<
+  34 return
   35 ;TwoMethods.j(13) }
   36 stringConstant 0 = "TwoMethods doIt"
   37 stringConstant 1 = "TwoMethods Klaar"

@@ -17,10 +17,10 @@
   16 ;NoModifier.j(7)     println(b);
   17 acc8= (basePointer + -1)
   18 writeLineAcc8
-  19 stackPointer= basePointer
-  20 basePointer<
-  21 return
-  22 ;NoModifier.j(8)   }
+  19 ;NoModifier.j(8)   }
+  20 stackPointer= basePointer
+  21 basePointer<
+  22 return
   23 ;NoModifier.j(9)   public static void doByteWord() {
   24 method doByteWord [public, static] void ()
   25 <basePointer
@@ -38,10 +38,10 @@
   37 ;NoModifier.j(13)     println(w);
   38 acc16= (basePointer + -3)
   39 writeLineAcc16
-  40 stackPointer= basePointer
-  41 basePointer<
-  42 return
-  43 ;NoModifier.j(14)   }
+  40 ;NoModifier.j(14)   }
+  41 stackPointer= basePointer
+  42 basePointer<
+  43 return
   44 ;NoModifier.j(15)   public static void doWordByte() {
   45 method doWordByte [public, static] void ()
   46 <basePointer
@@ -59,10 +59,10 @@
   58 ;NoModifier.j(19)     println(w);
   59 acc16= (basePointer + -2)
   60 writeLineAcc16
-  61 stackPointer= basePointer
-  62 basePointer<
-  63 return
-  64 ;NoModifier.j(20)   }
+  61 ;NoModifier.j(20)   }
+  62 stackPointer= basePointer
+  63 basePointer<
+  64 return
   65 ;NoModifier.j(21)   public static void doString() {
   66 method doString [public, static] void ()
   67 <basePointer
@@ -74,10 +74,10 @@
   73 ;NoModifier.j(23)     println(str);
   74 acc16= (basePointer + -2)
   75 writeLineString
-  76 stackPointer= basePointer
-  77 basePointer<
-  78 return
-  79 ;NoModifier.j(24)   }
+  76 ;NoModifier.j(24)   }
+  77 stackPointer= basePointer
+  78 basePointer<
+  79 return
   80 ;NoModifier.j(25)   public static void main() {
   81 method main [public, static] void ()
   82 <basePointer
@@ -100,10 +100,10 @@
   99 ;NoModifier.j(32)     println("klaar");
  100 acc16= stringconstant 108
  101 writeLineString
- 102 stackPointer= basePointer
- 103 basePointer<
- 104 return
- 105 ;NoModifier.j(33)   }
+ 102 ;NoModifier.j(33)   }
+ 103 stackPointer= basePointer
+ 104 basePointer<
+ 105 return
  106 ;NoModifier.j(34) }
  107 stringConstant 0 = "Hallo Wereld"
  108 stringConstant 1 = "klaar"

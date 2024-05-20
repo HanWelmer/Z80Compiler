@@ -11,10 +11,10 @@
   10 ;TestNoParameters.j(3)     println("Hallo");
   11 acc16= stringconstant 36
   12 writeLineString
-  13 stackPointer= basePointer
-  14 basePointer<
-  15 return
-  16 ;TestNoParameters.j(4)   }
+  13 ;TestNoParameters.j(4)   }
+  14 stackPointer= basePointer
+  15 basePointer<
+  16 return
   17 ;TestNoParameters.j(5) 
   18 ;TestNoParameters.j(6)   public static void main() {
   19 method main [public, static] void ()
@@ -29,10 +29,10 @@
   28 ;TestNoParameters.j(9)     println("      wereld");
   29 acc16= stringconstant 38
   30 writeLineString
-  31 stackPointer= basePointer
-  32 basePointer<
-  33 return
-  34 ;TestNoParameters.j(10)   }
+  31 ;TestNoParameters.j(10)   }
+  32 stackPointer= basePointer
+  33 basePointer<
+  34 return
   35 ;TestNoParameters.j(11) }
   36 stringConstant 0 = "Hallo"
   37 stringConstant 1 = ""

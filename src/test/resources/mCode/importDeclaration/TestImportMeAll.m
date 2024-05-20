@@ -17,9 +17,9 @@
   16 ;TestImportMeAll.j(8)     println("Klaar");
   17 acc16= stringconstant 24
   18 writeLineString
-  19 stackPointer= basePointer
-  20 basePointer<
-  21 return
-  22 ;TestImportMeAll.j(9)   }
+  19 ;TestImportMeAll.j(9)   }
+  20 stackPointer= basePointer
+  21 basePointer<
+  22 return
   23 ;TestImportMeAll.j(10) }
   24 stringConstant 0 = "Klaar"

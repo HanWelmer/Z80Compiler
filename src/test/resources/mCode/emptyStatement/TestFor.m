@@ -22,8 +22,8 @@
   21 incr8 (basePointer + -1)
   22 br 17
   23 ;TestFor.j(6)       ;
-  24 br 21
-  25 ;TestFor.j(7)     }
+  24 ;TestFor.j(7)     }
+  25 br 21
   26 ;TestFor.j(8)     println(2);
   27 acc8= constant 2
   28 writeLineAcc8
@@ -53,17 +53,17 @@
   52 writeLineAcc8
   53 ;TestFor.j(13)       b++;
   54 incr8 (basePointer + -1)
-  55 br 49
-  56 ;TestFor.j(14)     }
+  55 ;TestFor.j(14)     }
+  56 br 49
   57 ;TestFor.j(15)     println(5);
   58 acc8= constant 5
   59 writeLineAcc8
   60 ;TestFor.j(16)     println("Klaar.");
   61 acc16= stringconstant 68
   62 writeLineString
-  63 stackPointer= basePointer
-  64 basePointer<
-  65 return
-  66 ;TestFor.j(17)   }
+  63 ;TestFor.j(17)   }
+  64 stackPointer= basePointer
+  65 basePointer<
+  66 return
   67 ;TestFor.j(18) }
   68 stringConstant 0 = "Klaar."

@@ -35,9 +35,9 @@
   34 ;TestDo.j(15)     println("Klaar.");
   35 acc16= stringconstant 42
   36 writeLineString
-  37 stackPointer= basePointer
-  38 basePointer<
-  39 return
-  40 ;TestDo.j(16)   }
+  37 ;TestDo.j(16)   }
+  38 stackPointer= basePointer
+  39 basePointer<
+  40 return
   41 ;TestDo.j(17) }
   42 stringConstant 0 = "Klaar."
