@@ -793,13 +793,13 @@
 21E4             L12:
 21E4 CD 43 20            CALL  writeLineStr
 21E7             L13:
+21E7                     ;;TestNoParameters.j(4)   }
+21E7             L14:
 21E7 DD F9               LD    SP,IX
-21E9             L14:
+21E9             L15:
 21E9 DD E1               POP   IX
-21EB             L15:
+21EB             L16:
 21EB C9                  return
-21EC             L16:
-21EC                     ;;TestNoParameters.j(4)   }
 21EC             L17:
 21EC                     ;;TestNoParameters.j(5) 
 21EC             L18:
@@ -832,13 +832,13 @@
 2205             L30:
 2205 CD 43 20            CALL  writeLineStr
 2208             L31:
+2208                     ;;TestNoParameters.j(10)   }
+2208             L32:
 2208 DD F9               LD    SP,IX
-220A             L32:
+220A             L33:
 220A DD E1               POP   IX
-220C             L33:
+220C             L34:
 220C C9                  return
-220D             L34:
-220D                     ;;TestNoParameters.j(10)   }
 220D             L35:
 220D                     ;;TestNoParameters.j(11) }
 220D             L36:
@@ -859,9 +859,9 @@ Labels and cross references:
      L11 = 21E1 :
      L12 = 21E4 :
      L13 = 21E7 :
-     L14 = 21E9 :
-     L15 = 21EB :
-     L16 = 21EC :
+     L14 = 21E7 :
+     L15 = 21E9 :
+     L16 = 21EB :
      L17 = 21EC :
      L18 = 21EC :
      L19 = 21EC : 21CE
@@ -879,9 +879,9 @@ Labels and cross references:
       L3 = 21D4 :
      L30 = 2205 :
      L31 = 2208 :
-     L32 = 220A :
-     L33 = 220C :
-     L34 = 220D :
+     L32 = 2208 :
+     L33 = 220A :
+     L34 = 220C :
      L35 = 220D :
      L36 = 220D : 21E1
      L37 = 2213 : 21F9

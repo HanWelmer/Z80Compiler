@@ -805,13 +805,13 @@ L17:
 L18:
         CALL  writeLineA
 L19:
-        LD    SP,IX
-L20:
-        POP   IX
-L21:
-        return
-L22:
         ;;NoModifier.j(8)   }
+L20:
+        LD    SP,IX
+L21:
+        POP   IX
+L22:
+        return
 L23:
         ;;NoModifier.j(9)   public static void doByteWord() {
 L24:
@@ -852,13 +852,13 @@ L38:
 L39:
         CALL  writeLineHL
 L40:
-        LD    SP,IX
-L41:
-        POP   IX
-L42:
-        return
-L43:
         ;;NoModifier.j(14)   }
+L41:
+        LD    SP,IX
+L42:
+        POP   IX
+L43:
+        return
 L44:
         ;;NoModifier.j(15)   public static void doWordByte() {
 L45:
@@ -899,13 +899,13 @@ L59:
 L60:
         CALL  writeLineHL
 L61:
-        LD    SP,IX
-L62:
-        POP   IX
-L63:
-        return
-L64:
         ;;NoModifier.j(20)   }
+L62:
+        LD    SP,IX
+L63:
+        POP   IX
+L64:
+        return
 L65:
         ;;NoModifier.j(21)   public static void doString() {
 L66:
@@ -934,13 +934,13 @@ L74:
 L75:
         CALL  writeLineStr
 L76:
-        LD    SP,IX
-L77:
-        POP   IX
-L78:
-        return
-L79:
         ;;NoModifier.j(24)   }
+L77:
+        LD    SP,IX
+L78:
+        POP   IX
+L79:
+        return
 L80:
         ;;NoModifier.j(25)   public static void main() {
 L81:
@@ -989,13 +989,13 @@ L100:
 L101:
         CALL  writeLineStr
 L102:
-        LD    SP,IX
-L103:
-        POP   IX
-L104:
-        return
-L105:
         ;;NoModifier.j(33)   }
+L103:
+        LD    SP,IX
+L104:
+        POP   IX
+L105:
+        return
 L106:
         ;;NoModifier.j(34) }
 L107:

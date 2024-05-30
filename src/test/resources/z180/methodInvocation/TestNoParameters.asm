@@ -793,13 +793,13 @@ L11:
 L12:
         CALL  writeLineStr
 L13:
-        LD    SP,IX
-L14:
-        POP   IX
-L15:
-        return
-L16:
         ;;TestNoParameters.j(4)   }
+L14:
+        LD    SP,IX
+L15:
+        POP   IX
+L16:
+        return
 L17:
         ;;TestNoParameters.j(5) 
 L18:
@@ -832,13 +832,13 @@ L29:
 L30:
         CALL  writeLineStr
 L31:
-        LD    SP,IX
-L32:
-        POP   IX
-L33:
-        return
-L34:
         ;;TestNoParameters.j(10)   }
+L32:
+        LD    SP,IX
+L33:
+        POP   IX
+L34:
+        return
 L35:
         ;;TestNoParameters.j(11) }
 L36:

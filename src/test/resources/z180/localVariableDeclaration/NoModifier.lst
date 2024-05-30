@@ -805,13 +805,13 @@
 21E9             L18:
 21E9 CD BE 21            CALL  writeLineA
 21EC             L19:
+21EC                     ;;NoModifier.j(8)   }
+21EC             L20:
 21EC DD F9               LD    SP,IX
-21EE             L20:
+21EE             L21:
 21EE DD E1               POP   IX
-21F0             L21:
+21F0             L22:
 21F0 C9                  return
-21F1             L22:
-21F1                     ;;NoModifier.j(8)   }
 21F1             L23:
 21F1                     ;;NoModifier.j(9)   public static void doByteWord() {
 21F1             L24:
@@ -852,13 +852,13 @@
 2218             L39:
 2218 CD 96 21            CALL  writeLineHL
 221B             L40:
+221B                     ;;NoModifier.j(14)   }
+221B             L41:
 221B DD F9               LD    SP,IX
-221D             L41:
+221D             L42:
 221D DD E1               POP   IX
-221F             L42:
+221F             L43:
 221F C9                  return
-2220             L43:
-2220                     ;;NoModifier.j(14)   }
 2220             L44:
 2220                     ;;NoModifier.j(15)   public static void doWordByte() {
 2220             L45:
@@ -899,13 +899,13 @@
 2247             L60:
 2247 CD 96 21            CALL  writeLineHL
 224A             L61:
+224A                     ;;NoModifier.j(20)   }
+224A             L62:
 224A DD F9               LD    SP,IX
-224C             L62:
+224C             L63:
 224C DD E1               POP   IX
-224E             L63:
+224E             L64:
 224E C9                  return
-224F             L64:
-224F                     ;;NoModifier.j(20)   }
 224F             L65:
 224F                     ;;NoModifier.j(21)   public static void doString() {
 224F             L66:
@@ -934,13 +934,13 @@
 226B             L75:
 226B CD 43 20            CALL  writeLineStr
 226E             L76:
+226E                     ;;NoModifier.j(24)   }
+226E             L77:
 226E DD F9               LD    SP,IX
-2270             L77:
+2270             L78:
 2270 DD E1               POP   IX
-2272             L78:
+2272             L79:
 2272 C9                  return
-2273             L79:
-2273                     ;;NoModifier.j(24)   }
 2273             L80:
 2273                     ;;NoModifier.j(25)   public static void main() {
 2273             L81:
@@ -989,13 +989,13 @@
 229A             L101:
 229A CD 43 20            CALL  writeLineStr
 229D             L102:
+229D                     ;;NoModifier.j(33)   }
+229D             L103:
 229D DD F9               LD    SP,IX
-229F             L103:
+229F             L104:
 229F DD E1               POP   IX
-22A1             L104:
+22A1             L105:
 22A1 C9                  return
-22A2             L105:
-22A2                     ;;NoModifier.j(33)   }
 22A2             L106:
 22A2                     ;;NoModifier.j(34) }
 22A2             L107:
@@ -1014,9 +1014,9 @@ Labels and cross references:
     L100 = 2297 :
     L101 = 229A :
     L102 = 229D :
-    L103 = 229F :
-    L104 = 22A1 :
-    L105 = 22A2 :
+    L103 = 229D :
+    L104 = 229F :
+    L105 = 22A1 :
     L106 = 22A2 :
     L107 = 22A2 : 225C
     L108 = 22AF : 2297
@@ -1030,9 +1030,9 @@ Labels and cross references:
      L18 = 21E9 :
      L19 = 21EC :
       L2 = 21D4 :
-     L20 = 21EE :
-     L21 = 21F0 :
-     L22 = 21F1 :
+     L20 = 21EC :
+     L21 = 21EE :
+     L22 = 21F0 :
      L23 = 21F1 :
      L24 = 21F1 : 2291
      L25 = 21F1 :
@@ -1053,9 +1053,9 @@ Labels and cross references:
      L39 = 2218 :
       L4 = 21D4 :
      L40 = 221B :
-     L41 = 221D :
-     L42 = 221F :
-     L43 = 2220 :
+     L41 = 221B :
+     L42 = 221D :
+     L43 = 221F :
      L44 = 2220 :
      L45 = 2220 : 2294
      L46 = 2220 :
@@ -1076,9 +1076,9 @@ Labels and cross references:
       L6 = 21D4 :
      L60 = 2247 :
      L61 = 224A :
-     L62 = 224C :
-     L63 = 224E :
-     L64 = 224F :
+     L62 = 224A :
+     L63 = 224C :
+     L64 = 224E :
      L65 = 224F :
      L66 = 224F : 228B
      L67 = 224F :
@@ -1092,9 +1092,9 @@ Labels and cross references:
      L74 = 2265 :
      L75 = 226B :
      L76 = 226E :
-     L77 = 2270 :
-     L78 = 2272 :
-     L79 = 2273 :
+     L77 = 226E :
+     L78 = 2270 :
+     L79 = 2272 :
       L8 = 21D4 :
      L80 = 2273 :
      L81 = 2273 : 21CE
