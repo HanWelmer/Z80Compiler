@@ -18,14 +18,16 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.hanwelmer;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 public class Variable {
 
   private String name;
   private IdentifierType identifierType;
-  private Datatype datatype;
+  private DataType dataType;
   private EnumSet<LexemeType> modifiers;
+  private ArrayList<FormalParameter> formalParameters;
   private int intValue = 0;
   private int address;
 
@@ -33,6 +35,7 @@ public class Variable {
   public Variable(String name) {
     this.name = name;
     this.address = 0;
+    this.formalParameters = new ArrayList<FormalParameter>();
   }
 
   public String getName() {
@@ -47,12 +50,12 @@ public class Variable {
     return identifierType;
   }
 
-  public void setDatatype(Datatype datatype) {
-    this.datatype = datatype;
+  public void setDatatype(DataType dataType) {
+    this.dataType = dataType;
   }
 
-  public Datatype getDatatype() {
-    return datatype;
+  public DataType getDataType() {
+    return dataType;
   }
 
   public void setModifiers(EnumSet<LexemeType> modifiers) {
@@ -61,6 +64,21 @@ public class Variable {
 
   public EnumSet<LexemeType> getModifiers() {
     return modifiers;
+  }
+
+  public void addFormalParameter(FormalParameter parameter) {
+    formalParameters.add(parameter);
+  }
+
+  public FormalParameter getFormalParameter(int index) throws FatalError {
+    if (index < 0 || index >= formalParameters.size()) {
+      throw new FatalError(39);
+    }
+    return formalParameters.get(index);
+  }
+
+  public ArrayList<FormalParameter> getFormalParameters() {
+    return formalParameters;
   }
 
   public void setIntValue(int intValue) {
@@ -86,10 +104,13 @@ public class Variable {
   public String toString() {
     String result = "var(" + name;
     result += ", identifierType=" + identifierType;
-    result += ", datatype=" + datatype;
+    result += ", dataType=" + dataType;
     result += ", modifiers=" + modifiers;
     result += ", intValue=" + intValue;
     result += ", address=" + address;
+    if (identifierType == IdentifierType.METHOD) {
+      result += ", formalParameters=" + formalParameters;
+    }
     result += ")";
     return result;
   }

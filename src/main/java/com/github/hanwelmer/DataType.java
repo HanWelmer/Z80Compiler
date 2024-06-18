@@ -23,13 +23,13 @@ package com.github.hanwelmer;
  * language. Used in lexical analysis, semantic analysis and code generation
  * phases of the compiler.
  */
-public enum Datatype {
+public enum DataType {
   clazz("class", 0), voidd("void", 0), byt("byte", 1), word("word", 2), string("String", 2);
 
   private String value;
   private int size;
 
-  private Datatype(String value, int size) {
+  private DataType(String value, int size) {
     this.value = value;
     this.size = size;
   }

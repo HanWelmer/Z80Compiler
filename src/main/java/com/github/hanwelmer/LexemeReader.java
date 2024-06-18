@@ -224,11 +224,11 @@ public class LexemeReader {
           ch = getChar(sourceCode);
         }
       }
-      lexeme.datatype = (lexeme.constVal <= MAX_BYT_CONSTANT) ? Datatype.byt : Datatype.word;
+      lexeme.dataType = (lexeme.constVal <= MAX_BYT_CONSTANT) ? DataType.byt : DataType.word;
     } else if (ch == '"') {
       /* try to recognise a string constant */
       lexeme.type = LexemeType.stringConstant;
-      lexeme.datatype = Datatype.string;
+      lexeme.dataType = DataType.string;
       lexeme.stringVal = "";
       while (nextChar(sourceCode) != '"' && nextChar(sourceCode) != EOF) {
         ch = getChar(sourceCode);
@@ -318,7 +318,7 @@ public class LexemeReader {
           lexeme.type = LexemeType.period;
           break;
         case ',':
-          lexeme.type = LexemeType.comma;
+          lexeme.type = LexemeType.COMMA;
           break;
         case ';':
           lexeme.type = LexemeType.semicolon;

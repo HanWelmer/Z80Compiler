@@ -29,6 +29,7 @@ the syntax of miniJava has the following limitations:
 - MethodDeclaration     no TypeParameters, no "throws".
 - MethodDeclarator      no [].
 - FormalParameter       no "&", "*" or "...". 
+- FormalParameter       possible modifiers: "final"?.
 - ResultType            no "*" or "&"
 - ReferenceType         no ClassOrInterfaceType.
 - PrimitiveType         no "char" | "byte" | "short" | "int" | "long"
@@ -157,10 +158,10 @@ TODO:
 
 `arguments                 ::= "(" argumentList? ")".`
 
+`argumentList              ::= expression { "," expression }.`
+
 TODO
 ``
-
-`argumentList              ::= expression { "," expression }.`
 
 `arraySelector             ::= name { "[" Expression "]" }.`
 `assignment                ::= name assignmentOperator expression.`

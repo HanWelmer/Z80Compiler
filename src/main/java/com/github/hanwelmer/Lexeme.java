@@ -27,7 +27,7 @@ public class Lexeme {
   protected LexemeType type;
   protected Integer constVal;
   protected String stringVal;
-  protected Datatype datatype;
+  protected DataType dataType;
   protected String idVal;
   protected OperatorType operator;
   // Line number of source code leading up to and including this lexeme.
@@ -48,7 +48,7 @@ public class Lexeme {
         break;
       case constant:
         result += " ";
-        result += datatype.getValue();
+        result += dataType.getValue();
         result += " ";
         result += constVal;
         break;
@@ -61,7 +61,7 @@ public class Lexeme {
         result += " " + idVal;
         if ((variable != null) && (variable.getAddress() >= 0)) {
           result += "{";
-          result += variable.getDatatype().getValue();
+          result += variable.getDataType().getValue();
           result += "}@";
           result += variable.getAddress();
         }
@@ -71,7 +71,7 @@ public class Lexeme {
       case relop:
         result += " " + operator;
         break;
-      case comma:
+      case COMMA:
       case period:
       case semicolon:
       case packageLexeme:

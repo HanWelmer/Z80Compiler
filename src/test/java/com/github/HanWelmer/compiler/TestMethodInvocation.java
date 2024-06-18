@@ -53,4 +53,9 @@ public class TestMethodInvocation extends AbstactRegressionTest {
     System.out.println("As expected.\n");
   }
 
+  @Test
+  public void TestWordParameter() {
+    assertTrue(singleTest("TestWordParameter.j"));
+  }
+
 }

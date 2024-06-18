@@ -174,12 +174,12 @@ public class Interpreter {
             if ((instr.operand.intValue < 0) || (instr.operand.intValue >= vars.length)) {
               runError("too many variables");
             }
-            if (instr.operand.datatype == Datatype.word || instr.operand.datatype == Datatype.string) {
+            if (instr.operand.dataType == DataType.word || instr.operand.dataType == DataType.string) {
               vars[instr.operand.intValue] = acc16;
-            } else if (instr.operand.datatype == Datatype.byt) {
+            } else if (instr.operand.dataType == DataType.byt) {
               vars[instr.operand.intValue] = acc16 % 256;
             } else {
-              runError("incompatible datatype between assignment variable and expression");
+              runError("incompatible dataType between assignment variable and expression");
             }
             break;
           case LOCAL_VAR:
@@ -187,12 +187,12 @@ public class Interpreter {
             if (stackIndex < 0) {
               runError(String.format("stack error: basePointer=%d, index=%d", basePointer, instr.operand.intValue));
             }
-            if (instr.operand.datatype == Datatype.word || instr.operand.datatype == Datatype.string) {
+            if (instr.operand.dataType == DataType.word || instr.operand.dataType == DataType.string) {
               machineStack.set(stackIndex - 1, acc16);
-            } else if (instr.operand.datatype == Datatype.byt) {
+            } else if (instr.operand.dataType == DataType.byt) {
               machineStack.set(stackIndex - 1, acc16 % 256);
             } else {
-              runError("incompatible datatype between assignment variable and expression");
+              runError("incompatible dataType between assignment variable and expression");
             }
             break;
           case STACK16:
@@ -683,9 +683,9 @@ public class Interpreter {
     int result = 0;
     switch (operand.opType) {
       case ACC:
-        if (operand.datatype == Datatype.byt) {
+        if (operand.dataType == DataType.byt) {
           result = acc8;
-        } else if (operand.datatype == Datatype.word) {
+        } else if (operand.dataType == DataType.word) {
           result = acc16;
         }
         break;

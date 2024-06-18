@@ -53,9 +53,9 @@ public class MachineCodeParser {
     if (pos < line.length() && line.charAt(pos) == ';') {
       pos++;
       if (pos == line.length()) {
-        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, Datatype.string, ""));
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, ""));
       } else {
-        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, Datatype.string, line.substring(pos)));
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, line.substring(pos)));
       }
     } else {
       String keyword = parseKeyword(line);
@@ -181,7 +181,7 @@ public class MachineCodeParser {
   private Instruction parseCallFunction(String line, FunctionType functionType) {
     skipSpaces(line);
     int value = parseNumber(line);
-    Operand label = new Operand(OperandType.LABEL, Datatype.word, value);
+    Operand label = new Operand(OperandType.LABEL, DataType.word, value);
     if (value == 0) {
       label.strValue = parseKeyword(line);
     }
@@ -202,7 +202,7 @@ public class MachineCodeParser {
       string += line.charAt(pos++);
     }
 
-    Operand operand = new Operand(OperandType.CONSTANT, Datatype.string, string);
+    Operand operand = new Operand(OperandType.CONSTANT, DataType.string, string);
     operand.intValue = lineNumber;
     return new Instruction(FunctionType.stringConstant, operand);
   }
@@ -217,7 +217,7 @@ public class MachineCodeParser {
   private Instruction parseFunctionWithByteOperand(String line, FunctionType functionType) {
     Instruction result;
     skipSpaces(line);
-    Operand operand = parseOperand(line, Datatype.byt);
+    Operand operand = parseOperand(line, DataType.byt);
     result = new Instruction(functionType, operand);
     return result;
   }
@@ -232,7 +232,7 @@ public class MachineCodeParser {
   private Instruction parseFunctionWithWordOperand(String line, FunctionType functionType) {
     Instruction result;
     skipSpaces(line);
-    Operand operand = parseOperand(line, Datatype.word);
+    Operand operand = parseOperand(line, DataType.word);
     result = new Instruction(functionType, operand);
     return result;
   }
@@ -243,7 +243,7 @@ public class MachineCodeParser {
    * @param line
    * @return
    */
-  private Operand parseOperand(String line, Datatype datatype) {
+  private Operand parseOperand(String line, DataType datatype) {
     Operand result;
     skipSpaces(line);
     String keyword = parseKeyword(line);
@@ -266,7 +266,7 @@ public class MachineCodeParser {
     } else if ("stringconstant".equals(keyword)) {
       skipSpaces(line);
       int value = parseNumber(line);
-      result = new Operand(OperandType.CONSTANT, Datatype.string, value);
+      result = new Operand(OperandType.CONSTANT, DataType.string, value);
     } else {
       throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
     }

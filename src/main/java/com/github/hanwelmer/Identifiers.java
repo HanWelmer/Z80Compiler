@@ -95,8 +95,8 @@ public class Identifiers {
    *          this identifier will be declared
    * @param identifierType:
    *          type of identifier.
-   * @param datatype:
-   *          datatype of variable.
+   * @param dataType:
+   *          dataType of variable.
    * @param modifiers
    * @return true if OK; false if such an identifier already declared.
    */
@@ -116,19 +116,19 @@ public class Identifiers {
     // set type of identifier
     var.setIdentifierType(identifierType);
 
-    // set datatype
+    // set dataType
     if (datatype == LexemeType.classLexeme) {
-      var.setDatatype(Datatype.clazz);
+      var.setDatatype(DataType.clazz);
     } else if (datatype == LexemeType.byteLexeme) {
-      var.setDatatype(Datatype.byt);
+      var.setDatatype(DataType.byt);
     } else if (datatype == LexemeType.wordLexeme) {
-      var.setDatatype(Datatype.word);
+      var.setDatatype(DataType.word);
     } else if (datatype == LexemeType.stringLexeme) {
-      var.setDatatype(Datatype.string);
+      var.setDatatype(DataType.string);
     } else if (datatype == LexemeType.voidLexeme) {
-      var.setDatatype(Datatype.voidd);
+      var.setDatatype(DataType.voidd);
     } else {
-      throw new RuntimeException("Internal compiler error in Identifiers.declareId(): unknown datatype " + datatype);
+      throw new RuntimeException("Internal compiler error in Identifiers.declareId(): unknown dataType " + datatype);
     }
 
     // set modifiers
@@ -142,18 +142,40 @@ public class Identifiers {
       // available address.
       int address = classVariables.getAddress();
       var.setAddress(address);
-      classVariables.setAddress(address + var.getDatatype().getSize());
+      classVariables.setAddress(address + var.getDataType().getSize());
     } else if (identifierType == IdentifierType.LOCAL_VARIABLE) {
-      // Allocate local variable on the stack, relative to the base pointer.
+      // Allocate a local variable on the stack, with a negative index relative
+      // to the base pointer:
+      // BP - 1,2 for first word.
+      // BP - 1 for first byte.
       // This scheme assumes that memory allocation can only occur in the
       // current top level scope.
       // This scheme assumes that the stack grows downwards (from high to low
       // memory addresses) and that the current value is just above the first
       // available address.
       int address = localVariables.peek().getAddress();
-      address = address - var.getDatatype().getSize();
+      address = address - var.getDataType().getSize();
       var.setAddress(address);
       localVariables.peek().setAddress(address);
+    } else if (identifierType == IdentifierType.FORMAL_PARAMETER) {
+      // Allocate a formal parameter on the stack, with a positive index
+      // relative to the base pointer:
+      // BP + 0,1 is saved value for the old base pointer.
+      // BP + 2,3 is the return address.
+      // BP + 4,5 is the first word; BP + 4 is the first byte.
+      // This scheme assumes that memory allocation can only occur in the
+      // current top level scope.
+      // This scheme assumes that the stack grows downwards (from high to low
+      // memory addresses) and that the current value is just above the first
+      // available address.
+      int address = 4;
+      // TODO calculate address when there are more than 1 formal parameters.
+      var.setAddress(address);
+      localVariables.peek().setAddress(address);
+    } else if (identifierType == IdentifierType.CLAZZ || identifierType == IdentifierType.METHOD) {
+      ; // no address assigned.
+    } else {
+      throw new RuntimeException("Internal compiler error in Identifiers.declareId(): unknown identifier type " + identifierType);
     }
 
     return true;

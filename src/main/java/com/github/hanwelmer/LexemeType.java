@@ -26,7 +26,7 @@ public enum LexemeType {
   // special lexemeTypes.
   identifier("identifier"), constant("constant"), stringConstant("stringConstant"),
   // from here until beginlexeme are the special characters...
-  period("."), comma(","), assign("="), semicolon(";"), LPAREN("("), RPAREN(")"), LBRACKET("["), RBRACKET("]"),
+  period("."), COMMA(","), assign("="), semicolon(";"), LPAREN("("), RPAREN(")"), LBRACKET("["), RBRACKET("]"),
   // increment/decrement
   increment("++"), decrement("--"),
   // Lexeme types for operators in order of increasing precedence.

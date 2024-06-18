@@ -105,13 +105,13 @@ public class Instruction {
     // error detection (internal compiler errors):
     switch (fn) {
       case input:
-        if ((operand == null) || (operand.opType != OperandType.CONSTANT) || (operand.datatype != Datatype.byt)) {
+        if ((operand == null) || (operand.opType != OperandType.CONSTANT) || (operand.dataType != DataType.byt)) {
           throw new RuntimeException(
               "Internal compiler error: functionType " + fn + " expects constant byte value for port parameter.");
         }
         break;
       case sleep:
-        if ((operand == null) || !((operand.datatype == Datatype.byt) || (operand.datatype == Datatype.word))) {
+        if ((operand == null) || !((operand.dataType == DataType.byt) || (operand.dataType == DataType.word))) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte or word value.");
         }
         break;
@@ -124,7 +124,7 @@ public class Instruction {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a constant operand.");
         }
         ;
-        if (operand.datatype != Datatype.string || operand.strValue == null) {
+        if (operand.dataType != DataType.string || operand.strValue == null) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects a string constant operand.");
         }
         ;
@@ -196,7 +196,7 @@ public class Instruction {
           // no error.
         } else if (operand.opType == OperandType.LOCAL_VAR && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.ACC && operand.datatype == Datatype.word) {
+        } else if (operand.opType == OperandType.ACC && operand.dataType == DataType.word) {
           // no error.
         } else {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -219,7 +219,7 @@ public class Instruction {
           // no error.
         } else if (operand.opType == OperandType.LOCAL_VAR && operand.intValue != null) {
           // no error.
-        } else if (operand.opType == OperandType.ACC && operand.datatype == Datatype.byt) {
+        } else if (operand.opType == OperandType.ACC && operand.dataType == DataType.byt) {
           // no error.
         } else {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -256,9 +256,9 @@ public class Instruction {
           case STACK16:
             break;
           case CONSTANT:
-            if (operand.datatype != Datatype.byt && operand.datatype != Datatype.word) {
+            if (operand.dataType != DataType.byt && operand.dataType != DataType.word) {
               throw new RuntimeException(
-                  "Internal compiler error: functionType " + fn + " expects an word or byte datatype for its constant operand.");
+                  "Internal compiler error: functionType " + fn + " expects an word or byte dataType for its constant operand.");
             }
             if (operand.intValue == null) {
               throw new RuntimeException(
@@ -278,7 +278,7 @@ public class Instruction {
             }
             break;
           case ACC:
-            if (operand.datatype == Datatype.byt || operand.datatype == Datatype.word) {
+            if (operand.dataType == DataType.byt || operand.dataType == DataType.word) {
               // no error.
             } else {
               throw new RuntimeException("Internal compiler error: functionType " + fn + " with " + operand + ".");
@@ -305,7 +305,7 @@ public class Instruction {
         }
         break;
       case stackPointerPlus:
-        if ((operand == null) || (operand.opType != OperandType.CONSTANT) || (operand.datatype != Datatype.word)) {
+        if ((operand == null) || (operand.opType != OperandType.CONSTANT) || (operand.dataType != DataType.word)) {
           throw new RuntimeException("Internal compiler error: functionType " + fn + " expects constant word value as operand.");
         }
         break;
@@ -361,10 +361,10 @@ public class Instruction {
 
     if (fn == FunctionType.output) {
       // Instruction(FunctionType.output, port, value)
-      if ((operand1 == null) || (operand1.datatype != Datatype.byt)) {
+      if ((operand1 == null) || (operand1.dataType != DataType.byt)) {
         throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for port parameter.");
       }
-      if ((operand2 == null) || (operand2.datatype != Datatype.byt)) {
+      if ((operand2 == null) || (operand2.dataType != DataType.byt)) {
         throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte value for value parameter.");
       }
     } else {
@@ -388,7 +388,7 @@ public class Instruction {
     }
 
     // operand contains name of the method.
-    operand = new Operand(OperandType.CONSTANT, Datatype.string, identifier);
+    operand = new Operand(OperandType.CONSTANT, DataType.string, identifier);
     // copy parameter modifiers and resultType to member fields.
     function = fn;
     this.modifiers = modifiers;
@@ -397,13 +397,13 @@ public class Instruction {
 
   protected Operand deepCopy(Operand operand) {
     Operand newOperand;
-    if (operand.opType == OperandType.LABEL || operand.datatype == Datatype.string) {
-      newOperand = new Operand(operand.opType, operand.datatype, operand.intValue);
+    if (operand.opType == OperandType.LABEL || operand.dataType == DataType.string) {
+      newOperand = new Operand(operand.opType, operand.dataType, operand.intValue);
       newOperand.strValue = operand.strValue;
-    } else if (operand.datatype == Datatype.word || operand.datatype == Datatype.byt) {
-      newOperand = new Operand(operand.opType, operand.datatype, operand.intValue);
+    } else if (operand.dataType == DataType.word || operand.dataType == DataType.byt) {
+      newOperand = new Operand(operand.opType, operand.dataType, operand.intValue);
     } else {
-      newOperand = new Operand(operand.opType, operand.datatype, operand.strValue);
+      newOperand = new Operand(operand.opType, operand.dataType, operand.strValue);
     }
     newOperand.isFinal = operand.isFinal;
     return newOperand;
@@ -517,7 +517,7 @@ public class Instruction {
             result += String.format(" (basePointer + %d)", operand.intValue);
             break;
           case CONSTANT:
-            if (operand.datatype == Datatype.string) {
+            if (operand.dataType == DataType.string) {
 
               // error detection
               if (operand.intValue == null) {
@@ -531,16 +531,16 @@ public class Instruction {
             break;
           case STACK16:
           case STACK8:
-            if (operand.datatype == Datatype.byt) {
+            if (operand.dataType == DataType.byt) {
               result += " unstack8";
-            } else if (operand.datatype == Datatype.word) {
+            } else if (operand.dataType == DataType.word) {
               result += " unstack16";
             }
             break;
           case ACC:
-            if (operand.datatype == Datatype.byt) {
+            if (operand.dataType == DataType.byt) {
               result += " acc8";
-            } else if (operand.datatype == Datatype.word) {
+            } else if (operand.dataType == DataType.word) {
               result += " acc16";
             }
             break;
@@ -625,10 +625,10 @@ public class Instruction {
             result += String.format(" value 0x%1$02X", operand2.intValue);
             break;
           case ACC:
-            if (operand2.datatype == Datatype.byt) {
+            if (operand2.dataType == DataType.byt) {
               result += ", value acc8";
             } else {
-              throw new RuntimeException("output with unsupported datatype for value operand");
+              throw new RuntimeException("output with unsupported dataType for value operand");
             }
             break;
           case GLOBAL_VAR:

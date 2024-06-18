@@ -25,11 +25,11 @@ package com.github.hanwelmer;
  */
 public class Operand {
   public OperandType opType;
-  public Datatype datatype;
+  public DataType dataType;
   public Integer intValue;
   public String strValue;
   public boolean isFinal = false;
-  // opType... | datatype... | strValue.. | intValue |
+  // opType... | dataType... | strValue.. | intValue |
   // ----------+-------------+------------+---------+
   // UNKNOWN.. | X.......... | X......... | X....... |
   // CONSTANT. | byt,integer | X......... | value... |
@@ -45,49 +45,51 @@ public class Operand {
     this.opType = opType;
   }
 
-  public Operand(OperandType opType, Datatype datatype) {
+  public Operand(OperandType opType, DataType dataType) {
     this.opType = opType;
-    this.datatype = datatype;
+    this.dataType = dataType;
   }
 
   public Operand(String labelName, Integer address) {
     this.opType = OperandType.LABEL;
-    this.datatype = Datatype.word;
+    this.dataType = DataType.word;
     this.strValue = labelName;
     this.intValue = address;
   }
 
-  public Operand(OperandType opType, Datatype datatype, String value) {
+  public Operand(OperandType opType, DataType dataType, String value) {
     this.opType = opType;
-    this.datatype = datatype;
+    this.dataType = dataType;
     this.strValue = value;
   }
 
-  public Operand(OperandType opType, Datatype datatype, Integer value) {
+  public Operand(OperandType opType, DataType dataType, Integer value) {
     this.opType = opType;
-    this.datatype = datatype;
+    this.dataType = dataType;
     this.intValue = value;
   }
 
-  public Operand(IdentifierType identifierType, Datatype datatype, int value) {
+  public Operand(IdentifierType identifierType, DataType dataType, int address) {
     if (identifierType == IdentifierType.CLASS_VARIABLE) {
       this.opType = OperandType.GLOBAL_VAR;
     } else if (identifierType == IdentifierType.LOCAL_VARIABLE) {
       this.opType = OperandType.LOCAL_VAR;
+    } else if (identifierType == IdentifierType.FORMAL_PARAMETER) {
+      this.opType = OperandType.LOCAL_VAR;
     } else {
       throw new RuntimeException("Internal compiler error: no OperandType for IdentifierType " + identifierType);
     }
-    this.datatype = datatype;
-    this.intValue = value;
+    this.dataType = dataType;
+    this.intValue = address;
   }
 
   public String toString() {
     String result = "operand(" + opType;
-    if (datatype != null) {
-      result += ", type=" + datatype;
+    if (dataType != null) {
+      result += ", type=" + dataType;
     }
     if (strValue != null) {
-      if (datatype == Datatype.string) {
+      if (dataType == DataType.string) {
         result += ", strValue=\"" + strValue + "\"";
       } else {
         result += ", strValue=" + strValue;
