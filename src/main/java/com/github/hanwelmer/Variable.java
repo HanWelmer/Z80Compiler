@@ -71,9 +71,6 @@ public class Variable {
   }
 
   public FormalParameter getFormalParameter(int index) throws FatalError {
-    if (index < 0 || index >= formalParameters.size()) {
-      throw new FatalError(39);
-    }
     return formalParameters.get(index);
   }
 

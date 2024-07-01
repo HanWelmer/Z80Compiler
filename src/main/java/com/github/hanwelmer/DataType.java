@@ -34,6 +34,22 @@ public enum DataType {
     this.size = size;
   }
 
+  static public DataType dataTypeFromLexemeType(LexemeType lexeme) {
+    if (lexeme == LexemeType.classLexeme) {
+      return DataType.clazz;
+    } else if (lexeme == LexemeType.byteLexeme) {
+      return DataType.byt;
+    } else if (lexeme == LexemeType.wordLexeme) {
+      return DataType.word;
+    } else if (lexeme == LexemeType.stringLexeme) {
+      return DataType.string;
+    } else if (lexeme == LexemeType.voidLexeme) {
+      return DataType.voidd;
+    } else {
+      throw new RuntimeException("Internal compiler error in Identifiers.declareId(): unknown DataType " + lexeme);
+    }
+  }
+
   public String getValue() {
     return value;
   }

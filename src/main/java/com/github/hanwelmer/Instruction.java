@@ -18,6 +18,7 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.hanwelmer;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 /**
@@ -30,6 +31,7 @@ public class Instruction {
   public Operand operand2;
   public EnumSet<LexemeType> modifiers;
   public ResultType resultType;
+  public ArrayList<FormalParameter> formalParameters;
 
   private EnumSet<FunctionType> noOperand = EnumSet.of(
       // special instructions:
@@ -457,7 +459,11 @@ public class Instruction {
       case method:
         // method identifier [modifiers] returnType (formalParameters)
         result += " " + operand.strValue + " " + modifiers + " " + resultType.getType();
-        result += " ()";
+        result += " (";
+        for (FormalParameter formalParameter : formalParameters) {
+          result += formalParameter;
+        }
+        result += ")";
         break;
       case stringConstant:
         result += " " + operand.intValue + " = \"" + operand.strValue + "\"";

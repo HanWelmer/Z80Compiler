@@ -1034,7 +1034,9 @@ public class pCompiler {
 
     // code generation
     int methodAddress = saveLabel();
-    plant(new Instruction(FunctionType.method, identifier, modifiers, resultType));
+    Instruction methodInstruction = new Instruction(FunctionType.method, identifier, modifiers, resultType);
+    methodInstruction.formalParameters = method.getFormalParameters();
+    plant(methodInstruction);
     // set start address for this method.
     method.setIntValue(methodAddress);
     // add method to symbol table.
@@ -2218,10 +2220,15 @@ public class pCompiler {
       Operand expression = expression(localStopSet);
 
       // semantic analysis.
-      FormalParameter parameter = method.getFormalParameter(parameterIndex);
-      if (parameter.getDataType() != expression.dataType) {
-        error(41); // incompatible data type between argument and formal
-                   // parameter.
+      if (parameterIndex >= method.getFormalParameters().size()) {
+        error(39); // number of arguments does not match number of formal
+                   // parameters.
+      } else {
+        FormalParameter parameter = method.getFormalParameter(parameterIndex);
+        if (parameter.getDataType() != expression.dataType) {
+          error(41); // incompatible data type between argument and formal
+                     // parameter.
+        }
       }
 
       // code generation.

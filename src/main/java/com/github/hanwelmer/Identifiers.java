@@ -117,19 +117,7 @@ public class Identifiers {
     var.setIdentifierType(identifierType);
 
     // set dataType
-    if (datatype == LexemeType.classLexeme) {
-      var.setDatatype(DataType.clazz);
-    } else if (datatype == LexemeType.byteLexeme) {
-      var.setDatatype(DataType.byt);
-    } else if (datatype == LexemeType.wordLexeme) {
-      var.setDatatype(DataType.word);
-    } else if (datatype == LexemeType.stringLexeme) {
-      var.setDatatype(DataType.string);
-    } else if (datatype == LexemeType.voidLexeme) {
-      var.setDatatype(DataType.voidd);
-    } else {
-      throw new RuntimeException("Internal compiler error in Identifiers.declareId(): unknown dataType " + datatype);
-    }
+    var.setDatatype(DataType.dataTypeFromLexemeType(datatype));
 
     // set modifiers
     var.setModifiers(modifiers);

@@ -36,4 +36,15 @@ public class FormalParameter {
     return basePointerOffset;
   }
 
+  public String toString() {
+    String result = "";
+    // for (LexemeType modifier : modifiers) {
+    // result += modifier + " ";
+    // }
+    result += dataType + " ";
+    result += name;
+    result += " {bp+" + basePointerOffset + "}";
+    return result;
+  }
+
 }
