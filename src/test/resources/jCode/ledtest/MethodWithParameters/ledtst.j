@@ -138,7 +138,7 @@ class LEDTest {
   /**
    * sleep for n miliseconds.
    */
-  public static void sleep(word n) {
+  public static void hold(word n) {
     while (n != 0) {
       sleepOneMillisecond();
       n--;
@@ -151,7 +151,7 @@ class LEDTest {
     while (1==1) {
       toggle();
       //Thread.sleep(500); // Sleep for 500 miliseconds.
-      sleep(500); // Sleep for 500 miliseconds.
+      hold(500); // Sleep for 500 miliseconds.
     }
   }
 }
