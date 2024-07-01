@@ -47,9 +47,9 @@ public class TestMethodInvocation extends AbstactRegressionTest {
     String testOutput = testWithRedirectedSystemOut("TestOneParameterIsoOne.j");
     System.out.println(testOutput);
     String[] lines = testOutput.split("\n");
-    assertTrue(lines.length == 14);
-    assertTrue("          ^unexpected symbol; found constant, expected [)]\r".equals(lines[2]));
-    assertTrue("2 errors.\r".equals(lines[13]));
+    assertTrue(lines.length == 4);
+    assertTrue("           ^number of arguments does not match number of formal parameters.\r".equals(lines[2]));
+    assertTrue("1 error.\r".equals(lines[3]));
     System.out.println("As expected.\n");
   }
 

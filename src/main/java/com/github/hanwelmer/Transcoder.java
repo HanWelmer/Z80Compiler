@@ -681,11 +681,11 @@ public class Transcoder {
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x32, memAddress % 256, memAddress / 256);
         } else if ((instruction.operand.opType == OperandType.LOCAL_VAR)
             && (instruction.operand.dataType == DataType.word || instruction.operand.dataType == DataType.string)) {
-          asmCode = String.format(INDENT + "LD    (IX - 0%02XH),L", 256 - byt);
+          asmCode = String.format(INDENT + "LD    (%s),L", basePointerPlusIndex(byt));
           asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x75, byt);
           result.add(asm);
           byteAddress += asm.getBytes().size();
-          asmCode = String.format(INDENT + "LD    (IX - 0%02XH),H", 255 - byt);
+          asmCode = String.format(INDENT + "LD    (%s),H", basePointerPlusIndex(byt + 1));
           asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x74, byt + 1);
         } else {
           throw new RuntimeException("illegal M-code instruction: " + instruction + " " + instruction.operand);
@@ -940,7 +940,7 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
         } else if ((instruction.operand.opType == OperandType.LOCAL_VAR) && (instruction.operand.dataType == DataType.byt)) {
-          asmCode = String.format(INDENT + "LD    (IX - 0%02XH),A", 256 - byt);
+          asmCode = String.format(INDENT + "LD    (%s),A", basePointerPlusIndex(byt));
           asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x77, byt);
         } else {
           throw new RuntimeException("illegal M-code instruction: " + instruction);
@@ -1057,19 +1057,19 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
         } else if (instruction.operand.opType == OperandType.LOCAL_VAR) {
-          asmCode = String.format(INDENT + "LD    L,(IX - 0%02XH)", 256 - byt);
+          asmCode = String.format(INDENT + "LD    L,(%s)", basePointerPlusIndex(byt));
           result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x6E, byt));
           byteAddress += 3;
-          asmCode = String.format(INDENT + "LD    H,(IX - 0%02XH)", 255 - byt);
+          asmCode = String.format(INDENT + "LD    H,(%s)", basePointerPlusIndex(byt + 1));
           result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x66, byt + 1));
           byteAddress += 3;
           asmCode = String.format(INDENT + "DEC   HL");
           result.add(new AssemblyInstruction(byteAddress, asmCode, 0x2B));
           byteAddress++;
-          asmCode = String.format(INDENT + "LD    (IX - 0%02XH),L", 256 - byt);
+          asmCode = String.format(INDENT + "LD    (%s),L", basePointerPlusIndex(byt));
           result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x75, byt));
           byteAddress += 3;
-          asmCode = String.format(INDENT + "LD    (IX - 0%02XH),H", 255 - byt);
+          asmCode = String.format(INDENT + "LD    (%s),H", basePointerPlusIndex(byt + 1));
           asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x74, byt + 1);
         } else {
           throw new RuntimeException("decrement16 with unsupported operandType");
@@ -1080,7 +1080,7 @@ public class Transcoder {
           result.addAll(operandToHL(instruction));
           asm = new AssemblyInstruction(byteAddress, INDENT + "DEC   (HL)", 0x35);
         } else if (instruction.operand.opType == OperandType.LOCAL_VAR) {
-          asmCode = String.format(INDENT + "DEC   (IX - 0%02XH)", 256 - byt);
+          asmCode = String.format(INDENT + "DEC   (%s)", basePointerPlusIndex(byt));
           asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x35, byt);
         } else {
           throw new RuntimeException("decrement8 with unsupported operandType");
@@ -1177,10 +1177,10 @@ public class Transcoder {
         }
         break;
       case stackAcc16:
-        asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH HL", 0xE6);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH HL", 0xE5);
         break;
       case stackAcc16Load:
-        result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  HL", 0xE6));
+        result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  HL", 0xE5));
         if (instruction.operand.opType == OperandType.STACK16) {
           throw new RuntimeException("illegal M-code instruction: stackAccLoad unstack");
         }
@@ -1288,6 +1288,25 @@ public class Transcoder {
     return result;
   } // transcode
 
+  /**
+   * Prepare the assembler string for a base pointer plus index.
+   * 
+   * @param byt
+   *          value for the index: 0..256.
+   * @return "IX - 128" .. "IX + 127"
+   */
+  private String basePointerPlusIndex(int byt) {
+    String result = "IX ";
+    if (byt >= 0 && byt <= 127) {
+      result += String.format("+ %d", byt);
+    } else if (byt >= 128 && byt <= 255) {
+      result += String.format("- %d", 256 - byt);
+    } else {
+      throw new RuntimeException(String.format("invalid base pointer relative index: ", byt));
+    }
+    return result;
+  }
+
   // escape control characters \\, \', \", \n, \r, \t, \b, \f, \a
   protected String escapeString(String str) {
     str = str.replace("\\", "\\\\");
@@ -1316,7 +1335,7 @@ public class Transcoder {
         if (byt < 0) {
           byt = 256 + byt;
         }
-        asmCode = String.format(INDENT + "LD    A,(IX - 0%02XH)", 256 - byt);
+        asmCode = String.format(INDENT + "LD    A,(%s)", basePointerPlusIndex(byt));
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x7E, byt);
         break;
       case CONSTANT:
@@ -1348,11 +1367,11 @@ public class Transcoder {
         if (byt < 0) {
           byt = 256 + byt;
         }
-        asmCode = String.format(INDENT + "LD    L,(IX - 0%02XH)", 256 - byt);
+        asmCode = String.format(INDENT + "LD    L,(%s)", basePointerPlusIndex(byt));
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x6E, byt);
         result.add(asm);
         byteAddress += asm.getBytes().size();
-        asmCode = String.format(INDENT + "LD    H,(IX - 0%02XH)", 255 - byt);
+        asmCode = String.format(INDENT + "LD    H,(%s)", basePointerPlusIndex(byt + 1));
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x66, byt + 1);
         break;
       case CONSTANT:

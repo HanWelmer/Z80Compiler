@@ -764,359 +764,136 @@
 21CD C9                  RET
 21CE             main:
 21CE             L0:
-21CE CD 73 22            CALL  L81
+21CE CD EF 21            CALL  L19
 21D1             L1:
 21D1 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
 21D4             L2:
-21D4                     ;;NoModifier.j(0) /*
+21D4                     ;;TestWordParameter.j(0) public class TestStatementExpression {
 21D4             L3:
-21D4                     ;;NoModifier.j(1)  * A small program in the miniJava language.
+21D4                     ;class TestStatementExpression [public]
 21D4             L4:
-21D4                     ;;NoModifier.j(2)  * Test final modifier in a local variable declaration.
+21D4                     ;;TestWordParameter.j(1)   
 21D4             L5:
-21D4                     ;;NoModifier.j(3)  */
+21D4                     ;;TestWordParameter.j(2)   private static void doIt(word w) {
 21D4             L6:
-21D4                     ;;NoModifier.j(4) class NoModifier {
+21D4                     ;method doIt [private, static] void (word w {bp+0})
 21D4             L7:
-21D4                     ;class NoModifier []
-21D4             L8:
-21D4                     ;;NoModifier.j(5)   public static void doByte() {
-21D4             L9:
-21D4                     ;method doByte [public, static] void ()
-21D4             L10:
 21D4 DD E5               PUSH  IX
-21D6             L11:
+21D6             L8:
 21D6 DD 21 00 00         LD    IX,0x0000
 21DA DD 39               ADD   IX,SP
-21DC             L12:
-21DC 21 FF FF            LD    HL,65535
+21DC             L9:
+21DC 21 00 00            LD    HL,65536
 21DF 39                  ADD   HL,SP
 21E0 F9                  LD    SP,HL
-21E1             L13:
-21E1                     ;;NoModifier.j(6)     byte b = 1;
-21E1             L14:
-21E1 3E 01               LD    A,1
-21E3             L15:
-21E3 DD 77 FF            LD    (IX - 1),A
-21E6             L16:
-21E6                     ;;NoModifier.j(7)     println(b);
-21E6             L17:
-21E6 DD 7E FF            LD    A,(IX - 1)
-21E9             L18:
-21E9 CD BE 21            CALL  writeLineA
-21EC             L19:
-21EC                     ;;NoModifier.j(8)   }
-21EC             L20:
-21EC DD F9               LD    SP,IX
-21EE             L21:
-21EE DD E1               POP   IX
-21F0             L22:
-21F0 C9                  return
-21F1             L23:
-21F1                     ;;NoModifier.j(9)   public static void doByteWord() {
-21F1             L24:
-21F1                     ;method doByteWord [public, static] void ()
-21F1             L25:
-21F1 DD E5               PUSH  IX
-21F3             L26:
-21F3 DD 21 00 00         LD    IX,0x0000
-21F7 DD 39               ADD   IX,SP
-21F9             L27:
-21F9 21 FD FF            LD    HL,65533
-21FC 39                  ADD   HL,SP
-21FD F9                  LD    SP,HL
-21FE             L28:
-21FE                     ;;NoModifier.j(10)     byte b = 2;
-21FE             L29:
-21FE 3E 02               LD    A,2
-2200             L30:
-2200 DD 77 FF            LD    (IX - 1),A
-2203             L31:
-2203                     ;;NoModifier.j(11)     word w = 3333;
-2203             L32:
-2203 21 05 0D            LD    HL,3333
-2206             L33:
-2206 DD 75 FD            LD    (IX - 3),L
-2209 DD 74 FE            LD    (IX - 2),H
-220C             L34:
-220C                     ;;NoModifier.j(12)     println(b);
-220C             L35:
-220C DD 7E FF            LD    A,(IX - 1)
-220F             L36:
-220F CD BE 21            CALL  writeLineA
-2212             L37:
-2212                     ;;NoModifier.j(13)     println(w);
-2212             L38:
-2212 DD 6E FD            LD    L,(IX - 3)
-2215 DD 66 FE            LD    H,(IX - 2)
-2218             L39:
-2218 CD 96 21            CALL  writeLineHL
-221B             L40:
-221B                     ;;NoModifier.j(14)   }
-221B             L41:
-221B DD F9               LD    SP,IX
-221D             L42:
-221D DD E1               POP   IX
-221F             L43:
-221F C9                  return
-2220             L44:
-2220                     ;;NoModifier.j(15)   public static void doWordByte() {
-2220             L45:
-2220                     ;method doWordByte [public, static] void ()
-2220             L46:
-2220 DD E5               PUSH  IX
-2222             L47:
-2222 DD 21 00 00         LD    IX,0x0000
-2226 DD 39               ADD   IX,SP
-2228             L48:
-2228 21 FD FF            LD    HL,65533
-222B 39                  ADD   HL,SP
-222C F9                  LD    SP,HL
-222D             L49:
-222D                     ;;NoModifier.j(16)     word w = 5555;
-222D             L50:
-222D 21 B3 15            LD    HL,5555
-2230             L51:
-2230 DD 75 FE            LD    (IX - 2),L
-2233 DD 74 FF            LD    (IX - 1),H
-2236             L52:
-2236                     ;;NoModifier.j(17)     byte b = 4;
-2236             L53:
-2236 3E 04               LD    A,4
-2238             L54:
-2238 DD 77 FD            LD    (IX - 3),A
-223B             L55:
-223B                     ;;NoModifier.j(18)     println(b);
-223B             L56:
-223B DD 7E FD            LD    A,(IX - 3)
-223E             L57:
-223E CD BE 21            CALL  writeLineA
-2241             L58:
-2241                     ;;NoModifier.j(19)     println(w);
-2241             L59:
-2241 DD 6E FE            LD    L,(IX - 2)
-2244 DD 66 FF            LD    H,(IX - 1)
-2247             L60:
-2247 CD 96 21            CALL  writeLineHL
-224A             L61:
-224A                     ;;NoModifier.j(20)   }
-224A             L62:
-224A DD F9               LD    SP,IX
-224C             L63:
-224C DD E1               POP   IX
-224E             L64:
-224E C9                  return
-224F             L65:
-224F                     ;;NoModifier.j(21)   public static void doString() {
-224F             L66:
-224F                     ;method doString [public, static] void ()
-224F             L67:
-224F DD E5               PUSH  IX
-2251             L68:
-2251 DD 21 00 00         LD    IX,0x0000
-2255 DD 39               ADD   IX,SP
-2257             L69:
-2257 21 FE FF            LD    HL,65534
-225A 39                  ADD   HL,SP
-225B F9                  LD    SP,HL
-225C             L70:
-225C                     ;;NoModifier.j(22)     String str = "Hallo Wereld";
-225C             L71:
-225C 21 A2 22            LD    HL,L107
-225F             L72:
-225F DD 75 FE            LD    (IX - 2),L
-2262 DD 74 FF            LD    (IX - 1),H
-2265             L73:
-2265                     ;;NoModifier.j(23)     println(str);
-2265             L74:
-2265 DD 6E FE            LD    L,(IX - 2)
-2268 DD 66 FF            LD    H,(IX - 1)
-226B             L75:
-226B CD 43 20            CALL  writeLineStr
-226E             L76:
-226E                     ;;NoModifier.j(24)   }
-226E             L77:
-226E DD F9               LD    SP,IX
-2270             L78:
-2270 DD E1               POP   IX
-2272             L79:
-2272 C9                  return
-2273             L80:
-2273                     ;;NoModifier.j(25)   public static void main() {
-2273             L81:
-2273                     ;method main [public, static] void ()
-2273             L82:
-2273 DD E5               PUSH  IX
-2275             L83:
-2275 DD 21 00 00         LD    IX,0x0000
-2279 DD 39               ADD   IX,SP
-227B             L84:
-227B 21 FF FF            LD    HL,65535
-227E 39                  ADD   HL,SP
-227F F9                  LD    SP,HL
-2280             L85:
-2280                     ;;NoModifier.j(26)     byte b = 0;
-2280             L86:
-2280 3E 00               LD    A,0
-2282             L87:
-2282 DD 77 FF            LD    (IX - 1),A
-2285             L88:
-2285                     ;;NoModifier.j(27)     println(b);
-2285             L89:
-2285 DD 7E FF            LD    A,(IX - 1)
-2288             L90:
-2288 CD BE 21            CALL  writeLineA
-228B             L91:
-228B                     ;;NoModifier.j(28)     doString();
-228B             L92:
-228B CD 4F 22            CALL  L66
-228E             L93:
-228E                     ;;NoModifier.j(29)     doByte();
-228E             L94:
-228E CD D4 21            CALL  L9
-2291             L95:
-2291                     ;;NoModifier.j(30)     doByteWord();
-2291             L96:
-2291 CD F1 21            CALL  L24
-2294             L97:
-2294                     ;;NoModifier.j(31)     doWordByte();
-2294             L98:
-2294 CD 20 22            CALL  L45
-2297             L99:
-2297                     ;;NoModifier.j(32)     println("klaar");
-2297             L100:
-2297 21 AF 22            LD    HL,L108
-229A             L101:
-229A CD 43 20            CALL  writeLineStr
-229D             L102:
-229D                     ;;NoModifier.j(33)   }
-229D             L103:
-229D DD F9               LD    SP,IX
-229F             L104:
-229F DD E1               POP   IX
-22A1             L105:
-22A1 C9                  return
-22A2             L106:
-22A2                     ;;NoModifier.j(34) }
-22A2             L107:
-22A2 48 61 6C 6C
-     6F 20 57 65
-     72 65 6C 64
-     00                  .ASCIZ  "Hallo Wereld"
-22AF             L108:
-22AF 6B 6C 61 61
-     72 00               .ASCIZ  "klaar"
+21E1             L10:
+21E1                     ;;TestWordParameter.j(3)     println(w);
+21E1             L11:
+21E1 DD 6E 04            LD    L,(IX + 4)
+21E4 DD 66 05            LD    H,(IX + 5)
+21E7             L12:
+21E7 CD 96 21            CALL  writeLineHL
+21EA             L13:
+21EA                     ;;TestWordParameter.j(4)   }
+21EA             L14:
+21EA DD F9               LD    SP,IX
+21EC             L15:
+21EC DD E1               POP   IX
+21EE             L16:
+21EE C9                  return
+21EF             L17:
+21EF                     ;;TestWordParameter.j(5) 
+21EF             L18:
+21EF                     ;;TestWordParameter.j(6)   public static void main() {
+21EF             L19:
+21EF                     ;method main [public, static] void ()
+21EF             L20:
+21EF DD E5               PUSH  IX
+21F1             L21:
+21F1 DD 21 00 00         LD    IX,0x0000
+21F5 DD 39               ADD   IX,SP
+21F7             L22:
+21F7 21 00 00            LD    HL,65536
+21FA 39                  ADD   HL,SP
+21FB F9                  LD    SP,HL
+21FC             L23:
+21FC                     ;;TestWordParameter.j(7)     println("Hallo ");
+21FC             L24:
+21FC 21 14 22            LD    HL,L38
+21FF             L25:
+21FF CD 43 20            CALL  writeLineStr
+2202             L26:
+2202                     ;;TestWordParameter.j(8)     doIt(257);
+2202             L27:
+2202 21 01 01            LD    HL,257
+2205             L28:
+2205 E5                  PUSH HL
+2206             L29:
+2206 CD D4 21            CALL  L6
+2209             L30:
+2209                     ;;TestWordParameter.j(9)     println(" wereld");
+2209             L31:
+2209 21 1B 22            LD    HL,L39
+220C             L32:
+220C CD 43 20            CALL  writeLineStr
+220F             L33:
+220F                     ;;TestWordParameter.j(10)   }
+220F             L34:
+220F DD F9               LD    SP,IX
+2211             L35:
+2211 DD E1               POP   IX
+2213             L36:
+2213 C9                  return
+2214             L37:
+2214                     ;;TestWordParameter.j(11) }
+2214             L38:
+2214 48 61 6C 6C
+     6F 20 00            .ASCIZ  "Hallo "
+221B             L39:
+221B 20 77 65 72
+     65 6C 64 00         .ASCIZ  " wereld"
 
 Labels and cross references:
       L0 = 21CE :
       L1 = 21D1 :
-     L10 = 21D4 :
-    L100 = 2297 :
-    L101 = 229A :
-    L102 = 229D :
-    L103 = 229D :
-    L104 = 229F :
-    L105 = 22A1 :
-    L106 = 22A2 :
-    L107 = 22A2 : 225C
-    L108 = 22AF : 2297
-     L11 = 21D6 :
-     L12 = 21DC :
-     L13 = 21E1 :
-     L14 = 21E1 :
-     L15 = 21E3 :
-     L16 = 21E6 :
-     L17 = 21E6 :
-     L18 = 21E9 :
-     L19 = 21EC :
+     L10 = 21E1 :
+     L11 = 21E1 :
+     L12 = 21E7 :
+     L13 = 21EA :
+     L14 = 21EA :
+     L15 = 21EC :
+     L16 = 21EE :
+     L17 = 21EF :
+     L18 = 21EF :
+     L19 = 21EF : 21CE
       L2 = 21D4 :
-     L20 = 21EC :
-     L21 = 21EE :
-     L22 = 21F0 :
-     L23 = 21F1 :
-     L24 = 21F1 : 2291
-     L25 = 21F1 :
-     L26 = 21F3 :
-     L27 = 21F9 :
-     L28 = 21FE :
-     L29 = 21FE :
+     L20 = 21EF :
+     L21 = 21F1 :
+     L22 = 21F7 :
+     L23 = 21FC :
+     L24 = 21FC :
+     L25 = 21FF :
+     L26 = 2202 :
+     L27 = 2202 :
+     L28 = 2205 :
+     L29 = 2206 :
       L3 = 21D4 :
-     L30 = 2200 :
-     L31 = 2203 :
-     L32 = 2203 :
-     L33 = 2206 :
-     L34 = 220C :
-     L35 = 220C :
-     L36 = 220F :
-     L37 = 2212 :
-     L38 = 2212 :
-     L39 = 2218 :
+     L30 = 2209 :
+     L31 = 2209 :
+     L32 = 220C :
+     L33 = 220F :
+     L34 = 220F :
+     L35 = 2211 :
+     L36 = 2213 :
+     L37 = 2214 :
+     L38 = 2214 : 21FC
+     L39 = 221B : 2209
       L4 = 21D4 :
-     L40 = 221B :
-     L41 = 221B :
-     L42 = 221D :
-     L43 = 221F :
-     L44 = 2220 :
-     L45 = 2220 : 2294
-     L46 = 2220 :
-     L47 = 2222 :
-     L48 = 2228 :
-     L49 = 222D :
       L5 = 21D4 :
-     L50 = 222D :
-     L51 = 2230 :
-     L52 = 2236 :
-     L53 = 2236 :
-     L54 = 2238 :
-     L55 = 223B :
-     L56 = 223B :
-     L57 = 223E :
-     L58 = 2241 :
-     L59 = 2241 :
-      L6 = 21D4 :
-     L60 = 2247 :
-     L61 = 224A :
-     L62 = 224A :
-     L63 = 224C :
-     L64 = 224E :
-     L65 = 224F :
-     L66 = 224F : 228B
-     L67 = 224F :
-     L68 = 2251 :
-     L69 = 2257 :
+      L6 = 21D4 : 2206
       L7 = 21D4 :
-     L70 = 225C :
-     L71 = 225C :
-     L72 = 225F :
-     L73 = 2265 :
-     L74 = 2265 :
-     L75 = 226B :
-     L76 = 226E :
-     L77 = 226E :
-     L78 = 2270 :
-     L79 = 2272 :
-      L8 = 21D4 :
-     L80 = 2273 :
-     L81 = 2273 : 21CE
-     L82 = 2273 :
-     L83 = 2275 :
-     L84 = 227B :
-     L85 = 2280 :
-     L86 = 2280 :
-     L87 = 2282 :
-     L88 = 2285 :
-     L89 = 2285 :
-      L9 = 21D4 : 228E
-     L90 = 2288 :
-     L91 = 228B :
-     L92 = 228B :
-     L93 = 228E :
-     L94 = 228E :
-     L95 = 2291 :
-     L96 = 2291 :
-     L97 = 2294 :
-     L98 = 2294 :
-     L99 = 2297 :
+      L8 = 21D6 :
+      L9 = 21DC :
   WAIT1M = 2018 : 2007 2011
  WAIT1M2 = 201D : 2020
    div16 = 2123 :
@@ -1168,7 +945,7 @@ putSpace = 2057 : 2078
 writeHL1 = 21A8 : 21A3 21B1
 writeHL2 = 21B3 : 21B9
 writeHL3 = 21B4 : 21A6
-writeLineA = 21BE : 21E9 220F 223E 2288
-writeLineHL = 2196 : 2218 2247
-writeLineStr = 2043 : 226B 229A
+writeLineA = 21BE :
+writeLineHL = 2196 : 21E7
+writeLineStr = 2043 : 21FF 220C
 writeStr = 204A : 203E 2043

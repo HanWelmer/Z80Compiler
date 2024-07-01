@@ -48,7 +48,7 @@ public class TestLocalVariableDeclaration extends AbstactRegressionTest {
     System.out.println(testOutput);
     String[] lines = testOutput.split("\n");
     assertTrue(lines.length == 5);
-    assertTrue("              ^unexpected modifier in local variable declaration.\r".equals(lines[2]));
+    assertTrue("              ^unexpected modifier.\r".equals(lines[2]));
     assertTrue("1 error.\r".equals(lines[4]));
     System.out.println("As expected.\n");
   }

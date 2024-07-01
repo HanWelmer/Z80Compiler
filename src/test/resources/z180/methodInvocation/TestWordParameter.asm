@@ -764,241 +764,89 @@ writeA:
         RET
 main:
 L0:
-        CALL  L81
+        CALL  L19
 L1:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
 L2:
-        ;;NoModifier.j(0) /*
+        ;;TestWordParameter.j(0) public class TestStatementExpression {
 L3:
-        ;;NoModifier.j(1)  * A small program in the miniJava language.
+        ;class TestStatementExpression [public]
 L4:
-        ;;NoModifier.j(2)  * Test final modifier in a local variable declaration.
+        ;;TestWordParameter.j(1)   
 L5:
-        ;;NoModifier.j(3)  */
+        ;;TestWordParameter.j(2)   private static void doIt(word w) {
 L6:
-        ;;NoModifier.j(4) class NoModifier {
+        ;method doIt [private, static] void (word w {bp+0})
 L7:
-        ;class NoModifier []
+        PUSH  IX
 L8:
-        ;;NoModifier.j(5)   public static void doByte() {
+        LD    IX,0x0000
+        ADD   IX,SP
 L9:
-        ;method doByte [public, static] void ()
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
 L10:
-        PUSH  IX
+        ;;TestWordParameter.j(3)     println(w);
 L11:
-        LD    IX,0x0000
-        ADD   IX,SP
+        LD    L,(IX + 4)
+        LD    H,(IX + 5)
 L12:
-        LD    HL,65535
-        ADD   HL,SP
-        LD    SP,HL
+        CALL  writeLineHL
 L13:
-        ;;NoModifier.j(6)     byte b = 1;
+        ;;TestWordParameter.j(4)   }
 L14:
-        LD    A,1
+        LD    SP,IX
 L15:
-        LD    (IX - 1),A
+        POP   IX
 L16:
-        ;;NoModifier.j(7)     println(b);
+        return
 L17:
-        LD    A,(IX - 1)
+        ;;TestWordParameter.j(5) 
 L18:
-        CALL  writeLineA
+        ;;TestWordParameter.j(6)   public static void main() {
 L19:
-        ;;NoModifier.j(8)   }
-L20:
-        LD    SP,IX
-L21:
-        POP   IX
-L22:
-        return
-L23:
-        ;;NoModifier.j(9)   public static void doByteWord() {
-L24:
-        ;method doByteWord [public, static] void ()
-L25:
-        PUSH  IX
-L26:
-        LD    IX,0x0000
-        ADD   IX,SP
-L27:
-        LD    HL,65533
-        ADD   HL,SP
-        LD    SP,HL
-L28:
-        ;;NoModifier.j(10)     byte b = 2;
-L29:
-        LD    A,2
-L30:
-        LD    (IX - 1),A
-L31:
-        ;;NoModifier.j(11)     word w = 3333;
-L32:
-        LD    HL,3333
-L33:
-        LD    (IX - 3),L
-        LD    (IX - 2),H
-L34:
-        ;;NoModifier.j(12)     println(b);
-L35:
-        LD    A,(IX - 1)
-L36:
-        CALL  writeLineA
-L37:
-        ;;NoModifier.j(13)     println(w);
-L38:
-        LD    L,(IX - 3)
-        LD    H,(IX - 2)
-L39:
-        CALL  writeLineHL
-L40:
-        ;;NoModifier.j(14)   }
-L41:
-        LD    SP,IX
-L42:
-        POP   IX
-L43:
-        return
-L44:
-        ;;NoModifier.j(15)   public static void doWordByte() {
-L45:
-        ;method doWordByte [public, static] void ()
-L46:
-        PUSH  IX
-L47:
-        LD    IX,0x0000
-        ADD   IX,SP
-L48:
-        LD    HL,65533
-        ADD   HL,SP
-        LD    SP,HL
-L49:
-        ;;NoModifier.j(16)     word w = 5555;
-L50:
-        LD    HL,5555
-L51:
-        LD    (IX - 2),L
-        LD    (IX - 1),H
-L52:
-        ;;NoModifier.j(17)     byte b = 4;
-L53:
-        LD    A,4
-L54:
-        LD    (IX - 3),A
-L55:
-        ;;NoModifier.j(18)     println(b);
-L56:
-        LD    A,(IX - 3)
-L57:
-        CALL  writeLineA
-L58:
-        ;;NoModifier.j(19)     println(w);
-L59:
-        LD    L,(IX - 2)
-        LD    H,(IX - 1)
-L60:
-        CALL  writeLineHL
-L61:
-        ;;NoModifier.j(20)   }
-L62:
-        LD    SP,IX
-L63:
-        POP   IX
-L64:
-        return
-L65:
-        ;;NoModifier.j(21)   public static void doString() {
-L66:
-        ;method doString [public, static] void ()
-L67:
-        PUSH  IX
-L68:
-        LD    IX,0x0000
-        ADD   IX,SP
-L69:
-        LD    HL,65534
-        ADD   HL,SP
-        LD    SP,HL
-L70:
-        ;;NoModifier.j(22)     String str = "Hallo Wereld";
-L71:
-        LD    HL,L107
-L72:
-        LD    (IX - 2),L
-        LD    (IX - 1),H
-L73:
-        ;;NoModifier.j(23)     println(str);
-L74:
-        LD    L,(IX - 2)
-        LD    H,(IX - 1)
-L75:
-        CALL  writeLineStr
-L76:
-        ;;NoModifier.j(24)   }
-L77:
-        LD    SP,IX
-L78:
-        POP   IX
-L79:
-        return
-L80:
-        ;;NoModifier.j(25)   public static void main() {
-L81:
         ;method main [public, static] void ()
-L82:
+L20:
         PUSH  IX
-L83:
+L21:
         LD    IX,0x0000
         ADD   IX,SP
-L84:
-        LD    HL,65535
+L22:
+        LD    HL,65536
         ADD   HL,SP
         LD    SP,HL
-L85:
-        ;;NoModifier.j(26)     byte b = 0;
-L86:
-        LD    A,0
-L87:
-        LD    (IX - 1),A
-L88:
-        ;;NoModifier.j(27)     println(b);
-L89:
-        LD    A,(IX - 1)
-L90:
-        CALL  writeLineA
-L91:
-        ;;NoModifier.j(28)     doString();
-L92:
-        CALL  L66
-L93:
-        ;;NoModifier.j(29)     doByte();
-L94:
-        CALL  L9
-L95:
-        ;;NoModifier.j(30)     doByteWord();
-L96:
-        CALL  L24
-L97:
-        ;;NoModifier.j(31)     doWordByte();
-L98:
-        CALL  L45
-L99:
-        ;;NoModifier.j(32)     println("klaar");
-L100:
-        LD    HL,L108
-L101:
+L23:
+        ;;TestWordParameter.j(7)     println("Hallo ");
+L24:
+        LD    HL,L38
+L25:
         CALL  writeLineStr
-L102:
-        ;;NoModifier.j(33)   }
-L103:
+L26:
+        ;;TestWordParameter.j(8)     doIt(257);
+L27:
+        LD    HL,257
+L28:
+        PUSH HL
+L29:
+        CALL  L6
+L30:
+        ;;TestWordParameter.j(9)     println(" wereld");
+L31:
+        LD    HL,L39
+L32:
+        CALL  writeLineStr
+L33:
+        ;;TestWordParameter.j(10)   }
+L34:
         LD    SP,IX
-L104:
+L35:
         POP   IX
-L105:
+L36:
         return
-L106:
-        ;;NoModifier.j(34) }
-L107:
-        .ASCIZ  "Hallo Wereld"
-L108:
-        .ASCIZ  "klaar"
+L37:
+        ;;TestWordParameter.j(11) }
+L38:
+        .ASCIZ  "Hallo "
+L39:
+        .ASCIZ  " wereld"

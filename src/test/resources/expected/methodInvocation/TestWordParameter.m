@@ -4,7 +4,7 @@
    3 class TestStatementExpression [public]
    4 ;TestWordParameter.j(1)   
    5 ;TestWordParameter.j(2)   private static void doIt(word w) {
-   6 method doIt [private, static] void ()
+   6 method doIt [private, static] void (word w {bp+4})
    7 <basePointer
    8 basePointer= stackPointer
    9 stackPointer+ constant 0

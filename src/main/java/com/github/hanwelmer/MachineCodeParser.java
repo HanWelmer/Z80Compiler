@@ -293,17 +293,17 @@ public class MachineCodeParser {
    * @return
    */
   protected Instruction parseMethod(String line, FunctionType functionType) {
-    Instruction result;
-    EnumSet<LexemeType> modifiers;
-    String identifier;
+    String identifier = parseKeyword(line);
     skipSpaces(line);
-    identifier = parseKeyword(line);
-    skipSpaces(line);
-    modifiers = parseModifiers(line);
+    EnumSet<LexemeType> modifiers = parseModifiers(line);
     ResultType resultType = new ResultType();
-    // TODO read resultType
-    resultType.setType(LexemeType.voidLexeme);
-    result = new Instruction(functionType, identifier, modifiers, resultType);
+    // resultType
+    String temp = parseKeyword(line);
+    resultType.setType(LexemeType.valueFor(temp.trim()));
+    Instruction result = new Instruction(functionType, identifier, modifiers, resultType);
+    // formal parameters
+    skipUntil(line, '(');
+    result.formalParameters = parseFormalParameters(line);
     return result;
   }
 
@@ -338,7 +338,43 @@ public class MachineCodeParser {
     return result;
   }
 
+  // FormalParameter := '(' FormalParameterList? ')'.
+  // FormalParameterList := FormalParameter (', ' FormalParameter)*.
+  // FormalParameter := modifiers type identifier "{bp+" index '}'.
+  // modifiers := "final"?.
+  // example: (word w {bp+4})
+  private ArrayList<FormalParameter> parseFormalParameters(String line) {
+    ArrayList<FormalParameter> result = new ArrayList<FormalParameter>();
+    // skip opening (.
+    pos++;
+    while (pos < line.length() && line.charAt(pos) != ')') {
+      String temp = parseKeyword(line).trim();
+      // optional modifier
+      LexemeType lexeme = LexemeType.valueFor(temp);
+      EnumSet<LexemeType> modifiers = EnumSet.noneOf(LexemeType.class);
+      if (lexeme == LexemeType.finalLexeme) {
+        modifiers.add(lexeme);
+        skipSpaces(line);
+        temp = parseKeyword(line).trim();
+        lexeme = LexemeType.valueFor(temp);
+      }
+      // data type
+      DataType dataType = DataType.dataTypeFromLexemeType(lexeme);
+      // identifier
+      skipSpaces(line);
+      String name = parseKeyword(line).trim();
+      // skip base pointer index and closing } .
+      skipUntil(line, '}');
+      pos++;
+      result.add(new FormalParameter(name, modifiers, dataType));
+    }
+    // skip closing (.
+    pos++;
+    return result;
+  }
+
   protected String parseKeyword(String line) {
+    skipSpaces(line);
     String result = "";
     while (pos < line.length() && !Character.isWhitespace(line.charAt(pos))) {
       result += line.charAt(pos);
