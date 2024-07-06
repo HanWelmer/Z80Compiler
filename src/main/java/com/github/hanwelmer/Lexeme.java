@@ -111,7 +111,6 @@ public class Lexeme {
       case outputLexeme:
       case readLexeme:
       case printlnLexeme:
-      case sleepLexeme:
       case eof:
       case unknown:
         // nothing todo

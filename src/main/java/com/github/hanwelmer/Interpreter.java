@@ -546,13 +546,6 @@ public class Interpreter {
       case returnFunction:
         pc = pop();
         break;
-      case sleep:
-        try {
-          Thread.sleep(getOp(instr.operand));
-        } catch (InterruptedException e) {
-          System.out.println(e);
-        }
-        break;
       case stop:
         pc = instructions.size();
         System.out.println("stop");

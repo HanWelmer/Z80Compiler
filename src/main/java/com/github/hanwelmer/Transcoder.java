@@ -160,6 +160,7 @@ public class Transcoder {
    */
   public ArrayList<AssemblyInstruction> transcode(ArrayList<Instruction> instructions) {
     // Initialization.
+    byteAddress = MIN_BIN;
     ArrayList<AssemblyInstruction> z80Instructions = new ArrayList<AssemblyInstruction>();
     labels.clear();
     for (String key : labelReferences.keySet()) {
@@ -1157,25 +1158,6 @@ public class Transcoder {
       case returnFunction:
         asm = new AssemblyInstruction(byteAddress, String.format(INDENT + "return"), 0xC9);
         break;
-      case sleep:
-        if (instruction.operand.dataType == DataType.byt) {
-          if (instruction.operand.opType != OperandType.ACC) {
-            asm = operandToA(instruction.operand);
-            result.add(asm);
-            byteAddress += asm.getBytes().size();
-          }
-          putLabelReference("sleepA", byteAddress);
-          asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  sleepA", 0xCD, 0, 0);
-        } else if (instruction.operand.dataType == DataType.word) {
-          if (instruction.operand.opType != OperandType.ACC) {
-            result.addAll(operandToHL(instruction));
-          }
-          putLabelReference("sleepHL", byteAddress);
-          asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  sleepHL", 0xCD, 0, 0);
-        } else {
-          throw new RuntimeException("sleep with unsupported operand dataType");
-        }
-        break;
       case stackAcc16:
         asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH HL", 0xE5);
         break;
@@ -1459,101 +1441,6 @@ public class Transcoder {
     result.add(plantAssemblyInstruction(INDENT + "LD    SP,TOS", 0x31, 0x00, 0xFD));
     putLabelReference("main", byteAddress);
     result.add(plantAssemblyInstruction(INDENT + "JP    main", 0xC3, 0, 0));
-
-    // start of module sleep.asm
-    result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    result.add(new AssemblyInstruction(byteAddress, ";sleepHL - Wait HL * 1 msec @ 18,432 MHz with no wait states"));
-    result.add(new AssemblyInstruction(byteAddress, ";  IN:  HL number of msec to wait"));
-    result.add(new AssemblyInstruction(byteAddress, ";  OUT: none"));
-    result.add(new AssemblyInstruction(byteAddress, ";  USES: 4 bytes on stack"));
-    result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    labels.put("sleepHL", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "sleepHL:"));
-    result.add(plantAssemblyInstruction(INDENT + "PUSH  AF", 0xF5));
-    labels.put("sleep1", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "sleep1:"));
-    putLabelReference("WAIT1M", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "CALL  WAIT1M      ;Wait 1 msec", 0xCD, 0, 0));
-    result.add(plantAssemblyInstruction(INDENT + "DEC   HL", 0x2B));
-    result.add(plantAssemblyInstruction(INDENT + "LD    A,H", 0x7C));
-    result.add(plantAssemblyInstruction(INDENT + "OR    A,L", 0xB5));
-    putLabelReference("sleep1", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,sleep1", 0x20, 0));
-    result.add(plantAssemblyInstruction(INDENT + "POP   AF", 0xF1));
-    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
-
-    result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    result.add(new AssemblyInstruction(byteAddress, ";sleepA - Wait A * 1 msec @ 18,432 MHz with no wait states"));
-    result.add(new AssemblyInstruction(byteAddress, ";  IN:  A number of msec to wait"));
-    result.add(new AssemblyInstruction(byteAddress, ";  OUT: none"));
-    result.add(new AssemblyInstruction(byteAddress, ";  USES: no stack"));
-    result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    labels.put("sleepA", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "sleepA:"));
-    putLabelReference("WAIT1M", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "CALL  WAIT1M      ;Wait 1 msec", 0xCD, 0, 0));
-    result.add(plantAssemblyInstruction(INDENT + "DEC   A", 0x3D));
-    putLabelReference("sleep1", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,sleepA", 0x20, 0));
-    result.add(plantAssemblyInstruction(INDENT + "RET", 0xC9));
-
-    result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    result.add(new AssemblyInstruction(byteAddress, ";WAIT1M"));
-    result.add(new AssemblyInstruction(byteAddress, ";wait 1 msec at 18,432 MHz with no wait states"));
-    result.add(new AssemblyInstruction(byteAddress, ";The routine requires 56+n*22 states, so that with n=834"));
-    result.add(new AssemblyInstruction(byteAddress, ";28  clock cycles remain left."));
-    result.add(new AssemblyInstruction(byteAddress, ";****************"));
-    labels.put("WAIT1M", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "WAIT1M:"));
-    result.add(plantAssemblyInstruction(INDENT + "PUSH  HL          ;5      11 (11)", 0xE5));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem write"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 inc SP"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem write"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 inc SP"));
-    result.add(plantAssemblyInstruction(INDENT + "PUSH  AF          ;5      11 (22)", 0xF5));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem write"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 inc SP"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem write"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 inc SP"));
-    result.add(plantAssemblyInstruction(INDENT + "LD    HL, 834     ;3      9 (31)", 0x21, 0x42, 0x03));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    labels.put("WAIT1M2", byteAddress);
-    result.add(new AssemblyInstruction(byteAddress, "WAIT1M2:"));
-    result.add(plantAssemblyInstruction(INDENT + "DEC   HL          ;2      4 (31+n*4)", 0x2B));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 execute"));
-    result.add(plantAssemblyInstruction(INDENT + "LD    A,H         ;2      6 (31+n*10)", 0x7C));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 execute"));
-    result.add(plantAssemblyInstruction(INDENT + "OR    A,L         ;2      4 (31+n*14)", 0xB5));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 execute"));
-    putLabelReference("WAIT1M2", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JR    NZ,WAIT1M2  ;4      8 (31+n*22) if NZ", 0x20, 0));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 execute"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       1 execute"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;2      6 (29+n*22) if not NZ"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(plantAssemblyInstruction(INDENT + "POP   AF          ;3      9 (38+n*22)", 0xF1));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(plantAssemblyInstruction(INDENT + "POP   HL          ;3      9 (47+n*22)", 0xE1));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(plantAssemblyInstruction(INDENT + "RET               ;3      9 (56+n*22)", 0xC9));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 opcode"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    result.add(new AssemblyInstruction(byteAddress, INDENT + "                  ;       3 mem read"));
-    // end of module wait.asm
 
     // start of module chario.asm
     result.add(new AssemblyInstruction(byteAddress, ";****************"));

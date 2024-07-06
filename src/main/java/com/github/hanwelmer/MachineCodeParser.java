@@ -164,7 +164,6 @@ public class MachineCodeParser {
         case output:
         case revAcc16Compare:
         case revAcc8Compare:
-        case sleep:
         case stackAcc16Load:
         case stackAcc8Load:
           throw new RuntimeException("Internal error; functionType not implemented yet: " + keyword);

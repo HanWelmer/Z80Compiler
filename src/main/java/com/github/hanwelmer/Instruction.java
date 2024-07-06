@@ -51,7 +51,7 @@ public class Instruction {
 
   private EnumSet<FunctionType> oneOperand = EnumSet.of(
       // special instructions:
-      FunctionType.stringConstant, FunctionType.comment, FunctionType.call, FunctionType.sleep
+      FunctionType.stringConstant, FunctionType.comment, FunctionType.call
       // Input and output instructions:
       , FunctionType.input
       // 8-bit instructions:
@@ -110,11 +110,6 @@ public class Instruction {
         if ((operand == null) || (operand.opType != OperandType.CONSTANT) || (operand.dataType != DataType.byt)) {
           throw new RuntimeException(
               "Internal compiler error: functionType " + fn + " expects constant byte value for port parameter.");
-        }
-        break;
-      case sleep:
-        if ((operand == null) || !((operand.dataType == DataType.byt) || (operand.dataType == DataType.word))) {
-          throw new RuntimeException("Internal compiler error: functionType " + fn + " expects byte or word value.");
         }
         break;
       case comment:
@@ -584,7 +579,6 @@ public class Instruction {
       case brLe:
       case brGe:
       case brGt:
-      case sleep:
       case call:
         result += " " + operand.intValue;
         break;

@@ -136,7 +136,7 @@ public class pCompiler {
   private static final EnumSet<LexemeType> START_STATEMENT = EnumSet.of(LexemeType.beginLexeme, LexemeType.semicolon,
       LexemeType.finalLexeme, LexemeType.identifier, LexemeType.byteLexeme, LexemeType.wordLexeme, LexemeType.stringLexeme,
       LexemeType.ifLexeme, LexemeType.whileLexeme, LexemeType.doLexeme, LexemeType.forLexeme, LexemeType.returnLexeme,
-      LexemeType.printlnLexeme, LexemeType.outputLexeme, LexemeType.sleepLexeme);
+      LexemeType.printlnLexeme, LexemeType.outputLexeme);
   // Lexeme types that start an expression.
   private static final EnumSet<LexemeType> START_EXPRESSION = EnumSet.of(LexemeType.LPAREN, LexemeType.identifier,
       LexemeType.constant, LexemeType.stringConstant, LexemeType.inputLexeme, LexemeType.readLexeme);
@@ -1447,7 +1447,7 @@ public class pCompiler {
 
   // statementExceptIf ::= block | emptyStatement | whileStatement | doStatement
   // | forStatement | returnStatement | printlnStatement |
-  // outputStatement | sleepStatement | expressionStatement.
+  // outputStatement | expressionStatement.
   private int statementExceptIf(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExceptIf: start with stopSet = " + stopSet);
 
@@ -1479,9 +1479,6 @@ public class pCompiler {
         break;
       case outputLexeme:
         outputStatement(stopSet);
-        break;
-      case sleepLexeme:
-        sleepStatement(stopSet);
         break;
       default:
         expressionStatement(stopSet);
@@ -1871,51 +1868,6 @@ public class pCompiler {
 
     debug("\noutput: end");
   } // outputStatement
-
-  // sleepStatement = "sleep" "(" expression ")".
-  private void sleepStatement(EnumSet<LexemeType> stopSet) throws FatalError {
-    debug("\nsleep: start with stopSet = " + stopSet);
-
-    // lexical analysis.
-    // skip sleep symbol.
-    lexeme = lexemeReader.getLexeme(sourceCode);
-
-    EnumSet<LexemeType> stopSleepSet = stopSet.clone();
-    stopSleepSet.addAll(START_EXPRESSION);
-    stopSleepSet.add(LexemeType.RPAREN);
-    stopSleepSet.add(LexemeType.semicolon);
-
-    // skip left bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.LPAREN), stopSleepSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // read second expression.
-    Operand value = expression(stopSleepSet);
-
-    // semantic analysis.
-    debug("\nsleep: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    // check value has type byte or word.
-    if (value.dataType != DataType.byt && value.dataType != DataType.word) {
-      error(18);
-    }
-
-    // code generation.
-    plant(new Instruction(FunctionType.sleep, value));
-
-    // lexical analysis.
-    // skip right bracket.
-    if (checkOrSkip(EnumSet.of(LexemeType.RPAREN), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    // skip semicolon.
-    if (checkOrSkip(EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
-    }
-
-    debug("\nsleep: end");
-  } // sleepStatement
 
   // expressionStatement ::= statementExpression ";".
   private void expressionStatement(EnumSet<LexemeType> stopSet) throws FatalError {

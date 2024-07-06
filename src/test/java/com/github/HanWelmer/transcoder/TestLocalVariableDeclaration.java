@@ -18,7 +18,7 @@ public class TestLocalVariableDeclaration extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 1004);
+    assertTrue(code.size() == 924);
   }
 
 }
