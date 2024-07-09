@@ -182,8 +182,8 @@
  181 ;ledtst.j(137)   /**
  182 ;ledtst.j(138)    * sleep for n miliseconds.
  183 ;ledtst.j(139)    */
- 184 ;ledtst.j(140)   public static void hold(word n) {
- 185 method hold [public, static] void (word n {bp+4})
+ 184 ;ledtst.j(140)   public static void sleep(word n) {
+ 185 method sleep [public, static] void (word n {bp+4})
  186 <basePointer
  187 basePointer= stackPointer
  188 stackPointer+ constant 0
@@ -218,7 +218,7 @@
  217 ;ledtst.j(151)       toggle();
  218 call 122
  219 ;ledtst.j(152)       //Thread.sleep(500); // Sleep for 500 miliseconds.
- 220 ;ledtst.j(153)       hold(500); // Sleep for 500 miliseconds.
+ 220 ;ledtst.j(153)       sleep(500); // Sleep for 500 miliseconds.
  221 acc16= constant 500
  222 <acc16
  223 call 185
