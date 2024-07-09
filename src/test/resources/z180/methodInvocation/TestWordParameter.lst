@@ -1,866 +1,864 @@
-2000             TOS     equ 0FD00H        ;User stack grows before user global data.
-2000             CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
-2000             STAT0   equ 004H          ;147 ASCI0 Status register.
-2000             TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
-2000             RDR0    equ 008H          ;149 ASCI0 Receive Data Register.
-2000             ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
-2000             TDRE    equ 1             ;STAT0->Tx data register empty bit.
-2000             OVERRUN equ 6             ;STAT0->OVERRUN bit.
-2000             RDRF    equ 7             ;STAT0->Rx data register full bit.
-2000                     .ORG  02000H      ;lowest external RAM address.
+2000             SOC     equ 02000H        ;start of code, i.e.lowest external RAM address.
+2000             TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data.
+2000                     .ORG  SOC
 2000             start:
 2000 31 00 FD            LD    SP,TOS
-2003 C3 AF 21            JP    main
-2006             ;****************
-2006             ;getChar
-2006             ;Check if an input character from ASCI0 is available.
-2006             ;  IN:  none
-2006             ;  OUT: F: ZERO flag set if no character is available.
-2006             ;          ZERO flag reset if a character is available.
-2006             ;       A : character from ASCI0, if available.
-2006             ;  USES:AF
-2006             ;****************
-2006             getChar:
-2006 ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status
-2009 CB 77               BIT   OVERRUN,A   ;check if ASCIO OVERRUN bit is set
-200B 20 07               JR    NZ,getChar1 ;-yes: reset error flags
-200D CB 7F               BIT   RDRF,A      ;check if ASCIO RDRF bit is set
-200F C8                  RET   Z           ;-no: return without a character
-2010 ED 38 08            IN0   A,(RDR0)    ;-yes:read ASCIO Rx data register
-2013 C9                  RET
-2014             getChar1:
-2014 ED 38 00            IN0   A,(CNTLA0)  ;read ASCI0 control register
-2017 CB 9F               RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
-2019 ED 39 00            OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
-201C AF                  XOR   A,A
-201D C9                  RET               ;return without a character
-201E             ;****************
-201E             ;putMsg
-201E             ;Print via ASCI0 a zero terminated string, starting at the return address on the stack.
-201E             ;  IN:  none.
-201E             ;  OUT: none.
-201E             ;  USES:none.
-201E             ;****************
-201E             putMsg:
-201E E3                  EX    (SP),HL     ;save HL and load return address into HL.
-201F CD 2B 20            CALL  writeStr
-2022 E3                  EX    (SP),HL     ;put return address onto stack and restore HL.
-2023 C9                  RET
-2024             ;****************
-2024             ;writeLineStr
-2024             ;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
-2024             ;  IN:  HL:address of zero terminated string to be printed.
-2024             ;  OUT: none.
-2024             ;  USES:HL (point to byte after zero terminated string)
-2024             ;****************
-2024             writeLineStr:
-2024 CD 2B 20            CALL  writeStr
-2027 CD 47 20            CALL  putCRLF
-202A C9                  RET
-202B             ;****************
-202B             ;writeStr
-202B             ;Print via ASCI0 a zero terminated string, pointed to by HL.
-202B             ;  IN:  HL:address of zero terminated string to be printed.
-202B             ;  OUT: none.
-202B             ;  USES:HL (point to byte after zero terminated string)
-202B             ;****************
-202B             writeStr:
-202B F5                  PUSH  AF          ;save registers
-202C             putStr1:
-202C 7E                  LD    A,(HL)      ;get next character
-202D 23                  INC   HL
-202E B7                  OR    A,A         ;is it zer0?
-202F 28 05               JR    Z,putStr2   ;yes ->return
-2031 CD 3A 20            CALL  putChar     ;no->put it to ASCI0
-2034 18 F6               JR    putStr1
-2036             putStr2:
-2036 F1                  POP   AF
-2037 C9                  RET
-2038             ;****************
-2038             ;putSpace
-2038             ;Send a space character to ASCI0
-2038             ;  IN:  none.
-2038             ;  OUT: none.
-2038             ;  USES:AF
-2038             ;****************
-2038             putSpace:
-2038 3E 20               LD    A,' '       ;load space and continue with putChar.
-203A             ;****************
-203A             ;putChar
-203A             ;Send one character to ASCI0.
-203A             ;  IN:  A = character
-203A             ;  OUT: none.
-203A             ;  USES:none.
-203A             ;****************
-203A             putChar:
-203A F5                  PUSH  AF          ;send the character via ASCI0
-203B             putChar1:
-203B ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status register
-203E CB 4F               BIT   TDRE,A      ;wait until TDRE <> 0
-2040 28 F9               JR    Z,putChar1
-2042 F1                  POP   AF          ;restore AF registers
-2043 ED 39 06            OUT0  (TDR0),A    ;write character to ASCI0
-2046 C9                  RET
-2047             ;****************
-2047             ;putCRLF
-2047             ;Send CR and LF to ASCI0
-2047             ;  IN:  none.
-2047             ;  OUT: none.
-2047             ;  USES:none.
-2047             ;****************
-2047             putCRLF:
-2047 F5                  PUSH  AF
-2048 3E 0D               LD    A,'\r'       ;print carriage return
-204A CD 3A 20            CALL  putChar
-204D 3E 0A               LD    A,'\n'       ;print line feed
-204F CD 3A 20            CALL  putChar
-2052 F1                  POP   AF
-2053 C9                  RET
-2054             ;****************
-2054             ;putErase
-2054             ;Erase the latest character at ASCI0
-2054             ;  IN:  none.
-2054             ;  OUT: none.
-2054             ;  USES:AF
-2054             ;****************
-2054             putErase:
-2054 3E 08               LD    A,'\b'       ;print backspace
-2056 CD 3A 20            CALL  putChar
-2059 CD 38 20            CALL  putSpace    ;print space (erase character)
-205C 3E 08               LD    A,'\b'      ;print backspace
-205E 18 DA               JR    putChar
-2060             ;****************
-2060             ;putBell
-2060             ;Send a Bell character to ASCI0
-2060             ;  IN:  none.
-2060             ;  OUT: none.
-2060             ;  USES:AF
-2060             ;****************
-2060             putBell:
-2060 3E 07               LD    A,07        ;ring the bell at ASCI0
-2062 18 D6               JR    putChar
-2064             ;****************
-2064             ;putHexHL
-2064             ;Print HL register pair as 4 hex digits
-2064             ;  IN:  HL = word to be printed.
-2064             ;  OUT: none.
-2064             ;  USES:none.
-2064             ;****************
-2064             putHexHL:
-2064 F5                  PUSH  AF          ;save used registers
-2065 7C                  LD    A,H         ;print H as 2 hex digits
-2066 CD 6F 20            CALL  putHexA
-2069 7D                  LD    A,L         ;print L as 2 hex digits
-206A CD 6F 20            CALL  putHexA
-206D F1                  POP   AF          ;restore used registers
-206E C9                  RET
-206F             ;****************
-206F             ;putHexA
-206F             ;Print A register as 2 hex digits
-206F             ;  IN:  A = byte to be printed
-206F             ;  OUT: none.
-206F             ;  USES:none.
-206F             ;****************
-206F             putHexA:
-206F F5                  PUSH  AF          ;save input
-2070 1F                  RRA               ;shift upper nibble to the right
-2071 1F                  RRA
-2072 1F                  RRA
-2073 1F                  RRA
-2074 CD 78 20            CALL  putHexA1    ;print upper nibble
-2077 F1                  POP   AF          ;restore input & print lower nibble
-2078             putHexA1:
-2078 F5                  PUSH  AF          ;save input
-2079 E6 0F               AND   A,00FH      ;mask lower nibble
-207B C6 30               ADD   A,'0'       ;convert to hex digit
-207D FE 3A               CP    A,'9'+1
-207F 38 02               JR    C,putHexA2
-2081 C6 07               ADD   A,07
-2083             putHexA2:
-2083 CD 3A 20            CALL  putChar
-2086 F1                  POP   AF          ;restore input
-2087 C9                  RET               ;and return
-2088             ;****************
-2088             ;mul16
-2088             ;16 by 16 bit unsigned multiplication with 16 bit result.
-2088             ;  IN:  HL = operand 1
-2088             ;       DE = operand 2
-2088             ;  OUT: HL = HL * DE low part
-2088             ;  USES:DE
-2088             ;  Size   25 bytes
-2088             ;  Time  160 cycles
-2088             ;****************
-2088             mul16:
-2088                     ;HL = HL * DE
-2088                     ;        H  L
-2088                     ;        D  E
-2088                     ;    --------*
-2088                     ;          EL
-2088                     ;       EH  0
-2088                     ;       DL  0
-2088                     ; -----------+
-2088                     ;        R  S
-2088                     ;S = ELlow
-2088                     ;R = ELhigh+EHlow+DLlow
-2088 C5                  PUSH  BC          ;11  11 save BC
-2089 44                  LD    B,H         ; 4  15 copy HL to BC
-208A 4D                  LD    C,L         ; 4  19
-208B 63                  LD    H,E         ; 4  23 HL contains EL
-208C ED 6C               MLT   HL          ;17  40
-208E E5                  PUSH  HL          ;11  51
-208F 63                  LD    H,E         ; 4  55 HL contains EH aka EB
-2090 68                  LD    L,B         ; 4  59
-2091 ED 6C               MLT   HL          ;17  76
-2093 45                  LD    B,L         ; 4  80 save EHlow in B
-2094 62                  LD    H,D         ; 4  84 HL contains DL aka DC
-2095 69                  LD    L,C         ; 4  88
-2096 ED 6C               MLT   HL          ;17 105
-2098 55                  LD    D,L         ; 4 109 DLlow into DE
-2099 1E 00               LD    E,0         ; 6 115
-209B E1                  POP   HL          ; 9 124 add EL+DElow
-209C 19                  ADD   HL,DE       ; 7 131
-209D 50                  LD    D,B         ; 4 135 add EL+DElow+EHlow
-209E 19                  ADD   HL,DE       ; 7 142
-209F C1                  POP   BC          ; 9 151 restore BC
-20A0 C9                  RET               ; 9 160
-20A1             ;****************
-20A1             ;mul16_10
-20A1             ;multiply a 16 bit unsigned number by 10 with a 16 bit result.
-20A1             ;  IN:  HL = operand
-20A1             ;  OUT: HL = HL * 10; low part
-20A1             ;  USES:Flags
-20A1             ;  Size   9 bytes
-20A1             ;  Time   65 cycles
-20A1             ;****************
-20A1             mul16_10:
-20A1 D5                  PUSH  DE          ;11 11
-20A2 54                  LD    D,H         ; 4 15
-20A3 5D                  LD    E,L         ; 4 19
-20A4 29                  ADD   HL,HL       ; 7 26 times 2
-20A5 29                  ADD   HL,HL       ; 7 33 times 4
-20A6 19                  ADD   HL,DE       ; 7 40 times 5
-20A7 29                  ADD   HL,HL       ; 7 47 times 10
-20A8 D1                  POP   DE          ; 9 56
-20A9 C9                  RET               ; 9 65
-20AA             ;****************
-20AA             ;mul16_8
-20AA             ;16 by 8 bit unsigned multiplication with 16 bit result.
-20AA             ;  IN:  HL = operand 1
-20AA             ;        A = operand 2
-20AA             ;  OUT: HL = HL * A low part
-20AA             ;  USES:AF
-20AA             ;  Size   .. bytes
-20AA             ;  Time  ... cycles
-20AA             ;****************
-20AA             mul16_8:
-20AA                     ;HL = HL * A
-20AA                     ;        H  L
-20AA                     ;           A
-20AA                     ;    --------*
-20AA                     ;          AL
-20AA                     ;       AH  0
-20AA                     ; -----------+
-20AA                     ;        R  S
-20AA                     ;S = ALlow
-20AA                     ;R = ALhigh+AHlow
-20AA C5                  PUSH  BC          ;11  11 save BC
-20AB 44                  LD    B,H         ; 4  15
-20AC 4F                  LD    C,A         ; 4  19
-20AD 67                  LD    H,A         ; 4  23
-20AE ED 6C               MLT   HL          ;17  40 HL = AL
-20B0 ED 4C               MLT   BC          ;17  57 BC = AH
-20B2 7C                  LD    A,H         ; 4  61 A = S = ALhigh+AHlow
-20B3 81                  ADD   A,C         ; 4  65
-20B4 67                  LD    H,A         ; 4  69
-20B5 C1                  POP   BC          ; 9  78 | 289 restore BC
-20B6 C9                  RET               ; 9  87 | 307
-20B7             ;****************
-20B7             ;mul1632
-20B7             ;16 by 16 bit unsigned multiplication with 32 bit result.
-20B7             ;  IN:  HL = operand 1
-20B7             ;       DE = operand 2
-20B7             ;  OUT: HL = HL * DE low part
-20B7             ;       DE = HL * DE high part
-20B7             ;  USES:-
-20B7             ;  Size 49 bytes
-20B7             ;  Time between 303 en 307 cycles
-20B7             ;****************
-20B7             mul1632:
-20B7                     ;HL = HL * DE
-20B7                     ;        H  L
-20B7                     ;        D  E
-20B7                     ;    --------*
-20B7                     ;          EL
-20B7                     ;       EH  0
-20B7                     ;       DL  0
-20B7                     ;    DH  0  0
-20B7                     ; -----------+
-20B7                     ;  P  Q  R  S
-20B7                     ;S = ELlow
-20B7                     ;R = ELhigh+EHlow+DLlow
-20B7                     ;Q = DHlow+EHhigh+DLhigh
-20B7                     ;P = DHhigh
-20B7 F5                  PUSH  AF          ;11  11 save AF
-20B8 C5                  PUSH  BC          ;11  22 save BC
-20B9 44                  LD    B,H         ; 4  26
-20BA 4D                  LD    C,L         ; 4  30
-20BB 62                  LD    H,D         ; 4  34 HL contains DH aka DB
-20BC 68                  LD    L,B         ; 4  38
-20BD ED 6C               MLT   HL          ;17  55
-20BF E5                  PUSH  HL          ;11  66
-20C0 62                  LD    H,D         ; 4  70 HL contains DL aka DC
-20C1 69                  LD    L,C         ; 4  74
-20C2 ED 6C               MLT   HL          ;17  91
-20C4 E5                  PUSH  HL          ;11 102
-20C5 63                  LD    H,E         ; 4 106 HL contains EH aka EB
-20C6 68                  LD    L,B         ; 4 110
-20C7 ED 6C               MLT   HL          ;17 127
-20C9 E5                  PUSH  HL          ;11 138
-20CA 63                  LD    H,E         ; 4 142 HL contains EL aka EC
-20CB 69                  LD    L,C         ; 4 146
-20CC ED 6C               MLT   HL          ;17 163
-20CE D1                  POP   DE          ; 9 172 calculate RS=EL+EH0
-20CF 06 00               LD    B,0         ; 6 178
-20D1 4A                  LD    C,D         ; 4 182 ..C=EHhigh
-20D2 53                  LD    D,E         ; 4 186 ..D=EHlow
-20D3 1E 00               LD    E,0         ; 6 192
-20D5 19                  ADD   HL,DE       ; 7 199
-20D6 30 01               JR    NC,mul16321 ; 8 207 | 6 205 add carry to PQ
-20D8 03                  INC   BC          ;         4 209
-20D9             mul16321:
-20D9 D1                  POP   DE          ; 9 209 | 211 calculate RS=EL+EH0+DL0
-20DA 7A                  LD    A,D         ; 4 220 | 222 ..A=DLhigh
-20DB 53                  LD    D,E         ; 4 224 | 226 ..D=DLlow
-20DC 19                  ADD   HL,DE       ; 7 231 | 233
-20DD 30 01               JR    NC,mul16322 ; 8 239 | 6 239 add carry to PQ
-20DF 03                  INC   BC          ;         4 243
-20E0             mul16322:
-20E0                                       ;HL=RS=EL+EH0+DL0
-20E0                                       ;C=EHhigh
-20E0                                       ;A=DLhigh
-20E0                                       ;E=0
-20E0 EB                  EX    DE,HL       ; 3 242 | 246
-20E1 65                  LD    H,L         ; 4 246 | 250 ..E was 0, so H=L=0
-20E2 6F                  LD    L,A         ; 4 250 | 254 ..HL=DLhigh
-20E3 09                  ADD   HL,BC       ; 7 257 | 261 PQ=EHhigh+DLhigh+DH
-20E4 C1                  POP   BC          ; 9 266 | 270
-20E5 09                  ADD   HL,BC       ; 7 273 | 277
-20E6 EB                  EX    DE,HL       ; 3 276 | 280
-20E7                                       ;D=P=DHhigh
-20E7                                       ;E=Q=DHlow+EHhigh+DLhigh
-20E7                                       ;H=R=ELhigh+EHlow+DLlow
-20E7                                       ;L=S=ELlow
-20E7 C1                  POP   BC          ; 9 285 | 289 restore BC
-20E8 F1                  POP   AF          ; 9 294 | 298 restore AF
-20E9 C9                  RET               ; 9 303 | 307
-20EA             ;****************
-20EA             ;mul16S
-20EA             ;16 by 16 bit slow unsigned multiplication with 32 bit result.
-20EA             ;  IN:  HL = operand 1
-20EA             ;       DE = operand 2
-20EA             ;  OUT: DE = HL * DE high part
-20EA             ;       HL = HL * DE low part
-20EA             ;  USES:none.
-20EA             ;  Size 26 bytes
-20EA             ;  Time between 726 en 998 cycles
-20EA             ;****************
-20EA             mul16S:
-20EA F5                  PUSH  AF          ;11  11 save AF
-20EB C5                  PUSH  BC          ;11  22 save BC
-20EC 44                  LD    B,H         ; 4  26
-20ED 4D                  LD    C,L         ; 4  30
-20EE 21 00 00            LD    HL,0        ; 9  39
-20F1 3E 10               LD    A,16        ; 6  45
-20F3             mul16S1:
-20F3 29                  ADD   HL,HL       ;16*7=112 157
-20F4 CB 13               RL    E           ;16*7=112 269
-20F6 CB 12               RL    D           ;16*7=112 381
-20F8 30 04               JR    NC,mul16S2  ;16*8=128 509 16*6= 96 477
-20FA 09                  ADD   HL,BC       ;             16*7=112 589
-20FB 30 01               JR    NC,mul16S2  ;             16*8=128 717 16*6=96 685
-20FD 13                  INC   DE          ;             16*4= 64 781 16*4=64 749 This instruction (with the jump) is like an "ADC DE,0"
-20FE             mul16S2:
-20FE 3D                  DEC   A           ;16*4=64    573 | 845 | 813
-20FF 20 F2               JR    NZ,mul16S1  ;15*8+6=126 699 | 971 | 939
-2101 C1                  POP   BC          ; 9         708 | 980 | 948 restore BC
-2102 F1                  POP   AF          ; 9         717 | 989 | 957 restore AF
-2103 C9                  RET               ; 9         726 | 998 | 966
-2104             ;****************
-2104             ;div16
-2104             ;16 by 16 bit unsigned division.
-2104             ;  IN:  HL = dividend
-2104             ;       DE = divisor
-2104             ;  OUT: HL = quotient
-2104             ;       DE = remainder
-2104             ;  USES:-
-2104             ;  Size   32 bytes
-2104             ;  Time   between 1073 en 1121 cycles
-2104             ;pseudo code:
-2104             ;T = AC = dividend
-2104             ;D = DE = divisor
-2104             ;Q = AC = quotient = 0
-2104             ;R = HL = remainder = 0
-2104             ;invariante betrekking:
-2104             ; D/T\Q     
-2104             ;   R       
-2104             ; T = QD + R
-2104             ; T <= 2^N  
-2104             ;
-2104             ; D/T'.RT\Q'      
-2104             ;   R'             
-2104             ; RT <= 2^N        
-2104             ; 0<=k<=N          
-2104             ; RT = T % 2^k     
-2104             ; T' = (T-RT) / 2^k
-2104             ; Q' = T' / D      
-2104             ; R' = T' % D      
-2104             ;
-2104             ;for (i=16; i>0; i--) {
-2104             ;  T = T * 2 (remember MSB in carry)
-2104             ;  R = R * 2 + carry
-2104             ;  Q = Q * 2
-2104             ;  if (R >= D) {
-2104             ;    R = R - D;
-2104             ;    Q++;
-2104             ;  }
-2104             ;}
-2104             ;return Q (in HL) and R (in DE)
-2104             ;****************
-2104             div16:
-2104 F5                  PUSH  AF          ;11  11 save registers used
-2105 C5                  PUSH  BC          ;11  22
-2106 4D                  LD    C,L         ; 4  26 T(AC) = teller from input (HL)
-2107 7C                  LD    A,H         ; 4  30 D(DE) = deler from input  (DE)
-2108 21 00 00            LD    HL,0        ; 9  39 R(HL) = restant; Q(AC) = quotient
-210B 06 10               LD    B,16        ; 6  45 for (i=16; i>0; i--)
-210D             div16_1:
-210D CB 21               SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
-210F CB 17               RL    A           ;16* 7=112 269   Q = Q * 2
-2111 ED 6A               ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
-2113 B7                  OR    A,A         ;16* 4= 64 493   if (R >= D) {
-2114 ED 52               SBC   HL,DE       ;16*10=160 653
-2116 38 03               JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
-2118 0C                  INC   C           ;              16*4= 64 813   Q++
-2119 18 01               JR    div16_3     ;              16*8=128 941
-211B             div16_2:
-211B 19                  ADD   HL,DE       ;16* 7=112 893  (compensate comparison)
-211C             div16_3:
-211C 10 EF               DJNZ  div16_1     ;15*9+7=142 1035 | 1083 }
-211E EB                  EX    DE,HL       ; 3 1038 | 1086 swap remainder (HL) into DE
-211F 67                  LD    H,A         ; 4 1042 | 1090 move quotient (AC) into HL
-2120 69                  LD    L,C         ; 4 1046 | 1094
-2121 C1                  POP   BC          ; 9 1055 | 1103
-2122 F1                  POP   AF          ; 9 1064 | 1112
-2123 C9                  RET               ; 9 1073 | 1121
-2124             ;****************
-2124             ;div16_8
-2124             ;16 by 8 bit unsigned division.
-2124             ;  IN:  HL = dividend
-2124             ;       A  = divisor
-2124             ;  OUT: HL = quotient
-2124             ;       A  = remainder
-2124             ;  USES:F(lags)
-2124             ;  Size 18 bytes
-2124             ;  Time between 601 en 697 cycles
-2124             ;****************
-2124             div16_8:
-2124 C5                  PUSH  BC          ;11 11 save registers used
-2125 06 10               LD    B,16        ; 6 17 the length of the dividend (16 bits)
-2127 4F                  LD    C,A         ; 4 21 move divisor to C
-2128 AF                  XOR   A,A         ; 4 25 clear upper 8 bits of AHL
-2129             div16_82:
-2129 29                  ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
-212A CB 17               RL    A           ;16*7=112 249
-212C B9                  CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
-212D 38 02               JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
-212F 91                  SUB   A,C         ;             16*4=64 473 subtract the divisor
-2130 2C                  INC   L           ;             16*4=64 537 and set the next digit of the quotient
-2131             div16_83:
-2131 10 F6               DJNZ  div16_82    ;15*9+7=142 583 679
-2133 C1                  POP   BC          ;9 592 688
-2134 C9                  RET               ;9 601 697
-2135             ;****************
-2135             ;div8
-2135             ;8 by 8 bit unsigned division.
-2135             ;  IN:  A = dividend
-2135             ;       C = divisor
-2135             ;  OUT: A = quotient
-2135             ;       C = remainder
-2135             ;  USES:F(lags)
-2135             ;  Size 26 bytes
-2135             ;  Time between 411 and 459 cycles
-2135             ;****************
-2135             ;pseudo code:
-2135             ;T = dividend
-2135             ;D = divisor
-2135             ;Q = quotient = 0
-2135             ;R = remainder = 0
-2135             ;invariante betrekking:
-2135             ; T = QD + R
-2135             ; T <= 2^8  
-2135             ;
-2135             ; D/T'.RT\Q'      
-2135             ;   R'             
-2135             ; RT <= 2^8        
-2135             ; 0<=k<=8          
-2135             ; RT = T % 2^k     
-2135             ; T' = (T-RT) / 2^k
-2135             ; Q' = T' / D      
-2135             ; R' = T' % D      
-2135             ;
-2135             ;for (i=8; i>0; i--) {
-2135             ;  T = T * 2 (remember MSB in carry)
-2135             ;  R = R * 2 + carry
-2135             ;  Q = Q * 2
-2135             ;  if (R >= D) {
-2135             ;    R = R - D;
-2135             ;    Q++;
-2135             ;  }
-2135             ;}
-2135             ;return Q (in A) and R (in C)
-2135             ;****************
-2135             ;E = T = dividend
-2135             ;C = D = divisor
-2135             ;D = Q = quotient
-2135             ;A = R = remainder
-2135             ;****************
-2135             ;  IN:  A = dividend
-2135             ;       C  = divisor
-2135             div8:
-2135 D5                  PUSH  DE          ;11 11 save registers used
-2136 C5                  PUSH  BC          ;11 22 save registers used
-2137 06 08               LD    B,8         ; 6 28 the length of the dividend (8 bits)
-2139 16 00               LD    D,0         ; 6 34 D = Q = quotient = 0
-213B 5F                  LD    E,A         ; 4 38 E = T = dividend
-213C AF                  XOR   A,A         ; 4 42 A = R = remainder = 0
-213D             div8_1:
-213D CB 23               SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
-213F CB 17               RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
-2141 CB 22               SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
-2143 B9                  CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
-2144 38 02               JR    C,div8_2    ;8*8=64 306 8*6=48 290
-2146 91                  SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
-2147 14                  INC   D           ;           8*4=32 354   Q[D]++;
-2148             div8_2:           ;                      }
-2148 10 F3               DJNZ  div8_1      ;7*9+7=70 376 424      }
-214A C1                  POP   BC          ;9        385 433
-214B 4F                  LD    C,A         ;4        389 437      return Remainder[A] in C
-214C 7A                  LD    A,D         ;4        393 441      return Quotient[D] in A
-214D D1                  POP   DE          ;9        402 450
-214E C9                  RET               ;9        411 459
-214F             ;****************
-214F             ;div8_16
-214F             ;8 by 16 bit unsigned division.
-214F             ;  IN:  A = dividend
-214F             ;       HL = divisor
-214F             ;  OUT: A = quotient
-214F             ;       C = remainder
-214F             ;  USES:F(lags)
-214F             ;  Size 13 bytes (plus dependency on div8)
-214F             ;  Time 31 or between 436 and 484 cycles
-214F             ;****************
-214F             ;invariante betrekking:
-214F             ; T = dividend
-214F             ; D = divisor
-214F             ; Q = quotient
-214F             ; R = remainder
-214F             ; T = QD + R
-214F             ;pseudo code:
-214F             ; if D >= 256 {
-214F             ;   R = T
-214F             ;   Q = 0
-214F             ; } else {
-214F             ;   R = T/D (using div8)
-214F             ;   Q = T%D (using div8)
-214F             ; }
-214F             ;****************
-214F             
-214F             
-214F             div8_16:
-214F 4F                  LD    C,A         ;  4  4         save dividend(A) in C
-2150 7C                  LD    A,H         ;  4  8         if D >= 256 {
-2151 B7                  OR    A,A         ;  4 12
-2152 28 02               JR    Z,div8_161  ;  6 18  8  20
-2154 AF                  XOR   A,A         ;  4 22           R = T;
-2155 C9                  RET               ;  9 31           Q = 0;
-2156             div8_161:                     ;               } else {
-2156 79                  LD    A,C         ;        4  24    restore dividend into A
-2157 4D                  LD    C,L         ;        4  28    load divisor (HL) into C
-2158 CD 35 21            CALL  div8        ; 16+411/16+459               R = T/D; Q = T%D;
-215B C9                  RET               ; 9  436/484    }
-215C             ;****************
-215C             ;read
-215C             ;read a 16 bit unsigned number from the input
-215C             ;  IN:  none
-215C             ;  OUT: HL = 16 bit unsigned number
-215C             ;  USES:-
-215C             ;****************
-215C             read:
-215C F5                  PUSH  AF
-215D 21 00 00            LD    HL,0        ;result = 0;
-2160             read1:
-2160 CD 06 20            CALL  getChar     ;check if a character is available.
-2163 28 FB               JR    Z,read1     ;-no: wait for it.
-2165 FE 0D               CP    A,'\r'      ;return if char == Carriage Return
-2167 28 0C               JR    Z,read2
-2169 CD A1 20            CALL  mul16_10    ;result *= 10;
-216C D6 30               SUB   A,'0'       ;digit = char - '0';
-216E 85                  ADD   A,L         ;result += digit;
-216F 6F                  LD    L,A
-2170 30 EE               JR    NC,read1     ;get next character
-2172 24                  INC   H
-2173 18 EB               JR    read1        ;get next character
-2175             read2:
-2175 F1                  POP   AF
-2176 C9                  RET
-2177             ;****************
-2177             ;writeLineHL
-2177             ;write a 16 bit unsigned number to the output, followed by a carriage return
-2177             ;  IN:  HL = 16 bit unsigned number
-2177             ;  OUT: none
-2177             ;  USES:HL
-2177             ;****************
-2177             writeLineHL:
-2177 CD 7E 21            CALL  writeHL
-217A CD 47 20            CALL  putCRLF
-217D C9                  RET
-217E             ;****************
-217E             ;writeHL
-217E             ;write a 16 bit unsigned number to the output
-217E             ;  IN:  HL = 16 bit unsigned number
-217E             ;  OUT: none
-217E             ;  USES:HL
-217E             ;****************
-217E             writeHL:
-217E C5                  PUSH  BC          ;save registers used
-217F F5                  PUSH  AF
-2180 06 00               LD    B,0         ;number of digits on stack
-2182 7C                  LD    A,H         ;is HL=0?
-2183 B5                  OR    A,L
-2184 20 03               JR    NZ,writeHL1
-2186 04                  INC   B           ;write a single digit 0
-2187 18 0C               JR    writeHL3
-2189             writeHL1:
-2189 3E 0A               LD    A,10        ;divide HL by 10
-218B CD 24 21            CALL  div16_8
-218E F5                  PUSH  AF          ;put remainder on stack
-218F 04                  INC   B
-2190 7C                  LD    A,H         ;is quotient 0?
-2191 B5                  OR    A,L
-2192 20 F5               JR    NZ,writeHL1
-2194             writeHL2:
-2194 F1                  POP   AF          ;write digit
-2195             writeHL3:
-2195 C6 30               ADD   A,'0'
-2197 CD 3A 20            CALL  putChar
-219A 10 F8               DJNZ  writeHL2
-219C F1                  POP   AF          ;restore registers used
-219D C1                  POP   BC
-219E C9                  RET
-219F             ;****************
-219F             ;writeLineA
-219F             ;write an 8-bit unsigned number to the output, followed by a carriage return
-219F             ;  IN:  A = 8-bit unsigned number
-219F             ;  OUT: none
-219F             ;  USES:none
-219F             ;****************
-219F             writeLineA:
-219F CD A6 21            CALL  writeA
-21A2 CD 47 20            CALL  putCRLF
-21A5 C9                  RET
-21A6             ;****************
-21A6             ;writeA
-21A6             ;write an 8-bit unsigned number to the output
-21A6             ;  IN:  A = 8-bit unsigned number
-21A6             ;  OUT: none
-21A6             ;  USES:none
-21A6             ;****************
-21A6             writeA:
-21A6 E5                  PUSH  HL          ;save registers used
-21A7 26 00               LD    H,0
-21A9 6F                  LD    L,A
-21AA CD 7E 21            CALL  writeHL
-21AD E1                  POP   HL
-21AE C9                  RET
-21AF             main:
-21AF             L0:
-21AF CD D0 21            CALL  L19
-21B2             L1:
-21B2 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
-21B5             L2:
-21B5                     ;;TestWordParameter.j(0) public class TestStatementExpression {
-21B5             L3:
-21B5                     ;class TestStatementExpression [public]
-21B5             L4:
-21B5                     ;;TestWordParameter.j(1)   
-21B5             L5:
-21B5                     ;;TestWordParameter.j(2)   private static void doIt(word w) {
-21B5             L6:
-21B5                     ;method doIt [private, static] void (word w {bp+0})
-21B5             L7:
-21B5 DD E5               PUSH  IX
-21B7             L8:
-21B7 DD 21 00 00         LD    IX,0x0000
-21BB DD 39               ADD   IX,SP
-21BD             L9:
-21BD 21 00 00            LD    HL,65536
-21C0 39                  ADD   HL,SP
-21C1 F9                  LD    SP,HL
-21C2             L10:
-21C2                     ;;TestWordParameter.j(3)     println(w);
-21C2             L11:
-21C2 DD 6E 04            LD    L,(IX + 4)
-21C5 DD 66 05            LD    H,(IX + 5)
-21C8             L12:
-21C8 CD 77 21            CALL  writeLineHL
-21CB             L13:
-21CB                     ;;TestWordParameter.j(4)   }
-21CB             L14:
-21CB DD F9               LD    SP,IX
-21CD             L15:
-21CD DD E1               POP   IX
-21CF             L16:
-21CF C9                  return
-21D0             L17:
-21D0                     ;;TestWordParameter.j(5) 
-21D0             L18:
-21D0                     ;;TestWordParameter.j(6)   public static void main() {
-21D0             L19:
-21D0                     ;method main [public, static] void ()
-21D0             L20:
-21D0 DD E5               PUSH  IX
-21D2             L21:
-21D2 DD 21 00 00         LD    IX,0x0000
-21D6 DD 39               ADD   IX,SP
-21D8             L22:
-21D8 21 00 00            LD    HL,65536
-21DB 39                  ADD   HL,SP
-21DC F9                  LD    SP,HL
-21DD             L23:
-21DD                     ;;TestWordParameter.j(7)     println("Hallo ");
-21DD             L24:
-21DD 21 F5 21            LD    HL,L38
-21E0             L25:
-21E0 CD 24 20            CALL  writeLineStr
-21E3             L26:
-21E3                     ;;TestWordParameter.j(8)     doIt(257);
-21E3             L27:
-21E3 21 01 01            LD    HL,257
-21E6             L28:
-21E6 E5                  PUSH HL
-21E7             L29:
-21E7 CD B5 21            CALL  L6
-21EA             L30:
-21EA                     ;;TestWordParameter.j(9)     println(" wereld");
-21EA             L31:
-21EA 21 FC 21            LD    HL,L39
-21ED             L32:
-21ED CD 24 20            CALL  writeLineStr
-21F0             L33:
-21F0                     ;;TestWordParameter.j(10)   }
-21F0             L34:
-21F0 DD F9               LD    SP,IX
-21F2             L35:
-21F2 DD E1               POP   IX
-21F4             L36:
-21F4 C9                  return
-21F5             L37:
-21F5                     ;;TestWordParameter.j(11) }
-21F5             L38:
-21F5 48 61 6C 6C
+2003             L0:
+2003 CD 24 20            CALL  L19
+2006             L1:
+2006 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
+2009             L2:
+2009                     ;;TestWordParameter.j(0) public class TestStatementExpression {
+2009             L3:
+2009                     ;class TestStatementExpression [public]
+2009             L4:
+2009                     ;;TestWordParameter.j(1)   
+2009             L5:
+2009                     ;;TestWordParameter.j(2)   private static void doIt(word w) {
+2009             L6:
+2009                     ;method doIt [private, static] void (word w {bp+0})
+2009             L7:
+2009 DD E5               PUSH  IX
+200B             L8:
+200B DD 21 00 00         LD    IX,0x0000
+200F DD 39               ADD   IX,SP
+2011             L9:
+2011 21 00 00            LD    HL,65536
+2014 39                  ADD   HL,SP
+2015 F9                  LD    SP,HL
+2016             L10:
+2016                     ;;TestWordParameter.j(3)     println(w);
+2016             L11:
+2016 DD 6E 04            LD    L,(IX + 4)
+2019 DD 66 05            LD    H,(IX + 5)
+201C             L12:
+201C CD C9 21            CALL  writeLineHL
+201F             L13:
+201F                     ;;TestWordParameter.j(4)   }
+201F             L14:
+201F DD F9               LD    SP,IX
+2021             L15:
+2021 DD E1               POP   IX
+2023             L16:
+2023 C9                  return
+2024             L17:
+2024                     ;;TestWordParameter.j(5) 
+2024             L18:
+2024                     ;;TestWordParameter.j(6)   public static void main() {
+2024             L19:
+2024                     ;method main [public, static] void ()
+2024             L20:
+2024 DD E5               PUSH  IX
+2026             L21:
+2026 DD 21 00 00         LD    IX,0x0000
+202A DD 39               ADD   IX,SP
+202C             L22:
+202C 21 00 00            LD    HL,65536
+202F 39                  ADD   HL,SP
+2030 F9                  LD    SP,HL
+2031             L23:
+2031                     ;;TestWordParameter.j(7)     println("Hallo ");
+2031             L24:
+2031 21 49 20            LD    HL,L38
+2034             L25:
+2034 CD 76 20            CALL  writeLineStr
+2037             L26:
+2037                     ;;TestWordParameter.j(8)     doIt(257);
+2037             L27:
+2037 21 01 01            LD    HL,257
+203A             L28:
+203A E5                  PUSH HL
+203B             L29:
+203B CD 09 20            CALL  L6
+203E             L30:
+203E                     ;;TestWordParameter.j(9)     println(" wereld");
+203E             L31:
+203E 21 50 20            LD    HL,L39
+2041             L32:
+2041 CD 76 20            CALL  writeLineStr
+2044             L33:
+2044                     ;;TestWordParameter.j(10)   }
+2044             L34:
+2044 DD F9               LD    SP,IX
+2046             L35:
+2046 DD E1               POP   IX
+2048             L36:
+2048 C9                  return
+2049             L37:
+2049                     ;;TestWordParameter.j(11) }
+2049             L38:
+2049 48 61 6C 6C
      6F 20 00            .ASCIZ  "Hallo "
-21FC             L39:
-21FC 20 77 65 72
+2050             L39:
+2050 20 77 65 72
      65 6C 64 00         .ASCIZ  " wereld"
+2058             CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
+2058             STAT0   equ 004H          ;147 ASCI0 Status register.
+2058             TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
+2058             RDR0    equ 008H          ;149 ASCI0 Receive Data Register.
+2058             ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
+2058             TDRE    equ 1             ;STAT0->Tx data register empty bit.
+2058             OVERRUN equ 6             ;STAT0->OVERRUN bit.
+2058             RDRF    equ 7             ;STAT0->Rx data register full bit.
+2058             ;****************
+2058             ;getChar
+2058             ;Check if an input character from ASCI0 is available.
+2058             ;  IN:  none
+2058             ;  OUT: F: ZERO flag set if no character is available.
+2058             ;          ZERO flag reset if a character is available.
+2058             ;       A : character from ASCI0, if available.
+2058             ;  USES:AF
+2058             ;****************
+2058             getChar:
+2058 ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status
+205B CB 77               BIT   OVERRUN,A   ;check if ASCIO OVERRUN bit is set
+205D 20 07               JR    NZ,getChar1 ;-yes: reset error flags
+205F CB 7F               BIT   RDRF,A      ;check if ASCIO RDRF bit is set
+2061 C8                  RET   Z           ;-no: return without a character
+2062 ED 38 08            IN0   A,(RDR0)    ;-yes:read ASCIO Rx data register
+2065 C9                  RET
+2066             getChar1:
+2066 ED 38 00            IN0   A,(CNTLA0)  ;read ASCI0 control register
+2069 CB 9F               RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
+206B ED 39 00            OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
+206E AF                  XOR   A,A
+206F C9                  RET               ;return without a character
+2070             ;****************
+2070             ;putMsg
+2070             ;Print via ASCI0 a zero terminated string, starting at the return address on the stack.
+2070             ;  IN:  none.
+2070             ;  OUT: none.
+2070             ;  USES:none.
+2070             ;****************
+2070             putMsg:
+2070 E3                  EX    (SP),HL     ;save HL and load return address into HL.
+2071 CD 7D 20            CALL  writeStr
+2074 E3                  EX    (SP),HL     ;put return address onto stack and restore HL.
+2075 C9                  RET
+2076             ;****************
+2076             ;writeLineStr
+2076             ;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+2076             ;  IN:  HL:address of zero terminated string to be printed.
+2076             ;  OUT: none.
+2076             ;  USES:HL (point to byte after zero terminated string)
+2076             ;****************
+2076             writeLineStr:
+2076 CD 7D 20            CALL  writeStr
+2079 CD 99 20            CALL  putCRLF
+207C C9                  RET
+207D             ;****************
+207D             ;writeStr
+207D             ;Print via ASCI0 a zero terminated string, pointed to by HL.
+207D             ;  IN:  HL:address of zero terminated string to be printed.
+207D             ;  OUT: none.
+207D             ;  USES:HL (point to byte after zero terminated string)
+207D             ;****************
+207D             writeStr:
+207D F5                  PUSH  AF          ;save registers
+207E             putStr1:
+207E 7E                  LD    A,(HL)      ;get next character
+207F 23                  INC   HL
+2080 B7                  OR    A,A         ;is it zer0?
+2081 28 05               JR    Z,putStr2   ;yes ->return
+2083 CD 8C 20            CALL  putChar     ;no->put it to ASCI0
+2086 18 F6               JR    putStr1
+2088             putStr2:
+2088 F1                  POP   AF
+2089 C9                  RET
+208A             ;****************
+208A             ;putSpace
+208A             ;Send a space character to ASCI0
+208A             ;  IN:  none.
+208A             ;  OUT: none.
+208A             ;  USES:AF
+208A             ;****************
+208A             putSpace:
+208A 3E 20               LD    A,' '       ;load space and continue with putChar.
+208C             ;****************
+208C             ;putChar
+208C             ;Send one character to ASCI0.
+208C             ;  IN:  A = character
+208C             ;  OUT: none.
+208C             ;  USES:none.
+208C             ;****************
+208C             putChar:
+208C F5                  PUSH  AF          ;send the character via ASCI0
+208D             putChar1:
+208D ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status register
+2090 CB 4F               BIT   TDRE,A      ;wait until TDRE <> 0
+2092 28 F9               JR    Z,putChar1
+2094 F1                  POP   AF          ;restore AF registers
+2095 ED 39 06            OUT0  (TDR0),A    ;write character to ASCI0
+2098 C9                  RET
+2099             ;****************
+2099             ;putCRLF
+2099             ;Send CR and LF to ASCI0
+2099             ;  IN:  none.
+2099             ;  OUT: none.
+2099             ;  USES:none.
+2099             ;****************
+2099             putCRLF:
+2099 F5                  PUSH  AF
+209A 3E 0D               LD    A,'\r'       ;print carriage return
+209C CD 8C 20            CALL  putChar
+209F 3E 0A               LD    A,'\n'       ;print line feed
+20A1 CD 8C 20            CALL  putChar
+20A4 F1                  POP   AF
+20A5 C9                  RET
+20A6             ;****************
+20A6             ;putErase
+20A6             ;Erase the latest character at ASCI0
+20A6             ;  IN:  none.
+20A6             ;  OUT: none.
+20A6             ;  USES:AF
+20A6             ;****************
+20A6             putErase:
+20A6 3E 08               LD    A,'\b'       ;print backspace
+20A8 CD 8C 20            CALL  putChar
+20AB CD 8A 20            CALL  putSpace    ;print space (erase character)
+20AE 3E 08               LD    A,'\b'      ;print backspace
+20B0 18 DA               JR    putChar
+20B2             ;****************
+20B2             ;putBell
+20B2             ;Send a Bell character to ASCI0
+20B2             ;  IN:  none.
+20B2             ;  OUT: none.
+20B2             ;  USES:AF
+20B2             ;****************
+20B2             putBell:
+20B2 3E 07               LD    A,07        ;ring the bell at ASCI0
+20B4 18 D6               JR    putChar
+20B6             ;****************
+20B6             ;putHexHL
+20B6             ;Print HL register pair as 4 hex digits
+20B6             ;  IN:  HL = word to be printed.
+20B6             ;  OUT: none.
+20B6             ;  USES:none.
+20B6             ;****************
+20B6             putHexHL:
+20B6 F5                  PUSH  AF          ;save used registers
+20B7 7C                  LD    A,H         ;print H as 2 hex digits
+20B8 CD C1 20            CALL  putHexA
+20BB 7D                  LD    A,L         ;print L as 2 hex digits
+20BC CD C1 20            CALL  putHexA
+20BF F1                  POP   AF          ;restore used registers
+20C0 C9                  RET
+20C1             ;****************
+20C1             ;putHexA
+20C1             ;Print A register as 2 hex digits
+20C1             ;  IN:  A = byte to be printed
+20C1             ;  OUT: none.
+20C1             ;  USES:none.
+20C1             ;****************
+20C1             putHexA:
+20C1 F5                  PUSH  AF          ;save input
+20C2 1F                  RRA               ;shift upper nibble to the right
+20C3 1F                  RRA
+20C4 1F                  RRA
+20C5 1F                  RRA
+20C6 CD CA 20            CALL  putHexA1    ;print upper nibble
+20C9 F1                  POP   AF          ;restore input & print lower nibble
+20CA             putHexA1:
+20CA F5                  PUSH  AF          ;save input
+20CB E6 0F               AND   A,00FH      ;mask lower nibble
+20CD C6 30               ADD   A,'0'       ;convert to hex digit
+20CF FE 3A               CP    A,'9'+1
+20D1 38 02               JR    C,putHexA2
+20D3 C6 07               ADD   A,07
+20D5             putHexA2:
+20D5 CD 8C 20            CALL  putChar
+20D8 F1                  POP   AF          ;restore input
+20D9 C9                  RET               ;and return
+20DA             ;****************
+20DA             ;mul16
+20DA             ;16 by 16 bit unsigned multiplication with 16 bit result.
+20DA             ;  IN:  HL = operand 1
+20DA             ;       DE = operand 2
+20DA             ;  OUT: HL = HL * DE low part
+20DA             ;  USES:DE
+20DA             ;  Size   25 bytes
+20DA             ;  Time  160 cycles
+20DA             ;****************
+20DA             mul16:
+20DA                     ;HL = HL * DE
+20DA                     ;        H  L
+20DA                     ;        D  E
+20DA                     ;    --------*
+20DA                     ;          EL
+20DA                     ;       EH  0
+20DA                     ;       DL  0
+20DA                     ; -----------+
+20DA                     ;        R  S
+20DA                     ;S = ELlow
+20DA                     ;R = ELhigh+EHlow+DLlow
+20DA C5                  PUSH  BC          ;11  11 save BC
+20DB 44                  LD    B,H         ; 4  15 copy HL to BC
+20DC 4D                  LD    C,L         ; 4  19
+20DD 63                  LD    H,E         ; 4  23 HL contains EL
+20DE ED 6C               MLT   HL          ;17  40
+20E0 E5                  PUSH  HL          ;11  51
+20E1 63                  LD    H,E         ; 4  55 HL contains EH aka EB
+20E2 68                  LD    L,B         ; 4  59
+20E3 ED 6C               MLT   HL          ;17  76
+20E5 45                  LD    B,L         ; 4  80 save EHlow in B
+20E6 62                  LD    H,D         ; 4  84 HL contains DL aka DC
+20E7 69                  LD    L,C         ; 4  88
+20E8 ED 6C               MLT   HL          ;17 105
+20EA 55                  LD    D,L         ; 4 109 DLlow into DE
+20EB 1E 00               LD    E,0         ; 6 115
+20ED E1                  POP   HL          ; 9 124 add EL+DElow
+20EE 19                  ADD   HL,DE       ; 7 131
+20EF 50                  LD    D,B         ; 4 135 add EL+DElow+EHlow
+20F0 19                  ADD   HL,DE       ; 7 142
+20F1 C1                  POP   BC          ; 9 151 restore BC
+20F2 C9                  RET               ; 9 160
+20F3             ;****************
+20F3             ;mul16_10
+20F3             ;multiply a 16 bit unsigned number by 10 with a 16 bit result.
+20F3             ;  IN:  HL = operand
+20F3             ;  OUT: HL = HL * 10; low part
+20F3             ;  USES:Flags
+20F3             ;  Size   9 bytes
+20F3             ;  Time   65 cycles
+20F3             ;****************
+20F3             mul16_10:
+20F3 D5                  PUSH  DE          ;11 11
+20F4 54                  LD    D,H         ; 4 15
+20F5 5D                  LD    E,L         ; 4 19
+20F6 29                  ADD   HL,HL       ; 7 26 times 2
+20F7 29                  ADD   HL,HL       ; 7 33 times 4
+20F8 19                  ADD   HL,DE       ; 7 40 times 5
+20F9 29                  ADD   HL,HL       ; 7 47 times 10
+20FA D1                  POP   DE          ; 9 56
+20FB C9                  RET               ; 9 65
+20FC             ;****************
+20FC             ;mul16_8
+20FC             ;16 by 8 bit unsigned multiplication with 16 bit result.
+20FC             ;  IN:  HL = operand 1
+20FC             ;        A = operand 2
+20FC             ;  OUT: HL = HL * A low part
+20FC             ;  USES:AF
+20FC             ;  Size   .. bytes
+20FC             ;  Time  ... cycles
+20FC             ;****************
+20FC             mul16_8:
+20FC                     ;HL = HL * A
+20FC                     ;        H  L
+20FC                     ;           A
+20FC                     ;    --------*
+20FC                     ;          AL
+20FC                     ;       AH  0
+20FC                     ; -----------+
+20FC                     ;        R  S
+20FC                     ;S = ALlow
+20FC                     ;R = ALhigh+AHlow
+20FC C5                  PUSH  BC          ;11  11 save BC
+20FD 44                  LD    B,H         ; 4  15
+20FE 4F                  LD    C,A         ; 4  19
+20FF 67                  LD    H,A         ; 4  23
+2100 ED 6C               MLT   HL          ;17  40 HL = AL
+2102 ED 4C               MLT   BC          ;17  57 BC = AH
+2104 7C                  LD    A,H         ; 4  61 A = S = ALhigh+AHlow
+2105 81                  ADD   A,C         ; 4  65
+2106 67                  LD    H,A         ; 4  69
+2107 C1                  POP   BC          ; 9  78 | 289 restore BC
+2108 C9                  RET               ; 9  87 | 307
+2109             ;****************
+2109             ;mul1632
+2109             ;16 by 16 bit unsigned multiplication with 32 bit result.
+2109             ;  IN:  HL = operand 1
+2109             ;       DE = operand 2
+2109             ;  OUT: HL = HL * DE low part
+2109             ;       DE = HL * DE high part
+2109             ;  USES:-
+2109             ;  Size 49 bytes
+2109             ;  Time between 303 en 307 cycles
+2109             ;****************
+2109             mul1632:
+2109                     ;HL = HL * DE
+2109                     ;        H  L
+2109                     ;        D  E
+2109                     ;    --------*
+2109                     ;          EL
+2109                     ;       EH  0
+2109                     ;       DL  0
+2109                     ;    DH  0  0
+2109                     ; -----------+
+2109                     ;  P  Q  R  S
+2109                     ;S = ELlow
+2109                     ;R = ELhigh+EHlow+DLlow
+2109                     ;Q = DHlow+EHhigh+DLhigh
+2109                     ;P = DHhigh
+2109 F5                  PUSH  AF          ;11  11 save AF
+210A C5                  PUSH  BC          ;11  22 save BC
+210B 44                  LD    B,H         ; 4  26
+210C 4D                  LD    C,L         ; 4  30
+210D 62                  LD    H,D         ; 4  34 HL contains DH aka DB
+210E 68                  LD    L,B         ; 4  38
+210F ED 6C               MLT   HL          ;17  55
+2111 E5                  PUSH  HL          ;11  66
+2112 62                  LD    H,D         ; 4  70 HL contains DL aka DC
+2113 69                  LD    L,C         ; 4  74
+2114 ED 6C               MLT   HL          ;17  91
+2116 E5                  PUSH  HL          ;11 102
+2117 63                  LD    H,E         ; 4 106 HL contains EH aka EB
+2118 68                  LD    L,B         ; 4 110
+2119 ED 6C               MLT   HL          ;17 127
+211B E5                  PUSH  HL          ;11 138
+211C 63                  LD    H,E         ; 4 142 HL contains EL aka EC
+211D 69                  LD    L,C         ; 4 146
+211E ED 6C               MLT   HL          ;17 163
+2120 D1                  POP   DE          ; 9 172 calculate RS=EL+EH0
+2121 06 00               LD    B,0         ; 6 178
+2123 4A                  LD    C,D         ; 4 182 ..C=EHhigh
+2124 53                  LD    D,E         ; 4 186 ..D=EHlow
+2125 1E 00               LD    E,0         ; 6 192
+2127 19                  ADD   HL,DE       ; 7 199
+2128 30 01               JR    NC,mul16321 ; 8 207 | 6 205 add carry to PQ
+212A 03                  INC   BC          ;         4 209
+212B             mul16321:
+212B D1                  POP   DE          ; 9 209 | 211 calculate RS=EL+EH0+DL0
+212C 7A                  LD    A,D         ; 4 220 | 222 ..A=DLhigh
+212D 53                  LD    D,E         ; 4 224 | 226 ..D=DLlow
+212E 19                  ADD   HL,DE       ; 7 231 | 233
+212F 30 01               JR    NC,mul16322 ; 8 239 | 6 239 add carry to PQ
+2131 03                  INC   BC          ;         4 243
+2132             mul16322:
+2132                                       ;HL=RS=EL+EH0+DL0
+2132                                       ;C=EHhigh
+2132                                       ;A=DLhigh
+2132                                       ;E=0
+2132 EB                  EX    DE,HL       ; 3 242 | 246
+2133 65                  LD    H,L         ; 4 246 | 250 ..E was 0, so H=L=0
+2134 6F                  LD    L,A         ; 4 250 | 254 ..HL=DLhigh
+2135 09                  ADD   HL,BC       ; 7 257 | 261 PQ=EHhigh+DLhigh+DH
+2136 C1                  POP   BC          ; 9 266 | 270
+2137 09                  ADD   HL,BC       ; 7 273 | 277
+2138 EB                  EX    DE,HL       ; 3 276 | 280
+2139                                       ;D=P=DHhigh
+2139                                       ;E=Q=DHlow+EHhigh+DLhigh
+2139                                       ;H=R=ELhigh+EHlow+DLlow
+2139                                       ;L=S=ELlow
+2139 C1                  POP   BC          ; 9 285 | 289 restore BC
+213A F1                  POP   AF          ; 9 294 | 298 restore AF
+213B C9                  RET               ; 9 303 | 307
+213C             ;****************
+213C             ;mul16S
+213C             ;16 by 16 bit slow unsigned multiplication with 32 bit result.
+213C             ;  IN:  HL = operand 1
+213C             ;       DE = operand 2
+213C             ;  OUT: DE = HL * DE high part
+213C             ;       HL = HL * DE low part
+213C             ;  USES:none.
+213C             ;  Size 26 bytes
+213C             ;  Time between 726 en 998 cycles
+213C             ;****************
+213C             mul16S:
+213C F5                  PUSH  AF          ;11  11 save AF
+213D C5                  PUSH  BC          ;11  22 save BC
+213E 44                  LD    B,H         ; 4  26
+213F 4D                  LD    C,L         ; 4  30
+2140 21 00 00            LD    HL,0        ; 9  39
+2143 3E 10               LD    A,16        ; 6  45
+2145             mul16S1:
+2145 29                  ADD   HL,HL       ;16*7=112 157
+2146 CB 13               RL    E           ;16*7=112 269
+2148 CB 12               RL    D           ;16*7=112 381
+214A 30 04               JR    NC,mul16S2  ;16*8=128 509 16*6= 96 477
+214C 09                  ADD   HL,BC       ;             16*7=112 589
+214D 30 01               JR    NC,mul16S2  ;             16*8=128 717 16*6=96 685
+214F 13                  INC   DE          ;             16*4= 64 781 16*4=64 749 This instruction (with the jump) is like an "ADC DE,0"
+2150             mul16S2:
+2150 3D                  DEC   A           ;16*4=64    573 | 845 | 813
+2151 20 F2               JR    NZ,mul16S1  ;15*8+6=126 699 | 971 | 939
+2153 C1                  POP   BC          ; 9         708 | 980 | 948 restore BC
+2154 F1                  POP   AF          ; 9         717 | 989 | 957 restore AF
+2155 C9                  RET               ; 9         726 | 998 | 966
+2156             ;****************
+2156             ;div16
+2156             ;16 by 16 bit unsigned division.
+2156             ;  IN:  HL = dividend
+2156             ;       DE = divisor
+2156             ;  OUT: HL = quotient
+2156             ;       DE = remainder
+2156             ;  USES:-
+2156             ;  Size   32 bytes
+2156             ;  Time   between 1073 en 1121 cycles
+2156             ;pseudo code:
+2156             ;T = AC = dividend
+2156             ;D = DE = divisor
+2156             ;Q = AC = quotient = 0
+2156             ;R = HL = remainder = 0
+2156             ;invariante betrekking:
+2156             ; D/T\Q     
+2156             ;   R       
+2156             ; T = QD + R
+2156             ; T <= 2^N  
+2156             ;
+2156             ; D/T'.RT\Q'      
+2156             ;   R'             
+2156             ; RT <= 2^N        
+2156             ; 0<=k<=N          
+2156             ; RT = T % 2^k     
+2156             ; T' = (T-RT) / 2^k
+2156             ; Q' = T' / D      
+2156             ; R' = T' % D      
+2156             ;
+2156             ;for (i=16; i>0; i--) {
+2156             ;  T = T * 2 (remember MSB in carry)
+2156             ;  R = R * 2 + carry
+2156             ;  Q = Q * 2
+2156             ;  if (R >= D) {
+2156             ;    R = R - D;
+2156             ;    Q++;
+2156             ;  }
+2156             ;}
+2156             ;return Q (in HL) and R (in DE)
+2156             ;****************
+2156             div16:
+2156 F5                  PUSH  AF          ;11  11 save registers used
+2157 C5                  PUSH  BC          ;11  22
+2158 4D                  LD    C,L         ; 4  26 T(AC) = teller from input (HL)
+2159 7C                  LD    A,H         ; 4  30 D(DE) = deler from input  (DE)
+215A 21 00 00            LD    HL,0        ; 9  39 R(HL) = restant; Q(AC) = quotient
+215D 06 10               LD    B,16        ; 6  45 for (i=16; i>0; i--)
+215F             div16_1:
+215F CB 21               SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
+2161 CB 17               RL    A           ;16* 7=112 269   Q = Q * 2
+2163 ED 6A               ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
+2165 B7                  OR    A,A         ;16* 4= 64 493   if (R >= D) {
+2166 ED 52               SBC   HL,DE       ;16*10=160 653
+2168 38 03               JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
+216A 0C                  INC   C           ;              16*4= 64 813   Q++
+216B 18 01               JR    div16_3     ;              16*8=128 941
+216D             div16_2:
+216D 19                  ADD   HL,DE       ;16* 7=112 893  (compensate comparison)
+216E             div16_3:
+216E 10 EF               DJNZ  div16_1     ;15*9+7=142 1035 | 1083 }
+2170 EB                  EX    DE,HL       ; 3 1038 | 1086 swap remainder (HL) into DE
+2171 67                  LD    H,A         ; 4 1042 | 1090 move quotient (AC) into HL
+2172 69                  LD    L,C         ; 4 1046 | 1094
+2173 C1                  POP   BC          ; 9 1055 | 1103
+2174 F1                  POP   AF          ; 9 1064 | 1112
+2175 C9                  RET               ; 9 1073 | 1121
+2176             ;****************
+2176             ;div16_8
+2176             ;16 by 8 bit unsigned division.
+2176             ;  IN:  HL = dividend
+2176             ;       A  = divisor
+2176             ;  OUT: HL = quotient
+2176             ;       A  = remainder
+2176             ;  USES:F(lags)
+2176             ;  Size 18 bytes
+2176             ;  Time between 601 en 697 cycles
+2176             ;****************
+2176             div16_8:
+2176 C5                  PUSH  BC          ;11 11 save registers used
+2177 06 10               LD    B,16        ; 6 17 the length of the dividend (16 bits)
+2179 4F                  LD    C,A         ; 4 21 move divisor to C
+217A AF                  XOR   A,A         ; 4 25 clear upper 8 bits of AHL
+217B             div16_82:
+217B 29                  ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
+217C CB 17               RL    A           ;16*7=112 249
+217E B9                  CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
+217F 38 02               JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
+2181 91                  SUB   A,C         ;             16*4=64 473 subtract the divisor
+2182 2C                  INC   L           ;             16*4=64 537 and set the next digit of the quotient
+2183             div16_83:
+2183 10 F6               DJNZ  div16_82    ;15*9+7=142 583 679
+2185 C1                  POP   BC          ;9 592 688
+2186 C9                  RET               ;9 601 697
+2187             ;****************
+2187             ;div8
+2187             ;8 by 8 bit unsigned division.
+2187             ;  IN:  A = dividend
+2187             ;       C = divisor
+2187             ;  OUT: A = quotient
+2187             ;       C = remainder
+2187             ;  USES:F(lags)
+2187             ;  Size 26 bytes
+2187             ;  Time between 411 and 459 cycles
+2187             ;****************
+2187             ;pseudo code:
+2187             ;T = dividend
+2187             ;D = divisor
+2187             ;Q = quotient = 0
+2187             ;R = remainder = 0
+2187             ;invariante betrekking:
+2187             ; T = QD + R
+2187             ; T <= 2^8  
+2187             ;
+2187             ; D/T'.RT\Q'      
+2187             ;   R'             
+2187             ; RT <= 2^8        
+2187             ; 0<=k<=8          
+2187             ; RT = T % 2^k     
+2187             ; T' = (T-RT) / 2^k
+2187             ; Q' = T' / D      
+2187             ; R' = T' % D      
+2187             ;
+2187             ;for (i=8; i>0; i--) {
+2187             ;  T = T * 2 (remember MSB in carry)
+2187             ;  R = R * 2 + carry
+2187             ;  Q = Q * 2
+2187             ;  if (R >= D) {
+2187             ;    R = R - D;
+2187             ;    Q++;
+2187             ;  }
+2187             ;}
+2187             ;return Q (in A) and R (in C)
+2187             ;****************
+2187             ;E = T = dividend
+2187             ;C = D = divisor
+2187             ;D = Q = quotient
+2187             ;A = R = remainder
+2187             ;****************
+2187             ;  IN:  A = dividend
+2187             ;       C  = divisor
+2187             div8:
+2187 D5                  PUSH  DE          ;11 11 save registers used
+2188 C5                  PUSH  BC          ;11 22 save registers used
+2189 06 08               LD    B,8         ; 6 28 the length of the dividend (8 bits)
+218B 16 00               LD    D,0         ; 6 34 D = Q = quotient = 0
+218D 5F                  LD    E,A         ; 4 38 E = T = dividend
+218E AF                  XOR   A,A         ; 4 42 A = R = remainder = 0
+218F             div8_1:
+218F CB 23               SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
+2191 CB 17               RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
+2193 CB 22               SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
+2195 B9                  CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
+2196 38 02               JR    C,div8_2    ;8*8=64 306 8*6=48 290
+2198 91                  SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
+2199 14                  INC   D           ;           8*4=32 354   Q[D]++;
+219A             div8_2:           ;                      }
+219A 10 F3               DJNZ  div8_1      ;7*9+7=70 376 424      }
+219C C1                  POP   BC          ;9        385 433
+219D 4F                  LD    C,A         ;4        389 437      return Remainder[A] in C
+219E 7A                  LD    A,D         ;4        393 441      return Quotient[D] in A
+219F D1                  POP   DE          ;9        402 450
+21A0 C9                  RET               ;9        411 459
+21A1             ;****************
+21A1             ;div8_16
+21A1             ;8 by 16 bit unsigned division.
+21A1             ;  IN:  A = dividend
+21A1             ;       HL = divisor
+21A1             ;  OUT: A = quotient
+21A1             ;       C = remainder
+21A1             ;  USES:F(lags)
+21A1             ;  Size 13 bytes (plus dependency on div8)
+21A1             ;  Time 31 or between 436 and 484 cycles
+21A1             ;****************
+21A1             ;invariante betrekking:
+21A1             ; T = dividend
+21A1             ; D = divisor
+21A1             ; Q = quotient
+21A1             ; R = remainder
+21A1             ; T = QD + R
+21A1             ;pseudo code:
+21A1             ; if D >= 256 {
+21A1             ;   R = T
+21A1             ;   Q = 0
+21A1             ; } else {
+21A1             ;   R = T/D (using div8)
+21A1             ;   Q = T%D (using div8)
+21A1             ; }
+21A1             ;****************
+21A1             
+21A1             
+21A1             div8_16:
+21A1 4F                  LD    C,A         ;  4  4         save dividend(A) in C
+21A2 7C                  LD    A,H         ;  4  8         if D >= 256 {
+21A3 B7                  OR    A,A         ;  4 12
+21A4 28 02               JR    Z,div8_161  ;  6 18  8  20
+21A6 AF                  XOR   A,A         ;  4 22           R = T;
+21A7 C9                  RET               ;  9 31           Q = 0;
+21A8             div8_161:                     ;               } else {
+21A8 79                  LD    A,C         ;        4  24    restore dividend into A
+21A9 4D                  LD    C,L         ;        4  28    load divisor (HL) into C
+21AA CD 87 21            CALL  div8        ; 16+411/16+459               R = T/D; Q = T%D;
+21AD C9                  RET               ; 9  436/484    }
+21AE             ;****************
+21AE             ;read
+21AE             ;read a 16 bit unsigned number from the input
+21AE             ;  IN:  none
+21AE             ;  OUT: HL = 16 bit unsigned number
+21AE             ;  USES:-
+21AE             ;****************
+21AE             read:
+21AE F5                  PUSH  AF
+21AF 21 00 00            LD    HL,0        ;result = 0;
+21B2             read1:
+21B2 CD 58 20            CALL  getChar     ;check if a character is available.
+21B5 28 FB               JR    Z,read1     ;-no: wait for it.
+21B7 FE 0D               CP    A,'\r'      ;return if char == Carriage Return
+21B9 28 0C               JR    Z,read2
+21BB CD F3 20            CALL  mul16_10    ;result *= 10;
+21BE D6 30               SUB   A,'0'       ;digit = char - '0';
+21C0 85                  ADD   A,L         ;result += digit;
+21C1 6F                  LD    L,A
+21C2 30 EE               JR    NC,read1     ;get next character
+21C4 24                  INC   H
+21C5 18 EB               JR    read1        ;get next character
+21C7             read2:
+21C7 F1                  POP   AF
+21C8 C9                  RET
+21C9             ;****************
+21C9             ;writeLineHL
+21C9             ;write a 16 bit unsigned number to the output, followed by a carriage return
+21C9             ;  IN:  HL = 16 bit unsigned number
+21C9             ;  OUT: none
+21C9             ;  USES:HL
+21C9             ;****************
+21C9             writeLineHL:
+21C9 CD D0 21            CALL  writeHL
+21CC CD 99 20            CALL  putCRLF
+21CF C9                  RET
+21D0             ;****************
+21D0             ;writeHL
+21D0             ;write a 16 bit unsigned number to the output
+21D0             ;  IN:  HL = 16 bit unsigned number
+21D0             ;  OUT: none
+21D0             ;  USES:HL
+21D0             ;****************
+21D0             writeHL:
+21D0 C5                  PUSH  BC          ;save registers used
+21D1 F5                  PUSH  AF
+21D2 06 00               LD    B,0         ;number of digits on stack
+21D4 7C                  LD    A,H         ;is HL=0?
+21D5 B5                  OR    A,L
+21D6 20 03               JR    NZ,writeHL1
+21D8 04                  INC   B           ;write a single digit 0
+21D9 18 0C               JR    writeHL3
+21DB             writeHL1:
+21DB 3E 0A               LD    A,10        ;divide HL by 10
+21DD CD 76 21            CALL  div16_8
+21E0 F5                  PUSH  AF          ;put remainder on stack
+21E1 04                  INC   B
+21E2 7C                  LD    A,H         ;is quotient 0?
+21E3 B5                  OR    A,L
+21E4 20 F5               JR    NZ,writeHL1
+21E6             writeHL2:
+21E6 F1                  POP   AF          ;write digit
+21E7             writeHL3:
+21E7 C6 30               ADD   A,'0'
+21E9 CD 8C 20            CALL  putChar
+21EC 10 F8               DJNZ  writeHL2
+21EE F1                  POP   AF          ;restore registers used
+21EF C1                  POP   BC
+21F0 C9                  RET
+21F1             ;****************
+21F1             ;writeLineA
+21F1             ;write an 8-bit unsigned number to the output, followed by a carriage return
+21F1             ;  IN:  A = 8-bit unsigned number
+21F1             ;  OUT: none
+21F1             ;  USES:none
+21F1             ;****************
+21F1             writeLineA:
+21F1 CD F8 21            CALL  writeA
+21F4 CD 99 20            CALL  putCRLF
+21F7 C9                  RET
+21F8             ;****************
+21F8             ;writeA
+21F8             ;write an 8-bit unsigned number to the output
+21F8             ;  IN:  A = 8-bit unsigned number
+21F8             ;  OUT: none
+21F8             ;  USES:none
+21F8             ;****************
+21F8             writeA:
+21F8 E5                  PUSH  HL          ;save registers used
+21F9 26 00               LD    H,0
+21FB 6F                  LD    L,A
+21FC CD D0 21            CALL  writeHL
+21FF E1                  POP   HL
+2200 C9                  RET
 
 Labels and cross references:
-      L0 = 21AF :
-      L1 = 21B2 :
-     L10 = 21C2 :
-     L11 = 21C2 :
-     L12 = 21C8 :
-     L13 = 21CB :
-     L14 = 21CB :
-     L15 = 21CD :
-     L16 = 21CF :
-     L17 = 21D0 :
-     L18 = 21D0 :
-     L19 = 21D0 : 21AF
-      L2 = 21B5 :
-     L20 = 21D0 :
-     L21 = 21D2 :
-     L22 = 21D8 :
-     L23 = 21DD :
-     L24 = 21DD :
-     L25 = 21E0 :
-     L26 = 21E3 :
-     L27 = 21E3 :
-     L28 = 21E6 :
-     L29 = 21E7 :
-      L3 = 21B5 :
-     L30 = 21EA :
-     L31 = 21EA :
-     L32 = 21ED :
-     L33 = 21F0 :
-     L34 = 21F0 :
-     L35 = 21F2 :
-     L36 = 21F4 :
-     L37 = 21F5 :
-     L38 = 21F5 : 21DD
-     L39 = 21FC : 21EA
-      L4 = 21B5 :
-      L5 = 21B5 :
-      L6 = 21B5 : 21E7
-      L7 = 21B5 :
-      L8 = 21B7 :
-      L9 = 21BD :
-   div16 = 2104 :
- div16_1 = 210D : 211C
- div16_2 = 211B : 2116
- div16_3 = 211C : 2119
- div16_8 = 2124 : 218B
-div16_82 = 2129 : 2131
-div16_83 = 2131 : 212D
-    div8 = 2135 : 2158
-  div8_1 = 213D : 2148
- div8_16 = 214F :
-div8_161 = 2156 : 2152
-  div8_2 = 2148 : 2144
- getChar = 2006 : 2160
-getChar1 = 2014 : 200B
-    main = 21AF : 2003
-   mul16 = 2088 :
- mul1632 = 20B7 :
-mul16321 = 20D9 : 20D6
-mul16322 = 20E0 : 20DD
-  mul16S = 20EA :
- mul16S1 = 20F3 : 20FF
- mul16S2 = 20FE : 20F8 20FB
-mul16_10 = 20A1 : 2169
- mul16_8 = 20AA :
- putBell = 2060 :
- putCRLF = 2047 : 2027 217A 21A2
- putChar = 203A : 2031 204A 204F 2056 205E 2062 2083 2197
-putChar1 = 203B : 2040
-putErase = 2054 :
- putHexA = 206F : 2066 206A
-putHexA1 = 2078 : 2074
-putHexA2 = 2083 : 207F
-putHexHL = 2064 :
-  putMsg = 201E :
-putSpace = 2038 : 2059
- putStr1 = 202C : 2034
- putStr2 = 2036 : 202F
-    read = 215C :
-   read1 = 2160 : 2163 2170 2173
-   read2 = 2175 : 2167
+      L0 = 2003 :
+      L1 = 2006 :
+     L10 = 2016 :
+     L11 = 2016 :
+     L12 = 201C :
+     L13 = 201F :
+     L14 = 201F :
+     L15 = 2021 :
+     L16 = 2023 :
+     L17 = 2024 :
+     L18 = 2024 :
+     L19 = 2024 : 2003
+      L2 = 2009 :
+     L20 = 2024 :
+     L21 = 2026 :
+     L22 = 202C :
+     L23 = 2031 :
+     L24 = 2031 :
+     L25 = 2034 :
+     L26 = 2037 :
+     L27 = 2037 :
+     L28 = 203A :
+     L29 = 203B :
+      L3 = 2009 :
+     L30 = 203E :
+     L31 = 203E :
+     L32 = 2041 :
+     L33 = 2044 :
+     L34 = 2044 :
+     L35 = 2046 :
+     L36 = 2048 :
+     L37 = 2049 :
+     L38 = 2049 : 2031
+     L39 = 2050 : 203E
+      L4 = 2009 :
+      L5 = 2009 :
+      L6 = 2009 : 203B
+      L7 = 2009 :
+      L8 = 200B :
+      L9 = 2011 :
+   div16 = 2156 :
+ div16_1 = 215F : 216E
+ div16_2 = 216D : 2168
+ div16_3 = 216E : 216B
+ div16_8 = 2176 : 21DD
+div16_82 = 217B : 2183
+div16_83 = 2183 : 217F
+    div8 = 2187 : 21AA
+  div8_1 = 218F : 219A
+ div8_16 = 21A1 :
+div8_161 = 21A8 : 21A4
+  div8_2 = 219A : 2196
+ getChar = 2058 : 21B2
+getChar1 = 2066 : 205D
+   mul16 = 20DA :
+ mul1632 = 2109 :
+mul16321 = 212B : 2128
+mul16322 = 2132 : 212F
+  mul16S = 213C :
+ mul16S1 = 2145 : 2151
+ mul16S2 = 2150 : 214A 214D
+mul16_10 = 20F3 : 21BB
+ mul16_8 = 20FC :
+ putBell = 20B2 :
+ putCRLF = 2099 : 2079 21CC 21F4
+ putChar = 208C : 2083 209C 20A1 20A8 20B0 20B4 20D5 21E9
+putChar1 = 208D : 2092
+putErase = 20A6 :
+ putHexA = 20C1 : 20B8 20BC
+putHexA1 = 20CA : 20C6
+putHexA2 = 20D5 : 20D1
+putHexHL = 20B6 :
+  putMsg = 2070 :
+putSpace = 208A : 20AB
+ putStr1 = 207E : 2086
+ putStr2 = 2088 : 2081
+    read = 21AE :
+   read1 = 21B2 : 21B5 21C2 21C5
+   read2 = 21C7 : 21B9
    start = 2000 :
-  writeA = 21A6 : 219F
- writeHL = 217E : 2177 21AA
-writeHL1 = 2189 : 2184 2192
-writeHL2 = 2194 : 219A
-writeHL3 = 2195 : 2187
-writeLineA = 219F :
-writeLineHL = 2177 : 21C8
-writeLineStr = 2024 : 21E0 21ED
-writeStr = 202B : 201F 2024
+  writeA = 21F8 : 21F1
+ writeHL = 21D0 : 21C9 21FC
+writeHL1 = 21DB : 21D6 21E4
+writeHL2 = 21E6 : 21EC
+writeHL3 = 21E7 : 21D9
+writeLineA = 21F1 :
+writeLineHL = 21C9 : 201C
+writeLineStr = 2076 : 2034 2041
+writeStr = 207D : 2071 2076

@@ -1,4 +1,502 @@
-TOS     equ 0FD00H        ;User stack grows before user global data.
+SOC     equ 02000H        ;start of code, i.e.lowest external RAM address.
+TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data.
+        .ORG  SOC
+start:
+        LD    SP,TOS
+L0:
+        CALL  L207
+L1:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L2:
+        ;;ledtst.j(0) /* Z80S183 program that tests switching on/off the LED at the PWRSWTCH  output. */
+L3:
+        ;;ledtst.j(1) /* Transcribed from LEDTest.asm to ledtest.j */
+L4:
+        ;;ledtst.j(2) class LEDTest {
+L5:
+        ;class LEDTest []
+L6:
+        ;;ledtst.j(3)   /*******************************
+L7:
+        ;;ledtst.j(4)   To compile this class and generate Z80 asm, listing and hex files:
+L8:
+        ;;ledtst.j(5)   - cd src\test\resources\jCode\ledtest\localVariableNoParameter
+L9:
+        ;;ledtst.j(6)   - java -jar ..\..\..\..\..\..\target\z80Compiler-1.0-SNAPSHOT.jar -z -b ledtst.j
+L10:
+        ;;ledtst.j(7)   Assumes that code can be run from internal RAM with 1 wait state.
+L11:
+        ;;ledtst.j(8)   Assumes data can be read/written to internal RAM with 1 wait state.
+L12:
+        ;;ledtst.j(9)   Assumes the Z80S183 is driven by an 18.432 MHz clock at the XTAL pin
+L13:
+        ;;ledtst.j(10)   Assumes that an active-low LED is available at the PWRSWTCH pin:
+L14:
+        ;;ledtst.j(11)    - connect anode of low-current (2 mA) LED to VCC
+L15:
+        ;;ledtst.j(12)    - connect cathode of low-current LED to 1k8 resistor
+L16:
+        ;;ledtst.j(13)    - connect other end of resistor to PWR_SW (pin 13 of J23).
+L17:
+        ;;ledtst.j(14)   
+L18:
+        ;;ledtst.j(15)   Connect Z80S183 evaluation board via DB9 (male-female) cable to RS232 of host computer.
+L19:
+        ;;ledtst.j(16)   Start hyperterminal or TeraTerm:
+L20:
+        ;;ledtst.j(17)    - Select serial communication using COM1
+L21:
+        ;;ledtst.j(18)    - Set up | Serial port
+L22:
+        ;;ledtst.j(19)      * COM1
+L23:
+        ;;ledtst.j(20)      * 57600
+L24:
+        ;;ledtst.j(21)      * 8N2
+L25:
+        ;;ledtst.j(22)      * no flow control
+L26:
+        ;;ledtst.j(23)    - connect 9V DC adapter to Z80S183 evaluation board.
+L27:
+        ;;ledtst.j(24)    - Press RESET on Z80S183 evaluation board
+L28:
+        ;;ledtst.j(25)      The text Zilog Z80183 Monitor Version 2.8 should appear.
+L29:
+        ;;ledtst.j(26)   Upload Intel hex file ledtst.hex:
+L30:
+        ;;ledtst.j(27)    -  type L
+L31:
+        ;;ledtst.j(28)    -  File | Send file
+L32:
+        ;;ledtst.j(29)       * Browse to file ledtst.hex and select OK
+L33:
+        ;;ledtst.j(30)       * The text 10(10) records in Hex file should appear
+L34:
+        ;;ledtst.j(31)   Check memory contents:
+L35:
+        ;;ledtst.j(32)    -  D 2000 32
+L36:
+        ;;ledtst.j(33)   Run program
+L37:
+        ;;ledtst.j(34)    -  G 2000
+L38:
+        ;;ledtst.j(35)    - The LED should blink at a rate of 1Hz.
+L39:
+        ;;ledtst.j(36)   *******************************/
+L40:
+        ;;ledtst.j(37) 
+L41:
+        ;;ledtst.j(38)   // Definition of on-chip Z80S183 registers
+L42:
+        ;;ledtst.j(39)   //                Name  Address  Description
+L43:
+        ;;ledtst.j(40)   //                ====  =======  =========
+L44:
+        ;;ledtst.j(41)   static final byte WDTCR = 0x65;  //Watchdog Timer Control Register
+L45:
+        ;;ledtst.j(42)   static final byte SCR   = 0x7F;  //System Configuration Register P91
+L46:
+        ;;ledtst.j(43)   static final byte CCR   = 0x1F;  //CPU Control Register P84
+L47:
+        ;;ledtst.j(44)   static final byte DCNTL = 0x32;  //DMA/Wait Control Register P121
+L48:
+        ;;ledtst.j(45)   static final byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
+L49:
+        ;;ledtst.j(46)   static final byte PCR   = 0x7E;  //Power Control Register
+L50:
+        ;;ledtst.j(47) 
+L51:
+        ;;ledtst.j(48)   //Device initialisation
+L52:
+        ;;ledtst.j(49)   public static void init() {
+L53:
+        ;method init [public, static] void ()
+L54:
+        PUSH  IX
+L55:
+        LD    IX,0x0000
+        ADD   IX,SP
+L56:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L57:
+        ;;ledtst.j(50)     // Enable writing to system ctrl registers
+L58:
+        ;;ledtst.j(51)     output(WDTCR, 0x00);
+L59:
+        LD    A,0
+        OUT0  (065H),A
+L60:
+        ;;ledtst.j(52)     // LD      A,00BH
+L61:
+        ;;ledtst.j(53)     // OUT0    (WDTCR),A
+L62:
+        ;;ledtst.j(54) 
+L63:
+        ;;ledtst.j(55)     // System configuration Register P91
+L64:
+        ;;ledtst.j(56)     // b7 = 0 on-chip ROM disabled
+L65:
+        ;;ledtst.j(57)     // b6 = 1 on-chip RAM enabled
+L66:
+        ;;ledtst.j(58)     // b5 = 0 on-chip RAM at xF800H-xFFFFH
+L67:
+        ;;ledtst.j(59)     // b4 = 1 ROMCS enabled/disabled
+L68:
+        ;;ledtst.j(60)     // b3 = 1 RAMCS enabled/disabled
+L69:
+        ;;ledtst.j(61)     // b2 = 1 IOCS  enabled/disabled
+L70:
+        ;;ledtst.j(62)     // b10=00 PHI = EXTAL clock
+L71:
+        ;;ledtst.j(63)     output(SCR, 0x5C);
+L72:
+        LD    A,92
+        OUT0  (07FH),A
+L73:
+        ;;ledtst.j(64)     // LD      A,05CH
+L74:
+        ;;ledtst.j(65)     // OUT0    (SCR),A
+L75:
+        ;;ledtst.j(66)   
+L76:
+        ;;ledtst.j(67)     // CPU Control Register P84
+L77:
+        ;;ledtst.j(68)     // b7 = 1 PHI = XTAL / 1
+L78:
+        ;;ledtst.j(69)     // b63=00 SLP instruction enters sleep mode
+L79:
+        ;;ledtst.j(70)     // b5 = 0 BREQ in standby ignored
+L80:
+        ;;ledtst.j(71)     // b4 = 0 PHI low noise disabled
+L81:
+        ;;ledtst.j(72)     // b2 = x reserved
+L82:
+        ;;ledtst.j(73)     // b1 = 0 IORD/IOWR low noise disabled
+L83:
+        ;;ledtst.j(74)     // b0 = 0 A19-0/D7-0 low noise disabled
+L84:
+        ;;ledtst.j(75)     output(CCR, 0x80);    
+L85:
+        LD    A,128
+        OUT0  (01FH),A
+L86:
+        ;;ledtst.j(76)     // LD      A,080H
+L87:
+        ;;ledtst.j(77)     // OUT0    (CCR),A
+L88:
+        ;;ledtst.j(78) 
+L89:
+        ;;ledtst.j(79)     
+L90:
+        ;;ledtst.j(80)     // DMA/Wait Control Register P121
+L91:
+        ;;ledtst.j(81)     // b76=00 0 wait state CPU memory cycle
+L92:
+        ;;ledtst.j(82)     // b54=00 0 wait state CPU I/O cycle
+L93:
+        ;;ledtst.j(83)     // b3 = 0 level detect on DMA1 Request
+L94:
+        ;;ledtst.j(84)     // b2 = 0 level detect on DMA0 Request
+L95:
+        ;;ledtst.j(85)     // b1 = 0 DMA from memory to I/O 
+L96:
+        ;;ledtst.j(86)     // b0 = 0 DMA increasing memory address
+L97:
+        ;;ledtst.j(87)     output(DCNTL, 0x00);
+L98:
+        LD    A,0
+        OUT0  (032H),A
+L99:
+        ;;ledtst.j(88)     // XOR      A
+L100:
+        ;;ledtst.j(89)     // OUT0    (DCNTL),A
+L101:
+        ;;ledtst.j(90) 
+L102:
+        ;;ledtst.j(91)     // Wait State Generator Control Register P96
+L103:
+        ;;ledtst.j(92)     // b76=00 0 wait states CSROM
+L104:
+        ;;ledtst.j(93)     // b54=00 0 wait states CSRAM
+L105:
+        ;;ledtst.j(94)     // b32=00 0 wait states other
+L106:
+        ;;ledtst.j(95)     // b10=xx reserved
+L107:
+        ;;ledtst.j(96)     output(WSGCR, 0x00);
+L108:
+        LD    A,0
+        OUT0  (06BH),A
+L109:
+        ;;ledtst.j(97)     // OUT0    (WSGCR),A
+L110:
+        ;;ledtst.j(98) 
+L111:
+        ;;ledtst.j(99)     // Block writing to system ctrl registers
+L112:
+        ;;ledtst.j(100)     output(WDTCR, 0x00);
+L113:
+        LD    A,0
+        OUT0  (065H),A
+L114:
+        ;;ledtst.j(101)     // XOR     A
+L115:
+        ;;ledtst.j(102)     // OUT0    (WDTCR),A
+L116:
+        ;;ledtst.j(103)   }
+L117:
+        LD    SP,IX
+L118:
+        POP   IX
+L119:
+        return
+L120:
+        ;;ledtst.j(104) 
+L121:
+        ;;ledtst.j(105)   public static void toggle() {
+L122:
+        ;method toggle [public, static] void ()
+L123:
+        PUSH  IX
+L124:
+        LD    IX,0x0000
+        ADD   IX,SP
+L125:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L126:
+        ;;ledtst.j(106)     // Enable writing to PCR
+L127:
+        ;;ledtst.j(107)     output(WDTCR, 0x0B);
+L128:
+        LD    A,11
+        OUT0  (065H),A
+L129:
+        ;;ledtst.j(108)     //LD      A,00BH
+L130:
+        ;;ledtst.j(109)     //OUT0    (WDTCR),A
+L131:
+        ;;ledtst.j(110) 
+L132:
+        ;;ledtst.j(111)     // Toggle LED at PWR_SW
+L133:
+        ;;ledtst.j(112)     output(PCR, input(PCR) ^ 0x20);
+L134:
+        IN0  A,(07EH)
+L135:
+        XOR   A,32
+L136:
+        OUT0  (07EH),A
+L137:
+        ;;ledtst.j(113)     //IN0     A,(PCR)
+L138:
+        ;;ledtst.j(114)     //XOR     A,020H
+L139:
+        ;;ledtst.j(115)     //OUT0    (PCR),A
+L140:
+        ;;ledtst.j(116) 
+L141:
+        ;;ledtst.j(117)     // Disable writing to PCR
+L142:
+        ;;ledtst.j(118)     output(WDTCR, 0x00);
+L143:
+        LD    A,0
+        OUT0  (065H),A
+L144:
+        ;;ledtst.j(119)     //XOR     A,A
+L145:
+        ;;ledtst.j(120)     //OUT0    (WDTCR),A
+L146:
+        ;;ledtst.j(121)   }
+L147:
+        LD    SP,IX
+L148:
+        POP   IX
+L149:
+        return
+L150:
+        ;;ledtst.j(122) 
+L151:
+        ;;ledtst.j(123)   /**
+L152:
+        ;;ledtst.j(124)    * Wait 1 msec at 18,432 MHz with no wait states.
+L153:
+        ;;ledtst.j(125)    * 
+L154:
+        ;;ledtst.j(126)    * With n=255 the routine requires 108 + n * 71 = 18213 T-states, 
+L155:
+        ;;ledtst.j(127)    * which is 219 T-states or 11,8 microseconds short of 1 millisecond.
+L156:
+        ;;ledtst.j(128)    * 
+L157:
+        ;;ledtst.j(129)    * Duplicating the for loop with a total of 257 for n and m 
+L158:
+        ;;ledtst.j(130)    * requires 132 + (n + m) * 71 = 18379 T-states,
+L159:
+        ;;ledtst.j(131)    * which is 53 T-states or 2,8 microseconds short of 1 millisecond.
+L160:
+        ;;ledtst.j(132)    */
+L161:
+        ;;ledtst.j(133)   public static void sleepOneMillisecond() {
+L162:
+        ;method sleepOneMillisecond [public, static] void ()
+L163:
+        PUSH  IX
+L164:
+        LD    IX,0x0000
+        ADD   IX,SP
+L165:
+        LD    HL,65535
+        ADD   HL,SP
+        LD    SP,HL
+L166:
+        ;;ledtst.j(134)     for (byte b = 255; b!=0; b--) ;
+L167:
+        LD    A,255
+L168:
+        LD    (IX - 1),A
+L169:
+        LD    A,(IX - 1)
+L170:
+        SUB   A,0
+L171:
+        JP    Z,L177
+L172:
+        JP    L175
+L173:
+        DEC   (IX - 1)
+L174:
+        JP    L169
+L175:
+        JP    L173
+L176:
+        ;;ledtst.j(135)   }
+L177:
+        LD    SP,IX
+L178:
+        POP   IX
+L179:
+        return
+L180:
+        ;;ledtst.j(136) 
+L181:
+        ;;ledtst.j(137)   /**
+L182:
+        ;;ledtst.j(138)    * sleep for n miliseconds.
+L183:
+        ;;ledtst.j(139)    */
+L184:
+        ;;ledtst.j(140)   public static void sleep(word n) {
+L185:
+        ;method sleep [public, static] void (word n {bp+4})
+L186:
+        PUSH  IX
+L187:
+        LD    IX,0x0000
+        ADD   IX,SP
+L188:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L189:
+        ;;ledtst.j(141)     while (n != 0) {
+L190:
+        LD    L,(IX + 4)
+        LD    H,(IX + 5)
+L191:
+        LD    A,0
+L192:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L193:
+        JP    Z,L201
+L194:
+        ;;ledtst.j(142)       sleepOneMillisecond();
+L195:
+        CALL  L162
+L196:
+        ;;ledtst.j(143)       n--;
+L197:
+        LD    L,(IX + 4)
+        LD    H,(IX + 5)
+        DEC   HL
+        LD    (IX + 4),L
+        LD    (IX + 5),H
+L198:
+        ;;ledtst.j(144)     }
+L199:
+        JP    L190
+L200:
+        ;;ledtst.j(145)   }
+L201:
+        LD    SP,IX
+L202:
+        POP   IX
+L203:
+        return
+L204:
+        ;;ledtst.j(146) 
+L205:
+        ;;ledtst.j(147)   // Blink LED on/off in a XXxxXXxx pattern at 1 Hz.
+L206:
+        ;;ledtst.j(148)   public static void main() {
+L207:
+        ;method main [public, static] void ()
+L208:
+        PUSH  IX
+L209:
+        LD    IX,0x0000
+        ADD   IX,SP
+L210:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L211:
+        ;;ledtst.j(149)     init();
+L212:
+        CALL  L53
+L213:
+        ;;ledtst.j(150)     while (1==1) {
+L214:
+        LD    A,1
+L215:
+        SUB   A,1
+L216:
+        JP    NZ,L227
+L217:
+        ;;ledtst.j(151)       toggle();
+L218:
+        CALL  L122
+L219:
+        ;;ledtst.j(152)       //Thread.sleep(500); // Sleep for 500 miliseconds.
+L220:
+        ;;ledtst.j(153)       sleep(500); // Sleep for 500 miliseconds.
+L221:
+        LD    HL,500
+L222:
+        PUSH HL
+L223:
+        CALL  L185
+L224:
+        ;;ledtst.j(154)     }
+L225:
+        JP    L214
+L226:
+        ;;ledtst.j(155)   }
+L227:
+        LD    SP,IX
+L228:
+        POP   IX
+L229:
+        return
+L230:
+        ;;ledtst.j(156) }
 CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
 STAT0   equ 004H          ;147 ASCI0 Status register.
 TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
@@ -7,10 +505,6 @@ ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
 TDRE    equ 1             ;STAT0->Tx data register empty bit.
 OVERRUN equ 6             ;STAT0->OVERRUN bit.
 RDRF    equ 7             ;STAT0->Rx data register full bit.
-        .ORG  02000H      ;lowest external RAM address.
-start:
-        LD    SP,TOS
-        JP    main
 ;****************
 ;getChar
 ;Check if an input character from ASCI0 is available.
@@ -682,498 +1176,3 @@ writeA:
         CALL  writeHL
         POP   HL
         RET
-main:
-L0:
-        CALL  L207
-L1:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L2:
-        ;;ledtst.j(0) /* Z80S183 program that tests switching on/off the LED at the PWRSWTCH  output. */
-L3:
-        ;;ledtst.j(1) /* Transcribed from LEDTest.asm to ledtest.j */
-L4:
-        ;;ledtst.j(2) class LEDTest {
-L5:
-        ;class LEDTest []
-L6:
-        ;;ledtst.j(3)   /*******************************
-L7:
-        ;;ledtst.j(4)   To compile this class and generate Z80 asm, listing and hex files:
-L8:
-        ;;ledtst.j(5)   - cd src\test\resources\jCode\ledtest\localVariableNoParameter
-L9:
-        ;;ledtst.j(6)   - java -jar ..\..\..\..\..\..\target\z80Compiler-1.0-SNAPSHOT.jar -z -b ledtst.j
-L10:
-        ;;ledtst.j(7)   Assumes that code can be run from internal RAM with 1 wait state.
-L11:
-        ;;ledtst.j(8)   Assumes data can be read/written to internal RAM with 1 wait state.
-L12:
-        ;;ledtst.j(9)   Assumes the Z80S183 is driven by an 18.432 MHz clock at the XTAL pin
-L13:
-        ;;ledtst.j(10)   Assumes that an active-low LED is available at the PWRSWTCH pin:
-L14:
-        ;;ledtst.j(11)    - connect anode of low-current (2 mA) LED to VCC
-L15:
-        ;;ledtst.j(12)    - connect cathode of low-current LED to 1k8 resistor
-L16:
-        ;;ledtst.j(13)    - connect other end of resistor to PWR_SW (pin 13 of J23).
-L17:
-        ;;ledtst.j(14)   
-L18:
-        ;;ledtst.j(15)   Connect Z80S183 evaluation board via DB9 (male-female) cable to RS232 of host computer.
-L19:
-        ;;ledtst.j(16)   Start hyperterminal or TeraTerm:
-L20:
-        ;;ledtst.j(17)    - Select serial communication using COM1
-L21:
-        ;;ledtst.j(18)    - Set up | Serial port
-L22:
-        ;;ledtst.j(19)      * COM1
-L23:
-        ;;ledtst.j(20)      * 57600
-L24:
-        ;;ledtst.j(21)      * 8N2
-L25:
-        ;;ledtst.j(22)      * no flow control
-L26:
-        ;;ledtst.j(23)    - connect 9V DC adapter to Z80S183 evaluation board.
-L27:
-        ;;ledtst.j(24)    - Press RESET on Z80S183 evaluation board
-L28:
-        ;;ledtst.j(25)      The text Zilog Z80183 Monitor Version 2.8 should appear.
-L29:
-        ;;ledtst.j(26)   Upload Intel hex file ledtst.hex:
-L30:
-        ;;ledtst.j(27)    -  type L
-L31:
-        ;;ledtst.j(28)    -  File | Send file
-L32:
-        ;;ledtst.j(29)       * Browse to file ledtst.hex and select OK
-L33:
-        ;;ledtst.j(30)       * The text 10(10) records in Hex file should appear
-L34:
-        ;;ledtst.j(31)   Check memory contents:
-L35:
-        ;;ledtst.j(32)    -  D 2000 32
-L36:
-        ;;ledtst.j(33)   Run program
-L37:
-        ;;ledtst.j(34)    -  G 2000
-L38:
-        ;;ledtst.j(35)    - The LED should blink at a rate of 1Hz.
-L39:
-        ;;ledtst.j(36)   *******************************/
-L40:
-        ;;ledtst.j(37) 
-L41:
-        ;;ledtst.j(38)   // Definition of on-chip Z80S183 registers
-L42:
-        ;;ledtst.j(39)   //                Name  Address  Description
-L43:
-        ;;ledtst.j(40)   //                ====  =======  =========
-L44:
-        ;;ledtst.j(41)   static final byte WDTCR = 0x65;  //Watchdog Timer Control Register
-L45:
-        ;;ledtst.j(42)   static final byte SCR   = 0x7F;  //System Configuration Register P91
-L46:
-        ;;ledtst.j(43)   static final byte CCR   = 0x1F;  //CPU Control Register P84
-L47:
-        ;;ledtst.j(44)   static final byte DCNTL = 0x32;  //DMA/Wait Control Register P121
-L48:
-        ;;ledtst.j(45)   static final byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
-L49:
-        ;;ledtst.j(46)   static final byte PCR   = 0x7E;  //Power Control Register
-L50:
-        ;;ledtst.j(47) 
-L51:
-        ;;ledtst.j(48)   //Device initialisation
-L52:
-        ;;ledtst.j(49)   public static void init() {
-L53:
-        ;method init [public, static] void ()
-L54:
-        PUSH  IX
-L55:
-        LD    IX,0x0000
-        ADD   IX,SP
-L56:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L57:
-        ;;ledtst.j(50)     // Enable writing to system ctrl registers
-L58:
-        ;;ledtst.j(51)     output(WDTCR, 0x00);
-L59:
-        LD    A,0
-        OUT0  (065H),A
-L60:
-        ;;ledtst.j(52)     // LD      A,00BH
-L61:
-        ;;ledtst.j(53)     // OUT0    (WDTCR),A
-L62:
-        ;;ledtst.j(54) 
-L63:
-        ;;ledtst.j(55)     // System configuration Register P91
-L64:
-        ;;ledtst.j(56)     // b7 = 0 on-chip ROM disabled
-L65:
-        ;;ledtst.j(57)     // b6 = 1 on-chip RAM enabled
-L66:
-        ;;ledtst.j(58)     // b5 = 0 on-chip RAM at xF800H-xFFFFH
-L67:
-        ;;ledtst.j(59)     // b4 = 1 ROMCS enabled/disabled
-L68:
-        ;;ledtst.j(60)     // b3 = 1 RAMCS enabled/disabled
-L69:
-        ;;ledtst.j(61)     // b2 = 1 IOCS  enabled/disabled
-L70:
-        ;;ledtst.j(62)     // b10=00 PHI = EXTAL clock
-L71:
-        ;;ledtst.j(63)     output(SCR, 0x5C);
-L72:
-        LD    A,92
-        OUT0  (07FH),A
-L73:
-        ;;ledtst.j(64)     // LD      A,05CH
-L74:
-        ;;ledtst.j(65)     // OUT0    (SCR),A
-L75:
-        ;;ledtst.j(66)   
-L76:
-        ;;ledtst.j(67)     // CPU Control Register P84
-L77:
-        ;;ledtst.j(68)     // b7 = 1 PHI = XTAL / 1
-L78:
-        ;;ledtst.j(69)     // b63=00 SLP instruction enters sleep mode
-L79:
-        ;;ledtst.j(70)     // b5 = 0 BREQ in standby ignored
-L80:
-        ;;ledtst.j(71)     // b4 = 0 PHI low noise disabled
-L81:
-        ;;ledtst.j(72)     // b2 = x reserved
-L82:
-        ;;ledtst.j(73)     // b1 = 0 IORD/IOWR low noise disabled
-L83:
-        ;;ledtst.j(74)     // b0 = 0 A19-0/D7-0 low noise disabled
-L84:
-        ;;ledtst.j(75)     output(CCR, 0x80);    
-L85:
-        LD    A,128
-        OUT0  (01FH),A
-L86:
-        ;;ledtst.j(76)     // LD      A,080H
-L87:
-        ;;ledtst.j(77)     // OUT0    (CCR),A
-L88:
-        ;;ledtst.j(78) 
-L89:
-        ;;ledtst.j(79)     
-L90:
-        ;;ledtst.j(80)     // DMA/Wait Control Register P121
-L91:
-        ;;ledtst.j(81)     // b76=00 0 wait state CPU memory cycle
-L92:
-        ;;ledtst.j(82)     // b54=00 0 wait state CPU I/O cycle
-L93:
-        ;;ledtst.j(83)     // b3 = 0 level detect on DMA1 Request
-L94:
-        ;;ledtst.j(84)     // b2 = 0 level detect on DMA0 Request
-L95:
-        ;;ledtst.j(85)     // b1 = 0 DMA from memory to I/O 
-L96:
-        ;;ledtst.j(86)     // b0 = 0 DMA increasing memory address
-L97:
-        ;;ledtst.j(87)     output(DCNTL, 0x00);
-L98:
-        LD    A,0
-        OUT0  (032H),A
-L99:
-        ;;ledtst.j(88)     // XOR      A
-L100:
-        ;;ledtst.j(89)     // OUT0    (DCNTL),A
-L101:
-        ;;ledtst.j(90) 
-L102:
-        ;;ledtst.j(91)     // Wait State Generator Control Register P96
-L103:
-        ;;ledtst.j(92)     // b76=00 0 wait states CSROM
-L104:
-        ;;ledtst.j(93)     // b54=00 0 wait states CSRAM
-L105:
-        ;;ledtst.j(94)     // b32=00 0 wait states other
-L106:
-        ;;ledtst.j(95)     // b10=xx reserved
-L107:
-        ;;ledtst.j(96)     output(WSGCR, 0x00);
-L108:
-        LD    A,0
-        OUT0  (06BH),A
-L109:
-        ;;ledtst.j(97)     // OUT0    (WSGCR),A
-L110:
-        ;;ledtst.j(98) 
-L111:
-        ;;ledtst.j(99)     // Block writing to system ctrl registers
-L112:
-        ;;ledtst.j(100)     output(WDTCR, 0x00);
-L113:
-        LD    A,0
-        OUT0  (065H),A
-L114:
-        ;;ledtst.j(101)     // XOR     A
-L115:
-        ;;ledtst.j(102)     // OUT0    (WDTCR),A
-L116:
-        ;;ledtst.j(103)   }
-L117:
-        LD    SP,IX
-L118:
-        POP   IX
-L119:
-        return
-L120:
-        ;;ledtst.j(104) 
-L121:
-        ;;ledtst.j(105)   public static void toggle() {
-L122:
-        ;method toggle [public, static] void ()
-L123:
-        PUSH  IX
-L124:
-        LD    IX,0x0000
-        ADD   IX,SP
-L125:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L126:
-        ;;ledtst.j(106)     // Enable writing to PCR
-L127:
-        ;;ledtst.j(107)     output(WDTCR, 0x0B);
-L128:
-        LD    A,11
-        OUT0  (065H),A
-L129:
-        ;;ledtst.j(108)     //LD      A,00BH
-L130:
-        ;;ledtst.j(109)     //OUT0    (WDTCR),A
-L131:
-        ;;ledtst.j(110) 
-L132:
-        ;;ledtst.j(111)     // Toggle LED at PWR_SW
-L133:
-        ;;ledtst.j(112)     output(PCR, input(PCR) ^ 0x20);
-L134:
-        IN0  A,(07EH)
-L135:
-        XOR   A,32
-L136:
-        OUT0  (07EH),A
-L137:
-        ;;ledtst.j(113)     //IN0     A,(PCR)
-L138:
-        ;;ledtst.j(114)     //XOR     A,020H
-L139:
-        ;;ledtst.j(115)     //OUT0    (PCR),A
-L140:
-        ;;ledtst.j(116) 
-L141:
-        ;;ledtst.j(117)     // Disable writing to PCR
-L142:
-        ;;ledtst.j(118)     output(WDTCR, 0x00);
-L143:
-        LD    A,0
-        OUT0  (065H),A
-L144:
-        ;;ledtst.j(119)     //XOR     A,A
-L145:
-        ;;ledtst.j(120)     //OUT0    (WDTCR),A
-L146:
-        ;;ledtst.j(121)   }
-L147:
-        LD    SP,IX
-L148:
-        POP   IX
-L149:
-        return
-L150:
-        ;;ledtst.j(122) 
-L151:
-        ;;ledtst.j(123)   /**
-L152:
-        ;;ledtst.j(124)    * Wait 1 msec at 18,432 MHz with no wait states.
-L153:
-        ;;ledtst.j(125)    * 
-L154:
-        ;;ledtst.j(126)    * With n=255 the routine requires 108 + n * 71 = 18213 T-states, 
-L155:
-        ;;ledtst.j(127)    * which is 219 T-states or 11,8 microseconds short of 1 millisecond.
-L156:
-        ;;ledtst.j(128)    * 
-L157:
-        ;;ledtst.j(129)    * Duplicating the for loop with a total of 257 for n and m 
-L158:
-        ;;ledtst.j(130)    * requires 132 + (n + m) * 71 = 18379 T-states,
-L159:
-        ;;ledtst.j(131)    * which is 53 T-states or 2,8 microseconds short of 1 millisecond.
-L160:
-        ;;ledtst.j(132)    */
-L161:
-        ;;ledtst.j(133)   public static void sleepOneMillisecond() {
-L162:
-        ;method sleepOneMillisecond [public, static] void ()
-L163:
-        PUSH  IX
-L164:
-        LD    IX,0x0000
-        ADD   IX,SP
-L165:
-        LD    HL,65535
-        ADD   HL,SP
-        LD    SP,HL
-L166:
-        ;;ledtst.j(134)     for (byte b = 255; b!=0; b--) ;
-L167:
-        LD    A,255
-L168:
-        LD    (IX - 1),A
-L169:
-        LD    A,(IX - 1)
-L170:
-        SUB   A,0
-L171:
-        JP    Z,L177
-L172:
-        JP    L175
-L173:
-        DEC   (IX - 1)
-L174:
-        JP    L169
-L175:
-        JP    L173
-L176:
-        ;;ledtst.j(135)   }
-L177:
-        LD    SP,IX
-L178:
-        POP   IX
-L179:
-        return
-L180:
-        ;;ledtst.j(136) 
-L181:
-        ;;ledtst.j(137)   /**
-L182:
-        ;;ledtst.j(138)    * sleep for n miliseconds.
-L183:
-        ;;ledtst.j(139)    */
-L184:
-        ;;ledtst.j(140)   public static void sleep(word n) {
-L185:
-        ;method sleep [public, static] void (word n {bp+4})
-L186:
-        PUSH  IX
-L187:
-        LD    IX,0x0000
-        ADD   IX,SP
-L188:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L189:
-        ;;ledtst.j(141)     while (n != 0) {
-L190:
-        LD    L,(IX + 4)
-        LD    H,(IX + 5)
-L191:
-        LD    A,0
-L192:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L193:
-        JP    Z,L201
-L194:
-        ;;ledtst.j(142)       sleepOneMillisecond();
-L195:
-        CALL  L162
-L196:
-        ;;ledtst.j(143)       n--;
-L197:
-        LD    L,(IX + 4)
-        LD    H,(IX + 5)
-        DEC   HL
-        LD    (IX + 4),L
-        LD    (IX + 5),H
-L198:
-        ;;ledtst.j(144)     }
-L199:
-        JP    L190
-L200:
-        ;;ledtst.j(145)   }
-L201:
-        LD    SP,IX
-L202:
-        POP   IX
-L203:
-        return
-L204:
-        ;;ledtst.j(146) 
-L205:
-        ;;ledtst.j(147)   // Blink LED on/off in a XXxxXXxx pattern at 1 Hz.
-L206:
-        ;;ledtst.j(148)   public static void main() {
-L207:
-        ;method main [public, static] void ()
-L208:
-        PUSH  IX
-L209:
-        LD    IX,0x0000
-        ADD   IX,SP
-L210:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L211:
-        ;;ledtst.j(149)     init();
-L212:
-        CALL  L53
-L213:
-        ;;ledtst.j(150)     while (1==1) {
-L214:
-        LD    A,1
-L215:
-        SUB   A,1
-L216:
-        JP    NZ,L227
-L217:
-        ;;ledtst.j(151)       toggle();
-L218:
-        CALL  L122
-L219:
-        ;;ledtst.j(152)       //Thread.sleep(500); // Sleep for 500 miliseconds.
-L220:
-        ;;ledtst.j(153)       sleep(500); // Sleep for 500 miliseconds.
-L221:
-        LD    HL,500
-L222:
-        PUSH HL
-L223:
-        CALL  L185
-L224:
-        ;;ledtst.j(154)     }
-L225:
-        JP    L214
-L226:
-        ;;ledtst.j(155)   }
-L227:
-        LD    SP,IX
-L228:
-        POP   IX
-L229:
-        return
-L230:
-        ;;ledtst.j(156) }

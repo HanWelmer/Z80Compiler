@@ -1,4 +1,95 @@
-TOS     equ 0FD00H        ;User stack grows before user global data.
+SOC     equ 02000H        ;start of code, i.e.lowest external RAM address.
+TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data.
+        .ORG  SOC
+start:
+        LD    SP,TOS
+L0:
+        CALL  L19
+L1:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L2:
+        ;;TestWordParameter.j(0) public class TestStatementExpression {
+L3:
+        ;class TestStatementExpression [public]
+L4:
+        ;;TestWordParameter.j(1)   
+L5:
+        ;;TestWordParameter.j(2)   private static void doIt(word w) {
+L6:
+        ;method doIt [private, static] void (word w {bp+0})
+L7:
+        PUSH  IX
+L8:
+        LD    IX,0x0000
+        ADD   IX,SP
+L9:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L10:
+        ;;TestWordParameter.j(3)     println(w);
+L11:
+        LD    L,(IX + 4)
+        LD    H,(IX + 5)
+L12:
+        CALL  writeLineHL
+L13:
+        ;;TestWordParameter.j(4)   }
+L14:
+        LD    SP,IX
+L15:
+        POP   IX
+L16:
+        return
+L17:
+        ;;TestWordParameter.j(5) 
+L18:
+        ;;TestWordParameter.j(6)   public static void main() {
+L19:
+        ;method main [public, static] void ()
+L20:
+        PUSH  IX
+L21:
+        LD    IX,0x0000
+        ADD   IX,SP
+L22:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L23:
+        ;;TestWordParameter.j(7)     println("Hallo ");
+L24:
+        LD    HL,L38
+L25:
+        CALL  writeLineStr
+L26:
+        ;;TestWordParameter.j(8)     doIt(257);
+L27:
+        LD    HL,257
+L28:
+        PUSH HL
+L29:
+        CALL  L6
+L30:
+        ;;TestWordParameter.j(9)     println(" wereld");
+L31:
+        LD    HL,L39
+L32:
+        CALL  writeLineStr
+L33:
+        ;;TestWordParameter.j(10)   }
+L34:
+        LD    SP,IX
+L35:
+        POP   IX
+L36:
+        return
+L37:
+        ;;TestWordParameter.j(11) }
+L38:
+        .ASCIZ  "Hallo "
+L39:
+        .ASCIZ  " wereld"
 CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
 STAT0   equ 004H          ;147 ASCI0 Status register.
 TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
@@ -7,10 +98,6 @@ ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
 TDRE    equ 1             ;STAT0->Tx data register empty bit.
 OVERRUN equ 6             ;STAT0->OVERRUN bit.
 RDRF    equ 7             ;STAT0->Rx data register full bit.
-        .ORG  02000H      ;lowest external RAM address.
-start:
-        LD    SP,TOS
-        JP    main
 ;****************
 ;getChar
 ;Check if an input character from ASCI0 is available.
@@ -682,91 +769,3 @@ writeA:
         CALL  writeHL
         POP   HL
         RET
-main:
-L0:
-        CALL  L19
-L1:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L2:
-        ;;TestWordParameter.j(0) public class TestStatementExpression {
-L3:
-        ;class TestStatementExpression [public]
-L4:
-        ;;TestWordParameter.j(1)   
-L5:
-        ;;TestWordParameter.j(2)   private static void doIt(word w) {
-L6:
-        ;method doIt [private, static] void (word w {bp+0})
-L7:
-        PUSH  IX
-L8:
-        LD    IX,0x0000
-        ADD   IX,SP
-L9:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L10:
-        ;;TestWordParameter.j(3)     println(w);
-L11:
-        LD    L,(IX + 4)
-        LD    H,(IX + 5)
-L12:
-        CALL  writeLineHL
-L13:
-        ;;TestWordParameter.j(4)   }
-L14:
-        LD    SP,IX
-L15:
-        POP   IX
-L16:
-        return
-L17:
-        ;;TestWordParameter.j(5) 
-L18:
-        ;;TestWordParameter.j(6)   public static void main() {
-L19:
-        ;method main [public, static] void ()
-L20:
-        PUSH  IX
-L21:
-        LD    IX,0x0000
-        ADD   IX,SP
-L22:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L23:
-        ;;TestWordParameter.j(7)     println("Hallo ");
-L24:
-        LD    HL,L38
-L25:
-        CALL  writeLineStr
-L26:
-        ;;TestWordParameter.j(8)     doIt(257);
-L27:
-        LD    HL,257
-L28:
-        PUSH HL
-L29:
-        CALL  L6
-L30:
-        ;;TestWordParameter.j(9)     println(" wereld");
-L31:
-        LD    HL,L39
-L32:
-        CALL  writeLineStr
-L33:
-        ;;TestWordParameter.j(10)   }
-L34:
-        LD    SP,IX
-L35:
-        POP   IX
-L36:
-        return
-L37:
-        ;;TestWordParameter.j(11) }
-L38:
-        .ASCIZ  "Hallo "
-L39:
-        .ASCIZ  " wereld"

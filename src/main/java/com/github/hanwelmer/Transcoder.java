@@ -86,13 +86,13 @@ import java.util.TreeMap;
 
 public class Transcoder {
 
-  // constants.
-  // max Z80 assembler lines of code.
-  private static final int MAX_ASM_CODE = 0x3000;
+  // Memory map constants.
+  // Z80 assembled code.
+  private static final int MIN_ASM_CODE = 0x2000;
+  private static final int MAX_ASM_CODE = 0x5000;
   // lowest address for global variables.
   private static final int MEM_START = 0x5000;
-  // Z80 assembled bytes start at 2000.
-  private static final int MIN_BIN = 0x2000;
+
   private static final String INDENT = "        ";
   @SuppressWarnings("serial")
   private static final Set<Byte> ABSOLUTE_ADDRESS_INSTRUCTIONS = new HashSet<Byte>(18) {
@@ -139,7 +139,7 @@ public class Transcoder {
 
   /* global variables */
   private boolean debugMode = false;
-  private int byteAddress = MIN_BIN;
+  private int byteAddress = MIN_ASM_CODE;
   public Map<String, Integer> labels = new HashMap<String, Integer>();
   public Map<String, ArrayList<Integer>> labelReferences = new HashMap<String, ArrayList<Integer>>();
 
@@ -160,7 +160,7 @@ public class Transcoder {
    */
   public ArrayList<AssemblyInstruction> transcode(ArrayList<Instruction> instructions) {
     // Initialization.
-    byteAddress = MIN_BIN;
+    byteAddress = MIN_ASM_CODE;
     ArrayList<AssemblyInstruction> z80Instructions = new ArrayList<AssemblyInstruction>();
     labels.clear();
     for (String key : labelReferences.keySet()) {
@@ -169,23 +169,24 @@ public class Transcoder {
     labelReferences.clear();
 
     // Insert runtime library.
-    z80Instructions.addAll(plantZ80Runtime());
+    z80Instructions.addAll(plantStartUpCode());
 
     // Insert transcoded code.
-    labels.put("main", byteAddress);
-    z80Instructions.add(new AssemblyInstruction(byteAddress, "main:"));
     for (Instruction instruction : instructions) {
-      // add label and address to map with labels and to the assembler output
+      // add label and its address to the map with labels and assembler output.
       String label = "L" + instructions.indexOf(instruction);
       labels.put(label, byteAddress);
       z80Instructions.add(new AssemblyInstruction(byteAddress, label + ":"));
 
       z80Instructions.addAll(transcode(instruction));
 
-      if (z80Instructions.size() > MAX_ASM_CODE) {
+      if (byteAddress >= MAX_ASM_CODE) {
         throw new RuntimeException("Z80 code overflow while generating Z80 assembler code");
       }
     }
+
+    // Insert runtime library.
+    z80Instructions.addAll(plantZ80Runtime());
 
     // Resolve any unresolved label references.
     resolveLabelReferences(z80Instructions);
@@ -1419,11 +1420,26 @@ public class Transcoder {
     return asm;
   }
 
+  private ArrayList<AssemblyInstruction> plantStartUpCode() {
+    ArrayList<AssemblyInstruction> result = new ArrayList<AssemblyInstruction>();
+
+    // hardware related constants
+    result.add(new AssemblyInstruction(byteAddress, "SOC     equ 02000H        ;start of code, i.e.lowest external RAM address."));
+    result.add(
+        new AssemblyInstruction(byteAddress, "TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data."));
+
+    // start up code
+    result.add(new AssemblyInstruction(byteAddress, INDENT + ".ORG  SOC"));
+    labels.put("start", byteAddress);
+    result.add(new AssemblyInstruction(byteAddress, "start:"));
+    result.add(plantAssemblyInstruction(INDENT + "LD    SP,TOS", 0x31, 0x00, 0xFD));
+
+    return result;
+  }
+
   private ArrayList<AssemblyInstruction> plantZ80Runtime() {
     ArrayList<AssemblyInstruction> result = new ArrayList<AssemblyInstruction>();
-    labels.put("start", byteAddress);
-    // hardware related constants
-    result.add(new AssemblyInstruction(byteAddress, "TOS     equ 0FD00H        ;User stack grows before user global data."));
+
     // on-chip registers
     result.add(new AssemblyInstruction(byteAddress, "CNTLA0  equ 000H          ;144 ASCI0 Control Register A."));
     result.add(new AssemblyInstruction(byteAddress, "STAT0   equ 004H          ;147 ASCI0 Status register."));
@@ -1434,13 +1450,6 @@ public class Transcoder {
     result.add(new AssemblyInstruction(byteAddress, "TDRE    equ 1             ;STAT0->Tx data register empty bit."));
     result.add(new AssemblyInstruction(byteAddress, "OVERRUN equ 6             ;STAT0->OVERRUN bit."));
     result.add(new AssemblyInstruction(byteAddress, "RDRF    equ 7             ;STAT0->Rx data register full bit."));
-
-    // start up code
-    result.add(new AssemblyInstruction(byteAddress, INDENT + ".ORG  02000H      ;lowest external RAM address."));
-    result.add(new AssemblyInstruction(byteAddress, "start:"));
-    result.add(plantAssemblyInstruction(INDENT + "LD    SP,TOS", 0x31, 0x00, 0xFD));
-    putLabelReference("main", byteAddress);
-    result.add(plantAssemblyInstruction(INDENT + "JP    main", 0xC3, 0, 0));
 
     // start of module chario.asm
     result.add(new AssemblyInstruction(byteAddress, ";****************"));

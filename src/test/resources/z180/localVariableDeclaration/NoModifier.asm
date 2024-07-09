@@ -1,4 +1,247 @@
-TOS     equ 0FD00H        ;User stack grows before user global data.
+SOC     equ 02000H        ;start of code, i.e.lowest external RAM address.
+TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data.
+        .ORG  SOC
+start:
+        LD    SP,TOS
+L0:
+        CALL  L81
+L1:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L2:
+        ;;NoModifier.j(0) /*
+L3:
+        ;;NoModifier.j(1)  * A small program in the miniJava language.
+L4:
+        ;;NoModifier.j(2)  * Test final modifier in a local variable declaration.
+L5:
+        ;;NoModifier.j(3)  */
+L6:
+        ;;NoModifier.j(4) class NoModifier {
+L7:
+        ;class NoModifier []
+L8:
+        ;;NoModifier.j(5)   public static void doByte() {
+L9:
+        ;method doByte [public, static] void ()
+L10:
+        PUSH  IX
+L11:
+        LD    IX,0x0000
+        ADD   IX,SP
+L12:
+        LD    HL,65535
+        ADD   HL,SP
+        LD    SP,HL
+L13:
+        ;;NoModifier.j(6)     byte b = 1;
+L14:
+        LD    A,1
+L15:
+        LD    (IX - 1),A
+L16:
+        ;;NoModifier.j(7)     println(b);
+L17:
+        LD    A,(IX - 1)
+L18:
+        CALL  writeLineA
+L19:
+        ;;NoModifier.j(8)   }
+L20:
+        LD    SP,IX
+L21:
+        POP   IX
+L22:
+        return
+L23:
+        ;;NoModifier.j(9)   public static void doByteWord() {
+L24:
+        ;method doByteWord [public, static] void ()
+L25:
+        PUSH  IX
+L26:
+        LD    IX,0x0000
+        ADD   IX,SP
+L27:
+        LD    HL,65533
+        ADD   HL,SP
+        LD    SP,HL
+L28:
+        ;;NoModifier.j(10)     byte b = 2;
+L29:
+        LD    A,2
+L30:
+        LD    (IX - 1),A
+L31:
+        ;;NoModifier.j(11)     word w = 3333;
+L32:
+        LD    HL,3333
+L33:
+        LD    (IX - 3),L
+        LD    (IX - 2),H
+L34:
+        ;;NoModifier.j(12)     println(b);
+L35:
+        LD    A,(IX - 1)
+L36:
+        CALL  writeLineA
+L37:
+        ;;NoModifier.j(13)     println(w);
+L38:
+        LD    L,(IX - 3)
+        LD    H,(IX - 2)
+L39:
+        CALL  writeLineHL
+L40:
+        ;;NoModifier.j(14)   }
+L41:
+        LD    SP,IX
+L42:
+        POP   IX
+L43:
+        return
+L44:
+        ;;NoModifier.j(15)   public static void doWordByte() {
+L45:
+        ;method doWordByte [public, static] void ()
+L46:
+        PUSH  IX
+L47:
+        LD    IX,0x0000
+        ADD   IX,SP
+L48:
+        LD    HL,65533
+        ADD   HL,SP
+        LD    SP,HL
+L49:
+        ;;NoModifier.j(16)     word w = 5555;
+L50:
+        LD    HL,5555
+L51:
+        LD    (IX - 2),L
+        LD    (IX - 1),H
+L52:
+        ;;NoModifier.j(17)     byte b = 4;
+L53:
+        LD    A,4
+L54:
+        LD    (IX - 3),A
+L55:
+        ;;NoModifier.j(18)     println(b);
+L56:
+        LD    A,(IX - 3)
+L57:
+        CALL  writeLineA
+L58:
+        ;;NoModifier.j(19)     println(w);
+L59:
+        LD    L,(IX - 2)
+        LD    H,(IX - 1)
+L60:
+        CALL  writeLineHL
+L61:
+        ;;NoModifier.j(20)   }
+L62:
+        LD    SP,IX
+L63:
+        POP   IX
+L64:
+        return
+L65:
+        ;;NoModifier.j(21)   public static void doString() {
+L66:
+        ;method doString [public, static] void ()
+L67:
+        PUSH  IX
+L68:
+        LD    IX,0x0000
+        ADD   IX,SP
+L69:
+        LD    HL,65534
+        ADD   HL,SP
+        LD    SP,HL
+L70:
+        ;;NoModifier.j(22)     String str = "Hallo Wereld";
+L71:
+        LD    HL,L107
+L72:
+        LD    (IX - 2),L
+        LD    (IX - 1),H
+L73:
+        ;;NoModifier.j(23)     println(str);
+L74:
+        LD    L,(IX - 2)
+        LD    H,(IX - 1)
+L75:
+        CALL  writeLineStr
+L76:
+        ;;NoModifier.j(24)   }
+L77:
+        LD    SP,IX
+L78:
+        POP   IX
+L79:
+        return
+L80:
+        ;;NoModifier.j(25)   public static void main() {
+L81:
+        ;method main [public, static] void ()
+L82:
+        PUSH  IX
+L83:
+        LD    IX,0x0000
+        ADD   IX,SP
+L84:
+        LD    HL,65535
+        ADD   HL,SP
+        LD    SP,HL
+L85:
+        ;;NoModifier.j(26)     byte b = 0;
+L86:
+        LD    A,0
+L87:
+        LD    (IX - 1),A
+L88:
+        ;;NoModifier.j(27)     println(b);
+L89:
+        LD    A,(IX - 1)
+L90:
+        CALL  writeLineA
+L91:
+        ;;NoModifier.j(28)     doString();
+L92:
+        CALL  L66
+L93:
+        ;;NoModifier.j(29)     doByte();
+L94:
+        CALL  L9
+L95:
+        ;;NoModifier.j(30)     doByteWord();
+L96:
+        CALL  L24
+L97:
+        ;;NoModifier.j(31)     doWordByte();
+L98:
+        CALL  L45
+L99:
+        ;;NoModifier.j(32)     println("klaar");
+L100:
+        LD    HL,L108
+L101:
+        CALL  writeLineStr
+L102:
+        ;;NoModifier.j(33)   }
+L103:
+        LD    SP,IX
+L104:
+        POP   IX
+L105:
+        return
+L106:
+        ;;NoModifier.j(34) }
+L107:
+        .ASCIZ  "Hallo Wereld"
+L108:
+        .ASCIZ  "klaar"
 CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
 STAT0   equ 004H          ;147 ASCI0 Status register.
 TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
@@ -7,10 +250,6 @@ ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
 TDRE    equ 1             ;STAT0->Tx data register empty bit.
 OVERRUN equ 6             ;STAT0->OVERRUN bit.
 RDRF    equ 7             ;STAT0->Rx data register full bit.
-        .ORG  02000H      ;lowest external RAM address.
-start:
-        LD    SP,TOS
-        JP    main
 ;****************
 ;getChar
 ;Check if an input character from ASCI0 is available.
@@ -682,243 +921,3 @@ writeA:
         CALL  writeHL
         POP   HL
         RET
-main:
-L0:
-        CALL  L81
-L1:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L2:
-        ;;NoModifier.j(0) /*
-L3:
-        ;;NoModifier.j(1)  * A small program in the miniJava language.
-L4:
-        ;;NoModifier.j(2)  * Test final modifier in a local variable declaration.
-L5:
-        ;;NoModifier.j(3)  */
-L6:
-        ;;NoModifier.j(4) class NoModifier {
-L7:
-        ;class NoModifier []
-L8:
-        ;;NoModifier.j(5)   public static void doByte() {
-L9:
-        ;method doByte [public, static] void ()
-L10:
-        PUSH  IX
-L11:
-        LD    IX,0x0000
-        ADD   IX,SP
-L12:
-        LD    HL,65535
-        ADD   HL,SP
-        LD    SP,HL
-L13:
-        ;;NoModifier.j(6)     byte b = 1;
-L14:
-        LD    A,1
-L15:
-        LD    (IX - 1),A
-L16:
-        ;;NoModifier.j(7)     println(b);
-L17:
-        LD    A,(IX - 1)
-L18:
-        CALL  writeLineA
-L19:
-        ;;NoModifier.j(8)   }
-L20:
-        LD    SP,IX
-L21:
-        POP   IX
-L22:
-        return
-L23:
-        ;;NoModifier.j(9)   public static void doByteWord() {
-L24:
-        ;method doByteWord [public, static] void ()
-L25:
-        PUSH  IX
-L26:
-        LD    IX,0x0000
-        ADD   IX,SP
-L27:
-        LD    HL,65533
-        ADD   HL,SP
-        LD    SP,HL
-L28:
-        ;;NoModifier.j(10)     byte b = 2;
-L29:
-        LD    A,2
-L30:
-        LD    (IX - 1),A
-L31:
-        ;;NoModifier.j(11)     word w = 3333;
-L32:
-        LD    HL,3333
-L33:
-        LD    (IX - 3),L
-        LD    (IX - 2),H
-L34:
-        ;;NoModifier.j(12)     println(b);
-L35:
-        LD    A,(IX - 1)
-L36:
-        CALL  writeLineA
-L37:
-        ;;NoModifier.j(13)     println(w);
-L38:
-        LD    L,(IX - 3)
-        LD    H,(IX - 2)
-L39:
-        CALL  writeLineHL
-L40:
-        ;;NoModifier.j(14)   }
-L41:
-        LD    SP,IX
-L42:
-        POP   IX
-L43:
-        return
-L44:
-        ;;NoModifier.j(15)   public static void doWordByte() {
-L45:
-        ;method doWordByte [public, static] void ()
-L46:
-        PUSH  IX
-L47:
-        LD    IX,0x0000
-        ADD   IX,SP
-L48:
-        LD    HL,65533
-        ADD   HL,SP
-        LD    SP,HL
-L49:
-        ;;NoModifier.j(16)     word w = 5555;
-L50:
-        LD    HL,5555
-L51:
-        LD    (IX - 2),L
-        LD    (IX - 1),H
-L52:
-        ;;NoModifier.j(17)     byte b = 4;
-L53:
-        LD    A,4
-L54:
-        LD    (IX - 3),A
-L55:
-        ;;NoModifier.j(18)     println(b);
-L56:
-        LD    A,(IX - 3)
-L57:
-        CALL  writeLineA
-L58:
-        ;;NoModifier.j(19)     println(w);
-L59:
-        LD    L,(IX - 2)
-        LD    H,(IX - 1)
-L60:
-        CALL  writeLineHL
-L61:
-        ;;NoModifier.j(20)   }
-L62:
-        LD    SP,IX
-L63:
-        POP   IX
-L64:
-        return
-L65:
-        ;;NoModifier.j(21)   public static void doString() {
-L66:
-        ;method doString [public, static] void ()
-L67:
-        PUSH  IX
-L68:
-        LD    IX,0x0000
-        ADD   IX,SP
-L69:
-        LD    HL,65534
-        ADD   HL,SP
-        LD    SP,HL
-L70:
-        ;;NoModifier.j(22)     String str = "Hallo Wereld";
-L71:
-        LD    HL,L107
-L72:
-        LD    (IX - 2),L
-        LD    (IX - 1),H
-L73:
-        ;;NoModifier.j(23)     println(str);
-L74:
-        LD    L,(IX - 2)
-        LD    H,(IX - 1)
-L75:
-        CALL  writeLineStr
-L76:
-        ;;NoModifier.j(24)   }
-L77:
-        LD    SP,IX
-L78:
-        POP   IX
-L79:
-        return
-L80:
-        ;;NoModifier.j(25)   public static void main() {
-L81:
-        ;method main [public, static] void ()
-L82:
-        PUSH  IX
-L83:
-        LD    IX,0x0000
-        ADD   IX,SP
-L84:
-        LD    HL,65535
-        ADD   HL,SP
-        LD    SP,HL
-L85:
-        ;;NoModifier.j(26)     byte b = 0;
-L86:
-        LD    A,0
-L87:
-        LD    (IX - 1),A
-L88:
-        ;;NoModifier.j(27)     println(b);
-L89:
-        LD    A,(IX - 1)
-L90:
-        CALL  writeLineA
-L91:
-        ;;NoModifier.j(28)     doString();
-L92:
-        CALL  L66
-L93:
-        ;;NoModifier.j(29)     doByte();
-L94:
-        CALL  L9
-L95:
-        ;;NoModifier.j(30)     doByteWord();
-L96:
-        CALL  L24
-L97:
-        ;;NoModifier.j(31)     doWordByte();
-L98:
-        CALL  L45
-L99:
-        ;;NoModifier.j(32)     println("klaar");
-L100:
-        LD    HL,L108
-L101:
-        CALL  writeLineStr
-L102:
-        ;;NoModifier.j(33)   }
-L103:
-        LD    SP,IX
-L104:
-        POP   IX
-L105:
-        return
-L106:
-        ;;NoModifier.j(34) }
-L107:
-        .ASCIZ  "Hallo Wereld"
-L108:
-        .ASCIZ  "klaar"

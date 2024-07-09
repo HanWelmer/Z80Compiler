@@ -1,4 +1,92 @@
-TOS     equ 0FD00H        ;User stack grows before user global data.
+SOC     equ 02000H        ;start of code, i.e.lowest external RAM address.
+TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data.
+        .ORG  SOC
+start:
+        LD    SP,TOS
+L0:
+        CALL  L19
+L1:
+        JP    00171H      ;Jump to Zilog Z80183 Monitor.
+L2:
+        ;;TestNoParameters.j(0) public class TestStatementExpression {
+L3:
+        ;class TestStatementExpression [public]
+L4:
+        ;;TestNoParameters.j(1)   
+L5:
+        ;;TestNoParameters.j(2)   private static void doIt() {
+L6:
+        ;method doIt [private, static] void ()
+L7:
+        PUSH  IX
+L8:
+        LD    IX,0x0000
+        ADD   IX,SP
+L9:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L10:
+        ;;TestNoParameters.j(3)     println("Hallo");
+L11:
+        LD    HL,L36
+L12:
+        CALL  writeLineStr
+L13:
+        ;;TestNoParameters.j(4)   }
+L14:
+        LD    SP,IX
+L15:
+        POP   IX
+L16:
+        return
+L17:
+        ;;TestNoParameters.j(5) 
+L18:
+        ;;TestNoParameters.j(6)   public static void main() {
+L19:
+        ;method main [public, static] void ()
+L20:
+        PUSH  IX
+L21:
+        LD    IX,0x0000
+        ADD   IX,SP
+L22:
+        LD    HL,65536
+        ADD   HL,SP
+        LD    SP,HL
+L23:
+        ;;TestNoParameters.j(7)     println("");
+L24:
+        LD    HL,L37
+L25:
+        CALL  writeLineStr
+L26:
+        ;;TestNoParameters.j(8)     doIt();
+L27:
+        CALL  L6
+L28:
+        ;;TestNoParameters.j(9)     println("      wereld");
+L29:
+        LD    HL,L38
+L30:
+        CALL  writeLineStr
+L31:
+        ;;TestNoParameters.j(10)   }
+L32:
+        LD    SP,IX
+L33:
+        POP   IX
+L34:
+        return
+L35:
+        ;;TestNoParameters.j(11) }
+L36:
+        .ASCIZ  "Hallo"
+L37:
+        .ASCIZ  ""
+L38:
+        .ASCIZ  "      wereld"
 CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
 STAT0   equ 004H          ;147 ASCI0 Status register.
 TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
@@ -7,10 +95,6 @@ ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
 TDRE    equ 1             ;STAT0->Tx data register empty bit.
 OVERRUN equ 6             ;STAT0->OVERRUN bit.
 RDRF    equ 7             ;STAT0->Rx data register full bit.
-        .ORG  02000H      ;lowest external RAM address.
-start:
-        LD    SP,TOS
-        JP    main
 ;****************
 ;getChar
 ;Check if an input character from ASCI0 is available.
@@ -682,88 +766,3 @@ writeA:
         CALL  writeHL
         POP   HL
         RET
-main:
-L0:
-        CALL  L19
-L1:
-        JP    00171H      ;Jump to Zilog Z80183 Monitor.
-L2:
-        ;;TestNoParameters.j(0) public class TestStatementExpression {
-L3:
-        ;class TestStatementExpression [public]
-L4:
-        ;;TestNoParameters.j(1)   
-L5:
-        ;;TestNoParameters.j(2)   private static void doIt() {
-L6:
-        ;method doIt [private, static] void ()
-L7:
-        PUSH  IX
-L8:
-        LD    IX,0x0000
-        ADD   IX,SP
-L9:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L10:
-        ;;TestNoParameters.j(3)     println("Hallo");
-L11:
-        LD    HL,L36
-L12:
-        CALL  writeLineStr
-L13:
-        ;;TestNoParameters.j(4)   }
-L14:
-        LD    SP,IX
-L15:
-        POP   IX
-L16:
-        return
-L17:
-        ;;TestNoParameters.j(5) 
-L18:
-        ;;TestNoParameters.j(6)   public static void main() {
-L19:
-        ;method main [public, static] void ()
-L20:
-        PUSH  IX
-L21:
-        LD    IX,0x0000
-        ADD   IX,SP
-L22:
-        LD    HL,65536
-        ADD   HL,SP
-        LD    SP,HL
-L23:
-        ;;TestNoParameters.j(7)     println("");
-L24:
-        LD    HL,L37
-L25:
-        CALL  writeLineStr
-L26:
-        ;;TestNoParameters.j(8)     doIt();
-L27:
-        CALL  L6
-L28:
-        ;;TestNoParameters.j(9)     println("      wereld");
-L29:
-        LD    HL,L38
-L30:
-        CALL  writeLineStr
-L31:
-        ;;TestNoParameters.j(10)   }
-L32:
-        LD    SP,IX
-L33:
-        POP   IX
-L34:
-        return
-L35:
-        ;;TestNoParameters.j(11) }
-L36:
-        .ASCIZ  "Hallo"
-L37:
-        .ASCIZ  ""
-L38:
-        .ASCIZ  "      wereld"

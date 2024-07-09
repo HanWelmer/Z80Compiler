@@ -18,21 +18,21 @@ public class TestMethodInvocation extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 769);
-    assertTrue(code.get(697).toString().equals("21b5 L6:"));
-    assertTrue(code.get(698).toString().equals("21b5         ;method doIt [private, static] void ()"));
-    assertTrue(code.get(699).toString().equals("21b5 L7:"));
-    assertTrue(code.get(700).toString().equals("21b5         PUSH  IX dd e5"));
-    assertTrue(code.get(701).toString().equals("21b7 L8:"));
-    assertTrue(code.get(702).toString().equals("21b7         LD    IX,0x0000 dd 21 00 00"));
-    assertTrue(code.get(703).toString().equals("21bb         ADD   IX,SP dd 39"));
-    assertTrue(code.get(704).toString().equals("21bd L9:"));
+    assertTrue(code.size() == 768);
+    assertTrue(code.get(17).toString().equals("2009 L6:"));
+    assertTrue(code.get(18).toString().equals("2009         ;method doIt [private, static] void ()"));
+    assertTrue(code.get(19).toString().equals("2009 L7:"));
+    assertTrue(code.get(20).toString().equals("2009         PUSH  IX dd e5"));
+    assertTrue(code.get(21).toString().equals("200b L8:"));
+    assertTrue(code.get(22).toString().equals("200b         LD    IX,0x0000 dd 21 00 00"));
+    assertTrue(code.get(23).toString().equals("200f         ADD   IX,SP dd 39"));
+    assertTrue(code.get(24).toString().equals("2011 L9:"));
 
-    assertTrue(code.get(743).toString().equals("21e0 L26:"));
-    assertTrue(code.get(744).toString().equals("21e0         ;;TestNoParameters.j(8)     doIt();"));
-    assertTrue(code.get(745).toString().equals("21e0 L27:"));
-    assertTrue(code.get(746).toString().equals("21e0         CALL  L6 cd b5 21"));
-    assertTrue(code.get(747).toString().equals("21e3 L28:"));
+    assertTrue(code.get(63).toString().equals("2034 L26:"));
+    assertTrue(code.get(64).toString().equals("2034         ;;TestNoParameters.j(8)     doIt();"));
+    assertTrue(code.get(65).toString().equals("2034 L27:"));
+    assertTrue(code.get(66).toString().equals("2034         CALL  L6 cd 09 20"));
+    assertTrue(code.get(67).toString().equals("2037 L28:"));
   }
 
   @Test
@@ -43,36 +43,36 @@ public class TestMethodInvocation extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 772);
-    assertTrue(code.get(695).toString().equals("21b5 L5:"));
-    assertTrue(code.get(696).toString().equals("21b5         ;;TestWordParameter.j(2)   private static void doIt(word w) {"));
-    assertTrue(code.get(697).toString().equals("21b5 L6:"));
-    assertTrue(code.get(698).toString().equals("21b5         ;method doIt [private, static] void (word w {bp+0})"));
-    assertTrue(code.get(699).toString().equals("21b5 L7:"));
-    assertTrue(code.get(700).toString().equals("21b5         PUSH  IX dd e5"));
-    assertTrue(code.get(701).toString().equals("21b7 L8:"));
-    assertTrue(code.get(702).toString().equals("21b7         LD    IX,0x0000 dd 21 00 00"));
-    assertTrue(code.get(703).toString().equals("21bb         ADD   IX,SP dd 39"));
-    assertTrue(code.get(704).toString().equals("21bd L9:"));
+    assertTrue(code.size() == 771);
+    assertTrue(code.get(15).toString().equals("2009 L5:"));
+    assertTrue(code.get(16).toString().equals("2009         ;;TestWordParameter.j(2)   private static void doIt(word w) {"));
+    assertTrue(code.get(17).toString().equals("2009 L6:"));
+    assertTrue(code.get(18).toString().equals("2009         ;method doIt [private, static] void (word w {bp+0})"));
+    assertTrue(code.get(19).toString().equals("2009 L7:"));
+    assertTrue(code.get(20).toString().equals("2009         PUSH  IX dd e5"));
+    assertTrue(code.get(21).toString().equals("200b L8:"));
+    assertTrue(code.get(22).toString().equals("200b         LD    IX,0x0000 dd 21 00 00"));
+    assertTrue(code.get(23).toString().equals("200f         ADD   IX,SP dd 39"));
+    assertTrue(code.get(24).toString().equals("2011 L9:"));
 
-    assertTrue(code.get(708).toString().equals("21c2 L10:"));
-    assertTrue(code.get(709).toString().equals("21c2         ;;TestWordParameter.j(3)     println(w);"));
-    assertTrue(code.get(710).toString().equals("21c2 L11:"));
-    assertTrue(code.get(711).toString().equals("21c2         LD    L,(IX + 4) dd 6e 04"));
-    assertTrue(code.get(712).toString().equals("21c5         LD    H,(IX + 5) dd 66 05"));
-    assertTrue(code.get(713).toString().equals("21c8 L12:"));
-    assertTrue(code.get(714).toString().equals("21c8         CALL  writeLineHL cd 77 21"));
-    assertTrue(code.get(715).toString().equals("21cb L13:"));
-    assertTrue(code.get(716).toString().equals("21cb         ;;TestWordParameter.j(4)   }"));
+    assertTrue(code.get(28).toString().equals("2016 L10:"));
+    assertTrue(code.get(29).toString().equals("2016         ;;TestWordParameter.j(3)     println(w);"));
+    assertTrue(code.get(30).toString().equals("2016 L11:"));
+    assertTrue(code.get(31).toString().equals("2016         LD    L,(IX + 4) dd 6e 04"));
+    assertTrue(code.get(32).toString().equals("2019         LD    H,(IX + 5) dd 66 05"));
+    assertTrue(code.get(33).toString().equals("201c L12:"));
+    assertTrue(code.get(34).toString().equals("201c         CALL  writeLineHL cd c9 21"));
+    assertTrue(code.get(35).toString().equals("201f L13:"));
+    assertTrue(code.get(36).toString().equals("201f         ;;TestWordParameter.j(4)   }"));
 
-    assertTrue(code.get(744).toString().equals("21e3 L26:"));
-    assertTrue(code.get(745).toString().equals("21e3         ;;TestWordParameter.j(8)     doIt(257);"));
-    assertTrue(code.get(746).toString().equals("21e3 L27:"));
-    assertTrue(code.get(747).toString().equals("21e3         LD    HL,257 21 01 01"));
-    assertTrue(code.get(748).toString().equals("21e6 L28:"));
-    assertTrue(code.get(749).toString().equals("21e6         PUSH HL e5"));
-    assertTrue(code.get(750).toString().equals("21e7 L29:"));
-    assertTrue(code.get(751).toString().equals("21e7         CALL  L6 cd b5 21"));
+    assertTrue(code.get(64).toString().equals("2037 L26:"));
+    assertTrue(code.get(65).toString().equals("2037         ;;TestWordParameter.j(8)     doIt(257);"));
+    assertTrue(code.get(66).toString().equals("2037 L27:"));
+    assertTrue(code.get(67).toString().equals("2037         LD    HL,257 21 01 01"));
+    assertTrue(code.get(68).toString().equals("203a L28:"));
+    assertTrue(code.get(69).toString().equals("203a         PUSH HL e5"));
+    assertTrue(code.get(70).toString().equals("203b L29:"));
+    assertTrue(code.get(71).toString().equals("203b         CALL  L6 cd 09 20"));
   }
 
 }
