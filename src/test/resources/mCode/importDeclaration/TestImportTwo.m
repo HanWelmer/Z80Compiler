@@ -6,8 +6,8 @@
    5 ;TestImportTwo.j(3)  */
    6 ;TestImportTwo.j(4) import me.TestImportMe;
    7 import me.TestImportMe
-   8 ;TestImportTwo.j(5) import me.to.TestImportMe;
-   9 import me.to.TestImportMe
+   8 ;TestImportTwo.j(5) import me.to.ImportedClass;
+   9 import me.to.ImportedClass
   10 ;TestImportTwo.j(6) 
   11 ;TestImportTwo.j(7) class TestImportTwo {
   12 class TestImportTwo []

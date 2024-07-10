@@ -383,6 +383,9 @@ public class pCompiler {
       case 41:
         System.out.println("incompatible data type between argument and formal parameter.");
         break;
+      case 42:
+        System.out.print("could not find imported file ");
+        break;
     }
   } // error
 
@@ -586,6 +589,16 @@ public class pCompiler {
       plant(new Instruction(FunctionType.importFunction, importPackageName, null, null));
 
       // semantic analysis: import single class.
+      LexemeReader localLexemeReader = new LexemeReader();
+
+      String fullName = importPackageName.replace(".", File.separator) + ".j";
+      if (localLexemeReader.init(debugMode, lexemeReader.getPath(), fullName)) {
+        // pCompiler pCompiler = new pCompiler(debugMode, verboseMode);
+        // instructions.addAll(pCompiler.compile(localLexemeReader));
+        // throw new RuntimeException("To be implemented.");
+      } else {
+        error(42, fullName);
+      }
 
       // skip ";"
       lexeme = lexemeReader.getLexeme(sourceCode);

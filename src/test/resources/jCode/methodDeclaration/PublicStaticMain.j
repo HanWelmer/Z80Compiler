@@ -2,10 +2,8 @@
  * A small program in the miniJava language.
  * Test final modifier in method declaration gives an error.
  */
-import TestImport;
-
-class TestImport {
+class PublicStaticMain {
   public static void main() {
-    println("TestImport Klaar");
+    println("PublicStaticMain Klaar");
   }
 }
