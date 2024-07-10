@@ -562,13 +562,11 @@ public class pCompiler {
   // to:
   // ... "import" "static"? name [ "." "*" ] ";".
   //
-  // packageName = identifier { "." identifier }.
-  // importType = identifier | "*".
-  //
-  // Note: packageName identifiers are lowerCamelCase.
-  // Note: importType identifier is UpperCamelCase.
+  // Note: identifiers in the package name are lowerCamelCase.
+  // Note: identifier as import type (class name) is UpperCamelCase.
   //
   // TODO implement semantic analysis of importDeclaration
+  // TODO import all classes in a package (import packageName.*).
   private void importDeclaration(EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nimportDeclaration: start");
 
@@ -587,7 +585,7 @@ public class pCompiler {
       // code generation
       plant(new Instruction(FunctionType.importFunction, importPackageName, null, null));
 
-      // TODO: import single class or all classes in the package.
+      // semantic analysis: import single class.
 
       // skip ";"
       lexeme = lexemeReader.getLexeme(sourceCode);
