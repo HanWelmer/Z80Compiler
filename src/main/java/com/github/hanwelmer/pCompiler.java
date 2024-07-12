@@ -567,7 +567,6 @@ public class pCompiler {
   // Note: identifier as import type (class name) is UpperCamelCase.
   //
   // TODO implement semantic analysis of importDeclaration
-  // TODO import all classes in a package (import packageName.*).
   private void importDeclaration(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nimportDeclaration: start");
 
@@ -587,13 +586,11 @@ public class pCompiler {
       plant(lexemeReader, new Instruction(FunctionType.importFunction, importPackageName, null, null));
 
       // semantic analysis: import single class.
-      LexemeReader localLexemeReader = new LexemeReader();
-
+      // TODO import all classes in a package (import packageName.*).
       String fullName = importPackageName.replace(".", File.separator) + ".j";
+      LexemeReader localLexemeReader = new LexemeReader();
       if (localLexemeReader.init(debugMode, lexemeReader.getPath(), fullName)) {
-        // pCompiler pCompiler = new pCompiler(debugMode, verboseMode);
-        // instructions.addAll(pCompiler.compile(localLexemeReader));
-        // throw new RuntimeException("To be implemented.");
+        compilationUnit(localLexemeReader);
       } else {
         error(lexemeReader, 42, fullName);
       }
