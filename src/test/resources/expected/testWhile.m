@@ -20,7 +20,7 @@
   19 acc8=> variable 6
   20 ;testWhile.j(7) 
   21 ;testWhile.j(8)   public static void main() {
-  22 method main [public, static] void ()
+  22 method TestWhile.main [public, static] void ()
   23 <basePointer
   24 basePointer= stackPointer
   25 stackPointer+ constant 4

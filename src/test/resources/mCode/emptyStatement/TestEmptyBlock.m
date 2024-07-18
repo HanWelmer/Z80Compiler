@@ -5,7 +5,7 @@
    4 class TestEmptyBlock []
    5 ;TestEmptyBlock.j(2) 
    6 ;TestEmptyBlock.j(3)   public static void main() {
-   7 method main [public, static] void ()
+   7 method TestEmptyBlock.main [public, static] void ()
    8 <basePointer
    9 basePointer= stackPointer
   10 stackPointer+ constant 0

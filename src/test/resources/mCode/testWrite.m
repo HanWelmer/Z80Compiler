@@ -14,7 +14,7 @@
   13 acc8=> variable 2
   14 ;testWrite.j(7) 
   15 ;testWrite.j(8)   public static void main() {
-  16 method main [public, static] void ()
+  16 method TestWrite.main [public, static] void ()
   17 <basePointer
   18 basePointer= stackPointer
   19 stackPointer+ constant 2

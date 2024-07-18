@@ -16,7 +16,7 @@ L4:
 L5:
         ;;TestNoParameters.j(2)   private static void doIt() {
 L6:
-        ;method doIt [private, static] void ()
+        ;method TestStatementExpression.doIt [private, static] void ()
 L7:
         PUSH  IX
 L8:
@@ -45,7 +45,7 @@ L17:
 L18:
         ;;TestNoParameters.j(6)   public static void main() {
 L19:
-        ;method main [public, static] void ()
+        ;method TestStatementExpression.main [public, static] void ()
 L20:
         PUSH  IX
 L21:

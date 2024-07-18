@@ -7,7 +7,7 @@
    6 ;TestNoPackage.j(4) class TestNoPackage {
    7 class TestNoPackage []
    8 ;TestNoPackage.j(5)   public static void main() {
-   9 method main [public, static] void ()
+   9 method TestNoPackage.main [public, static] void ()
   10 <basePointer
   11 basePointer= stackPointer
   12 stackPointer+ constant 0

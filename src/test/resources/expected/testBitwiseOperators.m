@@ -21,7 +21,7 @@
   20 ;testBitwiseOperators.j(9)   private static final word fw2 = 0x1234;
   21 ;testBitwiseOperators.j(10) 
   22 ;testBitwiseOperators.j(11)   public static void main() {
-  23 method main [public, static] void ()
+  23 method TestBitwiseOperators.main [public, static] void ()
   24 <basePointer
   25 basePointer= stackPointer
   26 stackPointer+ constant 0

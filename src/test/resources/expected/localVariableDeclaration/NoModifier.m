@@ -7,7 +7,7 @@
    6 ;NoModifier.j(4) class NoModifier {
    7 class NoModifier []
    8 ;NoModifier.j(5)   public static void doByte() {
-   9 method doByte [public, static] void ()
+   9 method NoModifier.doByte [public, static] void ()
   10 <basePointer
   11 basePointer= stackPointer
   12 stackPointer+ constant 1
@@ -22,7 +22,7 @@
   21 basePointer<
   22 return
   23 ;NoModifier.j(9)   public static void doByteWord() {
-  24 method doByteWord [public, static] void ()
+  24 method NoModifier.doByteWord [public, static] void ()
   25 <basePointer
   26 basePointer= stackPointer
   27 stackPointer+ constant 3
@@ -43,7 +43,7 @@
   42 basePointer<
   43 return
   44 ;NoModifier.j(15)   public static void doWordByte() {
-  45 method doWordByte [public, static] void ()
+  45 method NoModifier.doWordByte [public, static] void ()
   46 <basePointer
   47 basePointer= stackPointer
   48 stackPointer+ constant 3
@@ -64,7 +64,7 @@
   63 basePointer<
   64 return
   65 ;NoModifier.j(21)   public static void doString() {
-  66 method doString [public, static] void ()
+  66 method NoModifier.doString [public, static] void ()
   67 <basePointer
   68 basePointer= stackPointer
   69 stackPointer+ constant 2
@@ -79,7 +79,7 @@
   78 basePointer<
   79 return
   80 ;NoModifier.j(25)   public static void main() {
-  81 method main [public, static] void ()
+  81 method NoModifier.main [public, static] void ()
   82 <basePointer
   83 basePointer= stackPointer
   84 stackPointer+ constant 1

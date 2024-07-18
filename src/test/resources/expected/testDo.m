@@ -14,7 +14,7 @@
   13 acc8=> variable 3
   14 ;testDo.j(5) 
   15 ;testDo.j(6)   public static void main() {
-  16 method main [public, static] void ()
+  16 method TestDo.main [public, static] void ()
   17 <basePointer
   18 basePointer= stackPointer
   19 stackPointer+ constant 4

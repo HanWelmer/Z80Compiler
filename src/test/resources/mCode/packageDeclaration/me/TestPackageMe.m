@@ -8,7 +8,7 @@
    7 package me
    8 ;me\TestPackageMe.j(5) 
    9 ;me\TestPackageMe.j(6) class TestPackageMe {
-  10 class TestPackageMe []
+  10 class me.TestPackageMe []
   11 ;me\TestPackageMe.j(7)   static word zero = 0;
   12 acc8= constant 0
   13 acc8=> variable 0
@@ -16,7 +16,7 @@
   15 acc8= constant 1
   16 acc8=> variable 2
   17 ;me\TestPackageMe.j(9)   public static void main() {
-  18 method main [public, static] void ()
+  18 method me.TestPackageMe.main [public, static] void ()
   19 <basePointer
   20 basePointer= stackPointer
   21 stackPointer+ constant 2

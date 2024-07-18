@@ -22,7 +22,7 @@
 2009             L8:
 2009                     ;;NoModifier.j(5)   public static void doByte() {
 2009             L9:
-2009                     ;method doByte [public, static] void ()
+2009                     ;method NoModifier.doByte [public, static] void ()
 2009             L10:
 2009 DD E5               PUSH  IX
 200B             L11:
@@ -55,7 +55,7 @@
 2026             L23:
 2026                     ;;NoModifier.j(9)   public static void doByteWord() {
 2026             L24:
-2026                     ;method doByteWord [public, static] void ()
+2026                     ;method NoModifier.doByteWord [public, static] void ()
 2026             L25:
 2026 DD E5               PUSH  IX
 2028             L26:
@@ -102,7 +102,7 @@
 2055             L44:
 2055                     ;;NoModifier.j(15)   public static void doWordByte() {
 2055             L45:
-2055                     ;method doWordByte [public, static] void ()
+2055                     ;method NoModifier.doWordByte [public, static] void ()
 2055             L46:
 2055 DD E5               PUSH  IX
 2057             L47:
@@ -149,7 +149,7 @@
 2084             L65:
 2084                     ;;NoModifier.j(21)   public static void doString() {
 2084             L66:
-2084                     ;method doString [public, static] void ()
+2084                     ;method NoModifier.doString [public, static] void ()
 2084             L67:
 2084 DD E5               PUSH  IX
 2086             L68:
@@ -184,7 +184,7 @@
 20A8             L80:
 20A8                     ;;NoModifier.j(25)   public static void main() {
 20A8             L81:
-20A8                     ;method main [public, static] void ()
+20A8                     ;method NoModifier.main [public, static] void ()
 20A8             L82:
 20A8 DD E5               PUSH  IX
 20AA             L83:

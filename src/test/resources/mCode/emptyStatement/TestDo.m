@@ -5,7 +5,7 @@
    4 class TestDo []
    5 ;TestDo.j(2) 
    6 ;TestDo.j(3)   public static void main() {
-   7 method main [public, static] void ()
+   7 method TestDo.main [public, static] void ()
    8 <basePointer
    9 basePointer= stackPointer
   10 stackPointer+ constant 0

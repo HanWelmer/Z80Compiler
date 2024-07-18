@@ -7,7 +7,7 @@
    6 ;PublicStaticMain.j(4) class PublicStaticMain {
    7 class PublicStaticMain []
    8 ;PublicStaticMain.j(5)   public static void main() {
-   9 method main [public, static] void ()
+   9 method PublicStaticMain.main [public, static] void ()
   10 <basePointer
   11 basePointer= stackPointer
   12 stackPointer+ constant 0

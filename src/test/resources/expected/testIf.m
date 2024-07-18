@@ -23,7 +23,7 @@
   22 acc8=> variable 8
   23 ;testIf.j(8) 
   24 ;testIf.j(9)   public static void main() {
-  25 method main [public, static] void ()
+  25 method TestIf.main [public, static] void ()
   26 <basePointer
   27 basePointer= stackPointer
   28 stackPointer+ constant 0

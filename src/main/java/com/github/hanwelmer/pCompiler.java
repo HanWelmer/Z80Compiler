@@ -582,8 +582,6 @@ public class pCompiler {
   //
   // Note: identifiers in the package name are lowerCamelCase.
   // Note: identifier as import type (class name) is UpperCamelCase.
-  //
-  // TODO implement semantic analysis of importDeclaration
   private void importDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nimportDeclaration: start");
 

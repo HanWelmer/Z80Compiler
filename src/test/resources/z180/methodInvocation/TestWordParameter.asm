@@ -16,7 +16,7 @@ L4:
 L5:
         ;;TestWordParameter.j(2)   private static void doIt(word w) {
 L6:
-        ;method doIt [private, static] void (word w {bp+0})
+        ;method TestStatementExpression.doIt [private, static] void (word w {bp+0})
 L7:
         PUSH  IX
 L8:
@@ -46,7 +46,7 @@ L17:
 L18:
         ;;TestWordParameter.j(6)   public static void main() {
 L19:
-        ;method main [public, static] void ()
+        ;method TestStatementExpression.main [public, static] void ()
 L20:
         PUSH  IX
 L21:

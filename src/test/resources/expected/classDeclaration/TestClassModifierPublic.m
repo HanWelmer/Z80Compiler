@@ -7,7 +7,7 @@
    6 ;TestClassModifierPublic.j(4) public class TestClassModifierPublic {
    7 class TestClassModifierPublic [public]
    8 ;TestClassModifierPublic.j(5)   public static void main() {
-   9 method main [public, static] void ()
+   9 method TestClassModifierPublic.main [public, static] void ()
   10 <basePointer
   11 basePointer= stackPointer
   12 stackPointer+ constant 0

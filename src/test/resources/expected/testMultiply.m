@@ -6,7 +6,7 @@
    5 ;testMultiply.j(2)   private static word a;
    6 ;testMultiply.j(3) 
    7 ;testMultiply.j(4)   public static void main() {
-   8 method main [public, static] void ()
+   8 method TestMultiply.main [public, static] void ()
    9 <basePointer
   10 basePointer= stackPointer
   11 stackPointer+ constant 0

@@ -20,7 +20,7 @@ public class TestMethodInvocation extends AbstractTranscoderTest {
 
     assertTrue(code.size() == 768);
     assertTrue(code.get(17).toString().equals("2009 L6:"));
-    assertTrue(code.get(18).toString().equals("2009         ;method doIt [private, static] void ()"));
+    assertTrue(code.get(18).toString().equals("2009         ;method TestStatementExpression.doIt [private, static] void ()"));
     assertTrue(code.get(19).toString().equals("2009 L7:"));
     assertTrue(code.get(20).toString().equals("2009         PUSH  IX dd e5"));
     assertTrue(code.get(21).toString().equals("200b L8:"));
@@ -47,7 +47,8 @@ public class TestMethodInvocation extends AbstractTranscoderTest {
     assertTrue(code.get(15).toString().equals("2009 L5:"));
     assertTrue(code.get(16).toString().equals("2009         ;;TestWordParameter.j(2)   private static void doIt(word w) {"));
     assertTrue(code.get(17).toString().equals("2009 L6:"));
-    assertTrue(code.get(18).toString().equals("2009         ;method doIt [private, static] void (word w {bp+0})"));
+    assertTrue(
+        code.get(18).toString().equals("2009         ;method TestStatementExpression.doIt [private, static] void (word w {bp+0})"));
     assertTrue(code.get(19).toString().equals("2009 L7:"));
     assertTrue(code.get(20).toString().equals("2009         PUSH  IX dd e5"));
     assertTrue(code.get(21).toString().equals("200b L8:"));

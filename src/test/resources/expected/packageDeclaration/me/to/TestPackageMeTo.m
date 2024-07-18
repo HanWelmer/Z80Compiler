@@ -8,9 +8,9 @@
    7 package me.to
    8 ;me\to\TestPackageMeTo.j(5) 
    9 ;me\to\TestPackageMeTo.j(6) class TestPackageMeTo {
-  10 class TestPackageMeTo []
+  10 class me.to.TestPackageMeTo []
   11 ;me\to\TestPackageMeTo.j(7)   public static void main() {
-  12 method main [public, static] void ()
+  12 method me.to.TestPackageMeTo.main [public, static] void ()
   13 <basePointer
   14 basePointer= stackPointer
   15 stackPointer+ constant 0

@@ -33,7 +33,7 @@
   32 ;testComparison.j(13)   private static byte b;
   33 ;testComparison.j(14)   
   34 ;testComparison.j(15)   public static void main() {
-  35 method main [public, static] void ()
+  35 method TestComparison.main [public, static] void ()
   36 <basePointer
   37 basePointer= stackPointer
   38 stackPointer+ constant 4

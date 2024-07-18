@@ -22,7 +22,7 @@ L7:
 L8:
         ;;NoModifier.j(5)   public static void doByte() {
 L9:
-        ;method doByte [public, static] void ()
+        ;method NoModifier.doByte [public, static] void ()
 L10:
         PUSH  IX
 L11:
@@ -55,7 +55,7 @@ L22:
 L23:
         ;;NoModifier.j(9)   public static void doByteWord() {
 L24:
-        ;method doByteWord [public, static] void ()
+        ;method NoModifier.doByteWord [public, static] void ()
 L25:
         PUSH  IX
 L26:
@@ -102,7 +102,7 @@ L43:
 L44:
         ;;NoModifier.j(15)   public static void doWordByte() {
 L45:
-        ;method doWordByte [public, static] void ()
+        ;method NoModifier.doWordByte [public, static] void ()
 L46:
         PUSH  IX
 L47:
@@ -149,7 +149,7 @@ L64:
 L65:
         ;;NoModifier.j(21)   public static void doString() {
 L66:
-        ;method doString [public, static] void ()
+        ;method NoModifier.doString [public, static] void ()
 L67:
         PUSH  IX
 L68:
@@ -184,7 +184,7 @@ L79:
 L80:
         ;;NoModifier.j(25)   public static void main() {
 L81:
-        ;method main [public, static] void ()
+        ;method NoModifier.main [public, static] void ()
 L82:
         PUSH  IX
 L83:

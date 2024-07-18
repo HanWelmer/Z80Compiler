@@ -10,7 +10,7 @@
    9 ;testRead.j(6)   private static word i;
   10 ;testRead.j(7) 
   11 ;testRead.j(8)   public static void main() {
-  12 method main [public, static] void ()
+  12 method TestRead.main [public, static] void ()
   13 <basePointer
   14 basePointer= stackPointer
   15 stackPointer+ constant 0

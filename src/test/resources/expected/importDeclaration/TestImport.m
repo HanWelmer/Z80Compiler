@@ -13,7 +13,7 @@
   12 ;ImportedClass.j(4) class ImportedClass {
   13 class ImportedClass []
   14 ;ImportedClass.j(5)   public static void importedFunction() {
-  15 method importedFunction [public, static] void ()
+  15 method ImportedClass.importedFunction [public, static] void ()
   16 <basePointer
   17 basePointer= stackPointer
   18 stackPointer+ constant 0
@@ -29,7 +29,7 @@
   28 ;TestImport.j(6) class TestImport {
   29 class TestImport []
   30 ;TestImport.j(7)   public static void main() {
-  31 method main [public, static] void ()
+  31 method TestImport.main [public, static] void ()
   32 <basePointer
   33 basePointer= stackPointer
   34 stackPointer+ constant 0

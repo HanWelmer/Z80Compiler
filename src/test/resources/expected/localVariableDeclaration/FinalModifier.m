@@ -7,7 +7,7 @@
    6 ;FinalModifier.j(4) class FinalModifier {
    7 class FinalModifier []
    8 ;FinalModifier.j(5)   public static void main() {
-   9 method main [public, static] void ()
+   9 method FinalModifier.main [public, static] void ()
   10 <basePointer
   11 basePointer= stackPointer
   12 stackPointer+ constant 1

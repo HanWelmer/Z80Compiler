@@ -7,7 +7,7 @@
    6 ;VolatileModifier.j(4) class VolatileModifier {
    7 class VolatileModifier []
    8 ;VolatileModifier.j(5)   public static void main() {
-   9 method main [public, static] void ()
+   9 method VolatileModifier.main [public, static] void ()
   10 <basePointer
   11 basePointer= stackPointer
   12 stackPointer+ constant 1

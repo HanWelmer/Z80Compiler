@@ -23,7 +23,7 @@
   22 ;testSleep.j(15)    * which is 53 T-states or 2,8 microseconds short of 1 millisecond.
   23 ;testSleep.j(16)    */
   24 ;testSleep.j(17)   public static void sleepOneMillisecond() {
-  25 method sleepOneMillisecond [public, static] void ()
+  25 method TestSleep.sleepOneMillisecond [public, static] void ()
   26 <basePointer
   27 basePointer= stackPointer
   28 stackPointer+ constant 1
@@ -46,7 +46,7 @@
   45 ;testSleep.j(22)    * sleep for n miliseconds.
   46 ;testSleep.j(23)    */
   47 ;testSleep.j(24)   public static void sleep(word n) {
-  48 method sleep [public, static] void (word n {bp+4})
+  48 method TestSleep.sleep [public, static] void (word n {bp+4})
   49 <basePointer
   50 basePointer= stackPointer
   51 stackPointer+ constant 0
@@ -67,7 +67,7 @@
   66 return
   67 ;testSleep.j(30) 
   68 ;testSleep.j(31)   public static void main() {
-  69 method main [public, static] void ()
+  69 method TestSleep.main [public, static] void ()
   70 <basePointer
   71 basePointer= stackPointer
   72 stackPointer+ constant 3

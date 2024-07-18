@@ -17,7 +17,7 @@
   16 acc8=> variable 4
   17 ;testFor.j(6) 
   18 ;testFor.j(7)   public static void main() {
-  19 method main [public, static] void ()
+  19 method TestFor.main [public, static] void ()
   20 <basePointer
   21 basePointer= stackPointer
   22 stackPointer+ constant 2

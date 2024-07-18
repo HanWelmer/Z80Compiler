@@ -5,7 +5,7 @@
    4 class TestReturn []
    5 ;TestReturn.j(2) 
    6 ;TestReturn.j(3)   public static void main() {
-   7 method main [public, static] void ()
+   7 method TestReturn.main [public, static] void ()
    8 <basePointer
    9 basePointer= stackPointer
   10 stackPointer+ constant 0

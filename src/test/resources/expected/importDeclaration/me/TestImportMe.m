@@ -8,9 +8,9 @@
    7 package me
    8 ;me\TestImportMe.j(5) 
    9 ;me\TestImportMe.j(6) class TestImportMe {
-  10 class TestImportMe []
+  10 class me.TestImportMe []
   11 ;me\TestImportMe.j(7)   public static void main() {
-  12 method main [public, static] void ()
+  12 method me.TestImportMe.main [public, static] void ()
   13 <basePointer
   14 basePointer= stackPointer
   15 stackPointer+ constant 0

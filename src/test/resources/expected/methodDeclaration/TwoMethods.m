@@ -7,7 +7,7 @@
    6 ;TwoMethods.j(4) class TwoMethods {
    7 class TwoMethods []
    8 ;TwoMethods.j(5)   private static void doIt() {
-   9 method doIt [private, static] void ()
+   9 method TwoMethods.doIt [private, static] void ()
   10 <basePointer
   11 basePointer= stackPointer
   12 stackPointer+ constant 0
@@ -20,7 +20,7 @@
   19 return
   20 ;TwoMethods.j(8) 
   21 ;TwoMethods.j(9)   public static void main() {
-  22 method main [public, static] void ()
+  22 method TwoMethods.main [public, static] void ()
   23 <basePointer
   24 basePointer= stackPointer
   25 stackPointer+ constant 0

@@ -4,7 +4,7 @@
    3 ;testDivide.j(1) class TestDivide {
    4 class TestDivide []
    5 ;testDivide.j(2)   public static void main() {
-   6 method main [public, static] void ()
+   6 method TestDivide.main [public, static] void ()
    7 <basePointer
    8 basePointer= stackPointer
    9 stackPointer+ constant 0

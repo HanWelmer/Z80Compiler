@@ -14,7 +14,7 @@
   13 ;testExpression.j(10)   private static word wordHex;
   14 ;testExpression.j(11) 
   15 ;testExpression.j(12)   public static void main() {
-  16 method main [public, static] void ()
+  16 method TestExpression.main [public, static] void ()
   17 <basePointer
   18 basePointer= stackPointer
   19 stackPointer+ constant 0

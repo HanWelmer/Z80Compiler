@@ -5,7 +5,7 @@
    4 class TestFor []
    5 ;TestFor.j(2) 
    6 ;TestFor.j(3)   public static void main() {
-   7 method main [public, static] void ()
+   7 method TestFor.main [public, static] void ()
    8 <basePointer
    9 basePointer= stackPointer
   10 stackPointer+ constant 1

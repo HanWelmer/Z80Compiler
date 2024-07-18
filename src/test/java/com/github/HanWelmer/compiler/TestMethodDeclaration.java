@@ -32,7 +32,7 @@ public class TestMethodDeclaration extends AbstactRegressionTest {
     System.out.println(testOutput);
     String[] lines = testOutput.split("\n");
     assertTrue(lines.length == 4);
-    assertTrue("symbol not found: main\r".equals(lines[1]));
+    assertTrue("symbol not found: NoMain.main\r".equals(lines[1]));
     assertTrue("1 error.\r".equals(lines[3]));
     System.out.println("As expected.\n");
   }

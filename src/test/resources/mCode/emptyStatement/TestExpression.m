@@ -5,7 +5,7 @@
    4 class TestExpression []
    5 ;TestExpression.j(2) 
    6 ;TestExpression.j(3)   public static void main() {
-   7 method main [public, static] void ()
+   7 method TestExpression.main [public, static] void ()
    8 <basePointer
    9 basePointer= stackPointer
   10 stackPointer+ constant 1

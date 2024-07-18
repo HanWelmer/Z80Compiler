@@ -14,7 +14,7 @@
   13 ;testReverseSubtractDivision.j(10)   private static word k;
   14 ;testReverseSubtractDivision.j(11) 
   15 ;testReverseSubtractDivision.j(12)   public static void main() {
-  16 method main [public, static] void ()
+  16 method TestReverseSubtractDivision.main [public, static] void ()
   17 <basePointer
   18 basePointer= stackPointer
   19 stackPointer+ constant 0

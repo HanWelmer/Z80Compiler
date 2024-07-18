@@ -11,7 +11,7 @@
   10 acc16=> variable 1
   11 ;testMultiplyComparison.j(4) 
   12 ;testMultiplyComparison.j(5)   public static void main() {
-  13 method main [public, static] void ()
+  13 method TestMultiplyComparison.main [public, static] void ()
   14 <basePointer
   15 basePointer= stackPointer
   16 stackPointer+ constant 0

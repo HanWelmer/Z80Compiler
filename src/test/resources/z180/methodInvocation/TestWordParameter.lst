@@ -16,7 +16,7 @@
 2009             L5:
 2009                     ;;TestWordParameter.j(2)   private static void doIt(word w) {
 2009             L6:
-2009                     ;method doIt [private, static] void (word w {bp+0})
+2009                     ;method TestStatementExpression.doIt [private, static] void (word w {bp+0})
 2009             L7:
 2009 DD E5               PUSH  IX
 200B             L8:
@@ -46,7 +46,7 @@
 2024             L18:
 2024                     ;;TestWordParameter.j(6)   public static void main() {
 2024             L19:
-2024                     ;method main [public, static] void ()
+2024                     ;method TestStatementExpression.main [public, static] void ()
 2024             L20:
 2024 DD E5               PUSH  IX
 2026             L21:

@@ -9,7 +9,7 @@
    8 ;testOutputInput.j(5)   private static final byte FINAL_VALUE = 20;
    9 ;testOutputInput.j(6) 
   10 ;testOutputInput.j(7)   public static void main() {
-  11 method main [public, static] void ()
+  11 method TestOutputInput.main [public, static] void ()
   12 <basePointer
   13 basePointer= stackPointer
   14 stackPointer+ constant 0

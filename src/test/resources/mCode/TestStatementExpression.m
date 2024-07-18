@@ -6,7 +6,7 @@
    5 ;TestStatementExpression.j(2)   private static byte b;
    6 ;TestStatementExpression.j(3) 
    7 ;TestStatementExpression.j(4)   private static void doIt() {
-   8 method doIt [private, static] void ()
+   8 method TestStatementExpression.doIt [private, static] void ()
    9 <basePointer
   10 basePointer= stackPointer
   11 stackPointer+ constant 0
@@ -19,7 +19,7 @@
   18 return
   19 ;TestStatementExpression.j(7) 
   20 ;TestStatementExpression.j(8)   public static void main() {
-  21 method main [public, static] void ()
+  21 method TestStatementExpression.main [public, static] void ()
   22 <basePointer
   23 basePointer= stackPointer
   24 stackPointer+ constant 0

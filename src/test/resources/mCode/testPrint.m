@@ -11,7 +11,7 @@
   10 acc8=> variable 2
   11 ;testPrint.j(4)   
   12 ;testPrint.j(5)   public static void main() {
-  13 method main [public, static] void ()
+  13 method TestPrint.main [public, static] void ()
   14 <basePointer
   15 basePointer= stackPointer
   16 stackPointer+ constant 0

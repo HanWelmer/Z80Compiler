@@ -32,29 +32,8 @@ public class TestTheRest extends AbstactRegressionTest {
   }
 
   @Test
-  public void testPrint() {
-    assertTrue(singleTest("testPrint.j"));
-  }
-
-  // Note: has local variables!
-  @Test
-  public void testWhile() {
-    assertTrue(singleTest("testWhile.j"));
-  }
-
-  @Test
-  public void testMultiply() {
-    assertTrue(singleTest("testMultiply.j"));
-  }
-
-  @Test
-  public void testDivide() {
-    assertTrue(singleTest("testDivide.j"));
-  }
-
-  @Test
-  public void testIf() {
-    assertTrue(singleTest("testIf.j"));
+  public void testBitwiseOperators() {
+    assertTrue(singleTest("testBitwiseOperators.j"));
   }
 
   // Note: has local variables!
@@ -64,8 +43,51 @@ public class TestTheRest extends AbstactRegressionTest {
   }
 
   @Test
+  public void testDivide() {
+    assertTrue(singleTest("testDivide.j"));
+  }
+
+  // Note: has local variables!
+  @Test
+  public void testDo() {
+    assertTrue(singleTest("testDo.j"));
+  }
+
+  @Test
   public void testExpression() {
     assertTrue(singleTest("testExpression.j"));
+  }
+
+  // Note: has local variables!
+  @Test
+  public void testFor() {
+    assertTrue(singleTest("testFor.j"));
+  }
+
+  @Test
+  public void testIf() {
+    assertTrue(singleTest("testIf.j"));
+  }
+
+  @Test
+  public void testMultiply() {
+    assertTrue(singleTest("testMultiply.j"));
+  }
+
+  @Test
+  public void testMultiplyComparison() {
+    assertTrue(singleTest("testMultiplyComparison.j"));
+  }
+
+  @Test
+  public void testOutputInput() {
+    // TODO enable test on output() with port number as constant expression
+    assertTrue(singleTest("testOutputInput.j"));
+  }
+
+  @Test
+  public void testPrint() {
+    assertTrue(singleTest("testPrint.j"));
   }
 
   @Test
@@ -79,46 +101,24 @@ public class TestTheRest extends AbstactRegressionTest {
   }
 
   @Test
-  public void testMultiplyComparison() {
-    assertTrue(singleTest("testMultiplyComparison.j"));
-  }
-
-  // Note: has local variables!
-  @Test
-  public void testDo() {
-    assertTrue(singleTest("testDo.j"));
-  }
-
-  // Note: has local variables!
-  @Test
-  public void testFor() {
-    assertTrue(singleTest("testFor.j"));
-  }
-
-  @Test
-  public void testWrite() {
-    assertTrue(singleTest("testWrite.j"));
-  }
-
-  @Test
-  public void testOutputInput() {
-    // TODO enable test on output() with port number as constant expression
-    assertTrue(singleTest("testOutputInput.j"));
-  }
-
-  @Test
   public void testSleep() {
     assertTrue(singleTest("testSleep.j"));
   }
 
   @Test
-  public void testBitwiseOperators() {
-    assertTrue(singleTest("testBitwiseOperators.j"));
+  public void testStatementExpression() {
+    assertTrue(singleTest("TestStatementExpression.j"));
+  }
+
+  // Note: has local variables!
+  @Test
+  public void testWhile() {
+    assertTrue(singleTest("testWhile.j"));
   }
 
   @Test
-  public void testStatementExpression() {
-    assertTrue(singleTest("TestStatementExpression.j"));
+  public void testWrite() {
+    assertTrue(singleTest("testWrite.j"));
   }
 
 }

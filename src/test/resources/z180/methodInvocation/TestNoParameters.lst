@@ -16,7 +16,7 @@
 2009             L5:
 2009                     ;;TestNoParameters.j(2)   private static void doIt() {
 2009             L6:
-2009                     ;method doIt [private, static] void ()
+2009                     ;method TestStatementExpression.doIt [private, static] void ()
 2009             L7:
 2009 DD E5               PUSH  IX
 200B             L8:
@@ -45,7 +45,7 @@
 2021             L18:
 2021                     ;;TestNoParameters.j(6)   public static void main() {
 2021             L19:
-2021                     ;method main [public, static] void ()
+2021                     ;method TestStatementExpression.main [public, static] void ()
 2021             L20:
 2021 DD E5               PUSH  IX
 2023             L21:
