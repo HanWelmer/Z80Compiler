@@ -23,7 +23,7 @@ import java.util.EnumSet;
 
 public class Variable {
 
-  private String name;
+  private String fullyQualifiedName;
   private IdentifierType identifierType;
   private DataType dataType;
   private EnumSet<LexemeType> modifiers;
@@ -32,14 +32,14 @@ public class Variable {
   private int address;
 
   // constructor
-  public Variable(String name) {
-    this.name = name;
+  public Variable(String fullyQualifiedName) {
+    this.fullyQualifiedName = fullyQualifiedName;
     this.address = 0;
     this.formalParameters = new ArrayList<FormalParameter>();
   }
 
-  public String getName() {
-    return name;
+  public String getFullyQualifiedName() {
+    return fullyQualifiedName;
   }
 
   public void setIdentifierType(IdentifierType identifierType) {
@@ -99,7 +99,7 @@ public class Variable {
   }
 
   public String toString() {
-    String result = "var(" + name;
+    String result = "var(" + fullyQualifiedName;
     result += ", identifierType=" + identifierType;
     result += ", dataType=" + dataType;
     result += ", modifiers=" + modifiers;

@@ -342,9 +342,7 @@ public class Instruction {
     function = fn;
     // deep copy of parameter operand to member operand, otherwise a reference
     // to the mutable object operand is copied into the Instruction.
-    this.operand =
-
-        deepCopy(operand);
+    this.operand = deepCopy(operand);
   } // Instruction(FunctionType fn, Operand operand)
 
   public Instruction(FunctionType fn, Operand operand1, Operand operand2) {
