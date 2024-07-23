@@ -1927,7 +1927,7 @@ public class pCompiler {
       } else if (lexeme.type == LexemeType.decrement) {
         postdecrementExpression(cuc.lexemeReader, name, stopSet);
       } else if (lexeme.type == LexemeType.LPAREN) {
-        methodInvocation(cuc.lexemeReader, getFullyQualifiedName(cuc, name), stopSet);
+        methodInvocation(cuc.lexemeReader, name, stopSet);
       } else {
         assignment(cuc.lexemeReader, name, stopSet);
       }
