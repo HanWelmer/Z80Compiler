@@ -58,4 +58,9 @@ public class TestMethodInvocation extends AbstactRegressionTest {
     assertTrue(singleTest("TestWordParameter.j"));
   }
 
+  @Test
+  public void TestImportLocalClass() {
+    assertTrue(singleTest("TestImportLocalClass.j"));
+  }
+
 }

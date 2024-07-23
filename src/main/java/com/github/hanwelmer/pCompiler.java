@@ -1202,11 +1202,6 @@ public class pCompiler {
   } // resultType()
 
   // name ::= javaIdentifier { "." javaIdentifier }.
-  //
-  // TODO change implementation from:
-  // ...name ::= identifier {"." identifier} ["." importType]
-  // to:
-  // ...name ::= javaIdentifier {"." javaIdentifier}.
   private String name(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nname: start");
     String result = "";
@@ -1218,16 +1213,15 @@ public class pCompiler {
       // recognize { "." identifier }.
       lexeme = lexemeReader.getLexeme(sourceCode);
       while (lexeme.type == LexemeType.period) {
-        // skip another ".".
-        result += ".";
+        // skip the period
         lexeme = lexemeReader.getLexeme(sourceCode);
 
-        // recognize another identifier or "*" (import type).
+        // recognize another identifier.
         if (lexeme.type == LexemeType.identifier) {
-          result += lexeme.idVal;
+          result += "." + lexeme.idVal;
           lexeme = lexemeReader.getLexeme(sourceCode);
         } else if (lexeme.type == LexemeType.mulop && lexeme.operator == OperatorType.mul) {
-          result += "*";
+          result += ".*";
           lexeme = lexemeReader.getLexeme(sourceCode);
         } else {
           error(lexemeReader, 3, "found " + lexeme.type + ", expected identifer or '*'");
@@ -1911,7 +1905,6 @@ public class pCompiler {
   // postincrementExpression | postdecrementExpression | methodInvocation |
   // arraySelector | assignment.
   //
-  // TODO implement methodInvocation.
   // TODO implement arraySelector.
   private void statementExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
@@ -1920,12 +1913,15 @@ public class pCompiler {
     } else if (lexeme.type == LexemeType.decrement) {
       predecrementExpression(cuc.lexemeReader, stopSet);
     } else if (lexeme.type == LexemeType.identifier) {
-      // Semantic analysis.
-      // TODO support fully qualified name instead of just an identifier.
-      String name = lexeme.idVal;
+      String name = name(cuc.lexemeReader, stopSet);
 
-      // lexical analysis.
-      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+      // Semantic analysis.
+      // TODO check visibility of name:
+      // - within current class.
+      // - within same package and public or protected.
+      // - anywhere else and public.
+
+      // Syntax analysis.
       if (lexeme.type == LexemeType.increment) {
         postincrementExpression(cuc.lexemeReader, name, stopSet);
       } else if (lexeme.type == LexemeType.decrement) {
