@@ -73,9 +73,9 @@ public class Identifiers {
   /**
    * Get a variable by its name. Method is used during semantic analysis phase.
    * 
-   * Param name : name of the variable for which its address is sought.
+   * Param name : name of the variable.
    * 
-   * Returns null if no variable with that name is not found; the variable if a
+   * Returns null if no variable with that name is found; the variable if a
    * variable with that name has been declared.
    */
   public Variable getId(String name) {
@@ -84,6 +84,50 @@ public class Identifiers {
     while ((variable == null) && iterator.hasNext()) {
       Scope scope = iterator.next();
       variable = scope.getVariable(name);
+    }
+    return variable;
+  } // getId
+
+  /**
+   * Get a variable by its name and optionally its class name and optionally its
+   * package name. Method is used during semantic analysis phase.
+   * 
+   * Param packageName : name of the package in which the class is declared.
+   * Param className : name of the class in which the variable is declared.
+   * Param name : name of the variable.
+   * 
+   * Returns null if no variable with that name, class name and package name is
+   * found; the variable if a variable with that name has been declared.
+   */
+  public Variable getId(String packageName, String className, String name) {
+    // check if the name identifies a class variable or method.
+    Variable variable = classVariables.getVariable(name);
+    if (variable == null) {
+      variable = classVariables.getVariable(className + "." + name);
+    }
+    if (variable == null && packageName != null && packageName.isEmpty()) {
+      variable = classVariables.getVariable(packageName + "." + className + "." + name);
+    }
+
+    // check if the name identifies a local variable defined within a method.
+    Iterator<Scope> iterator = localVariables.iterator();
+    while ((variable == null) && iterator.hasNext()) {
+      Scope scope = iterator.next();
+      variable = scope.getVariable(name);
+    }
+    if (variable == null) {
+      iterator = localVariables.iterator();
+      while ((variable == null) && iterator.hasNext()) {
+        Scope scope = iterator.next();
+        variable = scope.getVariable(className + "." + name);
+      }
+    }
+    if (variable == null && packageName != null && packageName.isEmpty()) {
+      iterator = localVariables.iterator();
+      while ((variable == null) && iterator.hasNext()) {
+        Scope scope = iterator.next();
+        variable = scope.getVariable(packageName + "." + className + "." + name);
+      }
     }
     return variable;
   } // getId

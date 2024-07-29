@@ -40,6 +40,19 @@ public class Scope {
     return variables.get(fullyQualifiedName);
   }
 
+  public Variable getVariable(String packageName, String className, String name) {
+    Variable variable = variables.get(name);
+    if (variable == null) {
+      name = className + "." + name;
+      variable = variables.get(name);
+    }
+    if (variable == null && packageName != null && packageName.isEmpty()) {
+      name = packageName + "." + name;
+      variable = variables.get(name);
+    }
+    return variable;
+  }
+
   public void addVariable(String fullyQualifiedName) {
     variables.put(fullyQualifiedName, new Variable(fullyQualifiedName));
   }

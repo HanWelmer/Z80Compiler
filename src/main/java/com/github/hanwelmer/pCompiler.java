@@ -1915,21 +1915,26 @@ public class pCompiler {
     } else if (lexeme.type == LexemeType.identifier) {
       String name = name(cuc.lexemeReader, stopSet);
 
-      // Semantic analysis.
-      // TODO check visibility of name:
-      // - within current class.
-      // - within same package and public or protected.
-      // - anywhere else and public.
-
-      // Syntax analysis.
-      if (lexeme.type == LexemeType.increment) {
-        postincrementExpression(cuc.lexemeReader, name, stopSet);
-      } else if (lexeme.type == LexemeType.decrement) {
-        postdecrementExpression(cuc.lexemeReader, name, stopSet);
-      } else if (lexeme.type == LexemeType.LPAREN) {
-        methodInvocation(cuc.lexemeReader, name, stopSet);
+      // semantic analysis.
+      Variable method = identifiers.getId(cuc.packageName, cuc.className, name);
+      if (method == null) {
+        error(cuc.lexemeReader, 36); // method not declared.
       } else {
-        assignment(cuc.lexemeReader, name, stopSet);
+        // TODO check visibility of name:
+        // - within current class.
+        // - within same package and public or protected.
+        // - anywhere else and public.
+
+        // Syntax analysis.
+        if (lexeme.type == LexemeType.increment) {
+          postincrementExpression(cuc.lexemeReader, name, stopSet);
+        } else if (lexeme.type == LexemeType.decrement) {
+          postdecrementExpression(cuc.lexemeReader, name, stopSet);
+        } else if (lexeme.type == LexemeType.LPAREN) {
+          methodInvocation(cuc.lexemeReader, method, stopSet);
+        } else {
+          assignment(cuc.lexemeReader, name, stopSet);
+        }
       }
     } else {
       error(cuc.lexemeReader, 3, " " + lexeme.makeString(null));
@@ -2059,30 +2064,24 @@ public class pCompiler {
   } // postdecrementExpression
 
   // methodInvocation ::= name arguments.
-  private void methodInvocation(LexemeReader lexemeReader, String name, EnumSet<LexemeType> stopSet) throws FatalError {
-    // semantic analysis.
-    Variable method = identifiers.getId(name);
-    if (method == null) {
-      error(lexemeReader, 36); // method not declared.
-    } else {
-      // TODO support method call before method declaration.
-      // get the method signature from the list of identifiers.
-      debug("\nmethod invocation: " + method);
+  private void methodInvocation(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
+    // TODO support method call before method declaration.
+    // get the method signature from the list of identifiers.
+    debug("\nmethod invocation: " + method);
 
-      // lexical and semantic analysis.
-      // Get the optional list of actual parameters
-      // and check if they match the formal parameters in the method definition.
-      arguments(lexemeReader, method, stopSet);
+    // lexical and semantic analysis.
+    // Get the optional list of actual parameters
+    // and check if they match the formal parameters in the method definition.
+    arguments(lexemeReader, method, stopSet);
 
-      // semantic analysis: check return type.
-      // TODO add check of return type.
-      if (method.getDataType() != DataType.voidd) {
-        error(lexemeReader, 37); // incompatible return type.
-      }
-
-      // code generation.
-      plant(lexemeReader, new Instruction(FunctionType.call, new Operand(name, method.getIntValue())));
+    // semantic analysis: check return type.
+    // TODO add check of return type.
+    if (method.getDataType() != DataType.voidd) {
+      error(lexemeReader, 37); // incompatible return type.
     }
+
+    // code generation.
+    plant(lexemeReader, new Instruction(FunctionType.call, new Operand(method.getFullyQualifiedName(), method.getIntValue())));
   } // methodInvocation
 
   // TODO refactor assignment.
@@ -3285,25 +3284,26 @@ public class pCompiler {
       int address = findSymbol(fullyQualifiedName);
       if (address == 0) {
         error(lexemeReader, 38, fullyQualifiedName);
-      }
-      // update references to label <name>.
-      for (Integer reference : references) {
-        Instruction instruction = instructions.get(reference);
-        if (instruction.function != FunctionType.call) {
-          throw new RuntimeException(
-              String.format("One of the instructions to symbol %s is not a call function", fullyQualifiedName));
-        } else if (instruction.operand == null) {
-          throw new RuntimeException(
-              String.format("One of the instructions to symbol %s does not have an operand", fullyQualifiedName));
-        } else if (instruction.operand.opType != OperandType.LABEL) {
-          throw new RuntimeException(
-              String.format("One of the instructions to symbol %s does not have a label operand", fullyQualifiedName));
-        } else if (instruction.operand.intValue == 0) {
-          instruction.operand.intValue = address;
-        } else if (instruction.operand.intValue != address) {
-          throw new RuntimeException(String.format(
-              "One of the instructions to symbol %s already has %d as address which is different from expected value %d",
-              fullyQualifiedName, instruction.operand.intValue, address));
+      } else {
+        // update references to label <name>.
+        for (Integer reference : references) {
+          Instruction instruction = instructions.get(reference);
+          if (instruction.function != FunctionType.call) {
+            throw new RuntimeException(
+                String.format("One of the instructions to symbol %s is not a call function", fullyQualifiedName));
+          } else if (instruction.operand == null) {
+            throw new RuntimeException(
+                String.format("One of the instructions to symbol %s does not have an operand", fullyQualifiedName));
+          } else if (instruction.operand.opType != OperandType.LABEL) {
+            throw new RuntimeException(
+                String.format("One of the instructions to symbol %s does not have a label operand", fullyQualifiedName));
+          } else if (instruction.operand.intValue == 0) {
+            instruction.operand.intValue = address;
+          } else if (instruction.operand.intValue != address) {
+            throw new RuntimeException(String.format(
+                "One of the instructions to symbol %s already has %d as address which is different from expected value %d",
+                fullyQualifiedName, instruction.operand.intValue, address));
+          }
         }
       }
     });
