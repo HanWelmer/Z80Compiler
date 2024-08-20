@@ -1,4 +1,4 @@
-   0 call 207
+   0 call 210
    1 stop
    2 ;ledtst.j(0) /* Z80S183 program that tests switching on/off the LED at the PWRSWTCH  output. */
    3 ;ledtst.j(1) /* Transcribed from LEDTest.asm to ledtest.j */
@@ -164,7 +164,7 @@
  163 <basePointer
  164 basePointer= stackPointer
  165 stackPointer+ constant 1
- 166 ;ledtst.j(134)     for (byte b = 255; b!=0; b--) ;
+ 166 ;ledtst.j(134)     for (byte n = 255; n!=0; n--) ;
  167 acc8= constant 255
  168 acc8=> (basePointer + -1)
  169 acc8= (basePointer + -1)
@@ -180,52 +180,52 @@
  179 return
  180 ;ledtst.j(136) 
  181 ;ledtst.j(137)   /**
- 182 ;ledtst.j(138)    * sleep for n miliseconds.
+ 182 ;ledtst.j(138)    * wait 500 msec at 18,432 MHz with no wait states.
  183 ;ledtst.j(139)    */
- 184 ;ledtst.j(140)   public static void sleep(word n) {
- 185 method LEDTest.sleep [public, static] void (word n {bp+4})
+ 184 ;ledtst.j(140)   public static void sleep500msec() {
+ 185 method LEDTest.sleep500msec [public, static] void ()
  186 <basePointer
  187 basePointer= stackPointer
- 188 stackPointer+ constant 0
- 189 ;ledtst.j(141)     while (n != 0) {
- 190 acc16= (basePointer + 4)
- 191 acc8= constant 0
- 192 acc16CompareAcc8
- 193 breq 201
- 194 ;ledtst.j(142)       sleepOneMillisecond();
- 195 call 162
- 196 ;ledtst.j(143)       n--;
- 197 decr16 (basePointer + 4)
- 198 ;ledtst.j(144)     }
- 199 br 190
- 200 ;ledtst.j(145)   }
- 201 stackPointer= basePointer
- 202 basePointer<
- 203 return
- 204 ;ledtst.j(146) 
- 205 ;ledtst.j(147)   // Blink LED on/off in a XXxxXXxx pattern at 1 Hz.
- 206 ;ledtst.j(148)   public static void main() {
- 207 method LEDTest.main [public, static] void ()
- 208 <basePointer
- 209 basePointer= stackPointer
- 210 stackPointer+ constant 0
- 211 ;ledtst.j(149)     init();
- 212 call 53
- 213 ;ledtst.j(150)     while (1==1) {
- 214 acc8= constant 1
- 215 acc8Comp constant 1
- 216 brne 227
- 217 ;ledtst.j(151)       toggle();
- 218 call 122
- 219 ;ledtst.j(152)       //Thread.sleep(500); // Sleep for 500 miliseconds.
- 220 ;ledtst.j(153)       sleep(500); // Sleep for 500 miliseconds.
- 221 acc16= constant 500
- 222 <acc16
+ 188 stackPointer+ constant 2
+ 189 ;ledtst.j(141)     for (word w = 500; w>0; w--) {
+ 190 acc16= constant 500
+ 191 acc16=> (basePointer + -2)
+ 192 acc16= (basePointer + -2)
+ 193 acc8= constant 0
+ 194 acc16CompareAcc8
+ 195 brle 204
+ 196 br 199
+ 197 decr16 (basePointer + -2)
+ 198 br 192
+ 199 ;ledtst.j(142)       sleepOneMillisecond();
+ 200 call 162
+ 201 ;ledtst.j(143)     }
+ 202 br 197
+ 203 ;ledtst.j(144)   }
+ 204 stackPointer= basePointer
+ 205 basePointer<
+ 206 return
+ 207 ;ledtst.j(145) 
+ 208 ;ledtst.j(146)   // Blink LED on/off in a XXxxXXxx pattern at 1 Hz.
+ 209 ;ledtst.j(147)   public static void main() {
+ 210 method LEDTest.main [public, static] void ()
+ 211 <basePointer
+ 212 basePointer= stackPointer
+ 213 stackPointer+ constant 0
+ 214 ;ledtst.j(148)     init();
+ 215 call 53
+ 216 ;ledtst.j(149)     while (1==1) {
+ 217 acc8= constant 1
+ 218 acc8Comp constant 1
+ 219 brne 227
+ 220 ;ledtst.j(150)       toggle();
+ 221 call 122
+ 222 ;ledtst.j(151)       sleep500msec();
  223 call 185
- 224 ;ledtst.j(154)     }
- 225 br 214
- 226 ;ledtst.j(155)   }
+ 224 ;ledtst.j(152)     }
+ 225 br 217
+ 226 ;ledtst.j(153)   }
  227 stackPointer= basePointer
  228 basePointer<
  229 return
- 230 ;ledtst.j(156) }
+ 230 ;ledtst.j(154) }

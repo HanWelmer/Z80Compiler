@@ -85,48 +85,52 @@
   84 ;testSleep.j(37)     //println("sleeping 0.25 second:");
   85 ;testSleep.j(38)     //sleep(250);
   86 ;testSleep.j(39)     println("sleeping 10 second:");
-  87 acc16= stringconstant 130
+  87 acc16= stringconstant 134
   88 writeLineString
   89 ;testSleep.j(40)     sleep(10000);
   90 acc16= constant 10000
   91 <acc16
   92 call 48
-  93 ;testSleep.j(41)     //println("sleeping 0.25 second:");
-  94 ;testSleep.j(42)     //sleep(VALUE);
-  95 ;testSleep.j(43)     println("sleeping 10 second:");
-  96 acc16= stringconstant 130
-  97 writeLineString
-  98 ;testSleep.j(44)     sleep(BIG_VALUE);
-  99 acc16= constant 10000
- 100 <acc16
- 101 call 48
- 102 ;testSleep.j(45)     //println("sleeping 0.25 second:");
- 103 ;testSleep.j(46)     //sleep(localByte);
- 104 ;testSleep.j(47)     println("sleeping 10 second:");
- 105 acc16= stringconstant 130
- 106 writeLineString
- 107 ;testSleep.j(48)     sleep(localWord);
- 108 acc16= (basePointer + -3)
- 109 <acc16
- 110 call 48
- 111 ;testSleep.j(49)     //println("sleeping 0.25 second:");
- 112 ;testSleep.j(50)     //sleep(globalByte);
- 113 ;testSleep.j(51)     println("sleeping 10 second:");
- 114 acc16= stringconstant 130
- 115 writeLineString
- 116 ;testSleep.j(52)     sleep(globalWord);
- 117 acc16= variable 4
- 118 <acc16
- 119 call 48
- 120 ;testSleep.j(53)   
- 121 ;testSleep.j(54)     println("Klaar");
- 122 acc16= stringconstant 131
- 123 writeLineString
- 124 ;testSleep.j(55)   }
- 125 stackPointer= basePointer
- 126 basePointer<
- 127 return
- 128 ;testSleep.j(56) 
- 129 ;testSleep.j(57) }
- 130 stringConstant 0 = "sleeping 10 second:"
- 131 stringConstant 1 = "Klaar"
+  93 stackPointer+ constant -2
+  94 ;testSleep.j(41)     //println("sleeping 0.25 second:");
+  95 ;testSleep.j(42)     //sleep(VALUE);
+  96 ;testSleep.j(43)     println("sleeping 10 second:");
+  97 acc16= stringconstant 134
+  98 writeLineString
+  99 ;testSleep.j(44)     sleep(BIG_VALUE);
+ 100 acc16= constant 10000
+ 101 <acc16
+ 102 call 48
+ 103 stackPointer+ constant -2
+ 104 ;testSleep.j(45)     //println("sleeping 0.25 second:");
+ 105 ;testSleep.j(46)     //sleep(localByte);
+ 106 ;testSleep.j(47)     println("sleeping 10 second:");
+ 107 acc16= stringconstant 134
+ 108 writeLineString
+ 109 ;testSleep.j(48)     sleep(localWord);
+ 110 acc16= (basePointer + -3)
+ 111 <acc16
+ 112 call 48
+ 113 stackPointer+ constant -2
+ 114 ;testSleep.j(49)     //println("sleeping 0.25 second:");
+ 115 ;testSleep.j(50)     //sleep(globalByte);
+ 116 ;testSleep.j(51)     println("sleeping 10 second:");
+ 117 acc16= stringconstant 134
+ 118 writeLineString
+ 119 ;testSleep.j(52)     sleep(globalWord);
+ 120 acc16= variable 4
+ 121 <acc16
+ 122 call 48
+ 123 stackPointer+ constant -2
+ 124 ;testSleep.j(53)   
+ 125 ;testSleep.j(54)     println("Klaar");
+ 126 acc16= stringconstant 135
+ 127 writeLineString
+ 128 ;testSleep.j(55)   }
+ 129 stackPointer= basePointer
+ 130 basePointer<
+ 131 return
+ 132 ;testSleep.j(56) 
+ 133 ;testSleep.j(57) }
+ 134 stringConstant 0 = "sleeping 10 second:"
+ 135 stringConstant 1 = "Klaar"

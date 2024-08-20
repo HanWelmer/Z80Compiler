@@ -230,17 +230,18 @@
  229 ;ledtst.j(129)     while (1==1) {
  230 acc8= constant 1
  231 acc8Comp constant 1
- 232 brne 242
+ 232 brne 243
  233 ;ledtst.j(130)       toggle();
  234 call 192
  235 ;ledtst.j(131)       Thread.sleep(500); // Sleep for 500 miliseconds.
  236 acc16= constant 500
  237 <acc16
  238 call 52
- 239 ;ledtst.j(132)     }
- 240 br 230
- 241 ;ledtst.j(133)   }
- 242 stackPointer= basePointer
- 243 basePointer<
- 244 return
- 245 ;ledtst.j(134) }
+ 239 stackPointer+ constant -2
+ 240 ;ledtst.j(132)     }
+ 241 br 230
+ 242 ;ledtst.j(133)   }
+ 243 stackPointer= basePointer
+ 244 basePointer<
+ 245 return
+ 246 ;ledtst.j(134) }

@@ -22,19 +22,20 @@
   21 basePointer= stackPointer
   22 stackPointer+ constant 0
   23 ;TestWordParameter.j(7)     println("Hallo ");
-  24 acc16= stringconstant 38
+  24 acc16= stringconstant 39
   25 writeLineString
   26 ;TestWordParameter.j(8)     doIt(257);
   27 acc16= constant 257
   28 <acc16
   29 call 6
-  30 ;TestWordParameter.j(9)     println(" wereld");
-  31 acc16= stringconstant 39
-  32 writeLineString
-  33 ;TestWordParameter.j(10)   }
-  34 stackPointer= basePointer
-  35 basePointer<
-  36 return
-  37 ;TestWordParameter.j(11) }
-  38 stringConstant 0 = "Hallo "
-  39 stringConstant 1 = " wereld"
+  30 stackPointer+ constant -2
+  31 ;TestWordParameter.j(9)     println(" wereld");
+  32 acc16= stringconstant 40
+  33 writeLineString
+  34 ;TestWordParameter.j(10)   }
+  35 stackPointer= basePointer
+  36 basePointer<
+  37 return
+  38 ;TestWordParameter.j(11) }
+  39 stringConstant 0 = "Hallo "
+  40 stringConstant 1 = " wereld"

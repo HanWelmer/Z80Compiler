@@ -59,7 +59,7 @@ L22:
 L23:
         ;;TestWordParameter.j(7)     println("Hallo ");
 L24:
-        LD    HL,L38
+        LD    HL,L39
 L25:
         CALL  writeLineStr
 L26:
@@ -71,24 +71,28 @@ L28:
 L29:
         CALL  L6
 L30:
-        ;;TestWordParameter.j(9)     println(" wereld");
+        LD    HL,2
+        ADD   HL,SP
+        LD    SP,HL
 L31:
-        LD    HL,L39
+        ;;TestWordParameter.j(9)     println(" wereld");
 L32:
-        CALL  writeLineStr
+        LD    HL,L40
 L33:
-        ;;TestWordParameter.j(10)   }
+        CALL  writeLineStr
 L34:
-        LD    SP,IX
+        ;;TestWordParameter.j(10)   }
 L35:
-        POP   IX
+        LD    SP,IX
 L36:
-        return
+        POP   IX
 L37:
-        ;;TestWordParameter.j(11) }
+        return
 L38:
-        .ASCIZ  "Hallo "
+        ;;TestWordParameter.j(11) }
 L39:
+        .ASCIZ  "Hallo "
+L40:
         .ASCIZ  " wereld"
 CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
 STAT0   equ 004H          ;147 ASCI0 Status register.

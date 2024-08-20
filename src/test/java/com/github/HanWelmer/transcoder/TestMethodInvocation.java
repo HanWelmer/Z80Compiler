@@ -43,7 +43,7 @@ public class TestMethodInvocation extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 771);
+    assertTrue(code.size() == 775);
     assertTrue(code.get(15).toString().equals("2009 L5:"));
     assertTrue(code.get(16).toString().equals("2009         ;;TestWordParameter.j(2)   private static void doIt(word w) {"));
     assertTrue(code.get(17).toString().equals("2009 L6:"));
@@ -62,7 +62,7 @@ public class TestMethodInvocation extends AbstractTranscoderTest {
     assertTrue(code.get(31).toString().equals("2016         LD    L,(IX + 4) dd 6e 04"));
     assertTrue(code.get(32).toString().equals("2019         LD    H,(IX + 5) dd 66 05"));
     assertTrue(code.get(33).toString().equals("201c L12:"));
-    assertTrue(code.get(34).toString().equals("201c         CALL  writeLineHL cd c9 21"));
+    assertTrue(code.get(34).toString().equals("201c         CALL  writeLineHL cd ce 21"));
     assertTrue(code.get(35).toString().equals("201f L13:"));
     assertTrue(code.get(36).toString().equals("201f         ;;TestWordParameter.j(4)   }"));
 
@@ -74,6 +74,10 @@ public class TestMethodInvocation extends AbstractTranscoderTest {
     assertTrue(code.get(69).toString().equals("203a         PUSH HL e5"));
     assertTrue(code.get(70).toString().equals("203b L29:"));
     assertTrue(code.get(71).toString().equals("203b         CALL  L6 cd 09 20"));
+    assertTrue(code.get(72).toString().equals("203e L30:"));
+    assertTrue(code.get(73).toString().equals("203e         LD    HL,2 21 02 00"));
+    assertTrue(code.get(74).toString().equals("2041         ADD   HL,SP 39"));
+    assertTrue(code.get(75).toString().equals("2042         LD    SP,HL f9"));
   }
 
 }

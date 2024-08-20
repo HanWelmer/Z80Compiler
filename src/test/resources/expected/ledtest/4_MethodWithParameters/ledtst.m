@@ -214,7 +214,7 @@
  213 ;ledtst.j(150)     while (1==1) {
  214 acc8= constant 1
  215 acc8Comp constant 1
- 216 brne 227
+ 216 brne 228
  217 ;ledtst.j(151)       toggle();
  218 call 122
  219 ;ledtst.j(152)       //Thread.sleep(500); // Sleep for 500 miliseconds.
@@ -222,10 +222,11 @@
  221 acc16= constant 500
  222 <acc16
  223 call 185
- 224 ;ledtst.j(154)     }
- 225 br 214
- 226 ;ledtst.j(155)   }
- 227 stackPointer= basePointer
- 228 basePointer<
- 229 return
- 230 ;ledtst.j(156) }
+ 224 stackPointer+ constant -2
+ 225 ;ledtst.j(154)     }
+ 226 br 214
+ 227 ;ledtst.j(155)   }
+ 228 stackPointer= basePointer
+ 229 basePointer<
+ 230 return
+ 231 ;ledtst.j(156) }

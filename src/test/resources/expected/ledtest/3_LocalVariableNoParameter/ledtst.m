@@ -51,7 +51,7 @@
   50 ;ledtst.j(47) 
   51 ;ledtst.j(48)   //Device initialisation
   52 ;ledtst.j(49)   public static void init() {
-  53 method init [public, static] void ()
+  53 method LEDTest.init [public, static] void ()
   54 <basePointer
   55 basePointer= stackPointer
   56 stackPointer+ constant 0
@@ -112,15 +112,15 @@
  111 ;ledtst.j(99)     // Block writing to system ctrl registers
  112 ;ledtst.j(100)     output(WDTCR, 0x00);
  113 output port 0x65 value 0x00
- 114 stackPointer= basePointer
- 115 basePointer<
- 116 return
- 117 ;ledtst.j(101)     // XOR     A
- 118 ;ledtst.j(102)     // OUT0    (WDTCR),A
- 119 ;ledtst.j(103)   }
+ 114 ;ledtst.j(101)     // XOR     A
+ 115 ;ledtst.j(102)     // OUT0    (WDTCR),A
+ 116 ;ledtst.j(103)   }
+ 117 stackPointer= basePointer
+ 118 basePointer<
+ 119 return
  120 ;ledtst.j(104) 
  121 ;ledtst.j(105)   public static void toggle() {
- 122 method toggle [public, static] void ()
+ 122 method LEDTest.toggle [public, static] void ()
  123 <basePointer
  124 basePointer= stackPointer
  125 stackPointer+ constant 0
@@ -142,12 +142,12 @@
  141 ;ledtst.j(117)     // Disable writing to PCR
  142 ;ledtst.j(118)     output(WDTCR, 0x00);
  143 output port 0x65 value 0x00
- 144 stackPointer= basePointer
- 145 basePointer<
- 146 return
- 147 ;ledtst.j(119)     //XOR     A,A
- 148 ;ledtst.j(120)     //OUT0    (WDTCR),A
- 149 ;ledtst.j(121)   }
+ 144 ;ledtst.j(119)     //XOR     A,A
+ 145 ;ledtst.j(120)     //OUT0    (WDTCR),A
+ 146 ;ledtst.j(121)   }
+ 147 stackPointer= basePointer
+ 148 basePointer<
+ 149 return
  150 ;ledtst.j(122) 
  151 ;ledtst.j(123)   /**
  152 ;ledtst.j(124)    * Wait 1 msec at 18,432 MHz with no wait states.
@@ -160,7 +160,7 @@
  159 ;ledtst.j(131)    * which is 53 T-states or 2,8 microseconds short of 1 millisecond.
  160 ;ledtst.j(132)    */
  161 ;ledtst.j(133)   public static void sleepOneMillisecond() {
- 162 method sleepOneMillisecond [public, static] void ()
+ 162 method LEDTest.sleepOneMillisecond [public, static] void ()
  163 <basePointer
  164 basePointer= stackPointer
  165 stackPointer+ constant 1
@@ -183,7 +183,7 @@
  182 ;ledtst.j(138)    * wait 500 msec at 18,432 MHz with no wait states.
  183 ;ledtst.j(139)    */
  184 ;ledtst.j(140)   public static void sleep500msec() {
- 185 method sleep500msec [public, static] void ()
+ 185 method LEDTest.sleep500msec [public, static] void ()
  186 <basePointer
  187 basePointer= stackPointer
  188 stackPointer+ constant 2
@@ -199,8 +199,8 @@
  198 br 192
  199 ;ledtst.j(142)       sleepOneMillisecond();
  200 call 162
- 201 br 197
- 202 ;ledtst.j(143)     }
+ 201 ;ledtst.j(143)     }
+ 202 br 197
  203 ;ledtst.j(144)   }
  204 stackPointer= basePointer
  205 basePointer<
@@ -208,7 +208,7 @@
  207 ;ledtst.j(145) 
  208 ;ledtst.j(146)   // Blink LED on/off in a XXxxXXxx pattern at 1 Hz.
  209 ;ledtst.j(147)   public static void main() {
- 210 method main [public, static] void ()
+ 210 method LEDTest.main [public, static] void ()
  211 <basePointer
  212 basePointer= stackPointer
  213 stackPointer+ constant 0
@@ -222,8 +222,8 @@
  221 call 122
  222 ;ledtst.j(151)       sleep500msec();
  223 call 185
- 224 br 217
- 225 ;ledtst.j(152)     }
+ 224 ;ledtst.j(152)     }
+ 225 br 217
  226 ;ledtst.j(153)   }
  227 stackPointer= basePointer
  228 basePointer<

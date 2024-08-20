@@ -2072,7 +2072,9 @@ public class pCompiler {
     // lexical and semantic analysis.
     // Get the optional list of actual parameters
     // and check if they match the formal parameters in the method definition.
-    arguments(lexemeReader, method, stopSet);
+    // Return value is the number of bytes needed on the stack for the
+    // arguments.
+    int stackSize = arguments(lexemeReader, method, stopSet);
 
     // semantic analysis: check return type.
     // TODO add check of return type.
@@ -2082,6 +2084,10 @@ public class pCompiler {
 
     // code generation.
     plant(lexemeReader, new Instruction(FunctionType.call, new Operand(method.getFullyQualifiedName(), method.getIntValue())));
+    if (stackSize > 0) {
+      plant(lexemeReader,
+          new Instruction(FunctionType.stackPointerPlus, new Operand(OperandType.CONSTANT, DataType.word, -stackSize)));
+    }
   } // methodInvocation
 
   // TODO refactor assignment.
@@ -2133,10 +2139,12 @@ public class pCompiler {
    * @param stopSet:
    *          skip until lexeme in this set is found in case of a lexicographic
    *          error.
+   * @returns number of bytes needed on the stack for the arguments.
    * @throws FatalError
    */
-  private void arguments(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
+  private int arguments(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\narguments: start with stopSet = " + stopSet);
+    int stackSize = 0;
 
     EnumSet<LexemeType> localStopSet = stopSet.clone();
     localStopSet.add(LexemeType.RPAREN);
@@ -2146,7 +2154,7 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
 
       if (lexeme.type != LexemeType.RPAREN) {
-        argumentList(lexemeReader, method, localStopSet);
+        stackSize = argumentList(lexemeReader, method, localStopSet);
       } else if (method.getFormalParameters().size() != 0) {
         error(lexemeReader, 39); // nr of arguments does not match nr of formal
                                  // parameters.
@@ -2162,7 +2170,8 @@ public class pCompiler {
       }
     }
 
-    debug("\narguments: end");
+    debug("\narguments: end; stack size=" + stackSize);
+    return stackSize;
   } // arguments
 
   /**
@@ -2177,10 +2186,12 @@ public class pCompiler {
    * @param stopSet:
    *          skip until lexeme in this set is found in case of a lexicographic
    *          error.
+   * @returns number of bytes needed on the stack for the arguments.
    * @throws FatalError
    */
-  private void argumentList(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
+  private int argumentList(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nargumentList: start with stopSet = " + stopSet);
+    int stackSize = 0;
 
     // process expression until closing parenthesis or other lexeme in stop set.
     EnumSet<LexemeType> localStopSet = stopSet.clone();
@@ -2204,7 +2215,7 @@ public class pCompiler {
       }
 
       // code generation.
-      generateArgument(lexemeReader, expression);
+      stackSize += generateArgument(lexemeReader, expression);
 
       // lexical analysis.
       if (lexeme.type == LexemeType.COMMA) {
@@ -2215,6 +2226,7 @@ public class pCompiler {
 
     // TODO Auto-generated method stub
     debug("\nargumentList: end");
+    return stackSize;
   } // argumentList
 
   /*********************************************
@@ -2831,10 +2843,12 @@ public class pCompiler {
    * Generate M-code for a stack based argument in a method invocation.
    * 
    * @param argument
+   * @returns number of bytes needed on the stack for the argument.
    */
-  private void generateArgument(LexemeReader lexemeReader, Operand argument) {
+  private int generateArgument(LexemeReader lexemeReader, Operand argument) {
     // code generation.
     debug("\ngenerateArgument: argument = " + argument);
+    int stackSize = 0;
 
     // operand to accu.
     if (argument.opType != OperandType.ACC) {
@@ -2844,11 +2858,14 @@ public class pCompiler {
     // put accu on the stack.
     if (acc16.inUse()) {
       plant(lexemeReader, new Instruction(FunctionType.stackAcc16));
+      stackSize = 2;
     } else if (acc8.inUse()) {
       plant(lexemeReader, new Instruction(FunctionType.stackAcc8));
+      stackSize = 1;
     } else {
       error(lexemeReader, 12);
     }
+    return stackSize;
   }
 
   private void plant(LexemeReader lexemeReader, Instruction instruction) {

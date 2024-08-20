@@ -28,17 +28,48 @@ import org.junit.Test;
 public class TestLedTest extends AbstactRegressionTest {
 
   protected void init() {
-    final String testName = "ledtest/5_ImportThread";
-    // Override default configuration values.
-    jCodeLocation = "/src/test/resources/jCode/" + testName + "/";
-    mCodeLocation = "/src/test/resources/jCode/" + testName + "/";
-    expectedLocation = "/src/test/resources/expected/" + testName + "/";
     debugMode = false;
     verboseMode = false;
   }
 
+  protected void setConfig(String testName) {
+    // Override default configuration values.
+    jCodeLocation = "/src/test/resources/jCode/" + testName + "/";
+    mCodeLocation = "/src/test/resources/jCode/" + testName + "/";
+    expectedLocation = "/src/test/resources/expected/" + testName + "/";
+  }
+
+  // @Test obsolete as sleep() is no longer a built-in method in the runtime
+  // software.
+  public void test1() {
+    setConfig("ledtest/1_OneMethod");
+    assertTrue(singleTest("ledtst.j"));
+  }
+
+  // @Test obsolete as sleep() is no longer a built-in method in the runtime
+  // software.
+  public void test2() {
+    setConfig("ledtest/2_ParameterLessMethods");
+    assertTrue(singleTest("ledtst.j"));
+  }
+
+  // TODO enable test
+  // @Test
+  public void test3() {
+    setConfig("ledtest/3_LocalVariableNoParameter");
+    assertTrue(singleTest("ledtst.j"));
+  }
+
+  // TODO enable test
+  // @Test
+  public void test4() {
+    setConfig("ledtest/4_MethodWithParameters");
+    assertTrue(singleTest("ledtst.j"));
+  }
+
   @Test
-  public void test5_ImportThread() {
+  public void test5() {
+    setConfig("ledtest/5_ImportThread");
     assertTrue(singleTest("ledtst.j"));
   }
 
