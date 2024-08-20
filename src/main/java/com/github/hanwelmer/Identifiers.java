@@ -201,7 +201,7 @@ public class Identifiers {
       // memory addresses) and that the current value is just above the first
       // available address.
       int address = 4;
-      // TODO calculate address when there are more than 1 formal parameters.
+      // FIXME calculate address when there are more than 1 formal parameters.
       var.setAddress(address);
       localVariables.peek().setAddress(address);
     } else if (identifierType == IdentifierType.CLAZZ || identifierType == IdentifierType.METHOD) {

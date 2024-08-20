@@ -229,7 +229,7 @@ public class pCompiler {
     System.out.println(message);
   }
 
-  // TODO Fix runtime error: too many variables
+  // FIXME Fix runtime error: too many variables
   private void error(LexemeReader lexemeReader, int n) {
     error(lexemeReader);
     switch (n) {
@@ -575,7 +575,7 @@ public class pCompiler {
   // importDeclaration ::= "import" "static"? name [ "." "*" ] ";".
   //
   // TODO implement "static"? in importDeclaration.
-  // TODO change implementation from:
+  // In other words, change implementation from:
   // ....importDeclaration ::= "import" name "." importType ";".
   // to:
   // ... "import" "static"? name [ "." "*" ] ";".
@@ -1012,8 +1012,7 @@ public class pCompiler {
    */
   // restOfMethodDeclarator ::= ( formalParameters* )? ")" block.
   //
-  // avoid stackPointer+ constant 0 if method doesn't need stack space for local
-  // variables.
+  // FIXME avoid stackPointer+ constant 0 if identifiers.getScopeSize()==0.
   // TODO implement semantic analysis of modifiers in methodDeclaration.
   // TODO implement stopSet in methodDeclaration.
   // TODO implement code generation for less than trivial return statement.
@@ -1395,7 +1394,7 @@ public class pCompiler {
   // TODO refactor ifStatement
   // ifStatement = "if" "(" comparison ")" block [ "else" block ].
   //
-  // TODO optimize branch instruction in ifStatement
+  // FIXME optimize branch instruction in ifStatement
   // See test5.j 163: if (b>132) {
   // 1326 acc8= variable 14
   // 1327 acc8Comp constant 132
@@ -1868,7 +1867,7 @@ public class pCompiler {
 
     // semantic analysis.
     debug("\noutputStatement: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    // TODO check value is a byte expression.
+    // FIXME check value is a byte expression.
 
     // code generation.
     plant(lexemeReader, new Instruction(FunctionType.output, port, value));
@@ -1922,7 +1921,7 @@ public class pCompiler {
       if (method == null) {
         error(cuc.lexemeReader, 36); // method not declared.
       } else {
-        // TODO check visibility of name:
+        // FIXME check visibility of name:
         // - within current class.
         // - within same package and public or protected.
         // - anywhere else and public.
@@ -2067,7 +2066,7 @@ public class pCompiler {
 
   // methodInvocation ::= name arguments.
   private void methodInvocation(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
-    // TODO support method call before method declaration.
+    // FIXME support method call before method declaration.
     // get the method signature from the list of identifiers.
     debug("\nmethod invocation: " + method);
 
@@ -2226,7 +2225,6 @@ public class pCompiler {
       }
     }
 
-    // TODO Auto-generated method stub
     debug("\nargumentList: end");
     return stackSize;
   } // argumentList

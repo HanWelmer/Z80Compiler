@@ -81,7 +81,7 @@ public class TestTheRest extends AbstactRegressionTest {
 
   @Test
   public void testOutputInput() {
-    // TODO enable test on output() with port number as constant expression
+    // FIXME enable test on output() with port number as constant expression
     assertTrue(singleTest("testOutputInput.j"));
   }
 
