@@ -1012,6 +1012,8 @@ public class pCompiler {
    */
   // restOfMethodDeclarator ::= ( formalParameters* )? ")" block.
   //
+  // avoid stackPointer+ constant 0 if method doesn't need stack space for local
+  // variables.
   // TODO implement semantic analysis of modifiers in methodDeclaration.
   // TODO implement stopSet in methodDeclaration.
   // TODO implement code generation for less than trivial return statement.

@@ -53,15 +53,13 @@ public class TestLedTest extends AbstactRegressionTest {
     assertTrue(singleTest("ledtst.j"));
   }
 
-  // TODO enable test
-  // @Test
+  @Test
   public void test3() {
     setConfig("ledtest/3_LocalVariableNoParameter");
     assertTrue(singleTest("ledtst.j"));
   }
 
-  // TODO enable test
-  // @Test
+  @Test
   public void test4() {
     setConfig("ledtest/4_MethodWithParameters");
     assertTrue(singleTest("ledtst.j"));
