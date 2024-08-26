@@ -23,7 +23,7 @@ public class MachineCodeParser {
         String line = br.readLine();
         while (line != null) {
           pos = 0;
-          result.add(parseLine(line));
+          result.addAll(parseLine(line));
           line = br.readLine();
         }
       } catch (IOException e) {
@@ -42,8 +42,8 @@ public class MachineCodeParser {
     return result;
   }
 
-  protected Instruction parseLine(String line) {
-    Instruction result = new Instruction(FunctionType.stop);
+  protected ArrayList<Instruction> parseLine(String line) {
+    ArrayList<Instruction> result = new ArrayList<Instruction>();
 
     // ignore whitespace and line number
     skipSpaces(line);
@@ -53,122 +53,129 @@ public class MachineCodeParser {
     if (pos < line.length() && line.charAt(pos) == ';') {
       pos++;
       if (pos == line.length()) {
-        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, ""));
+        result.add(new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, "")));
       } else {
-        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, line.substring(pos)));
+        result.add(new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, line.substring(pos))));
       }
     } else {
       String keyword = parseKeyword(line);
       FunctionType functionType = FunctionType.valueFor(keyword);
-      switch (functionType) {
-        /*******************************
-         * instructions without operands.
-         */
-        case acc16CompareAcc8:
-        case acc16ToAcc8:
-        case acc8CompareAcc16:
-        case acc8ToAcc16:
-        case read:
-        case returnFunction:
-        case stackAcc16:
-        case stackAcc16ToAcc8:
-        case stackAcc8:
-        case stackAcc8ToAcc16:
-        case stackBasePointer:
-        case stop:
-        case unstackAcc16:
-        case unstackAcc8:
-        case unstackBasePointer:
-        case writeAcc16:
-        case writeAcc8:
-        case writeLineAcc16:
-        case writeLineAcc8:
-        case writeLineString:
-        case writeString:
-          result = new Instruction(functionType);
-          break;
-        /*******************************
-         * instructions with address operand.
-         */
-        case call:
-          result = parseCallFunction(line, functionType);
-          break;
-        /*******************************
-         * instructions with one byte operand.
-         */
-        case acc8Load:
-        case acc8Store:
-          result = parseFunctionWithByteOperand(line, functionType);
-          break;
-        /*******************************
-         * instructions with one word operand.
-         */
-        case acc16Load:
-        case acc16Store:
-        case basePointerLoad:
-        case stackPointerLoad:
-        case stackPointerPlus:
-          result = parseFunctionWithWordOperand(line, functionType);
-          break;
-        /*******************************
-         * other instructions with one or more operands.
-         */
-        case importFunction:
-        case packageFunction:
-          result = parsePackageOrImportFunction(line, functionType);
-          break;
-        case classFunction:
-          result = parseClassFunction(line, functionType);
-          break;
-        case method:
-          result = parseMethod(line, functionType);
-          break;
-        case stringConstant:
-          result = parseStringConstant(line, lineNumber);
-          break;
-        /*******************************
-         * TODO.
-         */
-        case acc16And:
-        case acc16Compare:
-        case acc16Div:
-        case acc16Minus:
-        case acc16Or:
-        case acc16Plus:
-        case acc16Times:
-        case acc16Xor:
-        case acc8And:
-        case acc8Compare:
-        case acc8Div:
-        case acc8Minus:
-        case acc8Or:
-        case acc8Plus:
-        case acc8Times:
-        case acc8Xor:
-        case br:
-        case brEq:
-        case brGe:
-        case brGt:
-        case brLe:
-        case brLt:
-        case brNe:
-        case decrement16:
-        case decrement8:
-        case divAcc16:
-        case divAcc8:
-        case increment16:
-        case increment8:
-        case input:
-        case minusAcc16:
-        case minusAcc8:
-        case output:
-        case revAcc16Compare:
-        case revAcc8Compare:
-        case stackAcc16Load:
-        case stackAcc8Load:
-          throw new RuntimeException("Internal error; functionType not implemented yet: " + keyword);
-        default:
-          throw new RuntimeException("Internal error; not supported functionType: " + keyword);
+      if (functionType == FunctionType.output) {
+        result = parseOutputFunction(line);
+      } else {
+        Instruction oneInstruction = new Instruction(FunctionType.stop);
+        switch (functionType) {
+          /*******************************
+           * instructions without operands.
+           */
+          case acc16CompareAcc8:
+          case acc16ToAcc8:
+          case acc8CompareAcc16:
+          case acc8ToAcc16:
+          case read:
+          case returnFunction:
+          case stackAcc16:
+          case stackAcc16ToAcc8:
+          case stackAcc8:
+          case stackAcc8ToAcc16:
+          case stackBasePointer:
+          case stop:
+          case unstackAcc16:
+          case unstackAcc8:
+          case unstackBasePointer:
+          case writeAcc16:
+          case writeAcc8:
+          case writeLineAcc16:
+          case writeLineAcc8:
+          case writeLineString:
+          case writeString:
+            oneInstruction = new Instruction(functionType);
+            break;
+          /*******************************
+           * instructions with address operand.
+           */
+          case br:
+          case brEq:
+          case call:
+            oneInstruction = parseCallFunction(line, functionType);
+            break;
+          /*******************************
+           * instructions with one byte operand.
+           */
+          case acc8Compare:
+          case acc8Load:
+          case acc8Store:
+          case decrement8:
+            oneInstruction = parseFunctionWithByteOperand(line, functionType);
+            break;
+          /*******************************
+           * instructions with one word operand.
+           */
+          case acc16Load:
+          case acc16Store:
+          case basePointerLoad:
+          case decrement16:
+          case stackPointerLoad:
+          case stackPointerPlus:
+            oneInstruction = parseFunctionWithWordOperand(line, functionType);
+            break;
+          /*******************************
+           * other instructions with one or more operands.
+           */
+          case importFunction:
+            oneInstruction = parsePackageOrImportFunction(line, functionType);
+            break;
+          case classFunction:
+            oneInstruction = parseClassFunction(line, functionType);
+            break;
+          case method:
+            oneInstruction = parseMethod(line, functionType);
+            break;
+          case packageFunction:
+            oneInstruction = parsePackageOrImportFunction(line, functionType);
+            break;
+          case stringConstant:
+            oneInstruction = parseStringConstant(line, lineNumber);
+            break;
+          /*******************************
+           * TODO.
+           */
+          case acc16And:
+          case acc16Compare:
+          case acc16Div:
+          case acc16Minus:
+          case acc16Or:
+          case acc16Plus:
+          case acc16Times:
+          case acc16Xor:
+          case acc8And:
+          case acc8Div:
+          case acc8Minus:
+          case acc8Or:
+          case acc8Plus:
+          case acc8Times:
+          case acc8Xor:
+          case brGe:
+          case brGt:
+          case brLe:
+          case brLt:
+          case brNe:
+          case divAcc16:
+          case divAcc8:
+          case increment16:
+          case increment8:
+          case input:
+          case minusAcc16:
+          case minusAcc8:
+          case revAcc16Compare:
+          case revAcc8Compare:
+          case stackAcc16Load:
+          case stackAcc8Load:
+            throw new RuntimeException("Internal error; functionType not implemented yet: " + keyword);
+          default:
+            throw new RuntimeException("Internal error; not supported functionType: " + keyword);
+        }
+        result.add(oneInstruction);
       }
       skipSpaces(line);
     }
@@ -185,6 +192,25 @@ public class MachineCodeParser {
       label.strValue = parseKeyword(line);
     }
     return new Instruction(functionType, label);
+  }
+
+  /**
+   * Parse: output port operand1 value operand2
+   * 
+   * @param line
+   *          with M-code. eg 129 output port 0x65 value 0x00
+   *          01234567890123456789012345678901 00000000001111111111222222222233
+   * @return list of generated Z80 instructions. eg LD A,00BH OUT0 (WDTCR),A
+   */
+  private ArrayList<Instruction> parseOutputFunction(String line) {
+    ArrayList<Instruction> result = new ArrayList<Instruction>();
+
+    // keyword output has already been read. Read the port and value operands.
+    Operand port = parseOperand(line, DataType.byt);
+    Operand value = parseOperand(line, DataType.byt);
+    result.add(new Instruction(FunctionType.output, port, value));
+
+    return result;
   }
 
   private Instruction parseStringConstant(String line, int lineNumber) {
@@ -207,7 +233,7 @@ public class MachineCodeParser {
   }
 
   /**
-   * Parse acc16= operand function.
+   * Parse acc8= operand function.
    * 
    * @param line
    * @param functionType
@@ -237,6 +263,19 @@ public class MachineCodeParser {
   }
 
   /**
+   * @param line
+   * @param functionType
+   * @return
+   */
+  protected Instruction parsePackageOrImportFunction(String line, FunctionType functionType) {
+    Instruction result;
+    skipSpaces(line);
+    String name = skipUntil(line, ';');
+    result = new Instruction(functionType, name, null, null);
+    return result;
+  }
+
+  /**
    * Parse operand.
    * 
    * @param line
@@ -260,6 +299,16 @@ public class MachineCodeParser {
       skipSpaces(line);
       int value = parseNumber(line);
       result = new Operand(OperandType.CONSTANT, datatype, value);
+    } else if ("port".equals(keyword)) {
+      // port 0x65
+      skipSpaces(line);
+      int value = parseNumber(line);
+      result = new Operand(OperandType.CONSTANT, datatype, value);
+    } else if ("value".equals(keyword)) {
+      // value 0x00
+      skipSpaces(line);
+      int value = parseNumber(line);
+      result = new Operand(OperandType.CONSTANT, datatype, value);
     } else if ("stackPointer".equals(keyword)) {
       result = new Operand(OperandType.STACK_POINTER);
     } else if ("stringconstant".equals(keyword)) {
@@ -270,19 +319,6 @@ public class MachineCodeParser {
       throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
     }
 
-    return result;
-  }
-
-  /**
-   * @param line
-   * @param functionType
-   * @return
-   */
-  protected Instruction parsePackageOrImportFunction(String line, FunctionType functionType) {
-    Instruction result;
-    skipSpaces(line);
-    String name = skipUntil(line, ';');
-    result = new Instruction(functionType, name, null, null);
     return result;
   }
 
@@ -384,16 +420,42 @@ public class MachineCodeParser {
 
   protected int parseNumber(String line) {
     int result = 0;
+    int radix = 10;
     int sign = 1;
     if ('-' == line.charAt(pos)) {
       pos++;
       sign = -1;
     }
-    while (pos < line.length() && Character.isDigit(line.charAt(pos))) {
-      result = result * 10 + ((int) line.charAt(pos) - (int) '0');
+    if (pos + 1 < line.length() && line.charAt(pos) == '0' && line.charAt(pos + 1) == 'x') {
+      radix = 16;
+      pos++;
+      pos++;
+    }
+    while (pos < line.length() && isValidDigit(radix, line.charAt(pos))) {
+      result = result * radix + digitValue(radix, line.charAt(pos));
       pos++;
     }
     return sign * result;
+  }
+
+  private boolean isValidDigit(int radix, char charAt) {
+    if (radix == 10) {
+      return Character.isDigit(charAt);
+    } else if (radix == 16) {
+      return Character.isDigit(charAt) || Character.toUpperCase(charAt) >= 'A' && Character.toUpperCase(charAt) <= 'F';
+    } else {
+      throw new RuntimeException("Internal error; not supported radix " + radix);
+    }
+  }
+
+  private int digitValue(int radix, char charAt) {
+    if (Character.isDigit(charAt)) {
+      return (int) charAt - (int) '0';
+    } else if (Character.toUpperCase(charAt) >= 'A' && Character.toUpperCase(charAt) <= 'F') {
+      return (int) 10 + charAt - 'A';
+    } else {
+      throw new RuntimeException("Internal error; invalid digit " + charAt + " for radix " + radix);
+    }
   }
 
   protected String skipUntil(String line, char stopChar) {
