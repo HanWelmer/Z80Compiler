@@ -1,0 +1,1509 @@
+2000             SOC     equ 02000H        ;start of code, i.e.lowest external RAM address.
+2000             TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data.
+2000                     .ORG  SOC
+2000             start:
+2000 31 00 FD            LD    SP,TOS
+2003             L0:
+2003 CD BF 20            CALL  L223
+2006             L1:
+2006 C3 71 01            JP    00171H      ;Jump to Zilog Z80183 Monitor.
+2009             L2:
+2009                     ;;ledtst.j(0) /* Z80S183 program that tests switching on/off the LED at the PWRSWTCH  output. */
+2009             L3:
+2009                     ;;ledtst.j(1) /* Transcribed from LEDTest.asm to ledtest.j */
+2009             L4:
+2009                     ;;ledtst.j(2) 
+2009             L5:
+2009                     ;;ledtst.j(3) import Thread;
+2009             L6:
+2009             L7:
+2009                     ;;Thread.j(0) 
+2009             L8:
+2009                     ;;Thread.j(1) /* Z80S183 program that tests switching on/off the LED at the PWRSWTCH  output. */
+2009             L9:
+2009                     ;;Thread.j(2) /* Transcribed from LEDTest.asm to ledtest.j */
+2009             L10:
+2009                     ;;Thread.j(3) 
+2009             L11:
+2009                     ;;Thread.j(4) class Thread {
+2009             L12:
+2009                     ;class Thread []
+2009             L13:
+2009                     ;;Thread.j(5) 
+2009             L14:
+2009                     ;;Thread.j(6)   /**
+2009             L15:
+2009                     ;;Thread.j(7)    * Wait 1 msec at 18,432 MHz with no wait states.
+2009             L16:
+2009                     ;;Thread.j(8)    * 
+2009             L17:
+2009                     ;;Thread.j(9)    * Assumes that code can be run from internal RAM with 1 wait state.
+2009             L18:
+2009                     ;;Thread.j(10)    * Assumes data can be read/written to internal RAM with 1 wait state.
+2009             L19:
+2009                     ;;Thread.j(11)    * Assumes the Z80S183 is driven by an 18.432 MHz clock at the XTAL pin
+2009             L20:
+2009                     ;;Thread.j(12)    * 
+2009             L21:
+2009                     ;;Thread.j(13)    * With b=255 the routine requires 108 + b * 71 = 18213 T-states, 
+2009             L22:
+2009                     ;;Thread.j(14)    * which is 219 T-states or 11,8 microseconds short of 1 millisecond.
+2009             L23:
+2009                     ;;Thread.j(15)    * 
+2009             L24:
+2009                     ;;Thread.j(16)    * Duplicating the for loop with a total of 257 for b and c 
+2009             L25:
+2009                     ;;Thread.j(17)    * requires 132 + (b + c) * 71 = 18379 T-states,
+2009             L26:
+2009                     ;;Thread.j(18)    * which is 53 T-states or 2,8 microseconds short of 1 millisecond.
+2009             L27:
+2009                     ;;Thread.j(19)    */
+2009             L28:
+2009                     ;;Thread.j(20)   private static void sleepOneMillisecond() {
+2009             L29:
+2009                     ;method Thread.sleepOneMillisecond [private, static] void ()
+2009             L30:
+2009 DD E5               PUSH  IX
+200B             L31:
+200B DD 21 00 00         LD    IX,0x0000
+200F DD 39               ADD   IX,SP
+2011             L32:
+2011 21 FF FF            LD    HL,65535
+2014 39                  ADD   HL,SP
+2015 F9                  LD    SP,HL
+2016             L33:
+2016                     ;;Thread.j(21)     for (byte b = 255; b!=0; b--) ;
+2016             L34:
+2016 3E FF               LD    A,255
+2018             L35:
+2018 DD 77 FF            LD    (IX - 1),A
+201B             L36:
+201B DD 7E FF            LD    A,(IX - 1)
+201E             L37:
+201E D6 00               SUB   A,0
+2020             L38:
+2020 CA 2F 20            JP    Z,L44
+2023             L39:
+2023 C3 2C 20            JP    L42
+2026             L40:
+2026 DD 35 FF            DEC   (IX - 1)
+2029             L41:
+2029 C3 1B 20            JP    L36
+202C             L42:
+202C C3 26 20            JP    L40
+202F             L43:
+202F                     ;;Thread.j(22)   }
+202F             L44:
+202F DD F9               LD    SP,IX
+2031             L45:
+2031 DD E1               POP   IX
+2033             L46:
+2033 C9                  return
+2034             L47:
+2034                     ;;Thread.j(23) 
+2034             L48:
+2034                     ;;Thread.j(24)   /**
+2034             L49:
+2034                     ;;Thread.j(25)    * sleep for n miliseconds.
+2034             L50:
+2034                     ;;Thread.j(26)    */
+2034             L51:
+2034                     ;;Thread.j(27)   public static void sleep(word n) {
+2034             L52:
+2034                     ;method Thread.sleep [public, static] void (word n {bp+0})
+2034             L53:
+2034 DD E5               PUSH  IX
+2036             L54:
+2036 DD 21 00 00         LD    IX,0x0000
+203A DD 39               ADD   IX,SP
+203C             L55:
+203C 21 00 00            LD    HL,65536
+203F 39                  ADD   HL,SP
+2040 F9                  LD    SP,HL
+2041             L56:
+2041                     ;;Thread.j(28)     while (n != 0) {
+2041             L57:
+2041 DD 6E 04            LD    L,(IX + 4)
+2044 DD 66 05            LD    H,(IX + 5)
+2047             L58:
+2047 3E 00               LD    A,0
+2049             L59:
+2049 5F                  LD    E,A
+204A 16 00               LD    D,0
+204C EB                  EX    DE,HL
+204D B7                  OR    A
+204E ED 52               SBC   HL,DE
+2050             L60:
+2050 CA 66 20            JP    Z,L68
+2053             L61:
+2053                     ;;Thread.j(29)       sleepOneMillisecond();
+2053             L62:
+2053 CD 09 20            CALL  L29
+2056             L63:
+2056                     ;;Thread.j(30)       n--;
+2056             L64:
+2056 DD 6E 04            LD    L,(IX + 4)
+2059 DD 66 05            LD    H,(IX + 5)
+205C 2B                  DEC   HL
+205D DD 75 04            LD    (IX + 4),L
+2060 DD 74 05            LD    (IX + 5),H
+2063             L65:
+2063                     ;;Thread.j(31)     }
+2063             L66:
+2063 C3 41 20            JP    L57
+2066             L67:
+2066                     ;;Thread.j(32)   }
+2066             L68:
+2066 DD F9               LD    SP,IX
+2068             L69:
+2068 DD E1               POP   IX
+206A             L70:
+206A C9                  return
+206B             L71:
+206B                     ;;Thread.j(33) 
+206B             L72:
+206B                     ;;Thread.j(34) }
+206B             L73:
+206B                     ;;ledtst.j(4) 
+206B             L74:
+206B                     ;;ledtst.j(5) class LEDTest {
+206B             L75:
+206B                     ;class LEDTest []
+206B             L76:
+206B                     ;;ledtst.j(6)   /*******************************
+206B             L77:
+206B                     ;;ledtst.j(7)   To compile this class and generate Z80 asm, listing and hex files:
+206B             L78:
+206B                     ;;ledtst.j(8)   - cd src\test\resources\jCode\ledtest\5_ImportThread
+206B             L79:
+206B                     ;;ledtst.j(9)   - java -jar ..\..\..\..\..\..\target\z80Compiler-1.0-SNAPSHOT.jar -z -b ledtst.j
+206B             L80:
+206B                     ;;ledtst.j(10)   Assumes that code can be run from internal RAM with 1 wait state.
+206B             L81:
+206B                     ;;ledtst.j(11)   Assumes data can be read/written to internal RAM with 1 wait state.
+206B             L82:
+206B                     ;;ledtst.j(12)   Assumes the Z80S183 is driven by an 18.432 MHz clock at the XTAL pin
+206B             L83:
+206B                     ;;ledtst.j(13)   Assumes that an active-low LED is available at the PWRSWTCH pin:
+206B             L84:
+206B                     ;;ledtst.j(14)    - connect anode of low-current (2 mA) LED to VCC
+206B             L85:
+206B                     ;;ledtst.j(15)    - connect cathode of low-current LED to 1k8 resistor
+206B             L86:
+206B                     ;;ledtst.j(16)    - connect other end of resistor to PWR_SW (pin 13 of J23).
+206B             L87:
+206B                     ;;ledtst.j(17)   
+206B             L88:
+206B                     ;;ledtst.j(18)   Connect Z80S183 evaluation board via DB9 (male-female) cable to RS232 of host computer.
+206B             L89:
+206B                     ;;ledtst.j(19)   Start hyperterminal or TeraTerm:
+206B             L90:
+206B                     ;;ledtst.j(20)    - Select serial communication using COM1
+206B             L91:
+206B                     ;;ledtst.j(21)    - Set up | Serial port
+206B             L92:
+206B                     ;;ledtst.j(22)      * COM1
+206B             L93:
+206B                     ;;ledtst.j(23)      * 57600
+206B             L94:
+206B                     ;;ledtst.j(24)      * 8N2
+206B             L95:
+206B                     ;;ledtst.j(25)      * no flow control
+206B             L96:
+206B                     ;;ledtst.j(26)    - connect 9V DC adapter to Z80S183 evaluation board.
+206B             L97:
+206B                     ;;ledtst.j(27)    - Press RESET on Z80S183 evaluation board
+206B             L98:
+206B                     ;;ledtst.j(28)      The text Zilog Z80183 Monitor Version 2.8 should appear.
+206B             L99:
+206B                     ;;ledtst.j(29)   Upload Intel hex file ledtst.hex:
+206B             L100:
+206B                     ;;ledtst.j(30)    -  type L
+206B             L101:
+206B                     ;;ledtst.j(31)    -  File | Send file
+206B             L102:
+206B                     ;;ledtst.j(32)       * Browse to file ledtst.hex and select OK
+206B             L103:
+206B                     ;;ledtst.j(33)       * The text 10(10) records in Hex file should appear
+206B             L104:
+206B                     ;;ledtst.j(34)   Check memory contents:
+206B             L105:
+206B                     ;;ledtst.j(35)    -  D 2000 32
+206B             L106:
+206B                     ;;ledtst.j(36)   Run program
+206B             L107:
+206B                     ;;ledtst.j(37)    -  G 2000
+206B             L108:
+206B                     ;;ledtst.j(38)    - The LED should blink at a rate of 1Hz.
+206B             L109:
+206B                     ;;ledtst.j(39)   *******************************/
+206B             L110:
+206B                     ;;ledtst.j(40) 
+206B             L111:
+206B                     ;;ledtst.j(41)   // Definition of on-chip Z80S183 registers
+206B             L112:
+206B                     ;;ledtst.j(42)   //                Name  Address  Description
+206B             L113:
+206B                     ;;ledtst.j(43)   //                ====  =======  =========
+206B             L114:
+206B                     ;;ledtst.j(44)   static final byte WDTCR = 0x65;  //Watchdog Timer Control Register
+206B             L115:
+206B                     ;;ledtst.j(45)   static final byte SCR   = 0x7F;  //System Configuration Register P91
+206B             L116:
+206B                     ;;ledtst.j(46)   static final byte CCR   = 0x1F;  //CPU Control Register P84
+206B             L117:
+206B                     ;;ledtst.j(47)   static final byte DCNTL = 0x32;  //DMA/Wait Control Register P121
+206B             L118:
+206B                     ;;ledtst.j(48)   static final byte WSGCR = 0x6B;  //Wait State Generator Control Register P96
+206B             L119:
+206B                     ;;ledtst.j(49)   static final byte PCR   = 0x7E;  //Power Control Register
+206B             L120:
+206B                     ;;ledtst.j(50) 
+206B             L121:
+206B                     ;;ledtst.j(51)   //Device initialisation
+206B             L122:
+206B                     ;;ledtst.j(52)   public static void init() {
+206B             L123:
+206B                     ;method LEDTest.init [public, static] void ()
+206B             L124:
+206B DD E5               PUSH  IX
+206D             L125:
+206D DD 21 00 00         LD    IX,0x0000
+2071 DD 39               ADD   IX,SP
+2073             L126:
+2073 21 00 00            LD    HL,65536
+2076 39                  ADD   HL,SP
+2077 F9                  LD    SP,HL
+2078             L127:
+2078                     ;;ledtst.j(53)     // Enable writing to system ctrl registers
+2078             L128:
+2078                     ;;ledtst.j(54)     output(WDTCR, 0x00);
+2078             L129:
+2078 3E 00               LD    A,0
+207A ED 39 65            OUT0  (065H),A
+207D             L130:
+207D                     ;;ledtst.j(55)     // LD      A,00BH
+207D             L131:
+207D                     ;;ledtst.j(56)     // OUT0    (WDTCR),A
+207D             L132:
+207D                     ;;ledtst.j(57) 
+207D             L133:
+207D                     ;;ledtst.j(58)     // System configuration Register P91
+207D             L134:
+207D                     ;;ledtst.j(59)     // b7 = 0 on-chip ROM disabled
+207D             L135:
+207D                     ;;ledtst.j(60)     // b6 = 1 on-chip RAM enabled
+207D             L136:
+207D                     ;;ledtst.j(61)     // b5 = 0 on-chip RAM at xF800H-xFFFFH
+207D             L137:
+207D                     ;;ledtst.j(62)     // b4 = 1 ROMCS enabled/disabled
+207D             L138:
+207D                     ;;ledtst.j(63)     // b3 = 1 RAMCS enabled/disabled
+207D             L139:
+207D                     ;;ledtst.j(64)     // b2 = 1 IOCS  enabled/disabled
+207D             L140:
+207D                     ;;ledtst.j(65)     // b10=00 PHI = EXTAL clock
+207D             L141:
+207D                     ;;ledtst.j(66)     output(SCR, 0x5C);
+207D             L142:
+207D 3E 5C               LD    A,92
+207F ED 39 7F            OUT0  (07FH),A
+2082             L143:
+2082                     ;;ledtst.j(67)     // LD      A,05CH
+2082             L144:
+2082                     ;;ledtst.j(68)     // OUT0    (SCR),A
+2082             L145:
+2082                     ;;ledtst.j(69)   
+2082             L146:
+2082                     ;;ledtst.j(70)     // CPU Control Register P84
+2082             L147:
+2082                     ;;ledtst.j(71)     // b7 = 1 PHI = XTAL / 1
+2082             L148:
+2082                     ;;ledtst.j(72)     // b63=00 SLP instruction enters sleep mode
+2082             L149:
+2082                     ;;ledtst.j(73)     // b5 = 0 BREQ in standby ignored
+2082             L150:
+2082                     ;;ledtst.j(74)     // b4 = 0 PHI low noise disabled
+2082             L151:
+2082                     ;;ledtst.j(75)     // b2 = x reserved
+2082             L152:
+2082                     ;;ledtst.j(76)     // b1 = 0 IORD/IOWR low noise disabled
+2082             L153:
+2082                     ;;ledtst.j(77)     // b0 = 0 A19-0/D7-0 low noise disabled
+2082             L154:
+2082                     ;;ledtst.j(78)     output(CCR, 0x80);    
+2082             L155:
+2082 3E 80               LD    A,128
+2084 ED 39 1F            OUT0  (01FH),A
+2087             L156:
+2087                     ;;ledtst.j(79)     // LD      A,080H
+2087             L157:
+2087                     ;;ledtst.j(80)     // OUT0    (CCR),A
+2087             L158:
+2087                     ;;ledtst.j(81) 
+2087             L159:
+2087                     ;;ledtst.j(82)     
+2087             L160:
+2087                     ;;ledtst.j(83)     // DMA/Wait Control Register P121
+2087             L161:
+2087                     ;;ledtst.j(84)     // b76=00 0 wait state CPU memory cycle
+2087             L162:
+2087                     ;;ledtst.j(85)     // b54=00 0 wait state CPU I/O cycle
+2087             L163:
+2087                     ;;ledtst.j(86)     // b3 = 0 level detect on DMA1 Request
+2087             L164:
+2087                     ;;ledtst.j(87)     // b2 = 0 level detect on DMA0 Request
+2087             L165:
+2087                     ;;ledtst.j(88)     // b1 = 0 DMA from memory to I/O 
+2087             L166:
+2087                     ;;ledtst.j(89)     // b0 = 0 DMA increasing memory address
+2087             L167:
+2087                     ;;ledtst.j(90)     output(DCNTL, 0x00);
+2087             L168:
+2087 3E 00               LD    A,0
+2089 ED 39 32            OUT0  (032H),A
+208C             L169:
+208C                     ;;ledtst.j(91)     // XOR      A
+208C             L170:
+208C                     ;;ledtst.j(92)     // OUT0    (DCNTL),A
+208C             L171:
+208C                     ;;ledtst.j(93) 
+208C             L172:
+208C                     ;;ledtst.j(94)     // Wait State Generator Control Register P96
+208C             L173:
+208C                     ;;ledtst.j(95)     // b76=00 0 wait states CSROM
+208C             L174:
+208C                     ;;ledtst.j(96)     // b54=00 0 wait states CSRAM
+208C             L175:
+208C                     ;;ledtst.j(97)     // b32=00 0 wait states other
+208C             L176:
+208C                     ;;ledtst.j(98)     // b10=xx reserved
+208C             L177:
+208C                     ;;ledtst.j(99)     output(WSGCR, 0x00);
+208C             L178:
+208C 3E 00               LD    A,0
+208E ED 39 6B            OUT0  (06BH),A
+2091             L179:
+2091                     ;;ledtst.j(100)     // OUT0    (WSGCR),A
+2091             L180:
+2091                     ;;ledtst.j(101) 
+2091             L181:
+2091                     ;;ledtst.j(102)     // Block writing to system ctrl registers
+2091             L182:
+2091                     ;;ledtst.j(103)     output(WDTCR, 0x00);
+2091             L183:
+2091 3E 00               LD    A,0
+2093 ED 39 65            OUT0  (065H),A
+2096             L184:
+2096                     ;;ledtst.j(104)     // XOR     A
+2096             L185:
+2096                     ;;ledtst.j(105)     // OUT0    (WDTCR),A
+2096             L186:
+2096                     ;;ledtst.j(106)   }
+2096             L187:
+2096 DD F9               LD    SP,IX
+2098             L188:
+2098 DD E1               POP   IX
+209A             L189:
+209A C9                  return
+209B             L190:
+209B                     ;;ledtst.j(107) 
+209B             L191:
+209B                     ;;ledtst.j(108)   public static void toggle() {
+209B             L192:
+209B                     ;method LEDTest.toggle [public, static] void ()
+209B             L193:
+209B DD E5               PUSH  IX
+209D             L194:
+209D DD 21 00 00         LD    IX,0x0000
+20A1 DD 39               ADD   IX,SP
+20A3             L195:
+20A3 21 00 00            LD    HL,65536
+20A6 39                  ADD   HL,SP
+20A7 F9                  LD    SP,HL
+20A8             L196:
+20A8                     ;;ledtst.j(109)     // Enable writing to PCR
+20A8             L197:
+20A8                     ;;ledtst.j(110)     output(WDTCR, 0x0B);
+20A8             L198:
+20A8 3E 0B               LD    A,11
+20AA ED 39 65            OUT0  (065H),A
+20AD             L199:
+20AD                     ;;ledtst.j(111)     //LD      A,00BH
+20AD             L200:
+20AD                     ;;ledtst.j(112)     //OUT0    (WDTCR),A
+20AD             L201:
+20AD                     ;;ledtst.j(113) 
+20AD             L202:
+20AD                     ;;ledtst.j(114)     // Toggle LED at PWR_SW
+20AD             L203:
+20AD                     ;;ledtst.j(115)     output(PCR, input(PCR) ^ 0x20);
+20AD             L204:
+20AD ED 38 7E            IN0  A,(07EH)
+20B0             L205:
+20B0 EE 20               XOR   A,32
+20B2             L206:
+20B2 ED 39 7E            OUT0  (07EH),A
+20B5             L207:
+20B5                     ;;ledtst.j(116)     //IN0     A,(PCR)
+20B5             L208:
+20B5                     ;;ledtst.j(117)     //XOR     A,020H
+20B5             L209:
+20B5                     ;;ledtst.j(118)     //OUT0    (PCR),A
+20B5             L210:
+20B5                     ;;ledtst.j(119) 
+20B5             L211:
+20B5                     ;;ledtst.j(120)     // Disable writing to PCR
+20B5             L212:
+20B5                     ;;ledtst.j(121)     output(WDTCR, 0x00);
+20B5             L213:
+20B5 3E 00               LD    A,0
+20B7 ED 39 65            OUT0  (065H),A
+20BA             L214:
+20BA                     ;;ledtst.j(122)     //XOR     A,A
+20BA             L215:
+20BA                     ;;ledtst.j(123)     //OUT0    (WDTCR),A
+20BA             L216:
+20BA                     ;;ledtst.j(124)   }
+20BA             L217:
+20BA DD F9               LD    SP,IX
+20BC             L218:
+20BC DD E1               POP   IX
+20BE             L219:
+20BE C9                  return
+20BF             L220:
+20BF                     ;;ledtst.j(125) 
+20BF             L221:
+20BF                     ;;ledtst.j(126)   // Blink LED on/off in a XXxxXXxx pattern at 1 Hz.
+20BF             L222:
+20BF                     ;;ledtst.j(127)   public static void main() {
+20BF             L223:
+20BF                     ;method LEDTest.main [public, static] void ()
+20BF             L224:
+20BF DD E5               PUSH  IX
+20C1             L225:
+20C1 DD 21 00 00         LD    IX,0x0000
+20C5 DD 39               ADD   IX,SP
+20C7             L226:
+20C7 21 00 00            LD    HL,65536
+20CA 39                  ADD   HL,SP
+20CB F9                  LD    SP,HL
+20CC             L227:
+20CC                     ;;ledtst.j(128)     init();
+20CC             L228:
+20CC CD 6B 20            CALL  L123
+20CF             L229:
+20CF                     ;;ledtst.j(129)     while (1==1) {
+20CF             L230:
+20CF 3E 01               LD    A,1
+20D1             L231:
+20D1 D6 01               SUB   A,1
+20D3             L232:
+20D3 C2 E8 20            JP    NZ,L243
+20D6             L233:
+20D6                     ;;ledtst.j(130)       toggle();
+20D6             L234:
+20D6 CD 9B 20            CALL  L192
+20D9             L235:
+20D9                     ;;ledtst.j(131)       Thread.sleep(500); // Sleep for 500 miliseconds.
+20D9             L236:
+20D9 21 F4 01            LD    HL,500
+20DC             L237:
+20DC E5                  PUSH HL
+20DD             L238:
+20DD CD 34 20            CALL  L52
+20E0             L239:
+20E0 21 02 00            LD    HL,2
+20E3 39                  ADD   HL,SP
+20E4 F9                  LD    SP,HL
+20E5             L240:
+20E5                     ;;ledtst.j(132)     }
+20E5             L241:
+20E5 C3 CF 20            JP    L230
+20E8             L242:
+20E8                     ;;ledtst.j(133)   }
+20E8             L243:
+20E8 DD F9               LD    SP,IX
+20EA             L244:
+20EA DD E1               POP   IX
+20EC             L245:
+20EC C9                  return
+20ED             L246:
+20ED                     ;;ledtst.j(134) }
+20ED             CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
+20ED             STAT0   equ 004H          ;147 ASCI0 Status register.
+20ED             TDR0    equ 006H          ;148 ASCI0 Transmit Data Register.
+20ED             RDR0    equ 008H          ;149 ASCI0 Receive Data Register.
+20ED             ERROR   equ 3             ;CNTLA0->OVRN,FE,PE,BRK error flags.
+20ED             TDRE    equ 1             ;STAT0->Tx data register empty bit.
+20ED             OVERRUN equ 6             ;STAT0->OVERRUN bit.
+20ED             RDRF    equ 7             ;STAT0->Rx data register full bit.
+20ED             ;****************
+20ED             ;getChar
+20ED             ;Check if an input character from ASCI0 is available.
+20ED             ;  IN:  none
+20ED             ;  OUT: F: ZERO flag set if no character is available.
+20ED             ;          ZERO flag reset if a character is available.
+20ED             ;       A : character from ASCI0, if available.
+20ED             ;  USES:AF
+20ED             ;****************
+20ED             getChar:
+20ED ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status
+20F0 CB 77               BIT   OVERRUN,A   ;check if ASCIO OVERRUN bit is set
+20F2 20 07               JR    NZ,getChar1 ;-yes: reset error flags
+20F4 CB 7F               BIT   RDRF,A      ;check if ASCIO RDRF bit is set
+20F6 C8                  RET   Z           ;-no: return without a character
+20F7 ED 38 08            IN0   A,(RDR0)    ;-yes:read ASCIO Rx data register
+20FA C9                  RET
+20FB             getChar1:
+20FB ED 38 00            IN0   A,(CNTLA0)  ;read ASCI0 control register
+20FE CB 9F               RES   ERROR,A     ;reset OVRN,FE,PE,BRK flags
+2100 ED 39 00            OUT0  (CNTLA0),A  ;write back to ASCI0 CTRL
+2103 AF                  XOR   A,A
+2104 C9                  RET               ;return without a character
+2105             ;****************
+2105             ;putMsg
+2105             ;Print via ASCI0 a zero terminated string, starting at the return address on the stack.
+2105             ;  IN:  none.
+2105             ;  OUT: none.
+2105             ;  USES:none.
+2105             ;****************
+2105             putMsg:
+2105 E3                  EX    (SP),HL     ;save HL and load return address into HL.
+2106 CD 12 21            CALL  writeStr
+2109 E3                  EX    (SP),HL     ;put return address onto stack and restore HL.
+210A C9                  RET
+210B             ;****************
+210B             ;writeLineStr
+210B             ;Print via ASCI0 a zero terminated string, pointed to by HL, followed by a carriage return.
+210B             ;  IN:  HL:address of zero terminated string to be printed.
+210B             ;  OUT: none.
+210B             ;  USES:HL (point to byte after zero terminated string)
+210B             ;****************
+210B             writeLineStr:
+210B CD 12 21            CALL  writeStr
+210E CD 2E 21            CALL  putCRLF
+2111 C9                  RET
+2112             ;****************
+2112             ;writeStr
+2112             ;Print via ASCI0 a zero terminated string, pointed to by HL.
+2112             ;  IN:  HL:address of zero terminated string to be printed.
+2112             ;  OUT: none.
+2112             ;  USES:HL (point to byte after zero terminated string)
+2112             ;****************
+2112             writeStr:
+2112 F5                  PUSH  AF          ;save registers
+2113             putStr1:
+2113 7E                  LD    A,(HL)      ;get next character
+2114 23                  INC   HL
+2115 B7                  OR    A,A         ;is it zer0?
+2116 28 05               JR    Z,putStr2   ;yes ->return
+2118 CD 21 21            CALL  putChar     ;no->put it to ASCI0
+211B 18 F6               JR    putStr1
+211D             putStr2:
+211D F1                  POP   AF
+211E C9                  RET
+211F             ;****************
+211F             ;putSpace
+211F             ;Send a space character to ASCI0
+211F             ;  IN:  none.
+211F             ;  OUT: none.
+211F             ;  USES:AF
+211F             ;****************
+211F             putSpace:
+211F 3E 20               LD    A,' '       ;load space and continue with putChar.
+2121             ;****************
+2121             ;putChar
+2121             ;Send one character to ASCI0.
+2121             ;  IN:  A = character
+2121             ;  OUT: none.
+2121             ;  USES:none.
+2121             ;****************
+2121             putChar:
+2121 F5                  PUSH  AF          ;send the character via ASCI0
+2122             putChar1:
+2122 ED 38 04            IN0   A,(STAT0)   ;read ASCI0 status register
+2125 CB 4F               BIT   TDRE,A      ;wait until TDRE <> 0
+2127 28 F9               JR    Z,putChar1
+2129 F1                  POP   AF          ;restore AF registers
+212A ED 39 06            OUT0  (TDR0),A    ;write character to ASCI0
+212D C9                  RET
+212E             ;****************
+212E             ;putCRLF
+212E             ;Send CR and LF to ASCI0
+212E             ;  IN:  none.
+212E             ;  OUT: none.
+212E             ;  USES:none.
+212E             ;****************
+212E             putCRLF:
+212E F5                  PUSH  AF
+212F 3E 0D               LD    A,'\r'       ;print carriage return
+2131 CD 21 21            CALL  putChar
+2134 3E 0A               LD    A,'\n'       ;print line feed
+2136 CD 21 21            CALL  putChar
+2139 F1                  POP   AF
+213A C9                  RET
+213B             ;****************
+213B             ;putErase
+213B             ;Erase the latest character at ASCI0
+213B             ;  IN:  none.
+213B             ;  OUT: none.
+213B             ;  USES:AF
+213B             ;****************
+213B             putErase:
+213B 3E 08               LD    A,'\b'       ;print backspace
+213D CD 21 21            CALL  putChar
+2140 CD 1F 21            CALL  putSpace    ;print space (erase character)
+2143 3E 08               LD    A,'\b'      ;print backspace
+2145 18 DA               JR    putChar
+2147             ;****************
+2147             ;putBell
+2147             ;Send a Bell character to ASCI0
+2147             ;  IN:  none.
+2147             ;  OUT: none.
+2147             ;  USES:AF
+2147             ;****************
+2147             putBell:
+2147 3E 07               LD    A,07        ;ring the bell at ASCI0
+2149 18 D6               JR    putChar
+214B             ;****************
+214B             ;putHexHL
+214B             ;Print HL register pair as 4 hex digits
+214B             ;  IN:  HL = word to be printed.
+214B             ;  OUT: none.
+214B             ;  USES:none.
+214B             ;****************
+214B             putHexHL:
+214B F5                  PUSH  AF          ;save used registers
+214C 7C                  LD    A,H         ;print H as 2 hex digits
+214D CD 56 21            CALL  putHexA
+2150 7D                  LD    A,L         ;print L as 2 hex digits
+2151 CD 56 21            CALL  putHexA
+2154 F1                  POP   AF          ;restore used registers
+2155 C9                  RET
+2156             ;****************
+2156             ;putHexA
+2156             ;Print A register as 2 hex digits
+2156             ;  IN:  A = byte to be printed
+2156             ;  OUT: none.
+2156             ;  USES:none.
+2156             ;****************
+2156             putHexA:
+2156 F5                  PUSH  AF          ;save input
+2157 1F                  RRA               ;shift upper nibble to the right
+2158 1F                  RRA
+2159 1F                  RRA
+215A 1F                  RRA
+215B CD 5F 21            CALL  putHexA1    ;print upper nibble
+215E F1                  POP   AF          ;restore input & print lower nibble
+215F             putHexA1:
+215F F5                  PUSH  AF          ;save input
+2160 E6 0F               AND   A,00FH      ;mask lower nibble
+2162 C6 30               ADD   A,'0'       ;convert to hex digit
+2164 FE 3A               CP    A,'9'+1
+2166 38 02               JR    C,putHexA2
+2168 C6 07               ADD   A,07
+216A             putHexA2:
+216A CD 21 21            CALL  putChar
+216D F1                  POP   AF          ;restore input
+216E C9                  RET               ;and return
+216F             ;****************
+216F             ;mul16
+216F             ;16 by 16 bit unsigned multiplication with 16 bit result.
+216F             ;  IN:  HL = operand 1
+216F             ;       DE = operand 2
+216F             ;  OUT: HL = HL * DE low part
+216F             ;  USES:DE
+216F             ;  Size   25 bytes
+216F             ;  Time  160 cycles
+216F             ;****************
+216F             mul16:
+216F                     ;HL = HL * DE
+216F                     ;        H  L
+216F                     ;        D  E
+216F                     ;    --------*
+216F                     ;          EL
+216F                     ;       EH  0
+216F                     ;       DL  0
+216F                     ; -----------+
+216F                     ;        R  S
+216F                     ;S = ELlow
+216F                     ;R = ELhigh+EHlow+DLlow
+216F C5                  PUSH  BC          ;11  11 save BC
+2170 44                  LD    B,H         ; 4  15 copy HL to BC
+2171 4D                  LD    C,L         ; 4  19
+2172 63                  LD    H,E         ; 4  23 HL contains EL
+2173 ED 6C               MLT   HL          ;17  40
+2175 E5                  PUSH  HL          ;11  51
+2176 63                  LD    H,E         ; 4  55 HL contains EH aka EB
+2177 68                  LD    L,B         ; 4  59
+2178 ED 6C               MLT   HL          ;17  76
+217A 45                  LD    B,L         ; 4  80 save EHlow in B
+217B 62                  LD    H,D         ; 4  84 HL contains DL aka DC
+217C 69                  LD    L,C         ; 4  88
+217D ED 6C               MLT   HL          ;17 105
+217F 55                  LD    D,L         ; 4 109 DLlow into DE
+2180 1E 00               LD    E,0         ; 6 115
+2182 E1                  POP   HL          ; 9 124 add EL+DElow
+2183 19                  ADD   HL,DE       ; 7 131
+2184 50                  LD    D,B         ; 4 135 add EL+DElow+EHlow
+2185 19                  ADD   HL,DE       ; 7 142
+2186 C1                  POP   BC          ; 9 151 restore BC
+2187 C9                  RET               ; 9 160
+2188             ;****************
+2188             ;mul16_10
+2188             ;multiply a 16 bit unsigned number by 10 with a 16 bit result.
+2188             ;  IN:  HL = operand
+2188             ;  OUT: HL = HL * 10; low part
+2188             ;  USES:Flags
+2188             ;  Size   9 bytes
+2188             ;  Time   65 cycles
+2188             ;****************
+2188             mul16_10:
+2188 D5                  PUSH  DE          ;11 11
+2189 54                  LD    D,H         ; 4 15
+218A 5D                  LD    E,L         ; 4 19
+218B 29                  ADD   HL,HL       ; 7 26 times 2
+218C 29                  ADD   HL,HL       ; 7 33 times 4
+218D 19                  ADD   HL,DE       ; 7 40 times 5
+218E 29                  ADD   HL,HL       ; 7 47 times 10
+218F D1                  POP   DE          ; 9 56
+2190 C9                  RET               ; 9 65
+2191             ;****************
+2191             ;mul16_8
+2191             ;16 by 8 bit unsigned multiplication with 16 bit result.
+2191             ;  IN:  HL = operand 1
+2191             ;        A = operand 2
+2191             ;  OUT: HL = HL * A low part
+2191             ;  USES:AF
+2191             ;  Size   .. bytes
+2191             ;  Time  ... cycles
+2191             ;****************
+2191             mul16_8:
+2191                     ;HL = HL * A
+2191                     ;        H  L
+2191                     ;           A
+2191                     ;    --------*
+2191                     ;          AL
+2191                     ;       AH  0
+2191                     ; -----------+
+2191                     ;        R  S
+2191                     ;S = ALlow
+2191                     ;R = ALhigh+AHlow
+2191 C5                  PUSH  BC          ;11  11 save BC
+2192 44                  LD    B,H         ; 4  15
+2193 4F                  LD    C,A         ; 4  19
+2194 67                  LD    H,A         ; 4  23
+2195 ED 6C               MLT   HL          ;17  40 HL = AL
+2197 ED 4C               MLT   BC          ;17  57 BC = AH
+2199 7C                  LD    A,H         ; 4  61 A = S = ALhigh+AHlow
+219A 81                  ADD   A,C         ; 4  65
+219B 67                  LD    H,A         ; 4  69
+219C C1                  POP   BC          ; 9  78 | 289 restore BC
+219D C9                  RET               ; 9  87 | 307
+219E             ;****************
+219E             ;mul1632
+219E             ;16 by 16 bit unsigned multiplication with 32 bit result.
+219E             ;  IN:  HL = operand 1
+219E             ;       DE = operand 2
+219E             ;  OUT: HL = HL * DE low part
+219E             ;       DE = HL * DE high part
+219E             ;  USES:-
+219E             ;  Size 49 bytes
+219E             ;  Time between 303 en 307 cycles
+219E             ;****************
+219E             mul1632:
+219E                     ;HL = HL * DE
+219E                     ;        H  L
+219E                     ;        D  E
+219E                     ;    --------*
+219E                     ;          EL
+219E                     ;       EH  0
+219E                     ;       DL  0
+219E                     ;    DH  0  0
+219E                     ; -----------+
+219E                     ;  P  Q  R  S
+219E                     ;S = ELlow
+219E                     ;R = ELhigh+EHlow+DLlow
+219E                     ;Q = DHlow+EHhigh+DLhigh
+219E                     ;P = DHhigh
+219E F5                  PUSH  AF          ;11  11 save AF
+219F C5                  PUSH  BC          ;11  22 save BC
+21A0 44                  LD    B,H         ; 4  26
+21A1 4D                  LD    C,L         ; 4  30
+21A2 62                  LD    H,D         ; 4  34 HL contains DH aka DB
+21A3 68                  LD    L,B         ; 4  38
+21A4 ED 6C               MLT   HL          ;17  55
+21A6 E5                  PUSH  HL          ;11  66
+21A7 62                  LD    H,D         ; 4  70 HL contains DL aka DC
+21A8 69                  LD    L,C         ; 4  74
+21A9 ED 6C               MLT   HL          ;17  91
+21AB E5                  PUSH  HL          ;11 102
+21AC 63                  LD    H,E         ; 4 106 HL contains EH aka EB
+21AD 68                  LD    L,B         ; 4 110
+21AE ED 6C               MLT   HL          ;17 127
+21B0 E5                  PUSH  HL          ;11 138
+21B1 63                  LD    H,E         ; 4 142 HL contains EL aka EC
+21B2 69                  LD    L,C         ; 4 146
+21B3 ED 6C               MLT   HL          ;17 163
+21B5 D1                  POP   DE          ; 9 172 calculate RS=EL+EH0
+21B6 06 00               LD    B,0         ; 6 178
+21B8 4A                  LD    C,D         ; 4 182 ..C=EHhigh
+21B9 53                  LD    D,E         ; 4 186 ..D=EHlow
+21BA 1E 00               LD    E,0         ; 6 192
+21BC 19                  ADD   HL,DE       ; 7 199
+21BD 30 01               JR    NC,mul16321 ; 8 207 | 6 205 add carry to PQ
+21BF 03                  INC   BC          ;         4 209
+21C0             mul16321:
+21C0 D1                  POP   DE          ; 9 209 | 211 calculate RS=EL+EH0+DL0
+21C1 7A                  LD    A,D         ; 4 220 | 222 ..A=DLhigh
+21C2 53                  LD    D,E         ; 4 224 | 226 ..D=DLlow
+21C3 19                  ADD   HL,DE       ; 7 231 | 233
+21C4 30 01               JR    NC,mul16322 ; 8 239 | 6 239 add carry to PQ
+21C6 03                  INC   BC          ;         4 243
+21C7             mul16322:
+21C7                                       ;HL=RS=EL+EH0+DL0
+21C7                                       ;C=EHhigh
+21C7                                       ;A=DLhigh
+21C7                                       ;E=0
+21C7 EB                  EX    DE,HL       ; 3 242 | 246
+21C8 65                  LD    H,L         ; 4 246 | 250 ..E was 0, so H=L=0
+21C9 6F                  LD    L,A         ; 4 250 | 254 ..HL=DLhigh
+21CA 09                  ADD   HL,BC       ; 7 257 | 261 PQ=EHhigh+DLhigh+DH
+21CB C1                  POP   BC          ; 9 266 | 270
+21CC 09                  ADD   HL,BC       ; 7 273 | 277
+21CD EB                  EX    DE,HL       ; 3 276 | 280
+21CE                                       ;D=P=DHhigh
+21CE                                       ;E=Q=DHlow+EHhigh+DLhigh
+21CE                                       ;H=R=ELhigh+EHlow+DLlow
+21CE                                       ;L=S=ELlow
+21CE C1                  POP   BC          ; 9 285 | 289 restore BC
+21CF F1                  POP   AF          ; 9 294 | 298 restore AF
+21D0 C9                  RET               ; 9 303 | 307
+21D1             ;****************
+21D1             ;mul16S
+21D1             ;16 by 16 bit slow unsigned multiplication with 32 bit result.
+21D1             ;  IN:  HL = operand 1
+21D1             ;       DE = operand 2
+21D1             ;  OUT: DE = HL * DE high part
+21D1             ;       HL = HL * DE low part
+21D1             ;  USES:none.
+21D1             ;  Size 26 bytes
+21D1             ;  Time between 726 en 998 cycles
+21D1             ;****************
+21D1             mul16S:
+21D1 F5                  PUSH  AF          ;11  11 save AF
+21D2 C5                  PUSH  BC          ;11  22 save BC
+21D3 44                  LD    B,H         ; 4  26
+21D4 4D                  LD    C,L         ; 4  30
+21D5 21 00 00            LD    HL,0        ; 9  39
+21D8 3E 10               LD    A,16        ; 6  45
+21DA             mul16S1:
+21DA 29                  ADD   HL,HL       ;16*7=112 157
+21DB CB 13               RL    E           ;16*7=112 269
+21DD CB 12               RL    D           ;16*7=112 381
+21DF 30 04               JR    NC,mul16S2  ;16*8=128 509 16*6= 96 477
+21E1 09                  ADD   HL,BC       ;             16*7=112 589
+21E2 30 01               JR    NC,mul16S2  ;             16*8=128 717 16*6=96 685
+21E4 13                  INC   DE          ;             16*4= 64 781 16*4=64 749 This instruction (with the jump) is like an "ADC DE,0"
+21E5             mul16S2:
+21E5 3D                  DEC   A           ;16*4=64    573 | 845 | 813
+21E6 20 F2               JR    NZ,mul16S1  ;15*8+6=126 699 | 971 | 939
+21E8 C1                  POP   BC          ; 9         708 | 980 | 948 restore BC
+21E9 F1                  POP   AF          ; 9         717 | 989 | 957 restore AF
+21EA C9                  RET               ; 9         726 | 998 | 966
+21EB             ;****************
+21EB             ;div16
+21EB             ;16 by 16 bit unsigned division.
+21EB             ;  IN:  HL = dividend
+21EB             ;       DE = divisor
+21EB             ;  OUT: HL = quotient
+21EB             ;       DE = remainder
+21EB             ;  USES:-
+21EB             ;  Size   32 bytes
+21EB             ;  Time   between 1073 en 1121 cycles
+21EB             ;pseudo code:
+21EB             ;T = AC = dividend
+21EB             ;D = DE = divisor
+21EB             ;Q = AC = quotient = 0
+21EB             ;R = HL = remainder = 0
+21EB             ;invariante betrekking:
+21EB             ; D/T\Q     
+21EB             ;   R       
+21EB             ; T = QD + R
+21EB             ; T <= 2^N  
+21EB             ;
+21EB             ; D/T'.RT\Q'      
+21EB             ;   R'             
+21EB             ; RT <= 2^N        
+21EB             ; 0<=k<=N          
+21EB             ; RT = T % 2^k     
+21EB             ; T' = (T-RT) / 2^k
+21EB             ; Q' = T' / D      
+21EB             ; R' = T' % D      
+21EB             ;
+21EB             ;for (i=16; i>0; i--) {
+21EB             ;  T = T * 2 (remember MSB in carry)
+21EB             ;  R = R * 2 + carry
+21EB             ;  Q = Q * 2
+21EB             ;  if (R >= D) {
+21EB             ;    R = R - D;
+21EB             ;    Q++;
+21EB             ;  }
+21EB             ;}
+21EB             ;return Q (in HL) and R (in DE)
+21EB             ;****************
+21EB             div16:
+21EB F5                  PUSH  AF          ;11  11 save registers used
+21EC C5                  PUSH  BC          ;11  22
+21ED 4D                  LD    C,L         ; 4  26 T(AC) = teller from input (HL)
+21EE 7C                  LD    A,H         ; 4  30 D(DE) = deler from input  (DE)
+21EF 21 00 00            LD    HL,0        ; 9  39 R(HL) = restant; Q(AC) = quotient
+21F2 06 10               LD    B,16        ; 6  45 for (i=16; i>0; i--)
+21F4             div16_1:
+21F4 CB 21               SLA   C           ;16* 7=112 157   T = T * 2 (remember MSB in carry)
+21F6 CB 17               RL    A           ;16* 7=112 269   Q = Q * 2
+21F8 ED 6A               ADC   HL,HL       ;16*10=160 429   R = R * 2 + carry
+21FA B7                  OR    A,A         ;16* 4= 64 493   if (R >= D) {
+21FB ED 52               SBC   HL,DE       ;16*10=160 653
+21FD 38 03               JR    C,div16_2   ;16* 8=128 781 16*6= 96 749   R = R - D
+21FF 0C                  INC   C           ;              16*4= 64 813   Q++
+2200 18 01               JR    div16_3     ;              16*8=128 941
+2202             div16_2:
+2202 19                  ADD   HL,DE       ;16* 7=112 893  (compensate comparison)
+2203             div16_3:
+2203 10 EF               DJNZ  div16_1     ;15*9+7=142 1035 | 1083 }
+2205 EB                  EX    DE,HL       ; 3 1038 | 1086 swap remainder (HL) into DE
+2206 67                  LD    H,A         ; 4 1042 | 1090 move quotient (AC) into HL
+2207 69                  LD    L,C         ; 4 1046 | 1094
+2208 C1                  POP   BC          ; 9 1055 | 1103
+2209 F1                  POP   AF          ; 9 1064 | 1112
+220A C9                  RET               ; 9 1073 | 1121
+220B             ;****************
+220B             ;div16_8
+220B             ;16 by 8 bit unsigned division.
+220B             ;  IN:  HL = dividend
+220B             ;       A  = divisor
+220B             ;  OUT: HL = quotient
+220B             ;       A  = remainder
+220B             ;  USES:F(lags)
+220B             ;  Size 18 bytes
+220B             ;  Time between 601 en 697 cycles
+220B             ;****************
+220B             div16_8:
+220B C5                  PUSH  BC          ;11 11 save registers used
+220C 06 10               LD    B,16        ; 6 17 the length of the dividend (16 bits)
+220E 4F                  LD    C,A         ; 4 21 move divisor to C
+220F AF                  XOR   A,A         ; 4 25 clear upper 8 bits of AHL
+2210             div16_82:
+2210 29                  ADD   HL,HL       ;16*7=112 137 advance dividend (HL) into selected bits (A)
+2211 CB 17               RL    A           ;16*7=112 249
+2213 B9                  CP    A,C         ;16*4= 64 313 check if divisor (E) <= selected digits (A)
+2214 38 02               JR    C,div16_83  ;16*8=128 441 16*6=96 409 if not, advance without subtraction
+2216 91                  SUB   A,C         ;             16*4=64 473 subtract the divisor
+2217 2C                  INC   L           ;             16*4=64 537 and set the next digit of the quotient
+2218             div16_83:
+2218 10 F6               DJNZ  div16_82    ;15*9+7=142 583 679
+221A C1                  POP   BC          ;9 592 688
+221B C9                  RET               ;9 601 697
+221C             ;****************
+221C             ;div8
+221C             ;8 by 8 bit unsigned division.
+221C             ;  IN:  A = dividend
+221C             ;       C = divisor
+221C             ;  OUT: A = quotient
+221C             ;       C = remainder
+221C             ;  USES:F(lags)
+221C             ;  Size 26 bytes
+221C             ;  Time between 411 and 459 cycles
+221C             ;****************
+221C             ;pseudo code:
+221C             ;T = dividend
+221C             ;D = divisor
+221C             ;Q = quotient = 0
+221C             ;R = remainder = 0
+221C             ;invariante betrekking:
+221C             ; T = QD + R
+221C             ; T <= 2^8  
+221C             ;
+221C             ; D/T'.RT\Q'      
+221C             ;   R'             
+221C             ; RT <= 2^8        
+221C             ; 0<=k<=8          
+221C             ; RT = T % 2^k     
+221C             ; T' = (T-RT) / 2^k
+221C             ; Q' = T' / D      
+221C             ; R' = T' % D      
+221C             ;
+221C             ;for (i=8; i>0; i--) {
+221C             ;  T = T * 2 (remember MSB in carry)
+221C             ;  R = R * 2 + carry
+221C             ;  Q = Q * 2
+221C             ;  if (R >= D) {
+221C             ;    R = R - D;
+221C             ;    Q++;
+221C             ;  }
+221C             ;}
+221C             ;return Q (in A) and R (in C)
+221C             ;****************
+221C             ;E = T = dividend
+221C             ;C = D = divisor
+221C             ;D = Q = quotient
+221C             ;A = R = remainder
+221C             ;****************
+221C             ;  IN:  A = dividend
+221C             ;       C  = divisor
+221C             div8:
+221C D5                  PUSH  DE          ;11 11 save registers used
+221D C5                  PUSH  BC          ;11 22 save registers used
+221E 06 08               LD    B,8         ; 6 28 the length of the dividend (8 bits)
+2220 16 00               LD    D,0         ; 6 34 D = Q = quotient = 0
+2222 5F                  LD    E,A         ; 4 38 E = T = dividend
+2223 AF                  XOR   A,A         ; 4 42 A = R = remainder = 0
+2224             div8_1:
+2224 CB 23               SLA   E           ;8*7=56  98            T[E] = T[E] * 2 (remember MSB in carry)
+2226 CB 17               RL    A           ;8*7=56 154            R[A] = R[A] * 2 + carry
+2228 CB 22               SLA   D           ;8*7=56 210            Q[D] = Q[D] * 2
+222A B9                  CP    A,C         ;8*4=32 242            if (R[A] - D[C] >= 0) {
+222B 38 02               JR    C,div8_2    ;8*8=64 306 8*6=48 290
+222D 91                  SUB   A,C         ;           8*4=32 322   R[A] = R[A] - D[C];
+222E 14                  INC   D           ;           8*4=32 354   Q[D]++;
+222F             div8_2:           ;                      }
+222F 10 F3               DJNZ  div8_1      ;7*9+7=70 376 424      }
+2231 C1                  POP   BC          ;9        385 433
+2232 4F                  LD    C,A         ;4        389 437      return Remainder[A] in C
+2233 7A                  LD    A,D         ;4        393 441      return Quotient[D] in A
+2234 D1                  POP   DE          ;9        402 450
+2235 C9                  RET               ;9        411 459
+2236             ;****************
+2236             ;div8_16
+2236             ;8 by 16 bit unsigned division.
+2236             ;  IN:  A = dividend
+2236             ;       HL = divisor
+2236             ;  OUT: A = quotient
+2236             ;       C = remainder
+2236             ;  USES:F(lags)
+2236             ;  Size 13 bytes (plus dependency on div8)
+2236             ;  Time 31 or between 436 and 484 cycles
+2236             ;****************
+2236             ;invariante betrekking:
+2236             ; T = dividend
+2236             ; D = divisor
+2236             ; Q = quotient
+2236             ; R = remainder
+2236             ; T = QD + R
+2236             ;pseudo code:
+2236             ; if D >= 256 {
+2236             ;   R = T
+2236             ;   Q = 0
+2236             ; } else {
+2236             ;   R = T/D (using div8)
+2236             ;   Q = T%D (using div8)
+2236             ; }
+2236             ;****************
+2236             
+2236             
+2236             div8_16:
+2236 4F                  LD    C,A         ;  4  4         save dividend(A) in C
+2237 7C                  LD    A,H         ;  4  8         if D >= 256 {
+2238 B7                  OR    A,A         ;  4 12
+2239 28 02               JR    Z,div8_161  ;  6 18  8  20
+223B AF                  XOR   A,A         ;  4 22           R = T;
+223C C9                  RET               ;  9 31           Q = 0;
+223D             div8_161:                     ;               } else {
+223D 79                  LD    A,C         ;        4  24    restore dividend into A
+223E 4D                  LD    C,L         ;        4  28    load divisor (HL) into C
+223F CD 1C 22            CALL  div8        ; 16+411/16+459               R = T/D; Q = T%D;
+2242 C9                  RET               ; 9  436/484    }
+2243             ;****************
+2243             ;read
+2243             ;read a 16 bit unsigned number from the input
+2243             ;  IN:  none
+2243             ;  OUT: HL = 16 bit unsigned number
+2243             ;  USES:-
+2243             ;****************
+2243             read:
+2243 F5                  PUSH  AF
+2244 21 00 00            LD    HL,0        ;result = 0;
+2247             read1:
+2247 CD ED 20            CALL  getChar     ;check if a character is available.
+224A 28 FB               JR    Z,read1     ;-no: wait for it.
+224C FE 0D               CP    A,'\r'      ;return if char == Carriage Return
+224E 28 0C               JR    Z,read2
+2250 CD 88 21            CALL  mul16_10    ;result *= 10;
+2253 D6 30               SUB   A,'0'       ;digit = char - '0';
+2255 85                  ADD   A,L         ;result += digit;
+2256 6F                  LD    L,A
+2257 30 EE               JR    NC,read1     ;get next character
+2259 24                  INC   H
+225A 18 EB               JR    read1        ;get next character
+225C             read2:
+225C F1                  POP   AF
+225D C9                  RET
+225E             ;****************
+225E             ;writeLineHL
+225E             ;write a 16 bit unsigned number to the output, followed by a carriage return
+225E             ;  IN:  HL = 16 bit unsigned number
+225E             ;  OUT: none
+225E             ;  USES:HL
+225E             ;****************
+225E             writeLineHL:
+225E CD 65 22            CALL  writeHL
+2261 CD 2E 21            CALL  putCRLF
+2264 C9                  RET
+2265             ;****************
+2265             ;writeHL
+2265             ;write a 16 bit unsigned number to the output
+2265             ;  IN:  HL = 16 bit unsigned number
+2265             ;  OUT: none
+2265             ;  USES:HL
+2265             ;****************
+2265             writeHL:
+2265 C5                  PUSH  BC          ;save registers used
+2266 F5                  PUSH  AF
+2267 06 00               LD    B,0         ;number of digits on stack
+2269 7C                  LD    A,H         ;is HL=0?
+226A B5                  OR    A,L
+226B 20 03               JR    NZ,writeHL1
+226D 04                  INC   B           ;write a single digit 0
+226E 18 0C               JR    writeHL3
+2270             writeHL1:
+2270 3E 0A               LD    A,10        ;divide HL by 10
+2272 CD 0B 22            CALL  div16_8
+2275 F5                  PUSH  AF          ;put remainder on stack
+2276 04                  INC   B
+2277 7C                  LD    A,H         ;is quotient 0?
+2278 B5                  OR    A,L
+2279 20 F5               JR    NZ,writeHL1
+227B             writeHL2:
+227B F1                  POP   AF          ;write digit
+227C             writeHL3:
+227C C6 30               ADD   A,'0'
+227E CD 21 21            CALL  putChar
+2281 10 F8               DJNZ  writeHL2
+2283 F1                  POP   AF          ;restore registers used
+2284 C1                  POP   BC
+2285 C9                  RET
+2286             ;****************
+2286             ;writeLineA
+2286             ;write an 8-bit unsigned number to the output, followed by a carriage return
+2286             ;  IN:  A = 8-bit unsigned number
+2286             ;  OUT: none
+2286             ;  USES:none
+2286             ;****************
+2286             writeLineA:
+2286 CD 8D 22            CALL  writeA
+2289 CD 2E 21            CALL  putCRLF
+228C C9                  RET
+228D             ;****************
+228D             ;writeA
+228D             ;write an 8-bit unsigned number to the output
+228D             ;  IN:  A = 8-bit unsigned number
+228D             ;  OUT: none
+228D             ;  USES:none
+228D             ;****************
+228D             writeA:
+228D E5                  PUSH  HL          ;save registers used
+228E 26 00               LD    H,0
+2290 6F                  LD    L,A
+2291 CD 65 22            CALL  writeHL
+2294 E1                  POP   HL
+2295 C9                  RET
+
+Labels and cross references:
+      L0 = 2003 :
+      L1 = 2006 :
+     L10 = 2009 :
+    L100 = 206B :
+    L101 = 206B :
+    L102 = 206B :
+    L103 = 206B :
+    L104 = 206B :
+    L105 = 206B :
+    L106 = 206B :
+    L107 = 206B :
+    L108 = 206B :
+    L109 = 206B :
+     L11 = 2009 :
+    L110 = 206B :
+    L111 = 206B :
+    L112 = 206B :
+    L113 = 206B :
+    L114 = 206B :
+    L115 = 206B :
+    L116 = 206B :
+    L117 = 206B :
+    L118 = 206B :
+    L119 = 206B :
+     L12 = 2009 :
+    L120 = 206B :
+    L121 = 206B :
+    L122 = 206B :
+    L123 = 206B : 20CC
+    L124 = 206B :
+    L125 = 206D :
+    L126 = 2073 :
+    L127 = 2078 :
+    L128 = 2078 :
+    L129 = 2078 :
+     L13 = 2009 :
+    L130 = 207D :
+    L131 = 207D :
+    L132 = 207D :
+    L133 = 207D :
+    L134 = 207D :
+    L135 = 207D :
+    L136 = 207D :
+    L137 = 207D :
+    L138 = 207D :
+    L139 = 207D :
+     L14 = 2009 :
+    L140 = 207D :
+    L141 = 207D :
+    L142 = 207D :
+    L143 = 2082 :
+    L144 = 2082 :
+    L145 = 2082 :
+    L146 = 2082 :
+    L147 = 2082 :
+    L148 = 2082 :
+    L149 = 2082 :
+     L15 = 2009 :
+    L150 = 2082 :
+    L151 = 2082 :
+    L152 = 2082 :
+    L153 = 2082 :
+    L154 = 2082 :
+    L155 = 2082 :
+    L156 = 2087 :
+    L157 = 2087 :
+    L158 = 2087 :
+    L159 = 2087 :
+     L16 = 2009 :
+    L160 = 2087 :
+    L161 = 2087 :
+    L162 = 2087 :
+    L163 = 2087 :
+    L164 = 2087 :
+    L165 = 2087 :
+    L166 = 2087 :
+    L167 = 2087 :
+    L168 = 2087 :
+    L169 = 208C :
+     L17 = 2009 :
+    L170 = 208C :
+    L171 = 208C :
+    L172 = 208C :
+    L173 = 208C :
+    L174 = 208C :
+    L175 = 208C :
+    L176 = 208C :
+    L177 = 208C :
+    L178 = 208C :
+    L179 = 2091 :
+     L18 = 2009 :
+    L180 = 2091 :
+    L181 = 2091 :
+    L182 = 2091 :
+    L183 = 2091 :
+    L184 = 2096 :
+    L185 = 2096 :
+    L186 = 2096 :
+    L187 = 2096 :
+    L188 = 2098 :
+    L189 = 209A :
+     L19 = 2009 :
+    L190 = 209B :
+    L191 = 209B :
+    L192 = 209B : 20D6
+    L193 = 209B :
+    L194 = 209D :
+    L195 = 20A3 :
+    L196 = 20A8 :
+    L197 = 20A8 :
+    L198 = 20A8 :
+    L199 = 20AD :
+      L2 = 2009 :
+     L20 = 2009 :
+    L200 = 20AD :
+    L201 = 20AD :
+    L202 = 20AD :
+    L203 = 20AD :
+    L204 = 20AD :
+    L205 = 20B0 :
+    L206 = 20B2 :
+    L207 = 20B5 :
+    L208 = 20B5 :
+    L209 = 20B5 :
+     L21 = 2009 :
+    L210 = 20B5 :
+    L211 = 20B5 :
+    L212 = 20B5 :
+    L213 = 20B5 :
+    L214 = 20BA :
+    L215 = 20BA :
+    L216 = 20BA :
+    L217 = 20BA :
+    L218 = 20BC :
+    L219 = 20BE :
+     L22 = 2009 :
+    L220 = 20BF :
+    L221 = 20BF :
+    L222 = 20BF :
+    L223 = 20BF : 2003
+    L224 = 20BF :
+    L225 = 20C1 :
+    L226 = 20C7 :
+    L227 = 20CC :
+    L228 = 20CC :
+    L229 = 20CF :
+     L23 = 2009 :
+    L230 = 20CF : 20E5
+    L231 = 20D1 :
+    L232 = 20D3 :
+    L233 = 20D6 :
+    L234 = 20D6 :
+    L235 = 20D9 :
+    L236 = 20D9 :
+    L237 = 20DC :
+    L238 = 20DD :
+    L239 = 20E0 :
+     L24 = 2009 :
+    L240 = 20E5 :
+    L241 = 20E5 :
+    L242 = 20E8 :
+    L243 = 20E8 : 20D3
+    L244 = 20EA :
+    L245 = 20EC :
+    L246 = 20ED :
+     L25 = 2009 :
+     L26 = 2009 :
+     L27 = 2009 :
+     L28 = 2009 :
+     L29 = 2009 : 2053
+      L3 = 2009 :
+     L30 = 2009 :
+     L31 = 200B :
+     L32 = 2011 :
+     L33 = 2016 :
+     L34 = 2016 :
+     L35 = 2018 :
+     L36 = 201B : 2029
+     L37 = 201E :
+     L38 = 2020 :
+     L39 = 2023 :
+      L4 = 2009 :
+     L40 = 2026 : 202C
+     L41 = 2029 :
+     L42 = 202C : 2023
+     L43 = 202F :
+     L44 = 202F : 2020
+     L45 = 2031 :
+     L46 = 2033 :
+     L47 = 2034 :
+     L48 = 2034 :
+     L49 = 2034 :
+      L5 = 2009 :
+     L50 = 2034 :
+     L51 = 2034 :
+     L52 = 2034 : 20DD
+     L53 = 2034 :
+     L54 = 2036 :
+     L55 = 203C :
+     L56 = 2041 :
+     L57 = 2041 : 2063
+     L58 = 2047 :
+     L59 = 2049 :
+      L6 = 2009 :
+     L60 = 2050 :
+     L61 = 2053 :
+     L62 = 2053 :
+     L63 = 2056 :
+     L64 = 2056 :
+     L65 = 2063 :
+     L66 = 2063 :
+     L67 = 2066 :
+     L68 = 2066 : 2050
+     L69 = 2068 :
+      L7 = 2009 :
+     L70 = 206A :
+     L71 = 206B :
+     L72 = 206B :
+     L73 = 206B :
+     L74 = 206B :
+     L75 = 206B :
+     L76 = 206B :
+     L77 = 206B :
+     L78 = 206B :
+     L79 = 206B :
+      L8 = 2009 :
+     L80 = 206B :
+     L81 = 206B :
+     L82 = 206B :
+     L83 = 206B :
+     L84 = 206B :
+     L85 = 206B :
+     L86 = 206B :
+     L87 = 206B :
+     L88 = 206B :
+     L89 = 206B :
+      L9 = 2009 :
+     L90 = 206B :
+     L91 = 206B :
+     L92 = 206B :
+     L93 = 206B :
+     L94 = 206B :
+     L95 = 206B :
+     L96 = 206B :
+     L97 = 206B :
+     L98 = 206B :
+     L99 = 206B :
+   div16 = 21EB :
+ div16_1 = 21F4 : 2203
+ div16_2 = 2202 : 21FD
+ div16_3 = 2203 : 2200
+ div16_8 = 220B : 2272
+div16_82 = 2210 : 2218
+div16_83 = 2218 : 2214
+    div8 = 221C : 223F
+  div8_1 = 2224 : 222F
+ div8_16 = 2236 :
+div8_161 = 223D : 2239
+  div8_2 = 222F : 222B
+ getChar = 20ED : 2247
+getChar1 = 20FB : 20F2
+   mul16 = 216F :
+ mul1632 = 219E :
+mul16321 = 21C0 : 21BD
+mul16322 = 21C7 : 21C4
+  mul16S = 21D1 :
+ mul16S1 = 21DA : 21E6
+ mul16S2 = 21E5 : 21DF 21E2
+mul16_10 = 2188 : 2250
+ mul16_8 = 2191 :
+ putBell = 2147 :
+ putCRLF = 212E : 210E 2261 2289
+ putChar = 2121 : 2118 2131 2136 213D 2145 2149 216A 227E
+putChar1 = 2122 : 2127
+putErase = 213B :
+ putHexA = 2156 : 214D 2151
+putHexA1 = 215F : 215B
+putHexA2 = 216A : 2166
+putHexHL = 214B :
+  putMsg = 2105 :
+putSpace = 211F : 2140
+ putStr1 = 2113 : 211B
+ putStr2 = 211D : 2116
+    read = 2243 :
+   read1 = 2247 : 224A 2257 225A
+   read2 = 225C : 224E
+   start = 2000 :
+  writeA = 228D : 2286
+ writeHL = 2265 : 225E 2291
+writeHL1 = 2270 : 226B 2279
+writeHL2 = 227B : 2281
+writeHL3 = 227C : 226E
+writeLineA = 2286 :
+writeLineHL = 225E :
+writeLineStr = 210B :
+writeStr = 2112 : 2106 210B

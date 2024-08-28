@@ -595,7 +595,7 @@ public class Instruction {
           // result += " port " + operand.opType;
           // break;
           default:
-            throw new RuntimeException("output with unsupported operandType for port operand");
+            throw new RuntimeException("input with unsupported operandType for port operand");
         }
         ;
         break;
@@ -624,7 +624,7 @@ public class Instruction {
             break;
           case ACC:
             if (operand2.dataType == DataType.byt) {
-              result += ", value acc8";
+              result += " value acc8";
             } else {
               throw new RuntimeException("output with unsupported dataType for value operand");
             }

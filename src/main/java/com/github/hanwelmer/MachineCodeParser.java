@@ -23,7 +23,7 @@ public class MachineCodeParser {
         String line = br.readLine();
         while (line != null) {
           pos = 0;
-          result.addAll(parseLine(line));
+          result.add(parseLine(line));
           line = br.readLine();
         }
       } catch (IOException e) {
@@ -42,8 +42,8 @@ public class MachineCodeParser {
     return result;
   }
 
-  protected ArrayList<Instruction> parseLine(String line) {
-    ArrayList<Instruction> result = new ArrayList<Instruction>();
+  protected Instruction parseLine(String line) {
+    Instruction result = new Instruction(FunctionType.stop);
 
     // ignore whitespace and line number
     skipSpaces(line);
@@ -53,17 +53,13 @@ public class MachineCodeParser {
     if (pos < line.length() && line.charAt(pos) == ';') {
       pos++;
       if (pos == line.length()) {
-        result.add(new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, "")));
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, ""));
       } else {
-        result.add(new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, line.substring(pos))));
+        result = new Instruction(FunctionType.comment, new Operand(OperandType.CONSTANT, DataType.string, line.substring(pos)));
       }
     } else {
       String keyword = parseKeyword(line);
       FunctionType functionType = FunctionType.valueFor(keyword);
-      if (functionType == FunctionType.output) {
-        result = parseOutputFunction(line);
-      } else {
-        Instruction oneInstruction = new Instruction(FunctionType.stop);
         switch (functionType) {
           /*******************************
            * instructions without operands.
@@ -89,15 +85,16 @@ public class MachineCodeParser {
           case writeLineAcc8:
           case writeLineString:
           case writeString:
-            oneInstruction = new Instruction(functionType);
+            result = new Instruction(functionType);
             break;
           /*******************************
            * instructions with address operand.
            */
           case br:
           case brEq:
+          case brNe:
           case call:
-            oneInstruction = parseCallFunction(line, functionType);
+        	  result = parseCallFunction(line, functionType);
             break;
           /*******************************
            * instructions with one byte operand.
@@ -105,8 +102,9 @@ public class MachineCodeParser {
           case acc8Compare:
           case acc8Load:
           case acc8Store:
+          case acc8Xor:
           case decrement8:
-            oneInstruction = parseFunctionWithByteOperand(line, functionType);
+        	  result = parseFunctionWithByteOperand(line, functionType);
             break;
           /*******************************
            * instructions with one word operand.
@@ -117,25 +115,31 @@ public class MachineCodeParser {
           case decrement16:
           case stackPointerLoad:
           case stackPointerPlus:
-            oneInstruction = parseFunctionWithWordOperand(line, functionType);
+        	  result = parseFunctionWithWordOperand(line, functionType);
             break;
           /*******************************
            * other instructions with one or more operands.
            */
           case importFunction:
-            oneInstruction = parsePackageOrImportFunction(line, functionType);
+        	  result = parsePackageOrImportFunction(line, functionType);
             break;
+          case input:
+              result = parseInputFunction(line);
+              break;
           case classFunction:
-            oneInstruction = parseClassFunction(line, functionType);
+        	  result = parseClassFunction(line, functionType);
             break;
           case method:
-            oneInstruction = parseMethod(line, functionType);
+        	  result = parseMethod(line, functionType);
+            break;
+          case output:
+              result = parseOutputFunction(line);
             break;
           case packageFunction:
-            oneInstruction = parsePackageOrImportFunction(line, functionType);
+        	  result = parsePackageOrImportFunction(line, functionType);
             break;
           case stringConstant:
-            oneInstruction = parseStringConstant(line, lineNumber);
+        	  result = parseStringConstant(line, lineNumber);
             break;
           /*******************************
            * TODO.
@@ -154,17 +158,14 @@ public class MachineCodeParser {
           case acc8Or:
           case acc8Plus:
           case acc8Times:
-          case acc8Xor:
           case brGe:
           case brGt:
           case brLe:
           case brLt:
-          case brNe:
           case divAcc16:
           case divAcc8:
           case increment16:
           case increment8:
-          case input:
           case minusAcc16:
           case minusAcc8:
           case revAcc16Compare:
@@ -175,8 +176,6 @@ public class MachineCodeParser {
           default:
             throw new RuntimeException("Internal error; not supported functionType: " + keyword);
         }
-        result.add(oneInstruction);
-      }
       skipSpaces(line);
     }
     return result;
@@ -200,17 +199,28 @@ public class MachineCodeParser {
    * @param line
    *          with M-code. eg 129 output port 0x65 value 0x00
    *          01234567890123456789012345678901 00000000001111111111222222222233
-   * @return list of generated Z80 instructions. eg LD A,00BH OUT0 (WDTCR),A
+   * @return parsed M-code instruction.
    */
-  private ArrayList<Instruction> parseOutputFunction(String line) {
-    ArrayList<Instruction> result = new ArrayList<Instruction>();
-
+  private Instruction parseOutputFunction(String line) {
     // keyword output has already been read. Read the port and value operands.
     Operand port = parseOperand(line, DataType.byt);
     Operand value = parseOperand(line, DataType.byt);
-    result.add(new Instruction(FunctionType.output, port, value));
+    return new Instruction(FunctionType.output, port, value);
+  }
 
-    return result;
+  /**
+   * Parse: input port operand1
+   * 
+   * @param line
+   *          with M-code. eg 204 input port 0x7E
+   *                      01234567890123456789012
+   *                      00000000001111111111222
+   * @return parsed M-code instruction.
+   */
+  private Instruction parseInputFunction(String line) {
+    // keyword input has already been read. Read the port operand.
+    Operand port = parseOperand(line, DataType.byt);
+    return new Instruction(FunctionType.input, port);
   }
 
   private Instruction parseStringConstant(String line, int lineNumber) {
@@ -304,17 +314,21 @@ public class MachineCodeParser {
       skipSpaces(line);
       int value = parseNumber(line);
       result = new Operand(OperandType.CONSTANT, datatype, value);
-    } else if ("value".equals(keyword)) {
-      // value 0x00
-      skipSpaces(line);
-      int value = parseNumber(line);
-      result = new Operand(OperandType.CONSTANT, datatype, value);
     } else if ("stackPointer".equals(keyword)) {
       result = new Operand(OperandType.STACK_POINTER);
     } else if ("stringconstant".equals(keyword)) {
       skipSpaces(line);
       int value = parseNumber(line);
       result = new Operand(OperandType.CONSTANT, DataType.string, value);
+    } else if ("value".equals(keyword)) {
+        // value 0x00 or value acc8 
+        skipSpaces(line);
+        int value = parseNumber(line);
+        if (value == 0 && "acc8".equals(parseKeyword(line))) {
+          result = new Operand(OperandType.ACC, datatype, value);
+        } else {
+          result = new Operand(OperandType.CONSTANT, datatype, value);
+        }
     } else {
       throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
     }

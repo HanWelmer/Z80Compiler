@@ -134,7 +134,7 @@
  133 ;ledtst.j(112)     output(PCR, input(PCR) ^ 0x20);
  134 input port 0x7E
  135 acc8Xor constant 32
- 136 output port 0x7E, value acc8
+ 136 output port 0x7E value acc8
  137 ;ledtst.j(113)     //IN0     A,(PCR)
  138 ;ledtst.j(114)     //XOR     A,020H
  139 ;ledtst.j(115)     //OUT0    (PCR),A

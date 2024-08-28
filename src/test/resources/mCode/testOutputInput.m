@@ -58,7 +58,7 @@
   57 writeLineString
   58 ;testOutputInput.j(33)     output(12, input(INPUT_PORT));
   59 input port 0x0A
-  60 output port 0x0C, value acc8
+  60 output port 0x0C value acc8
   61 ;testOutputInput.j(34)     println(13);
   62 acc8= constant 13
   63 writeLineAcc8
@@ -69,7 +69,7 @@
   68 <acc8= constant 2
   69 acc8* constant 5
   70 acc8+ unstack8
-  71 output port 0x0F, value acc8
+  71 output port 0x0F value acc8
   72 ;testOutputInput.j(38)     println(16);
   73 acc8= constant 16
   74 writeLineAcc8
