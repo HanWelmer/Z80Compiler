@@ -117,7 +117,7 @@
 2036 DD 21 00 00         LD    IX,0x0000
 203A DD 39               ADD   IX,SP
 203C             L55:
-203C 21 00 00            LD    HL,65536
+203C 21 00 00            LD    HL,0
 203F 39                  ADD   HL,SP
 2040 F9                  LD    SP,HL
 2041             L56:
@@ -271,7 +271,7 @@
 206D DD 21 00 00         LD    IX,0x0000
 2071 DD 39               ADD   IX,SP
 2073             L126:
-2073 21 00 00            LD    HL,65536
+2073 21 00 00            LD    HL,0
 2076 39                  ADD   HL,SP
 2077 F9                  LD    SP,HL
 2078             L127:
@@ -418,7 +418,7 @@
 209D DD 21 00 00         LD    IX,0x0000
 20A1 DD 39               ADD   IX,SP
 20A3             L195:
-20A3 21 00 00            LD    HL,65536
+20A3 21 00 00            LD    HL,0
 20A6 39                  ADD   HL,SP
 20A7 F9                  LD    SP,HL
 20A8             L196:
@@ -485,7 +485,7 @@
 20C1 DD 21 00 00         LD    IX,0x0000
 20C5 DD 39               ADD   IX,SP
 20C7             L226:
-20C7 21 00 00            LD    HL,65536
+20C7 21 00 00            LD    HL,0
 20CA 39                  ADD   HL,SP
 20CB F9                  LD    SP,HL
 20CC             L227:

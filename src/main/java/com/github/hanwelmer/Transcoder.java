@@ -1018,7 +1018,7 @@ public class Transcoder {
         }
         break;
       case br:
-    	  //TODO use relative jump where possible.
+    	//TODO use relative jump where possible.
         putLabelReference(word, byteAddress);
         asm = new AssemblyInstruction(byteAddress, INDENT + "JP    L" + word, 0xC3, word % 256, word / 256);
         break;
@@ -1208,10 +1208,11 @@ public class Transcoder {
           // increases). However, in the Z80 the stack grows downwards
           // (stackpointer decreases). Therefore, calculate the 2's complement
           // of the operand value and add that to SP.
+          if (word != 0) {
+            word = 65536 - word;
+          }
           //TODO use incr/decr sp when word <= 5
-          //TODO replace LD HL,65536 by LD HL,0x0000
           //TODO generate nothing for stackPointer+ constant 0.
-          word = 65536 - word;
           result.add(new AssemblyInstruction(byteAddress, INDENT + "LD    HL," + word, 0x21, word % 256, word / 256));
           byteAddress += 3;
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "ADD   HL,SP", 0x39));

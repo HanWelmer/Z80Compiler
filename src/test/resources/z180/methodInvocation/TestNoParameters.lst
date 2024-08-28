@@ -23,7 +23,7 @@
 200B DD 21 00 00         LD    IX,0x0000
 200F DD 39               ADD   IX,SP
 2011             L9:
-2011 21 00 00            LD    HL,65536
+2011 21 00 00            LD    HL,0
 2014 39                  ADD   HL,SP
 2015 F9                  LD    SP,HL
 2016             L10:
@@ -52,7 +52,7 @@
 2023 DD 21 00 00         LD    IX,0x0000
 2027 DD 39               ADD   IX,SP
 2029             L22:
-2029 21 00 00            LD    HL,65536
+2029 21 00 00            LD    HL,0
 202C 39                  ADD   HL,SP
 202D F9                  LD    SP,HL
 202E             L23:

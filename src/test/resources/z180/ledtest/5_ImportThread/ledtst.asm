@@ -117,7 +117,7 @@ L54:
         LD    IX,0x0000
         ADD   IX,SP
 L55:
-        LD    HL,65536
+        LD    HL,0
         ADD   HL,SP
         LD    SP,HL
 L56:
@@ -271,7 +271,7 @@ L125:
         LD    IX,0x0000
         ADD   IX,SP
 L126:
-        LD    HL,65536
+        LD    HL,0
         ADD   HL,SP
         LD    SP,HL
 L127:
@@ -418,7 +418,7 @@ L194:
         LD    IX,0x0000
         ADD   IX,SP
 L195:
-        LD    HL,65536
+        LD    HL,0
         ADD   HL,SP
         LD    SP,HL
 L196:
@@ -485,7 +485,7 @@ L225:
         LD    IX,0x0000
         ADD   IX,SP
 L226:
-        LD    HL,65536
+        LD    HL,0
         ADD   HL,SP
         LD    SP,HL
 L227:
