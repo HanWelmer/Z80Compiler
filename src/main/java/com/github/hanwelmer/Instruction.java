@@ -529,12 +529,10 @@ public class Instruction {
             }
             break;
           case STACK16:
+            result += " unstack16";
+            break;
           case STACK8:
-            if (operand.dataType == DataType.byt) {
-              result += " unstack8";
-            } else if (operand.dataType == DataType.word) {
-              result += " unstack16";
-            }
+            result += " unstack8";
             break;
           case ACC:
             if (operand.dataType == DataType.byt) {

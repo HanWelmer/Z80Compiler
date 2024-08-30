@@ -2814,7 +2814,7 @@ public class pCompiler {
       plantCode(lexemeReader, new Instruction(FunctionType.unstackBasePointer));
       plantThenSource(lexemeReader, new Instruction(FunctionType.returnFunction));
     }
-  }
+  } // generateReturnStatement
 
   /**
    * Generate M-code for an assignment.
@@ -2837,7 +2837,7 @@ public class pCompiler {
     } else {
       error(lexemeReader, 12);
     }
-  }
+  } // generateAssignment
 
   /**
    * Generate M-code for a stack based argument in a method invocation.
@@ -2866,7 +2866,7 @@ public class pCompiler {
       error(lexemeReader, 12);
     }
     return stackSize;
-  }
+  } // generateArgument
 
   private void plant(LexemeReader lexemeReader, Instruction instruction) {
     // for debugging purposes.
