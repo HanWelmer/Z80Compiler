@@ -1211,12 +1211,22 @@ public class Transcoder {
           if (word != 0) {
             word = 65536 - word;
           }
-          //TODO use incr/decr sp when word <= 5
-          //TODO generate nothing for stackPointer+ constant 0.
-          result.add(new AssemblyInstruction(byteAddress, INDENT + "LD    HL," + word, 0x21, word % 256, word / 256));
-          byteAddress += 3;
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "ADD   HL,SP", 0x39));
-          asm = new AssemblyInstruction(byteAddress, INDENT + "LD    SP,HL", 0xF9);
+          if (word >= 1 && word <= 5) {
+            while (--word != 0) {
+              result.add(new AssemblyInstruction(byteAddress++, INDENT + "INC   SP", 0x33));
+            }
+            asm = new AssemblyInstruction(byteAddress, INDENT + "INC   SP", 0x33);
+          } else if (word >= 65531 && word <= 65535) {
+            while (++word != 65536) {
+              result.add(new AssemblyInstruction(byteAddress++, INDENT + "DEC   SP", 0x3B));
+            }
+            asm = new AssemblyInstruction(byteAddress, INDENT + "DEC   SP", 0x3B);
+          } else if (word != 0) {
+            result.add(new AssemblyInstruction(byteAddress, INDENT + "LD    HL," + word, 0x21, word % 256, word / 256));
+            byteAddress += 3;
+            result.add(new AssemblyInstruction(byteAddress++, INDENT + "ADD   HL,SP", 0x39));
+            asm = new AssemblyInstruction(byteAddress, INDENT + "LD    SP,HL", 0xF9);
+          }
         } else {
           throw new RuntimeException(String.format(UNSUPPORTED_OPERAND_TYPE, instruction.operand.opType, function));
         }

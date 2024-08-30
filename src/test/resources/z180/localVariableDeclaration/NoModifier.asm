@@ -29,9 +29,7 @@ L11:
         LD    IX,0x0000
         ADD   IX,SP
 L12:
-        LD    HL,65535
-        ADD   HL,SP
-        LD    SP,HL
+        DEC   SP
 L13:
         ;;NoModifier.j(6)     byte b = 1;
 L14:
@@ -62,9 +60,9 @@ L26:
         LD    IX,0x0000
         ADD   IX,SP
 L27:
-        LD    HL,65533
-        ADD   HL,SP
-        LD    SP,HL
+        DEC   SP
+        DEC   SP
+        DEC   SP
 L28:
         ;;NoModifier.j(10)     byte b = 2;
 L29:
@@ -109,9 +107,9 @@ L47:
         LD    IX,0x0000
         ADD   IX,SP
 L48:
-        LD    HL,65533
-        ADD   HL,SP
-        LD    SP,HL
+        DEC   SP
+        DEC   SP
+        DEC   SP
 L49:
         ;;NoModifier.j(16)     word w = 5555;
 L50:
@@ -156,9 +154,8 @@ L68:
         LD    IX,0x0000
         ADD   IX,SP
 L69:
-        LD    HL,65534
-        ADD   HL,SP
-        LD    SP,HL
+        DEC   SP
+        DEC   SP
 L70:
         ;;NoModifier.j(22)     String str = "Hallo Wereld";
 L71:
@@ -191,9 +188,7 @@ L83:
         LD    IX,0x0000
         ADD   IX,SP
 L84:
-        LD    HL,65535
-        ADD   HL,SP
-        LD    SP,HL
+        DEC   SP
 L85:
         ;;NoModifier.j(26)     byte b = 0;
 L86:

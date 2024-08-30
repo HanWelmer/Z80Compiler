@@ -23,9 +23,6 @@ L8:
         LD    IX,0x0000
         ADD   IX,SP
 L9:
-        LD    HL,0
-        ADD   HL,SP
-        LD    SP,HL
 L10:
         ;;TestWordParameter.j(3)     println(w);
 L11:
@@ -53,9 +50,6 @@ L21:
         LD    IX,0x0000
         ADD   IX,SP
 L22:
-        LD    HL,0
-        ADD   HL,SP
-        LD    SP,HL
 L23:
         ;;TestWordParameter.j(7)     println("Hallo ");
 L24:
@@ -71,9 +65,8 @@ L28:
 L29:
         CALL  L6
 L30:
-        LD    HL,2
-        ADD   HL,SP
-        LD    SP,HL
+        INC   SP
+        INC   SP
 L31:
         ;;TestWordParameter.j(9)     println(" wereld");
 L32:

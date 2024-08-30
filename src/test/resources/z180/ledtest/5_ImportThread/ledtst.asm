@@ -68,9 +68,7 @@ L31:
         LD    IX,0x0000
         ADD   IX,SP
 L32:
-        LD    HL,65535
-        ADD   HL,SP
-        LD    SP,HL
+        DEC   SP
 L33:
         ;;Thread.j(21)     for (byte b = 255; b!=0; b--) ;
 L34:
@@ -117,9 +115,6 @@ L54:
         LD    IX,0x0000
         ADD   IX,SP
 L55:
-        LD    HL,0
-        ADD   HL,SP
-        LD    SP,HL
 L56:
         ;;Thread.j(28)     while (n != 0) {
 L57:
@@ -271,9 +266,6 @@ L125:
         LD    IX,0x0000
         ADD   IX,SP
 L126:
-        LD    HL,0
-        ADD   HL,SP
-        LD    SP,HL
 L127:
         ;;ledtst.j(53)     // Enable writing to system ctrl registers
 L128:
@@ -418,9 +410,6 @@ L194:
         LD    IX,0x0000
         ADD   IX,SP
 L195:
-        LD    HL,0
-        ADD   HL,SP
-        LD    SP,HL
 L196:
         ;;ledtst.j(109)     // Enable writing to PCR
 L197:
@@ -485,9 +474,6 @@ L225:
         LD    IX,0x0000
         ADD   IX,SP
 L226:
-        LD    HL,0
-        ADD   HL,SP
-        LD    SP,HL
 L227:
         ;;ledtst.j(128)     init();
 L228:
@@ -513,9 +499,8 @@ L237:
 L238:
         CALL  L52
 L239:
-        LD    HL,2
-        ADD   HL,SP
-        LD    SP,HL
+        INC   SP
+        INC   SP
 L240:
         ;;ledtst.j(132)     }
 L241:

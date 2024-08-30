@@ -18,7 +18,7 @@ public class TestLedTest extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 1211);
+    assertTrue(code.size() == 1196);
   }
 
 }
