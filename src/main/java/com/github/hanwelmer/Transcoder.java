@@ -491,6 +491,7 @@ public class Transcoder {
           asm = new AssemblyInstruction(byteAddress, INDENT + "POP   BC", 0xC1);
         }
         break;
+      // FIXME generate CMP iso SBC
       case acc16Compare:
       case acc16CompareAcc8:
       case acc16Minus:
@@ -810,6 +811,7 @@ public class Transcoder {
             throw new RuntimeException(String.format(UNSUPPORTED_OPERAND_TYPE, instruction.operand.opType, function));
         }
         break;
+      // FIXME generate CMP iso SUB
       case acc8Compare:
       case acc8Minus:
       case minusAcc8:
@@ -1018,7 +1020,7 @@ public class Transcoder {
         }
         break;
       case br:
-    	//TODO use relative jump where possible.
+        // TODO use relative jump where possible.
         putLabelReference(word, byteAddress);
         asm = new AssemblyInstruction(byteAddress, INDENT + "JP    L" + word, 0xC3, word % 256, word / 256);
         break;
@@ -1115,8 +1117,8 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div8", 0xCD, 0x00, 0x00);
         break;
       case importFunction:
-          asm = null;
-          break;
+        asm = null;
+        break;
       case increment16:
         if (instruction.operand.opType == OperandType.GLOBAL_VAR) {
           result.addAll(operandToHL(instruction));
@@ -1340,7 +1342,7 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x7E, byt);
         break;
       case CONSTANT:
-    	//TODO replace LD A,0 by XOR A
+        // TODO replace LD A,0 by XOR A
         asmCode = INDENT + "LD    A," + operand.intValue;
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x3E, operand.intValue % 256);
         break;
