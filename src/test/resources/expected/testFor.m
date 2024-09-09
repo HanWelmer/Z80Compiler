@@ -1,4 +1,4 @@
-   0 call 19
+   0 call 6
    1 stop
    2 ;testFor.j(0) /* Program to test generated Z80 assembler code */
    3 ;testFor.j(1) class TestFor {
@@ -15,930 +15,931 @@
   14 ;testFor.j(5)   private static word p = 1;
   15 acc8= constant 1
   16 acc8=> variable 4
-  17 ;testFor.j(6) 
-  18 ;testFor.j(7)   public static void main() {
-  19 method TestFor.main [public, static] void ()
-  20 <basePointer
-  21 basePointer= stackPointer
-  22 stackPointer+ constant 2
-  23 ;testFor.j(8)     println(0);
-  24 acc8= constant 0
-  25 writeLineAcc8
-  26 ;testFor.j(9)   
-  27 ;testFor.j(10)     /************************/
-  28 ;testFor.j(11)     // global variable within for scope
-  29 ;testFor.j(12)     for (byte b = 1; b <= 2; b++) {
-  30 acc8= constant 1
-  31 acc8=> (basePointer + -1)
-  32 acc8= (basePointer + -1)
-  33 acc8Comp constant 2
-  34 brgt 57
-  35 br 38
-  36 incr8 (basePointer + -1)
-  37 br 32
-  38 ;testFor.j(13)       byte c = b1;
-  39 acc8= variable 0
-  40 acc8=> (basePointer + -2)
-  41 ;testFor.j(14)       println (c);
-  42 acc8= (basePointer + -2)
-  43 writeLineAcc8
-  44 ;testFor.j(15)       b1++;
-  45 incr8 variable 0
-  46 ;testFor.j(16)     }
-  47 br 36
-  48 ;testFor.j(17)   
-  49 ;testFor.j(18)     /************************/
-  50 ;testFor.j(19)     // constant - constant
-  51 ;testFor.j(20)     // not relevant
-  52 ;testFor.j(21)   
-  53 ;testFor.j(22)     /************************/
-  54 ;testFor.j(23)     // constant - acc
-  55 ;testFor.j(24)     // byte - byte
-  56 ;testFor.j(25)     for (byte b = 3; 103 == b+100; b++) { println (b); }
-  57 acc8= constant 3
-  58 acc8=> (basePointer + -1)
-  59 acc8= (basePointer + -1)
-  60 acc8+ constant 100
-  61 acc8Comp constant 103
-  62 brne 70
-  63 br 66
-  64 incr8 (basePointer + -1)
-  65 br 59
-  66 acc8= (basePointer + -1)
-  67 writeLineAcc8
-  68 br 64
-  69 ;testFor.j(26)     for (byte b = 4; 105 != b+100; b++) { println (b); }
-  70 acc8= constant 4
-  71 acc8=> (basePointer + -1)
-  72 acc8= (basePointer + -1)
-  73 acc8+ constant 100
-  74 acc8Comp constant 105
-  75 breq 83
-  76 br 79
-  77 incr8 (basePointer + -1)
-  78 br 72
-  79 acc8= (basePointer + -1)
-  80 writeLineAcc8
-  81 br 77
-  82 ;testFor.j(27)     b2=5;
-  83 acc8= constant 5
-  84 acc8=> variable 1
-  85 ;testFor.j(28)     for (byte b = 32; 134 > b+100; b++) { println (b2); b2++; }
-  86 acc8= constant 32
-  87 acc8=> (basePointer + -1)
-  88 acc8= (basePointer + -1)
-  89 acc8+ constant 100
-  90 acc8Comp constant 134
-  91 brge 100
-  92 br 95
-  93 incr8 (basePointer + -1)
-  94 br 88
-  95 acc8= variable 1
-  96 writeLineAcc8
-  97 incr8 variable 1
-  98 br 93
-  99 ;testFor.j(29)     for (byte b = 34; 135 >= b+100; b++) { println (b2); b2++; }
- 100 acc8= constant 34
- 101 acc8=> (basePointer + -1)
- 102 acc8= (basePointer + -1)
- 103 acc8+ constant 100
- 104 acc8Comp constant 135
- 105 brgt 114
- 106 br 109
- 107 incr8 (basePointer + -1)
- 108 br 102
- 109 acc8= variable 1
- 110 writeLineAcc8
- 111 incr8 variable 1
- 112 br 107
- 113 ;testFor.j(30)     for (byte b = 28; 126 <  b+100; b--) { println (b2); b2++; }
- 114 acc8= constant 28
- 115 acc8=> (basePointer + -1)
- 116 acc8= (basePointer + -1)
- 117 acc8+ constant 100
- 118 acc8Comp constant 126
- 119 brle 128
- 120 br 123
- 121 decr8 (basePointer + -1)
- 122 br 116
- 123 acc8= variable 1
- 124 writeLineAcc8
- 125 incr8 variable 1
- 126 br 121
- 127 ;testFor.j(31)     for (byte b = 26; 125 <= b+100; b--) { println (b2); b2++; }
- 128 acc8= constant 26
- 129 acc8=> (basePointer + -1)
- 130 acc8= (basePointer + -1)
- 131 acc8+ constant 100
- 132 acc8Comp constant 125
- 133 brlt 143
- 134 br 137
- 135 decr8 (basePointer + -1)
- 136 br 130
- 137 acc8= variable 1
- 138 writeLineAcc8
- 139 incr8 variable 1
- 140 br 135
- 141 ;testFor.j(32)     // byte - integer
- 142 ;testFor.j(33)     for(word i = 24; 24  == i+0; i--) { println (b2); b2++; }
- 143 acc8= constant 24
- 144 acc8=> (basePointer + -2)
- 145 acc16= (basePointer + -2)
- 146 acc16+ constant 0
- 147 acc8= constant 24
- 148 acc8CompareAcc16
- 149 brne 158
- 150 br 153
- 151 decr16 (basePointer + -2)
- 152 br 145
- 153 acc8= variable 1
- 154 writeLineAcc8
- 155 incr8 variable 1
- 156 br 151
- 157 ;testFor.j(34)     for(word i = 23; 120 != i+100; i--) { println (b2); b2++; }
- 158 acc8= constant 23
- 159 acc8=> (basePointer + -2)
- 160 acc16= (basePointer + -2)
- 161 acc16+ constant 100
- 162 acc8= constant 120
- 163 acc8CompareAcc16
- 164 breq 173
- 165 br 168
- 166 decr16 (basePointer + -2)
- 167 br 160
- 168 acc8= variable 1
- 169 writeLineAcc8
- 170 incr8 variable 1
- 171 br 166
- 172 ;testFor.j(35)     for(word i = 20; 122 > i+100; i++) { println (b2); b2++; }
- 173 acc8= constant 20
- 174 acc8=> (basePointer + -2)
- 175 acc16= (basePointer + -2)
- 176 acc16+ constant 100
- 177 acc8= constant 122
- 178 acc8CompareAcc16
- 179 brle 188
- 180 br 183
- 181 incr16 (basePointer + -2)
- 182 br 175
- 183 acc8= variable 1
- 184 writeLineAcc8
- 185 incr8 variable 1
- 186 br 181
- 187 ;testFor.j(36)     for(word i = 22; 123 >= i+100; i++) { println (b2); b2++; }
- 188 acc8= constant 22
- 189 acc8=> (basePointer + -2)
- 190 acc16= (basePointer + -2)
- 191 acc16+ constant 100
- 192 acc8= constant 123
- 193 acc8CompareAcc16
- 194 brlt 203
- 195 br 198
- 196 incr16 (basePointer + -2)
- 197 br 190
- 198 acc8= variable 1
- 199 writeLineAcc8
- 200 incr8 variable 1
- 201 br 196
- 202 ;testFor.j(37)     for(word i = 16; 114 <  i+100; i--) { println (b2); b2++; }
- 203 acc8= constant 16
- 204 acc8=> (basePointer + -2)
- 205 acc16= (basePointer + -2)
- 206 acc16+ constant 100
- 207 acc8= constant 114
- 208 acc8CompareAcc16
- 209 brge 218
- 210 br 213
- 211 decr16 (basePointer + -2)
- 212 br 205
- 213 acc8= variable 1
- 214 writeLineAcc8
- 215 incr8 variable 1
- 216 br 211
- 217 ;testFor.j(38)     for(word i = 14; 113 <= i+100; i--) { println (b2); b2++; }
- 218 acc8= constant 14
- 219 acc8=> (basePointer + -2)
- 220 acc16= (basePointer + -2)
- 221 acc16+ constant 100
- 222 acc8= constant 113
- 223 acc8CompareAcc16
- 224 brgt 236
- 225 br 228
- 226 decr16 (basePointer + -2)
- 227 br 220
- 228 acc8= variable 1
- 229 writeLineAcc8
- 230 incr8 variable 1
- 231 br 226
- 232 ;testFor.j(39)     // integer - byte
- 233 ;testFor.j(40)     // not relevant
- 234 ;testFor.j(41)     // integer - integer
- 235 ;testFor.j(42)     for(word i = 12; 1012 == i+1000; i--) { println (b2); b2++; }
- 236 acc8= constant 12
- 237 acc8=> (basePointer + -2)
- 238 acc16= (basePointer + -2)
- 239 acc16+ constant 1000
- 240 acc16Comp constant 1012
- 241 brne 250
- 242 br 245
- 243 decr16 (basePointer + -2)
- 244 br 238
- 245 acc8= variable 1
- 246 writeLineAcc8
- 247 incr8 variable 1
- 248 br 243
- 249 ;testFor.j(43)     for(word i = 11; 1008 != i+1000; i--) { println (b2); b2++; }
- 250 acc8= constant 11
- 251 acc8=> (basePointer + -2)
- 252 acc16= (basePointer + -2)
- 253 acc16+ constant 1000
- 254 acc16Comp constant 1008
- 255 breq 264
- 256 br 259
- 257 decr16 (basePointer + -2)
- 258 br 252
- 259 acc8= variable 1
- 260 writeLineAcc8
- 261 incr8 variable 1
- 262 br 257
- 263 ;testFor.j(44)     for(word i = 8; 1010 > i+1000; i++) { println (b2); b2++; }
- 264 acc8= constant 8
- 265 acc8=> (basePointer + -2)
- 266 acc16= (basePointer + -2)
- 267 acc16+ constant 1000
- 268 acc16Comp constant 1010
- 269 brge 278
- 270 br 273
- 271 incr16 (basePointer + -2)
- 272 br 266
- 273 acc8= variable 1
- 274 writeLineAcc8
- 275 incr8 variable 1
- 276 br 271
- 277 ;testFor.j(45)     for(word i = 10; 1011 >= i+1000; i++) { println (b2); b2++; }
- 278 acc8= constant 10
- 279 acc8=> (basePointer + -2)
- 280 acc16= (basePointer + -2)
- 281 acc16+ constant 1000
- 282 acc16Comp constant 1011
- 283 brgt 292
- 284 br 287
- 285 incr16 (basePointer + -2)
- 286 br 280
- 287 acc8= variable 1
- 288 writeLineAcc8
- 289 incr8 variable 1
- 290 br 285
- 291 ;testFor.j(46)     for(word i = 4; 1002 <  i+1000; i--) { println (b2); b2++; }
- 292 acc8= constant 4
- 293 acc8=> (basePointer + -2)
- 294 acc16= (basePointer + -2)
- 295 acc16+ constant 1000
- 296 acc16Comp constant 1002
- 297 brle 306
- 298 br 301
- 299 decr16 (basePointer + -2)
- 300 br 294
- 301 acc8= variable 1
- 302 writeLineAcc8
- 303 incr8 variable 1
- 304 br 299
- 305 ;testFor.j(47)     for(word i = 2; 1001 <= i+1000; i--) { println (b2); b2++; }
- 306 acc8= constant 2
- 307 acc8=> (basePointer + -2)
- 308 acc16= (basePointer + -2)
- 309 acc16+ constant 1000
- 310 acc16Comp constant 1001
- 311 brlt 324
- 312 br 315
- 313 decr16 (basePointer + -2)
- 314 br 308
- 315 acc8= variable 1
- 316 writeLineAcc8
- 317 incr8 variable 1
- 318 br 313
- 319 ;testFor.j(48)   
- 320 ;testFor.j(49)     /************************/
- 321 ;testFor.j(50)     // constant - var
- 322 ;testFor.j(51)     // byte - byte
- 323 ;testFor.j(52)     for (byte b = 42; 41 <= b; b--) { println (b2); b2++; }
- 324 acc8= constant 42
- 325 acc8=> (basePointer + -1)
- 326 acc8= (basePointer + -1)
- 327 acc8Comp constant 41
- 328 brlt 338
- 329 br 332
- 330 decr8 (basePointer + -1)
- 331 br 326
- 332 acc8= variable 1
- 333 writeLineAcc8
- 334 incr8 variable 1
- 335 br 330
- 336 ;testFor.j(53)     // byte - integer
- 337 ;testFor.j(54)     for(word i = 40; 39 <= i; i--) { println (b2); b2++; }
- 338 acc8= constant 40
- 339 acc8=> (basePointer + -2)
- 340 acc16= (basePointer + -2)
- 341 acc8= constant 39
- 342 acc8CompareAcc16
- 343 brgt 355
- 344 br 347
- 345 decr16 (basePointer + -2)
- 346 br 340
- 347 acc8= variable 1
- 348 writeLineAcc8
- 349 incr8 variable 1
- 350 br 345
- 351 ;testFor.j(55)     // integer - byte
- 352 ;testFor.j(56)     // not relevant
- 353 ;testFor.j(57)     // integer - integer
- 354 ;testFor.j(58)     for(word i = 1038; 1037 <= i; i--) { println (b2); b2++; }
- 355 acc16= constant 1038
- 356 acc16=> (basePointer + -2)
- 357 acc16= (basePointer + -2)
- 358 acc16Comp constant 1037
- 359 brlt 373
- 360 br 363
- 361 decr16 (basePointer + -2)
- 362 br 357
- 363 acc8= variable 1
- 364 writeLineAcc8
- 365 incr8 variable 1
- 366 br 361
- 367 ;testFor.j(59)   
- 368 ;testFor.j(60)     /************************/
- 369 ;testFor.j(61)     // constant - stack8
- 370 ;testFor.j(62)     // byte - byte
- 371 ;testFor.j(63)     //TODO
- 372 ;testFor.j(64)     println(43);
- 373 acc8= constant 43
- 374 writeLineAcc8
- 375 ;testFor.j(65)     println(44);
- 376 acc8= constant 44
- 377 writeLineAcc8
- 378 ;testFor.j(66)     // constant - stack8
- 379 ;testFor.j(67)     // byte - integer
- 380 ;testFor.j(68)     //TODO
- 381 ;testFor.j(69)     println(45);
- 382 acc8= constant 45
- 383 writeLineAcc8
- 384 ;testFor.j(70)     println(46);
- 385 acc8= constant 46
- 386 writeLineAcc8
- 387 ;testFor.j(71)     // constant - stack8
- 388 ;testFor.j(72)     // integer - byte
- 389 ;testFor.j(73)     //TODO
- 390 ;testFor.j(74)     println(47);
- 391 acc8= constant 47
- 392 writeLineAcc8
- 393 ;testFor.j(75)     println(48);
- 394 acc8= constant 48
- 395 writeLineAcc8
- 396 ;testFor.j(76)     // constant - stack88
- 397 ;testFor.j(77)     // integer - integer
- 398 ;testFor.j(78)     //TODO
- 399 ;testFor.j(79)     println(49);
- 400 acc8= constant 49
- 401 writeLineAcc8
- 402 ;testFor.j(80)     println(50);
- 403 acc8= constant 50
- 404 writeLineAcc8
- 405 ;testFor.j(81)   
- 406 ;testFor.j(82)     /************************/
- 407 ;testFor.j(83)     // constant - stack16
- 408 ;testFor.j(84)     // byte - byte
- 409 ;testFor.j(85)     //TODO
- 410 ;testFor.j(86)     println(51);
- 411 acc8= constant 51
- 412 writeLineAcc8
- 413 ;testFor.j(87)     println(52);
- 414 acc8= constant 52
- 415 writeLineAcc8
- 416 ;testFor.j(88)     // constant - stack16
- 417 ;testFor.j(89)     // byte - integer
- 418 ;testFor.j(90)     //TODO
- 419 ;testFor.j(91)     println(53);
- 420 acc8= constant 53
- 421 writeLineAcc8
- 422 ;testFor.j(92)     println(54);
- 423 acc8= constant 54
- 424 writeLineAcc8
- 425 ;testFor.j(93)     // constant - stack16
- 426 ;testFor.j(94)     // integer - byte
- 427 ;testFor.j(95)     //TODO
- 428 ;testFor.j(96)     println(55);
- 429 acc8= constant 55
- 430 writeLineAcc8
- 431 ;testFor.j(97)     println(56);
- 432 acc8= constant 56
- 433 writeLineAcc8
- 434 ;testFor.j(98)     // constant - stack16
- 435 ;testFor.j(99)     // integer - integer
- 436 ;testFor.j(100)     //TODO
- 437 ;testFor.j(101)     println(57);
- 438 acc8= constant 57
- 439 writeLineAcc8
- 440 ;testFor.j(102)     println(58);
- 441 acc8= constant 58
- 442 writeLineAcc8
- 443 ;testFor.j(103)   
- 444 ;testFor.j(104)     /************************/
- 445 ;testFor.j(105)     // acc - constant
- 446 ;testFor.j(106)     // byte - byte
- 447 ;testFor.j(107)     b2 = 59;
- 448 acc8= constant 59
- 449 acc8=> variable 1
- 450 ;testFor.j(108)     for (byte b = 56; b+0 <= 57; b++) { println (b2); b2++; }
- 451 acc8= constant 56
- 452 acc8=> (basePointer + -1)
- 453 acc8= (basePointer + -1)
- 454 acc8+ constant 0
- 455 acc8Comp constant 57
- 456 brgt 470
- 457 br 462
- 458 incr8 (basePointer + -1)
- 459 br 453
- 460 acc8= variable 1
- 461 writeLineAcc8
- 462 incr8 variable 1
- 463 br 460
- 464 ;testFor.j(109)     // byte - integer
- 465 ;testFor.j(110)     //not relevant
- 466 ;testFor.j(111)     // integer - byte
- 467 ;testFor.j(112)     for (word i = 54; i+0 <= 55; i++) { println (b2); b2++;}
- 468 acc8= constant 54
- 469 acc8=> (basePointer + -2)
- 470 acc16= (basePointer + -2)
- 471 acc16+ constant 0
- 472 acc8= constant 55
- 473 acc16CompareAcc8
- 474 brgt 488
- 475 br 482
- 476 incr16 (basePointer + -2)
- 477 br 472
- 478 acc8= variable 1
- 479 writeLineAcc8
- 480 incr8 variable 1
- 481 br 480
- 482 ;testFor.j(113)     // integer - integer
- 483 ;testFor.j(114)     for(word i = 1052; i+0 <= 1053; i++) { println (b2); b2++; }
- 484 acc16= constant 1052
- 485 acc16=> (basePointer + -2)
- 486 acc16= (basePointer + -2)
- 487 acc16+ constant 0
- 488 acc16Comp constant 1053
- 489 brgt 508
- 490 br 499
- 491 incr16 (basePointer + -2)
- 492 br 490
- 493 acc8= variable 1
- 494 writeLineAcc8
- 495 incr8 variable 1
- 496 br 497
- 497 ;testFor.j(115)   
- 498 ;testFor.j(116)     /************************/
- 499 ;testFor.j(117)     // acc - acc
- 500 ;testFor.j(118)     // byte - byte
- 501 ;testFor.j(119)     for (byte b = 64; 63+0 <= b+0; b--) { println (b2); b2++; }
- 502 acc8= constant 64
- 503 acc8=> (basePointer + -1)
- 504 acc8= constant 63
- 505 acc8+ constant 0
- 506 <acc8
- 507 acc8= (basePointer + -1)
- 508 acc8+ constant 0
- 509 revAcc8Comp unstack8
- 510 brlt 526
- 511 br 520
- 512 decr8 (basePointer + -1)
- 513 br 510
- 514 acc8= variable 1
- 515 writeLineAcc8
- 516 incr8 variable 1
- 517 br 518
- 518 ;testFor.j(120)     // byte - integer
- 519 ;testFor.j(121)     for(word i = 62; 61+0 <= i+0; i--) { println (b2); b2++; }
- 520 acc8= constant 62
- 521 acc8=> (basePointer + -2)
- 522 acc8= constant 61
- 523 acc8+ constant 0
- 524 <acc8
- 525 acc16= (basePointer + -2)
- 526 acc16+ constant 0
- 527 acc8<
- 528 acc8CompareAcc16
- 529 brgt 545
- 530 br 539
- 531 decr16 (basePointer + -2)
- 532 br 528
- 533 acc8= variable 1
- 534 writeLineAcc8
- 535 incr8 variable 1
- 536 br 537
- 537 ;testFor.j(122)     // integer - byte
- 538 ;testFor.j(123)     i2=59;
- 539 acc8= constant 59
- 540 acc8=> variable 2
- 541 ;testFor.j(124)     for (byte b = 60; i2+0 <= b+0; b--) { println (b2); b2++; }
- 542 acc8= constant 60
- 543 acc8=> (basePointer + -1)
- 544 acc16= variable 2
- 545 acc16+ constant 0
- 546 <acc16
- 547 acc8= (basePointer + -1)
- 548 acc8+ constant 0
- 549 acc16<
- 550 acc16CompareAcc8
- 551 brgt 567
- 552 br 561
- 553 decr8 (basePointer + -1)
- 554 br 550
- 555 acc8= variable 1
- 556 writeLineAcc8
- 557 incr8 variable 1
- 558 br 559
- 559 ;testFor.j(125)     // integer - integer
- 560 ;testFor.j(126)     for(word i = 1058; 1000+57 <= i+0; i--) { println (b2); b2++; }
- 561 acc16= constant 1058
- 562 acc16=> (basePointer + -2)
- 563 acc16= constant 1000
- 564 acc16+ constant 57
- 565 <acc16
- 566 acc16= (basePointer + -2)
- 567 acc16+ constant 0
- 568 revAcc16Comp unstack16
- 569 brlt 588
- 570 br 579
- 571 decr16 (basePointer + -2)
- 572 br 569
- 573 acc8= variable 1
- 574 writeLineAcc8
- 575 incr8 variable 1
- 576 br 577
- 577 ;testFor.j(127)   
- 578 ;testFor.j(128)     /************************/
- 579 ;testFor.j(129)     // acc - var
- 580 ;testFor.j(130)     // byte - byte
- 581 ;testFor.j(131)     for (byte b = 72; 71+0 <= b; b--) { println (b2); b2++; }
- 582 acc8= constant 72
- 583 acc8=> (basePointer + -1)
- 584 acc8= constant 71
- 585 acc8+ constant 0
- 586 acc8Comp (basePointer + -1)
- 587 brgt 605
- 588 br 599
- 589 decr8 (basePointer + -1)
- 590 br 590
- 591 acc8= variable 1
- 592 writeLineAcc8
- 593 incr8 variable 1
- 594 br 597
- 595 ;testFor.j(132)     // byte - integer
- 596 ;testFor.j(133)     for(word i = 70; 69+0 <= i; i--) { println (b2); b2++; }
- 597 acc8= constant 70
- 598 acc8=> (basePointer + -2)
- 599 acc8= constant 69
- 600 acc8+ constant 0
- 601 acc16= (basePointer + -2)
- 602 acc8CompareAcc16
- 603 brgt 623
- 604 br 617
- 605 decr16 (basePointer + -2)
- 606 br 607
- 607 acc8= variable 1
- 608 writeLineAcc8
- 609 incr8 variable 1
- 610 br 615
- 611 ;testFor.j(134)     // integer - byte
- 612 ;testFor.j(135)     i2=67;
- 613 acc8= constant 67
- 614 acc8=> variable 2
- 615 ;testFor.j(136)     for (byte b = 68; i2+0 <= b; b--) { println (b2); b2++; }
- 616 acc8= constant 68
- 617 acc8=> (basePointer + -1)
- 618 acc16= variable 2
- 619 acc16+ constant 0
- 620 acc8= (basePointer + -1)
- 621 acc16CompareAcc8
- 622 brgt 644
- 623 br 638
- 624 decr8 (basePointer + -1)
- 625 br 628
- 626 acc8= variable 1
- 627 writeLineAcc8
- 628 incr8 variable 1
- 629 br 636
- 630 ;testFor.j(137)     // integer - integer
- 631 ;testFor.j(138)     for(word i = 1066; 1000+65 <= i; i--) { println (b2); b2++; }
- 632 acc16= constant 1066
- 633 acc16=> (basePointer + -2)
- 634 acc16= constant 1000
- 635 acc16+ constant 65
- 636 acc16Comp (basePointer + -2)
- 637 brgt 665
- 638 br 655
- 639 decr16 (basePointer + -2)
- 640 br 646
- 641 acc8= variable 1
- 642 writeLineAcc8
- 643 incr8 variable 1
- 644 br 653
- 645 ;testFor.j(139)   
- 646 ;testFor.j(140)     /************************/
- 647 ;testFor.j(141)     // acc - stack8
- 648 ;testFor.j(142)     // byte - byte
- 649 ;testFor.j(143)     //TODO
- 650 ;testFor.j(144)     println(81);
- 651 acc8= constant 81
- 652 writeLineAcc8
- 653 ;testFor.j(145)     println(82);
- 654 acc8= constant 82
- 655 writeLineAcc8
- 656 ;testFor.j(146)     // byte - integer
- 657 ;testFor.j(147)     //TODO
- 658 ;testFor.j(148)     println(83);
- 659 acc8= constant 83
- 660 writeLineAcc8
- 661 ;testFor.j(149)     println(84);
- 662 acc8= constant 84
- 663 writeLineAcc8
- 664 ;testFor.j(150)     // integer - byte
- 665 ;testFor.j(151)     //TODO
- 666 ;testFor.j(152)     println(85);
- 667 acc8= constant 85
- 668 writeLineAcc8
- 669 ;testFor.j(153)     println(86);
- 670 acc8= constant 86
- 671 writeLineAcc8
- 672 ;testFor.j(154)     // integer - integer
- 673 ;testFor.j(155)     //TODO
- 674 ;testFor.j(156)     println(87);
- 675 acc8= constant 87
- 676 writeLineAcc8
- 677 ;testFor.j(157)     println(88);
- 678 acc8= constant 88
- 679 writeLineAcc8
- 680 ;testFor.j(158)   
- 681 ;testFor.j(159)     /************************/
- 682 ;testFor.j(160)     // acc - stack16
- 683 ;testFor.j(161)     // byte - byte
- 684 ;testFor.j(162)     //TODO
- 685 ;testFor.j(163)     println(89);
- 686 acc8= constant 89
- 687 writeLineAcc8
- 688 ;testFor.j(164)     println(90);
- 689 acc8= constant 90
- 690 writeLineAcc8
- 691 ;testFor.j(165)     // byte - integer
- 692 ;testFor.j(166)     //TODO
- 693 ;testFor.j(167)     println(91);
- 694 acc8= constant 91
- 695 writeLineAcc8
- 696 ;testFor.j(168)     println(92);
- 697 acc8= constant 92
- 698 writeLineAcc8
- 699 ;testFor.j(169)     // integer - byte
- 700 ;testFor.j(170)     //TODO
- 701 ;testFor.j(171)     println(93);
- 702 acc8= constant 93
- 703 writeLineAcc8
- 704 ;testFor.j(172)     println(94);
- 705 acc8= constant 94
- 706 writeLineAcc8
- 707 ;testFor.j(173)     // integer - integer
- 708 ;testFor.j(174)     //TODO
- 709 ;testFor.j(175)     println(95);
- 710 acc8= constant 95
- 711 writeLineAcc8
- 712 ;testFor.j(176)     println(96);
- 713 acc8= constant 96
- 714 writeLineAcc8
- 715 ;testFor.j(177)   
- 716 ;testFor.j(178)     /************************/
- 717 ;testFor.j(179)     // var - constant
- 718 ;testFor.j(180)     // byte - byte
- 719 ;testFor.j(181)     b2=97;
- 720 acc8= constant 97
- 721 acc8=> variable 1
- 722 ;testFor.j(182)     for (byte b = 96; b <= 97; b++) { println (b2); b2++; }
- 723 acc8= constant 96
- 724 acc8=> (basePointer + -1)
- 725 acc8= (basePointer + -1)
- 726 acc8Comp constant 97
- 727 brgt 753
- 728 br 745
- 729 incr8 (basePointer + -1)
- 730 br 739
- 731 acc8= variable 1
- 732 writeLineAcc8
- 733 incr8 variable 1
- 734 br 743
- 735 ;testFor.j(183)     // byte - integer
- 736 ;testFor.j(184)     //not relevant
- 737 ;testFor.j(185)     // integer - byte
- 738 ;testFor.j(186)     for(word i = 92; i <= 93; i++) { println (b2); b2++; }
- 739 acc8= constant 92
- 740 acc8=> (basePointer + -2)
- 741 acc16= (basePointer + -2)
- 742 acc8= constant 93
- 743 acc16CompareAcc8
- 744 brgt 768
- 745 br 762
- 746 incr16 (basePointer + -2)
- 747 br 755
- 748 acc8= variable 1
- 749 writeLineAcc8
- 750 incr8 variable 1
- 751 br 760
- 752 ;testFor.j(187)     // integer - integer
- 753 ;testFor.j(188)     for(word i = 1090; i <= 1091; i++) { println (b2); b2++; }
- 754 acc16= constant 1090
- 755 acc16=> (basePointer + -2)
- 756 acc16= (basePointer + -2)
- 757 acc16Comp constant 1091
- 758 brgt 785
- 759 br 776
- 760 incr16 (basePointer + -2)
- 761 br 770
- 762 acc8= variable 1
- 763 writeLineAcc8
- 764 incr8 variable 1
- 765 br 774
- 766 ;testFor.j(189)   
- 767 ;testFor.j(190)     /************************/
- 768 ;testFor.j(191)     // var - acc
- 769 ;testFor.j(192)     // byte - byte
- 770 ;testFor.j(193)     for (byte b = 104; b <= 105+0; b++) { println (b2); b2++; }
- 771 acc8= constant 104
- 772 acc8=> (basePointer + -1)
- 773 acc8= constant 105
- 774 acc8+ constant 0
- 775 acc8Comp (basePointer + -1)
- 776 brlt 800
- 777 br 794
- 778 incr8 (basePointer + -1)
- 779 br 787
- 780 acc8= variable 1
- 781 writeLineAcc8
- 782 incr8 variable 1
- 783 br 792
- 784 ;testFor.j(194)     // byte - integer
- 785 ;testFor.j(195)     i2=103;
- 786 acc8= constant 103
- 787 acc8=> variable 2
- 788 ;testFor.j(196)     for (byte b = 102; b <= i2+0; b++) { println (b2); b2++; }
- 789 acc8= constant 102
- 790 acc8=> (basePointer + -1)
- 791 acc16= variable 2
- 792 acc16+ constant 0
- 793 acc8= (basePointer + -1)
- 794 acc8CompareAcc16
- 795 brgt 819
- 796 br 813
- 797 incr8 (basePointer + -1)
- 798 br 805
- 799 acc8= variable 1
- 800 writeLineAcc8
- 801 incr8 variable 1
- 802 br 811
- 803 ;testFor.j(197)     // integer - byte
- 804 ;testFor.j(198)     for(word i = 100; i <= 101+0; i++) { println (b2); b2++; }
- 805 acc8= constant 100
- 806 acc8=> (basePointer + -2)
- 807 acc8= constant 101
- 808 acc8+ constant 0
- 809 acc16= (basePointer + -2)
- 810 acc16CompareAcc8
- 811 brgt 835
- 812 br 829
- 813 incr16 (basePointer + -2)
- 814 br 821
- 815 acc8= variable 1
- 816 writeLineAcc8
- 817 incr8 variable 1
- 818 br 827
- 819 ;testFor.j(199)     // integer - integer
- 820 ;testFor.j(200)     for(word i = 1098; i <= 1099+0; i++) { println (b2); b2++; }
- 821 acc16= constant 1098
- 822 acc16=> (basePointer + -2)
- 823 acc16= constant 1099
- 824 acc16+ constant 0
- 825 acc16Comp (basePointer + -2)
- 826 brlt 853
- 827 br 844
- 828 incr16 (basePointer + -2)
- 829 br 837
- 830 acc8= variable 1
- 831 writeLineAcc8
- 832 incr8 variable 1
- 833 br 842
- 834 ;testFor.j(201)   
- 835 ;testFor.j(202)     /************************/
- 836 ;testFor.j(203)     // var - var
- 837 ;testFor.j(204)     // byte - byte
- 838 ;testFor.j(205)     for (byte b = 112; b2 <= b; b--) { println (b2); b2++; }
- 839 acc8= constant 112
- 840 acc8=> (basePointer + -1)
- 841 acc8= variable 1
- 842 acc8Comp (basePointer + -1)
- 843 brgt 867
- 844 br 861
- 845 decr8 (basePointer + -1)
- 846 br 855
- 847 acc8= variable 1
- 848 writeLineAcc8
- 849 incr8 variable 1
- 850 br 859
- 851 ;testFor.j(206)     // byte - integer
- 852 ;testFor.j(207)     for(word i = 116; b2 <= i; i--) { println (b2); b2++; }
- 853 acc8= constant 116
- 854 acc8=> (basePointer + -2)
- 855 acc8= variable 1
- 856 acc16= (basePointer + -2)
- 857 acc8CompareAcc16
- 858 brgt 882
- 859 br 876
- 860 decr16 (basePointer + -2)
- 861 br 869
- 862 acc8= variable 1
- 863 writeLineAcc8
- 864 incr8 variable 1
- 865 br 874
- 866 ;testFor.j(208)     // integer - byte
- 867 ;testFor.j(209)     i2=b2;
- 868 acc8= variable 1
- 869 acc8=> variable 2
- 870 ;testFor.j(210)     for (byte b = 118; i2 <= b; b--) { println (b2); b2++; }
- 871 acc8= constant 118
- 872 acc8=> (basePointer + -1)
- 873 acc16= variable 2
- 874 acc8= (basePointer + -1)
- 875 acc16CompareAcc8
- 876 brgt 900
- 877 br 894
- 878 decr8 (basePointer + -1)
- 879 br 887
- 880 acc8= variable 1
- 881 writeLineAcc8
- 882 incr8 variable 1
- 883 br 892
- 884 ;testFor.j(211)     // integer - integer
- 885 ;testFor.j(212)     i2=120;
- 886 acc8= constant 120
- 887 acc8=> variable 2
- 888 ;testFor.j(213)     for(word i = b2+4; i2 <= i; i--) { println (b2); b2++; }
- 889 acc8= variable 1
- 890 acc8+ constant 4
- 891 acc8=> (basePointer + -2)
- 892 acc16= variable 2
- 893 acc16Comp (basePointer + -2)
- 894 brgt 950
- 895 br 912
- 896 decr16 (basePointer + -2)
- 897 br 906
- 898 acc8= variable 1
- 899 writeLineAcc8
- 900 incr8 variable 1
- 901 br 910
- 902 ;testFor.j(214)   
- 903 ;testFor.j(215)     /************************/
- 904 ;testFor.j(216)     // var - stack8
- 905 ;testFor.j(217)     // byte - byte
- 906 ;testFor.j(218)     // byte - integer
- 907 ;testFor.j(219)     // integer - byte
- 908 ;testFor.j(220)     // integer - integer
- 909 ;testFor.j(221)     //TODO
- 910 ;testFor.j(222)   
- 911 ;testFor.j(223)     /************************/
- 912 ;testFor.j(224)     // var - stack16
- 913 ;testFor.j(225)     // byte - byte
- 914 ;testFor.j(226)     // byte - integer
- 915 ;testFor.j(227)     // integer - byte
- 916 ;testFor.j(228)     // integer - integer
- 917 ;testFor.j(229)     //TODO
- 918 ;testFor.j(230)   
- 919 ;testFor.j(231)     /************************/
- 920 ;testFor.j(232)     // stack8 - constant
- 921 ;testFor.j(233)     // stack8 - acc
- 922 ;testFor.j(234)     // stack8 - var
- 923 ;testFor.j(235)     // stack8 - stack8
- 924 ;testFor.j(236)     // stack8 - stack16
- 925 ;testFor.j(237)     //TODO
- 926 ;testFor.j(238)   
- 927 ;testFor.j(239)     /************************/
- 928 ;testFor.j(240)     // stack16 - constant
- 929 ;testFor.j(241)     // stack16 - acc
- 930 ;testFor.j(242)     // stack16 - var
- 931 ;testFor.j(243)     // stack16 - stack8
- 932 ;testFor.j(244)     // stack16 - stack16
- 933 ;testFor.j(245)     //TODO
- 934 ;testFor.j(246)   
- 935 ;testFor.j(247)     println("Klaar.");
- 936 acc16= stringconstant 943
- 937 writeLineString
- 938 ;testFor.j(248)   }
- 939 stackPointer= basePointer
- 940 basePointer<
- 941 return
- 942 ;testFor.j(249) }
- 943 stringConstant 0 = "Klaar."
+  17 br 20
+  18 ;testFor.j(6) 
+  19 ;testFor.j(7)   public static void main() {
+  20 method TestFor.main [public, static] void ()
+  21 <basePointer
+  22 basePointer= stackPointer
+  23 stackPointer+ constant 2
+  24 ;testFor.j(8)     println(0);
+  25 acc8= constant 0
+  26 writeLineAcc8
+  27 ;testFor.j(9)   
+  28 ;testFor.j(10)     /************************/
+  29 ;testFor.j(11)     // global variable within for scope
+  30 ;testFor.j(12)     for (byte b = 1; b <= 2; b++) {
+  31 acc8= constant 1
+  32 acc8=> (basePointer + -1)
+  33 acc8= (basePointer + -1)
+  34 acc8Comp constant 2
+  35 brgt 58
+  36 br 39
+  37 incr8 (basePointer + -1)
+  38 br 33
+  39 ;testFor.j(13)       byte c = b1;
+  40 acc8= variable 0
+  41 acc8=> (basePointer + -2)
+  42 ;testFor.j(14)       println (c);
+  43 acc8= (basePointer + -2)
+  44 writeLineAcc8
+  45 ;testFor.j(15)       b1++;
+  46 incr8 variable 0
+  47 ;testFor.j(16)     }
+  48 br 37
+  49 ;testFor.j(17)   
+  50 ;testFor.j(18)     /************************/
+  51 ;testFor.j(19)     // constant - constant
+  52 ;testFor.j(20)     // not relevant
+  53 ;testFor.j(21)   
+  54 ;testFor.j(22)     /************************/
+  55 ;testFor.j(23)     // constant - acc
+  56 ;testFor.j(24)     // byte - byte
+  57 ;testFor.j(25)     for (byte b = 3; 103 == b+100; b++) { println (b); }
+  58 acc8= constant 3
+  59 acc8=> (basePointer + -1)
+  60 acc8= (basePointer + -1)
+  61 acc8+ constant 100
+  62 acc8Comp constant 103
+  63 brne 71
+  64 br 67
+  65 incr8 (basePointer + -1)
+  66 br 60
+  67 acc8= (basePointer + -1)
+  68 writeLineAcc8
+  69 br 65
+  70 ;testFor.j(26)     for (byte b = 4; 105 != b+100; b++) { println (b); }
+  71 acc8= constant 4
+  72 acc8=> (basePointer + -1)
+  73 acc8= (basePointer + -1)
+  74 acc8+ constant 100
+  75 acc8Comp constant 105
+  76 breq 84
+  77 br 80
+  78 incr8 (basePointer + -1)
+  79 br 73
+  80 acc8= (basePointer + -1)
+  81 writeLineAcc8
+  82 br 78
+  83 ;testFor.j(27)     b2=5;
+  84 acc8= constant 5
+  85 acc8=> variable 1
+  86 ;testFor.j(28)     for (byte b = 32; 134 > b+100; b++) { println (b2); b2++; }
+  87 acc8= constant 32
+  88 acc8=> (basePointer + -1)
+  89 acc8= (basePointer + -1)
+  90 acc8+ constant 100
+  91 acc8Comp constant 134
+  92 brge 101
+  93 br 96
+  94 incr8 (basePointer + -1)
+  95 br 89
+  96 acc8= variable 1
+  97 writeLineAcc8
+  98 incr8 variable 1
+  99 br 94
+ 100 ;testFor.j(29)     for (byte b = 34; 135 >= b+100; b++) { println (b2); b2++; }
+ 101 acc8= constant 34
+ 102 acc8=> (basePointer + -1)
+ 103 acc8= (basePointer + -1)
+ 104 acc8+ constant 100
+ 105 acc8Comp constant 135
+ 106 brgt 115
+ 107 br 110
+ 108 incr8 (basePointer + -1)
+ 109 br 103
+ 110 acc8= variable 1
+ 111 writeLineAcc8
+ 112 incr8 variable 1
+ 113 br 108
+ 114 ;testFor.j(30)     for (byte b = 28; 126 <  b+100; b--) { println (b2); b2++; }
+ 115 acc8= constant 28
+ 116 acc8=> (basePointer + -1)
+ 117 acc8= (basePointer + -1)
+ 118 acc8+ constant 100
+ 119 acc8Comp constant 126
+ 120 brle 129
+ 121 br 124
+ 122 decr8 (basePointer + -1)
+ 123 br 117
+ 124 acc8= variable 1
+ 125 writeLineAcc8
+ 126 incr8 variable 1
+ 127 br 122
+ 128 ;testFor.j(31)     for (byte b = 26; 125 <= b+100; b--) { println (b2); b2++; }
+ 129 acc8= constant 26
+ 130 acc8=> (basePointer + -1)
+ 131 acc8= (basePointer + -1)
+ 132 acc8+ constant 100
+ 133 acc8Comp constant 125
+ 134 brlt 144
+ 135 br 138
+ 136 decr8 (basePointer + -1)
+ 137 br 131
+ 138 acc8= variable 1
+ 139 writeLineAcc8
+ 140 incr8 variable 1
+ 141 br 136
+ 142 ;testFor.j(32)     // byte - integer
+ 143 ;testFor.j(33)     for(word i = 24; 24  == i+0; i--) { println (b2); b2++; }
+ 144 acc8= constant 24
+ 145 acc8=> (basePointer + -2)
+ 146 acc16= (basePointer + -2)
+ 147 acc16+ constant 0
+ 148 acc8= constant 24
+ 149 acc8CompareAcc16
+ 150 brne 159
+ 151 br 154
+ 152 decr16 (basePointer + -2)
+ 153 br 146
+ 154 acc8= variable 1
+ 155 writeLineAcc8
+ 156 incr8 variable 1
+ 157 br 152
+ 158 ;testFor.j(34)     for(word i = 23; 120 != i+100; i--) { println (b2); b2++; }
+ 159 acc8= constant 23
+ 160 acc8=> (basePointer + -2)
+ 161 acc16= (basePointer + -2)
+ 162 acc16+ constant 100
+ 163 acc8= constant 120
+ 164 acc8CompareAcc16
+ 165 breq 174
+ 166 br 169
+ 167 decr16 (basePointer + -2)
+ 168 br 161
+ 169 acc8= variable 1
+ 170 writeLineAcc8
+ 171 incr8 variable 1
+ 172 br 167
+ 173 ;testFor.j(35)     for(word i = 20; 122 > i+100; i++) { println (b2); b2++; }
+ 174 acc8= constant 20
+ 175 acc8=> (basePointer + -2)
+ 176 acc16= (basePointer + -2)
+ 177 acc16+ constant 100
+ 178 acc8= constant 122
+ 179 acc8CompareAcc16
+ 180 brle 189
+ 181 br 184
+ 182 incr16 (basePointer + -2)
+ 183 br 176
+ 184 acc8= variable 1
+ 185 writeLineAcc8
+ 186 incr8 variable 1
+ 187 br 182
+ 188 ;testFor.j(36)     for(word i = 22; 123 >= i+100; i++) { println (b2); b2++; }
+ 189 acc8= constant 22
+ 190 acc8=> (basePointer + -2)
+ 191 acc16= (basePointer + -2)
+ 192 acc16+ constant 100
+ 193 acc8= constant 123
+ 194 acc8CompareAcc16
+ 195 brlt 204
+ 196 br 199
+ 197 incr16 (basePointer + -2)
+ 198 br 191
+ 199 acc8= variable 1
+ 200 writeLineAcc8
+ 201 incr8 variable 1
+ 202 br 197
+ 203 ;testFor.j(37)     for(word i = 16; 114 <  i+100; i--) { println (b2); b2++; }
+ 204 acc8= constant 16
+ 205 acc8=> (basePointer + -2)
+ 206 acc16= (basePointer + -2)
+ 207 acc16+ constant 100
+ 208 acc8= constant 114
+ 209 acc8CompareAcc16
+ 210 brge 219
+ 211 br 214
+ 212 decr16 (basePointer + -2)
+ 213 br 206
+ 214 acc8= variable 1
+ 215 writeLineAcc8
+ 216 incr8 variable 1
+ 217 br 212
+ 218 ;testFor.j(38)     for(word i = 14; 113 <= i+100; i--) { println (b2); b2++; }
+ 219 acc8= constant 14
+ 220 acc8=> (basePointer + -2)
+ 221 acc16= (basePointer + -2)
+ 222 acc16+ constant 100
+ 223 acc8= constant 113
+ 224 acc8CompareAcc16
+ 225 brgt 237
+ 226 br 229
+ 227 decr16 (basePointer + -2)
+ 228 br 221
+ 229 acc8= variable 1
+ 230 writeLineAcc8
+ 231 incr8 variable 1
+ 232 br 227
+ 233 ;testFor.j(39)     // integer - byte
+ 234 ;testFor.j(40)     // not relevant
+ 235 ;testFor.j(41)     // integer - integer
+ 236 ;testFor.j(42)     for(word i = 12; 1012 == i+1000; i--) { println (b2); b2++; }
+ 237 acc8= constant 12
+ 238 acc8=> (basePointer + -2)
+ 239 acc16= (basePointer + -2)
+ 240 acc16+ constant 1000
+ 241 acc16Comp constant 1012
+ 242 brne 251
+ 243 br 246
+ 244 decr16 (basePointer + -2)
+ 245 br 239
+ 246 acc8= variable 1
+ 247 writeLineAcc8
+ 248 incr8 variable 1
+ 249 br 244
+ 250 ;testFor.j(43)     for(word i = 11; 1008 != i+1000; i--) { println (b2); b2++; }
+ 251 acc8= constant 11
+ 252 acc8=> (basePointer + -2)
+ 253 acc16= (basePointer + -2)
+ 254 acc16+ constant 1000
+ 255 acc16Comp constant 1008
+ 256 breq 265
+ 257 br 260
+ 258 decr16 (basePointer + -2)
+ 259 br 253
+ 260 acc8= variable 1
+ 261 writeLineAcc8
+ 262 incr8 variable 1
+ 263 br 258
+ 264 ;testFor.j(44)     for(word i = 8; 1010 > i+1000; i++) { println (b2); b2++; }
+ 265 acc8= constant 8
+ 266 acc8=> (basePointer + -2)
+ 267 acc16= (basePointer + -2)
+ 268 acc16+ constant 1000
+ 269 acc16Comp constant 1010
+ 270 brge 279
+ 271 br 274
+ 272 incr16 (basePointer + -2)
+ 273 br 267
+ 274 acc8= variable 1
+ 275 writeLineAcc8
+ 276 incr8 variable 1
+ 277 br 272
+ 278 ;testFor.j(45)     for(word i = 10; 1011 >= i+1000; i++) { println (b2); b2++; }
+ 279 acc8= constant 10
+ 280 acc8=> (basePointer + -2)
+ 281 acc16= (basePointer + -2)
+ 282 acc16+ constant 1000
+ 283 acc16Comp constant 1011
+ 284 brgt 293
+ 285 br 288
+ 286 incr16 (basePointer + -2)
+ 287 br 281
+ 288 acc8= variable 1
+ 289 writeLineAcc8
+ 290 incr8 variable 1
+ 291 br 286
+ 292 ;testFor.j(46)     for(word i = 4; 1002 <  i+1000; i--) { println (b2); b2++; }
+ 293 acc8= constant 4
+ 294 acc8=> (basePointer + -2)
+ 295 acc16= (basePointer + -2)
+ 296 acc16+ constant 1000
+ 297 acc16Comp constant 1002
+ 298 brle 307
+ 299 br 302
+ 300 decr16 (basePointer + -2)
+ 301 br 295
+ 302 acc8= variable 1
+ 303 writeLineAcc8
+ 304 incr8 variable 1
+ 305 br 300
+ 306 ;testFor.j(47)     for(word i = 2; 1001 <= i+1000; i--) { println (b2); b2++; }
+ 307 acc8= constant 2
+ 308 acc8=> (basePointer + -2)
+ 309 acc16= (basePointer + -2)
+ 310 acc16+ constant 1000
+ 311 acc16Comp constant 1001
+ 312 brlt 325
+ 313 br 316
+ 314 decr16 (basePointer + -2)
+ 315 br 309
+ 316 acc8= variable 1
+ 317 writeLineAcc8
+ 318 incr8 variable 1
+ 319 br 314
+ 320 ;testFor.j(48)   
+ 321 ;testFor.j(49)     /************************/
+ 322 ;testFor.j(50)     // constant - var
+ 323 ;testFor.j(51)     // byte - byte
+ 324 ;testFor.j(52)     for (byte b = 42; 41 <= b; b--) { println (b2); b2++; }
+ 325 acc8= constant 42
+ 326 acc8=> (basePointer + -1)
+ 327 acc8= (basePointer + -1)
+ 328 acc8Comp constant 41
+ 329 brlt 339
+ 330 br 333
+ 331 decr8 (basePointer + -1)
+ 332 br 327
+ 333 acc8= variable 1
+ 334 writeLineAcc8
+ 335 incr8 variable 1
+ 336 br 331
+ 337 ;testFor.j(53)     // byte - integer
+ 338 ;testFor.j(54)     for(word i = 40; 39 <= i; i--) { println (b2); b2++; }
+ 339 acc8= constant 40
+ 340 acc8=> (basePointer + -2)
+ 341 acc16= (basePointer + -2)
+ 342 acc8= constant 39
+ 343 acc8CompareAcc16
+ 344 brgt 356
+ 345 br 348
+ 346 decr16 (basePointer + -2)
+ 347 br 341
+ 348 acc8= variable 1
+ 349 writeLineAcc8
+ 350 incr8 variable 1
+ 351 br 346
+ 352 ;testFor.j(55)     // integer - byte
+ 353 ;testFor.j(56)     // not relevant
+ 354 ;testFor.j(57)     // integer - integer
+ 355 ;testFor.j(58)     for(word i = 1038; 1037 <= i; i--) { println (b2); b2++; }
+ 356 acc16= constant 1038
+ 357 acc16=> (basePointer + -2)
+ 358 acc16= (basePointer + -2)
+ 359 acc16Comp constant 1037
+ 360 brlt 374
+ 361 br 364
+ 362 decr16 (basePointer + -2)
+ 363 br 358
+ 364 acc8= variable 1
+ 365 writeLineAcc8
+ 366 incr8 variable 1
+ 367 br 362
+ 368 ;testFor.j(59)   
+ 369 ;testFor.j(60)     /************************/
+ 370 ;testFor.j(61)     // constant - stack8
+ 371 ;testFor.j(62)     // byte - byte
+ 372 ;testFor.j(63)     //TODO
+ 373 ;testFor.j(64)     println(43);
+ 374 acc8= constant 43
+ 375 writeLineAcc8
+ 376 ;testFor.j(65)     println(44);
+ 377 acc8= constant 44
+ 378 writeLineAcc8
+ 379 ;testFor.j(66)     // constant - stack8
+ 380 ;testFor.j(67)     // byte - integer
+ 381 ;testFor.j(68)     //TODO
+ 382 ;testFor.j(69)     println(45);
+ 383 acc8= constant 45
+ 384 writeLineAcc8
+ 385 ;testFor.j(70)     println(46);
+ 386 acc8= constant 46
+ 387 writeLineAcc8
+ 388 ;testFor.j(71)     // constant - stack8
+ 389 ;testFor.j(72)     // integer - byte
+ 390 ;testFor.j(73)     //TODO
+ 391 ;testFor.j(74)     println(47);
+ 392 acc8= constant 47
+ 393 writeLineAcc8
+ 394 ;testFor.j(75)     println(48);
+ 395 acc8= constant 48
+ 396 writeLineAcc8
+ 397 ;testFor.j(76)     // constant - stack88
+ 398 ;testFor.j(77)     // integer - integer
+ 399 ;testFor.j(78)     //TODO
+ 400 ;testFor.j(79)     println(49);
+ 401 acc8= constant 49
+ 402 writeLineAcc8
+ 403 ;testFor.j(80)     println(50);
+ 404 acc8= constant 50
+ 405 writeLineAcc8
+ 406 ;testFor.j(81)   
+ 407 ;testFor.j(82)     /************************/
+ 408 ;testFor.j(83)     // constant - stack16
+ 409 ;testFor.j(84)     // byte - byte
+ 410 ;testFor.j(85)     //TODO
+ 411 ;testFor.j(86)     println(51);
+ 412 acc8= constant 51
+ 413 writeLineAcc8
+ 414 ;testFor.j(87)     println(52);
+ 415 acc8= constant 52
+ 416 writeLineAcc8
+ 417 ;testFor.j(88)     // constant - stack16
+ 418 ;testFor.j(89)     // byte - integer
+ 419 ;testFor.j(90)     //TODO
+ 420 ;testFor.j(91)     println(53);
+ 421 acc8= constant 53
+ 422 writeLineAcc8
+ 423 ;testFor.j(92)     println(54);
+ 424 acc8= constant 54
+ 425 writeLineAcc8
+ 426 ;testFor.j(93)     // constant - stack16
+ 427 ;testFor.j(94)     // integer - byte
+ 428 ;testFor.j(95)     //TODO
+ 429 ;testFor.j(96)     println(55);
+ 430 acc8= constant 55
+ 431 writeLineAcc8
+ 432 ;testFor.j(97)     println(56);
+ 433 acc8= constant 56
+ 434 writeLineAcc8
+ 435 ;testFor.j(98)     // constant - stack16
+ 436 ;testFor.j(99)     // integer - integer
+ 437 ;testFor.j(100)     //TODO
+ 438 ;testFor.j(101)     println(57);
+ 439 acc8= constant 57
+ 440 writeLineAcc8
+ 441 ;testFor.j(102)     println(58);
+ 442 acc8= constant 58
+ 443 writeLineAcc8
+ 444 ;testFor.j(103)   
+ 445 ;testFor.j(104)     /************************/
+ 446 ;testFor.j(105)     // acc - constant
+ 447 ;testFor.j(106)     // byte - byte
+ 448 ;testFor.j(107)     b2 = 59;
+ 449 acc8= constant 59
+ 450 acc8=> variable 1
+ 451 ;testFor.j(108)     for (byte b = 56; b+0 <= 57; b++) { println (b2); b2++; }
+ 452 acc8= constant 56
+ 453 acc8=> (basePointer + -1)
+ 454 acc8= (basePointer + -1)
+ 455 acc8+ constant 0
+ 456 acc8Comp constant 57
+ 457 brgt 471
+ 458 br 463
+ 459 incr8 (basePointer + -1)
+ 460 br 454
+ 461 acc8= variable 1
+ 462 writeLineAcc8
+ 463 incr8 variable 1
+ 464 br 461
+ 465 ;testFor.j(109)     // byte - integer
+ 466 ;testFor.j(110)     //not relevant
+ 467 ;testFor.j(111)     // integer - byte
+ 468 ;testFor.j(112)     for (word i = 54; i+0 <= 55; i++) { println (b2); b2++;}
+ 469 acc8= constant 54
+ 470 acc8=> (basePointer + -2)
+ 471 acc16= (basePointer + -2)
+ 472 acc16+ constant 0
+ 473 acc8= constant 55
+ 474 acc16CompareAcc8
+ 475 brgt 489
+ 476 br 483
+ 477 incr16 (basePointer + -2)
+ 478 br 473
+ 479 acc8= variable 1
+ 480 writeLineAcc8
+ 481 incr8 variable 1
+ 482 br 481
+ 483 ;testFor.j(113)     // integer - integer
+ 484 ;testFor.j(114)     for(word i = 1052; i+0 <= 1053; i++) { println (b2); b2++; }
+ 485 acc16= constant 1052
+ 486 acc16=> (basePointer + -2)
+ 487 acc16= (basePointer + -2)
+ 488 acc16+ constant 0
+ 489 acc16Comp constant 1053
+ 490 brgt 509
+ 491 br 500
+ 492 incr16 (basePointer + -2)
+ 493 br 491
+ 494 acc8= variable 1
+ 495 writeLineAcc8
+ 496 incr8 variable 1
+ 497 br 498
+ 498 ;testFor.j(115)   
+ 499 ;testFor.j(116)     /************************/
+ 500 ;testFor.j(117)     // acc - acc
+ 501 ;testFor.j(118)     // byte - byte
+ 502 ;testFor.j(119)     for (byte b = 64; 63+0 <= b+0; b--) { println (b2); b2++; }
+ 503 acc8= constant 64
+ 504 acc8=> (basePointer + -1)
+ 505 acc8= constant 63
+ 506 acc8+ constant 0
+ 507 <acc8
+ 508 acc8= (basePointer + -1)
+ 509 acc8+ constant 0
+ 510 revAcc8Comp unstack8
+ 511 brlt 527
+ 512 br 521
+ 513 decr8 (basePointer + -1)
+ 514 br 511
+ 515 acc8= variable 1
+ 516 writeLineAcc8
+ 517 incr8 variable 1
+ 518 br 519
+ 519 ;testFor.j(120)     // byte - integer
+ 520 ;testFor.j(121)     for(word i = 62; 61+0 <= i+0; i--) { println (b2); b2++; }
+ 521 acc8= constant 62
+ 522 acc8=> (basePointer + -2)
+ 523 acc8= constant 61
+ 524 acc8+ constant 0
+ 525 <acc8
+ 526 acc16= (basePointer + -2)
+ 527 acc16+ constant 0
+ 528 acc8<
+ 529 acc8CompareAcc16
+ 530 brgt 546
+ 531 br 540
+ 532 decr16 (basePointer + -2)
+ 533 br 529
+ 534 acc8= variable 1
+ 535 writeLineAcc8
+ 536 incr8 variable 1
+ 537 br 538
+ 538 ;testFor.j(122)     // integer - byte
+ 539 ;testFor.j(123)     i2=59;
+ 540 acc8= constant 59
+ 541 acc8=> variable 2
+ 542 ;testFor.j(124)     for (byte b = 60; i2+0 <= b+0; b--) { println (b2); b2++; }
+ 543 acc8= constant 60
+ 544 acc8=> (basePointer + -1)
+ 545 acc16= variable 2
+ 546 acc16+ constant 0
+ 547 <acc16
+ 548 acc8= (basePointer + -1)
+ 549 acc8+ constant 0
+ 550 acc16<
+ 551 acc16CompareAcc8
+ 552 brgt 568
+ 553 br 562
+ 554 decr8 (basePointer + -1)
+ 555 br 551
+ 556 acc8= variable 1
+ 557 writeLineAcc8
+ 558 incr8 variable 1
+ 559 br 560
+ 560 ;testFor.j(125)     // integer - integer
+ 561 ;testFor.j(126)     for(word i = 1058; 1000+57 <= i+0; i--) { println (b2); b2++; }
+ 562 acc16= constant 1058
+ 563 acc16=> (basePointer + -2)
+ 564 acc16= constant 1000
+ 565 acc16+ constant 57
+ 566 <acc16
+ 567 acc16= (basePointer + -2)
+ 568 acc16+ constant 0
+ 569 revAcc16Comp unstack16
+ 570 brlt 589
+ 571 br 580
+ 572 decr16 (basePointer + -2)
+ 573 br 570
+ 574 acc8= variable 1
+ 575 writeLineAcc8
+ 576 incr8 variable 1
+ 577 br 578
+ 578 ;testFor.j(127)   
+ 579 ;testFor.j(128)     /************************/
+ 580 ;testFor.j(129)     // acc - var
+ 581 ;testFor.j(130)     // byte - byte
+ 582 ;testFor.j(131)     for (byte b = 72; 71+0 <= b; b--) { println (b2); b2++; }
+ 583 acc8= constant 72
+ 584 acc8=> (basePointer + -1)
+ 585 acc8= constant 71
+ 586 acc8+ constant 0
+ 587 acc8Comp (basePointer + -1)
+ 588 brgt 606
+ 589 br 600
+ 590 decr8 (basePointer + -1)
+ 591 br 591
+ 592 acc8= variable 1
+ 593 writeLineAcc8
+ 594 incr8 variable 1
+ 595 br 598
+ 596 ;testFor.j(132)     // byte - integer
+ 597 ;testFor.j(133)     for(word i = 70; 69+0 <= i; i--) { println (b2); b2++; }
+ 598 acc8= constant 70
+ 599 acc8=> (basePointer + -2)
+ 600 acc8= constant 69
+ 601 acc8+ constant 0
+ 602 acc16= (basePointer + -2)
+ 603 acc8CompareAcc16
+ 604 brgt 624
+ 605 br 618
+ 606 decr16 (basePointer + -2)
+ 607 br 608
+ 608 acc8= variable 1
+ 609 writeLineAcc8
+ 610 incr8 variable 1
+ 611 br 616
+ 612 ;testFor.j(134)     // integer - byte
+ 613 ;testFor.j(135)     i2=67;
+ 614 acc8= constant 67
+ 615 acc8=> variable 2
+ 616 ;testFor.j(136)     for (byte b = 68; i2+0 <= b; b--) { println (b2); b2++; }
+ 617 acc8= constant 68
+ 618 acc8=> (basePointer + -1)
+ 619 acc16= variable 2
+ 620 acc16+ constant 0
+ 621 acc8= (basePointer + -1)
+ 622 acc16CompareAcc8
+ 623 brgt 645
+ 624 br 639
+ 625 decr8 (basePointer + -1)
+ 626 br 629
+ 627 acc8= variable 1
+ 628 writeLineAcc8
+ 629 incr8 variable 1
+ 630 br 637
+ 631 ;testFor.j(137)     // integer - integer
+ 632 ;testFor.j(138)     for(word i = 1066; 1000+65 <= i; i--) { println (b2); b2++; }
+ 633 acc16= constant 1066
+ 634 acc16=> (basePointer + -2)
+ 635 acc16= constant 1000
+ 636 acc16+ constant 65
+ 637 acc16Comp (basePointer + -2)
+ 638 brgt 666
+ 639 br 656
+ 640 decr16 (basePointer + -2)
+ 641 br 647
+ 642 acc8= variable 1
+ 643 writeLineAcc8
+ 644 incr8 variable 1
+ 645 br 654
+ 646 ;testFor.j(139)   
+ 647 ;testFor.j(140)     /************************/
+ 648 ;testFor.j(141)     // acc - stack8
+ 649 ;testFor.j(142)     // byte - byte
+ 650 ;testFor.j(143)     //TODO
+ 651 ;testFor.j(144)     println(81);
+ 652 acc8= constant 81
+ 653 writeLineAcc8
+ 654 ;testFor.j(145)     println(82);
+ 655 acc8= constant 82
+ 656 writeLineAcc8
+ 657 ;testFor.j(146)     // byte - integer
+ 658 ;testFor.j(147)     //TODO
+ 659 ;testFor.j(148)     println(83);
+ 660 acc8= constant 83
+ 661 writeLineAcc8
+ 662 ;testFor.j(149)     println(84);
+ 663 acc8= constant 84
+ 664 writeLineAcc8
+ 665 ;testFor.j(150)     // integer - byte
+ 666 ;testFor.j(151)     //TODO
+ 667 ;testFor.j(152)     println(85);
+ 668 acc8= constant 85
+ 669 writeLineAcc8
+ 670 ;testFor.j(153)     println(86);
+ 671 acc8= constant 86
+ 672 writeLineAcc8
+ 673 ;testFor.j(154)     // integer - integer
+ 674 ;testFor.j(155)     //TODO
+ 675 ;testFor.j(156)     println(87);
+ 676 acc8= constant 87
+ 677 writeLineAcc8
+ 678 ;testFor.j(157)     println(88);
+ 679 acc8= constant 88
+ 680 writeLineAcc8
+ 681 ;testFor.j(158)   
+ 682 ;testFor.j(159)     /************************/
+ 683 ;testFor.j(160)     // acc - stack16
+ 684 ;testFor.j(161)     // byte - byte
+ 685 ;testFor.j(162)     //TODO
+ 686 ;testFor.j(163)     println(89);
+ 687 acc8= constant 89
+ 688 writeLineAcc8
+ 689 ;testFor.j(164)     println(90);
+ 690 acc8= constant 90
+ 691 writeLineAcc8
+ 692 ;testFor.j(165)     // byte - integer
+ 693 ;testFor.j(166)     //TODO
+ 694 ;testFor.j(167)     println(91);
+ 695 acc8= constant 91
+ 696 writeLineAcc8
+ 697 ;testFor.j(168)     println(92);
+ 698 acc8= constant 92
+ 699 writeLineAcc8
+ 700 ;testFor.j(169)     // integer - byte
+ 701 ;testFor.j(170)     //TODO
+ 702 ;testFor.j(171)     println(93);
+ 703 acc8= constant 93
+ 704 writeLineAcc8
+ 705 ;testFor.j(172)     println(94);
+ 706 acc8= constant 94
+ 707 writeLineAcc8
+ 708 ;testFor.j(173)     // integer - integer
+ 709 ;testFor.j(174)     //TODO
+ 710 ;testFor.j(175)     println(95);
+ 711 acc8= constant 95
+ 712 writeLineAcc8
+ 713 ;testFor.j(176)     println(96);
+ 714 acc8= constant 96
+ 715 writeLineAcc8
+ 716 ;testFor.j(177)   
+ 717 ;testFor.j(178)     /************************/
+ 718 ;testFor.j(179)     // var - constant
+ 719 ;testFor.j(180)     // byte - byte
+ 720 ;testFor.j(181)     b2=97;
+ 721 acc8= constant 97
+ 722 acc8=> variable 1
+ 723 ;testFor.j(182)     for (byte b = 96; b <= 97; b++) { println (b2); b2++; }
+ 724 acc8= constant 96
+ 725 acc8=> (basePointer + -1)
+ 726 acc8= (basePointer + -1)
+ 727 acc8Comp constant 97
+ 728 brgt 754
+ 729 br 746
+ 730 incr8 (basePointer + -1)
+ 731 br 740
+ 732 acc8= variable 1
+ 733 writeLineAcc8
+ 734 incr8 variable 1
+ 735 br 744
+ 736 ;testFor.j(183)     // byte - integer
+ 737 ;testFor.j(184)     //not relevant
+ 738 ;testFor.j(185)     // integer - byte
+ 739 ;testFor.j(186)     for(word i = 92; i <= 93; i++) { println (b2); b2++; }
+ 740 acc8= constant 92
+ 741 acc8=> (basePointer + -2)
+ 742 acc16= (basePointer + -2)
+ 743 acc8= constant 93
+ 744 acc16CompareAcc8
+ 745 brgt 769
+ 746 br 763
+ 747 incr16 (basePointer + -2)
+ 748 br 756
+ 749 acc8= variable 1
+ 750 writeLineAcc8
+ 751 incr8 variable 1
+ 752 br 761
+ 753 ;testFor.j(187)     // integer - integer
+ 754 ;testFor.j(188)     for(word i = 1090; i <= 1091; i++) { println (b2); b2++; }
+ 755 acc16= constant 1090
+ 756 acc16=> (basePointer + -2)
+ 757 acc16= (basePointer + -2)
+ 758 acc16Comp constant 1091
+ 759 brgt 786
+ 760 br 777
+ 761 incr16 (basePointer + -2)
+ 762 br 771
+ 763 acc8= variable 1
+ 764 writeLineAcc8
+ 765 incr8 variable 1
+ 766 br 775
+ 767 ;testFor.j(189)   
+ 768 ;testFor.j(190)     /************************/
+ 769 ;testFor.j(191)     // var - acc
+ 770 ;testFor.j(192)     // byte - byte
+ 771 ;testFor.j(193)     for (byte b = 104; b <= 105+0; b++) { println (b2); b2++; }
+ 772 acc8= constant 104
+ 773 acc8=> (basePointer + -1)
+ 774 acc8= constant 105
+ 775 acc8+ constant 0
+ 776 acc8Comp (basePointer + -1)
+ 777 brlt 801
+ 778 br 795
+ 779 incr8 (basePointer + -1)
+ 780 br 788
+ 781 acc8= variable 1
+ 782 writeLineAcc8
+ 783 incr8 variable 1
+ 784 br 793
+ 785 ;testFor.j(194)     // byte - integer
+ 786 ;testFor.j(195)     i2=103;
+ 787 acc8= constant 103
+ 788 acc8=> variable 2
+ 789 ;testFor.j(196)     for (byte b = 102; b <= i2+0; b++) { println (b2); b2++; }
+ 790 acc8= constant 102
+ 791 acc8=> (basePointer + -1)
+ 792 acc16= variable 2
+ 793 acc16+ constant 0
+ 794 acc8= (basePointer + -1)
+ 795 acc8CompareAcc16
+ 796 brgt 820
+ 797 br 814
+ 798 incr8 (basePointer + -1)
+ 799 br 806
+ 800 acc8= variable 1
+ 801 writeLineAcc8
+ 802 incr8 variable 1
+ 803 br 812
+ 804 ;testFor.j(197)     // integer - byte
+ 805 ;testFor.j(198)     for(word i = 100; i <= 101+0; i++) { println (b2); b2++; }
+ 806 acc8= constant 100
+ 807 acc8=> (basePointer + -2)
+ 808 acc8= constant 101
+ 809 acc8+ constant 0
+ 810 acc16= (basePointer + -2)
+ 811 acc16CompareAcc8
+ 812 brgt 836
+ 813 br 830
+ 814 incr16 (basePointer + -2)
+ 815 br 822
+ 816 acc8= variable 1
+ 817 writeLineAcc8
+ 818 incr8 variable 1
+ 819 br 828
+ 820 ;testFor.j(199)     // integer - integer
+ 821 ;testFor.j(200)     for(word i = 1098; i <= 1099+0; i++) { println (b2); b2++; }
+ 822 acc16= constant 1098
+ 823 acc16=> (basePointer + -2)
+ 824 acc16= constant 1099
+ 825 acc16+ constant 0
+ 826 acc16Comp (basePointer + -2)
+ 827 brlt 854
+ 828 br 845
+ 829 incr16 (basePointer + -2)
+ 830 br 838
+ 831 acc8= variable 1
+ 832 writeLineAcc8
+ 833 incr8 variable 1
+ 834 br 843
+ 835 ;testFor.j(201)   
+ 836 ;testFor.j(202)     /************************/
+ 837 ;testFor.j(203)     // var - var
+ 838 ;testFor.j(204)     // byte - byte
+ 839 ;testFor.j(205)     for (byte b = 112; b2 <= b; b--) { println (b2); b2++; }
+ 840 acc8= constant 112
+ 841 acc8=> (basePointer + -1)
+ 842 acc8= variable 1
+ 843 acc8Comp (basePointer + -1)
+ 844 brgt 868
+ 845 br 862
+ 846 decr8 (basePointer + -1)
+ 847 br 856
+ 848 acc8= variable 1
+ 849 writeLineAcc8
+ 850 incr8 variable 1
+ 851 br 860
+ 852 ;testFor.j(206)     // byte - integer
+ 853 ;testFor.j(207)     for(word i = 116; b2 <= i; i--) { println (b2); b2++; }
+ 854 acc8= constant 116
+ 855 acc8=> (basePointer + -2)
+ 856 acc8= variable 1
+ 857 acc16= (basePointer + -2)
+ 858 acc8CompareAcc16
+ 859 brgt 883
+ 860 br 877
+ 861 decr16 (basePointer + -2)
+ 862 br 870
+ 863 acc8= variable 1
+ 864 writeLineAcc8
+ 865 incr8 variable 1
+ 866 br 875
+ 867 ;testFor.j(208)     // integer - byte
+ 868 ;testFor.j(209)     i2=b2;
+ 869 acc8= variable 1
+ 870 acc8=> variable 2
+ 871 ;testFor.j(210)     for (byte b = 118; i2 <= b; b--) { println (b2); b2++; }
+ 872 acc8= constant 118
+ 873 acc8=> (basePointer + -1)
+ 874 acc16= variable 2
+ 875 acc8= (basePointer + -1)
+ 876 acc16CompareAcc8
+ 877 brgt 901
+ 878 br 895
+ 879 decr8 (basePointer + -1)
+ 880 br 888
+ 881 acc8= variable 1
+ 882 writeLineAcc8
+ 883 incr8 variable 1
+ 884 br 893
+ 885 ;testFor.j(211)     // integer - integer
+ 886 ;testFor.j(212)     i2=120;
+ 887 acc8= constant 120
+ 888 acc8=> variable 2
+ 889 ;testFor.j(213)     for(word i = b2+4; i2 <= i; i--) { println (b2); b2++; }
+ 890 acc8= variable 1
+ 891 acc8+ constant 4
+ 892 acc8=> (basePointer + -2)
+ 893 acc16= variable 2
+ 894 acc16Comp (basePointer + -2)
+ 895 brgt 951
+ 896 br 913
+ 897 decr16 (basePointer + -2)
+ 898 br 907
+ 899 acc8= variable 1
+ 900 writeLineAcc8
+ 901 incr8 variable 1
+ 902 br 911
+ 903 ;testFor.j(214)   
+ 904 ;testFor.j(215)     /************************/
+ 905 ;testFor.j(216)     // var - stack8
+ 906 ;testFor.j(217)     // byte - byte
+ 907 ;testFor.j(218)     // byte - integer
+ 908 ;testFor.j(219)     // integer - byte
+ 909 ;testFor.j(220)     // integer - integer
+ 910 ;testFor.j(221)     //TODO
+ 911 ;testFor.j(222)   
+ 912 ;testFor.j(223)     /************************/
+ 913 ;testFor.j(224)     // var - stack16
+ 914 ;testFor.j(225)     // byte - byte
+ 915 ;testFor.j(226)     // byte - integer
+ 916 ;testFor.j(227)     // integer - byte
+ 917 ;testFor.j(228)     // integer - integer
+ 918 ;testFor.j(229)     //TODO
+ 919 ;testFor.j(230)   
+ 920 ;testFor.j(231)     /************************/
+ 921 ;testFor.j(232)     // stack8 - constant
+ 922 ;testFor.j(233)     // stack8 - acc
+ 923 ;testFor.j(234)     // stack8 - var
+ 924 ;testFor.j(235)     // stack8 - stack8
+ 925 ;testFor.j(236)     // stack8 - stack16
+ 926 ;testFor.j(237)     //TODO
+ 927 ;testFor.j(238)   
+ 928 ;testFor.j(239)     /************************/
+ 929 ;testFor.j(240)     // stack16 - constant
+ 930 ;testFor.j(241)     // stack16 - acc
+ 931 ;testFor.j(242)     // stack16 - var
+ 932 ;testFor.j(243)     // stack16 - stack8
+ 933 ;testFor.j(244)     // stack16 - stack16
+ 934 ;testFor.j(245)     //TODO
+ 935 ;testFor.j(246)   
+ 936 ;testFor.j(247)     println("Klaar.");
+ 937 acc16= stringconstant 944
+ 938 writeLineString
+ 939 ;testFor.j(248)   }
+ 940 stackPointer= basePointer
+ 941 basePointer<
+ 942 return
+ 943 ;testFor.j(249) }
+ 944 stringConstant 0 = "Klaar."

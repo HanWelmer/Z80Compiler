@@ -1,4 +1,4 @@
-   0 call 13
+   0 call 6
    1 stop
    2 ;testPrint.j(0) /* Program to test generated Z80 assembler code */
    3 ;testPrint.j(1) class TestPrint {
@@ -9,67 +9,68 @@
    8 ;testPrint.j(3)   private static byte b = 2;
    9 acc8= constant 2
   10 acc8=> variable 2
-  11 ;testPrint.j(4)   
-  12 ;testPrint.j(5)   public static void main() {
-  13 method TestPrint.main [public, static] void ()
-  14 <basePointer
-  15 basePointer= stackPointer
-  16 stackPointer+ constant 0
-  17 ;testPrint.j(6)     println(0);
-  18 acc8= constant 0
-  19 writeLineAcc8
-  20 ;testPrint.j(7)     println(i);
-  21 acc16= variable 0
-  22 writeLineAcc16
-  23 ;testPrint.j(8)     println(b);
-  24 acc8= variable 2
-  25 writeLineAcc8
-  26 ;testPrint.j(9)     println("Hallo" + " wereld.");
-  27 acc16= stringconstant 65
-  28 writeString
-  29 acc16= stringconstant 66
-  30 writeLineString
-  31 ;testPrint.j(10)     println("Nog" + " een" + " bericht.");
-  32 acc16= stringconstant 67
-  33 writeString
-  34 acc16= stringconstant 68
-  35 writeString
-  36 acc16= stringconstant 69
-  37 writeLineString
-  38 ;testPrint.j(11)     println("3 + 2 = " + 5);
-  39 acc16= stringconstant 70
-  40 writeString
-  41 acc8= constant 5
-  42 writeLineAcc8
-  43 ;testPrint.j(12)     println("3 + 3 = " + (2 * 3));
-  44 acc16= stringconstant 71
-  45 writeString
-  46 acc8= constant 2
-  47 acc8* constant 3
-  48 writeLineAcc8
-  49 ;testPrint.j(13)     println("3 + 4 = " + (2 + 5) + ".");
-  50 acc16= stringconstant 72
-  51 writeString
-  52 acc8= constant 2
-  53 acc8+ constant 5
-  54 writeAcc8
-  55 acc16= stringconstant 73
-  56 writeLineString
-  57 ;testPrint.j(14)     println("Klaar.");
-  58 acc16= stringconstant 74
-  59 writeLineString
-  60 ;testPrint.j(15)   }
-  61 stackPointer= basePointer
-  62 basePointer<
-  63 return
-  64 ;testPrint.j(16) }
-  65 stringConstant 0 = "Hallo"
-  66 stringConstant 1 = " wereld."
-  67 stringConstant 2 = "Nog"
-  68 stringConstant 3 = " een"
-  69 stringConstant 4 = " bericht."
-  70 stringConstant 5 = "3 + 2 = "
-  71 stringConstant 6 = "3 + 3 = "
-  72 stringConstant 7 = "3 + 4 = "
-  73 stringConstant 8 = "."
-  74 stringConstant 9 = "Klaar."
+  11 br 14
+  12 ;testPrint.j(4)   
+  13 ;testPrint.j(5)   public static void main() {
+  14 method TestPrint.main [public, static] void ()
+  15 <basePointer
+  16 basePointer= stackPointer
+  17 stackPointer+ constant 0
+  18 ;testPrint.j(6)     println(0);
+  19 acc8= constant 0
+  20 writeLineAcc8
+  21 ;testPrint.j(7)     println(i);
+  22 acc16= variable 0
+  23 writeLineAcc16
+  24 ;testPrint.j(8)     println(b);
+  25 acc8= variable 2
+  26 writeLineAcc8
+  27 ;testPrint.j(9)     println("Hallo" + " wereld.");
+  28 acc16= stringconstant 66
+  29 writeString
+  30 acc16= stringconstant 67
+  31 writeLineString
+  32 ;testPrint.j(10)     println("Nog" + " een" + " bericht.");
+  33 acc16= stringconstant 68
+  34 writeString
+  35 acc16= stringconstant 69
+  36 writeString
+  37 acc16= stringconstant 70
+  38 writeLineString
+  39 ;testPrint.j(11)     println("3 + 2 = " + 5);
+  40 acc16= stringconstant 71
+  41 writeString
+  42 acc8= constant 5
+  43 writeLineAcc8
+  44 ;testPrint.j(12)     println("3 + 3 = " + (2 * 3));
+  45 acc16= stringconstant 72
+  46 writeString
+  47 acc8= constant 2
+  48 acc8* constant 3
+  49 writeLineAcc8
+  50 ;testPrint.j(13)     println("3 + 4 = " + (2 + 5) + ".");
+  51 acc16= stringconstant 73
+  52 writeString
+  53 acc8= constant 2
+  54 acc8+ constant 5
+  55 writeAcc8
+  56 acc16= stringconstant 74
+  57 writeLineString
+  58 ;testPrint.j(14)     println("Klaar.");
+  59 acc16= stringconstant 75
+  60 writeLineString
+  61 ;testPrint.j(15)   }
+  62 stackPointer= basePointer
+  63 basePointer<
+  64 return
+  65 ;testPrint.j(16) }
+  66 stringConstant 0 = "Hallo"
+  67 stringConstant 1 = " wereld."
+  68 stringConstant 2 = "Nog"
+  69 stringConstant 3 = " een"
+  70 stringConstant 4 = " bericht."
+  71 stringConstant 5 = "3 + 2 = "
+  72 stringConstant 6 = "3 + 3 = "
+  73 stringConstant 7 = "3 + 4 = "
+  74 stringConstant 8 = "."
+  75 stringConstant 9 = "Klaar."

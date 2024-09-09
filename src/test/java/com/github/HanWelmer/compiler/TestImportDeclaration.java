@@ -83,4 +83,9 @@ public class TestImportDeclaration extends AbstactRegressionTest {
   public void TestImportTwo() {
     assertTrue(singleTest("TestImportTwo.j"));
   }
+
+  @Test
+  public void TestNestedImport() {
+    assertTrue(singleTest("TestNestedImport.j"));
+  }
 }

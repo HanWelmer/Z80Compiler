@@ -35,7 +35,7 @@ public class TestLedTest extends AbstactRegressionTest {
   protected void setConfig(String testName) {
     // Override default configuration values.
     jCodeLocation = "/src/test/resources/jCode/" + testName + "/";
-    mCodeLocation = "/src/test/resources/jCode/" + testName + "/";
+    mCodeLocation = "/src/test/resources/mCode/" + testName + "/";
     expectedLocation = "/src/test/resources/expected/" + testName + "/";
   }
 

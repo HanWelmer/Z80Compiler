@@ -20,7 +20,7 @@ the syntax of miniJava has the following limitations:
 - EnumDeclaration       no ImplementsList?.
 - EnumBody              no ( "," )?
 - EnumConstant          no Modifiers, no ClassBody?
-- ClassBodyDeclaration  no Initializer, no ClassDeclaration, no EnumDeclaration, no ConstructorDeclaration, no ";".
+- ClassBodyDeclaration  no ClassDeclaration, no EnumDeclaration, no ConstructorDeclaration, no ";".
 - ArrayInitializer      no ( "," )?.
 - FieldDeclaration      static final is treated as compile time constant.
 - FieldDeclaration      VariableDeclarator in a static final field must be a compile time resolvable constant expression.

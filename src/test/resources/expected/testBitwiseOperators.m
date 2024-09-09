@@ -1,4 +1,4 @@
-   0 call 23
+   0 call 6
    1 stop
    2 ;testBitwiseOperators.j(0) /* Program to test bitwise operators and, or and xor. */
    3 ;testBitwiseOperators.j(1) class TestBitwiseOperators {
@@ -15,41 +15,42 @@
   14 ;testBitwiseOperators.j(5)   private static word w2 = 0x1234;
   15 acc16= constant 4660
   16 acc16=> variable 4
-  17 ;testBitwiseOperators.j(6)   private static final byte fb1 = 0x1C;
-  18 ;testBitwiseOperators.j(7)   private static final byte fb2 = 0x07;
-  19 ;testBitwiseOperators.j(8)   private static final word fw1 = 0x032C;
-  20 ;testBitwiseOperators.j(9)   private static final word fw2 = 0x1234;
-  21 ;testBitwiseOperators.j(10) 
-  22 ;testBitwiseOperators.j(11)   public static void main() {
-  23 method TestBitwiseOperators.main [public, static] void ()
-  24 <basePointer
-  25 basePointer= stackPointer
-  26 stackPointer+ constant 0
-  27 ;testBitwiseOperators.j(12)     println(0);
-  28 acc8= constant 0
-  29 writeLineAcc8
-  30 ;testBitwiseOperators.j(13)     
-  31 ;testBitwiseOperators.j(14)     // Possible operand types: constant, acc, var, final var, stack8, stack16.
-  32 ;testBitwiseOperators.j(15)     // Possible data types: byte, word.
-  33 ;testBitwiseOperators.j(16)   
-  34 ;testBitwiseOperators.j(17)     //constant/constant
-  35 ;testBitwiseOperators.j(18)     //*****************
-  36 ;testBitwiseOperators.j(19)     //constant byte/constant byte
-  37 ;testBitwiseOperators.j(20)     if (0x07 & 0x1C == 0x04) println (1); else println (999); //0000.0111 & 0001.1100 = 0000.0100
-  38 acc8= constant 7
-  39 acc8And constant 28
-  40 acc8Comp constant 4
-  41 brne 47
-  42 acc8= constant 1
-  43 writeLineAcc8
-  44 br 50
-  45 acc16= constant 999
-  46 writeLineAcc16
-  47 ;testBitwiseOperators.j(21)     if (0x07 | 0x1C == 0x1F) println (2); else println (999); //0000.0111 | 0001.1100 = 0001.1111
-  48 acc8= constant 7
-  49 acc8Or constant 28
-  50 acc8Comp constant 31
-  51 brne 59
+  17 br 24
+  18 ;testBitwiseOperators.j(6)   private static final byte fb1 = 0x1C;
+  19 ;testBitwiseOperators.j(7)   private static final byte fb2 = 0x07;
+  20 ;testBitwiseOperators.j(8)   private static final word fw1 = 0x032C;
+  21 ;testBitwiseOperators.j(9)   private static final word fw2 = 0x1234;
+  22 ;testBitwiseOperators.j(10) 
+  23 ;testBitwiseOperators.j(11)   public static void main() {
+  24 method TestBitwiseOperators.main [public, static] void ()
+  25 <basePointer
+  26 basePointer= stackPointer
+  27 stackPointer+ constant 0
+  28 ;testBitwiseOperators.j(12)     println(0);
+  29 acc8= constant 0
+  30 writeLineAcc8
+  31 ;testBitwiseOperators.j(13)     
+  32 ;testBitwiseOperators.j(14)     // Possible operand types: constant, acc, var, final var, stack8, stack16.
+  33 ;testBitwiseOperators.j(15)     // Possible data types: byte, word.
+  34 ;testBitwiseOperators.j(16)   
+  35 ;testBitwiseOperators.j(17)     //constant/constant
+  36 ;testBitwiseOperators.j(18)     //*****************
+  37 ;testBitwiseOperators.j(19)     //constant byte/constant byte
+  38 ;testBitwiseOperators.j(20)     if (0x07 & 0x1C == 0x04) println (1); else println (999); //0000.0111 & 0001.1100 = 0000.0100
+  39 acc8= constant 7
+  40 acc8And constant 28
+  41 acc8Comp constant 4
+  42 brne 46
+  43 acc8= constant 1
+  44 writeLineAcc8
+  45 br 49
+  46 acc16= constant 999
+  47 writeLineAcc16
+  48 ;testBitwiseOperators.j(21)     if (0x07 | 0x1C == 0x1F) println (2); else println (999); //0000.0111 | 0001.1100 = 0001.1111
+  49 acc8= constant 7
+  50 acc8Or constant 28
+  51 acc8Comp constant 31
+  52 brne 59
   52 acc8= constant 2
   53 writeLineAcc8
   54 br 62
