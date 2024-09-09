@@ -105,7 +105,7 @@ public class Identifiers {
     if (variable == null) {
       variable = classVariables.getVariable(className + "." + name);
     }
-    if (variable == null && packageName != null && packageName.isEmpty()) {
+    if (variable == null && packageName != null && !packageName.isEmpty()) {
       variable = classVariables.getVariable(packageName + "." + className + "." + name);
     }
 
@@ -122,7 +122,7 @@ public class Identifiers {
         variable = scope.getVariable(className + "." + name);
       }
     }
-    if (variable == null && packageName != null && packageName.isEmpty()) {
+    if (variable == null && packageName != null && !packageName.isEmpty()) {
       iterator = localVariables.iterator();
       while ((variable == null) && iterator.hasNext()) {
         Scope scope = iterator.next();

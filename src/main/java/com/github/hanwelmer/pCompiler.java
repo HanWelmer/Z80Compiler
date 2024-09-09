@@ -45,6 +45,8 @@ public class pCompiler {
     public LexemeReader lexemeReader;
     public String packageName = "";
     public String className = "";
+    public int jumpFrom = 0;
+    public boolean doingMemberInitializer= false;
 
     // constructor
     public CompilationUnitContext(LexemeReader lexemeReader) {
@@ -462,12 +464,14 @@ public class pCompiler {
       // lexical analysis, semantic analysis and code generation.
       CompilationUnitContext cuc = new CompilationUnitContext(lexemeReader);
       compilationUnit(cuc);
-      // replace "main" by fully qualified name
+      // last jump instruction in list of static member initializers jumps to main function.
       String main = getFullyQualifiedName(cuc, "main");
-      instructions.get(0).operand.strValue = main;
+      instructions.get(cuc.jumpFrom).operand.strValue = main;
+
+      // replace "main" by fully qualified name for main.
       methodReferences.remove("main");
       methodReferences.put(main, new ArrayList<Integer>());
-      methodReferences.get(main).add(new Integer(0));
+      methodReferences.get(main).add(new Integer(cuc.jumpFrom));
       debug("\n");
 
       // post processing.
@@ -605,7 +609,12 @@ public class pCompiler {
       String fullName = importPackageName.replace(".", File.separator) + ".j";
       LexemeReader localLexemeReader = new LexemeReader();
       if (localLexemeReader.init(debugMode, cuc.lexemeReader.getPath(), fullName)) {
-        compilationUnit(new CompilationUnitContext(localLexemeReader));
+    	CompilationUnitContext localCuc = new CompilationUnitContext(localLexemeReader);
+    	localCuc.jumpFrom = cuc.jumpFrom; 
+    	localCuc.doingMemberInitializer = cuc.doingMemberInitializer; 
+        compilationUnit(localCuc);
+    	cuc.jumpFrom = localCuc.jumpFrom; 
+    	cuc.doingMemberInitializer = localCuc.doingMemberInitializer; 
       } else {
         error(cuc.lexemeReader, 42, fullName);
       }
@@ -784,7 +793,7 @@ public class pCompiler {
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
       while (CLASS_BODY_START_SET.contains(lexeme.type)) {
-        classBodyDeclaration(cuc, classDeclStopSet);
+    	classBodyDeclaration(cuc, classDeclStopSet);
       }
 
       // skip end lexeme
@@ -818,7 +827,8 @@ public class pCompiler {
   // - Field resultType ::= type.
   private void classBodyDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nclassBodyDeclaration: start");
-
+    
+    //Semantic analysis
     EnumSet<LexemeType> modifiers = modifiers(cuc.lexemeReader);
     EnumSet<LexemeType> resultTypeStopSet = stopSet.clone();
     resultTypeStopSet.add(LexemeType.identifier);
@@ -834,11 +844,23 @@ public class pCompiler {
       String identifier = lexeme.idVal;
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       if (lexeme.type == LexemeType.LPAREN) {
+        //method declaration
+
+    	//Code generation
+        if (cuc.doingMemberInitializer && instructions.get(cuc.jumpFrom).operand.intValue != 0) {
+          cuc.jumpFrom = instructions.size();
+          plantThenSource(cuc.lexemeReader, new Instruction(FunctionType.br, new Operand(OperandType.LABEL, DataType.word, 0)));
+          cuc.doingMemberInitializer = false;
+        }
+
+        //Semantic analysis
         EnumSet<LexemeType> methodStopSet = stopSet.clone();
         methodStopSet.add(LexemeType.semicolon);
         methodStopSet.add(LexemeType.RPAREN);
         restOfMethodDeclaration(cuc, modifiers, resultType, identifier, methodStopSet);
       } else {
+    	// variable declaration
+
         // semantic analysis
         checkFieldModifiers(cuc.lexemeReader, modifiers);
 
@@ -921,15 +943,15 @@ public class pCompiler {
     debug("\nfieldDeclaration: start " + firstIdentifier);
 
     // semantic analysis
-    if (identifiers.declareId(firstIdentifier, identifierType, type.getType(), modifiers)) {
-      debug(String.format("\n%s declaration: $s %s %s", identifierType, modifiers, type.getType(), firstIdentifier));
+    String fullyQualifiedName = getFullyQualifiedName(cuc, firstIdentifier);
+    if (identifiers.declareId(fullyQualifiedName, identifierType, type.getType(), modifiers)) {
+      debug(String.format("\n%s declaration: $s %s %s", identifierType, modifiers, type.getType(), fullyQualifiedName));
     } else {
       error(cuc.lexemeReader);
-      System.out.println("variable " + firstIdentifier + " already declared.");
+      System.out.println("variable " + fullyQualifiedName + " already declared.");
     }
 
-    // semicolon indicates single primitive variable declarator without
-    // initializer.
+    // semicolon indicates single primitive declarator without initializer.
     if (lexeme.type == LexemeType.semicolon) {
       // skip semicolon
       // lexeme = lexemeReader.getLexeme(sourceCode);
@@ -942,30 +964,24 @@ public class pCompiler {
         // skip assignment sign
         lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
-        /*
-         */
         if (numberOfDimensions == 0) {
           // EnumSet<LexemeType> localSet = stopSet.clone();
           // localSet.add(LexemeType.semicolon);
           EnumSet<LexemeType> localSet = EnumSet.of(LexemeType.semicolon);
 
-          // semantic analysis.
-          Variable var = identifiers.getId(firstIdentifier);
+          Variable var = identifiers.getId(cuc.packageName, cuc.className, firstIdentifier);
           Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
           leftOperand.isFinal = var.isFinal();
           debug("\nFieldDeclaration: leftOperand = " + leftOperand);
 
           if (modifiers.contains(LexemeType.staticLexeme) && modifiers.contains(LexemeType.finalLexeme)) {
-            // static final field is treated as compile time constant.
-            // VariableDeclarator must be a compile time resolvable constant
-            // expression.
+            // Static final field is treated as compile-time constant.
+            // Therefore, initializer must be a compile-time constant expression.
 
-            // read constant expression.
-            // TODO support constant expression, not just a constant, for static
-            // final fields.
-            Operand rightOperand = constantExpression(cuc.lexemeReader, localSet);
+            // Parse constant expression.
+            // TODO support constant expression, not just a constant.
+            Operand rightOperand = constantExpression(cuc, localSet);
 
-            // semantic analysis.
             // no assignment but constant definition.
             if (var.getDataType() != rightOperand.dataType) {
               error(cuc.lexemeReader, 14);
@@ -976,10 +992,23 @@ public class pCompiler {
               error(cuc.lexemeReader, 17);
             }
           } else {
-            // read expression.
-            Operand rightOperand = expression(cuc.lexemeReader, localSet);
+        	// Proper run-time initializer.
 
-            // code generation.
+        	// Code generation
+        	Operand jumpingTo = instructions.get(cuc.jumpFrom).operand;
+        	if (identifierType == IdentifierType.CLASS_VARIABLE) {
+              if (jumpingTo.intValue == 0) {
+                plantSource();
+                jumpingTo.intValue = instructions.size();
+              }
+              cuc.doingMemberInitializer = true;
+        	}
+
+            // Semantic analysis
+            // Parse expression.
+            Operand rightOperand = expression(cuc, localSet);
+
+            // Code generation.
             generateAssignment(cuc.lexemeReader, leftOperand, rightOperand);
             debug("\nFieldDeclaration: " + var.getFullyQualifiedName() + " = " + rightOperand);
           }
@@ -1419,7 +1448,7 @@ public class pCompiler {
     stopSetIf.add(LexemeType.RPAREN);
     stopSetIf.addAll(START_STATEMENT);
     stopSetIf.remove(LexemeType.identifier);
-    int ifLabel = comparison(cuc.lexemeReader, stopSetIf);
+    int ifLabel = comparison(cuc, stopSetIf);
     debug("\nifStatement: ifLabel = " + ifLabel);
 
     // expect )
@@ -1492,10 +1521,10 @@ public class pCompiler {
         returnStatement(cuc.lexemeReader, stopSet);
         break;
       case printlnLexeme:
-        printlnStatement(cuc.lexemeReader, stopSet);
+        printlnStatement(cuc, stopSet);
         break;
       case outputLexeme:
-        outputStatement(cuc.lexemeReader, stopSet);
+        outputStatement(cuc, stopSet);
         break;
       default:
         expressionStatement(cuc, stopSet);
@@ -1538,7 +1567,7 @@ public class pCompiler {
     // lexical analysis.
     stopWhileSet.addAll(START_STATEMENT);
     stopWhileSet.remove(LexemeType.identifier);
-    int endLabel = comparison(cuc.lexemeReader, stopWhileSet);
+    int endLabel = comparison(cuc, stopWhileSet);
 
     // code generation.
     clearRegisters();
@@ -1591,7 +1620,7 @@ public class pCompiler {
     // expect comparison, terminated by ")"
     stopWhileSet.addAll(START_STATEMENT);
     stopWhileSet.remove(LexemeType.identifier);
-    comparisonInDoStatement(cuc.lexemeReader, stopWhileSet, doLabel);
+    comparisonInDoStatement(cuc, stopWhileSet, doLabel);
 
     // code generation.
     clearRegisters();
@@ -1637,7 +1666,7 @@ public class pCompiler {
     // In the initialization part a new variable must be declared.
     EnumSet<LexemeType> stopInitializationSet = stopForSet.clone();
     stopInitializationSet.add(LexemeType.semicolon);
-    String variable = assignment(cuc.lexemeReader, stopInitializationSet);
+    String variable = assignment(cuc, stopInitializationSet);
     if (variable == null) {
       error(cuc.lexemeReader);
       System.out.println("Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
@@ -1652,7 +1681,7 @@ public class pCompiler {
     stopInitializationSet.addAll(START_STATEMENT);
     stopInitializationSet.remove(LexemeType.identifier);
     int forLabel = saveLabel();
-    int gotoEnd = comparison(cuc.lexemeReader, stopInitializationSet);
+    int gotoEnd = comparison(cuc, stopInitializationSet);
     if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), stopInitializationSet)) {
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
@@ -1670,7 +1699,7 @@ public class pCompiler {
     // lexical analysis: update.
     stopForSet.add(LexemeType.beginLexeme);
     if (lexeme.type != LexemeType.RPAREN) {
-      update(cuc.lexemeReader, stopForSet);
+      update(cuc, stopForSet);
     }
 
     // code generation: jump back to comparison.
@@ -1739,12 +1768,12 @@ public class pCompiler {
   // parenthesis, may be string expressions or algorithmic expressions.
   // Operands in a string expression, including results of subexpressions, are
   // converted to string and then printed.
-  private void printlnStatement(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private void printlnStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nprintlnStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
     // skip println symbol.
-    lexeme = lexemeReader.getLexeme(sourceCode);
+    lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
     EnumSet<LexemeType> stopWriteSet = stopSet.clone();
     stopWriteSet.addAll(START_EXPRESSION);
@@ -1752,15 +1781,15 @@ public class pCompiler {
     stopWriteSet.add(LexemeType.semicolon);
 
     // skip left bracket.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.LPAREN), stopWriteSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.LPAREN), stopWriteSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     // read first operand.
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
     stopExpressionSet.add(LexemeType.RPAREN);
     stopExpressionSet.add(LexemeType.semicolon);
-    Operand operand = factor(lexemeReader, stopExpressionSet);
+    Operand operand = factor(cuc, stopExpressionSet);
     EnumSet<LexemeType> startExpressionSet = stopExpressionSet.clone();
     startExpressionSet.add(LexemeType.addop);
 
@@ -1772,46 +1801,46 @@ public class pCompiler {
         if ((lexeme.type == LexemeType.addop) && (lexeme.operator == OperatorType.add)) {
           debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
           // code generation.
-          plantPrintln(lexemeReader, operand, false);
+          plantPrintln(cuc.lexemeReader, operand, false);
 
           // lexical analysis.
           // skip addop symbol.
-          lexeme = lexemeReader.getLexeme(sourceCode);
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
           // read next factor.
-          operand = factor(lexemeReader, startExpressionSet);
+          operand = factor(cuc, startExpressionSet);
         } else if (lexeme.type != LexemeType.RPAREN) {
           // lexical analysis.
           // only + symbol allowed between terms in string expression.
-          error(lexemeReader, 3, " " + lexeme.makeString(null));
+          error(cuc.lexemeReader, 3, " " + lexeme.makeString(null));
           // skip unexpected symbol.
-          if (checkOrSkip(lexemeReader, EnumSet.of(lexeme.type), stopWriteSet)) {
-            lexeme = lexemeReader.getLexeme(sourceCode);
+          if (checkOrSkip(cuc.lexemeReader, EnumSet.of(lexeme.type), stopWriteSet)) {
+            lexeme = cuc.lexemeReader.getLexeme(sourceCode);
           }
         }
       } while (lexeme.type != LexemeType.RPAREN);
 
       debug("\nprintlnStatement: " + operand + ", lexeme=" + lexeme.makeString(null));
       // code generation.
-      plantPrintln(lexemeReader, operand, true);
+      plantPrintln(cuc.lexemeReader, operand, true);
     } else {
       // algorithmic expression.
-      operand = termWithOperand(lexemeReader, 0, operand, startExpressionSet);
+      operand = termWithOperand(cuc, 0, operand, startExpressionSet);
       debug("\nprintlnStatement: " + operand);
 
       // code generation.
-      plantPrintln(lexemeReader, operand, true);
+      plantPrintln(cuc.lexemeReader, operand, true);
     }
 
     // lexical analysis.
     // skip right bracket.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     // skip semicolon.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     debug("\nprintlnStatement: end");
@@ -1821,12 +1850,12 @@ public class pCompiler {
   // TODO Add non-constant port value to output/input (IN0 A,(C); OUT0 (C),A).
   // TODO Test various expressions for output(byte port, byte value). See
   // ledtest.j.
-  private void outputStatement(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private void outputStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\noutputStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
     // skip output symbol.
-    lexeme = lexemeReader.getLexeme(sourceCode);
+    lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
     EnumSet<LexemeType> stopOutputSet = stopSet.clone();
     stopOutputSet.addAll(START_EXPRESSION);
@@ -1835,8 +1864,8 @@ public class pCompiler {
     stopOutputSet.add(LexemeType.semicolon);
 
     // skip left bracket.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.LPAREN), stopOutputSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.LPAREN), stopOutputSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     EnumSet<LexemeType> stopExpressionSet = stopSet.clone();
@@ -1845,7 +1874,7 @@ public class pCompiler {
     stopExpressionSet.add(LexemeType.semicolon);
 
     // read constant expression.
-    Operand port = constantExpression(lexemeReader, stopExpressionSet);
+    Operand port = constantExpression(cuc, stopExpressionSet);
 
     // lexical analysis.
     stopOutputSet = stopSet.clone();
@@ -1854,8 +1883,8 @@ public class pCompiler {
     stopOutputSet.add(LexemeType.semicolon);
 
     // skip COMMA.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.COMMA), stopOutputSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.COMMA), stopOutputSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     stopExpressionSet = stopSet.clone();
@@ -1863,24 +1892,24 @@ public class pCompiler {
     stopExpressionSet.add(LexemeType.semicolon);
 
     // read second expression.
-    Operand value = expression(lexemeReader, stopExpressionSet);
+    Operand value = expression(cuc, stopExpressionSet);
 
     // semantic analysis.
     debug("\noutputStatement: value = " + value + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     // FIXME check value is a byte expression.
 
     // code generation.
-    plant(lexemeReader, new Instruction(FunctionType.output, port, value));
+    plant(cuc.lexemeReader, new Instruction(FunctionType.output, port, value));
 
     // lexical analysis.
     // skip right bracket.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), stopExpressionSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     // skip semicolon.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     debug("\noutput: end");
@@ -1928,13 +1957,13 @@ public class pCompiler {
 
         // Syntax analysis.
         if (lexeme.type == LexemeType.increment) {
-          postincrementExpression(cuc.lexemeReader, name, stopSet);
+          postincrementExpression(cuc, name, stopSet);
         } else if (lexeme.type == LexemeType.decrement) {
-          postdecrementExpression(cuc.lexemeReader, name, stopSet);
+          postdecrementExpression(cuc, name, stopSet);
         } else if (lexeme.type == LexemeType.LPAREN) {
-          methodInvocation(cuc.lexemeReader, method, stopSet);
+          methodInvocation(cuc, method, stopSet);
         } else {
-          assignment(cuc.lexemeReader, name, stopSet);
+          assignment(cuc, name, stopSet);
         }
       }
     } else {
@@ -2005,17 +2034,17 @@ public class pCompiler {
   } // predecrementExpression
 
   // postincrementExpression ::= name "++".
-  private void postincrementExpression(LexemeReader lexemeReader, String name, EnumSet<LexemeType> stopSet) throws FatalError {
+  private void postincrementExpression(CompilationUnitContext cuc, String name, EnumSet<LexemeType> stopSet) throws FatalError {
     // semantic analysis.
-    Variable var = identifiers.getId(name);
+    Variable var = identifiers.getId(cuc.packageName, cuc.className, name);
     if (var == null) {
-      error(lexemeReader, 9); // variable not declared.
+      error(cuc.lexemeReader, 9); // variable not declared.
     } else {
       debug("\nassignment: variable = " + var);
 
       // lexical analysis.
-      if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.increment), stopSet)) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.increment), stopSet)) {
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
         // semantic analysis.
         Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
@@ -2024,28 +2053,28 @@ public class pCompiler {
 
         // code generation.
         if (var.getDataType() == DataType.word) {
-          plant(lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
         } else if (var.getDataType() == DataType.byt) {
-          plant(lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
         } else {
-          error(lexemeReader, 12);
+          error(cuc.lexemeReader, 12);
         }
       }
     }
   } // postincrementExpression
 
   // postdecrementExpression ::= name "--".
-  private void postdecrementExpression(LexemeReader lexemeReader, String name, EnumSet<LexemeType> stopSet) throws FatalError {
+  private void postdecrementExpression(CompilationUnitContext cuc, String name, EnumSet<LexemeType> stopSet) throws FatalError {
     // semantic analysis.
-    Variable var = identifiers.getId(name);
+    Variable var = identifiers.getId(cuc.packageName, cuc.className, name);
     if (var == null) {
-      error(lexemeReader, 9); // variable not declared.
+      error(cuc.lexemeReader, 9); // variable not declared.
     } else {
       debug("\nassignment: variable = " + var);
 
       // lexical analysis.
-      if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.decrement), stopSet)) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.decrement), stopSet)) {
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
         // semantic analysis.
         Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
@@ -2054,18 +2083,18 @@ public class pCompiler {
 
         // code generation.
         if (var.getDataType() == DataType.word) {
-          plant(lexemeReader, new Instruction(FunctionType.decrement16, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.decrement16, leftOperand));
         } else if (var.getDataType() == DataType.byt) {
-          plant(lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
         } else {
-          error(lexemeReader, 12);
+          error(cuc.lexemeReader, 12);
         }
       }
     }
   } // postdecrementExpression
 
   // methodInvocation ::= name arguments.
-  private void methodInvocation(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
+  private void methodInvocation(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     // FIXME support method call before method declaration.
     // get the method signature from the list of identifiers.
     debug("\nmethod invocation: " + method);
@@ -2075,30 +2104,30 @@ public class pCompiler {
     // and check if they match the formal parameters in the method definition.
     // Return value is the number of bytes needed on the stack for the
     // arguments.
-    int stackSize = arguments(lexemeReader, method, stopSet);
+    int stackSize = arguments(cuc, method, stopSet);
 
     // semantic analysis: check return type.
     // TODO add check of return type.
     if (method.getDataType() != DataType.voidd) {
-      error(lexemeReader, 37); // incompatible return type.
+      error(cuc.lexemeReader, 37); // incompatible return type.
     }
 
     // code generation.
-    plant(lexemeReader, new Instruction(FunctionType.call, new Operand(method.getFullyQualifiedName(), method.getIntValue())));
+    plant(cuc.lexemeReader, new Instruction(FunctionType.call, new Operand(method.getFullyQualifiedName(), method.getIntValue())));
     if (stackSize > 0) {
-      plant(lexemeReader,
+      plant(cuc.lexemeReader,
           new Instruction(FunctionType.stackPointerPlus, new Operand(OperandType.CONSTANT, DataType.word, -stackSize)));
     }
   } // methodInvocation
 
   // TODO refactor assignment.
-  private void assignment(LexemeReader lexemeReader, String name, EnumSet<LexemeType> stopSet) throws FatalError {
+  private void assignment(CompilationUnitContext cuc, String name, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nassignment: start with stopSet = " + stopSet + "; variable e=" + name);
 
     // semantic analysis.
-    Variable var = identifiers.getId(name);
+    Variable var = identifiers.getId(cuc.packageName, cuc.className, name);
     if (var == null) {
-      error(lexemeReader, 9); // variable not declared.
+      error(cuc.lexemeReader, 9); // variable not declared.
     } else {
       debug("\nassignment: variable = " + var);
       Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
@@ -2109,18 +2138,18 @@ public class pCompiler {
       EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
       stopAssignmentSet.addAll(START_EXPRESSION);
       stopAssignmentSet.add(LexemeType.semicolon);
-      if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
         // identifier "=" expression
-        lexeme = lexemeReader.getLexeme(sourceCode);
-        Operand rightOperand = expression(lexemeReader, stopSet);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+        Operand rightOperand = expression(cuc, stopSet);
 
         // lexical analysis.
         if (var.isFinal()) {
           // assignment to a final variable.
-          error(lexemeReader, 34);
+          error(cuc.lexemeReader, 34);
         } else {
           // code generation.
-          generateAssignment(lexemeReader, leftOperand, rightOperand);
+          generateAssignment(cuc.lexemeReader, leftOperand, rightOperand);
         }
       }
     }
@@ -2143,7 +2172,7 @@ public class pCompiler {
    * @returns number of bytes needed on the stack for the arguments.
    * @throws FatalError
    */
-  private int arguments(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
+  private int arguments(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\narguments: start with stopSet = " + stopSet);
     int stackSize = 0;
 
@@ -2151,22 +2180,22 @@ public class pCompiler {
     localStopSet.add(LexemeType.RPAREN);
 
     // skip opening left parenthesis.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.LPAREN), localStopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.LPAREN), localStopSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
       if (lexeme.type != LexemeType.RPAREN) {
-        stackSize = argumentList(lexemeReader, method, localStopSet);
+        stackSize = argumentList(cuc, method, localStopSet);
       } else if (method.getFormalParameters().size() != 0) {
-        error(lexemeReader, 39); // nr of arguments does not match nr of formal
+        error(cuc.lexemeReader, 39); // nr of arguments does not match nr of formal
                                  // parameters.
       }
 
       // skip closing right parenthesis.
-      if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.RPAREN), localStopSet)) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), localStopSet)) {
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       } else {
-        if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.RPAREN), localStopSet)) {
-          lexeme = lexemeReader.getLexeme(sourceCode);
+        if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), localStopSet)) {
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
         }
       }
     }
@@ -2190,7 +2219,7 @@ public class pCompiler {
    * @returns number of bytes needed on the stack for the arguments.
    * @throws FatalError
    */
-  private int argumentList(LexemeReader lexemeReader, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
+  private int argumentList(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nargumentList: start with stopSet = " + stopSet);
     int stackSize = 0;
 
@@ -2199,29 +2228,29 @@ public class pCompiler {
     localStopSet.add(LexemeType.COMMA);
     int parameterIndex = 0;
     while (!stopSet.contains(lexeme.type)) {
-      Operand expression = expression(lexemeReader, localStopSet);
+      Operand expression = expression(cuc, localStopSet);
 
       // semantic analysis.
       if (parameterIndex >= method.getFormalParameters().size()) {
-        error(lexemeReader, 39); // number of arguments does not match number of
+        error(cuc.lexemeReader, 39); // number of arguments does not match number of
                                  // formal
         // parameters.
       } else {
         FormalParameter parameter = method.getFormalParameter(parameterIndex);
         if (parameter.getDataType() != expression.dataType) {
-          error(lexemeReader, 41); // incompatible data type between argument
+          error(cuc.lexemeReader, 41); // incompatible data type between argument
                                    // and formal
           // parameter.
         }
       }
 
       // code generation.
-      stackSize += generateArgument(lexemeReader, expression);
+      stackSize += generateArgument(cuc.lexemeReader, expression);
 
       // lexical analysis.
       if (lexeme.type == LexemeType.COMMA) {
         // skip comma separating expressions in the argument list
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       }
     }
 
@@ -2243,11 +2272,11 @@ public class pCompiler {
   // test13.j.
   // TODO Generate constant in Z80 code in hex notation if the constant was
   // written in hex notation in J-code. See ledtest.j.
-  private Operand constantExpression(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private Operand constantExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nconstantExpression: start with stopSet = " + stopSet);
 
     // lexical analysis.
-    Operand port = factor(lexemeReader, stopSet);
+    Operand port = factor(cuc, stopSet);
 
     // semantic analysis.
     debug("\nconstantExpression: port = " + port + ", final = " + port.isFinal + ", acc16InUse = " + acc16.inUse()
@@ -2258,7 +2287,7 @@ public class pCompiler {
       port = new Operand(OperandType.CONSTANT, port.dataType, identifiers.getId(port.strValue).getIntValue());
     }
     if (port.opType != OperandType.CONSTANT) {
-      error(lexemeReader, 16);
+      error(cuc.lexemeReader, 16);
     }
 
     debug("\nconstantExpression: end");
@@ -2268,12 +2297,12 @@ public class pCompiler {
   // inputFactor = "input" "(" constantExpression ")".
   // TODO Add support for input data (see Z80Compiler.class; call to
   // Interpreter).
-  private Operand inputFactor(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private Operand inputFactor(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ninputFactor: start with stopSet = " + stopSet);
 
     // lexical analysis.
     // skip input symbol.
-    lexeme = lexemeReader.getLexeme(sourceCode);
+    lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
     EnumSet<LexemeType> stopInputSet = stopSet.clone();
     stopInputSet.addAll(START_EXPRESSION);
@@ -2281,28 +2310,28 @@ public class pCompiler {
     stopInputSet.add(LexemeType.semicolon);
 
     // skip left bracket.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.LPAREN), stopInputSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.LPAREN), stopInputSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     // code generation.
     if (acc8.inUse()) {
-      plant(lexemeReader, new Instruction(FunctionType.stackAcc8));
+      plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc8));
     }
 
     // read constant expression.
-    Operand port = constantExpression(lexemeReader, stopInputSet);
+    Operand port = constantExpression(cuc, stopInputSet);
 
     // skip right bracket.
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.RPAREN), stopInputSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), stopInputSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     // semantic analysis.
     debug("\ninputFactor: port = " + port + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
     // code generation.
-    plant(lexemeReader, new Instruction(FunctionType.input, port));
+    plant(cuc.lexemeReader, new Instruction(FunctionType.input, port));
     // The input() function always returns a byte value.
     Operand operand = new Operand(OperandType.ACC);
     operand.dataType = DataType.byt;
@@ -2317,13 +2346,13 @@ public class pCompiler {
   // TODO Introduce built in function malloc() (see test1, test5, test10,
   // test11).
   // TODO Refactor StringConstants.
-  private Operand factor(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private Operand factor(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     Operand operand = new Operand(OperandType.UNKNOWN);
     debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    if (checkOrSkip(lexemeReader, START_EXPRESSION, stopSet)) {
+    if (checkOrSkip(cuc.lexemeReader, START_EXPRESSION, stopSet)) {
       if (lexeme.type == LexemeType.identifier) {
         // semantic analysis.
-        Variable var = identifiers.getId(lexeme.idVal);
+        Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
         if (var == null) {
           throw new FatalError(9); // variable not declared.
         } else {
@@ -2337,14 +2366,14 @@ public class pCompiler {
           operand.strValue = lexeme.idVal;
         }
         // lexical analysis.
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.constant) {
         // code generation.
         operand.opType = OperandType.CONSTANT;
         operand.dataType = lexeme.dataType;
         operand.intValue = lexeme.constVal;
         // lexical analysis.
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       } else if (lexeme.type == LexemeType.stringConstant) {
         debug("\nlexeme = " + lexeme.makeString(null));
         // semantic analysis.
@@ -2356,30 +2385,30 @@ public class pCompiler {
         operand.strValue = lexeme.stringVal;
         operand.intValue = constantId;
         // lexical analysis.
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
         debug("\nlexeme = " + lexeme.makeString(null));
       } else if (lexeme.type == LexemeType.readLexeme) {
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
         // code generation.
         // The read() function always returns a word value.
         if (acc16.inUse()) {
-          plant(lexemeReader, new Instruction(FunctionType.stackAcc16));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc16));
         }
-        plant(lexemeReader, new Instruction(FunctionType.read));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.read));
         operand.opType = OperandType.ACC;
         operand.dataType = DataType.word;
         acc16.setOperand(operand);
       } else if (lexeme.type == LexemeType.inputLexeme) {
-        operand = inputFactor(lexemeReader, stopSet);
+        operand = inputFactor(cuc, stopSet);
       } else if (lexeme.type == LexemeType.LPAREN) {
         // skip left bracket.
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
         EnumSet<LexemeType> stopSetCopy = stopSet.clone();
         stopSetCopy.add(LexemeType.RPAREN);
-        operand = expression(lexemeReader, stopSetCopy);
+        operand = expression(cuc, stopSetCopy);
         // skip right bracket.
-        if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.RPAREN), stopSet)) {
-          lexeme = lexemeReader.getLexeme(sourceCode);
+        if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), stopSet)) {
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
         }
       }
     }
@@ -2398,29 +2427,29 @@ public class pCompiler {
   // andTerm = addTerm {bitwiseAndOp addTerm}.
   // addTerm = term {addop term}.
   // term = factor {mulop factor}.
-  private Operand expression(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private Operand expression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     // start with lexeme type of lowest precedence.
-    return term(lexemeReader, 0, stopSet);
+    return term(cuc, 0, stopSet);
   }
 
   // Parse a term, as part of an expression, at a given precendence level.
-  private Operand term(LexemeReader lexemeReader, int level, EnumSet<LexemeType> stopSet) throws FatalError {
+  private Operand term(CompilationUnitContext cuc, int level, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nterm start: level = " + level + ", stopSet = " + stopSet);
 
     // lexical analysis.
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LEXEME_TYPE_AT_LEVEL[level]);
-    Operand leftOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(lexemeReader, followSet)
-        : term(lexemeReader, level + 1, followSet);
+    Operand leftOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(cuc, followSet)
+        : term(cuc, level + 1, followSet);
 
-    leftOperand = termWithOperand(lexemeReader, level, leftOperand, followSet);
+    leftOperand = termWithOperand(cuc, level, leftOperand, followSet);
     debug("\nterm: end");
     return leftOperand;
   } // term()
 
   // Parse a term, as part of an expression, at a given precendence level, given
   // an already parsed left operand.
-  private Operand termWithOperand(LexemeReader lexemeReader, int level, Operand leftOperand, EnumSet<LexemeType> followSet)
+  private Operand termWithOperand(CompilationUnitContext cuc, int level, Operand leftOperand, EnumSet<LexemeType> followSet)
       throws FatalError {
     debug("\ntermWithOperand start: level = " + level + ", lexeme = " + lexeme + ", followSet = " + followSet);
     debug("\ntermWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
@@ -2429,7 +2458,7 @@ public class pCompiler {
     // process the first operand at the next level if it is followed by an
     // operator with higher precedence.
     if (level < LEXEME_TYPE_AT_LEVEL.length - 1 && lexeme.type.ordinal() > LEXEME_TYPE_AT_LEVEL[level].ordinal()) {
-      leftOperand = termWithOperand(lexemeReader, level + 1, leftOperand, followSet);
+      leftOperand = termWithOperand(cuc, level + 1, leftOperand, followSet);
     }
 
     // code generation.
@@ -2442,17 +2471,17 @@ public class pCompiler {
       // code generation.
       if (leftOperandNotLoaded) {
         if (leftOperand.opType != OperandType.ACC) {
-          plantAccLoad(lexemeReader, leftOperand);
+          plantAccLoad(cuc.lexemeReader, leftOperand);
         }
         leftOperandNotLoaded = false;
       }
 
       // lexical analysis.
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       // process the right hand operand and subsequent operators/operands at the
       // next level, ultimately parsing a factor.
-      Operand rOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(lexemeReader, followSet)
-          : term(lexemeReader, level + 1, followSet);
+      Operand rOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(cuc, followSet)
+          : term(cuc, level + 1, followSet);
 
       // code generation.
       debug("\ntermWithOperand loop: level = " + level + ", leftOperand=" + leftOperand + ", rightOperand=" + rOperand
@@ -2463,26 +2492,26 @@ public class pCompiler {
        */
       if ((leftOperand.opType == OperandType.ACC) && (rOperand.opType == OperandType.CONSTANT)) {
         if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.word) {
-          plant(lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.byt) {
-          plant(lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.byt) {
-          plant(lexemeReader, new Instruction(forwardOperation8.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation8.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.word) {
-          plant(lexemeReader, new Instruction(FunctionType.acc8ToAcc16));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.acc8ToAcc16));
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
-          plant(lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.ACC) && (rOperand.opType == OperandType.ACC)) {
         if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.byt) {
-          plant(lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
           acc8.clear();
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.word) {
-          plant(lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
@@ -2492,23 +2521,23 @@ public class pCompiler {
       } else if ((leftOperand.opType == OperandType.ACC)
           && (rOperand.opType == OperandType.GLOBAL_VAR || rOperand.opType == OperandType.LOCAL_VAR)) {
         if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.word) {
-          plant(lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.byt) {
-          plant(lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.byt) {
-          plant(lexemeReader, new Instruction(forwardOperation8.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation8.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.word) {
-          plant(lexemeReader, new Instruction(FunctionType.acc8ToAcc16));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.acc8ToAcc16));
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
-          plant(lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.STACK16) && (rOperand.opType == OperandType.ACC)) {
         if (rOperand.dataType == DataType.word) {
-          plant(lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
           leftOperand.opType = OperandType.ACC;
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
@@ -2517,11 +2546,11 @@ public class pCompiler {
         }
       } else if ((leftOperand.opType == OperandType.STACK8) && (rOperand.opType == OperandType.ACC)) {
         if (rOperand.dataType == DataType.byt) {
-          plant(lexemeReader, new Instruction(reverseOperation8.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(reverseOperation8.get(operator), leftOperand));
           leftOperand.opType = OperandType.ACC;
           acc8.setOperand(leftOperand);
         } else if (rOperand.dataType == DataType.word) {
-          plant(lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
           leftOperand.opType = OperandType.ACC;
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
@@ -2541,22 +2570,22 @@ public class pCompiler {
   // filled with the label at the end of the control statement block.
   // comparison = expression relop expression
   // TODO Merge comparison with expression.
-  private int comparison(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private int comparison(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ncomparison: start with stopSet = " + stopSet);
 
     // lexical analysis.
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(lexemeReader, localSet);
+    Operand leftOperand = expression(cuc, localSet);
     debug("\ncomparison: leftOperand=" + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
     // code generation.
     if (leftOperand.opType == OperandType.ACC) {
       debug("\ncomparison: push leftOperand to the stack; " + leftOperand);
       if (leftOperand.dataType == DataType.word) {
-        plant(lexemeReader, new Instruction(FunctionType.stackAcc16));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc16));
       } else if (leftOperand.dataType == DataType.byt) {
-        plant(lexemeReader, new Instruction(FunctionType.stackAcc8));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc8));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
@@ -2566,11 +2595,11 @@ public class pCompiler {
     localSet = stopSet.clone();
     localSet.addAll(START_EXPRESSION);
     OperatorType compareOp;
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.relop), localSet)) {
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.relop), localSet)) {
       // code generation.
       compareOp = lexeme.operator;
       // lexical analysis.
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     } else {
       // code generation.
       compareOp = OperatorType.eq;
@@ -2580,17 +2609,17 @@ public class pCompiler {
     localSet = stopSet.clone();
     localSet.addAll(START_STATEMENT);
     localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(lexemeReader, localSet);
+    Operand rightOperand = expression(cuc, localSet);
 
     // code generation.
-    boolean reverseCompare = plantComparisonCode(lexemeReader, leftOperand, rightOperand);
+    boolean reverseCompare = plantComparisonCode(cuc.lexemeReader, leftOperand, rightOperand);
     int ifLabel = saveLabel();
     Operand labelOperand = new Operand(OperandType.LABEL, DataType.word, 0);
     if (reverseCompare) {
       debug(", reverseCompare");
-      plant(lexemeReader, new Instruction(reverseSkip.get(compareOp), labelOperand));
+      plant(cuc.lexemeReader, new Instruction(reverseSkip.get(compareOp), labelOperand));
     } else {
-      plant(lexemeReader, new Instruction(normalSkip.get(compareOp), labelOperand));
+      plant(cuc.lexemeReader, new Instruction(normalSkip.get(compareOp), labelOperand));
     }
 
     debug("\ncomparison: end");
@@ -2599,21 +2628,21 @@ public class pCompiler {
 
   // parse a comparison, jump back to the label if the comparison yields true.
   // comparison = expression relop expression
-  private void comparisonInDoStatement(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet, int doLabel) throws FatalError {
+  private void comparisonInDoStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet, int doLabel) throws FatalError {
     debug("\ncomparisonInDoStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
     EnumSet<LexemeType> localSet = stopSet.clone();
     localSet.add(LexemeType.relop);
-    Operand leftOperand = expression(lexemeReader, localSet);
+    Operand leftOperand = expression(cuc, localSet);
 
     // code generation.
     if (leftOperand.opType == OperandType.ACC) {
       debug("\ncomparisonInDoStatement: push leftOperand to the stack; " + leftOperand);
       if (leftOperand.dataType == DataType.word) {
-        plant(lexemeReader, new Instruction(FunctionType.stackAcc16));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc16));
       } else if (leftOperand.dataType == DataType.byt) {
-        plant(lexemeReader, new Instruction(FunctionType.stackAcc8));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc8));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
@@ -2623,11 +2652,11 @@ public class pCompiler {
     localSet = stopSet.clone();
     localSet.addAll(START_EXPRESSION);
     OperatorType compareOp;
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.relop), localSet)) {
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.relop), localSet)) {
       // code generation.
       compareOp = lexeme.operator;
       // lexical analysis.
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     } else {
       // code generation.
       compareOp = OperatorType.eq;
@@ -2637,39 +2666,39 @@ public class pCompiler {
     localSet = stopSet.clone();
     localSet.addAll(START_STATEMENT);
     localSet.remove(LexemeType.identifier);
-    Operand rightOperand = expression(lexemeReader, localSet);
+    Operand rightOperand = expression(cuc, localSet);
 
     // code generation.
-    boolean reverseCompare = plantComparisonCode(lexemeReader, leftOperand, rightOperand);
+    boolean reverseCompare = plantComparisonCode(cuc.lexemeReader, leftOperand, rightOperand);
     Operand labelOperand = new Operand(OperandType.LABEL, DataType.word, doLabel);
     if (reverseCompare) {
       debug(", reverseCompare");
       if (compareOp == OperatorType.eq) {
-        plant(lexemeReader, new Instruction(FunctionType.brEq, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brEq, labelOperand));
       } else if (compareOp == OperatorType.ne) {
-        plant(lexemeReader, new Instruction(FunctionType.brNe, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brNe, labelOperand));
       } else if (compareOp == OperatorType.gt) {
-        plant(lexemeReader, new Instruction(FunctionType.brLt, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brLt, labelOperand));
       } else if (compareOp == OperatorType.lt) {
-        plant(lexemeReader, new Instruction(FunctionType.brGt, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brGt, labelOperand));
       } else if (compareOp == OperatorType.ge) {
-        plant(lexemeReader, new Instruction(FunctionType.brLe, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brLe, labelOperand));
       } else if (compareOp == OperatorType.le) {
-        plant(lexemeReader, new Instruction(FunctionType.brGe, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brGe, labelOperand));
       }
     } else {
       if (compareOp == OperatorType.eq) {
-        plant(lexemeReader, new Instruction(FunctionType.brEq, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brEq, labelOperand));
       } else if (compareOp == OperatorType.ne) {
-        plant(lexemeReader, new Instruction(FunctionType.brNe, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brNe, labelOperand));
       } else if (compareOp == OperatorType.gt) {
-        plant(lexemeReader, new Instruction(FunctionType.brGt, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brGt, labelOperand));
       } else if (compareOp == OperatorType.lt) {
-        plant(lexemeReader, new Instruction(FunctionType.brLt, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brLt, labelOperand));
       } else if (compareOp == OperatorType.ge) {
-        plant(lexemeReader, new Instruction(FunctionType.brGe, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brGe, labelOperand));
       } else if (compareOp == OperatorType.le) {
-        plant(lexemeReader, new Instruction(FunctionType.brLe, labelOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.brLe, labelOperand));
       }
     }
 
@@ -2682,7 +2711,7 @@ public class pCompiler {
   // dataType = "byte" | "word" | "String".
   //
   // TODO implement isPublic
-  private String assignment(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private String assignment(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
@@ -2694,41 +2723,41 @@ public class pCompiler {
     if (lexeme.type == LexemeType.finalLexeme) {
       modifiers.add(lexeme.type);
       // skip final lexeme.
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     }
 
     // lexical analysis.
     String variable = null;
     if (lexeme.type == LexemeType.byteLexeme || lexeme.type == LexemeType.wordLexeme || lexeme.type == LexemeType.stringLexeme) {
       LexemeType dataType = lexeme.type;
-      lexeme = lexemeReader.getLexeme(sourceCode);
-      if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.identifier), stopAssignmentSet)) {
 
         // semantic analysis.
         if (identifiers.declareId(lexeme.idVal, IdentifierType.LOCAL_VARIABLE, dataType, modifiers)) {
           debug("\nstatementExpression: " + modifiers + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
-          error(lexemeReader);
+          error(cuc.lexemeReader);
           System.out.println("variable " + lexeme.idVal + " already declared.");
         }
       }
     } else {
-      checkOrSkip(lexemeReader, EnumSet.of(LexemeType.identifier), stopAssignmentSet);
+      checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.identifier), stopAssignmentSet);
 
       // semantic analysis.
       if (identifiers.getId(lexeme.idVal) == null)
-        error(lexemeReader, 9); // variable not declared.
+        error(cuc.lexemeReader, 9); // variable not declared.
     }
 
-    update(lexemeReader, stopSet);
+    update(cuc, stopSet);
 
     debug("\nstatementExpression: end");
     return variable;
   } // statementExpression()
 
   // update = identifier++ | identifier-- | identifier "=" expression
-  private void update(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+  private void update(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nupdate: start with stopSet = " + stopSet);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
@@ -2742,49 +2771,49 @@ public class pCompiler {
     debug("\nupdate: leftOperand = " + leftOperand);
 
     // lexical analysis.
-    lexeme = lexemeReader.getLexeme(sourceCode);
+    lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     if (lexeme.type == LexemeType.increment) {
       // identifier++
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
       // code generation.
       if (var.getDataType() == DataType.word) {
-        plant(lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
       } else if (var.getDataType() == DataType.byt) {
-        plant(lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
       } else {
-        error(lexemeReader, 12);
+        error(cuc.lexemeReader, 12);
       }
     } else if (lexeme.type == LexemeType.decrement) {
       // identifier--
-      lexeme = lexemeReader.getLexeme(sourceCode);
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
       // code generation.
       if (var.getDataType() == DataType.word) {
-        plant(lexemeReader, new Instruction(FunctionType.decrement16, leftOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.decrement16, leftOperand));
       } else if (var.getDataType() == DataType.byt) {
-        plant(lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
+        plant(cuc.lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
       } else {
-        error(lexemeReader, 12);
+        error(cuc.lexemeReader, 12);
       }
-    } else if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
+    } else if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
       // identifier "=" expression
-      lexeme = lexemeReader.getLexeme(sourceCode);
-      Operand rightOperand = expression(lexemeReader, stopSet);
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+      Operand rightOperand = expression(cuc, stopSet);
 
       // code generation.
       if (var.isFinal()) {
         // no assignment but constant definition.
         if (var.getDataType() != rightOperand.dataType) {
-          error(lexemeReader, 14);
+          error(cuc.lexemeReader, 14);
         } else if (rightOperand.opType == OperandType.CONSTANT) {
           var.setIntValue(rightOperand.intValue);
           debug("\nupdate: final var [" + var.getFullyQualifiedName() + "] = " + var.getIntValue());
         } else {
-          error(lexemeReader, 17);
+          error(cuc.lexemeReader, 17);
         }
       } else {
-        generateAssignment(lexemeReader, leftOperand, rightOperand);
+        generateAssignment(cuc.lexemeReader, leftOperand, rightOperand);
       }
     }
 
@@ -3305,9 +3334,9 @@ public class pCompiler {
         // update references to label <name>.
         for (Integer reference : references) {
           Instruction instruction = instructions.get(reference);
-          if (instruction.function != FunctionType.call) {
+          if (instruction.function != FunctionType.call && instruction.function != FunctionType.br) {
             throw new RuntimeException(
-                String.format("One of the instructions to symbol %s is not a call function", fullyQualifiedName));
+                String.format("One of the instructions to symbol %s is neither a call nor a branch function", fullyQualifiedName));
           } else if (instruction.operand == null) {
             throw new RuntimeException(
                 String.format("One of the instructions to symbol %s does not have an operand", fullyQualifiedName));
@@ -3316,10 +3345,10 @@ public class pCompiler {
                 String.format("One of the instructions to symbol %s does not have a label operand", fullyQualifiedName));
           } else if (instruction.operand.intValue == 0) {
             instruction.operand.intValue = address;
-          } else if (instruction.operand.intValue != address) {
-            throw new RuntimeException(String.format(
-                "One of the instructions to symbol %s already has %d as address which is different from expected value %d",
-                fullyQualifiedName, instruction.operand.intValue, address));
+//          } else if (instruction.operand.intValue != address) {
+//            throw new RuntimeException(String.format(
+//                "One of the instructions to symbol %s already has %d as address which is different from expected value %d",
+//                fullyQualifiedName, instruction.operand.intValue, address));
           }
         }
       }
