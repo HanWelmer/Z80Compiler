@@ -1939,9 +1939,9 @@ public class pCompiler {
   private void statementExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
     if (lexeme.type == LexemeType.increment) {
-      preincrementExpression(cuc.lexemeReader, stopSet);
+      preincrementExpression(cuc, stopSet);
     } else if (lexeme.type == LexemeType.decrement) {
-      predecrementExpression(cuc.lexemeReader, stopSet);
+      predecrementExpression(cuc, stopSet);
     } else if (lexeme.type == LexemeType.identifier) {
       String name = name(cuc.lexemeReader, stopSet);
 
@@ -1978,57 +1978,57 @@ public class pCompiler {
   } // statementExpression
 
   // preincrementExpression ::= "++" name.
-  private void preincrementExpression(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.increment), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+  private void preincrementExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.increment), stopSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
       // TODO support fully qualified name instead of just an identifier.
-      if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.identifier), stopSet)) {
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.identifier), stopSet)) {
         // semantic analysis.
-        Variable var = identifiers.getId(lexeme.idVal);
+        Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
         Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\nupdate: leftOperand = " + leftOperand);
 
         // code generation.
         if (var.getDataType() == DataType.word) {
-          plant(lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
         } else if (var.getDataType() == DataType.byt) {
-          plant(lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
         } else {
-          error(lexemeReader, 12);
+          error(cuc.lexemeReader, 12);
         }
 
         // lexical analysis.
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       }
     }
   } // preincrementExpression
 
   // predecrementExpression ::= "--" name.
-  private void predecrementExpression(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
-    if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.decrement), stopSet)) {
-      lexeme = lexemeReader.getLexeme(sourceCode);
+  private void predecrementExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
+    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.decrement), stopSet)) {
+      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
       // TODO support fully qualified name instead of just an identifier.
-      if (checkOrSkip(lexemeReader, EnumSet.of(LexemeType.identifier), stopSet)) {
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.identifier), stopSet)) {
         // semantic analysis.
-        Variable var = identifiers.getId(lexeme.idVal);
+        Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
         Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
         leftOperand.isFinal = var.isFinal();
         debug("\nupdate: leftOperand = " + leftOperand);
 
         // code generation.
         if (var.getDataType() == DataType.word) {
-          plant(lexemeReader, new Instruction(FunctionType.decrement16, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.decrement16, leftOperand));
         } else if (var.getDataType() == DataType.byt) {
-          plant(lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
+          plant(cuc.lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
         } else {
-          error(lexemeReader, 12);
+          error(cuc.lexemeReader, 12);
         }
 
         // lexical analysis.
-        lexeme = lexemeReader.getLexeme(sourceCode);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       }
     }
   } // predecrementExpression
@@ -3431,14 +3431,14 @@ public class pCompiler {
     }
 
     // adjust branch instructions.
-    int idx = 0;
-    Instruction instruction;
-    do {
-      instruction = instructions.get(idx++);
-      if (BRANCH_FUNCTIONS.contains(instruction.function) && (instruction.operand.intValue > pos)) {
-        instruction.operand.intValue -= number;
-      }
-    } while (instruction.function != FunctionType.stop);
+    instructions.forEach((instruction) -> updateBranchInstruction(instruction, pos, number));
   } // relocate
+
+  private Object updateBranchInstruction(Instruction instruction, int pos, int number) {
+    if (BRANCH_FUNCTIONS.contains(instruction.function) && (instruction.operand.intValue > pos)) {
+      instruction.operand.intValue -= number;
+    }
+	return instruction;
+  }
 
 }
