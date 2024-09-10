@@ -4,7 +4,7 @@ TOS     equ 0FD00H        ;top of stack, i.e. bottom of MONITOR user global data
 start:
         LD    SP,TOS
 L0:
-        CALL  L23
+        CALL  L6
 L1:
         JP    00171H      ;Jump to Zilog Z80183 Monitor.
 L2:
@@ -38,5881 +38,4752 @@ L15:
 L16:
         LD    (05004H),HL
 L17:
-        ;;testBitwiseOperators.j(6)   private static final byte fb1 = 0x1C;
+        JP    L24
 L18:
-        ;;testBitwiseOperators.j(7)   private static final byte fb2 = 0x07;
+        ;;testBitwiseOperators.j(6)   private static final byte fb1 = 0x1C;
 L19:
-        ;;testBitwiseOperators.j(8)   private static final word fw1 = 0x032C;
+        ;;testBitwiseOperators.j(7)   private static final byte fb2 = 0x07;
 L20:
-        ;;testBitwiseOperators.j(9)   private static final word fw2 = 0x1234;
+        ;;testBitwiseOperators.j(8)   private static final word fw1 = 0x032C;
 L21:
-        ;;testBitwiseOperators.j(10) 
+        ;;testBitwiseOperators.j(9)   private static final word fw2 = 0x1234;
 L22:
-        ;;testBitwiseOperators.j(11)   public static void main() {
+        ;;testBitwiseOperators.j(10) 
 L23:
-        ;method TestBitwiseOperators.main [public, static] void ()
+        ;;testBitwiseOperators.j(11)   public static void main() {
 L24:
-        PUSH  IX
+        ;method TestBitwiseOperators.main [public, static] void ()
 L25:
+        PUSH  IX
+L26:
         LD    IX,0x0000
         ADD   IX,SP
-L26:
 L27:
-        ;;testBitwiseOperators.j(12)     println(0);
 L28:
-        LD    A,0
+        ;;testBitwiseOperators.j(12)     println(0);
 L29:
-        CALL  writeLineA
+        LD    A,0
 L30:
-        ;;testBitwiseOperators.j(13)     
+        CALL  writeLineA
 L31:
-        ;;testBitwiseOperators.j(14)     // Possible operand types: constant, acc, var, final var, stack8, stack16.
+        ;;testBitwiseOperators.j(13)     
 L32:
-        ;;testBitwiseOperators.j(15)     // Possible data types: byte, word.
+        ;;testBitwiseOperators.j(14)     // Possible operand types: constant, acc, var, final var, stack8, stack16.
 L33:
-        ;;testBitwiseOperators.j(16)   
+        ;;testBitwiseOperators.j(15)     // Possible data types: byte, word.
 L34:
-        ;;testBitwiseOperators.j(17)     //constant/constant
+        ;;testBitwiseOperators.j(16)   
 L35:
-        ;;testBitwiseOperators.j(18)     //*****************
+        ;;testBitwiseOperators.j(17)     //constant/constant
 L36:
-        ;;testBitwiseOperators.j(19)     //constant byte/constant byte
+        ;;testBitwiseOperators.j(18)     //*****************
 L37:
-        ;;testBitwiseOperators.j(20)     if (0x07 & 0x1C == 0x04) println (1); else println (999); //0000.0111 & 0001.1100 = 0000.0100
+        ;;testBitwiseOperators.j(19)     //constant byte/constant byte
 L38:
-        LD    A,7
+        ;;testBitwiseOperators.j(20)     if (0x07 & 0x1C == 0x04) println (1); else println (999); //0000.0111 & 0001.1100 = 0000.0100
 L39:
-        AND   A,28
+        LD    A,7
 L40:
-        SUB   A,4
+        AND   A,28
 L41:
-        JP    NZ,L47
+        SUB   A,4
 L42:
-        LD    A,1
+        JP    NZ,L46
 L43:
-        CALL  writeLineA
+        LD    A,1
 L44:
-        JP    L50
+        CALL  writeLineA
 L45:
-        LD    HL,999
+        JP    L49
 L46:
-        CALL  writeLineHL
+        LD    HL,999
 L47:
-        ;;testBitwiseOperators.j(21)     if (0x07 | 0x1C == 0x1F) println (2); else println (999); //0000.0111 | 0001.1100 = 0001.1111
+        CALL  writeLineHL
 L48:
-        LD    A,7
+        ;;testBitwiseOperators.j(21)     if (0x07 | 0x1C == 0x1F) println (2); else println (999); //0000.0111 | 0001.1100 = 0001.1111
 L49:
-        OR    A,28
+        LD    A,7
 L50:
-        SUB   A,31
+        OR    A,28
 L51:
-        JP    NZ,L59
+        SUB   A,31
 L52:
-        LD    A,2
+        JP    NZ,L56
 L53:
-        CALL  writeLineA
+        LD    A,2
 L54:
-        JP    L62
+        CALL  writeLineA
 L55:
-        LD    HL,999
+        JP    L59
 L56:
-        CALL  writeLineHL
+        LD    HL,999
 L57:
-        ;;testBitwiseOperators.j(22)     if (0x07 ^ 0x1C == 0x1B) println (3); else println (999); //0000.0111 ^ 0001.1100 = 0001.1011
+        CALL  writeLineHL
 L58:
-        LD    A,7
+        ;;testBitwiseOperators.j(22)     if (0x07 ^ 0x1C == 0x1B) println (3); else println (999); //0000.0111 ^ 0001.1100 = 0001.1011
 L59:
-        XOR   A,28
+        LD    A,7
 L60:
-        SUB   A,27
+        XOR   A,28
 L61:
-        JP    NZ,L71
+        SUB   A,27
 L62:
-        LD    A,3
+        JP    NZ,L66
 L63:
-        CALL  writeLineA
+        LD    A,3
 L64:
-        JP    L75
+        CALL  writeLineA
 L65:
-        LD    HL,999
+        JP    L70
 L66:
-        CALL  writeLineHL
+        LD    HL,999
 L67:
-        ;;testBitwiseOperators.j(23)     //constant word/constant word
+        CALL  writeLineHL
 L68:
-        ;;testBitwiseOperators.j(24)     if (0x1234 & 0x032C == 0x0224) println (4); else println (999);
+        ;;testBitwiseOperators.j(23)     //constant word/constant word
 L69:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(24)     if (0x1234 & 0x032C == 0x0224) println (4); else println (999);
 L70:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L71:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L72:
-        JP    NZ,L84
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L73:
-        LD    A,4
+        JP    NZ,L77
 L74:
-        CALL  writeLineA
+        LD    A,4
 L75:
-        JP    L88
+        CALL  writeLineA
 L76:
-        LD    HL,999
+        JP    L81
 L77:
-        CALL  writeLineHL
+        LD    HL,999
 L78:
-        ;;testBitwiseOperators.j(25)     //0001.0010.0011.0100 & 0000.0011.0010.1100 = 0000.0010.0010.0100
+        CALL  writeLineHL
 L79:
-        ;;testBitwiseOperators.j(26)     if (0x1234 | 0x032C == 0x133C) println (5); else println (999);
+        ;;testBitwiseOperators.j(25)     //0001.0010.0011.0100 & 0000.0011.0010.1100 = 0000.0010.0010.0100
 L80:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(26)     if (0x1234 | 0x032C == 0x133C) println (5); else println (999);
 L81:
-        LD    DE,812
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,4660
 L82:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L83:
-        JP    NZ,L97
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L84:
-        LD    A,5
+        JP    NZ,L88
 L85:
-        CALL  writeLineA
+        LD    A,5
 L86:
-        JP    L101
+        CALL  writeLineA
 L87:
-        LD    HL,999
+        JP    L92
 L88:
-        CALL  writeLineHL
+        LD    HL,999
 L89:
-        ;;testBitwiseOperators.j(27)     //0001.0010.0011.0100 | 0000.0011.0010.1100 = 0001.0011.0011.1100
+        CALL  writeLineHL
 L90:
-        ;;testBitwiseOperators.j(28)     if (0x1234 ^ 0x032C == 0x1118) println (6); else println (999);
+        ;;testBitwiseOperators.j(27)     //0001.0010.0011.0100 | 0000.0011.0010.1100 = 0001.0011.0011.1100
 L91:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(28)     if (0x1234 ^ 0x032C == 0x1118) println (6); else println (999);
 L92:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L93:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L94:
-        JP    NZ,L110
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L95:
-        LD    A,6
+        JP    NZ,L99
 L96:
-        CALL  writeLineA
+        LD    A,6
 L97:
-        JP    L115
+        CALL  writeLineA
 L98:
-        LD    HL,999
+        JP    L104
 L99:
-        CALL  writeLineHL
+        LD    HL,999
 L100:
-        ;;testBitwiseOperators.j(29)     //0001.0010.0011.0100 ^ 0000.0011.0010.1100 = 0001.0001.0001.1000
+        CALL  writeLineHL
 L101:
-        ;;testBitwiseOperators.j(30)     //constant byte/constant word
+        ;;testBitwiseOperators.j(29)     //0001.0010.0011.0100 ^ 0000.0011.0010.1100 = 0001.0001.0001.1000
 L102:
-        ;;testBitwiseOperators.j(31)     if (0x1C & 0x1234 == 0x0014) println (7); else println (999); //0001.1100 & 0001.0010.0011.0100 = 0000.0000.0001.0100
+        ;;testBitwiseOperators.j(30)     //constant byte/constant word
 L103:
-        LD    A,28
+        ;;testBitwiseOperators.j(31)     if (0x1C & 0x1234 == 0x0014) println (7); else println (999); //0001.1100 & 0001.0010.0011.0100 = 0000.0000.0001.0100
 L104:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L105:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L106:
-        LD    A,20
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L107:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L108:
-        JP    NZ,L126
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L109:
-        LD    A,7
+        JP    NZ,L113
 L110:
-        CALL  writeLineA
+        LD    A,7
 L111:
-        JP    L129
+        CALL  writeLineA
 L112:
-        LD    HL,999
+        JP    L116
 L113:
-        CALL  writeLineHL
+        LD    HL,999
 L114:
-        ;;testBitwiseOperators.j(32)     if (0x1C | 0x1234 == 0x123C) println (8); else println (999); //0001.1100 | 0001.0010.0011.0100 = 0001.0010.0011.1100
+        CALL  writeLineHL
 L115:
-        LD    A,28
+        ;;testBitwiseOperators.j(32)     if (0x1C | 0x1234 == 0x123C) println (8); else println (999); //0001.1100 | 0001.0010.0011.0100 = 0001.0010.0011.1100
 L116:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L117:
-        LD    DE,4660
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L118:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L119:
-        JP    NZ,L139
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L120:
-        LD    A,8
+        JP    NZ,L124
 L121:
-        CALL  writeLineA
+        LD    A,8
 L122:
-        JP    L142
+        CALL  writeLineA
 L123:
-        LD    HL,999
+        JP    L127
 L124:
-        CALL  writeLineHL
+        LD    HL,999
 L125:
-        ;;testBitwiseOperators.j(33)     if (0x1C ^ 0x1234 == 0x1228) println (9); else println (999); //0001.1100 ^ 0001.0010.0011.0100 = 0001.0010.0010.1000
+        CALL  writeLineHL
 L126:
-        LD    A,28
+        ;;testBitwiseOperators.j(33)     if (0x1C ^ 0x1234 == 0x1228) println (9); else println (999); //0001.1100 ^ 0001.0010.0011.0100 = 0001.0010.0010.1000
 L127:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L128:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L129:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L130:
-        JP    NZ,L152
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L131:
-        LD    A,9
+        JP    NZ,L135
 L132:
-        CALL  writeLineA
+        LD    A,9
 L133:
-        JP    L156
+        CALL  writeLineA
 L134:
-        LD    HL,999
+        JP    L139
 L135:
-        CALL  writeLineHL
+        LD    HL,999
 L136:
-        ;;testBitwiseOperators.j(34)     //constant word/constant byte
+        CALL  writeLineHL
 L137:
-        ;;testBitwiseOperators.j(35)     if (0x1234 & 0x1C == 0x0014) println (10); else println (999); //0001.0010.0011.0100 & 0001.1100 = 0000.0000.0001.0100
+        ;;testBitwiseOperators.j(34)     //constant word/constant byte
 L138:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(35)     if (0x1234 & 0x1C == 0x0014) println (10); else println (999); //0001.0010.0011.0100 & 0001.1100 = 0000.0000.0001.0100
 L139:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L140:
-        LD    A,20
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L141:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L142:
-        JP    NZ,L166
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L143:
-        LD    A,10
+        JP    NZ,L147
 L144:
-        CALL  writeLineA
+        LD    A,10
 L145:
-        JP    L169
+        CALL  writeLineA
 L146:
-        LD    HL,999
+        JP    L150
 L147:
-        CALL  writeLineHL
+        LD    HL,999
 L148:
-        ;;testBitwiseOperators.j(36)     if (0x1234 | 0x1C == 0x123C) println (11); else println (999); //0001.0010.0011.0100 | 0001.1100 = 0001.0010.0011.1100
+        CALL  writeLineHL
 L149:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(36)     if (0x1234 | 0x1C == 0x123C) println (11); else println (999); //0001.0010.0011.0100 | 0001.1100 = 0001.0010.0011.1100
 L150:
-        LD    DE,28
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,4660
 L151:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L152:
-        JP    NZ,L178
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L153:
-        LD    A,11
+        JP    NZ,L157
 L154:
-        CALL  writeLineA
+        LD    A,11
 L155:
-        JP    L181
+        CALL  writeLineA
 L156:
-        LD    HL,999
+        JP    L160
 L157:
-        CALL  writeLineHL
+        LD    HL,999
 L158:
-        ;;testBitwiseOperators.j(37)     if (0x1234 ^ 0x1C == 0x1228) println (12); else println (999); //0001.0010.0011.0100 ^ 0001.1100 = 0001.0010.0010.1000
+        CALL  writeLineHL
 L159:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(37)     if (0x1234 ^ 0x1C == 0x1228) println (12); else println (999); //0001.0010.0011.0100 ^ 0001.1100 = 0001.0010.0010.1000
 L160:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L161:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L162:
-        JP    NZ,L190
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L163:
-        LD    A,12
+        JP    NZ,L167
 L164:
-        CALL  writeLineA
+        LD    A,12
 L165:
-        JP    L197
+        CALL  writeLineA
 L166:
-        LD    HL,999
+        JP    L174
 L167:
-        CALL  writeLineHL
+        LD    HL,999
 L168:
-        ;;testBitwiseOperators.j(38)   
+        CALL  writeLineHL
 L169:
-        ;;testBitwiseOperators.j(39)     //constant/acc
+        ;;testBitwiseOperators.j(38)   
 L170:
-        ;;testBitwiseOperators.j(40)     //************
+        ;;testBitwiseOperators.j(39)     //constant/acc
 L171:
-        ;;testBitwiseOperators.j(41)     //constant byte/acc byte
+        ;;testBitwiseOperators.j(40)     //************
 L172:
-        ;;testBitwiseOperators.j(42)     if (0x07 & (0x10 + 0x0C) == 0x04) println (13); else println (999);
+        ;;testBitwiseOperators.j(41)     //constant byte/acc byte
 L173:
-        LD    A,7
+        ;;testBitwiseOperators.j(42)     if (0x07 & (0x10 + 0x0C) == 0x04) println (13); else println (999);
 L174:
-        PUSH  AF
-        LD    A,16
+        LD    A,7
 L175:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L176:
-        POP   BC
-        AND   A,B
+        ADD   A,12
 L177:
-        SUB   A,4
+        POP   BC
+        AND   A,B
 L178:
-        JP    NZ,L208
+        SUB   A,4
 L179:
-        LD    A,13
+        JP    NZ,L183
 L180:
-        CALL  writeLineA
+        LD    A,13
 L181:
-        JP    L211
+        CALL  writeLineA
 L182:
-        LD    HL,999
+        JP    L186
 L183:
-        CALL  writeLineHL
+        LD    HL,999
 L184:
-        ;;testBitwiseOperators.j(43)     if (0x07 | (0x10 + 0x0C) == 0x1F) println (14); else println (999);
+        CALL  writeLineHL
 L185:
-        LD    A,7
+        ;;testBitwiseOperators.j(43)     if (0x07 | (0x10 + 0x0C) == 0x1F) println (14); else println (999);
 L186:
-        PUSH  AF
-        LD    A,16
+        LD    A,7
 L187:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L188:
-        POP   BC
-        OR    A,B
+        ADD   A,12
 L189:
-        SUB   A,31
+        POP   BC
+        OR    A,B
 L190:
-        JP    NZ,L222
+        SUB   A,31
 L191:
-        LD    A,14
+        JP    NZ,L195
 L192:
-        CALL  writeLineA
+        LD    A,14
 L193:
-        JP    L225
+        CALL  writeLineA
 L194:
-        LD    HL,999
+        JP    L198
 L195:
-        CALL  writeLineHL
+        LD    HL,999
 L196:
-        ;;testBitwiseOperators.j(44)     if (0x07 ^ (0x10 + 0x0C) == 0x1B) println (15); else println (999);
+        CALL  writeLineHL
 L197:
-        LD    A,7
+        ;;testBitwiseOperators.j(44)     if (0x07 ^ (0x10 + 0x0C) == 0x1B) println (15); else println (999);
 L198:
-        PUSH  AF
-        LD    A,16
+        LD    A,7
 L199:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L200:
-        POP   BC
-        XOR   A,B
+        ADD   A,12
 L201:
-        SUB   A,27
+        POP   BC
+        XOR   A,B
 L202:
-        JP    NZ,L236
+        SUB   A,27
 L203:
-        LD    A,15
+        JP    NZ,L207
 L204:
-        CALL  writeLineA
+        LD    A,15
 L205:
-        JP    L240
+        CALL  writeLineA
 L206:
-        LD    HL,999
+        JP    L211
 L207:
-        CALL  writeLineHL
+        LD    HL,999
 L208:
-        ;;testBitwiseOperators.j(45)     //constant word/acc word
+        CALL  writeLineHL
 L209:
-        ;;testBitwiseOperators.j(46)     if (0x1234 & 0x0100 + 0x022C == 0x0224) println (16); else println (999);
+        ;;testBitwiseOperators.j(45)     //constant word/acc word
 L210:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(46)     if (0x1234 & 0x0100 + 0x022C == 0x0224) println (16); else println (999);
 L211:
-        PUSH  HL
-        LD    HL,256
+        LD    HL,4660
 L212:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L213:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,556
+        ADD   HL,DE
 L214:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L215:
-        JP    NZ,L251
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L216:
-        LD    A,16
+        JP    NZ,L220
 L217:
-        CALL  writeLineA
+        LD    A,16
 L218:
-        JP    L254
+        CALL  writeLineA
 L219:
-        LD    HL,999
+        JP    L223
 L220:
-        CALL  writeLineHL
+        LD    HL,999
 L221:
-        ;;testBitwiseOperators.j(47)     if (0x1234 | 0x0100 + 0x022C == 0x133C) println (17); else println (999);
+        CALL  writeLineHL
 L222:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(47)     if (0x1234 | 0x0100 + 0x022C == 0x133C) println (17); else println (999);
 L223:
-        PUSH  HL
-        LD    HL,256
+        LD    HL,4660
 L224:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L225:
-        POP   DE
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,556
+        ADD   HL,DE
 L226:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L227:
-        JP    NZ,L265
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L228:
-        LD    A,17
+        JP    NZ,L232
 L229:
-        CALL  writeLineA
+        LD    A,17
 L230:
-        JP    L268
+        CALL  writeLineA
 L231:
-        LD    HL,999
+        JP    L235
 L232:
-        CALL  writeLineHL
+        LD    HL,999
 L233:
-        ;;testBitwiseOperators.j(48)     if (0x1234 ^ 0x0100 + 0x022C == 0x1118) println (18); else println (999);
+        CALL  writeLineHL
 L234:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(48)     if (0x1234 ^ 0x0100 + 0x022C == 0x1118) println (18); else println (999);
 L235:
-        PUSH  HL
-        LD    HL,256
+        LD    HL,4660
 L236:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L237:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,556
+        ADD   HL,DE
 L238:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L239:
-        JP    NZ,L279
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L240:
-        LD    A,18
+        JP    NZ,L244
 L241:
-        CALL  writeLineA
+        LD    A,18
 L242:
-        JP    L283
+        CALL  writeLineA
 L243:
-        LD    HL,999
+        JP    L248
 L244:
-        CALL  writeLineHL
+        LD    HL,999
 L245:
-        ;;testBitwiseOperators.j(49)     //constant byte/acc word
+        CALL  writeLineHL
 L246:
-        ;;testBitwiseOperators.j(50)     if (0x1C & 0x1000 + 0x0234 == 0x0014) println (19); else println (999);
+        ;;testBitwiseOperators.j(49)     //constant byte/acc word
 L247:
-        LD    A,28
+        ;;testBitwiseOperators.j(50)     if (0x1C & 0x1000 + 0x0234 == 0x0014) println (19); else println (999);
 L248:
-        LD    HL,4096
+        LD    A,28
 L249:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L250:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        LD    DE,564
+        ADD   HL,DE
 L251:
-        LD    A,20
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L252:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L253:
-        JP    NZ,L295
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L254:
-        LD    A,19
+        JP    NZ,L258
 L255:
-        CALL  writeLineA
+        LD    A,19
 L256:
-        JP    L298
+        CALL  writeLineA
 L257:
-        LD    HL,999
+        JP    L261
 L258:
-        CALL  writeLineHL
+        LD    HL,999
 L259:
-        ;;testBitwiseOperators.j(51)     if (0x1C | 0x1000 + 0x0234 == 0x123C) println (20); else println (999);
+        CALL  writeLineHL
 L260:
-        LD    A,28
+        ;;testBitwiseOperators.j(51)     if (0x1C | 0x1000 + 0x0234 == 0x123C) println (20); else println (999);
 L261:
-        LD    HL,4096
+        LD    A,28
 L262:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L263:
-        OR    A,L
-        LD    L,A
+        LD    DE,564
+        ADD   HL,DE
 L264:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        OR    A,L
+        LD    L,A
 L265:
-        JP    NZ,L309
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L266:
-        LD    A,20
+        JP    NZ,L270
 L267:
-        CALL  writeLineA
+        LD    A,20
 L268:
-        JP    L312
+        CALL  writeLineA
 L269:
-        LD    HL,999
+        JP    L273
 L270:
-        CALL  writeLineHL
+        LD    HL,999
 L271:
-        ;;testBitwiseOperators.j(52)     if (0x1C ^ 0x1000 + 0x0234 == 0x1228) println (21); else println (999);
+        CALL  writeLineHL
 L272:
-        LD    A,28
+        ;;testBitwiseOperators.j(52)     if (0x1C ^ 0x1000 + 0x0234 == 0x1228) println (21); else println (999);
 L273:
-        LD    HL,4096
+        LD    A,28
 L274:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L275:
-        XOR   A,L
-        LD    L,A
+        LD    DE,564
+        ADD   HL,DE
 L276:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        XOR   A,L
+        LD    L,A
 L277:
-        JP    NZ,L323
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L278:
-        LD    A,21
+        JP    NZ,L282
 L279:
-        CALL  writeLineA
+        LD    A,21
 L280:
-        JP    L327
+        CALL  writeLineA
 L281:
-        LD    HL,999
+        JP    L286
 L282:
-        CALL  writeLineHL
+        LD    HL,999
 L283:
-        ;;testBitwiseOperators.j(53)     //constant word/acc byte
+        CALL  writeLineHL
 L284:
-        ;;testBitwiseOperators.j(54)     if (0x1234 & 0x10 + 0x0C == 0x0014) println (22); else println (999);
+        ;;testBitwiseOperators.j(53)     //constant word/acc byte
 L285:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(54)     if (0x1234 & 0x10 + 0x0C == 0x0014) println (22); else println (999);
 L286:
-        LD    A,16
+        LD    HL,4660
 L287:
-        ADD   A,12
+        LD    A,16
 L288:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L289:
-        LD    A,20
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L290:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L291:
-        JP    NZ,L339
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L292:
-        LD    A,22
+        JP    NZ,L296
 L293:
-        CALL  writeLineA
+        LD    A,22
 L294:
-        JP    L342
+        CALL  writeLineA
 L295:
-        LD    HL,999
+        JP    L299
 L296:
-        CALL  writeLineHL
+        LD    HL,999
 L297:
-        ;;testBitwiseOperators.j(55)     if (0x1234 | 0x10 + 0x0C == 0x123C) println (23); else println (999);
+        CALL  writeLineHL
 L298:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(55)     if (0x1234 | 0x10 + 0x0C == 0x123C) println (23); else println (999);
 L299:
-        LD    A,16
+        LD    HL,4660
 L300:
-        ADD   A,12
+        LD    A,16
 L301:
-        OR    A,L
-        LD    L,A
+        ADD   A,12
 L302:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        OR    A,L
+        LD    L,A
 L303:
-        JP    NZ,L353
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L304:
-        LD    A,23
+        JP    NZ,L308
 L305:
-        CALL  writeLineA
+        LD    A,23
 L306:
-        JP    L356
+        CALL  writeLineA
 L307:
-        LD    HL,999
+        JP    L311
 L308:
-        CALL  writeLineHL
+        LD    HL,999
 L309:
-        ;;testBitwiseOperators.j(56)     if (0x1234 ^ 0x10 + 0x0C == 0x1228) println (24); else println (999);
+        CALL  writeLineHL
 L310:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(56)     if (0x1234 ^ 0x10 + 0x0C == 0x1228) println (24); else println (999);
 L311:
-        LD    A,16
+        LD    HL,4660
 L312:
-        ADD   A,12
+        LD    A,16
 L313:
-        XOR   A,L
-        LD    L,A
+        ADD   A,12
 L314:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        XOR   A,L
+        LD    L,A
 L315:
-        JP    NZ,L367
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L316:
-        LD    A,24
+        JP    NZ,L320
 L317:
-        CALL  writeLineA
+        LD    A,24
 L318:
-        JP    L374
+        CALL  writeLineA
 L319:
-        LD    HL,999
+        JP    L327
 L320:
-        CALL  writeLineHL
+        LD    HL,999
 L321:
-        ;;testBitwiseOperators.j(57)   
+        CALL  writeLineHL
 L322:
-        ;;testBitwiseOperators.j(58)     //constant/var
+        ;;testBitwiseOperators.j(57)   
 L323:
-        ;;testBitwiseOperators.j(59)     //*****************
+        ;;testBitwiseOperators.j(58)     //constant/var
 L324:
-        ;;testBitwiseOperators.j(60)     //constant byte/var byte
+        ;;testBitwiseOperators.j(59)     //*****************
 L325:
-        ;;testBitwiseOperators.j(61)     if (0x07 & b1 == 0x04) println (25); else println (999);
+        ;;testBitwiseOperators.j(60)     //constant byte/var byte
 L326:
-        LD    A,7
+        ;;testBitwiseOperators.j(61)     if (0x07 & b1 == 0x04) println (25); else println (999);
 L327:
-        LD    B,A
-        LD    A,(05000H)
-        AND   A,B
+        LD    A,7
 L328:
-        SUB   A,4
+        LD    B,A
+        LD    A,(05000H)
+        AND   A,B
 L329:
-        JP    NZ,L383
+        SUB   A,4
 L330:
-        LD    A,25
+        JP    NZ,L334
 L331:
-        CALL  writeLineA
+        LD    A,25
 L332:
-        JP    L386
+        CALL  writeLineA
 L333:
-        LD    HL,999
+        JP    L337
 L334:
-        CALL  writeLineHL
+        LD    HL,999
 L335:
-        ;;testBitwiseOperators.j(62)     if (0x07 | b1 == 0x1F) println (26); else println (999);
+        CALL  writeLineHL
 L336:
-        LD    A,7
+        ;;testBitwiseOperators.j(62)     if (0x07 | b1 == 0x1F) println (26); else println (999);
 L337:
-        LD    B,A
-        LD    A,(05000H)
-        OR    A,B
+        LD    A,7
 L338:
-        SUB   A,31
+        LD    B,A
+        LD    A,(05000H)
+        OR    A,B
 L339:
-        JP    NZ,L395
+        SUB   A,31
 L340:
-        LD    A,26
+        JP    NZ,L344
 L341:
-        CALL  writeLineA
+        LD    A,26
 L342:
-        JP    L398
+        CALL  writeLineA
 L343:
-        LD    HL,999
+        JP    L347
 L344:
-        CALL  writeLineHL
+        LD    HL,999
 L345:
-        ;;testBitwiseOperators.j(63)     if (0x07 ^ b1 == 0x1B) println (27); else println (999);
+        CALL  writeLineHL
 L346:
-        LD    A,7
+        ;;testBitwiseOperators.j(63)     if (0x07 ^ b1 == 0x1B) println (27); else println (999);
 L347:
-        LD    B,A
-        LD    A,(05000H)
-        XOR   A,B
+        LD    A,7
 L348:
-        SUB   A,27
+        LD    B,A
+        LD    A,(05000H)
+        XOR   A,B
 L349:
-        JP    NZ,L407
+        SUB   A,27
 L350:
-        LD    A,27
+        JP    NZ,L354
 L351:
-        CALL  writeLineA
+        LD    A,27
 L352:
-        JP    L411
+        CALL  writeLineA
 L353:
-        LD    HL,999
+        JP    L358
 L354:
-        CALL  writeLineHL
+        LD    HL,999
 L355:
-        ;;testBitwiseOperators.j(64)     //constant word/var word
+        CALL  writeLineHL
 L356:
-        ;;testBitwiseOperators.j(65)     if (0x1234 & w1 == 0x0224) println (28); else println (999);
+        ;;testBitwiseOperators.j(64)     //constant word/var word
 L357:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(65)     if (0x1234 & w1 == 0x0224) println (28); else println (999);
 L358:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L359:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L360:
-        JP    NZ,L420
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L361:
-        LD    A,28
+        JP    NZ,L365
 L362:
-        CALL  writeLineA
+        LD    A,28
 L363:
-        JP    L423
+        CALL  writeLineA
 L364:
-        LD    HL,999
+        JP    L368
 L365:
-        CALL  writeLineHL
+        LD    HL,999
 L366:
-        ;;testBitwiseOperators.j(66)     if (0x1234 | w1 == 0x133C) println (29); else println (999);
+        CALL  writeLineHL
 L367:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(66)     if (0x1234 | w1 == 0x133C) println (29); else println (999);
 L368:
-        LD    DE,(05002H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,4660
 L369:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L370:
-        JP    NZ,L432
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L371:
-        LD    A,29
+        JP    NZ,L375
 L372:
-        CALL  writeLineA
+        LD    A,29
 L373:
-        JP    L435
+        CALL  writeLineA
 L374:
-        LD    HL,999
+        JP    L378
 L375:
-        CALL  writeLineHL
+        LD    HL,999
 L376:
-        ;;testBitwiseOperators.j(67)     if (0x1234 ^ w1 == 0x1118) println (30); else println (999);
+        CALL  writeLineHL
 L377:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(67)     if (0x1234 ^ w1 == 0x1118) println (30); else println (999);
 L378:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L379:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L380:
-        JP    NZ,L444
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L381:
-        LD    A,30
+        JP    NZ,L385
 L382:
-        CALL  writeLineA
+        LD    A,30
 L383:
-        JP    L448
+        CALL  writeLineA
 L384:
-        LD    HL,999
+        JP    L389
 L385:
-        CALL  writeLineHL
+        LD    HL,999
 L386:
-        ;;testBitwiseOperators.j(68)     //constant byte/var word
+        CALL  writeLineHL
 L387:
-        ;;testBitwiseOperators.j(69)     if (0x1C & w2 == 0x0014) println (31); else println (999);
+        ;;testBitwiseOperators.j(68)     //constant byte/var word
 L388:
-        LD    A,28
+        ;;testBitwiseOperators.j(69)     if (0x1C & w2 == 0x0014) println (31); else println (999);
 L389:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L390:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L391:
-        LD    A,20
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L392:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L393:
-        JP    NZ,L459
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L394:
-        LD    A,31
+        JP    NZ,L398
 L395:
-        CALL  writeLineA
+        LD    A,31
 L396:
-        JP    L462
+        CALL  writeLineA
 L397:
-        LD    HL,999
+        JP    L401
 L398:
-        CALL  writeLineHL
+        LD    HL,999
 L399:
-        ;;testBitwiseOperators.j(70)     if (0x1C | w2 == 0x123C) println (32); else println (999);
+        CALL  writeLineHL
 L400:
-        LD    A,28
+        ;;testBitwiseOperators.j(70)     if (0x1C | w2 == 0x123C) println (32); else println (999);
 L401:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L402:
-        LD    DE,(05004H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L403:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05004H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L404:
-        JP    NZ,L472
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L405:
-        LD    A,32
+        JP    NZ,L409
 L406:
-        CALL  writeLineA
+        LD    A,32
 L407:
-        JP    L475
+        CALL  writeLineA
 L408:
-        LD    HL,999
+        JP    L412
 L409:
-        CALL  writeLineHL
+        LD    HL,999
 L410:
-        ;;testBitwiseOperators.j(71)     if (0x1C ^ w2 == 0x1228) println (33); else println (999);
+        CALL  writeLineHL
 L411:
-        LD    A,28
+        ;;testBitwiseOperators.j(71)     if (0x1C ^ w2 == 0x1228) println (33); else println (999);
 L412:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L413:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L414:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L415:
-        JP    NZ,L485
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L416:
-        LD    A,33
+        JP    NZ,L420
 L417:
-        CALL  writeLineA
+        LD    A,33
 L418:
-        JP    L489
+        CALL  writeLineA
 L419:
-        LD    HL,999
+        JP    L424
 L420:
-        CALL  writeLineHL
+        LD    HL,999
 L421:
-        ;;testBitwiseOperators.j(72)     //constant word/var byte
+        CALL  writeLineHL
 L422:
-        ;;testBitwiseOperators.j(73)     if (0x1234 & b1 == 0x0014) println (34); else println (999);
+        ;;testBitwiseOperators.j(72)     //constant word/var byte
 L423:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(73)     if (0x1234 & b1 == 0x0014) println (34); else println (999);
 L424:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L425:
-        LD    A,20
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L426:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L427:
-        JP    NZ,L499
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L428:
-        LD    A,34
+        JP    NZ,L432
 L429:
-        CALL  writeLineA
+        LD    A,34
 L430:
-        JP    L502
+        CALL  writeLineA
 L431:
-        LD    HL,999
+        JP    L435
 L432:
-        CALL  writeLineHL
+        LD    HL,999
 L433:
-        ;;testBitwiseOperators.j(74)     if (0x1234 | b1 == 0x123C) println (35); else println (999);
+        CALL  writeLineHL
 L434:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(74)     if (0x1234 | b1 == 0x123C) println (35); else println (999);
 L435:
-        LD    DE,(05000H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,4660
 L436:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05000H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L437:
-        JP    NZ,L511
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L438:
-        LD    A,35
+        JP    NZ,L442
 L439:
-        CALL  writeLineA
+        LD    A,35
 L440:
-        JP    L514
+        CALL  writeLineA
 L441:
-        LD    HL,999
+        JP    L445
 L442:
-        CALL  writeLineHL
+        LD    HL,999
 L443:
-        ;;testBitwiseOperators.j(75)     if (0x1234 ^ b1 == 0x1228) println (36); else println (999);
+        CALL  writeLineHL
 L444:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(75)     if (0x1234 ^ b1 == 0x1228) println (36); else println (999);
 L445:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L446:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L447:
-        JP    NZ,L523
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L448:
-        LD    A,36
+        JP    NZ,L452
 L449:
-        CALL  writeLineA
+        LD    A,36
 L450:
-        JP    L530
+        CALL  writeLineA
 L451:
-        LD    HL,999
+        JP    L459
 L452:
-        CALL  writeLineHL
+        LD    HL,999
 L453:
-        ;;testBitwiseOperators.j(76)   
+        CALL  writeLineHL
 L454:
-        ;;testBitwiseOperators.j(77)     //constant/final var
+        ;;testBitwiseOperators.j(76)   
 L455:
-        ;;testBitwiseOperators.j(78)     //*****************
+        ;;testBitwiseOperators.j(77)     //constant/final var
 L456:
-        ;;testBitwiseOperators.j(79)     //constant byte/final var byte
+        ;;testBitwiseOperators.j(78)     //*****************
 L457:
-        ;;testBitwiseOperators.j(80)     if (0x07 & fb1 == 0x04) println (37); else println (999);
+        ;;testBitwiseOperators.j(79)     //constant byte/final var byte
 L458:
-        LD    A,7
+        ;;testBitwiseOperators.j(80)     if (0x07 & fb1 == 0x04) println (37); else println (999);
 L459:
-        AND   A,28
+        LD    A,7
 L460:
-        SUB   A,4
+        AND   A,28
 L461:
-        JP    NZ,L539
+        SUB   A,4
 L462:
-        LD    A,37
+        JP    NZ,L466
 L463:
-        CALL  writeLineA
+        LD    A,37
 L464:
-        JP    L542
+        CALL  writeLineA
 L465:
-        LD    HL,999
+        JP    L469
 L466:
-        CALL  writeLineHL
+        LD    HL,999
 L467:
-        ;;testBitwiseOperators.j(81)     if (0x07 | fb1 == 0x1F) println (38); else println (999);
+        CALL  writeLineHL
 L468:
-        LD    A,7
+        ;;testBitwiseOperators.j(81)     if (0x07 | fb1 == 0x1F) println (38); else println (999);
 L469:
-        OR    A,28
+        LD    A,7
 L470:
-        SUB   A,31
+        OR    A,28
 L471:
-        JP    NZ,L551
+        SUB   A,31
 L472:
-        LD    A,38
+        JP    NZ,L476
 L473:
-        CALL  writeLineA
+        LD    A,38
 L474:
-        JP    L554
+        CALL  writeLineA
 L475:
-        LD    HL,999
+        JP    L479
 L476:
-        CALL  writeLineHL
+        LD    HL,999
 L477:
-        ;;testBitwiseOperators.j(82)     if (0x07 ^ fb1 == 0x1B) println (39); else println (999);
+        CALL  writeLineHL
 L478:
-        LD    A,7
+        ;;testBitwiseOperators.j(82)     if (0x07 ^ fb1 == 0x1B) println (39); else println (999);
 L479:
-        XOR   A,28
+        LD    A,7
 L480:
-        SUB   A,27
+        XOR   A,28
 L481:
-        JP    NZ,L563
+        SUB   A,27
 L482:
-        LD    A,39
+        JP    NZ,L486
 L483:
-        CALL  writeLineA
+        LD    A,39
 L484:
-        JP    L567
+        CALL  writeLineA
 L485:
-        LD    HL,999
+        JP    L490
 L486:
-        CALL  writeLineHL
+        LD    HL,999
 L487:
-        ;;testBitwiseOperators.j(83)     //constant word/final var word
+        CALL  writeLineHL
 L488:
-        ;;testBitwiseOperators.j(84)     if (0x1234 & fw1 == 0x0224) println (40); else println (999);
+        ;;testBitwiseOperators.j(83)     //constant word/final var word
 L489:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(84)     if (0x1234 & fw1 == 0x0224) println (40); else println (999);
 L490:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L491:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L492:
-        JP    NZ,L576
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L493:
-        LD    A,40
+        JP    NZ,L497
 L494:
-        CALL  writeLineA
+        LD    A,40
 L495:
-        JP    L579
+        CALL  writeLineA
 L496:
-        LD    HL,999
+        JP    L500
 L497:
-        CALL  writeLineHL
+        LD    HL,999
 L498:
-        ;;testBitwiseOperators.j(85)     if (0x1234 | fw1 == 0x133C) println (41); else println (999);
+        CALL  writeLineHL
 L499:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(85)     if (0x1234 | fw1 == 0x133C) println (41); else println (999);
 L500:
-        LD    DE,812
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,4660
 L501:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L502:
-        JP    NZ,L588
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L503:
-        LD    A,41
+        JP    NZ,L507
 L504:
-        CALL  writeLineA
+        LD    A,41
 L505:
-        JP    L591
+        CALL  writeLineA
 L506:
-        LD    HL,999
+        JP    L510
 L507:
-        CALL  writeLineHL
+        LD    HL,999
 L508:
-        ;;testBitwiseOperators.j(86)     if (0x1234 ^ fw1 == 0x1118) println (42); else println (999);
+        CALL  writeLineHL
 L509:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(86)     if (0x1234 ^ fw1 == 0x1118) println (42); else println (999);
 L510:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L511:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L512:
-        JP    NZ,L600
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L513:
-        LD    A,42
+        JP    NZ,L517
 L514:
-        CALL  writeLineA
+        LD    A,42
 L515:
-        JP    L604
+        CALL  writeLineA
 L516:
-        LD    HL,999
+        JP    L521
 L517:
-        CALL  writeLineHL
+        LD    HL,999
 L518:
-        ;;testBitwiseOperators.j(87)     //constant byte/final var word
+        CALL  writeLineHL
 L519:
-        ;;testBitwiseOperators.j(88)     if (0x1C & fw2 == 0x0014) println (43); else println (999);
+        ;;testBitwiseOperators.j(87)     //constant byte/final var word
 L520:
-        LD    A,28
+        ;;testBitwiseOperators.j(88)     if (0x1C & fw2 == 0x0014) println (43); else println (999);
 L521:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L522:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L523:
-        LD    A,20
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L524:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L525:
-        JP    NZ,L615
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L526:
-        LD    A,43
+        JP    NZ,L530
 L527:
-        CALL  writeLineA
+        LD    A,43
 L528:
-        JP    L618
+        CALL  writeLineA
 L529:
-        LD    HL,999
+        JP    L533
 L530:
-        CALL  writeLineHL
+        LD    HL,999
 L531:
-        ;;testBitwiseOperators.j(89)     if (0x1C | fw2 == 0x123C) println (44); else println (999);
+        CALL  writeLineHL
 L532:
-        LD    A,28
+        ;;testBitwiseOperators.j(89)     if (0x1C | fw2 == 0x123C) println (44); else println (999);
 L533:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L534:
-        LD    DE,4660
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L535:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L536:
-        JP    NZ,L628
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L537:
-        LD    A,44
+        JP    NZ,L541
 L538:
-        CALL  writeLineA
+        LD    A,44
 L539:
-        JP    L631
+        CALL  writeLineA
 L540:
-        LD    HL,999
+        JP    L544
 L541:
-        CALL  writeLineHL
+        LD    HL,999
 L542:
-        ;;testBitwiseOperators.j(90)     if (0x1C ^ fw2 == 0x1228) println (45); else println (999);
+        CALL  writeLineHL
 L543:
-        LD    A,28
+        ;;testBitwiseOperators.j(90)     if (0x1C ^ fw2 == 0x1228) println (45); else println (999);
 L544:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L545:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L546:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L547:
-        JP    NZ,L641
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L548:
-        LD    A,45
+        JP    NZ,L552
 L549:
-        CALL  writeLineA
+        LD    A,45
 L550:
-        JP    L645
+        CALL  writeLineA
 L551:
-        LD    HL,999
+        JP    L556
 L552:
-        CALL  writeLineHL
+        LD    HL,999
 L553:
-        ;;testBitwiseOperators.j(91)     //constant word/final var byte
+        CALL  writeLineHL
 L554:
-        ;;testBitwiseOperators.j(92)     if (0x1234 & fb1 == 0x0014) println (46); else println (999);
+        ;;testBitwiseOperators.j(91)     //constant word/final var byte
 L555:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(92)     if (0x1234 & fb1 == 0x0014) println (46); else println (999);
 L556:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L557:
-        LD    A,20
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L558:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L559:
-        JP    NZ,L655
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L560:
-        LD    A,46
+        JP    NZ,L564
 L561:
-        CALL  writeLineA
+        LD    A,46
 L562:
-        JP    L658
+        CALL  writeLineA
 L563:
-        LD    HL,999
+        JP    L567
 L564:
-        CALL  writeLineHL
+        LD    HL,999
 L565:
-        ;;testBitwiseOperators.j(93)     if (0x1234 | fb1 == 0x123C) println (47); else println (999);
+        CALL  writeLineHL
 L566:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(93)     if (0x1234 | fb1 == 0x123C) println (47); else println (999);
 L567:
-        LD    DE,28
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,4660
 L568:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L569:
-        JP    NZ,L667
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L570:
-        LD    A,47
+        JP    NZ,L574
 L571:
-        CALL  writeLineA
+        LD    A,47
 L572:
-        JP    L670
+        CALL  writeLineA
 L573:
-        LD    HL,999
+        JP    L577
 L574:
-        CALL  writeLineHL
+        LD    HL,999
 L575:
-        ;;testBitwiseOperators.j(94)     if (0x1234 ^ fb1 == 0x1228) println (48); else println (999);
+        CALL  writeLineHL
 L576:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(94)     if (0x1234 ^ fb1 == 0x1228) println (48); else println (999);
 L577:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,4660
 L578:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L579:
-        JP    NZ,L679
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L580:
-        LD    A,48
+        JP    NZ,L584
 L581:
-        CALL  writeLineA
+        LD    A,48
 L582:
-        JP    L686
+        CALL  writeLineA
 L583:
-        LD    HL,999
+        JP    L591
 L584:
-        CALL  writeLineHL
+        LD    HL,999
 L585:
-        ;;testBitwiseOperators.j(95)   
+        CALL  writeLineHL
 L586:
-        ;;testBitwiseOperators.j(96)     //acc/constant
+        ;;testBitwiseOperators.j(95)   
 L587:
-        ;;testBitwiseOperators.j(97)     //************
+        ;;testBitwiseOperators.j(96)     //acc/constant
 L588:
-        ;;testBitwiseOperators.j(98)     //acc byte/constant byte
+        ;;testBitwiseOperators.j(97)     //************
 L589:
-        ;;testBitwiseOperators.j(99)     if ((0x04 + 0x03) & 0x1C == 0x04) println (49); else println (999);
+        ;;testBitwiseOperators.j(98)     //acc byte/constant byte
 L590:
-        LD    A,4
+        ;;testBitwiseOperators.j(99)     if ((0x04 + 0x03) & 0x1C == 0x04) println (49); else println (999);
 L591:
-        ADD   A,3
+        LD    A,4
 L592:
-        AND   A,28
+        ADD   A,3
 L593:
-        SUB   A,4
+        AND   A,28
 L594:
-        JP    NZ,L696
+        SUB   A,4
 L595:
-        LD    A,49
+        JP    NZ,L599
 L596:
-        CALL  writeLineA
+        LD    A,49
 L597:
-        JP    L699
+        CALL  writeLineA
 L598:
-        LD    HL,999
+        JP    L602
 L599:
-        CALL  writeLineHL
+        LD    HL,999
 L600:
-        ;;testBitwiseOperators.j(100)     if ((0x04 + 0x03) | 0x1C == 0x1F) println (50); else println (999);
+        CALL  writeLineHL
 L601:
-        LD    A,4
+        ;;testBitwiseOperators.j(100)     if ((0x04 + 0x03) | 0x1C == 0x1F) println (50); else println (999);
 L602:
-        ADD   A,3
+        LD    A,4
 L603:
-        OR    A,28
+        ADD   A,3
 L604:
-        SUB   A,31
+        OR    A,28
 L605:
-        JP    NZ,L709
+        SUB   A,31
 L606:
-        LD    A,50
+        JP    NZ,L610
 L607:
-        CALL  writeLineA
+        LD    A,50
 L608:
-        JP    L712
+        CALL  writeLineA
 L609:
-        LD    HL,999
+        JP    L613
 L610:
-        CALL  writeLineHL
+        LD    HL,999
 L611:
-        ;;testBitwiseOperators.j(101)     if ((0x04 + 0x03) ^ 0x1C == 0x1B) println (51); else println (999);
+        CALL  writeLineHL
 L612:
-        LD    A,4
+        ;;testBitwiseOperators.j(101)     if ((0x04 + 0x03) ^ 0x1C == 0x1B) println (51); else println (999);
 L613:
-        ADD   A,3
+        LD    A,4
 L614:
-        XOR   A,28
+        ADD   A,3
 L615:
-        SUB   A,27
+        XOR   A,28
 L616:
-        JP    NZ,L722
+        SUB   A,27
 L617:
-        LD    A,51
+        JP    NZ,L621
 L618:
-        CALL  writeLineA
+        LD    A,51
 L619:
-        JP    L726
+        CALL  writeLineA
 L620:
-        LD    HL,999
+        JP    L625
 L621:
-        CALL  writeLineHL
+        LD    HL,999
 L622:
-        ;;testBitwiseOperators.j(102)     //acc word/constant word
+        CALL  writeLineHL
 L623:
-        ;;testBitwiseOperators.j(103)     if (0x1000 + 0x0234 & 0x032C == 0x0224) println (52); else println (999);
+        ;;testBitwiseOperators.j(102)     //acc word/constant word
 L624:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(103)     if (0x1000 + 0x0234 & 0x032C == 0x0224) println (52); else println (999);
 L625:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L626:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L627:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L628:
-        JP    NZ,L736
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L629:
-        LD    A,52
+        JP    NZ,L633
 L630:
-        CALL  writeLineA
+        LD    A,52
 L631:
-        JP    L739
+        CALL  writeLineA
 L632:
-        LD    HL,999
+        JP    L636
 L633:
-        CALL  writeLineHL
+        LD    HL,999
 L634:
-        ;;testBitwiseOperators.j(104)     if (0x1000 + 0x0234 | 0x032C == 0x133C) println (53); else println (999);
+        CALL  writeLineHL
 L635:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(104)     if (0x1000 + 0x0234 | 0x032C == 0x133C) println (53); else println (999);
 L636:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L637:
-        LD    DE,812
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,564
+        ADD   HL,DE
 L638:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L639:
-        JP    NZ,L749
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L640:
-        LD    A,53
+        JP    NZ,L644
 L641:
-        CALL  writeLineA
+        LD    A,53
 L642:
-        JP    L752
+        CALL  writeLineA
 L643:
-        LD    HL,999
+        JP    L647
 L644:
-        CALL  writeLineHL
+        LD    HL,999
 L645:
-        ;;testBitwiseOperators.j(105)     if (0x1000 + 0x0234 ^ 0x032C == 0x1118) println (54); else println (999);
+        CALL  writeLineHL
 L646:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(105)     if (0x1000 + 0x0234 ^ 0x032C == 0x1118) println (54); else println (999);
 L647:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L648:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L649:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L650:
-        JP    NZ,L762
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L651:
-        LD    A,54
+        JP    NZ,L655
 L652:
-        CALL  writeLineA
+        LD    A,54
 L653:
-        JP    L766
+        CALL  writeLineA
 L654:
-        LD    HL,999
+        JP    L659
 L655:
-        CALL  writeLineHL
+        LD    HL,999
 L656:
-        ;;testBitwiseOperators.j(106)     //acc byte/constant word
+        CALL  writeLineHL
 L657:
-        ;;testBitwiseOperators.j(107)     if (0x10 + 0x0C & 0x1234 == 0x0014) println (55); else println (999);
+        ;;testBitwiseOperators.j(106)     //acc byte/constant word
 L658:
-        LD    A,16
+        ;;testBitwiseOperators.j(107)     if (0x10 + 0x0C & 0x1234 == 0x0014) println (55); else println (999);
 L659:
-        ADD   A,12
+        LD    A,16
 L660:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L661:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L662:
-        LD    A,20
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L663:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L664:
-        JP    NZ,L778
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L665:
-        LD    A,55
+        JP    NZ,L669
 L666:
-        CALL  writeLineA
+        LD    A,55
 L667:
-        JP    L781
+        CALL  writeLineA
 L668:
-        LD    HL,999
+        JP    L672
 L669:
-        CALL  writeLineHL
+        LD    HL,999
 L670:
-        ;;testBitwiseOperators.j(108)     if (0x10 + 0x0C | 0x1234 == 0x123C) println (56); else println (999);
+        CALL  writeLineHL
 L671:
-        LD    A,16
+        ;;testBitwiseOperators.j(108)     if (0x10 + 0x0C | 0x1234 == 0x123C) println (56); else println (999);
 L672:
-        ADD   A,12
+        LD    A,16
 L673:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L674:
-        LD    DE,4660
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L675:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L676:
-        JP    NZ,L792
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L677:
-        LD    A,56
+        JP    NZ,L681
 L678:
-        CALL  writeLineA
+        LD    A,56
 L679:
-        JP    L795
+        CALL  writeLineA
 L680:
-        LD    HL,999
+        JP    L684
 L681:
-        CALL  writeLineHL
+        LD    HL,999
 L682:
-        ;;testBitwiseOperators.j(109)     if (0x10 + 0x0C ^ 0x1234 == 0x1228) println (57); else println (999);
+        CALL  writeLineHL
 L683:
-        LD    A,16
+        ;;testBitwiseOperators.j(109)     if (0x10 + 0x0C ^ 0x1234 == 0x1228) println (57); else println (999);
 L684:
-        ADD   A,12
+        LD    A,16
 L685:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L686:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L687:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L688:
-        JP    NZ,L806
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L689:
-        LD    A,57
+        JP    NZ,L693
 L690:
-        CALL  writeLineA
+        LD    A,57
 L691:
-        JP    L810
+        CALL  writeLineA
 L692:
-        LD    HL,999
+        JP    L697
 L693:
-        CALL  writeLineHL
+        LD    HL,999
 L694:
-        ;;testBitwiseOperators.j(110)     //acc word/constant byte
+        CALL  writeLineHL
 L695:
-        ;;testBitwiseOperators.j(111)     if (0x1000 + 0x0234 & 0x1C == 0x0014) println (58); else println (999);
+        ;;testBitwiseOperators.j(110)     //acc word/constant byte
 L696:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(111)     if (0x1000 + 0x0234 & 0x1C == 0x0014) println (58); else println (999);
 L697:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L698:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L699:
-        LD    A,20
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L700:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L701:
-        JP    NZ,L821
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L702:
-        LD    A,58
+        JP    NZ,L706
 L703:
-        CALL  writeLineA
+        LD    A,58
 L704:
-        JP    L824
+        CALL  writeLineA
 L705:
-        LD    HL,999
+        JP    L709
 L706:
-        CALL  writeLineHL
+        LD    HL,999
 L707:
-        ;;testBitwiseOperators.j(112)     if (0x1000 + 0x0234 | 0x1C == 0x123C) println (59); else println (999);
+        CALL  writeLineHL
 L708:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(112)     if (0x1000 + 0x0234 | 0x1C == 0x123C) println (59); else println (999);
 L709:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L710:
-        LD    DE,28
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,564
+        ADD   HL,DE
 L711:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L712:
-        JP    NZ,L834
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L713:
-        LD    A,59
+        JP    NZ,L717
 L714:
-        CALL  writeLineA
+        LD    A,59
 L715:
-        JP    L837
+        CALL  writeLineA
 L716:
-        LD    HL,999
+        JP    L720
 L717:
-        CALL  writeLineHL
+        LD    HL,999
 L718:
-        ;;testBitwiseOperators.j(113)     if (0x1000 + 0x0234 ^ 0x1C == 0x1228) println (60); else println (999);
+        CALL  writeLineHL
 L719:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(113)     if (0x1000 + 0x0234 ^ 0x1C == 0x1228) println (60); else println (999);
 L720:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L721:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L722:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L723:
-        JP    NZ,L847
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L724:
-        LD    A,60
+        JP    NZ,L728
 L725:
-        CALL  writeLineA
+        LD    A,60
 L726:
-        JP    L854
+        CALL  writeLineA
 L727:
-        LD    HL,999
+        JP    L735
 L728:
-        CALL  writeLineHL
+        LD    HL,999
 L729:
-        ;;testBitwiseOperators.j(114)   
+        CALL  writeLineHL
 L730:
-        ;;testBitwiseOperators.j(115)     //acc/acc
+        ;;testBitwiseOperators.j(114)   
 L731:
-        ;;testBitwiseOperators.j(116)     //*******
+        ;;testBitwiseOperators.j(115)     //acc/acc
 L732:
-        ;;testBitwiseOperators.j(117)     //acc byte/acc byte
+        ;;testBitwiseOperators.j(116)     //*******
 L733:
-        ;;testBitwiseOperators.j(118)     if (0x04 + 0x03 & 0x10 + 0x0C == 0x04) println (61); else println (999);
+        ;;testBitwiseOperators.j(117)     //acc byte/acc byte
 L734:
-        LD    A,4
+        ;;testBitwiseOperators.j(118)     if (0x04 + 0x03 & 0x10 + 0x0C == 0x04) println (61); else println (999);
 L735:
-        ADD   A,3
+        LD    A,4
 L736:
-        PUSH  AF
-        LD    A,16
+        ADD   A,3
 L737:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L738:
-        POP   BC
-        AND   A,B
+        ADD   A,12
 L739:
-        SUB   A,4
+        POP   BC
+        AND   A,B
 L740:
-        JP    NZ,L866
+        SUB   A,4
 L741:
-        LD    A,61
+        JP    NZ,L745
 L742:
-        CALL  writeLineA
+        LD    A,61
 L743:
-        JP    L869
+        CALL  writeLineA
 L744:
-        LD    HL,999
+        JP    L748
 L745:
-        CALL  writeLineHL
+        LD    HL,999
 L746:
-        ;;testBitwiseOperators.j(119)     if (0x04 + 0x03 | 0x10 + 0x0C == 0x1F) println (62); else println (999);
+        CALL  writeLineHL
 L747:
-        LD    A,4
+        ;;testBitwiseOperators.j(119)     if (0x04 + 0x03 | 0x10 + 0x0C == 0x1F) println (62); else println (999);
 L748:
-        ADD   A,3
+        LD    A,4
 L749:
-        PUSH  AF
-        LD    A,16
+        ADD   A,3
 L750:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L751:
-        POP   BC
-        OR    A,B
+        ADD   A,12
 L752:
-        SUB   A,31
+        POP   BC
+        OR    A,B
 L753:
-        JP    NZ,L881
+        SUB   A,31
 L754:
-        LD    A,62
+        JP    NZ,L758
 L755:
-        CALL  writeLineA
+        LD    A,62
 L756:
-        JP    L884
+        CALL  writeLineA
 L757:
-        LD    HL,999
+        JP    L761
 L758:
-        CALL  writeLineHL
+        LD    HL,999
 L759:
-        ;;testBitwiseOperators.j(120)     if (0x04 + 0x03 ^ 0x10 + 0x0C == 0x1B) println (63); else println (999);
+        CALL  writeLineHL
 L760:
-        LD    A,4
+        ;;testBitwiseOperators.j(120)     if (0x04 + 0x03 ^ 0x10 + 0x0C == 0x1B) println (63); else println (999);
 L761:
-        ADD   A,3
+        LD    A,4
 L762:
-        PUSH  AF
-        LD    A,16
+        ADD   A,3
 L763:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L764:
-        POP   BC
-        XOR   A,B
+        ADD   A,12
 L765:
-        SUB   A,27
+        POP   BC
+        XOR   A,B
 L766:
-        JP    NZ,L896
+        SUB   A,27
 L767:
-        LD    A,63
+        JP    NZ,L771
 L768:
-        CALL  writeLineA
+        LD    A,63
 L769:
-        JP    L900
+        CALL  writeLineA
 L770:
-        LD    HL,999
+        JP    L775
 L771:
-        CALL  writeLineHL
+        LD    HL,999
 L772:
-        ;;testBitwiseOperators.j(121)     //acc word/acc word
+        CALL  writeLineHL
 L773:
-        ;;testBitwiseOperators.j(122)     if (0x1000 + 0x0234 & 0x0100 + 0x022C == 0x0224) println (64); else println (999);
+        ;;testBitwiseOperators.j(121)     //acc word/acc word
 L774:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(122)     if (0x1000 + 0x0234 & 0x0100 + 0x022C == 0x0224) println (64); else println (999);
 L775:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L776:
-        PUSH  HL
-        LD    HL,256
+        LD    DE,564
+        ADD   HL,DE
 L777:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L778:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,556
+        ADD   HL,DE
 L779:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L780:
-        JP    NZ,L912
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L781:
-        LD    A,64
+        JP    NZ,L785
 L782:
-        CALL  writeLineA
+        LD    A,64
 L783:
-        JP    L915
+        CALL  writeLineA
 L784:
-        LD    HL,999
+        JP    L788
 L785:
-        CALL  writeLineHL
+        LD    HL,999
 L786:
-        ;;testBitwiseOperators.j(123)     if (0x1000 + 0x0234 | 0x0100 + 0x022C == 0x133C) println (65); else println (999);
+        CALL  writeLineHL
 L787:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(123)     if (0x1000 + 0x0234 | 0x0100 + 0x022C == 0x133C) println (65); else println (999);
 L788:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L789:
-        PUSH  HL
-        LD    HL,256
+        LD    DE,564
+        ADD   HL,DE
 L790:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L791:
-        POP   DE
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,556
+        ADD   HL,DE
 L792:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L793:
-        JP    NZ,L927
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L794:
-        LD    A,65
+        JP    NZ,L798
 L795:
-        CALL  writeLineA
+        LD    A,65
 L796:
-        JP    L930
+        CALL  writeLineA
 L797:
-        LD    HL,999
+        JP    L801
 L798:
-        CALL  writeLineHL
+        LD    HL,999
 L799:
-        ;;testBitwiseOperators.j(124)     if (0x1000 + 0x0234 ^ 0x0100 + 0x022C == 0x1118) println (66); else println (999);
+        CALL  writeLineHL
 L800:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(124)     if (0x1000 + 0x0234 ^ 0x0100 + 0x022C == 0x1118) println (66); else println (999);
 L801:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L802:
-        PUSH  HL
-        LD    HL,256
+        LD    DE,564
+        ADD   HL,DE
 L803:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L804:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,556
+        ADD   HL,DE
 L805:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L806:
-        JP    NZ,L942
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L807:
-        LD    A,66
+        JP    NZ,L811
 L808:
-        CALL  writeLineA
+        LD    A,66
 L809:
-        JP    L946
+        CALL  writeLineA
 L810:
-        LD    HL,999
+        JP    L815
 L811:
-        CALL  writeLineHL
+        LD    HL,999
 L812:
-        ;;testBitwiseOperators.j(125)     //acc byte/acc word
+        CALL  writeLineHL
 L813:
-        ;;testBitwiseOperators.j(126)     if (0x10 + 0x0C & 0x1000 + 0x0234 == 0x0014) println (67); else println (999);
+        ;;testBitwiseOperators.j(125)     //acc byte/acc word
 L814:
-        LD    A,16
+        ;;testBitwiseOperators.j(126)     if (0x10 + 0x0C & 0x1000 + 0x0234 == 0x0014) println (67); else println (999);
 L815:
-        ADD   A,12
+        LD    A,16
 L816:
-        LD    HL,4096
+        ADD   A,12
 L817:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L818:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        LD    DE,564
+        ADD   HL,DE
 L819:
-        LD    A,20
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L820:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L821:
-        JP    NZ,L959
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L822:
-        LD    A,67
+        JP    NZ,L826
 L823:
-        CALL  writeLineA
+        LD    A,67
 L824:
-        JP    L962
+        CALL  writeLineA
 L825:
-        LD    HL,999
+        JP    L829
 L826:
-        CALL  writeLineHL
+        LD    HL,999
 L827:
-        ;;testBitwiseOperators.j(127)     if (0x10 + 0x0C | 0x1000 + 0x0234 == 0x123C) println (68); else println (999);
+        CALL  writeLineHL
 L828:
-        LD    A,16
+        ;;testBitwiseOperators.j(127)     if (0x10 + 0x0C | 0x1000 + 0x0234 == 0x123C) println (68); else println (999);
 L829:
-        ADD   A,12
+        LD    A,16
 L830:
-        LD    HL,4096
+        ADD   A,12
 L831:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L832:
-        OR    A,L
-        LD    L,A
+        LD    DE,564
+        ADD   HL,DE
 L833:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        OR    A,L
+        LD    L,A
 L834:
-        JP    NZ,L974
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L835:
-        LD    A,68
+        JP    NZ,L839
 L836:
-        CALL  writeLineA
+        LD    A,68
 L837:
-        JP    L977
+        CALL  writeLineA
 L838:
-        LD    HL,999
+        JP    L842
 L839:
-        CALL  writeLineHL
+        LD    HL,999
 L840:
-        ;;testBitwiseOperators.j(128)     if (0x10 + 0x0C ^ 0x1000 + 0x0234 == 0x1228) println (69); else println (999);
+        CALL  writeLineHL
 L841:
-        LD    A,16
+        ;;testBitwiseOperators.j(128)     if (0x10 + 0x0C ^ 0x1000 + 0x0234 == 0x1228) println (69); else println (999);
 L842:
-        ADD   A,12
+        LD    A,16
 L843:
-        LD    HL,4096
+        ADD   A,12
 L844:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L845:
-        XOR   A,L
-        LD    L,A
+        LD    DE,564
+        ADD   HL,DE
 L846:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        XOR   A,L
+        LD    L,A
 L847:
-        JP    NZ,L989
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L848:
-        LD    A,69
+        JP    NZ,L852
 L849:
-        CALL  writeLineA
+        LD    A,69
 L850:
-        JP    L993
+        CALL  writeLineA
 L851:
-        LD    HL,999
+        JP    L856
 L852:
-        CALL  writeLineHL
+        LD    HL,999
 L853:
-        ;;testBitwiseOperators.j(129)     //acc word/acc byte
+        CALL  writeLineHL
 L854:
-        ;;testBitwiseOperators.j(130)     if (0x1000 + 0x0234 & 0x10 + 0x0C == 0x0014) println (70); else println (999);
+        ;;testBitwiseOperators.j(129)     //acc word/acc byte
 L855:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(130)     if (0x1000 + 0x0234 & 0x10 + 0x0C == 0x0014) println (70); else println (999);
 L856:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L857:
-        LD    A,16
+        LD    DE,564
+        ADD   HL,DE
 L858:
-        ADD   A,12
+        LD    A,16
 L859:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L860:
-        LD    A,20
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L861:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L862:
-        JP    NZ,L1006
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L863:
-        LD    A,70
+        JP    NZ,L867
 L864:
-        CALL  writeLineA
+        LD    A,70
 L865:
-        JP    L1009
+        CALL  writeLineA
 L866:
-        LD    HL,999
+        JP    L870
 L867:
-        CALL  writeLineHL
+        LD    HL,999
 L868:
-        ;;testBitwiseOperators.j(131)     if (0x1000 + 0x0234 | 0x10 + 0x0C == 0x123C) println (71); else println (999);
+        CALL  writeLineHL
 L869:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(131)     if (0x1000 + 0x0234 | 0x10 + 0x0C == 0x123C) println (71); else println (999);
 L870:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L871:
-        LD    A,16
+        LD    DE,564
+        ADD   HL,DE
 L872:
-        ADD   A,12
+        LD    A,16
 L873:
-        OR    A,L
-        LD    L,A
+        ADD   A,12
 L874:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        OR    A,L
+        LD    L,A
 L875:
-        JP    NZ,L1021
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L876:
-        LD    A,71
+        JP    NZ,L880
 L877:
-        CALL  writeLineA
+        LD    A,71
 L878:
-        JP    L1024
+        CALL  writeLineA
 L879:
-        LD    HL,999
+        JP    L883
 L880:
-        CALL  writeLineHL
+        LD    HL,999
 L881:
-        ;;testBitwiseOperators.j(132)     if (0x1000 + 0x0234 ^ 0x10 + 0x0C == 0x1228) println (72); else println (999);
+        CALL  writeLineHL
 L882:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(132)     if (0x1000 + 0x0234 ^ 0x10 + 0x0C == 0x1228) println (72); else println (999);
 L883:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L884:
-        LD    A,16
+        LD    DE,564
+        ADD   HL,DE
 L885:
-        ADD   A,12
+        LD    A,16
 L886:
-        XOR   A,L
-        LD    L,A
+        ADD   A,12
 L887:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        XOR   A,L
+        LD    L,A
 L888:
-        JP    NZ,L1036
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L889:
-        LD    A,72
+        JP    NZ,L893
 L890:
-        CALL  writeLineA
+        LD    A,72
 L891:
-        JP    L1043
+        CALL  writeLineA
 L892:
-        LD    HL,999
+        JP    L900
 L893:
-        CALL  writeLineHL
+        LD    HL,999
 L894:
-        ;;testBitwiseOperators.j(133)   
+        CALL  writeLineHL
 L895:
-        ;;testBitwiseOperators.j(134)     //acc/var
+        ;;testBitwiseOperators.j(133)   
 L896:
-        ;;testBitwiseOperators.j(135)     //*******
+        ;;testBitwiseOperators.j(134)     //acc/var
 L897:
-        ;;testBitwiseOperators.j(136)     //acc byte/var byte
+        ;;testBitwiseOperators.j(135)     //*******
 L898:
-        ;;testBitwiseOperators.j(137)     if (0x04 + 0x03 & b1 == 0x04) println (73); else println (999);
+        ;;testBitwiseOperators.j(136)     //acc byte/var byte
 L899:
-        LD    A,4
+        ;;testBitwiseOperators.j(137)     if (0x04 + 0x03 & b1 == 0x04) println (73); else println (999);
 L900:
-        ADD   A,3
+        LD    A,4
 L901:
-        LD    B,A
-        LD    A,(05000H)
-        AND   A,B
+        ADD   A,3
 L902:
-        SUB   A,4
+        LD    B,A
+        LD    A,(05000H)
+        AND   A,B
 L903:
-        JP    NZ,L1053
+        SUB   A,4
 L904:
-        LD    A,73
+        JP    NZ,L908
 L905:
-        CALL  writeLineA
+        LD    A,73
 L906:
-        JP    L1056
+        CALL  writeLineA
 L907:
-        LD    HL,999
+        JP    L911
 L908:
-        CALL  writeLineHL
+        LD    HL,999
 L909:
-        ;;testBitwiseOperators.j(138)     if (0x04 + 0x03 | b1 == 0x1F) println (74); else println (999);
+        CALL  writeLineHL
 L910:
-        LD    A,4
+        ;;testBitwiseOperators.j(138)     if (0x04 + 0x03 | b1 == 0x1F) println (74); else println (999);
 L911:
-        ADD   A,3
+        LD    A,4
 L912:
-        LD    B,A
-        LD    A,(05000H)
-        OR    A,B
+        ADD   A,3
 L913:
-        SUB   A,31
+        LD    B,A
+        LD    A,(05000H)
+        OR    A,B
 L914:
-        JP    NZ,L1066
+        SUB   A,31
 L915:
-        LD    A,74
+        JP    NZ,L919
 L916:
-        CALL  writeLineA
+        LD    A,74
 L917:
-        JP    L1069
+        CALL  writeLineA
 L918:
-        LD    HL,999
+        JP    L922
 L919:
-        CALL  writeLineHL
+        LD    HL,999
 L920:
-        ;;testBitwiseOperators.j(139)     if (0x04 + 0x03 ^ b1 == 0x1B) println (75); else println (999);
+        CALL  writeLineHL
 L921:
-        LD    A,4
+        ;;testBitwiseOperators.j(139)     if (0x04 + 0x03 ^ b1 == 0x1B) println (75); else println (999);
 L922:
-        ADD   A,3
+        LD    A,4
 L923:
-        LD    B,A
-        LD    A,(05000H)
-        XOR   A,B
+        ADD   A,3
 L924:
-        SUB   A,27
+        LD    B,A
+        LD    A,(05000H)
+        XOR   A,B
 L925:
-        JP    NZ,L1079
+        SUB   A,27
 L926:
-        LD    A,75
+        JP    NZ,L930
 L927:
-        CALL  writeLineA
+        LD    A,75
 L928:
-        JP    L1083
+        CALL  writeLineA
 L929:
-        LD    HL,999
+        JP    L934
 L930:
-        CALL  writeLineHL
+        LD    HL,999
 L931:
-        ;;testBitwiseOperators.j(140)     //acc word/var word
+        CALL  writeLineHL
 L932:
-        ;;testBitwiseOperators.j(141)     if (0x1000 + 0x0234 & w1 == 0x0224) println (76); else println (999);
+        ;;testBitwiseOperators.j(140)     //acc word/var word
 L933:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(141)     if (0x1000 + 0x0234 & w1 == 0x0224) println (76); else println (999);
 L934:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L935:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L936:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L937:
-        JP    NZ,L1093
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L938:
-        LD    A,76
+        JP    NZ,L942
 L939:
-        CALL  writeLineA
+        LD    A,76
 L940:
-        JP    L1096
+        CALL  writeLineA
 L941:
-        LD    HL,999
+        JP    L945
 L942:
-        CALL  writeLineHL
+        LD    HL,999
 L943:
-        ;;testBitwiseOperators.j(142)     if (0x1000 + 0x0234 | w1 == 0x133C) println (77); else println (999);
+        CALL  writeLineHL
 L944:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(142)     if (0x1000 + 0x0234 | w1 == 0x133C) println (77); else println (999);
 L945:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L946:
-        LD    DE,(05002H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,564
+        ADD   HL,DE
 L947:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L948:
-        JP    NZ,L1106
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L949:
-        LD    A,77
+        JP    NZ,L953
 L950:
-        CALL  writeLineA
+        LD    A,77
 L951:
-        JP    L1109
+        CALL  writeLineA
 L952:
-        LD    HL,999
+        JP    L956
 L953:
-        CALL  writeLineHL
+        LD    HL,999
 L954:
-        ;;testBitwiseOperators.j(143)     if (0x1000 + 0x0234 ^ w1 == 0x1118) println (78); else println (999);
+        CALL  writeLineHL
 L955:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(143)     if (0x1000 + 0x0234 ^ w1 == 0x1118) println (78); else println (999);
 L956:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L957:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L958:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L959:
-        JP    NZ,L1119
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L960:
-        LD    A,78
+        JP    NZ,L964
 L961:
-        CALL  writeLineA
+        LD    A,78
 L962:
-        JP    L1123
+        CALL  writeLineA
 L963:
-        LD    HL,999
+        JP    L968
 L964:
-        CALL  writeLineHL
+        LD    HL,999
 L965:
-        ;;testBitwiseOperators.j(144)     //acc byte/var word
+        CALL  writeLineHL
 L966:
-        ;;testBitwiseOperators.j(145)     if (0x10 + 0x0C & w2 == 0x0014) println (79); else println (999);
+        ;;testBitwiseOperators.j(144)     //acc byte/var word
 L967:
-        LD    A,16
+        ;;testBitwiseOperators.j(145)     if (0x10 + 0x0C & w2 == 0x0014) println (79); else println (999);
 L968:
-        ADD   A,12
+        LD    A,16
 L969:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L970:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L971:
-        LD    A,20
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L972:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L973:
-        JP    NZ,L1135
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L974:
-        LD    A,79
+        JP    NZ,L978
 L975:
-        CALL  writeLineA
+        LD    A,79
 L976:
-        JP    L1138
+        CALL  writeLineA
 L977:
-        LD    HL,999
+        JP    L981
 L978:
-        CALL  writeLineHL
+        LD    HL,999
 L979:
-        ;;testBitwiseOperators.j(146)     if (0x10 + 0x0C | w2 == 0x123C) println (80); else println (999);
+        CALL  writeLineHL
 L980:
-        LD    A,16
+        ;;testBitwiseOperators.j(146)     if (0x10 + 0x0C | w2 == 0x123C) println (80); else println (999);
 L981:
-        ADD   A,12
+        LD    A,16
 L982:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L983:
-        LD    DE,(05004H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L984:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05004H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L985:
-        JP    NZ,L1149
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L986:
-        LD    A,80
+        JP    NZ,L990
 L987:
-        CALL  writeLineA
+        LD    A,80
 L988:
-        JP    L1152
+        CALL  writeLineA
 L989:
-        LD    HL,999
+        JP    L993
 L990:
-        CALL  writeLineHL
+        LD    HL,999
 L991:
-        ;;testBitwiseOperators.j(147)     if (0x10 + 0x0C ^ w2 == 0x1228) println (81); else println (999);
+        CALL  writeLineHL
 L992:
-        LD    A,16
+        ;;testBitwiseOperators.j(147)     if (0x10 + 0x0C ^ w2 == 0x1228) println (81); else println (999);
 L993:
-        ADD   A,12
+        LD    A,16
 L994:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L995:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L996:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L997:
-        JP    NZ,L1163
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L998:
-        LD    A,81
+        JP    NZ,L1002
 L999:
-        CALL  writeLineA
+        LD    A,81
 L1000:
-        JP    L1167
+        CALL  writeLineA
 L1001:
-        LD    HL,999
+        JP    L1006
 L1002:
-        CALL  writeLineHL
+        LD    HL,999
 L1003:
-        ;;testBitwiseOperators.j(148)     //acc word/var byte
+        CALL  writeLineHL
 L1004:
-        ;;testBitwiseOperators.j(149)     if (0x1000 + 0x0234 & b1 == 0x0014) println (82); else println (999);
+        ;;testBitwiseOperators.j(148)     //acc word/var byte
 L1005:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(149)     if (0x1000 + 0x0234 & b1 == 0x0014) println (82); else println (999);
 L1006:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1007:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L1008:
-        LD    A,20
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1009:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1010:
-        JP    NZ,L1178
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1011:
-        LD    A,82
+        JP    NZ,L1015
 L1012:
-        CALL  writeLineA
+        LD    A,82
 L1013:
-        JP    L1181
+        CALL  writeLineA
 L1014:
-        LD    HL,999
+        JP    L1018
 L1015:
-        CALL  writeLineHL
+        LD    HL,999
 L1016:
-        ;;testBitwiseOperators.j(150)     if (0x1000 + 0x0234 | b1 == 0x123C) println (83); else println (999);
+        CALL  writeLineHL
 L1017:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(150)     if (0x1000 + 0x0234 | b1 == 0x123C) println (83); else println (999);
 L1018:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1019:
-        LD    DE,(05000H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,564
+        ADD   HL,DE
 L1020:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05000H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1021:
-        JP    NZ,L1191
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1022:
-        LD    A,83
+        JP    NZ,L1026
 L1023:
-        CALL  writeLineA
+        LD    A,83
 L1024:
-        JP    L1194
+        CALL  writeLineA
 L1025:
-        LD    HL,999
+        JP    L1029
 L1026:
-        CALL  writeLineHL
+        LD    HL,999
 L1027:
-        ;;testBitwiseOperators.j(151)     if (0x1000 + 0x0234 ^ b1 == 0x1228) println (84); else println (999);
+        CALL  writeLineHL
 L1028:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(151)     if (0x1000 + 0x0234 ^ b1 == 0x1228) println (84); else println (999);
 L1029:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1030:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L1031:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1032:
-        JP    NZ,L1204
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1033:
-        LD    A,84
+        JP    NZ,L1037
 L1034:
-        CALL  writeLineA
+        LD    A,84
 L1035:
-        JP    L1211
+        CALL  writeLineA
 L1036:
-        LD    HL,999
+        JP    L1044
 L1037:
-        CALL  writeLineHL
+        LD    HL,999
 L1038:
-        ;;testBitwiseOperators.j(152)   
+        CALL  writeLineHL
 L1039:
-        ;;testBitwiseOperators.j(153)     //acc/final var
+        ;;testBitwiseOperators.j(152)   
 L1040:
-        ;;testBitwiseOperators.j(154)     //*************
+        ;;testBitwiseOperators.j(153)     //acc/final var
 L1041:
-        ;;testBitwiseOperators.j(155)     //acc byte/final var byte
+        ;;testBitwiseOperators.j(154)     //*************
 L1042:
-        ;;testBitwiseOperators.j(156)     if (0x04 + 0x03 & fb1 == 0x04) println (85); else println (999);
+        ;;testBitwiseOperators.j(155)     //acc byte/final var byte
 L1043:
-        LD    A,4
+        ;;testBitwiseOperators.j(156)     if (0x04 + 0x03 & fb1 == 0x04) println (85); else println (999);
 L1044:
-        ADD   A,3
+        LD    A,4
 L1045:
-        AND   A,28
+        ADD   A,3
 L1046:
-        SUB   A,4
+        AND   A,28
 L1047:
-        JP    NZ,L1221
+        SUB   A,4
 L1048:
-        LD    A,85
+        JP    NZ,L1052
 L1049:
-        CALL  writeLineA
+        LD    A,85
 L1050:
-        JP    L1224
+        CALL  writeLineA
 L1051:
-        LD    HL,999
+        JP    L1055
 L1052:
-        CALL  writeLineHL
+        LD    HL,999
 L1053:
-        ;;testBitwiseOperators.j(157)     if (0x04 + 0x03 | fb1 == 0x1F) println (86); else println (999);
+        CALL  writeLineHL
 L1054:
-        LD    A,4
+        ;;testBitwiseOperators.j(157)     if (0x04 + 0x03 | fb1 == 0x1F) println (86); else println (999);
 L1055:
-        ADD   A,3
-L1056:
-        OR    A,28
-L1057:
-        SUB   A,31
-L1058:
-        JP    NZ,L1234
-L1059:
-        LD    A,86
-L1060:
-        CALL  writeLineA
-L1061:
-        JP    L1237
-L1062:
-        LD    HL,999
-L1063:
-        CALL  writeLineHL
-L1064:
-        ;;testBitwiseOperators.j(158)     if (0x04 + 0x03 ^ fb1 == 0x1B) println (87); else println (999);
-L1065:
         LD    A,4
-L1066:
+L1056:
         ADD   A,3
+L1057:
+        OR    A,28
+L1058:
+        SUB   A,31
+L1059:
+        JP    NZ,L1063
+L1060:
+        LD    A,86
+L1061:
+        CALL  writeLineA
+L1062:
+        JP    L1066
+L1063:
+        LD    HL,999
+L1064:
+        CALL  writeLineHL
+L1065:
+        ;;testBitwiseOperators.j(158)     if (0x04 + 0x03 ^ fb1 == 0x1B) println (87); else println (999);
+L1066:
+        LD    A,4
 L1067:
-        XOR   A,28
+        ADD   A,3
 L1068:
-        SUB   A,27
+        XOR   A,28
 L1069:
-        JP    NZ,L1247
+        SUB   A,27
 L1070:
-        LD    A,87
+        JP    NZ,L1074
 L1071:
-        CALL  writeLineA
+        LD    A,87
 L1072:
-        JP    L1251
+        CALL  writeLineA
 L1073:
-        LD    HL,999
+        JP    L1078
 L1074:
-        CALL  writeLineHL
+        LD    HL,999
 L1075:
-        ;;testBitwiseOperators.j(159)     //acc word/final var word
+        CALL  writeLineHL
 L1076:
-        ;;testBitwiseOperators.j(160)     if (0x1000 + 0x0234 & fw1 == 0x0224) println (88); else println (999);
+        ;;testBitwiseOperators.j(159)     //acc word/final var word
 L1077:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(160)     if (0x1000 + 0x0234 & fw1 == 0x0224) println (88); else println (999);
 L1078:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1079:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L1080:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1081:
-        JP    NZ,L1261
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1082:
-        LD    A,88
+        JP    NZ,L1086
 L1083:
-        CALL  writeLineA
+        LD    A,88
 L1084:
-        JP    L1264
+        CALL  writeLineA
 L1085:
-        LD    HL,999
+        JP    L1089
 L1086:
-        CALL  writeLineHL
+        LD    HL,999
 L1087:
-        ;;testBitwiseOperators.j(161)     if (0x1000 + 0x0234 | fw1 == 0x133C) println (89); else println (999);
+        CALL  writeLineHL
 L1088:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(161)     if (0x1000 + 0x0234 | fw1 == 0x133C) println (89); else println (999);
 L1089:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1090:
-        LD    DE,812
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,564
+        ADD   HL,DE
 L1091:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1092:
-        JP    NZ,L1274
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1093:
-        LD    A,89
+        JP    NZ,L1097
 L1094:
-        CALL  writeLineA
+        LD    A,89
 L1095:
-        JP    L1277
+        CALL  writeLineA
 L1096:
-        LD    HL,999
+        JP    L1100
 L1097:
-        CALL  writeLineHL
+        LD    HL,999
 L1098:
-        ;;testBitwiseOperators.j(162)     if (0x1000 + 0x0234 ^ fw1 == 0x1118) println (90); else println (999);
+        CALL  writeLineHL
 L1099:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(162)     if (0x1000 + 0x0234 ^ fw1 == 0x1118) println (90); else println (999);
 L1100:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1101:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L1102:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1103:
-        JP    NZ,L1287
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1104:
-        LD    A,90
+        JP    NZ,L1108
 L1105:
-        CALL  writeLineA
+        LD    A,90
 L1106:
-        JP    L1291
+        CALL  writeLineA
 L1107:
-        LD    HL,999
+        JP    L1112
 L1108:
-        CALL  writeLineHL
+        LD    HL,999
 L1109:
-        ;;testBitwiseOperators.j(163)     //acc byte/final var word
+        CALL  writeLineHL
 L1110:
-        ;;testBitwiseOperators.j(164)     if (0x10 + 0x0C & fw2 == 0x0014) println (91); else println (999);
+        ;;testBitwiseOperators.j(163)     //acc byte/final var word
 L1111:
-        LD    A,16
+        ;;testBitwiseOperators.j(164)     if (0x10 + 0x0C & fw2 == 0x0014) println (91); else println (999);
 L1112:
-        ADD   A,12
+        LD    A,16
 L1113:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L1114:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1115:
-        LD    A,20
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1116:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1117:
-        JP    NZ,L1303
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1118:
-        LD    A,91
+        JP    NZ,L1122
 L1119:
-        CALL  writeLineA
+        LD    A,91
 L1120:
-        JP    L1306
+        CALL  writeLineA
 L1121:
-        LD    HL,999
+        JP    L1125
 L1122:
-        CALL  writeLineHL
+        LD    HL,999
 L1123:
-        ;;testBitwiseOperators.j(165)     if (0x10 + 0x0C | fw2 == 0x123C) println (92); else println (999);
+        CALL  writeLineHL
 L1124:
-        LD    A,16
+        ;;testBitwiseOperators.j(165)     if (0x10 + 0x0C | fw2 == 0x123C) println (92); else println (999);
 L1125:
-        ADD   A,12
+        LD    A,16
 L1126:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L1127:
-        LD    DE,4660
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L1128:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1129:
-        JP    NZ,L1317
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1130:
-        LD    A,92
+        JP    NZ,L1134
 L1131:
-        CALL  writeLineA
+        LD    A,92
 L1132:
-        JP    L1320
+        CALL  writeLineA
 L1133:
-        LD    HL,999
+        JP    L1137
 L1134:
-        CALL  writeLineHL
+        LD    HL,999
 L1135:
-        ;;testBitwiseOperators.j(166)     if (0x10 + 0x0C ^ fw2 == 0x1228) println (93); else println (999);
+        CALL  writeLineHL
 L1136:
-        LD    A,16
+        ;;testBitwiseOperators.j(166)     if (0x10 + 0x0C ^ fw2 == 0x1228) println (93); else println (999);
 L1137:
-        ADD   A,12
+        LD    A,16
 L1138:
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L1139:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1140:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1141:
-        JP    NZ,L1331
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1142:
-        LD    A,93
+        JP    NZ,L1146
 L1143:
-        CALL  writeLineA
+        LD    A,93
 L1144:
-        JP    L1335
+        CALL  writeLineA
 L1145:
-        LD    HL,999
+        JP    L1150
 L1146:
-        CALL  writeLineHL
+        LD    HL,999
 L1147:
-        ;;testBitwiseOperators.j(167)     //acc word/final var byte
+        CALL  writeLineHL
 L1148:
-        ;;testBitwiseOperators.j(168)     if (0x1000 + 0x0234 & fb1 == 0x0014) println (94); else println (999);
+        ;;testBitwiseOperators.j(167)     //acc word/final var byte
 L1149:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(168)     if (0x1000 + 0x0234 & fb1 == 0x0014) println (94); else println (999);
 L1150:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1151:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L1152:
-        LD    A,20
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1153:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1154:
-        JP    NZ,L1346
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1155:
-        LD    A,94
+        JP    NZ,L1159
 L1156:
-        CALL  writeLineA
+        LD    A,94
 L1157:
-        JP    L1349
+        CALL  writeLineA
 L1158:
-        LD    HL,999
+        JP    L1162
 L1159:
-        CALL  writeLineHL
+        LD    HL,999
 L1160:
-        ;;testBitwiseOperators.j(169)     if (0x1000 + 0x0234 | fb1 == 0x123C) println (95); else println (999);
+        CALL  writeLineHL
 L1161:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(169)     if (0x1000 + 0x0234 | fb1 == 0x123C) println (95); else println (999);
 L1162:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1163:
-        LD    DE,28
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,564
+        ADD   HL,DE
 L1164:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1165:
-        JP    NZ,L1359
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1166:
-        LD    A,95
+        JP    NZ,L1170
 L1167:
-        CALL  writeLineA
+        LD    A,95
 L1168:
-        JP    L1362
+        CALL  writeLineA
 L1169:
-        LD    HL,999
+        JP    L1173
 L1170:
-        CALL  writeLineHL
+        LD    HL,999
 L1171:
-        ;;testBitwiseOperators.j(170)     if (0x1000 + 0x0234 ^ fb1 == 0x1228) println (96); else println (999);
+        CALL  writeLineHL
 L1172:
-        LD    HL,4096
+        ;;testBitwiseOperators.j(170)     if (0x1000 + 0x0234 ^ fb1 == 0x1228) println (96); else println (999);
 L1173:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1174:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,564
+        ADD   HL,DE
 L1175:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1176:
-        JP    NZ,L1372
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1177:
-        LD    A,96
+        JP    NZ,L1181
 L1178:
-        CALL  writeLineA
+        LD    A,96
 L1179:
-        JP    L1379
+        CALL  writeLineA
 L1180:
-        LD    HL,999
+        JP    L1188
 L1181:
-        CALL  writeLineHL
+        LD    HL,999
 L1182:
-        ;;testBitwiseOperators.j(171)   
+        CALL  writeLineHL
 L1183:
-        ;;testBitwiseOperators.j(172)     //var/constant
+        ;;testBitwiseOperators.j(171)   
 L1184:
-        ;;testBitwiseOperators.j(173)     //************
+        ;;testBitwiseOperators.j(172)     //var/constant
 L1185:
-        ;;testBitwiseOperators.j(174)     //var byte/constant byte
+        ;;testBitwiseOperators.j(173)     //************
 L1186:
-        ;;testBitwiseOperators.j(175)     if (b2 & 0x1C == 0x04) println (97); else println (999);
+        ;;testBitwiseOperators.j(174)     //var byte/constant byte
 L1187:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(175)     if (b2 & 0x1C == 0x04) println (97); else println (999);
 L1188:
-        AND   A,28
+        LD    A,(05001H)
 L1189:
-        SUB   A,4
+        AND   A,28
 L1190:
-        JP    NZ,L1388
+        SUB   A,4
 L1191:
-        LD    A,97
+        JP    NZ,L1195
 L1192:
-        CALL  writeLineA
+        LD    A,97
 L1193:
-        JP    L1391
+        CALL  writeLineA
 L1194:
-        LD    HL,999
+        JP    L1198
 L1195:
-        CALL  writeLineHL
+        LD    HL,999
 L1196:
-        ;;testBitwiseOperators.j(176)     if (b2 | 0x1C == 0x1F) println (98); else println (999);
+        CALL  writeLineHL
 L1197:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(176)     if (b2 | 0x1C == 0x1F) println (98); else println (999);
 L1198:
-        OR    A,28
+        LD    A,(05001H)
 L1199:
-        SUB   A,31
+        OR    A,28
 L1200:
-        JP    NZ,L1400
+        SUB   A,31
 L1201:
-        LD    A,98
+        JP    NZ,L1205
 L1202:
-        CALL  writeLineA
+        LD    A,98
 L1203:
-        JP    L1403
+        CALL  writeLineA
 L1204:
-        LD    HL,999
+        JP    L1208
 L1205:
-        CALL  writeLineHL
+        LD    HL,999
 L1206:
-        ;;testBitwiseOperators.j(177)     if (b2 ^ 0x1C == 0x1B) println (99); else println (999);
+        CALL  writeLineHL
 L1207:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(177)     if (b2 ^ 0x1C == 0x1B) println (99); else println (999);
 L1208:
-        XOR   A,28
+        LD    A,(05001H)
 L1209:
-        SUB   A,27
+        XOR   A,28
 L1210:
-        JP    NZ,L1412
+        SUB   A,27
 L1211:
-        LD    A,99
+        JP    NZ,L1215
 L1212:
-        CALL  writeLineA
+        LD    A,99
 L1213:
-        JP    L1416
+        CALL  writeLineA
 L1214:
-        LD    HL,999
+        JP    L1219
 L1215:
-        CALL  writeLineHL
+        LD    HL,999
 L1216:
-        ;;testBitwiseOperators.j(178)     //var word/constant word
+        CALL  writeLineHL
 L1217:
-        ;;testBitwiseOperators.j(179)     if (w2 & 0x032C == 0x0224) println (100); else println (999);
+        ;;testBitwiseOperators.j(178)     //var word/constant word
 L1218:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(179)     if (w2 & 0x032C == 0x0224) println (100); else println (999);
 L1219:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1220:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1221:
-        JP    NZ,L1425
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1222:
-        LD    A,100
+        JP    NZ,L1226
 L1223:
-        CALL  writeLineA
+        LD    A,100
 L1224:
-        JP    L1428
+        CALL  writeLineA
 L1225:
-        LD    HL,999
+        JP    L1229
 L1226:
-        CALL  writeLineHL
+        LD    HL,999
 L1227:
-        ;;testBitwiseOperators.j(180)     if (w2 | 0x032C == 0x133C) println (101); else println (999);
+        CALL  writeLineHL
 L1228:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(180)     if (w2 | 0x032C == 0x133C) println (101); else println (999);
 L1229:
-        LD    DE,812
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,(05004H)
 L1230:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1231:
-        JP    NZ,L1437
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1232:
-        LD    A,101
+        JP    NZ,L1236
 L1233:
-        CALL  writeLineA
+        LD    A,101
 L1234:
-        JP    L1440
+        CALL  writeLineA
 L1235:
-        LD    HL,999
+        JP    L1239
 L1236:
-        CALL  writeLineHL
+        LD    HL,999
 L1237:
-        ;;testBitwiseOperators.j(181)     if (w2 ^ 0x032C == 0x1118) println (102); else println (999);
+        CALL  writeLineHL
 L1238:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(181)     if (w2 ^ 0x032C == 0x1118) println (102); else println (999);
 L1239:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1240:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1241:
-        JP    NZ,L1449
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1242:
-        LD    A,102
+        JP    NZ,L1246
 L1243:
-        CALL  writeLineA
+        LD    A,102
 L1244:
-        JP    L1453
+        CALL  writeLineA
 L1245:
-        LD    HL,999
+        JP    L1250
 L1246:
-        CALL  writeLineHL
+        LD    HL,999
 L1247:
-        ;;testBitwiseOperators.j(182)     //var byte/constant word
+        CALL  writeLineHL
 L1248:
-        ;;testBitwiseOperators.j(183)     if (b1 & 0x1234 == 0x0014) println (103); else println (999);
+        ;;testBitwiseOperators.j(182)     //var byte/constant word
 L1249:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(183)     if (b1 & 0x1234 == 0x0014) println (103); else println (999);
 L1250:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1251:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1252:
-        LD    A,20
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1253:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1254:
-        JP    NZ,L1464
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1255:
-        LD    A,103
+        JP    NZ,L1259
 L1256:
-        CALL  writeLineA
+        LD    A,103
 L1257:
-        JP    L1467
+        CALL  writeLineA
 L1258:
-        LD    HL,999
+        JP    L1262
 L1259:
-        CALL  writeLineHL
+        LD    HL,999
 L1260:
-        ;;testBitwiseOperators.j(184)     if (b1 | 0x1234 == 0x123C) println (104); else println (999);
+        CALL  writeLineHL
 L1261:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(184)     if (b1 | 0x1234 == 0x123C) println (104); else println (999);
 L1262:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1263:
-        LD    DE,4660
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L1264:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1265:
-        JP    NZ,L1477
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1266:
-        LD    A,104
+        JP    NZ,L1270
 L1267:
-        CALL  writeLineA
+        LD    A,104
 L1268:
-        JP    L1480
+        CALL  writeLineA
 L1269:
-        LD    HL,999
+        JP    L1273
 L1270:
-        CALL  writeLineHL
+        LD    HL,999
 L1271:
-        ;;testBitwiseOperators.j(185)     if (b1 ^ 0x1234 == 0x1228) println (105); else println (999);
+        CALL  writeLineHL
 L1272:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(185)     if (b1 ^ 0x1234 == 0x1228) println (105); else println (999);
 L1273:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1274:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1275:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1276:
-        JP    NZ,L1490
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1277:
-        LD    A,105
+        JP    NZ,L1281
 L1278:
-        CALL  writeLineA
+        LD    A,105
 L1279:
-        JP    L1494
+        CALL  writeLineA
 L1280:
-        LD    HL,999
+        JP    L1285
 L1281:
-        CALL  writeLineHL
+        LD    HL,999
 L1282:
-        ;;testBitwiseOperators.j(186)     //var word/constant byte
+        CALL  writeLineHL
 L1283:
-        ;;testBitwiseOperators.j(187)     if (w2 & 0x1C == 0x0014) println (106); else println (999);
+        ;;testBitwiseOperators.j(186)     //var word/constant byte
 L1284:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(187)     if (w2 & 0x1C == 0x0014) println (106); else println (999);
 L1285:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1286:
-        LD    A,20
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1287:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1288:
-        JP    NZ,L1504
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1289:
-        LD    A,106
+        JP    NZ,L1293
 L1290:
-        CALL  writeLineA
+        LD    A,106
 L1291:
-        JP    L1507
+        CALL  writeLineA
 L1292:
-        LD    HL,999
+        JP    L1296
 L1293:
-        CALL  writeLineHL
+        LD    HL,999
 L1294:
-        ;;testBitwiseOperators.j(188)     if (w2 | 0x1C == 0x123C) println (107); else println (999);
+        CALL  writeLineHL
 L1295:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(188)     if (w2 | 0x1C == 0x123C) println (107); else println (999);
 L1296:
-        LD    DE,28
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,(05004H)
 L1297:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1298:
-        JP    NZ,L1516
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1299:
-        LD    A,107
+        JP    NZ,L1303
 L1300:
-        CALL  writeLineA
+        LD    A,107
 L1301:
-        JP    L1519
+        CALL  writeLineA
 L1302:
-        LD    HL,999
+        JP    L1306
 L1303:
-        CALL  writeLineHL
+        LD    HL,999
 L1304:
-        ;;testBitwiseOperators.j(189)     if (w2 ^ 0x1C == 0x1228) println (108); else println (999);
+        CALL  writeLineHL
 L1305:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(189)     if (w2 ^ 0x1C == 0x1228) println (108); else println (999);
 L1306:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1307:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1308:
-        JP    NZ,L1528
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1309:
-        LD    A,108
+        JP    NZ,L1313
 L1310:
-        CALL  writeLineA
+        LD    A,108
 L1311:
-        JP    L1535
+        CALL  writeLineA
 L1312:
-        LD    HL,999
+        JP    L1320
 L1313:
-        CALL  writeLineHL
+        LD    HL,999
 L1314:
-        ;;testBitwiseOperators.j(190)   
+        CALL  writeLineHL
 L1315:
-        ;;testBitwiseOperators.j(191)     //var/acc
+        ;;testBitwiseOperators.j(190)   
 L1316:
-        ;;testBitwiseOperators.j(192)     //*******
+        ;;testBitwiseOperators.j(191)     //var/acc
 L1317:
-        ;;testBitwiseOperators.j(193)     //var byte/acc byte
+        ;;testBitwiseOperators.j(192)     //*******
 L1318:
-        ;;testBitwiseOperators.j(194)     if (b2 & (0x10 + 0x0C) == 0x04) println (109); else println (999);
+        ;;testBitwiseOperators.j(193)     //var byte/acc byte
 L1319:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(194)     if (b2 & (0x10 + 0x0C) == 0x04) println (109); else println (999);
 L1320:
-        PUSH  AF
-        LD    A,16
+        LD    A,(05001H)
 L1321:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L1322:
-        POP   BC
-        AND   A,B
+        ADD   A,12
 L1323:
-        SUB   A,4
+        POP   BC
+        AND   A,B
 L1324:
-        JP    NZ,L1546
+        SUB   A,4
 L1325:
-        LD    A,109
+        JP    NZ,L1329
 L1326:
-        CALL  writeLineA
+        LD    A,109
 L1327:
-        JP    L1549
+        CALL  writeLineA
 L1328:
-        LD    HL,999
+        JP    L1332
 L1329:
-        CALL  writeLineHL
+        LD    HL,999
 L1330:
-        ;;testBitwiseOperators.j(195)     if (b2 | (0x10 + 0x0C) == 0x1F) println (110); else println (999);
+        CALL  writeLineHL
 L1331:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(195)     if (b2 | (0x10 + 0x0C) == 0x1F) println (110); else println (999);
 L1332:
-        PUSH  AF
-        LD    A,16
+        LD    A,(05001H)
 L1333:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L1334:
-        POP   BC
-        OR    A,B
+        ADD   A,12
 L1335:
-        SUB   A,31
+        POP   BC
+        OR    A,B
 L1336:
-        JP    NZ,L1560
+        SUB   A,31
 L1337:
-        LD    A,110
+        JP    NZ,L1341
 L1338:
-        CALL  writeLineA
+        LD    A,110
 L1339:
-        JP    L1563
+        CALL  writeLineA
 L1340:
-        LD    HL,999
+        JP    L1344
 L1341:
-        CALL  writeLineHL
+        LD    HL,999
 L1342:
-        ;;testBitwiseOperators.j(196)     if (b2 ^ (0x10 + 0x0C) == 0x1B) println (111); else println (999);
+        CALL  writeLineHL
 L1343:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(196)     if (b2 ^ (0x10 + 0x0C) == 0x1B) println (111); else println (999);
 L1344:
-        PUSH  AF
-        LD    A,16
+        LD    A,(05001H)
 L1345:
-        ADD   A,12
+        PUSH  AF
+        LD    A,16
 L1346:
-        POP   BC
-        XOR   A,B
+        ADD   A,12
 L1347:
-        SUB   A,27
+        POP   BC
+        XOR   A,B
 L1348:
-        JP    NZ,L1574
+        SUB   A,27
 L1349:
-        LD    A,111
+        JP    NZ,L1353
 L1350:
-        CALL  writeLineA
+        LD    A,111
 L1351:
-        JP    L1578
+        CALL  writeLineA
 L1352:
-        LD    HL,999
+        JP    L1357
 L1353:
-        CALL  writeLineHL
+        LD    HL,999
 L1354:
-        ;;testBitwiseOperators.j(197)     //var word/acc word
+        CALL  writeLineHL
 L1355:
-        ;;testBitwiseOperators.j(198)     if (w2 & 0x0100 + 0x022C == 0x0224) println (112); else println (999);
+        ;;testBitwiseOperators.j(197)     //var word/acc word
 L1356:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(198)     if (w2 & 0x0100 + 0x022C == 0x0224) println (112); else println (999);
 L1357:
-        PUSH  HL
-        LD    HL,256
+        LD    HL,(05004H)
 L1358:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L1359:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,556
+        ADD   HL,DE
 L1360:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1361:
-        JP    NZ,L1589
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1362:
-        LD    A,112
+        JP    NZ,L1366
 L1363:
-        CALL  writeLineA
+        LD    A,112
 L1364:
-        JP    L1592
+        CALL  writeLineA
 L1365:
-        LD    HL,999
+        JP    L1369
 L1366:
-        CALL  writeLineHL
+        LD    HL,999
 L1367:
-        ;;testBitwiseOperators.j(199)     if (w2 | 0x0100 + 0x022C == 0x133C) println (113); else println (999);
+        CALL  writeLineHL
 L1368:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(199)     if (w2 | 0x0100 + 0x022C == 0x133C) println (113); else println (999);
 L1369:
-        PUSH  HL
-        LD    HL,256
+        LD    HL,(05004H)
 L1370:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L1371:
-        POP   DE
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    DE,556
+        ADD   HL,DE
 L1372:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1373:
-        JP    NZ,L1603
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1374:
-        LD    A,113
+        JP    NZ,L1378
 L1375:
-        CALL  writeLineA
+        LD    A,113
 L1376:
-        JP    L1606
+        CALL  writeLineA
 L1377:
-        LD    HL,999
+        JP    L1381
 L1378:
-        CALL  writeLineHL
+        LD    HL,999
 L1379:
-        ;;testBitwiseOperators.j(200)     if (w2 ^ 0x0100 + 0x022C == 0x1118) println (114); else println (999);
+        CALL  writeLineHL
 L1380:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(200)     if (w2 ^ 0x0100 + 0x022C == 0x1118) println (114); else println (999);
 L1381:
-        PUSH  HL
-        LD    HL,256
+        LD    HL,(05004H)
 L1382:
-        LD    DE,556
-        ADD   HL,DE
+        PUSH  HL
+        LD    HL,256
 L1383:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    DE,556
+        ADD   HL,DE
 L1384:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1385:
-        JP    NZ,L1617
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1386:
-        LD    A,114
+        JP    NZ,L1390
 L1387:
-        CALL  writeLineA
+        LD    A,114
 L1388:
-        JP    L1621
+        CALL  writeLineA
 L1389:
-        LD    HL,999
+        JP    L1394
 L1390:
-        CALL  writeLineHL
+        LD    HL,999
 L1391:
-        ;;testBitwiseOperators.j(201)     //var byte/acc word
+        CALL  writeLineHL
 L1392:
-        ;;testBitwiseOperators.j(202)     if (b1 & 0x1000 + 0x0234 == 0x0014) println (115); else println (999);
+        ;;testBitwiseOperators.j(201)     //var byte/acc word
 L1393:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(202)     if (b1 & 0x1000 + 0x0234 == 0x0014) println (115); else println (999);
 L1394:
-        LD    HL,4096
+        LD    A,(05000H)
 L1395:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1396:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        LD    DE,564
+        ADD   HL,DE
 L1397:
-        LD    A,20
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L1398:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1399:
-        JP    NZ,L1633
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1400:
-        LD    A,115
+        JP    NZ,L1404
 L1401:
-        CALL  writeLineA
+        LD    A,115
 L1402:
-        JP    L1636
+        CALL  writeLineA
 L1403:
-        LD    HL,999
+        JP    L1407
 L1404:
-        CALL  writeLineHL
+        LD    HL,999
 L1405:
-        ;;testBitwiseOperators.j(203)     if (b1 | 0x1000 + 0x0234 == 0x123C) println (116); else println (999);
+        CALL  writeLineHL
 L1406:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(203)     if (b1 | 0x1000 + 0x0234 == 0x123C) println (116); else println (999);
 L1407:
-        LD    HL,4096
+        LD    A,(05000H)
 L1408:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1409:
-        OR    A,L
-        LD    L,A
+        LD    DE,564
+        ADD   HL,DE
 L1410:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        OR    A,L
+        LD    L,A
 L1411:
-        JP    NZ,L1647
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1412:
-        LD    A,116
+        JP    NZ,L1416
 L1413:
-        CALL  writeLineA
+        LD    A,116
 L1414:
-        JP    L1650
+        CALL  writeLineA
 L1415:
-        LD    HL,999
+        JP    L1419
 L1416:
-        CALL  writeLineHL
+        LD    HL,999
 L1417:
-        ;;testBitwiseOperators.j(204)     if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (117); else println (999);
+        CALL  writeLineHL
 L1418:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(204)     if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (117); else println (999);
 L1419:
-        LD    HL,4096
+        LD    A,(05000H)
 L1420:
-        LD    DE,564
-        ADD   HL,DE
+        LD    HL,4096
 L1421:
-        XOR   A,L
-        LD    L,A
+        LD    DE,564
+        ADD   HL,DE
 L1422:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        XOR   A,L
+        LD    L,A
 L1423:
-        JP    NZ,L1661
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1424:
-        LD    A,117
+        JP    NZ,L1428
 L1425:
-        CALL  writeLineA
+        LD    A,117
 L1426:
-        JP    L1665
+        CALL  writeLineA
 L1427:
-        LD    HL,999
+        JP    L1432
 L1428:
-        CALL  writeLineHL
+        LD    HL,999
 L1429:
-        ;;testBitwiseOperators.j(205)     //var word/acc byte
+        CALL  writeLineHL
 L1430:
-        ;;testBitwiseOperators.j(206)     if (w2 & 0x10 + 0x0C == 0x0014) println (118); else println (999);
+        ;;testBitwiseOperators.j(205)     //var word/acc byte
 L1431:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(206)     if (w2 & 0x10 + 0x0C == 0x0014) println (118); else println (999);
 L1432:
-        LD    A,16
+        LD    HL,(05004H)
 L1433:
-        ADD   A,12
+        LD    A,16
 L1434:
-        AND   A,L
-        LD    L,A
-        LD    H,0
+        ADD   A,12
 L1435:
-        LD    A,20
+        AND   A,L
+        LD    L,A
+        LD    H,0
 L1436:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1437:
-        JP    NZ,L1677
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1438:
-        LD    A,118
+        JP    NZ,L1442
 L1439:
-        CALL  writeLineA
+        LD    A,118
 L1440:
-        JP    L1680
+        CALL  writeLineA
 L1441:
-        LD    HL,999
+        JP    L1445
 L1442:
-        CALL  writeLineHL
+        LD    HL,999
 L1443:
-        ;;testBitwiseOperators.j(207)     if (w2 | 0x10 + 0x0C == 0x123C) println (119); else println (999);
+        CALL  writeLineHL
 L1444:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(207)     if (w2 | 0x10 + 0x0C == 0x123C) println (119); else println (999);
 L1445:
-        LD    A,16
+        LD    HL,(05004H)
 L1446:
-        ADD   A,12
+        LD    A,16
 L1447:
-        OR    A,L
-        LD    L,A
+        ADD   A,12
 L1448:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        OR    A,L
+        LD    L,A
 L1449:
-        JP    NZ,L1691
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1450:
-        LD    A,119
+        JP    NZ,L1454
 L1451:
-        CALL  writeLineA
+        LD    A,119
 L1452:
-        JP    L1694
+        CALL  writeLineA
 L1453:
-        LD    HL,999
+        JP    L1457
 L1454:
-        CALL  writeLineHL
+        LD    HL,999
 L1455:
-        ;;testBitwiseOperators.j(208)     if (w2 ^ 0x10 + 0x0C == 0x1228) println (120); else println (999);
+        CALL  writeLineHL
 L1456:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(208)     if (w2 ^ 0x10 + 0x0C == 0x1228) println (120); else println (999);
 L1457:
-        LD    A,16
+        LD    HL,(05004H)
 L1458:
-        ADD   A,12
+        LD    A,16
 L1459:
-        XOR   A,L
-        LD    L,A
+        ADD   A,12
 L1460:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        XOR   A,L
+        LD    L,A
 L1461:
-        JP    NZ,L1705
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1462:
-        LD    A,120
+        JP    NZ,L1466
 L1463:
-        CALL  writeLineA
+        LD    A,120
 L1464:
-        JP    L1712
+        CALL  writeLineA
 L1465:
-        LD    HL,999
+        JP    L1473
 L1466:
-        CALL  writeLineHL
+        LD    HL,999
 L1467:
-        ;;testBitwiseOperators.j(209)   
+        CALL  writeLineHL
 L1468:
-        ;;testBitwiseOperators.j(210)     //var/var
+        ;;testBitwiseOperators.j(209)   
 L1469:
-        ;;testBitwiseOperators.j(211)     //*******
+        ;;testBitwiseOperators.j(210)     //var/var
 L1470:
-        ;;testBitwiseOperators.j(212)     //var byte/var byte
+        ;;testBitwiseOperators.j(211)     //*******
 L1471:
-        ;;testBitwiseOperators.j(213)     if (b2 & b1 == 0x04) println (121); else println (999);
+        ;;testBitwiseOperators.j(212)     //var byte/var byte
 L1472:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(213)     if (b2 & b1 == 0x04) println (121); else println (999);
 L1473:
-        LD    B,A
-        LD    A,(05000H)
-        AND   A,B
+        LD    A,(05001H)
 L1474:
-        SUB   A,4
+        LD    B,A
+        LD    A,(05000H)
+        AND   A,B
 L1475:
-        JP    NZ,L1721
+        SUB   A,4
 L1476:
-        LD    A,121
+        JP    NZ,L1480
 L1477:
-        CALL  writeLineA
+        LD    A,121
 L1478:
-        JP    L1724
+        CALL  writeLineA
 L1479:
-        LD    HL,999
+        JP    L1483
 L1480:
-        CALL  writeLineHL
+        LD    HL,999
 L1481:
-        ;;testBitwiseOperators.j(214)     if (b2 | b1 == 0x1F) println (122); else println (999);
+        CALL  writeLineHL
 L1482:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(214)     if (b2 | b1 == 0x1F) println (122); else println (999);
 L1483:
-        LD    B,A
-        LD    A,(05000H)
-        OR    A,B
+        LD    A,(05001H)
 L1484:
-        SUB   A,31
+        LD    B,A
+        LD    A,(05000H)
+        OR    A,B
 L1485:
-        JP    NZ,L1733
+        SUB   A,31
 L1486:
-        LD    A,122
+        JP    NZ,L1490
 L1487:
-        CALL  writeLineA
+        LD    A,122
 L1488:
-        JP    L1736
+        CALL  writeLineA
 L1489:
-        LD    HL,999
+        JP    L1493
 L1490:
-        CALL  writeLineHL
+        LD    HL,999
 L1491:
-        ;;testBitwiseOperators.j(215)     if (b2 ^ b1 == 0x1B) println (123); else println (999);
+        CALL  writeLineHL
 L1492:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(215)     if (b2 ^ b1 == 0x1B) println (123); else println (999);
 L1493:
-        LD    B,A
-        LD    A,(05000H)
-        XOR   A,B
+        LD    A,(05001H)
 L1494:
-        SUB   A,27
+        LD    B,A
+        LD    A,(05000H)
+        XOR   A,B
 L1495:
-        JP    NZ,L1745
+        SUB   A,27
 L1496:
-        LD    A,123
+        JP    NZ,L1500
 L1497:
-        CALL  writeLineA
+        LD    A,123
 L1498:
-        JP    L1749
+        CALL  writeLineA
 L1499:
-        LD    HL,999
+        JP    L1504
 L1500:
-        CALL  writeLineHL
+        LD    HL,999
 L1501:
-        ;;testBitwiseOperators.j(216)     //var word/var word
+        CALL  writeLineHL
 L1502:
-        ;;testBitwiseOperators.j(217)     if (w2 & w1 == 0x0224) println (124); else println (999);
+        ;;testBitwiseOperators.j(216)     //var word/var word
 L1503:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(217)     if (w2 & w1 == 0x0224) println (124); else println (999);
 L1504:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1505:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1506:
-        JP    NZ,L1758
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1507:
-        LD    A,124
+        JP    NZ,L1511
 L1508:
-        CALL  writeLineA
+        LD    A,124
 L1509:
-        JP    L1761
+        CALL  writeLineA
 L1510:
-        LD    HL,999
+        JP    L1514
 L1511:
-        CALL  writeLineHL
+        LD    HL,999
 L1512:
-        ;;testBitwiseOperators.j(218)     if (w2 | w1 == 0x133C) println (125); else println (999);
+        CALL  writeLineHL
 L1513:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(218)     if (w2 | w1 == 0x133C) println (125); else println (999);
 L1514:
-        LD    DE,(05002H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,(05004H)
 L1515:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1516:
-        JP    NZ,L1770
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1517:
-        LD    A,125
+        JP    NZ,L1521
 L1518:
-        CALL  writeLineA
+        LD    A,125
 L1519:
-        JP    L1773
+        CALL  writeLineA
 L1520:
-        LD    HL,999
+        JP    L1524
 L1521:
-        CALL  writeLineHL
+        LD    HL,999
 L1522:
-        ;;testBitwiseOperators.j(219)     if (w2 ^ w1 == 0x1118) println (126); else println (999);
+        CALL  writeLineHL
 L1523:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(219)     if (w2 ^ w1 == 0x1118) println (126); else println (999);
 L1524:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1525:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1526:
-        JP    NZ,L1782
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1527:
-        LD    A,126
+        JP    NZ,L1531
 L1528:
-        CALL  writeLineA
+        LD    A,126
 L1529:
-        JP    L1786
+        CALL  writeLineA
 L1530:
-        LD    HL,999
+        JP    L1535
 L1531:
-        CALL  writeLineHL
+        LD    HL,999
 L1532:
-        ;;testBitwiseOperators.j(220)     //var byte/var word
+        CALL  writeLineHL
 L1533:
-        ;;testBitwiseOperators.j(221)     if (b1 & w2 == 0x0014) println (127); else println (999);
+        ;;testBitwiseOperators.j(220)     //var byte/var word
 L1534:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(221)     if (b1 & w2 == 0x0014) println (127); else println (999);
 L1535:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1536:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1537:
-        LD    A,20
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1538:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1539:
-        JP    NZ,L1797
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1540:
-        LD    A,127
+        JP    NZ,L1544
 L1541:
-        CALL  writeLineA
+        LD    A,127
 L1542:
-        JP    L1800
+        CALL  writeLineA
 L1543:
-        LD    HL,999
+        JP    L1547
 L1544:
-        CALL  writeLineHL
+        LD    HL,999
 L1545:
-        ;;testBitwiseOperators.j(222)     if (b1 | w2 == 0x123C) println (128); else println (999);
+        CALL  writeLineHL
 L1546:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(222)     if (b1 | w2 == 0x123C) println (128); else println (999);
 L1547:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1548:
-        LD    DE,(05004H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L1549:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05004H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1550:
-        JP    NZ,L1810
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1551:
-        LD    A,128
+        JP    NZ,L1555
 L1552:
-        CALL  writeLineA
+        LD    A,128
 L1553:
-        JP    L1813
+        CALL  writeLineA
 L1554:
-        LD    HL,999
+        JP    L1558
 L1555:
-        CALL  writeLineHL
+        LD    HL,999
 L1556:
-        ;;testBitwiseOperators.j(223)     if (b1 ^ w2 == 0x1228) println (129); else println (999);
+        CALL  writeLineHL
 L1557:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(223)     if (b1 ^ w2 == 0x1228) println (129); else println (999);
 L1558:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1559:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1560:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1561:
-        JP    NZ,L1823
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1562:
-        LD    A,129
+        JP    NZ,L1566
 L1563:
-        CALL  writeLineA
+        LD    A,129
 L1564:
-        JP    L1827
+        CALL  writeLineA
 L1565:
-        LD    HL,999
+        JP    L1570
 L1566:
-        CALL  writeLineHL
+        LD    HL,999
 L1567:
-        ;;testBitwiseOperators.j(224)     //var word/var byte
+        CALL  writeLineHL
 L1568:
-        ;;testBitwiseOperators.j(225)     if (w2 & b1 == 0x0014) println (130); else println (999);
+        ;;testBitwiseOperators.j(224)     //var word/var byte
 L1569:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(225)     if (w2 & b1 == 0x0014) println (130); else println (999);
 L1570:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1571:
-        LD    A,20
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1572:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1573:
-        JP    NZ,L1837
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1574:
-        LD    A,130
+        JP    NZ,L1578
 L1575:
-        CALL  writeLineA
+        LD    A,130
 L1576:
-        JP    L1840
+        CALL  writeLineA
 L1577:
-        LD    HL,999
+        JP    L1581
 L1578:
-        CALL  writeLineHL
+        LD    HL,999
 L1579:
-        ;;testBitwiseOperators.j(226)     if (w2 | b1 == 0x123C) println (131); else println (999);
+        CALL  writeLineHL
 L1580:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(226)     if (w2 | b1 == 0x123C) println (131); else println (999);
 L1581:
-        LD    DE,(05000H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,(05004H)
 L1582:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05000H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1583:
-        JP    NZ,L1849
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1584:
-        LD    A,131
+        JP    NZ,L1588
 L1585:
-        CALL  writeLineA
+        LD    A,131
 L1586:
-        JP    L1852
+        CALL  writeLineA
 L1587:
-        LD    HL,999
+        JP    L1591
 L1588:
-        CALL  writeLineHL
+        LD    HL,999
 L1589:
-        ;;testBitwiseOperators.j(227)     if (w2 ^ b1 == 0x1228) println (132); else println (999);
+        CALL  writeLineHL
 L1590:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(227)     if (w2 ^ b1 == 0x1228) println (132); else println (999);
 L1591:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1592:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1593:
-        JP    NZ,L1861
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1594:
-        LD    A,132
+        JP    NZ,L1598
 L1595:
-        CALL  writeLineA
+        LD    A,132
 L1596:
-        JP    L1868
+        CALL  writeLineA
 L1597:
-        LD    HL,999
+        JP    L1605
 L1598:
-        CALL  writeLineHL
+        LD    HL,999
 L1599:
-        ;;testBitwiseOperators.j(228)   
+        CALL  writeLineHL
 L1600:
-        ;;testBitwiseOperators.j(229)     //var/final var
+        ;;testBitwiseOperators.j(228)   
 L1601:
-        ;;testBitwiseOperators.j(230)     //*************
+        ;;testBitwiseOperators.j(229)     //var/final var
 L1602:
-        ;;testBitwiseOperators.j(231)     //var byte/final var byte
+        ;;testBitwiseOperators.j(230)     //*************
 L1603:
-        ;;testBitwiseOperators.j(232)     if (b2 & fb1 == 0x04) println (133); else println (999);
+        ;;testBitwiseOperators.j(231)     //var byte/final var byte
 L1604:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(232)     if (b2 & fb1 == 0x04) println (133); else println (999);
 L1605:
-        AND   A,28
+        LD    A,(05001H)
 L1606:
-        SUB   A,4
+        AND   A,28
 L1607:
-        JP    NZ,L1877
+        SUB   A,4
 L1608:
-        LD    A,133
+        JP    NZ,L1612
 L1609:
-        CALL  writeLineA
+        LD    A,133
 L1610:
-        JP    L1880
+        CALL  writeLineA
 L1611:
-        LD    HL,999
+        JP    L1615
 L1612:
-        CALL  writeLineHL
+        LD    HL,999
 L1613:
-        ;;testBitwiseOperators.j(233)     if (b2 | fb1 == 0x1F) println (134); else println (999);
+        CALL  writeLineHL
 L1614:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(233)     if (b2 | fb1 == 0x1F) println (134); else println (999);
 L1615:
-        OR    A,28
+        LD    A,(05001H)
 L1616:
-        SUB   A,31
+        OR    A,28
 L1617:
-        JP    NZ,L1889
+        SUB   A,31
 L1618:
-        LD    A,134
+        JP    NZ,L1622
 L1619:
-        CALL  writeLineA
+        LD    A,134
 L1620:
-        JP    L1892
+        CALL  writeLineA
 L1621:
-        LD    HL,999
+        JP    L1625
 L1622:
-        CALL  writeLineHL
+        LD    HL,999
 L1623:
-        ;;testBitwiseOperators.j(234)     if (b2 ^ fb1 == 0x1B) println (135); else println (999);
+        CALL  writeLineHL
 L1624:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(234)     if (b2 ^ fb1 == 0x1B) println (135); else println (999);
 L1625:
-        XOR   A,28
+        LD    A,(05001H)
 L1626:
-        SUB   A,27
+        XOR   A,28
 L1627:
-        JP    NZ,L1901
+        SUB   A,27
 L1628:
-        LD    A,135
+        JP    NZ,L1632
 L1629:
-        CALL  writeLineA
+        LD    A,135
 L1630:
-        JP    L1905
+        CALL  writeLineA
 L1631:
-        LD    HL,999
+        JP    L1636
 L1632:
-        CALL  writeLineHL
+        LD    HL,999
 L1633:
-        ;;testBitwiseOperators.j(235)     //var word/final var word
+        CALL  writeLineHL
 L1634:
-        ;;testBitwiseOperators.j(236)     if (w2 & fw1 == 0x0224) println (136); else println (999);
+        ;;testBitwiseOperators.j(235)     //var word/final var word
 L1635:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(236)     if (w2 & fw1 == 0x0224) println (136); else println (999);
 L1636:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1637:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1638:
-        JP    NZ,L1914
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
 L1639:
-        LD    A,136
+        JP    NZ,L1643
 L1640:
-        CALL  writeLineA
+        LD    A,136
 L1641:
-        JP    L1917
+        CALL  writeLineA
 L1642:
-        LD    HL,999
+        JP    L1646
 L1643:
-        CALL  writeLineHL
+        LD    HL,999
 L1644:
-        ;;testBitwiseOperators.j(237)     if (w2 | fw1 == 0x133C) println (137); else println (999);
+        CALL  writeLineHL
 L1645:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(237)     if (w2 | fw1 == 0x133C) println (137); else println (999);
 L1646:
-        LD    DE,812
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,(05004H)
 L1647:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1648:
-        JP    NZ,L1926
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
 L1649:
-        LD    A,137
+        JP    NZ,L1653
 L1650:
-        CALL  writeLineA
+        LD    A,137
 L1651:
-        JP    L1929
+        CALL  writeLineA
 L1652:
-        LD    HL,999
+        JP    L1656
 L1653:
-        CALL  writeLineHL
+        LD    HL,999
 L1654:
-        ;;testBitwiseOperators.j(238)     if (w2 ^ fw1 == 0x1118) println (138); else println (999);
+        CALL  writeLineHL
 L1655:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(238)     if (w2 ^ fw1 == 0x1118) println (138); else println (999);
 L1656:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1657:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1658:
-        JP    NZ,L1938
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L1659:
-        LD    A,138
+        JP    NZ,L1663
 L1660:
-        CALL  writeLineA
+        LD    A,138
 L1661:
-        JP    L1942
+        CALL  writeLineA
 L1662:
-        LD    HL,999
+        JP    L1667
 L1663:
-        CALL  writeLineHL
+        LD    HL,999
 L1664:
-        ;;testBitwiseOperators.j(239)     //var byte/final var word
+        CALL  writeLineHL
 L1665:
-        ;;testBitwiseOperators.j(240)     if (b1 & fw2 == 0x0014) println (139); else println (999);
+        ;;testBitwiseOperators.j(239)     //var byte/final var word
 L1666:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(240)     if (b1 & fw2 == 0x0014) println (139); else println (999);
 L1667:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1668:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1669:
-        LD    A,20
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1670:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1671:
-        JP    NZ,L1953
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1672:
-        LD    A,139
+        JP    NZ,L1676
 L1673:
-        CALL  writeLineA
+        LD    A,139
 L1674:
-        JP    L1956
+        CALL  writeLineA
 L1675:
-        LD    HL,999
+        JP    L1679
 L1676:
-        CALL  writeLineHL
+        LD    HL,999
 L1677:
-        ;;testBitwiseOperators.j(241)     if (b1 | fw2 == 0x123C) println (140); else println (999);
+        CALL  writeLineHL
 L1678:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(241)     if (b1 | fw2 == 0x123C) println (140); else println (999);
 L1679:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1680:
-        LD    DE,4660
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
         LD    L,A
-        LD    A,B
+        LD    H,0
 L1681:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1682:
-        JP    NZ,L1966
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1683:
-        LD    A,140
+        JP    NZ,L1687
 L1684:
-        CALL  writeLineA
+        LD    A,140
 L1685:
-        JP    L1969
+        CALL  writeLineA
 L1686:
-        LD    HL,999
+        JP    L1690
 L1687:
-        CALL  writeLineHL
+        LD    HL,999
 L1688:
-        ;;testBitwiseOperators.j(242)     if (b1 ^ fw2 == 0x1228) println (141); else println (999);
+        CALL  writeLineHL
 L1689:
-        LD    A,(05000H)
+        ;;testBitwiseOperators.j(242)     if (b1 ^ fw2 == 0x1228) println (141); else println (999);
 L1690:
-        LD    L,A
-        LD    H,0
+        LD    A,(05000H)
 L1691:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L1692:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1693:
-        JP    NZ,L1979
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1694:
-        LD    A,141
+        JP    NZ,L1698
 L1695:
-        CALL  writeLineA
+        LD    A,141
 L1696:
-        JP    L1983
+        CALL  writeLineA
 L1697:
-        LD    HL,999
+        JP    L1702
 L1698:
-        CALL  writeLineHL
+        LD    HL,999
 L1699:
-        ;;testBitwiseOperators.j(243)     //var word/final var byte
+        CALL  writeLineHL
 L1700:
-        ;;testBitwiseOperators.j(244)     if (w2 & fb1 == 0x0014) println (142); else println (999);
+        ;;testBitwiseOperators.j(243)     //var word/final var byte
 L1701:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(244)     if (w2 & fb1 == 0x0014) println (142); else println (999);
 L1702:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1703:
-        LD    A,20
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1704:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
+        LD    A,20
 L1705:
-        JP    NZ,L1993
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
 L1706:
-        LD    A,142
+        JP    NZ,L1710
 L1707:
-        CALL  writeLineA
+        LD    A,142
 L1708:
-        JP    L1996
+        CALL  writeLineA
 L1709:
-        LD    HL,999
+        JP    L1713
 L1710:
-        CALL  writeLineHL
+        LD    HL,999
 L1711:
-        ;;testBitwiseOperators.j(245)     if (w2 | fb1 == 0x123C) println (143); else println (999);
+        CALL  writeLineHL
 L1712:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(245)     if (w2 | fb1 == 0x123C) println (143); else println (999);
 L1713:
-        LD    DE,28
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
+        LD    HL,(05004H)
 L1714:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
 L1715:
-        JP    NZ,L2005
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
 L1716:
-        LD    A,143
+        JP    NZ,L1720
 L1717:
-        CALL  writeLineA
+        LD    A,143
 L1718:
-        JP    L2008
+        CALL  writeLineA
 L1719:
-        LD    HL,999
+        JP    L1723
 L1720:
-        CALL  writeLineHL
+        LD    HL,999
 L1721:
-        ;;testBitwiseOperators.j(246)     if (w2 ^ fb1 == 0x1228) println (144); else println (999);
+        CALL  writeLineHL
 L1722:
-        LD    HL,(05004H)
+        ;;testBitwiseOperators.j(246)     if (w2 ^ fb1 == 0x1228) println (144); else println (999);
 L1723:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
+        LD    HL,(05004H)
 L1724:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L1725:
-        JP    NZ,L2017
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
 L1726:
-        LD    A,144
+        JP    NZ,L1730
 L1727:
-        CALL  writeLineA
+        LD    A,144
 L1728:
-        JP    L2024
+        CALL  writeLineA
 L1729:
-        LD    HL,999
+        JP    L1737
 L1730:
-        CALL  writeLineHL
+        LD    HL,999
 L1731:
-        ;;testBitwiseOperators.j(247)   
+        CALL  writeLineHL
 L1732:
-        ;;testBitwiseOperators.j(248)     //final var/constant
+        ;;testBitwiseOperators.j(247)   
 L1733:
-        ;;testBitwiseOperators.j(249)     //******************
+        ;;testBitwiseOperators.j(248)     //final var/constant
 L1734:
-        ;;testBitwiseOperators.j(250)     //final var byte/constant byte
+        ;;testBitwiseOperators.j(249)     //******************
 L1735:
-        ;;testBitwiseOperators.j(251)     if (b2 & 0x1C == 0x04) println (145); else println (999);
+        ;;testBitwiseOperators.j(250)     //final var byte/constant byte
 L1736:
-        LD    A,(05001H)
+        ;;testBitwiseOperators.j(251)     if (b2 & 0x1C == 0x04) println (145); else println (999);
 L1737:
-        AND   A,28
+        LD    A,(05001H)
 L1738:
-        SUB   A,4
-L1739:
-        JP    NZ,L2033
-L1740:
-        LD    A,145
-L1741:
-        CALL  writeLineA
-L1742:
-        JP    L2036
-L1743:
-        LD    HL,999
-L1744:
-        CALL  writeLineHL
-L1745:
-        ;;testBitwiseOperators.j(252)     if (b2 | 0x1C == 0x1F) println (146); else println (999);
-L1746:
-        LD    A,(05001H)
-L1747:
-        OR    A,28
-L1748:
-        SUB   A,31
-L1749:
-        JP    NZ,L2045
-L1750:
-        LD    A,146
-L1751:
-        CALL  writeLineA
-L1752:
-        JP    L2048
-L1753:
-        LD    HL,999
-L1754:
-        CALL  writeLineHL
-L1755:
-        ;;testBitwiseOperators.j(253)     if (b2 ^ 0x1C == 0x1B) println (147); else println (999);
-L1756:
-        LD    A,(05001H)
-L1757:
-        XOR   A,28
-L1758:
-        SUB   A,27
-L1759:
-        JP    NZ,L2057
-L1760:
-        LD    A,147
-L1761:
-        CALL  writeLineA
-L1762:
-        JP    L2061
-L1763:
-        LD    HL,999
-L1764:
-        CALL  writeLineHL
-L1765:
-        ;;testBitwiseOperators.j(254)     //final var word/constant word
-L1766:
-        ;;testBitwiseOperators.j(255)     if (w2 & 0x032C == 0x0224) println (148); else println (999);
-L1767:
-        LD    HL,(05004H)
-L1768:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1769:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
-L1770:
-        JP    NZ,L2070
-L1771:
-        LD    A,148
-L1772:
-        CALL  writeLineA
-L1773:
-        JP    L2073
-L1774:
-        LD    HL,999
-L1775:
-        CALL  writeLineHL
-L1776:
-        ;;testBitwiseOperators.j(256)     if (w2 | 0x032C == 0x133C) println (149); else println (999);
-L1777:
-        LD    HL,(05004H)
-L1778:
-        LD    DE,812
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-L1779:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
-L1780:
-        JP    NZ,L2082
-L1781:
-        LD    A,149
-L1782:
-        CALL  writeLineA
-L1783:
-        JP    L2085
-L1784:
-        LD    HL,999
-L1785:
-        CALL  writeLineHL
-L1786:
-        ;;testBitwiseOperators.j(257)     if (w2 ^ 0x032C == 0x1118) println (150); else println (999);
-L1787:
-        LD    HL,(05004H)
-L1788:
-        LD    DE,812
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1789:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
-L1790:
-        JP    NZ,L2094
-L1791:
-        LD    A,150
-L1792:
-        CALL  writeLineA
-L1793:
-        JP    L2098
-L1794:
-        LD    HL,999
-L1795:
-        CALL  writeLineHL
-L1796:
-        ;;testBitwiseOperators.j(258)     //final var byte/constant word
-L1797:
-        ;;testBitwiseOperators.j(259)     if (b1 & 0x1234 == 0x0014) println (151); else println (999);
-L1798:
-        LD    A,(05000H)
-L1799:
-        LD    L,A
-        LD    H,0
-L1800:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1801:
-        LD    A,20
-L1802:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1803:
-        JP    NZ,L2109
-L1804:
-        LD    A,151
-L1805:
-        CALL  writeLineA
-L1806:
-        JP    L2112
-L1807:
-        LD    HL,999
-L1808:
-        CALL  writeLineHL
-L1809:
-        ;;testBitwiseOperators.j(260)     if (b1 | 0x1234 == 0x123C) println (152); else println (999);
-L1810:
-        LD    A,(05000H)
-L1811:
-        LD    L,A
-        LD    H,0
-L1812:
-        LD    DE,4660
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-L1813:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1814:
-        JP    NZ,L2122
-L1815:
-        LD    A,152
-L1816:
-        CALL  writeLineA
-L1817:
-        JP    L2125
-L1818:
-        LD    HL,999
-L1819:
-        CALL  writeLineHL
-L1820:
-        ;;testBitwiseOperators.j(261)     if (b1 ^ 0x1234 == 0x1228) println (153); else println (999);
-L1821:
-        LD    A,(05000H)
-L1822:
-        LD    L,A
-        LD    H,0
-L1823:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1824:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L1825:
-        JP    NZ,L2135
-L1826:
-        LD    A,153
-L1827:
-        CALL  writeLineA
-L1828:
-        JP    L2139
-L1829:
-        LD    HL,999
-L1830:
-        CALL  writeLineHL
-L1831:
-        ;;testBitwiseOperators.j(262)     //final var word/constant byte
-L1832:
-        ;;testBitwiseOperators.j(263)     if (w2 & 0x1C == 0x0014) println (154); else println (999);
-L1833:
-        LD    HL,(05004H)
-L1834:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1835:
-        LD    A,20
-L1836:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1837:
-        JP    NZ,L2149
-L1838:
-        LD    A,154
-L1839:
-        CALL  writeLineA
-L1840:
-        JP    L2152
-L1841:
-        LD    HL,999
-L1842:
-        CALL  writeLineHL
-L1843:
-        ;;testBitwiseOperators.j(264)     if (w2 | 0x1C == 0x123C) println (155); else println (999);
-L1844:
-        LD    HL,(05004H)
-L1845:
-        LD    DE,28
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-L1846:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1847:
-        JP    NZ,L2161
-L1848:
-        LD    A,155
-L1849:
-        CALL  writeLineA
-L1850:
-        JP    L2164
-L1851:
-        LD    HL,999
-L1852:
-        CALL  writeLineHL
-L1853:
-        ;;testBitwiseOperators.j(265)     if (w2 ^ 0x1C == 0x1228) println (156); else println (999);
-L1854:
-        LD    HL,(05004H)
-L1855:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1856:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L1857:
-        JP    NZ,L2173
-L1858:
-        LD    A,156
-L1859:
-        CALL  writeLineA
-L1860:
-        JP    L2180
-L1861:
-        LD    HL,999
-L1862:
-        CALL  writeLineHL
-L1863:
-        ;;testBitwiseOperators.j(266)   
-L1864:
-        ;;testBitwiseOperators.j(267)     //final var/acc
-L1865:
-        ;;testBitwiseOperators.j(268)     //*************
-L1866:
-        ;;testBitwiseOperators.j(269)     //final var byte/acc byte
-L1867:
-        ;;testBitwiseOperators.j(270)     if (b2 & (0x10 + 0x0C) == 0x04) println (157); else println (999);
-L1868:
-        LD    A,(05001H)
-L1869:
-        PUSH  AF
-        LD    A,16
-L1870:
-        ADD   A,12
-L1871:
-        POP   BC
-        AND   A,B
-L1872:
-        SUB   A,4
-L1873:
-        JP    NZ,L2191
-L1874:
-        LD    A,157
-L1875:
-        CALL  writeLineA
-L1876:
-        JP    L2194
-L1877:
-        LD    HL,999
-L1878:
-        CALL  writeLineHL
-L1879:
-        ;;testBitwiseOperators.j(271)     if (b2 | (0x10 + 0x0C) == 0x1F) println (158); else println (999);
-L1880:
-        LD    A,(05001H)
-L1881:
-        PUSH  AF
-        LD    A,16
-L1882:
-        ADD   A,12
-L1883:
-        POP   BC
-        OR    A,B
-L1884:
-        SUB   A,31
-L1885:
-        JP    NZ,L2205
-L1886:
-        LD    A,158
-L1887:
-        CALL  writeLineA
-L1888:
-        JP    L2208
-L1889:
-        LD    HL,999
-L1890:
-        CALL  writeLineHL
-L1891:
-        ;;testBitwiseOperators.j(272)     if (b2 ^ (0x10 + 0x0C) == 0x1B) println (159); else println (999);
-L1892:
-        LD    A,(05001H)
-L1893:
-        PUSH  AF
-        LD    A,16
-L1894:
-        ADD   A,12
-L1895:
-        POP   BC
-        XOR   A,B
-L1896:
-        SUB   A,27
-L1897:
-        JP    NZ,L2219
-L1898:
-        LD    A,159
-L1899:
-        CALL  writeLineA
-L1900:
-        JP    L2223
-L1901:
-        LD    HL,999
-L1902:
-        CALL  writeLineHL
-L1903:
-        ;;testBitwiseOperators.j(273)     //final var word/acc word
-L1904:
-        ;;testBitwiseOperators.j(274)     if (w2 & 0x0100 + 0x022C == 0x0224) println (160); else println (999);
-L1905:
-        LD    HL,(05004H)
-L1906:
-        PUSH  HL
-        LD    HL,256
-L1907:
-        LD    DE,556
-        ADD   HL,DE
-L1908:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1909:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
-L1910:
-        JP    NZ,L2234
-L1911:
-        LD    A,160
-L1912:
-        CALL  writeLineA
-L1913:
-        JP    L2237
-L1914:
-        LD    HL,999
-L1915:
-        CALL  writeLineHL
-L1916:
-        ;;testBitwiseOperators.j(275)     if (w2 | 0x0100 + 0x022C == 0x133C) println (161); else println (999);
-L1917:
-        LD    HL,(05004H)
-L1918:
-        PUSH  HL
-        LD    HL,256
-L1919:
-        LD    DE,556
-        ADD   HL,DE
-L1920:
-        POP   DE
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-L1921:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
-L1922:
-        JP    NZ,L2248
-L1923:
-        LD    A,161
-L1924:
-        CALL  writeLineA
-L1925:
-        JP    L2251
-L1926:
-        LD    HL,999
-L1927:
-        CALL  writeLineHL
-L1928:
-        ;;testBitwiseOperators.j(276)     if (w2 ^ 0x0100 + 0x022C == 0x1118) println (162); else println (999);
-L1929:
-        LD    HL,(05004H)
-L1930:
-        PUSH  HL
-        LD    HL,256
-L1931:
-        LD    DE,556
-        ADD   HL,DE
-L1932:
-        POP   DE
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L1933:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
-L1934:
-        JP    NZ,L2262
-L1935:
-        LD    A,162
-L1936:
-        CALL  writeLineA
-L1937:
-        JP    L2266
-L1938:
-        LD    HL,999
-L1939:
-        CALL  writeLineHL
-L1940:
-        ;;testBitwiseOperators.j(277)     //final var byte/acc word
-L1941:
-        ;;testBitwiseOperators.j(278)     if (b1 & 0x1000 + 0x0234 == 0x0014) println (163); else println (999);
-L1942:
-        LD    A,(05000H)
-L1943:
-        LD    HL,4096
-L1944:
-        LD    DE,564
-        ADD   HL,DE
-L1945:
-        AND   A,L
-        LD    L,A
-        LD    H,0
-L1946:
-        LD    A,20
-L1947:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1948:
-        JP    NZ,L2278
-L1949:
-        LD    A,163
-L1950:
-        CALL  writeLineA
-L1951:
-        JP    L2281
-L1952:
-        LD    HL,999
-L1953:
-        CALL  writeLineHL
-L1954:
-        ;;testBitwiseOperators.j(279)     if (b1 | 0x1000 + 0x0234 == 0x123C) println (164); else println (999);
-L1955:
-        LD    A,(05000H)
-L1956:
-        LD    HL,4096
-L1957:
-        LD    DE,564
-        ADD   HL,DE
-L1958:
-        OR    A,L
-        LD    L,A
-L1959:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1960:
-        JP    NZ,L2292
-L1961:
-        LD    A,164
-L1962:
-        CALL  writeLineA
-L1963:
-        JP    L2295
-L1964:
-        LD    HL,999
-L1965:
-        CALL  writeLineHL
-L1966:
-        ;;testBitwiseOperators.j(280)     if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (165); else println (999);
-L1967:
-        LD    A,(05000H)
-L1968:
-        LD    HL,4096
-L1969:
-        LD    DE,564
-        ADD   HL,DE
-L1970:
-        XOR   A,L
-        LD    L,A
-L1971:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L1972:
-        JP    NZ,L2306
-L1973:
-        LD    A,165
-L1974:
-        CALL  writeLineA
-L1975:
-        JP    L2310
-L1976:
-        LD    HL,999
-L1977:
-        CALL  writeLineHL
-L1978:
-        ;;testBitwiseOperators.j(281)     //final var word/acc byte
-L1979:
-        ;;testBitwiseOperators.j(282)     if (w2 & 0x10 + 0x0C == 0x0014) println (166); else println (999);
-L1980:
-        LD    HL,(05004H)
-L1981:
-        LD    A,16
-L1982:
-        ADD   A,12
-L1983:
-        AND   A,L
-        LD    L,A
-        LD    H,0
-L1984:
-        LD    A,20
-L1985:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L1986:
-        JP    NZ,L2322
-L1987:
-        LD    A,166
-L1988:
-        CALL  writeLineA
-L1989:
-        JP    L2325
-L1990:
-        LD    HL,999
-L1991:
-        CALL  writeLineHL
-L1992:
-        ;;testBitwiseOperators.j(283)     if (w2 | 0x10 + 0x0C == 0x123C) println (167); else println (999);
-L1993:
-        LD    HL,(05004H)
-L1994:
-        LD    A,16
-L1995:
-        ADD   A,12
-L1996:
-        OR    A,L
-        LD    L,A
-L1997:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L1998:
-        JP    NZ,L2336
-L1999:
-        LD    A,167
-L2000:
-        CALL  writeLineA
-L2001:
-        JP    L2339
-L2002:
-        LD    HL,999
-L2003:
-        CALL  writeLineHL
-L2004:
-        ;;testBitwiseOperators.j(284)     if (w2 ^ 0x10 + 0x0C == 0x1228) println (168); else println (999);
-L2005:
-        LD    HL,(05004H)
-L2006:
-        LD    A,16
-L2007:
-        ADD   A,12
-L2008:
-        XOR   A,L
-        LD    L,A
-L2009:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L2010:
-        JP    NZ,L2350
-L2011:
-        LD    A,168
-L2012:
-        CALL  writeLineA
-L2013:
-        JP    L2357
-L2014:
-        LD    HL,999
-L2015:
-        CALL  writeLineHL
-L2016:
-        ;;testBitwiseOperators.j(285)   
-L2017:
-        ;;testBitwiseOperators.j(286)     //final var/var
-L2018:
-        ;;testBitwiseOperators.j(287)     //*************
-L2019:
-        ;;testBitwiseOperators.j(288)     //final var byte/var byte
-L2020:
-        ;;testBitwiseOperators.j(289)     if (b2 & b1 == 0x04) println (169); else println (999);
-L2021:
-        LD    A,(05001H)
-L2022:
-        LD    B,A
-        LD    A,(05000H)
-        AND   A,B
-L2023:
-        SUB   A,4
-L2024:
-        JP    NZ,L2366
-L2025:
-        LD    A,169
-L2026:
-        CALL  writeLineA
-L2027:
-        JP    L2369
-L2028:
-        LD    HL,999
-L2029:
-        CALL  writeLineHL
-L2030:
-        ;;testBitwiseOperators.j(290)     if (b2 | b1 == 0x1F) println (170); else println (999);
-L2031:
-        LD    A,(05001H)
-L2032:
-        LD    B,A
-        LD    A,(05000H)
-        OR    A,B
-L2033:
-        SUB   A,31
-L2034:
-        JP    NZ,L2378
-L2035:
-        LD    A,170
-L2036:
-        CALL  writeLineA
-L2037:
-        JP    L2381
-L2038:
-        LD    HL,999
-L2039:
-        CALL  writeLineHL
-L2040:
-        ;;testBitwiseOperators.j(291)     if (b2 ^ b1 == 0x1B) println (171); else println (999);
-L2041:
-        LD    A,(05001H)
-L2042:
-        LD    B,A
-        LD    A,(05000H)
-        XOR   A,B
-L2043:
-        SUB   A,27
-L2044:
-        JP    NZ,L2390
-L2045:
-        LD    A,171
-L2046:
-        CALL  writeLineA
-L2047:
-        JP    L2394
-L2048:
-        LD    HL,999
-L2049:
-        CALL  writeLineHL
-L2050:
-        ;;testBitwiseOperators.j(292)     //final var word/var word
-L2051:
-        ;;testBitwiseOperators.j(293)     if (w2 & w1 == 0x0224) println (172); else println (999);
-L2052:
-        LD    HL,(05004H)
-L2053:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2054:
-        LD    DE,548
-        OR    A
-        SBC   HL,DE
-L2055:
-        JP    NZ,L2403
-L2056:
-        LD    A,172
-L2057:
-        CALL  writeLineA
-L2058:
-        JP    L2406
-L2059:
-        LD    HL,999
-L2060:
-        CALL  writeLineHL
-L2061:
-        ;;testBitwiseOperators.j(294)     if (w2 | w1 == 0x133C) println (173); else println (999);
-L2062:
-        LD    HL,(05004H)
-L2063:
-        LD    DE,(05002H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-L2064:
-        LD    DE,4924
-        OR    A
-        SBC   HL,DE
-L2065:
-        JP    NZ,L2415
-L2066:
-        LD    A,173
-L2067:
-        CALL  writeLineA
-L2068:
-        JP    L2418
-L2069:
-        LD    HL,999
-L2070:
-        CALL  writeLineHL
-L2071:
-        ;;testBitwiseOperators.j(295)     if (w2 ^ w1 == 0x1118) println (174); else println (999);
-L2072:
-        LD    HL,(05004H)
-L2073:
-        LD    DE,(05002H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2074:
-        LD    DE,4376
-        OR    A
-        SBC   HL,DE
-L2075:
-        JP    NZ,L2427
-L2076:
-        LD    A,174
-L2077:
-        CALL  writeLineA
-L2078:
-        JP    L2431
-L2079:
-        LD    HL,999
-L2080:
-        CALL  writeLineHL
-L2081:
-        ;;testBitwiseOperators.j(296)     //final var byte/var word
-L2082:
-        ;;testBitwiseOperators.j(297)     if (b1 & w2 == 0x0014) println (175); else println (999);
-L2083:
-        LD    A,(05000H)
-L2084:
-        LD    L,A
-        LD    H,0
-L2085:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2086:
-        LD    A,20
-L2087:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L2088:
-        JP    NZ,L2442
-L2089:
-        LD    A,175
-L2090:
-        CALL  writeLineA
-L2091:
-        JP    L2445
-L2092:
-        LD    HL,999
-L2093:
-        CALL  writeLineHL
-L2094:
-        ;;testBitwiseOperators.j(298)     if (b1 | w2 == 0x123C) println (176); else println (999);
-L2095:
-        LD    A,(05000H)
-L2096:
-        LD    L,A
-        LD    H,0
-L2097:
-        LD    DE,(05004H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-L2098:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L2099:
-        JP    NZ,L2455
-L2100:
-        LD    A,176
-L2101:
-        CALL  writeLineA
-L2102:
-        JP    L2458
-L2103:
-        LD    HL,999
-L2104:
-        CALL  writeLineHL
-L2105:
-        ;;testBitwiseOperators.j(299)     if (b1 ^ w2 == 0x1228) println (177); else println (999);
-L2106:
-        LD    A,(05000H)
-L2107:
-        LD    L,A
-        LD    H,0
-L2108:
-        LD    DE,(05004H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2109:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L2110:
-        JP    NZ,L2468
-L2111:
-        LD    A,177
-L2112:
-        CALL  writeLineA
-L2113:
-        JP    L2472
-L2114:
-        LD    HL,999
-L2115:
-        CALL  writeLineHL
-L2116:
-        ;;testBitwiseOperators.j(300)     //final var word/var byte
-L2117:
-        ;;testBitwiseOperators.j(301)     if (w2 & b1 == 0x0014) println (178); else println (999);
-L2118:
-        LD    HL,(05004H)
-L2119:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2120:
-        LD    A,20
-L2121:
-        LD    E,A
-        LD    D,0
-        EX    DE,HL
-        OR    A
-        SBC   HL,DE
-L2122:
-        JP    NZ,L2482
-L2123:
-        LD    A,178
-L2124:
-        CALL  writeLineA
-L2125:
-        JP    L2485
-L2126:
-        LD    HL,999
-L2127:
-        CALL  writeLineHL
-L2128:
-        ;;testBitwiseOperators.j(302)     if (w2 | b1 == 0x123C) println (179); else println (999);
-L2129:
-        LD    HL,(05004H)
-L2130:
-        LD    DE,(05000H)
-        LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
-        LD    L,A
-        LD    A,B
-L2131:
-        LD    DE,4668
-        OR    A
-        SBC   HL,DE
-L2132:
-        JP    NZ,L2494
-L2133:
-        LD    A,179
-L2134:
-        CALL  writeLineA
-L2135:
-        JP    L2497
-L2136:
-        LD    HL,999
-L2137:
-        CALL  writeLineHL
-L2138:
-        ;;testBitwiseOperators.j(303)     if (w2 ^ b1 == 0x1228) println (180); else println (999);
-L2139:
-        LD    HL,(05004H)
-L2140:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
-        LD    L,A
-        LD    A,B
-        POP   BC
-L2141:
-        LD    DE,4648
-        OR    A
-        SBC   HL,DE
-L2142:
-        JP    NZ,L2506
-L2143:
-        LD    A,180
-L2144:
-        CALL  writeLineA
-L2145:
-        JP    L2513
-L2146:
-        LD    HL,999
-L2147:
-        CALL  writeLineHL
-L2148:
-        ;;testBitwiseOperators.j(304)   
-L2149:
-        ;;testBitwiseOperators.j(305)     //final var/final var
-L2150:
-        ;;testBitwiseOperators.j(306)     //*******************
-L2151:
-        ;;testBitwiseOperators.j(307)     //final var byte/final var byte
-L2152:
-        ;;testBitwiseOperators.j(308)     if (fb2 & fb1 == 0x04) println (181); else println (999);
-L2153:
-        LD    A,7
-L2154:
         AND   A,28
-L2155:
+L1739:
         SUB   A,4
-L2156:
-        JP    NZ,L2522
-L2157:
-        LD    A,181
-L2158:
+L1740:
+        JP    NZ,L1744
+L1741:
+        LD    A,145
+L1742:
         CALL  writeLineA
-L2159:
-        JP    L2525
-L2160:
+L1743:
+        JP    L1747
+L1744:
         LD    HL,999
-L2161:
+L1745:
         CALL  writeLineHL
-L2162:
-        ;;testBitwiseOperators.j(309)     if (fb2 | fb1 == 0x1F) println (182); else println (999);
-L2163:
-        LD    A,7
-L2164:
+L1746:
+        ;;testBitwiseOperators.j(252)     if (b2 | 0x1C == 0x1F) println (146); else println (999);
+L1747:
+        LD    A,(05001H)
+L1748:
         OR    A,28
-L2165:
+L1749:
         SUB   A,31
-L2166:
-        JP    NZ,L2534
-L2167:
-        LD    A,182
-L2168:
+L1750:
+        JP    NZ,L1754
+L1751:
+        LD    A,146
+L1752:
         CALL  writeLineA
-L2169:
-        JP    L2537
-L2170:
+L1753:
+        JP    L1757
+L1754:
         LD    HL,999
-L2171:
+L1755:
         CALL  writeLineHL
-L2172:
-        ;;testBitwiseOperators.j(310)     if (fb2 ^ fb1 == 0x1B) println (183); else println (999);
-L2173:
-        LD    A,7
-L2174:
+L1756:
+        ;;testBitwiseOperators.j(253)     if (b2 ^ 0x1C == 0x1B) println (147); else println (999);
+L1757:
+        LD    A,(05001H)
+L1758:
         XOR   A,28
-L2175:
+L1759:
         SUB   A,27
-L2176:
-        JP    NZ,L2546
-L2177:
-        LD    A,183
-L2178:
+L1760:
+        JP    NZ,L1764
+L1761:
+        LD    A,147
+L1762:
         CALL  writeLineA
-L2179:
-        JP    L2550
-L2180:
+L1763:
+        JP    L1768
+L1764:
         LD    HL,999
-L2181:
+L1765:
         CALL  writeLineHL
-L2182:
-        ;;testBitwiseOperators.j(311)     //final var word/final var word
-L2183:
-        ;;testBitwiseOperators.j(312)     if (fw2 & fw1 == 0x0224) println (184); else println (999);
-L2184:
-        LD    HL,4660
-L2185:
+L1766:
+        ;;testBitwiseOperators.j(254)     //final var word/constant word
+L1767:
+        ;;testBitwiseOperators.j(255)     if (w2 & 0x032C == 0x0224) println (148); else println (999);
+L1768:
+        LD    HL,(05004H)
+L1769:
         LD    DE,812
         PUSH  BC
         LD    B,A
@@ -5924,27 +4795,27 @@ L2185:
         LD    L,A
         LD    A,B
         POP   BC
-L2186:
+L1770:
         LD    DE,548
         OR    A
         SBC   HL,DE
-L2187:
-        JP    NZ,L2559
-L2188:
-        LD    A,184
-L2189:
+L1771:
+        JP    NZ,L1775
+L1772:
+        LD    A,148
+L1773:
         CALL  writeLineA
-L2190:
-        JP    L2562
-L2191:
+L1774:
+        JP    L1778
+L1775:
         LD    HL,999
-L2192:
+L1776:
         CALL  writeLineHL
-L2193:
-        ;;testBitwiseOperators.j(313)     if (fw2 | fw1 == 0x133C) println (185); else println (999);
-L2194:
-        LD    HL,4660
-L2195:
+L1777:
+        ;;testBitwiseOperators.j(256)     if (w2 | 0x032C == 0x133C) println (149); else println (999);
+L1778:
+        LD    HL,(05004H)
+L1779:
         LD    DE,812
         LD    B,A
         LD    A,H
@@ -5954,27 +4825,27 @@ L2195:
         OR    A,E
         LD    L,A
         LD    A,B
-L2196:
+L1780:
         LD    DE,4924
         OR    A
         SBC   HL,DE
-L2197:
-        JP    NZ,L2571
-L2198:
-        LD    A,185
-L2199:
+L1781:
+        JP    NZ,L1785
+L1782:
+        LD    A,149
+L1783:
         CALL  writeLineA
-L2200:
-        JP    L2574
-L2201:
+L1784:
+        JP    L1788
+L1785:
         LD    HL,999
-L2202:
+L1786:
         CALL  writeLineHL
-L2203:
-        ;;testBitwiseOperators.j(314)     if (fw2 ^ fw1 == 0x1118) println (186); else println (999);
-L2204:
-        LD    HL,4660
-L2205:
+L1787:
+        ;;testBitwiseOperators.j(257)     if (w2 ^ 0x032C == 0x1118) println (150); else println (999);
+L1788:
+        LD    HL,(05004H)
+L1789:
         LD    DE,812
         PUSH  BC
         LD    B,A
@@ -5986,71 +4857,1202 @@ L2205:
         LD    L,A
         LD    A,B
         POP   BC
-L2206:
+L1790:
         LD    DE,4376
         OR    A
         SBC   HL,DE
+L1791:
+        JP    NZ,L1795
+L1792:
+        LD    A,150
+L1793:
+        CALL  writeLineA
+L1794:
+        JP    L1799
+L1795:
+        LD    HL,999
+L1796:
+        CALL  writeLineHL
+L1797:
+        ;;testBitwiseOperators.j(258)     //final var byte/constant word
+L1798:
+        ;;testBitwiseOperators.j(259)     if (b1 & 0x1234 == 0x0014) println (151); else println (999);
+L1799:
+        LD    A,(05000H)
+L1800:
+        LD    L,A
+        LD    H,0
+L1801:
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1802:
+        LD    A,20
+L1803:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1804:
+        JP    NZ,L1808
+L1805:
+        LD    A,151
+L1806:
+        CALL  writeLineA
+L1807:
+        JP    L1811
+L1808:
+        LD    HL,999
+L1809:
+        CALL  writeLineHL
+L1810:
+        ;;testBitwiseOperators.j(260)     if (b1 | 0x1234 == 0x123C) println (152); else println (999);
+L1811:
+        LD    A,(05000H)
+L1812:
+        LD    L,A
+        LD    H,0
+L1813:
+        LD    DE,4660
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+L1814:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1815:
+        JP    NZ,L1819
+L1816:
+        LD    A,152
+L1817:
+        CALL  writeLineA
+L1818:
+        JP    L1822
+L1819:
+        LD    HL,999
+L1820:
+        CALL  writeLineHL
+L1821:
+        ;;testBitwiseOperators.j(261)     if (b1 ^ 0x1234 == 0x1228) println (153); else println (999);
+L1822:
+        LD    A,(05000H)
+L1823:
+        LD    L,A
+        LD    H,0
+L1824:
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1825:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L1826:
+        JP    NZ,L1830
+L1827:
+        LD    A,153
+L1828:
+        CALL  writeLineA
+L1829:
+        JP    L1834
+L1830:
+        LD    HL,999
+L1831:
+        CALL  writeLineHL
+L1832:
+        ;;testBitwiseOperators.j(262)     //final var word/constant byte
+L1833:
+        ;;testBitwiseOperators.j(263)     if (w2 & 0x1C == 0x0014) println (154); else println (999);
+L1834:
+        LD    HL,(05004H)
+L1835:
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1836:
+        LD    A,20
+L1837:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1838:
+        JP    NZ,L1842
+L1839:
+        LD    A,154
+L1840:
+        CALL  writeLineA
+L1841:
+        JP    L1845
+L1842:
+        LD    HL,999
+L1843:
+        CALL  writeLineHL
+L1844:
+        ;;testBitwiseOperators.j(264)     if (w2 | 0x1C == 0x123C) println (155); else println (999);
+L1845:
+        LD    HL,(05004H)
+L1846:
+        LD    DE,28
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+L1847:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1848:
+        JP    NZ,L1852
+L1849:
+        LD    A,155
+L1850:
+        CALL  writeLineA
+L1851:
+        JP    L1855
+L1852:
+        LD    HL,999
+L1853:
+        CALL  writeLineHL
+L1854:
+        ;;testBitwiseOperators.j(265)     if (w2 ^ 0x1C == 0x1228) println (156); else println (999);
+L1855:
+        LD    HL,(05004H)
+L1856:
+        LD    DE,28
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1857:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L1858:
+        JP    NZ,L1862
+L1859:
+        LD    A,156
+L1860:
+        CALL  writeLineA
+L1861:
+        JP    L1869
+L1862:
+        LD    HL,999
+L1863:
+        CALL  writeLineHL
+L1864:
+        ;;testBitwiseOperators.j(266)   
+L1865:
+        ;;testBitwiseOperators.j(267)     //final var/acc
+L1866:
+        ;;testBitwiseOperators.j(268)     //*************
+L1867:
+        ;;testBitwiseOperators.j(269)     //final var byte/acc byte
+L1868:
+        ;;testBitwiseOperators.j(270)     if (b2 & (0x10 + 0x0C) == 0x04) println (157); else println (999);
+L1869:
+        LD    A,(05001H)
+L1870:
+        PUSH  AF
+        LD    A,16
+L1871:
+        ADD   A,12
+L1872:
+        POP   BC
+        AND   A,B
+L1873:
+        SUB   A,4
+L1874:
+        JP    NZ,L1878
+L1875:
+        LD    A,157
+L1876:
+        CALL  writeLineA
+L1877:
+        JP    L1881
+L1878:
+        LD    HL,999
+L1879:
+        CALL  writeLineHL
+L1880:
+        ;;testBitwiseOperators.j(271)     if (b2 | (0x10 + 0x0C) == 0x1F) println (158); else println (999);
+L1881:
+        LD    A,(05001H)
+L1882:
+        PUSH  AF
+        LD    A,16
+L1883:
+        ADD   A,12
+L1884:
+        POP   BC
+        OR    A,B
+L1885:
+        SUB   A,31
+L1886:
+        JP    NZ,L1890
+L1887:
+        LD    A,158
+L1888:
+        CALL  writeLineA
+L1889:
+        JP    L1893
+L1890:
+        LD    HL,999
+L1891:
+        CALL  writeLineHL
+L1892:
+        ;;testBitwiseOperators.j(272)     if (b2 ^ (0x10 + 0x0C) == 0x1B) println (159); else println (999);
+L1893:
+        LD    A,(05001H)
+L1894:
+        PUSH  AF
+        LD    A,16
+L1895:
+        ADD   A,12
+L1896:
+        POP   BC
+        XOR   A,B
+L1897:
+        SUB   A,27
+L1898:
+        JP    NZ,L1902
+L1899:
+        LD    A,159
+L1900:
+        CALL  writeLineA
+L1901:
+        JP    L1906
+L1902:
+        LD    HL,999
+L1903:
+        CALL  writeLineHL
+L1904:
+        ;;testBitwiseOperators.j(273)     //final var word/acc word
+L1905:
+        ;;testBitwiseOperators.j(274)     if (w2 & 0x0100 + 0x022C == 0x0224) println (160); else println (999);
+L1906:
+        LD    HL,(05004H)
+L1907:
+        PUSH  HL
+        LD    HL,256
+L1908:
+        LD    DE,556
+        ADD   HL,DE
+L1909:
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1910:
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
+L1911:
+        JP    NZ,L1915
+L1912:
+        LD    A,160
+L1913:
+        CALL  writeLineA
+L1914:
+        JP    L1918
+L1915:
+        LD    HL,999
+L1916:
+        CALL  writeLineHL
+L1917:
+        ;;testBitwiseOperators.j(275)     if (w2 | 0x0100 + 0x022C == 0x133C) println (161); else println (999);
+L1918:
+        LD    HL,(05004H)
+L1919:
+        PUSH  HL
+        LD    HL,256
+L1920:
+        LD    DE,556
+        ADD   HL,DE
+L1921:
+        POP   DE
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+L1922:
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
+L1923:
+        JP    NZ,L1927
+L1924:
+        LD    A,161
+L1925:
+        CALL  writeLineA
+L1926:
+        JP    L1930
+L1927:
+        LD    HL,999
+L1928:
+        CALL  writeLineHL
+L1929:
+        ;;testBitwiseOperators.j(276)     if (w2 ^ 0x0100 + 0x022C == 0x1118) println (162); else println (999);
+L1930:
+        LD    HL,(05004H)
+L1931:
+        PUSH  HL
+        LD    HL,256
+L1932:
+        LD    DE,556
+        ADD   HL,DE
+L1933:
+        POP   DE
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L1934:
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
+L1935:
+        JP    NZ,L1939
+L1936:
+        LD    A,162
+L1937:
+        CALL  writeLineA
+L1938:
+        JP    L1943
+L1939:
+        LD    HL,999
+L1940:
+        CALL  writeLineHL
+L1941:
+        ;;testBitwiseOperators.j(277)     //final var byte/acc word
+L1942:
+        ;;testBitwiseOperators.j(278)     if (b1 & 0x1000 + 0x0234 == 0x0014) println (163); else println (999);
+L1943:
+        LD    A,(05000H)
+L1944:
+        LD    HL,4096
+L1945:
+        LD    DE,564
+        ADD   HL,DE
+L1946:
+        AND   A,L
+        LD    L,A
+        LD    H,0
+L1947:
+        LD    A,20
+L1948:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1949:
+        JP    NZ,L1953
+L1950:
+        LD    A,163
+L1951:
+        CALL  writeLineA
+L1952:
+        JP    L1956
+L1953:
+        LD    HL,999
+L1954:
+        CALL  writeLineHL
+L1955:
+        ;;testBitwiseOperators.j(279)     if (b1 | 0x1000 + 0x0234 == 0x123C) println (164); else println (999);
+L1956:
+        LD    A,(05000H)
+L1957:
+        LD    HL,4096
+L1958:
+        LD    DE,564
+        ADD   HL,DE
+L1959:
+        OR    A,L
+        LD    L,A
+L1960:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1961:
+        JP    NZ,L1965
+L1962:
+        LD    A,164
+L1963:
+        CALL  writeLineA
+L1964:
+        JP    L1968
+L1965:
+        LD    HL,999
+L1966:
+        CALL  writeLineHL
+L1967:
+        ;;testBitwiseOperators.j(280)     if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (165); else println (999);
+L1968:
+        LD    A,(05000H)
+L1969:
+        LD    HL,4096
+L1970:
+        LD    DE,564
+        ADD   HL,DE
+L1971:
+        XOR   A,L
+        LD    L,A
+L1972:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L1973:
+        JP    NZ,L1977
+L1974:
+        LD    A,165
+L1975:
+        CALL  writeLineA
+L1976:
+        JP    L1981
+L1977:
+        LD    HL,999
+L1978:
+        CALL  writeLineHL
+L1979:
+        ;;testBitwiseOperators.j(281)     //final var word/acc byte
+L1980:
+        ;;testBitwiseOperators.j(282)     if (w2 & 0x10 + 0x0C == 0x0014) println (166); else println (999);
+L1981:
+        LD    HL,(05004H)
+L1982:
+        LD    A,16
+L1983:
+        ADD   A,12
+L1984:
+        AND   A,L
+        LD    L,A
+        LD    H,0
+L1985:
+        LD    A,20
+L1986:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L1987:
+        JP    NZ,L1991
+L1988:
+        LD    A,166
+L1989:
+        CALL  writeLineA
+L1990:
+        JP    L1994
+L1991:
+        LD    HL,999
+L1992:
+        CALL  writeLineHL
+L1993:
+        ;;testBitwiseOperators.j(283)     if (w2 | 0x10 + 0x0C == 0x123C) println (167); else println (999);
+L1994:
+        LD    HL,(05004H)
+L1995:
+        LD    A,16
+L1996:
+        ADD   A,12
+L1997:
+        OR    A,L
+        LD    L,A
+L1998:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L1999:
+        JP    NZ,L2003
+L2000:
+        LD    A,167
+L2001:
+        CALL  writeLineA
+L2002:
+        JP    L2006
+L2003:
+        LD    HL,999
+L2004:
+        CALL  writeLineHL
+L2005:
+        ;;testBitwiseOperators.j(284)     if (w2 ^ 0x10 + 0x0C == 0x1228) println (168); else println (999);
+L2006:
+        LD    HL,(05004H)
+L2007:
+        LD    A,16
+L2008:
+        ADD   A,12
+L2009:
+        XOR   A,L
+        LD    L,A
+L2010:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L2011:
+        JP    NZ,L2015
+L2012:
+        LD    A,168
+L2013:
+        CALL  writeLineA
+L2014:
+        JP    L2022
+L2015:
+        LD    HL,999
+L2016:
+        CALL  writeLineHL
+L2017:
+        ;;testBitwiseOperators.j(285)   
+L2018:
+        ;;testBitwiseOperators.j(286)     //final var/var
+L2019:
+        ;;testBitwiseOperators.j(287)     //*************
+L2020:
+        ;;testBitwiseOperators.j(288)     //final var byte/var byte
+L2021:
+        ;;testBitwiseOperators.j(289)     if (b2 & b1 == 0x04) println (169); else println (999);
+L2022:
+        LD    A,(05001H)
+L2023:
+        LD    B,A
+        LD    A,(05000H)
+        AND   A,B
+L2024:
+        SUB   A,4
+L2025:
+        JP    NZ,L2029
+L2026:
+        LD    A,169
+L2027:
+        CALL  writeLineA
+L2028:
+        JP    L2032
+L2029:
+        LD    HL,999
+L2030:
+        CALL  writeLineHL
+L2031:
+        ;;testBitwiseOperators.j(290)     if (b2 | b1 == 0x1F) println (170); else println (999);
+L2032:
+        LD    A,(05001H)
+L2033:
+        LD    B,A
+        LD    A,(05000H)
+        OR    A,B
+L2034:
+        SUB   A,31
+L2035:
+        JP    NZ,L2039
+L2036:
+        LD    A,170
+L2037:
+        CALL  writeLineA
+L2038:
+        JP    L2042
+L2039:
+        LD    HL,999
+L2040:
+        CALL  writeLineHL
+L2041:
+        ;;testBitwiseOperators.j(291)     if (b2 ^ b1 == 0x1B) println (171); else println (999);
+L2042:
+        LD    A,(05001H)
+L2043:
+        LD    B,A
+        LD    A,(05000H)
+        XOR   A,B
+L2044:
+        SUB   A,27
+L2045:
+        JP    NZ,L2049
+L2046:
+        LD    A,171
+L2047:
+        CALL  writeLineA
+L2048:
+        JP    L2053
+L2049:
+        LD    HL,999
+L2050:
+        CALL  writeLineHL
+L2051:
+        ;;testBitwiseOperators.j(292)     //final var word/var word
+L2052:
+        ;;testBitwiseOperators.j(293)     if (w2 & w1 == 0x0224) println (172); else println (999);
+L2053:
+        LD    HL,(05004H)
+L2054:
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2055:
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
+L2056:
+        JP    NZ,L2060
+L2057:
+        LD    A,172
+L2058:
+        CALL  writeLineA
+L2059:
+        JP    L2063
+L2060:
+        LD    HL,999
+L2061:
+        CALL  writeLineHL
+L2062:
+        ;;testBitwiseOperators.j(294)     if (w2 | w1 == 0x133C) println (173); else println (999);
+L2063:
+        LD    HL,(05004H)
+L2064:
+        LD    DE,(05002H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+L2065:
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
+L2066:
+        JP    NZ,L2070
+L2067:
+        LD    A,173
+L2068:
+        CALL  writeLineA
+L2069:
+        JP    L2073
+L2070:
+        LD    HL,999
+L2071:
+        CALL  writeLineHL
+L2072:
+        ;;testBitwiseOperators.j(295)     if (w2 ^ w1 == 0x1118) println (174); else println (999);
+L2073:
+        LD    HL,(05004H)
+L2074:
+        LD    DE,(05002H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2075:
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
+L2076:
+        JP    NZ,L2080
+L2077:
+        LD    A,174
+L2078:
+        CALL  writeLineA
+L2079:
+        JP    L2084
+L2080:
+        LD    HL,999
+L2081:
+        CALL  writeLineHL
+L2082:
+        ;;testBitwiseOperators.j(296)     //final var byte/var word
+L2083:
+        ;;testBitwiseOperators.j(297)     if (b1 & w2 == 0x0014) println (175); else println (999);
+L2084:
+        LD    A,(05000H)
+L2085:
+        LD    L,A
+        LD    H,0
+L2086:
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2087:
+        LD    A,20
+L2088:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L2089:
+        JP    NZ,L2093
+L2090:
+        LD    A,175
+L2091:
+        CALL  writeLineA
+L2092:
+        JP    L2096
+L2093:
+        LD    HL,999
+L2094:
+        CALL  writeLineHL
+L2095:
+        ;;testBitwiseOperators.j(298)     if (b1 | w2 == 0x123C) println (176); else println (999);
+L2096:
+        LD    A,(05000H)
+L2097:
+        LD    L,A
+        LD    H,0
+L2098:
+        LD    DE,(05004H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+L2099:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L2100:
+        JP    NZ,L2104
+L2101:
+        LD    A,176
+L2102:
+        CALL  writeLineA
+L2103:
+        JP    L2107
+L2104:
+        LD    HL,999
+L2105:
+        CALL  writeLineHL
+L2106:
+        ;;testBitwiseOperators.j(299)     if (b1 ^ w2 == 0x1228) println (177); else println (999);
+L2107:
+        LD    A,(05000H)
+L2108:
+        LD    L,A
+        LD    H,0
+L2109:
+        LD    DE,(05004H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2110:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L2111:
+        JP    NZ,L2115
+L2112:
+        LD    A,177
+L2113:
+        CALL  writeLineA
+L2114:
+        JP    L2119
+L2115:
+        LD    HL,999
+L2116:
+        CALL  writeLineHL
+L2117:
+        ;;testBitwiseOperators.j(300)     //final var word/var byte
+L2118:
+        ;;testBitwiseOperators.j(301)     if (w2 & b1 == 0x0014) println (178); else println (999);
+L2119:
+        LD    HL,(05004H)
+L2120:
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2121:
+        LD    A,20
+L2122:
+        LD    E,A
+        LD    D,0
+        EX    DE,HL
+        OR    A
+        SBC   HL,DE
+L2123:
+        JP    NZ,L2127
+L2124:
+        LD    A,178
+L2125:
+        CALL  writeLineA
+L2126:
+        JP    L2130
+L2127:
+        LD    HL,999
+L2128:
+        CALL  writeLineHL
+L2129:
+        ;;testBitwiseOperators.j(302)     if (w2 | b1 == 0x123C) println (179); else println (999);
+L2130:
+        LD    HL,(05004H)
+L2131:
+        LD    DE,(05000H)
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+L2132:
+        LD    DE,4668
+        OR    A
+        SBC   HL,DE
+L2133:
+        JP    NZ,L2137
+L2134:
+        LD    A,179
+L2135:
+        CALL  writeLineA
+L2136:
+        JP    L2140
+L2137:
+        LD    HL,999
+L2138:
+        CALL  writeLineHL
+L2139:
+        ;;testBitwiseOperators.j(303)     if (w2 ^ b1 == 0x1228) println (180); else println (999);
+L2140:
+        LD    HL,(05004H)
+L2141:
+        LD    DE,(05000H)
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2142:
+        LD    DE,4648
+        OR    A
+        SBC   HL,DE
+L2143:
+        JP    NZ,L2147
+L2144:
+        LD    A,180
+L2145:
+        CALL  writeLineA
+L2146:
+        JP    L2154
+L2147:
+        LD    HL,999
+L2148:
+        CALL  writeLineHL
+L2149:
+        ;;testBitwiseOperators.j(304)   
+L2150:
+        ;;testBitwiseOperators.j(305)     //final var/final var
+L2151:
+        ;;testBitwiseOperators.j(306)     //*******************
+L2152:
+        ;;testBitwiseOperators.j(307)     //final var byte/final var byte
+L2153:
+        ;;testBitwiseOperators.j(308)     if (fb2 & fb1 == 0x04) println (181); else println (999);
+L2154:
+        LD    A,7
+L2155:
+        AND   A,28
+L2156:
+        SUB   A,4
+L2157:
+        JP    NZ,L2161
+L2158:
+        LD    A,181
+L2159:
+        CALL  writeLineA
+L2160:
+        JP    L2164
+L2161:
+        LD    HL,999
+L2162:
+        CALL  writeLineHL
+L2163:
+        ;;testBitwiseOperators.j(309)     if (fb2 | fb1 == 0x1F) println (182); else println (999);
+L2164:
+        LD    A,7
+L2165:
+        OR    A,28
+L2166:
+        SUB   A,31
+L2167:
+        JP    NZ,L2171
+L2168:
+        LD    A,182
+L2169:
+        CALL  writeLineA
+L2170:
+        JP    L2174
+L2171:
+        LD    HL,999
+L2172:
+        CALL  writeLineHL
+L2173:
+        ;;testBitwiseOperators.j(310)     if (fb2 ^ fb1 == 0x1B) println (183); else println (999);
+L2174:
+        LD    A,7
+L2175:
+        XOR   A,28
+L2176:
+        SUB   A,27
+L2177:
+        JP    NZ,L2181
+L2178:
+        LD    A,183
+L2179:
+        CALL  writeLineA
+L2180:
+        JP    L2185
+L2181:
+        LD    HL,999
+L2182:
+        CALL  writeLineHL
+L2183:
+        ;;testBitwiseOperators.j(311)     //final var word/final var word
+L2184:
+        ;;testBitwiseOperators.j(312)     if (fw2 & fw1 == 0x0224) println (184); else println (999);
+L2185:
+        LD    HL,4660
+L2186:
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
+L2187:
+        LD    DE,548
+        OR    A
+        SBC   HL,DE
+L2188:
+        JP    NZ,L2192
+L2189:
+        LD    A,184
+L2190:
+        CALL  writeLineA
+L2191:
+        JP    L2195
+L2192:
+        LD    HL,999
+L2193:
+        CALL  writeLineHL
+L2194:
+        ;;testBitwiseOperators.j(313)     if (fw2 | fw1 == 0x133C) println (185); else println (999);
+L2195:
+        LD    HL,4660
+L2196:
+        LD    DE,812
+        LD    B,A
+        LD    A,H
+        OR    A,D
+        LD    H,A
+        LD    A,L
+        OR    A,E
+        LD    L,A
+        LD    A,B
+L2197:
+        LD    DE,4924
+        OR    A
+        SBC   HL,DE
+L2198:
+        JP    NZ,L2202
+L2199:
+        LD    A,185
+L2200:
+        CALL  writeLineA
+L2201:
+        JP    L2205
+L2202:
+        LD    HL,999
+L2203:
+        CALL  writeLineHL
+L2204:
+        ;;testBitwiseOperators.j(314)     if (fw2 ^ fw1 == 0x1118) println (186); else println (999);
+L2205:
+        LD    HL,4660
+L2206:
+        LD    DE,812
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        XOR   A,D
+        LD    H,A
+        LD    A,L
+        XOR   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L2207:
-        JP    NZ,L2583
+        LD    DE,4376
+        OR    A
+        SBC   HL,DE
 L2208:
-        LD    A,186
+        JP    NZ,L2212
 L2209:
-        CALL  writeLineA
+        LD    A,186
 L2210:
-        JP    L2587
+        CALL  writeLineA
 L2211:
-        LD    HL,999
+        JP    L2216
 L2212:
-        CALL  writeLineHL
+        LD    HL,999
 L2213:
-        ;;testBitwiseOperators.j(315)     //final var byte/final var word
+        CALL  writeLineHL
 L2214:
-        ;;testBitwiseOperators.j(316)     if (fb1 & fw2 == 0x0014) println (187); else println (999);
+        ;;testBitwiseOperators.j(315)     //final var byte/final var word
 L2215:
-        LD    A,28
+        ;;testBitwiseOperators.j(316)     if (fb1 & fw2 == 0x0014) println (187); else println (999);
 L2216:
-        LD    L,A
-        LD    H,0
+        LD    A,28
 L2217:
-        LD    DE,4660
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    H,0
 L2218:
-        LD    A,20
+        LD    DE,4660
+        PUSH  BC
+        LD    B,A
+        LD    A,H
+        AND   A,D
+        LD    H,A
+        LD    A,L
+        AND   A,E
+        LD    L,A
+        LD    A,B
+        POP   BC
 L2219:
+        LD    A,20
+L2220:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L2220:
-        JP    NZ,L2598
 L2221:
-        LD    A,187
+        JP    NZ,L2225
 L2222:
-        CALL  writeLineA
+        LD    A,187
 L2223:
-        JP    L2601
+        CALL  writeLineA
 L2224:
-        LD    HL,999
+        JP    L2228
 L2225:
-        CALL  writeLineHL
+        LD    HL,999
 L2226:
-        ;;testBitwiseOperators.j(317)     if (fb1 | fw2 == 0x123C) println (188); else println (999);
+        CALL  writeLineHL
 L2227:
-        LD    A,28
+        ;;testBitwiseOperators.j(317)     if (fb1 | fw2 == 0x123C) println (188); else println (999);
 L2228:
+        LD    A,28
+L2229:
         LD    L,A
         LD    H,0
-L2229:
+L2230:
         LD    DE,4660
         LD    B,A
         LD    A,H
@@ -6060,30 +6062,30 @@ L2229:
         OR    A,E
         LD    L,A
         LD    A,B
-L2230:
+L2231:
         LD    DE,4668
         OR    A
         SBC   HL,DE
-L2231:
-        JP    NZ,L2611
 L2232:
-        LD    A,188
+        JP    NZ,L2236
 L2233:
-        CALL  writeLineA
+        LD    A,188
 L2234:
-        JP    L2614
+        CALL  writeLineA
 L2235:
-        LD    HL,999
+        JP    L2239
 L2236:
-        CALL  writeLineHL
+        LD    HL,999
 L2237:
-        ;;testBitwiseOperators.j(318)     if (fb1 ^ fw2 == 0x1228) println (189); else println (999);
+        CALL  writeLineHL
 L2238:
-        LD    A,28
+        ;;testBitwiseOperators.j(318)     if (fb1 ^ fw2 == 0x1228) println (189); else println (999);
 L2239:
+        LD    A,28
+L2240:
         LD    L,A
         LD    H,0
-L2240:
+L2241:
         LD    DE,4660
         PUSH  BC
         LD    B,A
@@ -6095,29 +6097,29 @@ L2240:
         LD    L,A
         LD    A,B
         POP   BC
-L2241:
+L2242:
         LD    DE,4648
         OR    A
         SBC   HL,DE
-L2242:
-        JP    NZ,L2624
 L2243:
-        LD    A,189
+        JP    NZ,L2247
 L2244:
-        CALL  writeLineA
+        LD    A,189
 L2245:
-        JP    L2628
+        CALL  writeLineA
 L2246:
-        LD    HL,999
+        JP    L2251
 L2247:
-        CALL  writeLineHL
+        LD    HL,999
 L2248:
-        ;;testBitwiseOperators.j(319)     //final var word/final var byte
+        CALL  writeLineHL
 L2249:
-        ;;testBitwiseOperators.j(320)     if (fw2 & fb1 == 0x0014) println (190); else println (999);
+        ;;testBitwiseOperators.j(319)     //final var word/final var byte
 L2250:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(320)     if (fw2 & fb1 == 0x0014) println (190); else println (999);
 L2251:
+        LD    HL,4660
+L2252:
         LD    DE,28
         PUSH  BC
         LD    B,A
@@ -6129,31 +6131,31 @@ L2251:
         LD    L,A
         LD    A,B
         POP   BC
-L2252:
-        LD    A,20
 L2253:
+        LD    A,20
+L2254:
         LD    E,A
         LD    D,0
         EX    DE,HL
         OR    A
         SBC   HL,DE
-L2254:
-        JP    NZ,L2638
 L2255:
-        LD    A,190
+        JP    NZ,L2259
 L2256:
-        CALL  writeLineA
+        LD    A,190
 L2257:
-        JP    L2641
+        CALL  writeLineA
 L2258:
-        LD    HL,999
+        JP    L2262
 L2259:
-        CALL  writeLineHL
+        LD    HL,999
 L2260:
-        ;;testBitwiseOperators.j(321)     if (fw2 | fb1 == 0x123C) println (191); else println (999);
+        CALL  writeLineHL
 L2261:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(321)     if (fw2 | fb1 == 0x123C) println (191); else println (999);
 L2262:
+        LD    HL,4660
+L2263:
         LD    DE,28
         LD    B,A
         LD    A,H
@@ -6163,27 +6165,27 @@ L2262:
         OR    A,E
         LD    L,A
         LD    A,B
-L2263:
+L2264:
         LD    DE,4668
         OR    A
         SBC   HL,DE
-L2264:
-        JP    NZ,L2650
 L2265:
-        LD    A,191
+        JP    NZ,L2269
 L2266:
-        CALL  writeLineA
+        LD    A,191
 L2267:
-        JP    L2653
+        CALL  writeLineA
 L2268:
-        LD    HL,999
+        JP    L2272
 L2269:
-        CALL  writeLineHL
+        LD    HL,999
 L2270:
-        ;;testBitwiseOperators.j(322)     if (fw2 ^ fb1 == 0x1228) println (192); else println (999);
+        CALL  writeLineHL
 L2271:
-        LD    HL,4660
+        ;;testBitwiseOperators.j(322)     if (fw2 ^ fb1 == 0x1228) println (192); else println (999);
 L2272:
+        LD    HL,4660
+L2273:
         LD    DE,28
         PUSH  BC
         LD    B,A
@@ -6195,41 +6197,41 @@ L2272:
         LD    L,A
         LD    A,B
         POP   BC
-L2273:
+L2274:
         LD    DE,4648
         OR    A
         SBC   HL,DE
-L2274:
-        JP    NZ,L2662
 L2275:
-        LD    A,192
+        JP    NZ,L2279
 L2276:
-        CALL  writeLineA
+        LD    A,192
 L2277:
-        JP    L2666
+        CALL  writeLineA
 L2278:
-        LD    HL,999
+        JP    L2283
 L2279:
-        CALL  writeLineHL
+        LD    HL,999
 L2280:
-        ;;testBitwiseOperators.j(323)   
+        CALL  writeLineHL
 L2281:
-        ;;testBitwiseOperators.j(324)     println("Klaar");
+        ;;testBitwiseOperators.j(323)   
 L2282:
-        LD    HL,L2289
+        ;;testBitwiseOperators.j(324)     println("Klaar");
 L2283:
-        CALL  writeLineStr
+        LD    HL,L2290
 L2284:
-        ;;testBitwiseOperators.j(325)   }
+        CALL  writeLineStr
 L2285:
-        LD    SP,IX
+        ;;testBitwiseOperators.j(325)   }
 L2286:
-        POP   IX
+        LD    SP,IX
 L2287:
-        return
+        POP   IX
 L2288:
-        ;;testBitwiseOperators.j(326) }
+        return
 L2289:
+        ;;testBitwiseOperators.j(326) }
+L2290:
         .ASCIZ  "Klaar"
 CNTLA0  equ 000H          ;144 ASCI0 Control Register A.
 STAT0   equ 004H          ;147 ASCI0 Status register.

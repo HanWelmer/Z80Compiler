@@ -658,20 +658,20 @@
  657 acc8= constant 30
  658 acc8+ constant 0
  659 acc8Comp constant 20
- 660 brle 666
+ 660 brle 664
  661 acc8= constant 80
  662 writeLineAcc8
- 663 br 669
+ 663 br 667
  664 acc16= constant 999
  665 writeLineAcc16
  666 ;testIf.j(157)     if (10+0 < 20) println(81); else println(999);
  667 acc8= constant 10
  668 acc8+ constant 0
  669 acc8Comp constant 20
- 670 brge 678
+ 670 brge 674
  671 acc8= constant 81
  672 writeLineAcc8
- 673 br 683
+ 673 br 679
  674 acc16= constant 999
  675 writeLineAcc16
  676 ;testIf.j(158)     // acc - constant
@@ -681,10 +681,10 @@
  680 acc8+ constant 0
  681 acc16= constant 2000
  682 acc8CompareAcc16
- 683 brle 693
+ 683 brle 687
  684 acc16= constant 999
  685 writeLineAcc16
- 686 br 696
+ 686 br 690
  687 acc8= constant 82
  688 writeLineAcc8
  689 ;testIf.j(161)     if (10+0 < 2000) println(83); else println(999);
@@ -692,10 +692,10 @@
  691 acc8+ constant 0
  692 acc16= constant 2000
  693 acc8CompareAcc16
- 694 brge 706
+ 694 brge 698
  695 acc8= constant 83
  696 writeLineAcc8
- 697 br 711
+ 697 br 703
  698 acc16= constant 999
  699 writeLineAcc16
  700 ;testIf.j(162)     // acc - constant
@@ -705,10 +705,10 @@
  704 acc16+ constant 0
  705 acc8= constant 20
  706 acc16CompareAcc8
- 707 brle 721
+ 707 brle 711
  708 acc8= constant 84
  709 writeLineAcc8
- 710 br 724
+ 710 br 714
  711 acc16= constant 999
  712 writeLineAcc16
  713 ;testIf.j(165)     if (1000+0 < 20) println(999); else println(85);
@@ -716,10 +716,10 @@
  715 acc16+ constant 0
  716 acc8= constant 20
  717 acc16CompareAcc8
- 718 brge 734
+ 718 brge 722
  719 acc16= constant 999
  720 writeLineAcc16
- 721 br 739
+ 721 br 727
  722 acc8= constant 85
  723 writeLineAcc8
  724 ;testIf.j(166)     // acc - constant
@@ -728,20 +728,20 @@
  727 acc16= constant 3000
  728 acc16+ constant 0
  729 acc16Comp constant 2000
- 730 brle 748
+ 730 brle 734
  731 acc8= constant 86
  732 writeLineAcc8
- 733 br 751
+ 733 br 737
  734 acc16= constant 999
  735 writeLineAcc16
  736 ;testIf.j(169)     if (1000+0 < 2000) println(87); else println(999);
  737 acc16= constant 1000
  738 acc16+ constant 0
  739 acc16Comp constant 2000
- 740 brge 760
+ 740 brge 744
  741 acc8= constant 87
  742 writeLineAcc8
- 743 br 763
+ 743 br 747
  744 acc16= constant 999
  745 writeLineAcc16
  746 ;testIf.j(170)     println(88);
@@ -761,10 +761,10 @@
  760 acc8= constant 20
  761 acc8+ constant 0
  762 revAcc8Comp unstack8
- 763 brge 783
+ 763 brge 767
  764 acc8= constant 90
  765 writeLineAcc8
- 766 br 786
+ 766 br 770
  767 acc16= constant 999
  768 writeLineAcc16
  769 ;testIf.j(177)     if (10+0 < 20+0) println(91); else println(999);
@@ -774,10 +774,10 @@
  773 acc8= constant 20
  774 acc8+ constant 0
  775 revAcc8Comp unstack8
- 776 brle 796
+ 776 brle 780
  777 acc8= constant 91
  778 writeLineAcc8
- 779 br 801
+ 779 br 785
  780 acc16= constant 999
  781 writeLineAcc16
  782 ;testIf.j(178)     // acc - acc
@@ -790,10 +790,10 @@
  789 acc16+ constant 0
  790 acc8<
  791 acc8CompareAcc16
- 792 brle 812
+ 792 brle 796
  793 acc16= constant 999
  794 writeLineAcc16
- 795 br 815
+ 795 br 799
  796 acc8= constant 92
  797 writeLineAcc8
  798 ;testIf.j(181)     if (10+0 < 2000+0) println(93); else println(999);
@@ -804,10 +804,10 @@
  803 acc16+ constant 0
  804 acc8<
  805 acc8CompareAcc16
- 806 brge 826
+ 806 brge 810
  807 acc8= constant 93
  808 writeLineAcc8
- 809 br 831
+ 809 br 815
  810 acc16= constant 999
  811 writeLineAcc16
  812 ;testIf.j(182)     // acc - acc
@@ -820,10 +820,10 @@
  819 acc8+ constant 0
  820 acc16<
  821 acc16CompareAcc8
- 822 brle 842
+ 822 brle 826
  823 acc8= constant 94
  824 writeLineAcc8
- 825 br 845
+ 825 br 829
  826 acc16= constant 999
  827 writeLineAcc16
  828 ;testIf.j(185)     if (1000+0 < 20+0) println(999); else println(95);
@@ -834,10 +834,10 @@
  833 acc8+ constant 0
  834 acc16<
  835 acc16CompareAcc8
- 836 brge 856
+ 836 brge 840
  837 acc16= constant 999
  838 writeLineAcc16
- 839 br 861
+ 839 br 845
  840 acc8= constant 95
  841 writeLineAcc8
  842 ;testIf.j(186)     // acc - acc
@@ -849,10 +849,10 @@
  848 acc16= constant 2000
  849 acc16+ constant 0
  850 revAcc16Comp unstack16
- 851 brge 871
+ 851 brge 855
  852 acc8= constant 96
  853 writeLineAcc8
- 854 br 874
+ 854 br 858
  855 acc16= constant 999
  856 writeLineAcc16
  857 ;testIf.j(189)     if (1000+0 < 2000+0) println(97); else println(999);
@@ -862,10 +862,10 @@
  861 acc16= constant 2000
  862 acc16+ constant 0
  863 revAcc16Comp unstack16
- 864 brle 884
+ 864 brle 868
  865 acc8= constant 97
  866 writeLineAcc8
- 867 br 887
+ 867 br 871
  868 acc16= constant 999
  869 writeLineAcc16
  870 ;testIf.j(190)     println(98);
@@ -882,20 +882,20 @@
  881 acc8= constant 30
  882 acc8+ constant 0
  883 acc8Comp variable 6
- 884 brle 906
+ 884 brle 888
  885 acc8= constant 100
  886 writeLineAcc8
- 887 br 909
+ 887 br 891
  888 acc16= constant 999
  889 writeLineAcc16
  890 ;testIf.j(197)     if (10+0 < b) println(101); else println(999);
  891 acc8= constant 10
  892 acc8+ constant 0
  893 acc8Comp variable 6
- 894 brge 918
+ 894 brge 898
  895 acc8= constant 101
  896 writeLineAcc8
- 897 br 923
+ 897 br 903
  898 acc16= constant 999
  899 writeLineAcc16
  900 ;testIf.j(198)     // acc - var
@@ -905,10 +905,10 @@
  904 acc8+ constant 0
  905 acc16= variable 0
  906 acc8CompareAcc16
- 907 brle 933
+ 907 brle 911
  908 acc16= constant 999
  909 writeLineAcc16
- 910 br 936
+ 910 br 914
  911 acc8= constant 102
  912 writeLineAcc8
  913 ;testIf.j(201)     if (10+0 < i) println(103); else println(999);
@@ -916,10 +916,10 @@
  915 acc8+ constant 0
  916 acc16= variable 0
  917 acc8CompareAcc16
- 918 brge 946
+ 918 brge 922
  919 acc8= constant 103
  920 writeLineAcc8
- 921 br 951
+ 921 br 927
  922 acc16= constant 999
  923 writeLineAcc16
  924 ;testIf.j(202)     // acc - var
@@ -929,10 +929,10 @@
  928 acc16+ constant 0
  929 acc8= variable 6
  930 acc16CompareAcc8
- 931 brle 961
+ 931 brle 935
  932 acc8= constant 104
  933 writeLineAcc8
- 934 br 964
+ 934 br 938
  935 acc16= constant 999
  936 writeLineAcc16
  937 ;testIf.j(205)     if (1000+0 < b) println(999); else println(105);
@@ -940,10 +940,10 @@
  939 acc16+ constant 0
  940 acc8= variable 6
  941 acc16CompareAcc8
- 942 brge 974
+ 942 brge 946
  943 acc16= constant 999
  944 writeLineAcc16
- 945 br 979
+ 945 br 951
  946 acc8= constant 105
  947 writeLineAcc8
  948 ;testIf.j(206)     // acc - var
@@ -952,20 +952,20 @@
  951 acc16= constant 3000
  952 acc16+ constant 0
  953 acc16Comp variable 0
- 954 brle 988
+ 954 brle 958
  955 acc8= constant 106
  956 writeLineAcc8
- 957 br 991
+ 957 br 961
  958 acc16= constant 999
  959 writeLineAcc16
  960 ;testIf.j(209)     if (1000+0 < i) println(107); else println(999);
  961 acc16= constant 1000
  962 acc16+ constant 0
  963 acc16Comp variable 0
- 964 brge 1000
+ 964 brge 968
  965 acc8= constant 107
  966 writeLineAcc8
- 967 br 1003
+ 967 br 971
  968 acc16= constant 999
  969 writeLineAcc16
  970 ;testIf.j(210)     println(108);
@@ -1061,19 +1061,19 @@
 1060 ;testIf.j(256)     if (b > 10) println(130); else println(999);
 1061 acc8= variable 6
 1062 acc8Comp constant 10
-1063 brle 1099
+1063 brle 1067
 1064 acc8= constant 130
 1065 writeLineAcc8
-1066 br 1102
+1066 br 1070
 1067 acc16= constant 999
 1068 writeLineAcc16
 1069 ;testIf.j(257)     if (b < 30) println(131); else println(999);
 1070 acc8= variable 6
 1071 acc8Comp constant 30
-1072 brge 1108
+1072 brge 1076
 1073 acc8= constant 131
 1074 writeLineAcc8
-1075 br 1113
+1075 br 1081
 1076 acc16= constant 999
 1077 writeLineAcc16
 1078 ;testIf.j(258)     // var - constant
@@ -1082,20 +1082,20 @@
 1081 acc8= variable 6
 1082 acc16= constant 1000
 1083 acc8CompareAcc16
-1084 brle 1120
+1084 brle 1088
 1085 acc16= constant 999
 1086 writeLineAcc16
-1087 br 1123
+1087 br 1091
 1088 acc8= constant 132
 1089 writeLineAcc8
 1090 ;testIf.j(261)     if (b < 1000) println(133); else println(999);
 1091 acc8= variable 6
 1092 acc16= constant 1000
 1093 acc8CompareAcc16
-1094 brge 1130
+1094 brge 1098
 1095 acc8= constant 133
 1096 writeLineAcc8
-1097 br 1135
+1097 br 1103
 1098 acc16= constant 999
 1099 writeLineAcc16
 1100 ;testIf.j(262)     // var - constant
@@ -1103,19 +1103,19 @@
 1102 ;testIf.j(264)     if (i > 1000) println(134); else println(999);
 1103 acc16= variable 0
 1104 acc16Comp constant 1000
-1105 brle 1141
+1105 brle 1109
 1106 acc8= constant 134
 1107 writeLineAcc8
-1108 br 1144
+1108 br 1112
 1109 acc16= constant 999
 1110 writeLineAcc16
 1111 ;testIf.j(265)     if (i < 3000) println(135); else println(999);
 1112 acc16= variable 0
 1113 acc16Comp constant 3000
-1114 brge 1150
+1114 brge 1118
 1115 acc8= constant 135
 1116 writeLineAcc8
-1117 br 1155
+1117 br 1123
 1118 acc16= constant 999
 1119 writeLineAcc16
 1120 ;testIf.j(266)     // var - constant
@@ -1123,19 +1123,19 @@
 1122 ;testIf.j(268)     if (i > 1000) println(136); else println(999);
 1123 acc16= variable 0
 1124 acc16Comp constant 1000
-1125 brle 1161
+1125 brle 1129
 1126 acc8= constant 136
 1127 writeLineAcc8
-1128 br 1164
+1128 br 1132
 1129 acc16= constant 999
 1130 writeLineAcc16
 1131 ;testIf.j(269)     if (i < 3000) println(137); else println(999);
 1132 acc16= variable 0
 1133 acc16Comp constant 3000
-1134 brge 1170
+1134 brge 1138
 1135 acc8= constant 137
 1136 writeLineAcc8
-1137 br 1173
+1137 br 1141
 1138 acc16= constant 999
 1139 writeLineAcc16
 1140 ;testIf.j(270)     println(138);
@@ -1152,20 +1152,20 @@
 1151 acc8= constant 10
 1152 acc8+ constant 0
 1153 acc8Comp variable 6
-1154 brge 1190
+1154 brge 1158
 1155 acc8= constant 140
 1156 writeLineAcc8
-1157 br 1193
+1157 br 1161
 1158 acc16= constant 999
 1159 writeLineAcc16
 1160 ;testIf.j(277)     if (b < 30+0) println(141); else println(999);
 1161 acc8= constant 30
 1162 acc8+ constant 0
 1163 acc8Comp variable 6
-1164 brle 1200
+1164 brle 1168
 1165 acc8= constant 141
 1166 writeLineAcc8
-1167 br 1205
+1167 br 1173
 1168 acc16= constant 999
 1169 writeLineAcc16
 1170 ;testIf.j(278)     // var - acc
@@ -1175,10 +1175,10 @@
 1174 acc16+ constant 0
 1175 acc8= variable 6
 1176 acc8CompareAcc16
-1177 brle 1213
+1177 brle 1181
 1178 acc16= constant 999
 1179 writeLineAcc16
-1180 br 1216
+1180 br 1184
 1181 acc8= constant 142
 1182 writeLineAcc8
 1183 ;testIf.j(281)     if (b < 1000+0) println(143); else println(999);
@@ -1186,10 +1186,10 @@
 1185 acc16+ constant 0
 1186 acc8= variable 6
 1187 acc8CompareAcc16
-1188 brge 1224
+1188 brge 1192
 1189 acc8= constant 143
 1190 writeLineAcc8
-1191 br 1229
+1191 br 1197
 1192 acc16= constant 999
 1193 writeLineAcc16
 1194 ;testIf.j(282)     // var - acc
@@ -1198,20 +1198,20 @@
 1197 acc16= constant 1000
 1198 acc16+ constant 0
 1199 acc16Comp variable 0
-1200 brge 1236
+1200 brge 1204
 1201 acc8= constant 144
 1202 writeLineAcc8
-1203 br 1239
+1203 br 1207
 1204 acc16= constant 999
 1205 writeLineAcc16
 1206 ;testIf.j(285)     if (i < 3000+0) println(145); else println(999);
 1207 acc16= constant 3000
 1208 acc16+ constant 0
 1209 acc16Comp variable 0
-1210 brle 1246
+1210 brle 1214
 1211 acc8= constant 145
 1212 writeLineAcc8
-1213 br 1251
+1213 br 1219
 1214 acc16= constant 999
 1215 writeLineAcc16
 1216 ;testIf.j(286)     // var - acc
@@ -1220,20 +1220,20 @@
 1219 acc16= constant 1000
 1220 acc16+ constant 0
 1221 acc16Comp variable 0
-1222 brge 1258
+1222 brge 1226
 1223 acc8= constant 146
 1224 writeLineAcc8
-1225 br 1261
+1225 br 1229
 1226 acc16= constant 999
 1227 writeLineAcc16
 1228 ;testIf.j(289)     if (i < 3000+0) println(147); else println(999);
 1229 acc16= constant 3000
 1230 acc16+ constant 0
 1231 acc16Comp variable 0
-1232 brle 1268
+1232 brle 1236
 1233 acc8= constant 147
 1234 writeLineAcc8
-1235 br 1271
+1235 br 1239
 1236 acc16= constant 999
 1237 writeLineAcc16
 1238 ;testIf.j(290)     println(148);
@@ -1249,13 +1249,13 @@
 1248 ;testIf.j(296)     if (b > b1) println(150);
 1249 acc8= variable 6
 1250 acc8Comp variable 7
-1251 brle 1287
+1251 brle 1255
 1252 acc8= constant 150
 1253 writeLineAcc8
 1254 ;testIf.j(297)     if (b < b3) println(151);
 1255 acc8= variable 6
 1256 acc8Comp variable 8
-1257 brge 1295
+1257 brge 1263
 1258 acc8= constant 151
 1259 writeLineAcc8
 1260 ;testIf.j(298)     // var - var
@@ -1264,17 +1264,17 @@
 1263 acc8= variable 6
 1264 acc16= variable 2
 1265 acc8CompareAcc16
-1266 brle 1302
+1266 brle 1270
 1267 acc16= constant 999
 1268 writeLineAcc16
-1269 br 1305
+1269 br 1273
 1270 acc8= constant 152
 1271 writeLineAcc8
 1272 ;testIf.j(301)     if (b < i3) println(153);
 1273 acc8= variable 6
 1274 acc16= variable 4
 1275 acc8CompareAcc16
-1276 brge 1314
+1276 brge 1282
 1277 acc8= constant 153
 1278 writeLineAcc8
 1279 ;testIf.j(302)     // var - var
@@ -1282,13 +1282,13 @@
 1281 ;testIf.j(304)     if (i > i1) println(154);
 1282 acc16= variable 0
 1283 acc16Comp variable 2
-1284 brle 1320
+1284 brle 1288
 1285 acc8= constant 154
 1286 writeLineAcc8
 1287 ;testIf.j(305)     if (i < i3) println(155);
 1288 acc16= variable 0
 1289 acc16Comp variable 4
-1290 brge 1328
+1290 brge 1296
 1291 acc8= constant 155
 1292 writeLineAcc8
 1293 ;testIf.j(306)     // var - var
@@ -1296,13 +1296,13 @@
 1295 ;testIf.j(308)     if (i > i1) println(156);
 1296 acc16= variable 0
 1297 acc16Comp variable 2
-1298 brle 1334
+1298 brle 1302
 1299 acc8= constant 156
 1300 writeLineAcc8
 1301 ;testIf.j(309)     if (i < i3) println(157);
 1302 acc16= variable 0
 1303 acc16Comp variable 4
-1304 brge 1340
+1304 brge 1308
 1305 acc8= constant 157
 1306 writeLineAcc8
 1307 ;testIf.j(310)     println(158);

@@ -362,7 +362,7 @@
  361 acc16+ constant 0
  362 acc8= constant 54
  363 acc16CompareAcc8
- 364 brle 359
+ 364 brle 357
  365 ;testDo.j(123)   
  366 ;testDo.j(124)     b=55;
  367 acc8= constant 55
@@ -379,7 +379,7 @@
  378 acc16= variable 1
  379 acc16+ constant 0
  380 acc16Comp constant 1056
- 381 brle 378
+ 381 brle 374
  382 ;testDo.j(128)   
  383 ;testDo.j(129)     /************************/
  384 ;testDo.j(130)     // acc - acc
@@ -397,7 +397,7 @@
  396 acc8= constant 58
  397 acc8+ constant 0
  398 revAcc8Comp unstack8
- 399 brge 396
+ 399 brge 390
  400 ;testDo.j(134)     // byte - integer
  401 ;testDo.j(135)     i=61;
  402 acc8= constant 61
@@ -414,7 +414,7 @@
  413 acc16+ constant 0
  414 acc8<
  415 acc8CompareAcc16
- 416 brle 411
+ 416 brle 405
  417 ;testDo.j(137)     // integer - byte
  418 ;testDo.j(138)     i=61;
  419 acc8= constant 61
@@ -433,7 +433,7 @@
  432 acc8+ constant 0
  433 acc16<
  434 acc16CompareAcc8
- 435 brle 431
+ 435 brle 425
  436 ;testDo.j(141)     // integer - integer
  437 ;testDo.j(142)     b=63;
  438 acc8= constant 63
@@ -452,7 +452,7 @@
  451 acc16= variable 1
  452 acc16+ constant 0
  453 revAcc16Comp unstack16
- 454 brge 450
+ 454 brge 444
  455 ;testDo.j(145)   
  456 ;testDo.j(146)     /************************/
  457 ;testDo.j(147)     // acc - var
@@ -471,7 +471,7 @@
  470 acc8= constant 64
  471 acc8+ constant 0
  472 acc8Comp variable 0
- 473 brle 472
+ 473 brle 466
  474 ;testDo.j(152)     // byte - integer
  475 ;testDo.j(153)     b=67;
  476 acc8= constant 67
@@ -488,7 +488,7 @@
  487 acc8+ constant 0
  488 acc16= variable 1
  489 acc8CompareAcc16
- 490 brle 490
+ 490 brle 482
  491 ;testDo.j(156)     // integer - byte
  492 ;testDo.j(157)     i=69;
  493 acc8= constant 69
@@ -505,7 +505,7 @@
  504 acc16+ constant 68
  505 acc8= variable 0
  506 acc16CompareAcc8
- 507 brle 509
+ 507 brle 499
  508 ;testDo.j(160)     // integer - integer
  509 ;testDo.j(161)     i=1071;
  510 acc16= constant 1071
@@ -521,7 +521,7 @@
  520 acc16= constant 1000
  521 acc16+ constant 70
  522 acc16Comp variable 1
- 523 brle 528
+ 523 brle 516
  524 ;testDo.j(164)   
  525 ;testDo.j(165)     /************************/
  526 ;testDo.j(166)     // acc - stack16
@@ -605,7 +605,7 @@
  604 incr8 variable 0
  605 acc8= variable 0
  606 acc8Comp constant 89
- 607 brle 616
+ 607 brle 602
  608 ;testDo.j(208)     // byte - integer
  609 ;testDo.j(209)     //not relevant
  610 ;testDo.j(210)     println(90);
@@ -625,7 +625,7 @@
  624 acc16= variable 1
  625 acc8= constant 93
  626 acc16CompareAcc8
- 627 brle 635
+ 627 brle 621
  628 ;testDo.j(215)     // integer - integer
  629 ;testDo.j(216)     i=1094;
  630 acc16= constant 1094
@@ -640,7 +640,7 @@
  639 incr16 variable 1
  640 acc16= variable 1
  641 acc16Comp constant 1095
- 642 brle 650
+ 642 brle 636
  643 ;testDo.j(219)   
  644 ;testDo.j(220)     /************************/
  645 ;testDo.j(221)     // var - acc
@@ -652,7 +652,7 @@
  651 acc8= constant 97
  652 acc8+ constant 0
  653 acc8Comp variable 0
- 654 brge 662
+ 654 brge 648
  655 ;testDo.j(224)     // byte - integer
  656 ;testDo.j(225)     //not relevant
  657 ;testDo.j(226)     i=99;
@@ -666,7 +666,7 @@
  665 acc16+ constant 0
  666 acc8= variable 0
  667 acc8CompareAcc16
- 668 brle 675
+ 668 brle 661
  669 ;testDo.j(228)     // integer - byte
  670 ;testDo.j(229)     i=100;
  671 acc8= constant 100
@@ -679,7 +679,7 @@
  678 acc8+ constant 0
  679 acc16= variable 1
  680 acc16CompareAcc8
- 681 brle 688
+ 681 brle 674
  682 ;testDo.j(231)     // integer - integer
  683 ;testDo.j(232)     i=1102;
  684 acc16= constant 1102
@@ -695,7 +695,7 @@
  694 acc16= constant 1103
  695 acc16+ constant 0
  696 acc16Comp variable 1
- 697 brge 704
+ 697 brge 690
  698 ;testDo.j(235)   
  699 ;testDo.j(236)     /************************/
  700 ;testDo.j(237)     // var - var
@@ -709,7 +709,7 @@
  708 incr8 variable 0
  709 acc8= variable 0
  710 acc8Comp (basePointer + -1)
- 711 brle 720
+ 711 brle 706
  712 ;testDo.j(241)     // byte - integer
  713 ;testDo.j(242)     i=107;
  714 acc8= constant 107
@@ -721,7 +721,7 @@
  720 acc8= variable 0
  721 acc16= variable 1
  722 acc8CompareAcc16
- 723 brle 731
+ 723 brle 717
  724 ;testDo.j(244)     // integer - byte
  725 ;testDo.j(245)     i=b;
  726 acc8= variable 0
@@ -736,7 +736,7 @@
  735 acc16= variable 1
  736 acc8= variable 0
  737 acc16CompareAcc8
- 738 brle 746
+ 738 brle 732
  739 ;testDo.j(248)     // integer - integer
  740 ;testDo.j(249)     word i2 = 111;
  741 acc8= constant 111
@@ -747,7 +747,7 @@
  746 incr16 variable 1
  747 acc16= variable 1
  748 acc16Comp (basePointer + -3)
- 749 brle 758
+ 749 brle 744
  750 ;testDo.j(251)   
  751 ;testDo.j(252)     /************************/
  752 ;testDo.j(253)     // var - stack8

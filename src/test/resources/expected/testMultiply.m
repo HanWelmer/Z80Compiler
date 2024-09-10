@@ -52,10 +52,10 @@
   51 acc8= constant 7
   52 acc8* constant 5
   53 acc8Comp constant 35
-  54 brne 60
+  54 brne 58
   55 acc8= constant 7
   56 writeLineAcc8
-  57 br 63
+  57 br 61
   58 acc16= constant 999
   59 writeLineAcc16
   60 ;testMultiply.j(16)     if (2 * 9 * 9 == 162) println (8); else println (999);
@@ -63,29 +63,29 @@
   62 acc8* constant 9
   63 acc8* constant 9
   64 acc8Comp constant 162
-  65 brne 73
+  65 brne 69
   66 acc8= constant 8
   67 writeLineAcc8
-  68 br 76
+  68 br 72
   69 acc16= constant 999
   70 writeLineAcc16
   71 ;testMultiply.j(17)     if (729 == 729) println (9); else println (999);
   72 acc16= constant 729
   73 acc16Comp constant 729
-  74 brne 82
+  74 brne 78
   75 acc8= constant 9
   76 writeLineAcc8
-  77 br 85
+  77 br 81
   78 acc16= constant 999
   79 writeLineAcc16
   80 ;testMultiply.j(18)     if (729 * 9 == 6561) println (10); else println (999);
   81 acc16= constant 729
   82 acc16* constant 9
   83 acc16Comp constant 6561
-  84 brne 94
+  84 brne 88
   85 acc8= constant 10
   86 writeLineAcc8
-  87 br 97
+  87 br 91
   88 acc16= constant 999
   89 writeLineAcc16
   90 ;testMultiply.j(19)     if (6561 / 729 == 9) println (11); else println (999);
@@ -93,10 +93,10 @@
   92 acc16/ constant 729
   93 acc8= constant 9
   94 acc16CompareAcc8
-  95 brne 107
+  95 brne 99
   96 acc8= constant 11
   97 writeLineAcc8
-  98 br 110
+  98 br 102
   99 acc16= constant 999
  100 writeLineAcc16
  101 ;testMultiply.j(20)     a = 13;

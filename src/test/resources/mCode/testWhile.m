@@ -609,7 +609,7 @@
  608 acc8= constant 78
  609 acc8+ constant 0
  610 acc8Comp variable 1
- 611 brgt 621
+ 611 brgt 619
  612 acc8= variable 0
  613 writeLineAcc8
  614 incr8 variable 0
@@ -624,12 +624,12 @@
  623 acc8+ constant 0
  624 acc16= variable 2
  625 acc8CompareAcc16
- 626 brgt 638
+ 626 brgt 634
  627 acc8= variable 0
  628 writeLineAcc8
  629 incr8 variable 0
  630 decr16 variable 2
- 631 br 624
+ 631 br 622
  632 ;testWhile.j(217)     // integer - byte
  633 ;testWhile.j(218)     i=78;
  634 acc8= constant 78
@@ -642,12 +642,12 @@
  641 acc16+ constant 0
  642 acc8= variable 1
  643 acc16CompareAcc8
- 644 brgt 658
+ 644 brgt 652
  645 acc8= variable 0
  646 writeLineAcc8
  647 incr8 variable 0
  648 decr8 variable 1
- 649 br 644
+ 649 br 640
  650 ;testWhile.j(221)     // integer - integer
  651 ;testWhile.j(222)     i=1066;
  652 acc16= constant 1066
@@ -656,12 +656,12 @@
  655 acc16= constant 1000
  656 acc16+ constant 65
  657 acc16Comp variable 2
- 658 brgt 677
+ 658 brgt 669
  659 acc8= variable 0
  660 writeLineAcc8
  661 incr8 variable 0
  662 decr16 variable 2
- 663 br 661
+ 663 br 655
  664 ;testWhile.j(224)   
  665 ;testWhile.j(225)     /************************/
  666 ;testWhile.j(226)     // acc - acc
@@ -679,12 +679,12 @@
  678 acc8= variable 1
  679 acc8+ constant 0
  680 revAcc8Comp unstack8
- 681 brlt 697
+ 681 brlt 689
  682 acc8= variable 0
  683 writeLineAcc8
  684 incr8 variable 0
  685 decr8 variable 1
- 686 br 683
+ 686 br 675
  687 ;testWhile.j(231)     // byte - integer
  688 ;testWhile.j(232)     i=62;
  689 acc8= constant 62
@@ -697,12 +697,12 @@
  696 acc16+ constant 0
  697 acc8<
  698 acc8CompareAcc16
- 699 brgt 715
+ 699 brgt 707
  700 acc8= variable 0
  701 writeLineAcc8
  702 incr8 variable 0
  703 decr16 variable 2
- 704 br 700
+ 704 br 692
  705 ;testWhile.j(234)     // integer - byte
  706 ;testWhile.j(235)     i=59;
  707 acc8= constant 59
@@ -718,12 +718,12 @@
  717 acc8+ constant 0
  718 acc16<
  719 acc16CompareAcc8
- 720 brgt 736
+ 720 brgt 728
  721 acc8= variable 0
  722 writeLineAcc8
  723 incr8 variable 0
  724 decr8 variable 1
- 725 br 721
+ 725 br 713
  726 ;testWhile.j(238)     // integer - integer
  727 ;testWhile.j(239)     i=1058;
  728 acc16= constant 1058
@@ -735,12 +735,12 @@
  734 acc16= variable 2
  735 acc16+ constant 0
  736 revAcc16Comp unstack16
- 737 brlt 756
+ 737 brlt 748
  738 acc8= variable 0
  739 writeLineAcc8
  740 incr8 variable 0
  741 decr16 variable 2
- 742 br 739
+ 742 br 731
  743 ;testWhile.j(241)   
  744 ;testWhile.j(242)     /************************/
  745 ;testWhile.j(243)     // acc - constant
@@ -749,11 +749,11 @@
  748 acc8= variable 0
  749 acc8+ constant 0
  750 acc8Comp constant 96
- 751 brgt 770
+ 751 brgt 760
  752 acc8= variable 0
  753 writeLineAcc8
  754 incr8 variable 0
- 755 br 756
+ 755 br 748
  756 ;testWhile.j(246)     // byte - integer
  757 ;testWhile.j(247)     //not relevant
  758 ;testWhile.j(248)     // integer - byte
@@ -765,11 +765,11 @@
  764 acc16+ constant 0
  765 acc8= constant 98
  766 acc16CompareAcc8
- 767 brgt 785
+ 767 brgt 773
  768 acc16= variable 2
  769 writeLineAcc16
  770 incr16 variable 2
- 771 br 773
+ 771 br 763
  772 ;testWhile.j(251)     b=i;
  773 acc16= variable 2
  774 acc16=> variable 0
@@ -781,12 +781,12 @@
  780 acc16= variable 2
  781 acc16+ constant 0
  782 acc16Comp constant 1053
- 783 brgt 809
+ 783 brgt 795
  784 acc8= variable 0
  785 writeLineAcc8
  786 incr8 variable 0
  787 incr16 variable 2
- 788 br 792
+ 788 br 780
  789 ;testWhile.j(255)   
  790 ;testWhile.j(256)     /************************/
  791 ;testWhile.j(257)     // constant - stack8
