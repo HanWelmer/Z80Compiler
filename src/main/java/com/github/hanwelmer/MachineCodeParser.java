@@ -101,12 +101,16 @@ public class MachineCodeParser {
          */
         case acc8And:
         case acc8Compare:
+        case acc8Div:
         case acc8Load:
+        case acc8Minus:
         case acc8Or:
         case acc8Plus:
         case acc8Store:
+        case acc8Times:
         case acc8Xor:
         case decrement8:
+        case increment8:
         case stackAcc8Load:
           result = parseFunctionWithByteOperand(line, functionType);
           break;
@@ -116,9 +120,11 @@ public class MachineCodeParser {
         case acc16And:
         case acc16Compare:
         case acc16Load:
+        case acc16Minus:
         case acc16Or:
         case acc16Plus:
         case acc16Store:
+        case acc16Times:
         case acc16Xor:
         case basePointerLoad:
         case decrement16:
@@ -155,11 +161,6 @@ public class MachineCodeParser {
          * TODO.
          */
         case acc16Div:
-        case acc16Minus:
-        case acc16Times:
-        case acc8Div:
-        case acc8Minus:
-        case acc8Times:
         case brGe:
         case brGt:
         case brLe:
@@ -167,7 +168,6 @@ public class MachineCodeParser {
         case divAcc16:
         case divAcc8:
         case increment16:
-        case increment8:
         case minusAcc16:
         case minusAcc8:
         case revAcc16Compare:
