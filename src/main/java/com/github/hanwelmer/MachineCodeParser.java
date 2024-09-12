@@ -92,6 +92,10 @@ public class MachineCodeParser {
          */
         case br:
         case brEq:
+        case brGe:
+        case brGt:
+        case brLe:
+        case brLt:
         case brNe:
         case call:
           result = parseCallFunction(line, functionType);
@@ -110,7 +114,9 @@ public class MachineCodeParser {
         case acc8Times:
         case acc8Xor:
         case decrement8:
+        case divAcc8:
         case increment8:
+        case revAcc8Compare:
         case stackAcc8Load:
           result = parseFunctionWithByteOperand(line, functionType);
           break;
@@ -119,6 +125,7 @@ public class MachineCodeParser {
          */
         case acc16And:
         case acc16Compare:
+        case acc16Div:
         case acc16Load:
         case acc16Minus:
         case acc16Or:
@@ -128,6 +135,8 @@ public class MachineCodeParser {
         case acc16Xor:
         case basePointerLoad:
         case decrement16:
+        case divAcc16:
+        case revAcc16Compare:
         case stackAcc16Load:
         case stackPointerLoad:
         case stackPointerPlus:
@@ -160,18 +169,9 @@ public class MachineCodeParser {
         /*******************************
          * TODO.
          */
-        case acc16Div:
-        case brGe:
-        case brGt:
-        case brLe:
-        case brLt:
-        case divAcc16:
-        case divAcc8:
         case increment16:
         case minusAcc16:
         case minusAcc8:
-        case revAcc16Compare:
-        case revAcc8Compare:
           throw new RuntimeException("Internal error; functionType not implemented yet: " + keyword);
         default:
           throw new RuntimeException("Internal error; not supported functionType: " + keyword);
