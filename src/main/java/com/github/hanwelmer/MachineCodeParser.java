@@ -136,6 +136,7 @@ public class MachineCodeParser {
         case basePointerLoad:
         case decrement16:
         case divAcc16:
+        case increment16:
         case revAcc16Compare:
         case stackAcc16Load:
         case stackPointerLoad:
@@ -169,7 +170,6 @@ public class MachineCodeParser {
         /*******************************
          * TODO.
          */
-        case increment16:
         case minusAcc16:
         case minusAcc8:
           throw new RuntimeException("Internal error; functionType not implemented yet: " + keyword);
