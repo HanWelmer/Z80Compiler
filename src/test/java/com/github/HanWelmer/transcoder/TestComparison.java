@@ -60,5 +60,6 @@ public class TestComparison extends AbstractTranscoderTest {
     assertTrue(code.get(103).getCode().equals("        LD    C,A"));
     assertTrue(code.get(104).getCode().equals("        POP   AF"));
     assertTrue(code.get(105).getCode().equals("        CALL  div8"));
+
   }
 }
