@@ -173,6 +173,7 @@ L76:
 L77:
         SUB   A,3
 L78:
+        JP    C,L82
         JP    Z,L82
 L79:
         LD    A,4
@@ -218,6 +219,7 @@ L97:
 L98:
         SUB   A,4
 L99:
+        JP    C,L103
         JP    Z,L103
 L100:
         LD    A,7
@@ -251,8 +253,8 @@ L112:
 L113:
         SUB   A,4
 L114:
-        JR    Z,$+5
-        JP    C,L118
+        JR    Z,$+3
+        JP    NC,L118
 L115:
         LD    A,9
 L116:
@@ -285,8 +287,8 @@ L127:
 L128:
         SUB   A,4
 L129:
-        JR    Z,$+5
-        JP    C,L133
+        JR    Z,$+3
+        JP    NC,L133
 L130:
         LD    A,11
 L131:
@@ -307,8 +309,8 @@ L136:
 L137:
         SUB   A,5
 L138:
-        JR    Z,$+5
-        JP    C,L142
+        JR    Z,$+3
+        JP    NC,L142
 L139:
         LD    A,12
 L140:
@@ -341,8 +343,8 @@ L151:
 L152:
         SUB   A,4
 L153:
-        JR    Z,$+5
-        JP    C,L157
+        JR    Z,$+3
+        JP    NC,L157
 L154:
         LD    A,14
 L155:
@@ -501,6 +503,7 @@ L221:
         OR    A
         SBC   HL,DE
 L222:
+        JP    C,L226
         JP    Z,L226
 L223:
         LD    A,22
@@ -518,6 +521,7 @@ L228:
         OR    A
         SBC   HL,DE
 L229:
+        JP    C,L233
         JP    Z,L233
 L230:
         LD    A,23
@@ -541,8 +545,8 @@ L238:
         OR    A
         SBC   HL,DE
 L239:
-        JR    Z,$+5
-        JP    C,L243
+        JR    Z,$+3
+        JP    NC,L243
 L240:
         LD    A,24
 L241:
@@ -559,8 +563,8 @@ L245:
         OR    A
         SBC   HL,DE
 L246:
-        JR    Z,$+5
-        JP    C,L250
+        JR    Z,$+3
+        JP    NC,L250
 L247:
         LD    A,25
 L248:
@@ -583,8 +587,8 @@ L255:
         OR    A
         SBC   HL,DE
 L256:
-        JR    Z,$+5
-        JP    C,L260
+        JR    Z,$+3
+        JP    NC,L260
 L257:
         LD    A,26
 L258:
@@ -601,8 +605,8 @@ L262:
         OR    A
         SBC   HL,DE
 L263:
-        JR    Z,$+5
-        JP    C,L267
+        JR    Z,$+3
+        JP    NC,L267
 L264:
         LD    A,27
 L265:
@@ -848,6 +852,7 @@ L359:
         OR    A
         SBC   HL,DE
 L360:
+        JP    C,L364
         JP    Z,L364
 L361:
         LD    A,38
@@ -866,6 +871,7 @@ L366:
         OR    A
         SBC   HL,DE
 L367:
+        JP    C,L371
         JP    Z,L371
 L368:
         LD    A,39
@@ -893,8 +899,8 @@ L376:
         OR    A
         SBC   HL,DE
 L377:
-        JR    Z,$+5
-        JP    C,L381
+        JR    Z,$+3
+        JP    NC,L381
 L378:
         LD    A,40
 L379:
@@ -912,8 +918,8 @@ L383:
         OR    A
         SBC   HL,DE
 L384:
-        JR    Z,$+5
-        JP    C,L388
+        JR    Z,$+3
+        JP    NC,L388
 L385:
         LD    A,41
 L386:
@@ -940,8 +946,8 @@ L393:
         OR    A
         SBC   HL,DE
 L394:
-        JR    Z,$+5
-        JP    C,L398
+        JR    Z,$+3
+        JP    NC,L398
 L395:
         LD    A,42
 L396:
@@ -959,8 +965,8 @@ L400:
         OR    A
         SBC   HL,DE
 L401:
-        JR    Z,$+5
-        JP    C,L405
+        JR    Z,$+3
+        JP    NC,L405
 L402:
         LD    A,43
 L403:
@@ -1142,6 +1148,7 @@ L475:
         OR    A
         SBC   HL,DE
 L476:
+        JP    C,L480
         JP    Z,L480
 L477:
         LD    A,52
@@ -1190,6 +1197,7 @@ L496:
         OR    A
         SBC   HL,DE
 L497:
+        JP    C,L501
         JP    Z,L501
 L498:
         LD    A,55
@@ -1224,8 +1232,8 @@ L511:
         OR    A
         SBC   HL,DE
 L512:
-        JR    Z,$+5
-        JP    C,L516
+        JR    Z,$+3
+        JP    NC,L516
 L513:
         LD    A,57
 L514:
@@ -1259,8 +1267,8 @@ L526:
         OR    A
         SBC   HL,DE
 L527:
-        JR    Z,$+5
-        JP    C,L531
+        JR    Z,$+3
+        JP    NC,L531
 L528:
         LD    A,59
 L529:
@@ -1280,8 +1288,8 @@ L535:
         OR    A
         SBC   HL,DE
 L536:
-        JR    Z,$+5
-        JP    C,L540
+        JR    Z,$+3
+        JP    NC,L540
 L537:
         LD    A,60
 L538:
@@ -1315,8 +1323,8 @@ L550:
         OR    A
         SBC   HL,DE
 L551:
-        JR    Z,$+5
-        JP    C,L555
+        JR    Z,$+3
+        JP    NC,L555
 L552:
         LD    A,62
 L553:
@@ -1470,6 +1478,7 @@ L610:
         OR    A
         SBC   HL,DE
 L611:
+        JP    C,L615
         JP    Z,L615
 L612:
         LD    A,67
@@ -1504,8 +1513,8 @@ L623:
         OR    A
         SBC   HL,DE
 L624:
-        JR    Z,$+5
-        JP    C,L628
+        JR    Z,$+3
+        JP    NC,L628
 L625:
         LD    A,68
 L626:
@@ -1539,8 +1548,8 @@ L636:
         OR    A
         SBC   HL,DE
 L637:
-        JR    Z,$+5
-        JP    C,L641
+        JR    Z,$+3
+        JP    NC,L641
 L638:
         LD    A,69
 L639:
@@ -1701,6 +1710,7 @@ L698:
         OR    A
         SBC   HL,DE
 L699:
+        JP    C,L703
         JP    Z,L703
 L700:
         LD    A,74
@@ -1825,8 +1835,8 @@ L746:
         OR    A
         SBC   HL,DE
 L747:
-        JR    Z,$+5
-        JP    C,L751
+        JR    Z,$+3
+        JP    NC,L751
 L748:
         LD    A,78
 L749:
@@ -1857,8 +1867,8 @@ L758:
         OR    A
         SBC   HL,DE
 L759:
-        JR    Z,$+5
-        JP    C,L763
+        JR    Z,$+3
+        JP    NC,L763
 L760:
         LD    A,79
 L761:
@@ -1966,6 +1976,7 @@ L798:
         OR    A
         SBC   HL,DE
 L799:
+        JP    C,L803
         JP    Z,L803
 L800:
         LD    A,83
@@ -1993,8 +2004,8 @@ L808:
         OR    A
         SBC   HL,DE
 L809:
-        JR    Z,$+5
-        JP    C,L813
+        JR    Z,$+3
+        JP    NC,L813
 L810:
         LD    A,84
 L811:
@@ -2021,8 +2032,8 @@ L818:
         OR    A
         SBC   HL,DE
 L819:
-        JR    Z,$+5
-        JP    C,L823
+        JR    Z,$+3
+        JP    NC,L823
 L820:
         LD    A,85
 L821:
@@ -2148,6 +2159,7 @@ L865:
         OR    A
         SBC   HL,DE
 L866:
+        JP    C,L870
         JP    Z,L870
 L867:
         LD    A,90
@@ -2244,8 +2256,8 @@ L901:
         OR    A
         SBC   HL,DE
 L902:
-        JR    Z,$+5
-        JP    C,L906
+        JR    Z,$+3
+        JP    NC,L906
 L903:
         LD    A,94
 L904:
@@ -2269,8 +2281,8 @@ L910:
         OR    A
         SBC   HL,DE
 L911:
-        JR    Z,$+5
-        JP    C,L915
+        JR    Z,$+3
+        JP    NC,L915
 L912:
         LD    A,95
 L913:
@@ -2354,6 +2366,7 @@ L946:
         POP   BC
         SUB   A,B
 L947:
+        JP    C,L951
         JP    Z,L951
 L948:
         LD    A,98
@@ -2466,8 +2479,8 @@ L994:
         POP   BC
         SUB   A,B
 L995:
-        JR    Z,$+5
-        JP    C,L999
+        JR    Z,$+3
+        JP    NC,L999
 L996:
         LD    A,102
 L997:
@@ -2495,8 +2508,8 @@ L1006:
         POP   BC
         SUB   A,B
 L1007:
-        JR    Z,$+5
-        JP    C,L1011
+        JR    Z,$+3
+        JP    NC,L1011
 L1008:
         LD    A,103
 L1009:
@@ -2628,6 +2641,7 @@ L1058:
         OR    A
         SBC   HL,DE
 L1059:
+        JP    C,L1063
         JP    Z,L1063
 L1060:
         LD    A,107
@@ -2661,8 +2675,8 @@ L1071:
         OR    A
         SBC   HL,DE
 L1072:
-        JR    Z,$+5
-        JP    C,L1076
+        JR    Z,$+3
+        JP    NC,L1076
 L1073:
         LD    A,108
 L1074:
@@ -2695,8 +2709,8 @@ L1084:
         OR    A
         SBC   HL,DE
 L1085:
-        JR    Z,$+5
-        JP    C,L1089
+        JR    Z,$+3
+        JP    NC,L1089
 L1086:
         LD    A,109
 L1087:
@@ -2825,6 +2839,7 @@ L1136:
 L1137:
         SUB   A,3
 L1138:
+        JP    C,L1142
         JP    Z,L1142
 L1139:
         LD    A,114
@@ -2909,8 +2924,8 @@ L1172:
 L1173:
         SUB   A,4
 L1174:
-        JR    Z,$+5
-        JP    C,L1178
+        JR    Z,$+3
+        JP    NC,L1178
 L1175:
         LD    A,118
 L1176:
@@ -2931,8 +2946,8 @@ L1181:
 L1182:
         SUB   A,5
 L1183:
-        JR    Z,$+5
-        JP    C,L1187
+        JR    Z,$+3
+        JP    NC,L1187
 L1184:
         LD    A,119
 L1185:
@@ -3040,6 +3055,7 @@ L1222:
         OR    A
         SBC   HL,DE
 L1223:
+        JP    C,L1227
         JP    Z,L1227
 L1224:
         LD    A,123
@@ -3067,8 +3083,8 @@ L1232:
         OR    A
         SBC   HL,DE
 L1233:
-        JR    Z,$+5
-        JP    C,L1237
+        JR    Z,$+3
+        JP    NC,L1237
 L1234:
         LD    A,124
 L1235:
@@ -3095,8 +3111,8 @@ L1242:
         OR    A
         SBC   HL,DE
 L1243:
-        JR    Z,$+5
-        JP    C,L1247
+        JR    Z,$+3
+        JP    NC,L1247
 L1244:
         LD    A,125
 L1245:
@@ -3331,6 +3347,7 @@ L1332:
 L1333:
         SUB   A,132
 L1334:
+        JP    C,L1351
         JP    Z,L1351
 L1335:
         ;;testComparison.j(164)       word j = 1001;

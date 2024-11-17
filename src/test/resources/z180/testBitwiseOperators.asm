@@ -357,17 +357,12 @@ L138:
 L139:
         LD    HL,4660
 L140:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L141:
         LD    A,20
 L142:
@@ -662,8 +657,10 @@ L250:
         LD    DE,564
         ADD   HL,DE
 L251:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L252:
         LD    A,20
@@ -752,8 +749,10 @@ L287:
 L288:
         ADD   A,12
 L289:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L290:
         LD    A,20
@@ -1488,17 +1487,12 @@ L555:
 L556:
         LD    HL,4660
 L557:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L558:
         LD    A,20
 L559:
@@ -1885,17 +1879,12 @@ L698:
         LD    DE,564
         ADD   HL,DE
 L699:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L700:
         LD    A,20
 L701:
@@ -2213,8 +2202,10 @@ L818:
         LD    DE,564
         ADD   HL,DE
 L819:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L820:
         LD    A,20
@@ -2310,8 +2301,10 @@ L858:
 L859:
         ADD   A,12
 L860:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L861:
         LD    A,20
@@ -3106,17 +3099,12 @@ L1151:
         LD    DE,564
         ADD   HL,DE
 L1152:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L1153:
         LD    A,20
 L1154:
@@ -3485,17 +3473,12 @@ L1284:
 L1285:
         LD    HL,(05004H)
 L1286:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L1287:
         LD    A,20
 L1288:
@@ -3790,8 +3773,10 @@ L1396:
         LD    DE,564
         ADD   HL,DE
 L1397:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L1398:
         LD    A,20
@@ -3880,8 +3865,10 @@ L1433:
 L1434:
         ADD   A,12
 L1435:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L1436:
         LD    A,20
@@ -4616,17 +4603,12 @@ L1701:
 L1702:
         LD    HL,(05004H)
 L1703:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L1704:
         LD    A,20
 L1705:
@@ -4989,17 +4971,12 @@ L1833:
 L1834:
         LD    HL,(05004H)
 L1835:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L1836:
         LD    A,20
 L1837:
@@ -5294,8 +5271,10 @@ L1945:
         LD    DE,564
         ADD   HL,DE
 L1946:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L1947:
         LD    A,20
@@ -5384,8 +5363,10 @@ L1982:
 L1983:
         ADD   A,12
 L1984:
+        LD    E,A
         AND   A,L
         LD    L,A
+        LD    A,E
         LD    H,0
 L1985:
         LD    A,20
@@ -6120,17 +6101,12 @@ L2250:
 L2251:
         LD    HL,4660
 L2252:
-        LD    DE,28
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,28
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L2253:
         LD    A,20
 L2254:
