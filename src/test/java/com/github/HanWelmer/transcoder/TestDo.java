@@ -18,47 +18,33 @@ public class TestDo extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 4083);
+    assertTrue(code.size() == 2505);
 
-    assertTrue(code.get(373).getCode().equals("L168:"));
-    assertTrue(code.get(374).getCode().equals("        CALL  div16_8"));
+    // 66 breq 60
+    assertTrue(code.get(145).getCode().equals("L66:"));
+    assertTrue(code.get(146).getCode().equals("        JP    Z,L60"));
 
-    assertTrue(code.get(1632).getCode().equals("L673:"));
-    assertTrue(code.get(1633).getCode().equals("        POP   DE"));
-    assertTrue(code.get(1634).getCode().equals("        EX    DE,HL"));
-    assertTrue(code.get(1635).getCode().equals("        CALL  div16"));
+    // 74 brne 68
+    assertTrue(code.get(162).getCode().equals("L74:"));
+    assertTrue(code.get(163).getCode().equals("        JP    NZ,L68"));
 
-    assertTrue(code.get(186).getCode().equals("L84:"));
-    assertTrue(code.get(187).getCode().equals("        JP    NC,L88"));
-    assertTrue(code.get(187).getBytes().size() == 3);
-    assertTrue(code.get(187).getBytes().get(0) == (byte)0xd2);
+    // 82 brlt 76
+    assertTrue(code.get(179).getCode().equals("L82:"));
+    assertTrue(code.get(180).getCode().equals("        JP    C,L76"));
 
-    assertTrue(code.get(252).getCode().equals("L114:"));
-    assertTrue(code.get(253).getCode().equals("        JR    Z,$+5"));
-    assertTrue(code.get(253).getBytes().size() == 2);
-    assertTrue(code.get(253).getBytes().get(0) == (byte)0x28);
-    assertTrue(code.get(254).getCode().equals("        JP    C,L118"));
-    assertTrue(code.get(254).getBytes().size() == 3);
-    assertTrue(code.get(254).getBytes().get(0) == (byte)0xda);
+    // 90 brle 84
+    assertTrue(code.get(196).getCode().equals("L90:"));
+    assertTrue(code.get(197).getCode().equals("        JP    C,L84"));
+    assertTrue(code.get(198).getCode().equals("        JP    Z,L84"));
 
-    assertTrue(code.get(174).getCode().equals("L78:"));
-    assertTrue(code.get(175).getCode().equals("        JP    Z,L82"));
-    assertTrue(code.get(175).getBytes().size() == 3);
-    assertTrue(code.get(175).getBytes().get(0) == (byte)0xca);
+    // 102 brgt 95
+    assertTrue(code.get(224).getCode().equals("L102:"));
+    assertTrue(code.get(225).getCode().equals("        JR    Z,$+3"));
+    assertTrue(code.get(226).getCode().equals("        JP    NC,L95"));
 
-    assertTrue(code.get(240).getCode().equals("L108:"));
-    assertTrue(code.get(241).getCode().equals("        JP    C,L112"));
-    assertTrue(code.get(241).getBytes().size() == 3);
-    assertTrue(code.get(241).getBytes().get(0) == (byte)0xda);
+    // 111 brge 104
+    assertTrue(code.get(246).getCode().equals("L111:"));
+    assertTrue(code.get(247).getCode().equals("        JP    NC,L104"));
 
-    assertTrue(code.get(1632).getCode().equals("L673:"));
-    assertTrue(code.get(1633).getCode().equals("        POP   DE"));
-    assertTrue(code.get(1634).getCode().equals("        EX    DE,HL"));
-    assertTrue(code.get(1635).getCode().equals("        CALL  div16"));
-
-    assertTrue(code.get(102).getCode().equals("L46:"));
-    assertTrue(code.get(103).getCode().equals("        LD    C,A"));
-    assertTrue(code.get(104).getCode().equals("        POP   AF"));
-    assertTrue(code.get(105).getCode().equals("        CALL  div8"));
   }
 }

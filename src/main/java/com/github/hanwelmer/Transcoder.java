@@ -422,48 +422,24 @@ public class Transcoder {
      */
     switch (function) {
       case acc16And:
-        if (instruction.operand.opType == OperandType.ACC && instruction.operand.dataType == DataType.byt) {
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,L", 0xA5)); // L
-                                                                                          // =
-                                                                                          // L
-                                                                                          // &
-                                                                                          // A
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
-          asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00); // H
-                                                                                        // =
-                                                                                        // 0
-        } else if (instruction.operand.opType == OperandType.STACK8) {
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,A", 0x57)); // save
-                                                                                          // A
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,E", 0x7B)); // L
-                                                                                          // =
-                                                                                          // L
-                                                                                          // &
-                                                                                          // E
+        if ((instruction.operand.dataType == DataType.byt) || (instruction.operand.opType == OperandType.CONSTANT
+            && -128 <= instruction.operand.intValue && instruction.operand.intValue <= 255)) {
+          // Save A
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,A", 0x5F));
+
+          // L = L & operand
+          if (instruction.operand.opType != OperandType.ACC) {
+            asm = operandToA(instruction.operand);
+            result.add(asm);
+            byteAddress += asm.getBytes().size();
+          }
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,L", 0xA5));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,D", 0x7A)); // restore
-                                                                                          // A
-          asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00); // H
-                                                                                        // =
-                                                                                        // 0
-        } else if (instruction.operand.opType == OperandType.GLOBAL_VAR && instruction.operand.dataType == DataType.byt) {
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47)); // save
-                                                                                          // A
-          result.add(new AssemblyInstruction(byteAddress++, String.format(INDENT + "LD    A,(0%04XH)", memAddress), 0x3A,
-              memAddress % 256, memAddress / 256));
-          byteAddress += 2;
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "AND   A,L", 0xA5)); // L
-                                                                                          // =
-                                                                                          // L
-                                                                                          // &
-                                                                                          // var
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F)); // H
-                                                                                          // =
-                                                                                          // 0
-          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,B", 0x78)); // restore
-                                                                                          // A
+
+          // Restore A
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    A,E", 0x7B));
+
+          // H = 0
           asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0x00);
         } else {
           asm = operandToDE(instruction);
@@ -519,9 +495,27 @@ public class Transcoder {
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
           byteAddress++;
         } else {
-          asm = operandToDE(instruction);
-          result.add(asm);
-          byteAddress += asm.getBytes().size();
+          if (instruction.operand.opType == OperandType.LOCAL_VAR) {
+            // |word var D| <-BASE_POINTER - 2
+            // |word var E| <-BASE_POINTER - 3
+            // offset = -3
+            // byt = 256 + offset = 253
+
+            asmCode = String.format(INDENT + "LD    E,(%s)", basePointerPlusIndex(byt));
+            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x5E, instruction.operand.intValue);
+            result.add(asm);
+            byteAddress += asm.getBytes().size();
+
+            byt++;
+            asmCode = String.format(INDENT + "LD    D,(%s)", basePointerPlusIndex(byt));
+            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x56, instruction.operand.intValue);
+            result.add(asm);
+            byteAddress += asm.getBytes().size();
+          } else {
+            asm = operandToDE(instruction);
+            result.add(asm);
+            byteAddress += asm.getBytes().size();
+          }
         }
 
         if ((function == FunctionType.acc16CompareAcc8) || (function == FunctionType.minusAcc16)) {
@@ -829,6 +823,10 @@ public class Transcoder {
             asmCode = INDENT + "SUB   A,B";
             asm = new AssemblyInstruction(byteAddress, asmCode, 0x90);
             break;
+          case LOCAL_VAR:
+            asmCode = String.format(INDENT + "SUB   A,(%s)", basePointerPlusIndex(byt));
+            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x96, byt);
+            break;
           case CONSTANT:
             asmCode = INDENT + "SUB   A," + byt;
             asm = new AssemblyInstruction(byteAddress, asmCode, 0xD6, byt);
@@ -1033,13 +1031,17 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, INDENT + "JP    NC,L" + word, 0xD2, word % 256, word / 256);
         break;
       case brGt:
-        asm = new AssemblyInstruction(byteAddress, INDENT + "JR    Z,$+5", 0x28, 3);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "JR    Z,$+3", 0x28, 3);
         result.add(asm);
         byteAddress += asm.getBytes().size();
         putLabelReference(word, byteAddress);
-        asm = new AssemblyInstruction(byteAddress, INDENT + "JP    C,L" + word, 0xDA, word % 256, word / 256);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "JP    NC,L" + word, 0xDA, word % 256, word / 256);
         break;
       case brLe:
+        putLabelReference(word, byteAddress);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "JP    C,L" + word, 0xDA, word % 256, word / 256);
+        result.add(asm);
+        byteAddress += asm.getBytes().size();
         putLabelReference(word, byteAddress);
         asm = new AssemblyInstruction(byteAddress, INDENT + "JP    Z,L" + word, 0xCA, word % 256, word / 256);
         break;
