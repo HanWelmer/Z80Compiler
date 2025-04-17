@@ -465,7 +465,7 @@ public class Instruction {
       case acc8Store:
         switch (operand.opType) {
           case GLOBAL_VAR:
-            result += " variable " + operand.intValue;
+            result += " " + operand.dataType.getValue() + " variable " + operand.intValue;
             break;
           case LOCAL_VAR:
             result += String.format(" (basePointer + %d)", operand.intValue);
@@ -510,7 +510,7 @@ public class Instruction {
       case revAcc8Compare: // reverse compare
         switch (operand.opType) {
           case GLOBAL_VAR:
-            result += " variable " + operand.intValue;
+            result += " " + operand.dataType.getValue() + " variable " + operand.intValue;
             break;
           case LOCAL_VAR:
             result += String.format(" (basePointer + %d)", operand.intValue);
@@ -558,7 +558,7 @@ public class Instruction {
       case decrement8:
         switch (operand.opType) {
           case GLOBAL_VAR:
-            result += " variable " + operand.intValue;
+            result += " " + operand.dataType.getValue() + " variable " + operand.intValue;
             break;
           case LOCAL_VAR:
             result += String.format(" (basePointer + %d)", operand.intValue);

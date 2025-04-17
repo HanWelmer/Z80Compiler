@@ -334,10 +334,26 @@ public class MachineCodeParser {
       } else {
         result = new Operand(OperandType.CONSTANT, datatype, value);
       }
-    } else if ("variable".equals(keyword)) {
+    } else if ("byte".equals(keyword)) {
       skipSpaces(line);
-      int address = parseNumber(line);
-      result = new Operand(OperandType.GLOBAL_VAR, datatype, address);
+      keyword = parseKeyword(line);
+      if ("variable".equals(keyword)) {
+        skipSpaces(line);
+        int address = parseNumber(line);
+        result = new Operand(OperandType.GLOBAL_VAR, DataType.byt, address);
+      } else {
+        throw new RuntimeException("Internal error; unexpected syntax after <byte>: " + line.substring(pos));
+      }
+    } else if ("word".equals(keyword)) {
+      skipSpaces(line);
+      keyword = parseKeyword(line);
+      if ("variable".equals(keyword)) {
+        skipSpaces(line);
+        int address = parseNumber(line);
+        result = new Operand(OperandType.GLOBAL_VAR, DataType.word, address);
+      } else {
+        throw new RuntimeException("Internal error; unexpected syntax after <word>: " + line.substring(pos));
+      }
     } else {
       throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
     }

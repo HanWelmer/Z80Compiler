@@ -46,7 +46,7 @@ public class pCompiler {
     public String packageName = "";
     public String className = "";
     public int jumpFrom = 0;
-    public boolean doingMemberInitializer= false;
+    public boolean doingMemberInitializer = false;
 
     // constructor
     public CompilationUnitContext(LexemeReader lexemeReader) {
@@ -464,7 +464,8 @@ public class pCompiler {
       // lexical analysis, semantic analysis and code generation.
       CompilationUnitContext cuc = new CompilationUnitContext(lexemeReader);
       compilationUnit(cuc);
-      // last jump instruction in list of static member initializers jumps to main function.
+      // last jump instruction in list of static member initializers jumps to
+      // main function.
       String main = getFullyQualifiedName(cuc, "main");
       instructions.get(cuc.jumpFrom).operand.strValue = main;
 
@@ -609,12 +610,12 @@ public class pCompiler {
       String fullName = importPackageName.replace(".", File.separator) + ".j";
       LexemeReader localLexemeReader = new LexemeReader();
       if (localLexemeReader.init(debugMode, cuc.lexemeReader.getPath(), fullName)) {
-    	CompilationUnitContext localCuc = new CompilationUnitContext(localLexemeReader);
-    	localCuc.jumpFrom = cuc.jumpFrom; 
-    	localCuc.doingMemberInitializer = cuc.doingMemberInitializer; 
+        CompilationUnitContext localCuc = new CompilationUnitContext(localLexemeReader);
+        localCuc.jumpFrom = cuc.jumpFrom;
+        localCuc.doingMemberInitializer = cuc.doingMemberInitializer;
         compilationUnit(localCuc);
-    	cuc.jumpFrom = localCuc.jumpFrom; 
-    	cuc.doingMemberInitializer = localCuc.doingMemberInitializer; 
+        cuc.jumpFrom = localCuc.jumpFrom;
+        cuc.doingMemberInitializer = localCuc.doingMemberInitializer;
       } else {
         error(cuc.lexemeReader, 42, fullName);
       }
@@ -793,7 +794,7 @@ public class pCompiler {
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
       while (CLASS_BODY_START_SET.contains(lexeme.type)) {
-    	classBodyDeclaration(cuc, classDeclStopSet);
+        classBodyDeclaration(cuc, classDeclStopSet);
       }
 
       // skip end lexeme
@@ -827,8 +828,8 @@ public class pCompiler {
   // - Field resultType ::= type.
   private void classBodyDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nclassBodyDeclaration: start");
-    
-    //Semantic analysis
+
+    // Semantic analysis
     EnumSet<LexemeType> modifiers = modifiers(cuc.lexemeReader);
     EnumSet<LexemeType> resultTypeStopSet = stopSet.clone();
     resultTypeStopSet.add(LexemeType.identifier);
@@ -844,22 +845,22 @@ public class pCompiler {
       String identifier = lexeme.idVal;
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       if (lexeme.type == LexemeType.LPAREN) {
-        //method declaration
+        // method declaration
 
-    	//Code generation
+        // Code generation
         if (cuc.doingMemberInitializer && instructions.get(cuc.jumpFrom).operand.intValue != 0) {
           cuc.jumpFrom = instructions.size();
           plantThenSource(cuc.lexemeReader, new Instruction(FunctionType.br, new Operand(OperandType.LABEL, DataType.word, 0)));
           cuc.doingMemberInitializer = false;
         }
 
-        //Semantic analysis
+        // Semantic analysis
         EnumSet<LexemeType> methodStopSet = stopSet.clone();
         methodStopSet.add(LexemeType.semicolon);
         methodStopSet.add(LexemeType.RPAREN);
         restOfMethodDeclaration(cuc, modifiers, resultType, identifier, methodStopSet);
       } else {
-    	// variable declaration
+        // variable declaration
 
         // semantic analysis
         checkFieldModifiers(cuc.lexemeReader, modifiers);
@@ -976,7 +977,8 @@ public class pCompiler {
 
           if (modifiers.contains(LexemeType.staticLexeme) && modifiers.contains(LexemeType.finalLexeme)) {
             // Static final field is treated as compile-time constant.
-            // Therefore, initializer must be a compile-time constant expression.
+            // Therefore, initializer must be a compile-time constant
+            // expression.
 
             // Parse constant expression.
             // TODO support constant expression, not just a constant.
@@ -992,17 +994,17 @@ public class pCompiler {
               error(cuc.lexemeReader, 17);
             }
           } else {
-        	// Proper run-time initializer.
+            // Proper run-time initializer.
 
-        	// Code generation
-        	Operand jumpingTo = instructions.get(cuc.jumpFrom).operand;
-        	if (identifierType == IdentifierType.CLASS_VARIABLE) {
+            // Code generation
+            Operand jumpingTo = instructions.get(cuc.jumpFrom).operand;
+            if (identifierType == IdentifierType.CLASS_VARIABLE) {
               if (jumpingTo.intValue == 0) {
                 plantSource();
                 jumpingTo.intValue = instructions.size();
               }
               cuc.doingMemberInitializer = true;
-        	}
+            }
 
             // Semantic analysis
             // Parse expression.
@@ -2186,8 +2188,9 @@ public class pCompiler {
       if (lexeme.type != LexemeType.RPAREN) {
         stackSize = argumentList(cuc, method, localStopSet);
       } else if (method.getFormalParameters().size() != 0) {
-        error(cuc.lexemeReader, 39); // nr of arguments does not match nr of formal
-                                 // parameters.
+        error(cuc.lexemeReader, 39); // nr of arguments does not match nr of
+                                     // formal
+        // parameters.
       }
 
       // skip closing right parenthesis.
@@ -2232,14 +2235,16 @@ public class pCompiler {
 
       // semantic analysis.
       if (parameterIndex >= method.getFormalParameters().size()) {
-        error(cuc.lexemeReader, 39); // number of arguments does not match number of
-                                 // formal
+        error(cuc.lexemeReader, 39); // number of arguments does not match
+                                     // number of
+        // formal
         // parameters.
       } else {
         FormalParameter parameter = method.getFormalParameter(parameterIndex);
         if (parameter.getDataType() != expression.dataType) {
-          error(cuc.lexemeReader, 41); // incompatible data type between argument
-                                   // and formal
+          error(cuc.lexemeReader, 41); // incompatible data type between
+                                       // argument
+          // and formal
           // parameter.
         }
       }
@@ -2439,8 +2444,7 @@ public class pCompiler {
     // lexical analysis.
     EnumSet<LexemeType> followSet = stopSet.clone();
     followSet.add(LEXEME_TYPE_AT_LEVEL[level]);
-    Operand leftOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(cuc, followSet)
-        : term(cuc, level + 1, followSet);
+    Operand leftOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(cuc, followSet) : term(cuc, level + 1, followSet);
 
     leftOperand = termWithOperand(cuc, level, leftOperand, followSet);
     debug("\nterm: end");
@@ -2480,16 +2484,14 @@ public class pCompiler {
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       // process the right hand operand and subsequent operators/operands at the
       // next level, ultimately parsing a factor.
-      Operand rOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(cuc, followSet)
-          : term(cuc, level + 1, followSet);
+      Operand rOperand = (level == LEXEME_TYPE_AT_LEVEL.length - 1) ? factor(cuc, followSet) : term(cuc, level + 1, followSet);
 
       // code generation.
       debug("\ntermWithOperand loop: level = " + level + ", leftOperand=" + leftOperand + ", rightOperand=" + rOperand
           + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-      /*
-       * leftOperand: constant, acc, var, stack16, stack8 rOperand: constant,
-       * acc, var, stack16, stack8
-       */
+      // leftOperand: constant, acc, var, stack16, stack8.
+      // rOperand: constant, acc, var, stack16, stack8.
+      // TODO bitwiseAnd with byte operand (either side) gives a byte result.
       if ((leftOperand.opType == OperandType.ACC) && (rOperand.opType == OperandType.CONSTANT)) {
         if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.word) {
           plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
@@ -3345,10 +3347,11 @@ public class pCompiler {
                 String.format("One of the instructions to symbol %s does not have a label operand", fullyQualifiedName));
           } else if (instruction.operand.intValue == 0) {
             instruction.operand.intValue = address;
-//          } else if (instruction.operand.intValue != address) {
-//            throw new RuntimeException(String.format(
-//                "One of the instructions to symbol %s already has %d as address which is different from expected value %d",
-//                fullyQualifiedName, instruction.operand.intValue, address));
+            // } else if (instruction.operand.intValue != address) {
+            // throw new RuntimeException(String.format(
+            // "One of the instructions to symbol %s already has %d as address
+            // which is different from expected value %d",
+            // fullyQualifiedName, instruction.operand.intValue, address));
           }
         }
       }
@@ -3438,7 +3441,7 @@ public class pCompiler {
     if (BRANCH_FUNCTIONS.contains(instruction.function) && (instruction.operand.intValue > pos)) {
       instruction.operand.intValue -= number;
     }
-	return instruction;
+    return instruction;
   }
 
 }

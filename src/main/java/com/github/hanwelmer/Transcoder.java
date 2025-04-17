@@ -1084,7 +1084,12 @@ public class Transcoder {
         break;
       case decrement8:
         if (instruction.operand.opType == OperandType.GLOBAL_VAR) {
-          result.addAll(operandToHL(instruction));
+          // load address of global variable into HL.
+          asmCode = String.format(INDENT + "LD    HL,0%04XH", memAddress);
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, memAddress % 256, memAddress / 256);
+          result.add(asm);
+          byteAddress += asm.getBytes().size();
+          // decrement global variable.
           asm = new AssemblyInstruction(byteAddress, INDENT + "DEC   (HL)", 0x35);
         } else if (instruction.operand.opType == OperandType.LOCAL_VAR) {
           asmCode = String.format(INDENT + "DEC   (%s)", basePointerPlusIndex(byt));
@@ -1133,7 +1138,12 @@ public class Transcoder {
         break;
       case increment8:
         if (instruction.operand.opType == OperandType.GLOBAL_VAR) {
-          result.addAll(operandToHL(instruction));
+          // load address of global variable into HL.
+          asmCode = String.format(INDENT + "LD    HL,0%04XH", memAddress);
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0x21, memAddress % 256, memAddress / 256);
+          result.add(asm);
+          byteAddress += asm.getBytes().size();
+          // increment global variable.
           asm = new AssemblyInstruction(byteAddress, INDENT + "INC   (HL)", 0x34);
         } else {
           throw new RuntimeException("increment8 with unsupported operandType");
@@ -1364,6 +1374,9 @@ public class Transcoder {
     AssemblyInstruction asm = null;
     switch (instruction.operand.opType) {
       case GLOBAL_VAR:
+        if (instruction.operand.dataType != DataType.word) {
+          throw new RuntimeException(String.format("unsupported data type %s for loading into DE", instruction.operand.dataType));
+        }
         int memAddress = MEM_START + instruction.operand.intValue;
         asmCode = String.format(INDENT + "LD    HL,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0x2A, memAddress % 256, memAddress / 256);
@@ -1406,6 +1419,9 @@ public class Transcoder {
     AssemblyInstruction asm = null;
     switch (instruction.operand.opType) {
       case GLOBAL_VAR:
+        if (instruction.operand.dataType != DataType.word) {
+          throw new RuntimeException(String.format("unsupported data type %s for loading into DE", instruction.operand.dataType));
+        }
         int memAddress = MEM_START + instruction.operand.intValue;
         asmCode = String.format(INDENT + "LD    DE,(0%04XH)", memAddress);
         asm = new AssemblyInstruction(byteAddress, asmCode, 0xED, 0x5B, memAddress % 256, memAddress / 256);
