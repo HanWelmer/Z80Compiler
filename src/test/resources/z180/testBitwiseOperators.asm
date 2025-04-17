@@ -1114,17 +1114,12 @@ L423:
 L424:
         LD    HL,4660
 L425:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L426:
         LD    A,20
 L427:
@@ -1150,13 +1145,9 @@ L434:
 L435:
         LD    HL,4660
 L436:
-        LD    DE,(05000H)
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
 L437:
@@ -1180,17 +1171,11 @@ L444:
 L445:
         LD    HL,4660
 L446:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L447:
         LD    DE,4648
         OR    A
@@ -2696,17 +2681,12 @@ L1007:
         LD    DE,564
         ADD   HL,DE
 L1008:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L1009:
         LD    A,20
 L1010:
@@ -2735,13 +2715,9 @@ L1019:
         LD    DE,564
         ADD   HL,DE
 L1020:
-        LD    DE,(05000H)
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
 L1021:
@@ -2768,17 +2744,11 @@ L1030:
         LD    DE,564
         ADD   HL,DE
 L1031:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L1032:
         LD    DE,4648
         OR    A
@@ -4230,17 +4200,12 @@ L1569:
 L1570:
         LD    HL,(05004H)
 L1571:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L1572:
         LD    A,20
 L1573:
@@ -4266,13 +4231,9 @@ L1580:
 L1581:
         LD    HL,(05004H)
 L1582:
-        LD    DE,(05000H)
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
 L1583:
@@ -4296,17 +4257,11 @@ L1590:
 L1591:
         LD    HL,(05004H)
 L1592:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L1593:
         LD    DE,4648
         OR    A
@@ -5728,17 +5683,12 @@ L2118:
 L2119:
         LD    HL,(05004H)
 L2120:
-        LD    DE,(05000H)
-        PUSH  BC
-        LD    B,A
-        LD    A,H
-        AND   A,D
-        LD    H,A
-        LD    A,L
-        AND   A,E
+        LD    E,A
+        LD    A,(05000H)
+        AND   A,L
         LD    L,A
-        LD    A,B
-        POP   BC
+        LD    A,E
+        LD    H,0
 L2121:
         LD    A,20
 L2122:
@@ -5764,13 +5714,9 @@ L2129:
 L2130:
         LD    HL,(05004H)
 L2131:
-        LD    DE,(05000H)
         LD    B,A
-        LD    A,H
-        OR    A,D
-        LD    H,A
-        LD    A,L
-        OR    A,E
+        LD    A,(05000H)
+        OR    A,L
         LD    L,A
         LD    A,B
 L2132:
@@ -5794,17 +5740,11 @@ L2139:
 L2140:
         LD    HL,(05004H)
 L2141:
-        LD    DE,(05000H)
-        PUSH  BC
         LD    B,A
-        LD    A,H
-        XOR   A,D
-        LD    H,A
-        LD    A,L
-        XOR   A,E
+        LD    A,(05000H)
+        XOR   A,L
         LD    L,A
         LD    A,B
-        POP   BC
 L2142:
         LD    DE,4648
         OR    A

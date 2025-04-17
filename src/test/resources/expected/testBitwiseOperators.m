@@ -5,16 +5,16 @@
    4 class TestBitwiseOperators []
    5 ;testBitwiseOperators.j(2)   private static byte b1 = 0x1C;
    6 acc8= constant 28
-   7 acc8=> variable 0
+   7 acc8=> byte variable 0
    8 ;testBitwiseOperators.j(3)   private static byte b2 = 0x07;
    9 acc8= constant 7
-  10 acc8=> variable 1
+  10 acc8=> byte variable 1
   11 ;testBitwiseOperators.j(4)   private static word w1 = 0x032C;
   12 acc16= constant 812
-  13 acc16=> variable 2
+  13 acc16=> word variable 2
   14 ;testBitwiseOperators.j(5)   private static word w2 = 0x1234;
   15 acc16= constant 4660
-  16 acc16=> variable 4
+  16 acc16=> word variable 4
   17 br 24
   18 ;testBitwiseOperators.j(6)   private static final byte fb1 = 0x1C;
   19 ;testBitwiseOperators.j(7)   private static final byte fb2 = 0x07;
@@ -326,7 +326,7 @@
  325 ;testBitwiseOperators.j(60)     //constant byte/var byte
  326 ;testBitwiseOperators.j(61)     if (0x07 & b1 == 0x04) println (25); else println (999);
  327 acc8= constant 7
- 328 acc8And variable 0
+ 328 acc8And byte variable 0
  329 acc8Comp constant 4
  330 brne 334
  331 acc8= constant 25
@@ -336,7 +336,7 @@
  335 writeLineAcc16
  336 ;testBitwiseOperators.j(62)     if (0x07 | b1 == 0x1F) println (26); else println (999);
  337 acc8= constant 7
- 338 acc8Or variable 0
+ 338 acc8Or byte variable 0
  339 acc8Comp constant 31
  340 brne 344
  341 acc8= constant 26
@@ -346,7 +346,7 @@
  345 writeLineAcc16
  346 ;testBitwiseOperators.j(63)     if (0x07 ^ b1 == 0x1B) println (27); else println (999);
  347 acc8= constant 7
- 348 acc8Xor variable 0
+ 348 acc8Xor byte variable 0
  349 acc8Comp constant 27
  350 brne 354
  351 acc8= constant 27
@@ -357,7 +357,7 @@
  356 ;testBitwiseOperators.j(64)     //constant word/var word
  357 ;testBitwiseOperators.j(65)     if (0x1234 & w1 == 0x0224) println (28); else println (999);
  358 acc16= constant 4660
- 359 acc16And variable 2
+ 359 acc16And word variable 2
  360 acc16Comp constant 548
  361 brne 365
  362 acc8= constant 28
@@ -367,7 +367,7 @@
  366 writeLineAcc16
  367 ;testBitwiseOperators.j(66)     if (0x1234 | w1 == 0x133C) println (29); else println (999);
  368 acc16= constant 4660
- 369 acc16Or variable 2
+ 369 acc16Or word variable 2
  370 acc16Comp constant 4924
  371 brne 375
  372 acc8= constant 29
@@ -377,7 +377,7 @@
  376 writeLineAcc16
  377 ;testBitwiseOperators.j(67)     if (0x1234 ^ w1 == 0x1118) println (30); else println (999);
  378 acc16= constant 4660
- 379 acc16Xor variable 2
+ 379 acc16Xor word variable 2
  380 acc16Comp constant 4376
  381 brne 385
  382 acc8= constant 30
@@ -389,7 +389,7 @@
  388 ;testBitwiseOperators.j(69)     if (0x1C & w2 == 0x0014) println (31); else println (999);
  389 acc8= constant 28
  390 acc8ToAcc16
- 391 acc16And variable 4
+ 391 acc16And word variable 4
  392 acc8= constant 20
  393 acc16CompareAcc8
  394 brne 398
@@ -401,7 +401,7 @@
  400 ;testBitwiseOperators.j(70)     if (0x1C | w2 == 0x123C) println (32); else println (999);
  401 acc8= constant 28
  402 acc8ToAcc16
- 403 acc16Or variable 4
+ 403 acc16Or word variable 4
  404 acc16Comp constant 4668
  405 brne 409
  406 acc8= constant 32
@@ -412,7 +412,7 @@
  411 ;testBitwiseOperators.j(71)     if (0x1C ^ w2 == 0x1228) println (33); else println (999);
  412 acc8= constant 28
  413 acc8ToAcc16
- 414 acc16Xor variable 4
+ 414 acc16Xor word variable 4
  415 acc16Comp constant 4648
  416 brne 420
  417 acc8= constant 33
@@ -423,7 +423,7 @@
  422 ;testBitwiseOperators.j(72)     //constant word/var byte
  423 ;testBitwiseOperators.j(73)     if (0x1234 & b1 == 0x0014) println (34); else println (999);
  424 acc16= constant 4660
- 425 acc16And variable 0
+ 425 acc16And byte variable 0
  426 acc8= constant 20
  427 acc16CompareAcc8
  428 brne 432
@@ -434,7 +434,7 @@
  433 writeLineAcc16
  434 ;testBitwiseOperators.j(74)     if (0x1234 | b1 == 0x123C) println (35); else println (999);
  435 acc16= constant 4660
- 436 acc16Or variable 0
+ 436 acc16Or byte variable 0
  437 acc16Comp constant 4668
  438 brne 442
  439 acc8= constant 35
@@ -444,7 +444,7 @@
  443 writeLineAcc16
  444 ;testBitwiseOperators.j(75)     if (0x1234 ^ b1 == 0x1228) println (36); else println (999);
  445 acc16= constant 4660
- 446 acc16Xor variable 0
+ 446 acc16Xor byte variable 0
  447 acc16Comp constant 4648
  448 brne 452
  449 acc8= constant 36
@@ -900,7 +900,7 @@
  899 ;testBitwiseOperators.j(137)     if (0x04 + 0x03 & b1 == 0x04) println (73); else println (999);
  900 acc8= constant 4
  901 acc8+ constant 3
- 902 acc8And variable 0
+ 902 acc8And byte variable 0
  903 acc8Comp constant 4
  904 brne 908
  905 acc8= constant 73
@@ -911,7 +911,7 @@
  910 ;testBitwiseOperators.j(138)     if (0x04 + 0x03 | b1 == 0x1F) println (74); else println (999);
  911 acc8= constant 4
  912 acc8+ constant 3
- 913 acc8Or variable 0
+ 913 acc8Or byte variable 0
  914 acc8Comp constant 31
  915 brne 919
  916 acc8= constant 74
@@ -922,7 +922,7 @@
  921 ;testBitwiseOperators.j(139)     if (0x04 + 0x03 ^ b1 == 0x1B) println (75); else println (999);
  922 acc8= constant 4
  923 acc8+ constant 3
- 924 acc8Xor variable 0
+ 924 acc8Xor byte variable 0
  925 acc8Comp constant 27
  926 brne 930
  927 acc8= constant 75
@@ -934,7 +934,7 @@
  933 ;testBitwiseOperators.j(141)     if (0x1000 + 0x0234 & w1 == 0x0224) println (76); else println (999);
  934 acc16= constant 4096
  935 acc16+ constant 564
- 936 acc16And variable 2
+ 936 acc16And word variable 2
  937 acc16Comp constant 548
  938 brne 942
  939 acc8= constant 76
@@ -945,7 +945,7 @@
  944 ;testBitwiseOperators.j(142)     if (0x1000 + 0x0234 | w1 == 0x133C) println (77); else println (999);
  945 acc16= constant 4096
  946 acc16+ constant 564
- 947 acc16Or variable 2
+ 947 acc16Or word variable 2
  948 acc16Comp constant 4924
  949 brne 953
  950 acc8= constant 77
@@ -956,7 +956,7 @@
  955 ;testBitwiseOperators.j(143)     if (0x1000 + 0x0234 ^ w1 == 0x1118) println (78); else println (999);
  956 acc16= constant 4096
  957 acc16+ constant 564
- 958 acc16Xor variable 2
+ 958 acc16Xor word variable 2
  959 acc16Comp constant 4376
  960 brne 964
  961 acc8= constant 78
@@ -969,7 +969,7 @@
  968 acc8= constant 16
  969 acc8+ constant 12
  970 acc8ToAcc16
- 971 acc16And variable 4
+ 971 acc16And word variable 4
  972 acc8= constant 20
  973 acc16CompareAcc8
  974 brne 978
@@ -982,7 +982,7 @@
  981 acc8= constant 16
  982 acc8+ constant 12
  983 acc8ToAcc16
- 984 acc16Or variable 4
+ 984 acc16Or word variable 4
  985 acc16Comp constant 4668
  986 brne 990
  987 acc8= constant 80
@@ -994,7 +994,7 @@
  993 acc8= constant 16
  994 acc8+ constant 12
  995 acc8ToAcc16
- 996 acc16Xor variable 4
+ 996 acc16Xor word variable 4
  997 acc16Comp constant 4648
  998 brne 1002
  999 acc8= constant 81
@@ -1006,7 +1006,7 @@
 1005 ;testBitwiseOperators.j(149)     if (0x1000 + 0x0234 & b1 == 0x0014) println (82); else println (999);
 1006 acc16= constant 4096
 1007 acc16+ constant 564
-1008 acc16And variable 0
+1008 acc16And byte variable 0
 1009 acc8= constant 20
 1010 acc16CompareAcc8
 1011 brne 1015
@@ -1018,7 +1018,7 @@
 1017 ;testBitwiseOperators.j(150)     if (0x1000 + 0x0234 | b1 == 0x123C) println (83); else println (999);
 1018 acc16= constant 4096
 1019 acc16+ constant 564
-1020 acc16Or variable 0
+1020 acc16Or byte variable 0
 1021 acc16Comp constant 4668
 1022 brne 1026
 1023 acc8= constant 83
@@ -1029,7 +1029,7 @@
 1028 ;testBitwiseOperators.j(151)     if (0x1000 + 0x0234 ^ b1 == 0x1228) println (84); else println (999);
 1029 acc16= constant 4096
 1030 acc16+ constant 564
-1031 acc16Xor variable 0
+1031 acc16Xor byte variable 0
 1032 acc16Comp constant 4648
 1033 brne 1037
 1034 acc8= constant 84
@@ -1186,7 +1186,7 @@
 1185 ;testBitwiseOperators.j(173)     //************
 1186 ;testBitwiseOperators.j(174)     //var byte/constant byte
 1187 ;testBitwiseOperators.j(175)     if (b2 & 0x1C == 0x04) println (97); else println (999);
-1188 acc8= variable 1
+1188 acc8= byte variable 1
 1189 acc8And constant 28
 1190 acc8Comp constant 4
 1191 brne 1195
@@ -1196,7 +1196,7 @@
 1195 acc16= constant 999
 1196 writeLineAcc16
 1197 ;testBitwiseOperators.j(176)     if (b2 | 0x1C == 0x1F) println (98); else println (999);
-1198 acc8= variable 1
+1198 acc8= byte variable 1
 1199 acc8Or constant 28
 1200 acc8Comp constant 31
 1201 brne 1205
@@ -1206,7 +1206,7 @@
 1205 acc16= constant 999
 1206 writeLineAcc16
 1207 ;testBitwiseOperators.j(177)     if (b2 ^ 0x1C == 0x1B) println (99); else println (999);
-1208 acc8= variable 1
+1208 acc8= byte variable 1
 1209 acc8Xor constant 28
 1210 acc8Comp constant 27
 1211 brne 1215
@@ -1217,7 +1217,7 @@
 1216 writeLineAcc16
 1217 ;testBitwiseOperators.j(178)     //var word/constant word
 1218 ;testBitwiseOperators.j(179)     if (w2 & 0x032C == 0x0224) println (100); else println (999);
-1219 acc16= variable 4
+1219 acc16= word variable 4
 1220 acc16And constant 812
 1221 acc16Comp constant 548
 1222 brne 1226
@@ -1227,7 +1227,7 @@
 1226 acc16= constant 999
 1227 writeLineAcc16
 1228 ;testBitwiseOperators.j(180)     if (w2 | 0x032C == 0x133C) println (101); else println (999);
-1229 acc16= variable 4
+1229 acc16= word variable 4
 1230 acc16Or constant 812
 1231 acc16Comp constant 4924
 1232 brne 1236
@@ -1237,7 +1237,7 @@
 1236 acc16= constant 999
 1237 writeLineAcc16
 1238 ;testBitwiseOperators.j(181)     if (w2 ^ 0x032C == 0x1118) println (102); else println (999);
-1239 acc16= variable 4
+1239 acc16= word variable 4
 1240 acc16Xor constant 812
 1241 acc16Comp constant 4376
 1242 brne 1246
@@ -1248,7 +1248,7 @@
 1247 writeLineAcc16
 1248 ;testBitwiseOperators.j(182)     //var byte/constant word
 1249 ;testBitwiseOperators.j(183)     if (b1 & 0x1234 == 0x0014) println (103); else println (999);
-1250 acc8= variable 0
+1250 acc8= byte variable 0
 1251 acc8ToAcc16
 1252 acc16And constant 4660
 1253 acc8= constant 20
@@ -1260,7 +1260,7 @@
 1259 acc16= constant 999
 1260 writeLineAcc16
 1261 ;testBitwiseOperators.j(184)     if (b1 | 0x1234 == 0x123C) println (104); else println (999);
-1262 acc8= variable 0
+1262 acc8= byte variable 0
 1263 acc8ToAcc16
 1264 acc16Or constant 4660
 1265 acc16Comp constant 4668
@@ -1271,7 +1271,7 @@
 1270 acc16= constant 999
 1271 writeLineAcc16
 1272 ;testBitwiseOperators.j(185)     if (b1 ^ 0x1234 == 0x1228) println (105); else println (999);
-1273 acc8= variable 0
+1273 acc8= byte variable 0
 1274 acc8ToAcc16
 1275 acc16Xor constant 4660
 1276 acc16Comp constant 4648
@@ -1283,7 +1283,7 @@
 1282 writeLineAcc16
 1283 ;testBitwiseOperators.j(186)     //var word/constant byte
 1284 ;testBitwiseOperators.j(187)     if (w2 & 0x1C == 0x0014) println (106); else println (999);
-1285 acc16= variable 4
+1285 acc16= word variable 4
 1286 acc16And constant 28
 1287 acc8= constant 20
 1288 acc16CompareAcc8
@@ -1294,7 +1294,7 @@
 1293 acc16= constant 999
 1294 writeLineAcc16
 1295 ;testBitwiseOperators.j(188)     if (w2 | 0x1C == 0x123C) println (107); else println (999);
-1296 acc16= variable 4
+1296 acc16= word variable 4
 1297 acc16Or constant 28
 1298 acc16Comp constant 4668
 1299 brne 1303
@@ -1304,7 +1304,7 @@
 1303 acc16= constant 999
 1304 writeLineAcc16
 1305 ;testBitwiseOperators.j(189)     if (w2 ^ 0x1C == 0x1228) println (108); else println (999);
-1306 acc16= variable 4
+1306 acc16= word variable 4
 1307 acc16Xor constant 28
 1308 acc16Comp constant 4648
 1309 brne 1313
@@ -1318,7 +1318,7 @@
 1317 ;testBitwiseOperators.j(192)     //*******
 1318 ;testBitwiseOperators.j(193)     //var byte/acc byte
 1319 ;testBitwiseOperators.j(194)     if (b2 & (0x10 + 0x0C) == 0x04) println (109); else println (999);
-1320 acc8= variable 1
+1320 acc8= byte variable 1
 1321 <acc8= constant 16
 1322 acc8+ constant 12
 1323 acc8And unstack8
@@ -1330,7 +1330,7 @@
 1329 acc16= constant 999
 1330 writeLineAcc16
 1331 ;testBitwiseOperators.j(195)     if (b2 | (0x10 + 0x0C) == 0x1F) println (110); else println (999);
-1332 acc8= variable 1
+1332 acc8= byte variable 1
 1333 <acc8= constant 16
 1334 acc8+ constant 12
 1335 acc8Or unstack8
@@ -1342,7 +1342,7 @@
 1341 acc16= constant 999
 1342 writeLineAcc16
 1343 ;testBitwiseOperators.j(196)     if (b2 ^ (0x10 + 0x0C) == 0x1B) println (111); else println (999);
-1344 acc8= variable 1
+1344 acc8= byte variable 1
 1345 <acc8= constant 16
 1346 acc8+ constant 12
 1347 acc8Xor unstack8
@@ -1355,7 +1355,7 @@
 1354 writeLineAcc16
 1355 ;testBitwiseOperators.j(197)     //var word/acc word
 1356 ;testBitwiseOperators.j(198)     if (w2 & 0x0100 + 0x022C == 0x0224) println (112); else println (999);
-1357 acc16= variable 4
+1357 acc16= word variable 4
 1358 <acc16= constant 256
 1359 acc16+ constant 556
 1360 acc16And unstack16
@@ -1367,7 +1367,7 @@
 1366 acc16= constant 999
 1367 writeLineAcc16
 1368 ;testBitwiseOperators.j(199)     if (w2 | 0x0100 + 0x022C == 0x133C) println (113); else println (999);
-1369 acc16= variable 4
+1369 acc16= word variable 4
 1370 <acc16= constant 256
 1371 acc16+ constant 556
 1372 acc16Or unstack16
@@ -1379,7 +1379,7 @@
 1378 acc16= constant 999
 1379 writeLineAcc16
 1380 ;testBitwiseOperators.j(200)     if (w2 ^ 0x0100 + 0x022C == 0x1118) println (114); else println (999);
-1381 acc16= variable 4
+1381 acc16= word variable 4
 1382 <acc16= constant 256
 1383 acc16+ constant 556
 1384 acc16Xor unstack16
@@ -1392,7 +1392,7 @@
 1391 writeLineAcc16
 1392 ;testBitwiseOperators.j(201)     //var byte/acc word
 1393 ;testBitwiseOperators.j(202)     if (b1 & 0x1000 + 0x0234 == 0x0014) println (115); else println (999);
-1394 acc8= variable 0
+1394 acc8= byte variable 0
 1395 acc16= constant 4096
 1396 acc16+ constant 564
 1397 acc16And acc8
@@ -1405,7 +1405,7 @@
 1404 acc16= constant 999
 1405 writeLineAcc16
 1406 ;testBitwiseOperators.j(203)     if (b1 | 0x1000 + 0x0234 == 0x123C) println (116); else println (999);
-1407 acc8= variable 0
+1407 acc8= byte variable 0
 1408 acc16= constant 4096
 1409 acc16+ constant 564
 1410 acc16Or acc8
@@ -1417,7 +1417,7 @@
 1416 acc16= constant 999
 1417 writeLineAcc16
 1418 ;testBitwiseOperators.j(204)     if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (117); else println (999);
-1419 acc8= variable 0
+1419 acc8= byte variable 0
 1420 acc16= constant 4096
 1421 acc16+ constant 564
 1422 acc16Xor acc8
@@ -1430,7 +1430,7 @@
 1429 writeLineAcc16
 1430 ;testBitwiseOperators.j(205)     //var word/acc byte
 1431 ;testBitwiseOperators.j(206)     if (w2 & 0x10 + 0x0C == 0x0014) println (118); else println (999);
-1432 acc16= variable 4
+1432 acc16= word variable 4
 1433 acc8= constant 16
 1434 acc8+ constant 12
 1435 acc16And acc8
@@ -1443,7 +1443,7 @@
 1442 acc16= constant 999
 1443 writeLineAcc16
 1444 ;testBitwiseOperators.j(207)     if (w2 | 0x10 + 0x0C == 0x123C) println (119); else println (999);
-1445 acc16= variable 4
+1445 acc16= word variable 4
 1446 acc8= constant 16
 1447 acc8+ constant 12
 1448 acc16Or acc8
@@ -1455,7 +1455,7 @@
 1454 acc16= constant 999
 1455 writeLineAcc16
 1456 ;testBitwiseOperators.j(208)     if (w2 ^ 0x10 + 0x0C == 0x1228) println (120); else println (999);
-1457 acc16= variable 4
+1457 acc16= word variable 4
 1458 acc8= constant 16
 1459 acc8+ constant 12
 1460 acc16Xor acc8
@@ -1471,8 +1471,8 @@
 1470 ;testBitwiseOperators.j(211)     //*******
 1471 ;testBitwiseOperators.j(212)     //var byte/var byte
 1472 ;testBitwiseOperators.j(213)     if (b2 & b1 == 0x04) println (121); else println (999);
-1473 acc8= variable 1
-1474 acc8And variable 0
+1473 acc8= byte variable 1
+1474 acc8And byte variable 0
 1475 acc8Comp constant 4
 1476 brne 1480
 1477 acc8= constant 121
@@ -1481,8 +1481,8 @@
 1480 acc16= constant 999
 1481 writeLineAcc16
 1482 ;testBitwiseOperators.j(214)     if (b2 | b1 == 0x1F) println (122); else println (999);
-1483 acc8= variable 1
-1484 acc8Or variable 0
+1483 acc8= byte variable 1
+1484 acc8Or byte variable 0
 1485 acc8Comp constant 31
 1486 brne 1490
 1487 acc8= constant 122
@@ -1491,8 +1491,8 @@
 1490 acc16= constant 999
 1491 writeLineAcc16
 1492 ;testBitwiseOperators.j(215)     if (b2 ^ b1 == 0x1B) println (123); else println (999);
-1493 acc8= variable 1
-1494 acc8Xor variable 0
+1493 acc8= byte variable 1
+1494 acc8Xor byte variable 0
 1495 acc8Comp constant 27
 1496 brne 1500
 1497 acc8= constant 123
@@ -1502,8 +1502,8 @@
 1501 writeLineAcc16
 1502 ;testBitwiseOperators.j(216)     //var word/var word
 1503 ;testBitwiseOperators.j(217)     if (w2 & w1 == 0x0224) println (124); else println (999);
-1504 acc16= variable 4
-1505 acc16And variable 2
+1504 acc16= word variable 4
+1505 acc16And word variable 2
 1506 acc16Comp constant 548
 1507 brne 1511
 1508 acc8= constant 124
@@ -1512,8 +1512,8 @@
 1511 acc16= constant 999
 1512 writeLineAcc16
 1513 ;testBitwiseOperators.j(218)     if (w2 | w1 == 0x133C) println (125); else println (999);
-1514 acc16= variable 4
-1515 acc16Or variable 2
+1514 acc16= word variable 4
+1515 acc16Or word variable 2
 1516 acc16Comp constant 4924
 1517 brne 1521
 1518 acc8= constant 125
@@ -1522,8 +1522,8 @@
 1521 acc16= constant 999
 1522 writeLineAcc16
 1523 ;testBitwiseOperators.j(219)     if (w2 ^ w1 == 0x1118) println (126); else println (999);
-1524 acc16= variable 4
-1525 acc16Xor variable 2
+1524 acc16= word variable 4
+1525 acc16Xor word variable 2
 1526 acc16Comp constant 4376
 1527 brne 1531
 1528 acc8= constant 126
@@ -1533,9 +1533,9 @@
 1532 writeLineAcc16
 1533 ;testBitwiseOperators.j(220)     //var byte/var word
 1534 ;testBitwiseOperators.j(221)     if (b1 & w2 == 0x0014) println (127); else println (999);
-1535 acc8= variable 0
+1535 acc8= byte variable 0
 1536 acc8ToAcc16
-1537 acc16And variable 4
+1537 acc16And word variable 4
 1538 acc8= constant 20
 1539 acc16CompareAcc8
 1540 brne 1544
@@ -1545,9 +1545,9 @@
 1544 acc16= constant 999
 1545 writeLineAcc16
 1546 ;testBitwiseOperators.j(222)     if (b1 | w2 == 0x123C) println (128); else println (999);
-1547 acc8= variable 0
+1547 acc8= byte variable 0
 1548 acc8ToAcc16
-1549 acc16Or variable 4
+1549 acc16Or word variable 4
 1550 acc16Comp constant 4668
 1551 brne 1555
 1552 acc8= constant 128
@@ -1556,9 +1556,9 @@
 1555 acc16= constant 999
 1556 writeLineAcc16
 1557 ;testBitwiseOperators.j(223)     if (b1 ^ w2 == 0x1228) println (129); else println (999);
-1558 acc8= variable 0
+1558 acc8= byte variable 0
 1559 acc8ToAcc16
-1560 acc16Xor variable 4
+1560 acc16Xor word variable 4
 1561 acc16Comp constant 4648
 1562 brne 1566
 1563 acc8= constant 129
@@ -1568,8 +1568,8 @@
 1567 writeLineAcc16
 1568 ;testBitwiseOperators.j(224)     //var word/var byte
 1569 ;testBitwiseOperators.j(225)     if (w2 & b1 == 0x0014) println (130); else println (999);
-1570 acc16= variable 4
-1571 acc16And variable 0
+1570 acc16= word variable 4
+1571 acc16And byte variable 0
 1572 acc8= constant 20
 1573 acc16CompareAcc8
 1574 brne 1578
@@ -1579,8 +1579,8 @@
 1578 acc16= constant 999
 1579 writeLineAcc16
 1580 ;testBitwiseOperators.j(226)     if (w2 | b1 == 0x123C) println (131); else println (999);
-1581 acc16= variable 4
-1582 acc16Or variable 0
+1581 acc16= word variable 4
+1582 acc16Or byte variable 0
 1583 acc16Comp constant 4668
 1584 brne 1588
 1585 acc8= constant 131
@@ -1589,8 +1589,8 @@
 1588 acc16= constant 999
 1589 writeLineAcc16
 1590 ;testBitwiseOperators.j(227)     if (w2 ^ b1 == 0x1228) println (132); else println (999);
-1591 acc16= variable 4
-1592 acc16Xor variable 0
+1591 acc16= word variable 4
+1592 acc16Xor byte variable 0
 1593 acc16Comp constant 4648
 1594 brne 1598
 1595 acc8= constant 132
@@ -1603,7 +1603,7 @@
 1602 ;testBitwiseOperators.j(230)     //*************
 1603 ;testBitwiseOperators.j(231)     //var byte/final var byte
 1604 ;testBitwiseOperators.j(232)     if (b2 & fb1 == 0x04) println (133); else println (999);
-1605 acc8= variable 1
+1605 acc8= byte variable 1
 1606 acc8And constant 28
 1607 acc8Comp constant 4
 1608 brne 1612
@@ -1613,7 +1613,7 @@
 1612 acc16= constant 999
 1613 writeLineAcc16
 1614 ;testBitwiseOperators.j(233)     if (b2 | fb1 == 0x1F) println (134); else println (999);
-1615 acc8= variable 1
+1615 acc8= byte variable 1
 1616 acc8Or constant 28
 1617 acc8Comp constant 31
 1618 brne 1622
@@ -1623,7 +1623,7 @@
 1622 acc16= constant 999
 1623 writeLineAcc16
 1624 ;testBitwiseOperators.j(234)     if (b2 ^ fb1 == 0x1B) println (135); else println (999);
-1625 acc8= variable 1
+1625 acc8= byte variable 1
 1626 acc8Xor constant 28
 1627 acc8Comp constant 27
 1628 brne 1632
@@ -1634,7 +1634,7 @@
 1633 writeLineAcc16
 1634 ;testBitwiseOperators.j(235)     //var word/final var word
 1635 ;testBitwiseOperators.j(236)     if (w2 & fw1 == 0x0224) println (136); else println (999);
-1636 acc16= variable 4
+1636 acc16= word variable 4
 1637 acc16And constant 812
 1638 acc16Comp constant 548
 1639 brne 1643
@@ -1644,7 +1644,7 @@
 1643 acc16= constant 999
 1644 writeLineAcc16
 1645 ;testBitwiseOperators.j(237)     if (w2 | fw1 == 0x133C) println (137); else println (999);
-1646 acc16= variable 4
+1646 acc16= word variable 4
 1647 acc16Or constant 812
 1648 acc16Comp constant 4924
 1649 brne 1653
@@ -1654,7 +1654,7 @@
 1653 acc16= constant 999
 1654 writeLineAcc16
 1655 ;testBitwiseOperators.j(238)     if (w2 ^ fw1 == 0x1118) println (138); else println (999);
-1656 acc16= variable 4
+1656 acc16= word variable 4
 1657 acc16Xor constant 812
 1658 acc16Comp constant 4376
 1659 brne 1663
@@ -1665,7 +1665,7 @@
 1664 writeLineAcc16
 1665 ;testBitwiseOperators.j(239)     //var byte/final var word
 1666 ;testBitwiseOperators.j(240)     if (b1 & fw2 == 0x0014) println (139); else println (999);
-1667 acc8= variable 0
+1667 acc8= byte variable 0
 1668 acc8ToAcc16
 1669 acc16And constant 4660
 1670 acc8= constant 20
@@ -1677,7 +1677,7 @@
 1676 acc16= constant 999
 1677 writeLineAcc16
 1678 ;testBitwiseOperators.j(241)     if (b1 | fw2 == 0x123C) println (140); else println (999);
-1679 acc8= variable 0
+1679 acc8= byte variable 0
 1680 acc8ToAcc16
 1681 acc16Or constant 4660
 1682 acc16Comp constant 4668
@@ -1688,7 +1688,7 @@
 1687 acc16= constant 999
 1688 writeLineAcc16
 1689 ;testBitwiseOperators.j(242)     if (b1 ^ fw2 == 0x1228) println (141); else println (999);
-1690 acc8= variable 0
+1690 acc8= byte variable 0
 1691 acc8ToAcc16
 1692 acc16Xor constant 4660
 1693 acc16Comp constant 4648
@@ -1700,7 +1700,7 @@
 1699 writeLineAcc16
 1700 ;testBitwiseOperators.j(243)     //var word/final var byte
 1701 ;testBitwiseOperators.j(244)     if (w2 & fb1 == 0x0014) println (142); else println (999);
-1702 acc16= variable 4
+1702 acc16= word variable 4
 1703 acc16And constant 28
 1704 acc8= constant 20
 1705 acc16CompareAcc8
@@ -1711,7 +1711,7 @@
 1710 acc16= constant 999
 1711 writeLineAcc16
 1712 ;testBitwiseOperators.j(245)     if (w2 | fb1 == 0x123C) println (143); else println (999);
-1713 acc16= variable 4
+1713 acc16= word variable 4
 1714 acc16Or constant 28
 1715 acc16Comp constant 4668
 1716 brne 1720
@@ -1721,7 +1721,7 @@
 1720 acc16= constant 999
 1721 writeLineAcc16
 1722 ;testBitwiseOperators.j(246)     if (w2 ^ fb1 == 0x1228) println (144); else println (999);
-1723 acc16= variable 4
+1723 acc16= word variable 4
 1724 acc16Xor constant 28
 1725 acc16Comp constant 4648
 1726 brne 1730
@@ -1735,7 +1735,7 @@
 1734 ;testBitwiseOperators.j(249)     //******************
 1735 ;testBitwiseOperators.j(250)     //final var byte/constant byte
 1736 ;testBitwiseOperators.j(251)     if (b2 & 0x1C == 0x04) println (145); else println (999);
-1737 acc8= variable 1
+1737 acc8= byte variable 1
 1738 acc8And constant 28
 1739 acc8Comp constant 4
 1740 brne 1744
@@ -1745,7 +1745,7 @@
 1744 acc16= constant 999
 1745 writeLineAcc16
 1746 ;testBitwiseOperators.j(252)     if (b2 | 0x1C == 0x1F) println (146); else println (999);
-1747 acc8= variable 1
+1747 acc8= byte variable 1
 1748 acc8Or constant 28
 1749 acc8Comp constant 31
 1750 brne 1754
@@ -1755,7 +1755,7 @@
 1754 acc16= constant 999
 1755 writeLineAcc16
 1756 ;testBitwiseOperators.j(253)     if (b2 ^ 0x1C == 0x1B) println (147); else println (999);
-1757 acc8= variable 1
+1757 acc8= byte variable 1
 1758 acc8Xor constant 28
 1759 acc8Comp constant 27
 1760 brne 1764
@@ -1766,7 +1766,7 @@
 1765 writeLineAcc16
 1766 ;testBitwiseOperators.j(254)     //final var word/constant word
 1767 ;testBitwiseOperators.j(255)     if (w2 & 0x032C == 0x0224) println (148); else println (999);
-1768 acc16= variable 4
+1768 acc16= word variable 4
 1769 acc16And constant 812
 1770 acc16Comp constant 548
 1771 brne 1775
@@ -1776,7 +1776,7 @@
 1775 acc16= constant 999
 1776 writeLineAcc16
 1777 ;testBitwiseOperators.j(256)     if (w2 | 0x032C == 0x133C) println (149); else println (999);
-1778 acc16= variable 4
+1778 acc16= word variable 4
 1779 acc16Or constant 812
 1780 acc16Comp constant 4924
 1781 brne 1785
@@ -1786,7 +1786,7 @@
 1785 acc16= constant 999
 1786 writeLineAcc16
 1787 ;testBitwiseOperators.j(257)     if (w2 ^ 0x032C == 0x1118) println (150); else println (999);
-1788 acc16= variable 4
+1788 acc16= word variable 4
 1789 acc16Xor constant 812
 1790 acc16Comp constant 4376
 1791 brne 1795
@@ -1797,7 +1797,7 @@
 1796 writeLineAcc16
 1797 ;testBitwiseOperators.j(258)     //final var byte/constant word
 1798 ;testBitwiseOperators.j(259)     if (b1 & 0x1234 == 0x0014) println (151); else println (999);
-1799 acc8= variable 0
+1799 acc8= byte variable 0
 1800 acc8ToAcc16
 1801 acc16And constant 4660
 1802 acc8= constant 20
@@ -1809,7 +1809,7 @@
 1808 acc16= constant 999
 1809 writeLineAcc16
 1810 ;testBitwiseOperators.j(260)     if (b1 | 0x1234 == 0x123C) println (152); else println (999);
-1811 acc8= variable 0
+1811 acc8= byte variable 0
 1812 acc8ToAcc16
 1813 acc16Or constant 4660
 1814 acc16Comp constant 4668
@@ -1820,7 +1820,7 @@
 1819 acc16= constant 999
 1820 writeLineAcc16
 1821 ;testBitwiseOperators.j(261)     if (b1 ^ 0x1234 == 0x1228) println (153); else println (999);
-1822 acc8= variable 0
+1822 acc8= byte variable 0
 1823 acc8ToAcc16
 1824 acc16Xor constant 4660
 1825 acc16Comp constant 4648
@@ -1832,7 +1832,7 @@
 1831 writeLineAcc16
 1832 ;testBitwiseOperators.j(262)     //final var word/constant byte
 1833 ;testBitwiseOperators.j(263)     if (w2 & 0x1C == 0x0014) println (154); else println (999);
-1834 acc16= variable 4
+1834 acc16= word variable 4
 1835 acc16And constant 28
 1836 acc8= constant 20
 1837 acc16CompareAcc8
@@ -1843,7 +1843,7 @@
 1842 acc16= constant 999
 1843 writeLineAcc16
 1844 ;testBitwiseOperators.j(264)     if (w2 | 0x1C == 0x123C) println (155); else println (999);
-1845 acc16= variable 4
+1845 acc16= word variable 4
 1846 acc16Or constant 28
 1847 acc16Comp constant 4668
 1848 brne 1852
@@ -1853,7 +1853,7 @@
 1852 acc16= constant 999
 1853 writeLineAcc16
 1854 ;testBitwiseOperators.j(265)     if (w2 ^ 0x1C == 0x1228) println (156); else println (999);
-1855 acc16= variable 4
+1855 acc16= word variable 4
 1856 acc16Xor constant 28
 1857 acc16Comp constant 4648
 1858 brne 1862
@@ -1867,7 +1867,7 @@
 1866 ;testBitwiseOperators.j(268)     //*************
 1867 ;testBitwiseOperators.j(269)     //final var byte/acc byte
 1868 ;testBitwiseOperators.j(270)     if (b2 & (0x10 + 0x0C) == 0x04) println (157); else println (999);
-1869 acc8= variable 1
+1869 acc8= byte variable 1
 1870 <acc8= constant 16
 1871 acc8+ constant 12
 1872 acc8And unstack8
@@ -1879,7 +1879,7 @@
 1878 acc16= constant 999
 1879 writeLineAcc16
 1880 ;testBitwiseOperators.j(271)     if (b2 | (0x10 + 0x0C) == 0x1F) println (158); else println (999);
-1881 acc8= variable 1
+1881 acc8= byte variable 1
 1882 <acc8= constant 16
 1883 acc8+ constant 12
 1884 acc8Or unstack8
@@ -1891,7 +1891,7 @@
 1890 acc16= constant 999
 1891 writeLineAcc16
 1892 ;testBitwiseOperators.j(272)     if (b2 ^ (0x10 + 0x0C) == 0x1B) println (159); else println (999);
-1893 acc8= variable 1
+1893 acc8= byte variable 1
 1894 <acc8= constant 16
 1895 acc8+ constant 12
 1896 acc8Xor unstack8
@@ -1904,7 +1904,7 @@
 1903 writeLineAcc16
 1904 ;testBitwiseOperators.j(273)     //final var word/acc word
 1905 ;testBitwiseOperators.j(274)     if (w2 & 0x0100 + 0x022C == 0x0224) println (160); else println (999);
-1906 acc16= variable 4
+1906 acc16= word variable 4
 1907 <acc16= constant 256
 1908 acc16+ constant 556
 1909 acc16And unstack16
@@ -1916,7 +1916,7 @@
 1915 acc16= constant 999
 1916 writeLineAcc16
 1917 ;testBitwiseOperators.j(275)     if (w2 | 0x0100 + 0x022C == 0x133C) println (161); else println (999);
-1918 acc16= variable 4
+1918 acc16= word variable 4
 1919 <acc16= constant 256
 1920 acc16+ constant 556
 1921 acc16Or unstack16
@@ -1928,7 +1928,7 @@
 1927 acc16= constant 999
 1928 writeLineAcc16
 1929 ;testBitwiseOperators.j(276)     if (w2 ^ 0x0100 + 0x022C == 0x1118) println (162); else println (999);
-1930 acc16= variable 4
+1930 acc16= word variable 4
 1931 <acc16= constant 256
 1932 acc16+ constant 556
 1933 acc16Xor unstack16
@@ -1941,7 +1941,7 @@
 1940 writeLineAcc16
 1941 ;testBitwiseOperators.j(277)     //final var byte/acc word
 1942 ;testBitwiseOperators.j(278)     if (b1 & 0x1000 + 0x0234 == 0x0014) println (163); else println (999);
-1943 acc8= variable 0
+1943 acc8= byte variable 0
 1944 acc16= constant 4096
 1945 acc16+ constant 564
 1946 acc16And acc8
@@ -1954,7 +1954,7 @@
 1953 acc16= constant 999
 1954 writeLineAcc16
 1955 ;testBitwiseOperators.j(279)     if (b1 | 0x1000 + 0x0234 == 0x123C) println (164); else println (999);
-1956 acc8= variable 0
+1956 acc8= byte variable 0
 1957 acc16= constant 4096
 1958 acc16+ constant 564
 1959 acc16Or acc8
@@ -1966,7 +1966,7 @@
 1965 acc16= constant 999
 1966 writeLineAcc16
 1967 ;testBitwiseOperators.j(280)     if (b1 ^ 0x1000 + 0x0234 == 0x1228) println (165); else println (999);
-1968 acc8= variable 0
+1968 acc8= byte variable 0
 1969 acc16= constant 4096
 1970 acc16+ constant 564
 1971 acc16Xor acc8
@@ -1979,7 +1979,7 @@
 1978 writeLineAcc16
 1979 ;testBitwiseOperators.j(281)     //final var word/acc byte
 1980 ;testBitwiseOperators.j(282)     if (w2 & 0x10 + 0x0C == 0x0014) println (166); else println (999);
-1981 acc16= variable 4
+1981 acc16= word variable 4
 1982 acc8= constant 16
 1983 acc8+ constant 12
 1984 acc16And acc8
@@ -1992,7 +1992,7 @@
 1991 acc16= constant 999
 1992 writeLineAcc16
 1993 ;testBitwiseOperators.j(283)     if (w2 | 0x10 + 0x0C == 0x123C) println (167); else println (999);
-1994 acc16= variable 4
+1994 acc16= word variable 4
 1995 acc8= constant 16
 1996 acc8+ constant 12
 1997 acc16Or acc8
@@ -2004,7 +2004,7 @@
 2003 acc16= constant 999
 2004 writeLineAcc16
 2005 ;testBitwiseOperators.j(284)     if (w2 ^ 0x10 + 0x0C == 0x1228) println (168); else println (999);
-2006 acc16= variable 4
+2006 acc16= word variable 4
 2007 acc8= constant 16
 2008 acc8+ constant 12
 2009 acc16Xor acc8
@@ -2020,8 +2020,8 @@
 2019 ;testBitwiseOperators.j(287)     //*************
 2020 ;testBitwiseOperators.j(288)     //final var byte/var byte
 2021 ;testBitwiseOperators.j(289)     if (b2 & b1 == 0x04) println (169); else println (999);
-2022 acc8= variable 1
-2023 acc8And variable 0
+2022 acc8= byte variable 1
+2023 acc8And byte variable 0
 2024 acc8Comp constant 4
 2025 brne 2029
 2026 acc8= constant 169
@@ -2030,8 +2030,8 @@
 2029 acc16= constant 999
 2030 writeLineAcc16
 2031 ;testBitwiseOperators.j(290)     if (b2 | b1 == 0x1F) println (170); else println (999);
-2032 acc8= variable 1
-2033 acc8Or variable 0
+2032 acc8= byte variable 1
+2033 acc8Or byte variable 0
 2034 acc8Comp constant 31
 2035 brne 2039
 2036 acc8= constant 170
@@ -2040,8 +2040,8 @@
 2039 acc16= constant 999
 2040 writeLineAcc16
 2041 ;testBitwiseOperators.j(291)     if (b2 ^ b1 == 0x1B) println (171); else println (999);
-2042 acc8= variable 1
-2043 acc8Xor variable 0
+2042 acc8= byte variable 1
+2043 acc8Xor byte variable 0
 2044 acc8Comp constant 27
 2045 brne 2049
 2046 acc8= constant 171
@@ -2051,8 +2051,8 @@
 2050 writeLineAcc16
 2051 ;testBitwiseOperators.j(292)     //final var word/var word
 2052 ;testBitwiseOperators.j(293)     if (w2 & w1 == 0x0224) println (172); else println (999);
-2053 acc16= variable 4
-2054 acc16And variable 2
+2053 acc16= word variable 4
+2054 acc16And word variable 2
 2055 acc16Comp constant 548
 2056 brne 2060
 2057 acc8= constant 172
@@ -2061,8 +2061,8 @@
 2060 acc16= constant 999
 2061 writeLineAcc16
 2062 ;testBitwiseOperators.j(294)     if (w2 | w1 == 0x133C) println (173); else println (999);
-2063 acc16= variable 4
-2064 acc16Or variable 2
+2063 acc16= word variable 4
+2064 acc16Or word variable 2
 2065 acc16Comp constant 4924
 2066 brne 2070
 2067 acc8= constant 173
@@ -2071,8 +2071,8 @@
 2070 acc16= constant 999
 2071 writeLineAcc16
 2072 ;testBitwiseOperators.j(295)     if (w2 ^ w1 == 0x1118) println (174); else println (999);
-2073 acc16= variable 4
-2074 acc16Xor variable 2
+2073 acc16= word variable 4
+2074 acc16Xor word variable 2
 2075 acc16Comp constant 4376
 2076 brne 2080
 2077 acc8= constant 174
@@ -2082,9 +2082,9 @@
 2081 writeLineAcc16
 2082 ;testBitwiseOperators.j(296)     //final var byte/var word
 2083 ;testBitwiseOperators.j(297)     if (b1 & w2 == 0x0014) println (175); else println (999);
-2084 acc8= variable 0
+2084 acc8= byte variable 0
 2085 acc8ToAcc16
-2086 acc16And variable 4
+2086 acc16And word variable 4
 2087 acc8= constant 20
 2088 acc16CompareAcc8
 2089 brne 2093
@@ -2094,9 +2094,9 @@
 2093 acc16= constant 999
 2094 writeLineAcc16
 2095 ;testBitwiseOperators.j(298)     if (b1 | w2 == 0x123C) println (176); else println (999);
-2096 acc8= variable 0
+2096 acc8= byte variable 0
 2097 acc8ToAcc16
-2098 acc16Or variable 4
+2098 acc16Or word variable 4
 2099 acc16Comp constant 4668
 2100 brne 2104
 2101 acc8= constant 176
@@ -2105,9 +2105,9 @@
 2104 acc16= constant 999
 2105 writeLineAcc16
 2106 ;testBitwiseOperators.j(299)     if (b1 ^ w2 == 0x1228) println (177); else println (999);
-2107 acc8= variable 0
+2107 acc8= byte variable 0
 2108 acc8ToAcc16
-2109 acc16Xor variable 4
+2109 acc16Xor word variable 4
 2110 acc16Comp constant 4648
 2111 brne 2115
 2112 acc8= constant 177
@@ -2117,8 +2117,8 @@
 2116 writeLineAcc16
 2117 ;testBitwiseOperators.j(300)     //final var word/var byte
 2118 ;testBitwiseOperators.j(301)     if (w2 & b1 == 0x0014) println (178); else println (999);
-2119 acc16= variable 4
-2120 acc16And variable 0
+2119 acc16= word variable 4
+2120 acc16And byte variable 0
 2121 acc8= constant 20
 2122 acc16CompareAcc8
 2123 brne 2127
@@ -2128,8 +2128,8 @@
 2127 acc16= constant 999
 2128 writeLineAcc16
 2129 ;testBitwiseOperators.j(302)     if (w2 | b1 == 0x123C) println (179); else println (999);
-2130 acc16= variable 4
-2131 acc16Or variable 0
+2130 acc16= word variable 4
+2131 acc16Or byte variable 0
 2132 acc16Comp constant 4668
 2133 brne 2137
 2134 acc8= constant 179
@@ -2138,8 +2138,8 @@
 2137 acc16= constant 999
 2138 writeLineAcc16
 2139 ;testBitwiseOperators.j(303)     if (w2 ^ b1 == 0x1228) println (180); else println (999);
-2140 acc16= variable 4
-2141 acc16Xor variable 0
+2140 acc16= word variable 4
+2141 acc16Xor byte variable 0
 2142 acc16Comp constant 4648
 2143 brne 2147
 2144 acc8= constant 180
