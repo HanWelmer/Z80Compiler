@@ -29,24 +29,24 @@
   28 ;testMultiply.j(9)     a = 2 * 2;
   29 acc8= constant 2
   30 acc8* constant 2
-  31 acc8=> variable 0
+  31 acc8=> word variable 0
   32 ;testMultiply.j(10)     println(a);
-  33 acc16= variable 0
+  33 acc16= word variable 0
   34 writeLineAcc16
   35 ;testMultiply.j(11)     a = 1;
   36 acc8= constant 1
-  37 acc8=> variable 0
+  37 acc8=> word variable 0
   38 ;testMultiply.j(12)     println(a * 5);
-  39 acc16= variable 0
+  39 acc16= word variable 0
   40 acc16* constant 5
   41 writeLineAcc16
   42 ;testMultiply.j(13)     a = 2;
   43 acc8= constant 2
-  44 acc8=> variable 0
+  44 acc8=> word variable 0
   45 ;testMultiply.j(14)     println(3 * a);
   46 acc8= constant 3
   47 acc8ToAcc16
-  48 acc16* variable 0
+  48 acc16* word variable 0
   49 writeLineAcc16
   50 ;testMultiply.j(15)     if (7 * 5 == 35) println (7); else println (999);
   51 acc8= constant 7
@@ -101,16 +101,16 @@
  100 writeLineAcc16
  101 ;testMultiply.j(20)     a = 13;
  102 acc8= constant 13
- 103 acc8=> variable 0
+ 103 acc8=> word variable 0
  104 ;testMultiply.j(21)     a--;
- 105 decr16 variable 0
+ 105 decr16 word variable 0
  106 ;testMultiply.j(22)     println(a);
- 107 acc16= variable 0
+ 107 acc16= word variable 0
  108 writeLineAcc16
  109 ;testMultiply.j(23)     a++;
- 110 incr16 variable 0
+ 110 incr16 word variable 0
  111 ;testMultiply.j(24)     println(a);
- 112 acc16= variable 0
+ 112 acc16= word variable 0
  113 writeLineAcc16
  114 ;testMultiply.j(25)     println(14);
  115 acc8= constant 14

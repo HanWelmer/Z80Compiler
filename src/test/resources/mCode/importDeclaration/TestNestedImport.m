@@ -12,7 +12,7 @@
   11 class ImportLevel2Class1 []
   12 ;ImportLevel2Class1.j(1)   private static String str = "Level 2 class 1";
   13 acc16= stringconstant 168
-  14 acc16=> variable 0
+  14 acc16=> String variable 0
   15 br 35
   16 ;ImportLevel2Class1.j(2)   
   17 ;ImportLevel2Class1.j(3)   public static void doIt() {
@@ -21,7 +21,7 @@
   20 basePointer= stackPointer
   21 stackPointer+ constant 0
   22 ;ImportLevel2Class1.j(4)     println(str);
-  23 acc16= variable 0
+  23 acc16= String variable 0
   24 writeLineString
   25 ;ImportLevel2Class1.j(5)   }
   26 stackPointer= basePointer
@@ -34,7 +34,7 @@
   33 class ImportLevel2Class2 []
   34 ;ImportLevel2Class2.j(1)   private static String str = "Level 2 class 2";
   35 acc16= stringconstant 169
-  36 acc16=> variable 2
+  36 acc16=> String variable 2
   37 br 56
   38 ;ImportLevel2Class2.j(2)   
   39 ;ImportLevel2Class2.j(3)   public static void doIt() {
@@ -43,7 +43,7 @@
   42 basePointer= stackPointer
   43 stackPointer+ constant 0
   44 ;ImportLevel2Class2.j(4)     println(str);
-  45 acc16= variable 2
+  45 acc16= String variable 2
   46 writeLineString
   47 ;ImportLevel2Class2.j(5)   }
   48 stackPointer= basePointer
@@ -55,7 +55,7 @@
   54 class ImportLevel1Class1 []
   55 ;ImportLevel1Class1.j(4)   private static String str = "Level 1 class 1";
   56 acc16= stringconstant 170
-  57 acc16=> variable 4
+  57 acc16=> String variable 4
   58 br 84
   59 ;ImportLevel1Class1.j(5)   
   60 ;ImportLevel1Class1.j(6)   public static void doIt() {
@@ -64,7 +64,7 @@
   63 basePointer= stackPointer
   64 stackPointer+ constant 0
   65 ;ImportLevel1Class1.j(7)     println(str);
-  66 acc16= variable 4
+  66 acc16= String variable 4
   67 writeLineString
   68 ;ImportLevel1Class1.j(8)     ImportLevel2Class1.doIt();
   69 call 18
@@ -83,7 +83,7 @@
   82 class ImportLevel2Class3 []
   83 ;ImportLevel2Class3.j(1)   private static String str = "Level 2 class 3";
   84 acc16= stringconstant 171
-  85 acc16=> variable 6
+  85 acc16=> String variable 6
   86 br 106
   87 ;ImportLevel2Class3.j(2)   
   88 ;ImportLevel2Class3.j(3)   public static void doIt() {
@@ -92,7 +92,7 @@
   91 basePointer= stackPointer
   92 stackPointer+ constant 0
   93 ;ImportLevel2Class3.j(4)     println(str);
-  94 acc16= variable 6
+  94 acc16= String variable 6
   95 writeLineString
   96 ;ImportLevel2Class3.j(5)   }
   97 stackPointer= basePointer
@@ -105,7 +105,7 @@
  104 class ImportLevel2Class4 []
  105 ;ImportLevel2Class4.j(1)   private static String str = "Level 2 class 4";
  106 acc16= stringconstant 172
- 107 acc16=> variable 8
+ 107 acc16=> String variable 8
  108 br 127
  109 ;ImportLevel2Class4.j(2)   
  110 ;ImportLevel2Class4.j(3)   public static void doIt() {
@@ -114,7 +114,7 @@
  113 basePointer= stackPointer
  114 stackPointer+ constant 0
  115 ;ImportLevel2Class4.j(4)     println(str);
- 116 acc16= variable 8
+ 116 acc16= String variable 8
  117 writeLineString
  118 ;ImportLevel2Class4.j(5)   }
  119 stackPointer= basePointer
@@ -126,7 +126,7 @@
  125 class ImportLevel1Class2 []
  126 ;ImportLevel1Class2.j(4)   private static String str = "Level 1 class 2";
  127 acc16= stringconstant 173
- 128 acc16=> variable 10
+ 128 acc16=> String variable 10
  129 br 152
  130 ;ImportLevel1Class2.j(5) 
  131 ;ImportLevel1Class2.j(6)   public static void doIt() {
@@ -135,7 +135,7 @@
  134 basePointer= stackPointer
  135 stackPointer+ constant 0
  136 ;ImportLevel1Class2.j(7)     println(str);
- 137 acc16= variable 10
+ 137 acc16= String variable 10
  138 writeLineString
  139 ;ImportLevel1Class2.j(8)     ImportLevel2Class3.doIt();
  140 call 89

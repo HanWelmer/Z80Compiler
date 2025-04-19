@@ -18,32 +18,32 @@ public class TestExpression extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 2697);
+    assertTrue(code.size() == 2733);
 
-    assertTrue(code.get(265).getCode().equals("L124:"));
-    assertTrue(code.get(266).getCode().equals("        LD    HL,(05000H)"));
-    assertTrue(code.get(267).getCode().equals("        INC   (HL)"));
-    assertTrue(code.get(267).getBytes().size() == 1);
-    assertTrue(code.get(267).getBytes().get(0) == (byte)0x34);
-    
-    assertTrue(code.get(595).getCode().equals("L273:"));
-    assertTrue(code.get(596).getCode().equals("        LD    A,3"));
-    assertTrue(code.get(597).getCode().equals("L274:"));
-    assertTrue(code.get(598).getCode().equals("        LD    B,A"));
-    assertTrue(code.get(599).getCode().equals("        LD    C,11"));
-    assertTrue(code.get(600).getCode().equals("        MLT   BC"));
-    assertTrue(code.get(601).getCode().equals("        LD    A,C"));
-    
-    assertTrue(code.get(769).getCode().equals("L346:"));
-    assertTrue(code.get(770).getCode().equals("        LD    A,123"));
-    assertTrue(code.get(771).getCode().equals("L347:"));
-    assertTrue(code.get(772).getCode().equals("        LD    C,3"));
-    assertTrue(code.get(773).getCode().equals("        CALL  div8"));
-    
-    assertTrue(code.get(1690).getCode().equals("L765:"));
-    assertTrue(code.get(1691).getCode().equals("        LD    HL,518"));
-    assertTrue(code.get(1692).getCode().equals("L766:"));
-    assertTrue(code.get(1693).getCode().equals("        LD    DE,2"));
-    assertTrue(code.get(1694).getCode().equals("        CALL  mul16"));
+    assertTrue(code.get(271).getCode().equals("L124:"));
+    assertTrue(code.get(272).getCode().equals("        LD    HL,05000H"));
+    assertTrue(code.get(273).getCode().equals("        INC   (HL)"));
+    assertTrue(code.get(273).getBytes().size() == 1);
+    assertTrue(code.get(273).getBytes().get(0) == (byte) 0x34);
+
+    assertTrue(code.get(611).getCode().equals("L273:"));
+    assertTrue(code.get(612).getCode().equals("        LD    A,3"));
+    assertTrue(code.get(613).getCode().equals("L274:"));
+    assertTrue(code.get(614).getCode().equals("        LD    B,A"));
+    assertTrue(code.get(615).getCode().equals("        LD    C,11"));
+    assertTrue(code.get(616).getCode().equals("        MLT   BC"));
+    assertTrue(code.get(617).getCode().equals("        LD    A,C"));
+
+    assertTrue(code.get(785).getCode().equals("L346:"));
+    assertTrue(code.get(786).getCode().equals("        LD    A,123"));
+    assertTrue(code.get(787).getCode().equals("L347:"));
+    assertTrue(code.get(788).getCode().equals("        LD    C,3"));
+    assertTrue(code.get(789).getCode().equals("        CALL  div8"));
+
+    assertTrue(code.get(1726).getCode().equals("L765:"));
+    assertTrue(code.get(1727).getCode().equals("        LD    HL,518"));
+    assertTrue(code.get(1728).getCode().equals("L766:"));
+    assertTrue(code.get(1729).getCode().equals("        LD    DE,2"));
+    assertTrue(code.get(1730).getCode().equals("        CALL  mul16"));
   }
 }

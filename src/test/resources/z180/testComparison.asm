@@ -24,37 +24,49 @@ L8:
 L9:
         LD    A,0
 L10:
-        LD    (05000H),A
+        LD    L,A
+        LD    H,0
+        LD    (05000H),HL
 L11:
         ;;testComparison.j(6)   private static word one = 1;
 L12:
         LD    A,1
 L13:
-        LD    (05002H),A
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
 L14:
         ;;testComparison.j(7)   private static word three = 3;
 L15:
         LD    A,3
 L16:
-        LD    (05004H),A
+        LD    L,A
+        LD    H,0
+        LD    (05004H),HL
 L17:
         ;;testComparison.j(8)   private static word four = 4;
 L18:
         LD    A,4
 L19:
-        LD    (05006H),A
+        LD    L,A
+        LD    H,0
+        LD    (05006H),HL
 L20:
         ;;testComparison.j(9)   private static word five = 5;
 L21:
         LD    A,5
 L22:
-        LD    (05008H),A
+        LD    L,A
+        LD    H,0
+        LD    (05008H),HL
 L23:
         ;;testComparison.j(10)   private static word twelve = 12;
 L24:
         LD    A,12
 L25:
-        LD    (0500AH),A
+        LD    L,A
+        LD    H,0
+        LD    (0500AH),HL
 L26:
         ;;testComparison.j(11)   private static byte byteOne = 1;
 L27:
@@ -66,7 +78,8 @@ L29:
 L30:
         LD    HL,262
 L31:
-        LD    (0500DH),HL
+        LD    A,L
+        LD    (0500DH),A
 L32:
         JP    L36
 L33:
@@ -3371,7 +3384,7 @@ L1343:
 L1344:
         ;;testComparison.j(167)       b--;
 L1345:
-        LD    HL,(0500EH)
+        LD    HL,0500EH
         DEC   (HL)
 L1346:
         ;;testComparison.j(168)       println (c);

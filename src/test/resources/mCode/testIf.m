@@ -5,22 +5,22 @@
    4 class TestIf []
    5 ;testIf.j(2)   private static word i = 2000;
    6 acc16= constant 2000
-   7 acc16=> variable 0
+   7 acc16=> word variable 0
    8 ;testIf.j(3)   private static word i1 = 1000;
    9 acc16= constant 1000
-  10 acc16=> variable 2
+  10 acc16=> word variable 2
   11 ;testIf.j(4)   private static word i3 = 3000;
   12 acc16= constant 3000
-  13 acc16=> variable 4
+  13 acc16=> word variable 4
   14 ;testIf.j(5)   private static byte b = 20;
   15 acc8= constant 20
-  16 acc8=> variable 6
+  16 acc8=> byte variable 6
   17 ;testIf.j(6)   private static byte b1 = 10;
   18 acc8= constant 10
-  19 acc8=> variable 7
+  19 acc8=> byte variable 7
   20 ;testIf.j(7)   private static byte b3 = 30;
   21 acc8= constant 30
-  22 acc8=> variable 8
+  22 acc8=> byte variable 8
   23 br 26
   24 ;testIf.j(8) 
   25 ;testIf.j(9)   public static void main() {
@@ -483,7 +483,7 @@
  482 ;testIf.j(94)     // constant - var
  483 ;testIf.j(95)     // byte - byte
  484 ;testIf.j(96)     if (30 > b) println(50); else println(999);
- 485 acc8= variable 6
+ 485 acc8= byte variable 6
  486 acc8Comp constant 30
  487 brge 491
  488 acc8= constant 50
@@ -492,7 +492,7 @@
  491 acc16= constant 999
  492 writeLineAcc16
  493 ;testIf.j(97)     if (10 < b) println(51); else println(999);
- 494 acc8= variable 6
+ 494 acc8= byte variable 6
  495 acc8Comp constant 10
  496 brle 500
  497 acc8= constant 51
@@ -503,7 +503,7 @@
  502 ;testIf.j(98)     // constant - var
  503 ;testIf.j(99)     // byte - integer
  504 ;testIf.j(100)     if (30 > i) println(999); else println(52);
- 505 acc16= variable 0
+ 505 acc16= word variable 0
  506 acc8= constant 30
  507 acc8CompareAcc16
  508 brle 512
@@ -513,7 +513,7 @@
  512 acc8= constant 52
  513 writeLineAcc8
  514 ;testIf.j(101)     if (10 < i) println(53); else println(999);
- 515 acc16= variable 0
+ 515 acc16= word variable 0
  516 acc8= constant 10
  517 acc8CompareAcc16
  518 brge 522
@@ -525,7 +525,7 @@
  524 ;testIf.j(102)     // constant - var
  525 ;testIf.j(103)     // integer - byte
  526 ;testIf.j(104)     if (3000 > b) println(54); else println(999);
- 527 acc8= variable 6
+ 527 acc8= byte variable 6
  528 acc16= constant 3000
  529 acc16CompareAcc8
  530 brle 534
@@ -535,7 +535,7 @@
  534 acc16= constant 999
  535 writeLineAcc16
  536 ;testIf.j(105)     if (1000 < b) println(999); else println(55);
- 537 acc8= variable 6
+ 537 acc8= byte variable 6
  538 acc16= constant 1000
  539 acc16CompareAcc8
  540 brge 544
@@ -547,7 +547,7 @@
  546 ;testIf.j(106)     // constant - var
  547 ;testIf.j(107)     // integer - integer
  548 ;testIf.j(108)     if (3000 > i) println(56); else println(999);
- 549 acc16= variable 0
+ 549 acc16= word variable 0
  550 acc16Comp constant 3000
  551 brge 555
  552 acc8= constant 56
@@ -556,7 +556,7 @@
  555 acc16= constant 999
  556 writeLineAcc16
  557 ;testIf.j(109)     if (1000 < i) println(57); else println(999);
- 558 acc16= variable 0
+ 558 acc16= word variable 0
  559 acc16Comp constant 1000
  560 brle 564
  561 acc8= constant 57
@@ -881,7 +881,7 @@
  880 ;testIf.j(196)     if (30+0 > b) println(100); else println(999);
  881 acc8= constant 30
  882 acc8+ constant 0
- 883 acc8Comp variable 6
+ 883 acc8Comp byte variable 6
  884 brle 888
  885 acc8= constant 100
  886 writeLineAcc8
@@ -891,7 +891,7 @@
  890 ;testIf.j(197)     if (10+0 < b) println(101); else println(999);
  891 acc8= constant 10
  892 acc8+ constant 0
- 893 acc8Comp variable 6
+ 893 acc8Comp byte variable 6
  894 brge 898
  895 acc8= constant 101
  896 writeLineAcc8
@@ -903,7 +903,7 @@
  902 ;testIf.j(200)     if (30+0 > i) println(999); else println(102);
  903 acc8= constant 30
  904 acc8+ constant 0
- 905 acc16= variable 0
+ 905 acc16= word variable 0
  906 acc8CompareAcc16
  907 brle 911
  908 acc16= constant 999
@@ -914,7 +914,7 @@
  913 ;testIf.j(201)     if (10+0 < i) println(103); else println(999);
  914 acc8= constant 10
  915 acc8+ constant 0
- 916 acc16= variable 0
+ 916 acc16= word variable 0
  917 acc8CompareAcc16
  918 brge 922
  919 acc8= constant 103
@@ -927,7 +927,7 @@
  926 ;testIf.j(204)     if (3000+0 > b) println(104); else println(999);
  927 acc16= constant 3000
  928 acc16+ constant 0
- 929 acc8= variable 6
+ 929 acc8= byte variable 6
  930 acc16CompareAcc8
  931 brle 935
  932 acc8= constant 104
@@ -938,7 +938,7 @@
  937 ;testIf.j(205)     if (1000+0 < b) println(999); else println(105);
  938 acc16= constant 1000
  939 acc16+ constant 0
- 940 acc8= variable 6
+ 940 acc8= byte variable 6
  941 acc16CompareAcc8
  942 brge 946
  943 acc16= constant 999
@@ -951,7 +951,7 @@
  950 ;testIf.j(208)     if (3000+0 > i) println(106); else println(999);
  951 acc16= constant 3000
  952 acc16+ constant 0
- 953 acc16Comp variable 0
+ 953 acc16Comp word variable 0
  954 brle 958
  955 acc8= constant 106
  956 writeLineAcc8
@@ -961,7 +961,7 @@
  960 ;testIf.j(209)     if (1000+0 < i) println(107); else println(999);
  961 acc16= constant 1000
  962 acc16+ constant 0
- 963 acc16Comp variable 0
+ 963 acc16Comp word variable 0
  964 brge 968
  965 acc8= constant 107
  966 writeLineAcc8
@@ -1059,7 +1059,7 @@
 1058 ;testIf.j(254)     // var - constant
 1059 ;testIf.j(255)     // byte - byte
 1060 ;testIf.j(256)     if (b > 10) println(130); else println(999);
-1061 acc8= variable 6
+1061 acc8= byte variable 6
 1062 acc8Comp constant 10
 1063 brle 1067
 1064 acc8= constant 130
@@ -1068,7 +1068,7 @@
 1067 acc16= constant 999
 1068 writeLineAcc16
 1069 ;testIf.j(257)     if (b < 30) println(131); else println(999);
-1070 acc8= variable 6
+1070 acc8= byte variable 6
 1071 acc8Comp constant 30
 1072 brge 1076
 1073 acc8= constant 131
@@ -1079,7 +1079,7 @@
 1078 ;testIf.j(258)     // var - constant
 1079 ;testIf.j(259)     // byte - integer
 1080 ;testIf.j(260)     if (b > 1000) println(999); else println(132);
-1081 acc8= variable 6
+1081 acc8= byte variable 6
 1082 acc16= constant 1000
 1083 acc8CompareAcc16
 1084 brle 1088
@@ -1089,7 +1089,7 @@
 1088 acc8= constant 132
 1089 writeLineAcc8
 1090 ;testIf.j(261)     if (b < 1000) println(133); else println(999);
-1091 acc8= variable 6
+1091 acc8= byte variable 6
 1092 acc16= constant 1000
 1093 acc8CompareAcc16
 1094 brge 1098
@@ -1101,7 +1101,7 @@
 1100 ;testIf.j(262)     // var - constant
 1101 ;testIf.j(263)     // integer - byte
 1102 ;testIf.j(264)     if (i > 1000) println(134); else println(999);
-1103 acc16= variable 0
+1103 acc16= word variable 0
 1104 acc16Comp constant 1000
 1105 brle 1109
 1106 acc8= constant 134
@@ -1110,7 +1110,7 @@
 1109 acc16= constant 999
 1110 writeLineAcc16
 1111 ;testIf.j(265)     if (i < 3000) println(135); else println(999);
-1112 acc16= variable 0
+1112 acc16= word variable 0
 1113 acc16Comp constant 3000
 1114 brge 1118
 1115 acc8= constant 135
@@ -1121,7 +1121,7 @@
 1120 ;testIf.j(266)     // var - constant
 1121 ;testIf.j(267)     // integer - integer
 1122 ;testIf.j(268)     if (i > 1000) println(136); else println(999);
-1123 acc16= variable 0
+1123 acc16= word variable 0
 1124 acc16Comp constant 1000
 1125 brle 1129
 1126 acc8= constant 136
@@ -1130,7 +1130,7 @@
 1129 acc16= constant 999
 1130 writeLineAcc16
 1131 ;testIf.j(269)     if (i < 3000) println(137); else println(999);
-1132 acc16= variable 0
+1132 acc16= word variable 0
 1133 acc16Comp constant 3000
 1134 brge 1138
 1135 acc8= constant 137
@@ -1151,7 +1151,7 @@
 1150 ;testIf.j(276)     if (b > 10+0) println(140); else println(999);
 1151 acc8= constant 10
 1152 acc8+ constant 0
-1153 acc8Comp variable 6
+1153 acc8Comp byte variable 6
 1154 brge 1158
 1155 acc8= constant 140
 1156 writeLineAcc8
@@ -1161,7 +1161,7 @@
 1160 ;testIf.j(277)     if (b < 30+0) println(141); else println(999);
 1161 acc8= constant 30
 1162 acc8+ constant 0
-1163 acc8Comp variable 6
+1163 acc8Comp byte variable 6
 1164 brle 1168
 1165 acc8= constant 141
 1166 writeLineAcc8
@@ -1173,7 +1173,7 @@
 1172 ;testIf.j(280)     if (b > 1000+0) println(999); else println(142);
 1173 acc16= constant 1000
 1174 acc16+ constant 0
-1175 acc8= variable 6
+1175 acc8= byte variable 6
 1176 acc8CompareAcc16
 1177 brle 1181
 1178 acc16= constant 999
@@ -1184,7 +1184,7 @@
 1183 ;testIf.j(281)     if (b < 1000+0) println(143); else println(999);
 1184 acc16= constant 1000
 1185 acc16+ constant 0
-1186 acc8= variable 6
+1186 acc8= byte variable 6
 1187 acc8CompareAcc16
 1188 brge 1192
 1189 acc8= constant 143
@@ -1197,7 +1197,7 @@
 1196 ;testIf.j(284)     if (i > 1000+0) println(144); else println(999);
 1197 acc16= constant 1000
 1198 acc16+ constant 0
-1199 acc16Comp variable 0
+1199 acc16Comp word variable 0
 1200 brge 1204
 1201 acc8= constant 144
 1202 writeLineAcc8
@@ -1207,7 +1207,7 @@
 1206 ;testIf.j(285)     if (i < 3000+0) println(145); else println(999);
 1207 acc16= constant 3000
 1208 acc16+ constant 0
-1209 acc16Comp variable 0
+1209 acc16Comp word variable 0
 1210 brle 1214
 1211 acc8= constant 145
 1212 writeLineAcc8
@@ -1219,7 +1219,7 @@
 1218 ;testIf.j(288)     if (i > 1000+0) println(146); else println(999);
 1219 acc16= constant 1000
 1220 acc16+ constant 0
-1221 acc16Comp variable 0
+1221 acc16Comp word variable 0
 1222 brge 1226
 1223 acc8= constant 146
 1224 writeLineAcc8
@@ -1229,7 +1229,7 @@
 1228 ;testIf.j(289)     if (i < 3000+0) println(147); else println(999);
 1229 acc16= constant 3000
 1230 acc16+ constant 0
-1231 acc16Comp variable 0
+1231 acc16Comp word variable 0
 1232 brle 1236
 1233 acc8= constant 147
 1234 writeLineAcc8
@@ -1247,22 +1247,22 @@
 1246 ;testIf.j(294)     // var - var
 1247 ;testIf.j(295)     // byte - byte
 1248 ;testIf.j(296)     if (b > b1) println(150);
-1249 acc8= variable 6
-1250 acc8Comp variable 7
+1249 acc8= byte variable 6
+1250 acc8Comp byte variable 7
 1251 brle 1255
 1252 acc8= constant 150
 1253 writeLineAcc8
 1254 ;testIf.j(297)     if (b < b3) println(151);
-1255 acc8= variable 6
-1256 acc8Comp variable 8
+1255 acc8= byte variable 6
+1256 acc8Comp byte variable 8
 1257 brge 1263
 1258 acc8= constant 151
 1259 writeLineAcc8
 1260 ;testIf.j(298)     // var - var
 1261 ;testIf.j(299)     // byte - integer
 1262 ;testIf.j(300)     if (b > i1) println(999); else println(152);
-1263 acc8= variable 6
-1264 acc16= variable 2
+1263 acc8= byte variable 6
+1264 acc16= word variable 2
 1265 acc8CompareAcc16
 1266 brle 1270
 1267 acc16= constant 999
@@ -1271,8 +1271,8 @@
 1270 acc8= constant 152
 1271 writeLineAcc8
 1272 ;testIf.j(301)     if (b < i3) println(153);
-1273 acc8= variable 6
-1274 acc16= variable 4
+1273 acc8= byte variable 6
+1274 acc16= word variable 4
 1275 acc8CompareAcc16
 1276 brge 1282
 1277 acc8= constant 153
@@ -1280,28 +1280,28 @@
 1279 ;testIf.j(302)     // var - var
 1280 ;testIf.j(303)     // integer - byte
 1281 ;testIf.j(304)     if (i > i1) println(154);
-1282 acc16= variable 0
-1283 acc16Comp variable 2
+1282 acc16= word variable 0
+1283 acc16Comp word variable 2
 1284 brle 1288
 1285 acc8= constant 154
 1286 writeLineAcc8
 1287 ;testIf.j(305)     if (i < i3) println(155);
-1288 acc16= variable 0
-1289 acc16Comp variable 4
+1288 acc16= word variable 0
+1289 acc16Comp word variable 4
 1290 brge 1296
 1291 acc8= constant 155
 1292 writeLineAcc8
 1293 ;testIf.j(306)     // var - var
 1294 ;testIf.j(307)     // integer - integer
 1295 ;testIf.j(308)     if (i > i1) println(156);
-1296 acc16= variable 0
-1297 acc16Comp variable 2
+1296 acc16= word variable 0
+1297 acc16Comp word variable 2
 1298 brle 1302
 1299 acc8= constant 156
 1300 writeLineAcc8
 1301 ;testIf.j(309)     if (i < i3) println(157);
-1302 acc16= variable 0
-1303 acc16Comp variable 4
+1302 acc16= word variable 0
+1303 acc16Comp word variable 4
 1304 brge 1308
 1305 acc8= constant 157
 1306 writeLineAcc8

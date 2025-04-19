@@ -11,10 +11,10 @@
   10 class me.TestPackageMe []
   11 ;me\TestPackageMe.j(7)   static word zero = 0;
   12 acc8= constant 0
-  13 acc8=> variable 0
+  13 acc8=> word variable 0
   14 ;me\TestPackageMe.j(8)   static byte one = 1;
   15 acc8= constant 1
-  16 acc8=> variable 2
+  16 acc8=> byte variable 2
   17 br 19
   18 ;me\TestPackageMe.j(9)   public static void main() {
   19 method me.TestPackageMe.main [public, static] void ()
@@ -22,10 +22,10 @@
   21 basePointer= stackPointer
   22 stackPointer+ constant 2
   23 ;me\TestPackageMe.j(10)     println(zero);
-  24 acc16= variable 0
+  24 acc16= word variable 0
   25 writeLineAcc16
   26 ;me\TestPackageMe.j(11)     println(one);
-  27 acc8= variable 2
+  27 acc8= byte variable 2
   28 writeLineAcc8
   29 ;me\TestPackageMe.j(12)     println("2 Hallo wereld");
   30 acc16= stringconstant 49

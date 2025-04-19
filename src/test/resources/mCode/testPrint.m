@@ -5,10 +5,10 @@
    4 class TestPrint []
    5 ;testPrint.j(2)   private static word i = 1;
    6 acc8= constant 1
-   7 acc8=> variable 0
+   7 acc8=> word variable 0
    8 ;testPrint.j(3)   private static byte b = 2;
    9 acc8= constant 2
-  10 acc8=> variable 2
+  10 acc8=> byte variable 2
   11 br 14
   12 ;testPrint.j(4)   
   13 ;testPrint.j(5)   public static void main() {
@@ -20,10 +20,10 @@
   19 acc8= constant 0
   20 writeLineAcc8
   21 ;testPrint.j(7)     println(i);
-  22 acc16= variable 0
+  22 acc16= word variable 0
   23 writeLineAcc16
   24 ;testPrint.j(8)     println(b);
-  25 acc8= variable 2
+  25 acc8= byte variable 2
   26 writeLineAcc8
   27 ;testPrint.j(9)     println("Hallo" + " wereld.");
   28 acc16= stringconstant 66

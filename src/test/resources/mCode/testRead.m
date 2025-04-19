@@ -33,9 +33,9 @@
   32 writeLineAcc16
   33 ;testRead.j(18)     b = read;
   34 read
-  35 acc16=> variable 0
+  35 acc16=> byte variable 0
   36 ;testRead.j(19)     println(b);       // 3
-  37 acc8= variable 0
+  37 acc8= byte variable 0
   38 writeLineAcc8
   39 ;testRead.j(20)   
   40 ;testRead.j(21)     /**********************************/
@@ -89,9 +89,9 @@
   88 writeLineAcc16
   89 ;testRead.j(38)     i = read;
   90 read
-  91 acc16=> variable 1
+  91 acc16=> word variable 1
   92 ;testRead.j(39)     println(i);         // 1049
-  93 acc16= variable 1
+  93 acc16= word variable 1
   94 writeLineAcc16
   95 ;testRead.j(40)   
   96 ;testRead.j(41)     /**********************************/
@@ -170,50 +170,50 @@
  169 writeLineString
  170 ;testRead.j(65)     b = 0;
  171 acc8= constant 0
- 172 acc8=> variable 0
+ 172 acc8=> byte variable 0
  173 ;testRead.j(66)     println(read + b);   // 1058 + 0 = 1058
  174 read
- 175 acc16+ variable 0
+ 175 acc16+ byte variable 0
  176 writeLineAcc16
  177 ;testRead.j(67)     println(b + read);   // 0 + 1059 = 1059
- 178 acc8= variable 0
+ 178 acc8= byte variable 0
  179 read
  180 acc16+ acc8
  181 writeLineAcc16
  182 ;testRead.j(68)     println(read - b);   // 1060 - 0 = 1060
  183 read
- 184 acc16- variable 0
+ 184 acc16- byte variable 0
  185 writeLineAcc16
  186 ;testRead.j(69)     println("\nType 1061 expect -1061");
  187 acc16= stringconstant 311
  188 writeLineString
  189 ;testRead.j(70)     println(b - read);   // 0 - 1061 = -1061
- 190 acc8= variable 0
+ 190 acc8= byte variable 0
  191 read
  192 -acc16 acc8
  193 writeLineAcc16
  194 ;testRead.j(71)     b = 1;
  195 acc8= constant 1
- 196 acc8=> variable 0
+ 196 acc8=> byte variable 0
  197 ;testRead.j(72)     println("\nType 1062 etc");
  198 acc16= stringconstant 312
  199 writeLineString
  200 ;testRead.j(73)     println(read * b);   // 1062 * 1 = 1062
  201 read
- 202 acc16* variable 0
+ 202 acc16* byte variable 0
  203 writeLineAcc16
  204 ;testRead.j(74)     println(b * read);   // 1 * 1063 = 1063
- 205 acc8= variable 0
+ 205 acc8= byte variable 0
  206 read
  207 acc16* acc8
  208 writeLineAcc16
  209 ;testRead.j(75)     println(read / b);   // 1064 / 1 = 1064
  210 read
- 211 acc16/ variable 0
+ 211 acc16/ byte variable 0
  212 writeLineAcc16
  213 ;testRead.j(76)     b = 12;
  214 acc8= constant 12
- 215 acc8=> variable 0
+ 215 acc8=> byte variable 0
  216 ;testRead.j(77)     println("\nType 3 expect 4");
  217 acc16= stringconstant 313
  218 writeLineString
@@ -221,7 +221,7 @@
  220 acc8= constant 3
  221 writeLineAcc8
  222 ;testRead.j(79)     println(b / read);   // 12 / 3 = 4
- 223 acc8= variable 0
+ 223 acc8= byte variable 0
  224 read
  225 /acc16 acc8
  226 writeLineAcc16
@@ -231,61 +231,61 @@
  230 ;testRead.j(83)     /****************************************/
  231 ;testRead.j(84)     i = 0;
  232 acc8= constant 0
- 233 acc8=> variable 1
+ 233 acc8=> word variable 1
  234 ;testRead.j(85)     println("\nType 1066 etc");
  235 acc16= stringconstant 314
  236 writeLineString
  237 ;testRead.j(86)     println(read + i);   // 1066 + 0 = 1066
  238 read
- 239 acc16+ variable 1
+ 239 acc16+ word variable 1
  240 writeLineAcc16
  241 ;testRead.j(87)     println(i + read);   // 0 + 1067 = 1067
- 242 acc16= variable 1
+ 242 acc16= word variable 1
  243 <acc16
  244 read
  245 acc16+ unstack16
  246 writeLineAcc16
  247 ;testRead.j(88)     println(read - i);   // 1068 - 0 = 1068
  248 read
- 249 acc16- variable 1
+ 249 acc16- word variable 1
  250 writeLineAcc16
  251 ;testRead.j(89)     println("\nType 1069 expect -1069");
  252 acc16= stringconstant 315
  253 writeLineString
  254 ;testRead.j(90)     println(i - read);   // 0 - 1069 = -1069
- 255 acc16= variable 1
+ 255 acc16= word variable 1
  256 <acc16
  257 read
  258 -acc16 unstack16
  259 writeLineAcc16
  260 ;testRead.j(91)     i = 1;
  261 acc8= constant 1
- 262 acc8=> variable 1
+ 262 acc8=> word variable 1
  263 ;testRead.j(92)     println("\nType 1070 etc");
  264 acc16= stringconstant 316
  265 writeLineString
  266 ;testRead.j(93)     println(read * i);   // 1070 * 1 = 1070
  267 read
- 268 acc16* variable 1
+ 268 acc16* word variable 1
  269 writeLineAcc16
  270 ;testRead.j(94)     println(i * read);   // 1 * 1071 = 1071
- 271 acc16= variable 1
+ 271 acc16= word variable 1
  272 <acc16
  273 read
  274 acc16* unstack16
  275 writeLineAcc16
  276 ;testRead.j(95)     println(read / i);   // 1072 / 1 = 1072
  277 read
- 278 acc16/ variable 1
+ 278 acc16/ word variable 1
  279 writeLineAcc16
  280 ;testRead.j(96)     i = 3219;
  281 acc16= constant 3219
- 282 acc16=> variable 1
+ 282 acc16=> word variable 1
  283 ;testRead.j(97)     println("\nType 3 expect 1073");
  284 acc16= stringconstant 317
  285 writeLineString
  286 ;testRead.j(98)     println(i / read);   // 3219 / 3 = 1073  
- 287 acc16= variable 1
+ 287 acc16= word variable 1
  288 <acc16
  289 read
  290 /acc16 unstack16

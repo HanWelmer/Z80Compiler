@@ -8,28 +8,28 @@
    7 class TestComparison []
    8 ;testComparison.j(5)   private static word zero = 0;
    9 acc8= constant 0
-  10 acc8=> variable 0
+  10 acc8=> word variable 0
   11 ;testComparison.j(6)   private static word one = 1;
   12 acc8= constant 1
-  13 acc8=> variable 2
+  13 acc8=> word variable 2
   14 ;testComparison.j(7)   private static word three = 3;
   15 acc8= constant 3
-  16 acc8=> variable 4
+  16 acc8=> word variable 4
   17 ;testComparison.j(8)   private static word four = 4;
   18 acc8= constant 4
-  19 acc8=> variable 6
+  19 acc8=> word variable 6
   20 ;testComparison.j(9)   private static word five = 5;
   21 acc8= constant 5
-  22 acc8=> variable 8
+  22 acc8=> word variable 8
   23 ;testComparison.j(10)   private static word twelve = 12;
   24 acc8= constant 12
-  25 acc8=> variable 10
+  25 acc8=> word variable 10
   26 ;testComparison.j(11)   private static byte byteOne = 1;
   27 acc8= constant 1
-  28 acc8=> variable 12
+  28 acc8=> byte variable 12
   29 ;testComparison.j(12)   private static byte byteSix = 262;
   30 acc16= constant 262
-  31 acc16=> variable 13
+  31 acc16=> byte variable 13
   32 br 36
   33 ;testComparison.j(13)   private static byte b;
   34 ;testComparison.j(14)   
@@ -163,7 +163,7 @@
  162 ;testComparison.j(34)     //stack level 1
  163 ;testComparison.j(35)     //byte-integer
  164 ;testComparison.j(36)     if (4 == twelve/(1+2)) println(16);
- 165 acc16= variable 10
+ 165 acc16= word variable 10
  166 acc8= constant 1
  167 acc8+ constant 2
  168 acc16/ acc8
@@ -173,14 +173,14 @@
  172 acc8= constant 16
  173 writeLineAcc8
  174 ;testComparison.j(37)     if (4 == four) println(17);
- 175 acc16= variable 6
+ 175 acc16= word variable 6
  176 acc8= constant 4
  177 acc8CompareAcc16
  178 brne 182
  179 acc8= constant 17
  180 writeLineAcc8
  181 ;testComparison.j(38)     if (3 != twelve/(1+2)) println(18);
- 182 acc16= variable 10
+ 182 acc16= word variable 10
  183 acc8= constant 1
  184 acc8+ constant 2
  185 acc16/ acc8
@@ -190,14 +190,14 @@
  189 acc8= constant 18
  190 writeLineAcc8
  191 ;testComparison.j(39)     if (3 != four) println(19);
- 192 acc16= variable 6
+ 192 acc16= word variable 6
  193 acc8= constant 3
  194 acc8CompareAcc16
  195 breq 199
  196 acc8= constant 19
  197 writeLineAcc8
  198 ;testComparison.j(40)     if (3 < twelve/(1+2)) println(20);
- 199 acc16= variable 10
+ 199 acc16= word variable 10
  200 acc8= constant 1
  201 acc8+ constant 2
  202 acc16/ acc8
@@ -207,14 +207,14 @@
  206 acc8= constant 20
  207 writeLineAcc8
  208 ;testComparison.j(41)     if (3 < four) println(21);
- 209 acc16= variable 6
+ 209 acc16= word variable 6
  210 acc8= constant 3
  211 acc8CompareAcc16
  212 brge 216
  213 acc8= constant 21
  214 writeLineAcc8
  215 ;testComparison.j(42)     if (5 > twelve/(1+2)) println(22);
- 216 acc16= variable 10
+ 216 acc16= word variable 10
  217 acc8= constant 1
  218 acc8+ constant 2
  219 acc16/ acc8
@@ -224,14 +224,14 @@
  223 acc8= constant 22
  224 writeLineAcc8
  225 ;testComparison.j(43)     if (5 > four) println(23);
- 226 acc16= variable 6
+ 226 acc16= word variable 6
  227 acc8= constant 5
  228 acc8CompareAcc16
  229 brle 233
  230 acc8= constant 23
  231 writeLineAcc8
  232 ;testComparison.j(44)     if (3 <= twelve/(1+2)) println(24);
- 233 acc16= variable 10
+ 233 acc16= word variable 10
  234 acc8= constant 1
  235 acc8+ constant 2
  236 acc16/ acc8
@@ -241,14 +241,14 @@
  240 acc8= constant 24
  241 writeLineAcc8
  242 ;testComparison.j(45)     if (3 <= four) println(25);
- 243 acc16= variable 6
+ 243 acc16= word variable 6
  244 acc8= constant 3
  245 acc8CompareAcc16
  246 brgt 250
  247 acc8= constant 25
  248 writeLineAcc8
  249 ;testComparison.j(46)     if (4 <= twelve/(1+2)) println(26);
- 250 acc16= variable 10
+ 250 acc16= word variable 10
  251 acc8= constant 1
  252 acc8+ constant 2
  253 acc16/ acc8
@@ -258,14 +258,14 @@
  257 acc8= constant 26
  258 writeLineAcc8
  259 ;testComparison.j(47)     if (4 <= four) println(27);
- 260 acc16= variable 6
+ 260 acc16= word variable 6
  261 acc8= constant 4
  262 acc8CompareAcc16
  263 brgt 267
  264 acc8= constant 27
  265 writeLineAcc8
  266 ;testComparison.j(48)     if (5 >= twelve/(1+2)) println(28);
- 267 acc16= variable 10
+ 267 acc16= word variable 10
  268 acc8= constant 1
  269 acc8+ constant 2
  270 acc16/ acc8
@@ -275,14 +275,14 @@
  274 acc8= constant 28
  275 writeLineAcc8
  276 ;testComparison.j(49)     if (5 >= four) println(29);
- 277 acc16= variable 6
+ 277 acc16= word variable 6
  278 acc8= constant 5
  279 acc8CompareAcc16
  280 brlt 284
  281 acc8= constant 29
  282 writeLineAcc8
  283 ;testComparison.j(50)     if (4 >= twelve/(1+2)) println(30);
- 284 acc16= variable 10
+ 284 acc16= word variable 10
  285 acc8= constant 1
  286 acc8+ constant 2
  287 acc16/ acc8
@@ -292,7 +292,7 @@
  291 acc8= constant 30
  292 writeLineAcc8
  293 ;testComparison.j(51)     if (4 >= four) println(31);
- 294 acc16= variable 6
+ 294 acc16= word variable 6
  295 acc8= constant 4
  296 acc8CompareAcc16
  297 brlt 303
@@ -305,13 +305,13 @@
  304 <acc8= constant 1
  305 acc8+ constant 2
  306 /acc8 unstack8
- 307 acc16= variable 6
+ 307 acc16= word variable 6
  308 acc16CompareAcc8
  309 brne 313
  310 acc8= constant 32
  311 writeLineAcc8
  312 ;testComparison.j(55)     if (four == 4) println(33);
- 313 acc16= variable 6
+ 313 acc16= word variable 6
  314 acc8= constant 4
  315 acc16CompareAcc8
  316 brne 320
@@ -322,13 +322,13 @@
  321 <acc8= constant 1
  322 acc8+ constant 2
  323 /acc8 unstack8
- 324 acc16= variable 4
+ 324 acc16= word variable 4
  325 acc16CompareAcc8
  326 breq 330
  327 acc8= constant 34
  328 writeLineAcc8
  329 ;testComparison.j(57)     if (three != 4) println(35);
- 330 acc16= variable 4
+ 330 acc16= word variable 4
  331 acc8= constant 4
  332 acc16CompareAcc8
  333 breq 337
@@ -339,13 +339,13 @@
  338 <acc8= constant 1
  339 acc8+ constant 2
  340 /acc8 unstack8
- 341 acc16= variable 4
+ 341 acc16= word variable 4
  342 acc16CompareAcc8
  343 brge 347
  344 acc8= constant 36
  345 writeLineAcc8
  346 ;testComparison.j(59)     if (three < 4) println(37);
- 347 acc16= variable 4
+ 347 acc16= word variable 4
  348 acc8= constant 4
  349 acc16CompareAcc8
  350 brge 354
@@ -356,13 +356,13 @@
  355 <acc8= constant 1
  356 acc8+ constant 2
  357 /acc8 unstack8
- 358 acc16= variable 8
+ 358 acc16= word variable 8
  359 acc16CompareAcc8
  360 brle 364
  361 acc8= constant 38
  362 writeLineAcc8
  363 ;testComparison.j(61)     if (five > 4) println(39);
- 364 acc16= variable 8
+ 364 acc16= word variable 8
  365 acc8= constant 4
  366 acc16CompareAcc8
  367 brle 371
@@ -373,13 +373,13 @@
  372 <acc8= constant 1
  373 acc8+ constant 2
  374 /acc8 unstack8
- 375 acc16= variable 4
+ 375 acc16= word variable 4
  376 acc16CompareAcc8
  377 brgt 381
  378 acc8= constant 40
  379 writeLineAcc8
  380 ;testComparison.j(63)     if (three <= 4) println(41);
- 381 acc16= variable 4
+ 381 acc16= word variable 4
  382 acc8= constant 4
  383 acc16CompareAcc8
  384 brgt 388
@@ -390,13 +390,13 @@
  389 <acc8= constant 1
  390 acc8+ constant 2
  391 /acc8 unstack8
- 392 acc16= variable 6
+ 392 acc16= word variable 6
  393 acc16CompareAcc8
  394 brgt 398
  395 acc8= constant 42
  396 writeLineAcc8
  397 ;testComparison.j(65)     if (four <= 4) println(43);
- 398 acc16= variable 6
+ 398 acc16= word variable 6
  399 acc8= constant 4
  400 acc16CompareAcc8
  401 brgt 405
@@ -407,13 +407,13 @@
  406 <acc8= constant 1
  407 acc8+ constant 2
  408 /acc8 unstack8
- 409 acc16= variable 8
+ 409 acc16= word variable 8
  410 acc16CompareAcc8
  411 brlt 415
  412 acc8= constant 44
  413 writeLineAcc8
  414 ;testComparison.j(67)     if (five >= 4) println(45);
- 415 acc16= variable 8
+ 415 acc16= word variable 8
  416 acc8= constant 4
  417 acc16CompareAcc8
  418 brlt 422
@@ -424,13 +424,13 @@
  423 <acc8= constant 1
  424 acc8+ constant 2
  425 /acc8 unstack8
- 426 acc16= variable 6
+ 426 acc16= word variable 6
  427 acc16CompareAcc8
  428 brlt 432
  429 acc8= constant 46
  430 writeLineAcc8
  431 ;testComparison.j(69)     if (four >= 4) println(47);
- 432 acc16= variable 6
+ 432 acc16= word variable 6
  433 acc8= constant 4
  434 acc16CompareAcc8
  435 brlt 441
@@ -561,8 +561,8 @@
  560 ;testComparison.j(88)   
  561 ;testComparison.j(89)     //stack level 2
  562 ;testComparison.j(90)     if (one+three == 12/(1+2)) println(64);
- 563 acc16= variable 2
- 564 acc16+ variable 4
+ 563 acc16= word variable 2
+ 564 acc16+ word variable 4
  565 <acc16
  566 acc8= constant 12
  567 <acc8= constant 1
@@ -574,8 +574,8 @@
  573 acc8= constant 64
  574 writeLineAcc8
  575 ;testComparison.j(91)     if (one+four  != 12/(1+2)) println(65);
- 576 acc16= variable 2
- 577 acc16+ variable 6
+ 576 acc16= word variable 2
+ 577 acc16+ word variable 6
  578 <acc16
  579 acc8= constant 12
  580 <acc8= constant 1
@@ -587,8 +587,8 @@
  586 acc8= constant 65
  587 writeLineAcc8
  588 ;testComparison.j(92)     if (one+one < 12/(1+2)) println(66);
- 589 acc16= variable 2
- 590 acc16+ variable 2
+ 589 acc16= word variable 2
+ 590 acc16+ word variable 2
  591 <acc16
  592 acc8= constant 12
  593 <acc8= constant 1
@@ -600,8 +600,8 @@
  599 acc8= constant 66
  600 writeLineAcc8
  601 ;testComparison.j(93)     if (one+four > 12/(1+2)) println(67);
- 602 acc16= variable 2
- 603 acc16+ variable 6
+ 602 acc16= word variable 2
+ 603 acc16+ word variable 6
  604 <acc16
  605 acc8= constant 12
  606 <acc8= constant 1
@@ -613,8 +613,8 @@
  612 acc8= constant 67
  613 writeLineAcc8
  614 ;testComparison.j(94)     if (one+one <= 12/(1+2)) println(68);
- 615 acc16= variable 2
- 616 acc16+ variable 2
+ 615 acc16= word variable 2
+ 616 acc16+ word variable 2
  617 <acc16
  618 acc8= constant 12
  619 <acc8= constant 1
@@ -626,8 +626,8 @@
  625 acc8= constant 68
  626 writeLineAcc8
  627 ;testComparison.j(95)     if (one+three <= 12/(1+2)) println(69);
- 628 acc16= variable 2
- 629 acc16+ variable 4
+ 628 acc16= word variable 2
+ 629 acc16+ word variable 4
  630 <acc16
  631 acc8= constant 12
  632 <acc8= constant 1
@@ -639,8 +639,8 @@
  638 acc8= constant 69
  639 writeLineAcc8
  640 ;testComparison.j(96)     if (one+three >= 12/(1+2)) println(70);
- 641 acc16= variable 2
- 642 acc16+ variable 4
+ 641 acc16= word variable 2
+ 642 acc16+ word variable 4
  643 <acc16
  644 acc8= constant 12
  645 <acc8= constant 1
@@ -652,8 +652,8 @@
  651 acc8= constant 70
  652 writeLineAcc8
  653 ;testComparison.j(97)     if (one+four >= 12/(1+2)) println(71);
- 654 acc16= variable 2
- 655 acc16+ variable 6
+ 654 acc16= word variable 2
+ 655 acc16+ word variable 6
  656 <acc16
  657 acc8= constant 12
  658 <acc8= constant 1
@@ -665,11 +665,11 @@
  664 acc8= constant 71
  665 writeLineAcc8
  666 ;testComparison.j(98)     if (one+three == twelve/(one+2)) println(72);
- 667 acc16= variable 2
- 668 acc16+ variable 4
+ 667 acc16= word variable 2
+ 668 acc16+ word variable 4
  669 <acc16
- 670 acc16= variable 10
- 671 <acc16= variable 2
+ 670 acc16= word variable 10
+ 671 <acc16= word variable 2
  672 acc16+ constant 2
  673 /acc16 unstack16
  674 revAcc16Comp unstack16
@@ -677,11 +677,11 @@
  676 acc8= constant 72
  677 writeLineAcc8
  678 ;testComparison.j(99)     if (one+four  != twelve/(one+2)) println(73);
- 679 acc16= variable 2
- 680 acc16+ variable 6
+ 679 acc16= word variable 2
+ 680 acc16+ word variable 6
  681 <acc16
- 682 acc16= variable 10
- 683 <acc16= variable 2
+ 682 acc16= word variable 10
+ 683 <acc16= word variable 2
  684 acc16+ constant 2
  685 /acc16 unstack16
  686 revAcc16Comp unstack16
@@ -689,11 +689,11 @@
  688 acc8= constant 73
  689 writeLineAcc8
  690 ;testComparison.j(100)     if (one+one < twelve/(one+2)) println(74);
- 691 acc16= variable 2
- 692 acc16+ variable 2
+ 691 acc16= word variable 2
+ 692 acc16+ word variable 2
  693 <acc16
- 694 acc16= variable 10
- 695 <acc16= variable 2
+ 694 acc16= word variable 10
+ 695 <acc16= word variable 2
  696 acc16+ constant 2
  697 /acc16 unstack16
  698 revAcc16Comp unstack16
@@ -701,11 +701,11 @@
  700 acc8= constant 74
  701 writeLineAcc8
  702 ;testComparison.j(101)     if (one+four > twelve/(one+2)) println(75);
- 703 acc16= variable 2
- 704 acc16+ variable 6
+ 703 acc16= word variable 2
+ 704 acc16+ word variable 6
  705 <acc16
- 706 acc16= variable 10
- 707 <acc16= variable 2
+ 706 acc16= word variable 10
+ 707 <acc16= word variable 2
  708 acc16+ constant 2
  709 /acc16 unstack16
  710 revAcc16Comp unstack16
@@ -713,11 +713,11 @@
  712 acc8= constant 75
  713 writeLineAcc8
  714 ;testComparison.j(102)     if (one+one <= twelve/(one+2)) println(76);
- 715 acc16= variable 2
- 716 acc16+ variable 2
+ 715 acc16= word variable 2
+ 716 acc16+ word variable 2
  717 <acc16
- 718 acc16= variable 10
- 719 <acc16= variable 2
+ 718 acc16= word variable 10
+ 719 <acc16= word variable 2
  720 acc16+ constant 2
  721 /acc16 unstack16
  722 revAcc16Comp unstack16
@@ -725,11 +725,11 @@
  724 acc8= constant 76
  725 writeLineAcc8
  726 ;testComparison.j(103)     if (one+three <= twelve/(one+2)) println(77);
- 727 acc16= variable 2
- 728 acc16+ variable 4
+ 727 acc16= word variable 2
+ 728 acc16+ word variable 4
  729 <acc16
- 730 acc16= variable 10
- 731 <acc16= variable 2
+ 730 acc16= word variable 10
+ 731 <acc16= word variable 2
  732 acc16+ constant 2
  733 /acc16 unstack16
  734 revAcc16Comp unstack16
@@ -737,11 +737,11 @@
  736 acc8= constant 77
  737 writeLineAcc8
  738 ;testComparison.j(104)     if (one+three >= twelve/(one+2)) println(78);
- 739 acc16= variable 2
- 740 acc16+ variable 4
+ 739 acc16= word variable 2
+ 740 acc16+ word variable 4
  741 <acc16
- 742 acc16= variable 10
- 743 <acc16= variable 2
+ 742 acc16= word variable 10
+ 743 <acc16= word variable 2
  744 acc16+ constant 2
  745 /acc16 unstack16
  746 revAcc16Comp unstack16
@@ -749,11 +749,11 @@
  748 acc8= constant 78
  749 writeLineAcc8
  750 ;testComparison.j(105)     if (one+four >= twelve/(one+2)) println(79);
- 751 acc16= variable 2
- 752 acc16+ variable 6
+ 751 acc16= word variable 2
+ 752 acc16+ word variable 6
  753 <acc16
- 754 acc16= variable 10
- 755 <acc16= variable 2
+ 754 acc16= word variable 10
+ 755 <acc16= word variable 2
  756 acc16+ constant 2
  757 /acc16 unstack16
  758 revAcc16Comp unstack16
@@ -765,7 +765,7 @@
  764 <acc8= constant 1
  765 acc8+ constant 2
  766 /acc8 unstack8
- 767 acc16= variable 6
+ 767 acc16= word variable 6
  768 acc16CompareAcc8
  769 brne 773
  770 acc8= constant 80
@@ -775,7 +775,7 @@
  774 <acc8= constant 1
  775 acc8+ constant 2
  776 /acc8 unstack8
- 777 acc16= variable 4
+ 777 acc16= word variable 4
  778 acc16CompareAcc8
  779 breq 783
  780 acc8= constant 81
@@ -785,7 +785,7 @@
  784 <acc8= constant 1
  785 acc8+ constant 2
  786 /acc8 unstack8
- 787 acc16= variable 4
+ 787 acc16= word variable 4
  788 acc16CompareAcc8
  789 brge 793
  790 acc8= constant 82
@@ -795,7 +795,7 @@
  794 <acc8= constant 1
  795 acc8+ constant 2
  796 /acc8 unstack8
- 797 acc16= variable 10
+ 797 acc16= word variable 10
  798 acc16CompareAcc8
  799 brle 803
  800 acc8= constant 83
@@ -805,7 +805,7 @@
  804 <acc8= constant 1
  805 acc8+ constant 2
  806 /acc8 unstack8
- 807 acc16= variable 6
+ 807 acc16= word variable 6
  808 acc16CompareAcc8
  809 brgt 813
  810 acc8= constant 84
@@ -815,7 +815,7 @@
  814 <acc8= constant 1
  815 acc8+ constant 2
  816 /acc8 unstack8
- 817 acc16= variable 4
+ 817 acc16= word variable 4
  818 acc16CompareAcc8
  819 brgt 823
  820 acc8= constant 85
@@ -825,7 +825,7 @@
  824 <acc8= constant 1
  825 acc8+ constant 2
  826 /acc8 unstack8
- 827 acc16= variable 6
+ 827 acc16= word variable 6
  828 acc16CompareAcc8
  829 brlt 833
  830 acc8= constant 86
@@ -835,80 +835,80 @@
  834 <acc8= constant 1
  835 acc8+ constant 2
  836 /acc8 unstack8
- 837 acc16= variable 10
+ 837 acc16= word variable 10
  838 acc16CompareAcc8
  839 brlt 843
  840 acc8= constant 87
  841 writeLineAcc8
  842 ;testComparison.j(114)     if (four == twelve/(one+2)) println(88);
- 843 acc16= variable 10
- 844 <acc16= variable 2
+ 843 acc16= word variable 10
+ 844 <acc16= word variable 2
  845 acc16+ constant 2
  846 /acc16 unstack16
- 847 acc16Comp variable 6
+ 847 acc16Comp word variable 6
  848 brne 852
  849 acc8= constant 88
  850 writeLineAcc8
  851 ;testComparison.j(115)     if (three != twelve/(one+2)) println(89);
- 852 acc16= variable 10
- 853 <acc16= variable 2
+ 852 acc16= word variable 10
+ 853 <acc16= word variable 2
  854 acc16+ constant 2
  855 /acc16 unstack16
- 856 acc16Comp variable 4
+ 856 acc16Comp word variable 4
  857 breq 861
  858 acc8= constant 89
  859 writeLineAcc8
  860 ;testComparison.j(116)     if (three < twelve/(one+2)) println(90);
- 861 acc16= variable 10
- 862 <acc16= variable 2
+ 861 acc16= word variable 10
+ 862 <acc16= word variable 2
  863 acc16+ constant 2
  864 /acc16 unstack16
- 865 acc16Comp variable 4
+ 865 acc16Comp word variable 4
  866 brle 870
  867 acc8= constant 90
  868 writeLineAcc8
  869 ;testComparison.j(117)     if (twelve > twelve/(one+2)) println(91);
- 870 acc16= variable 10
- 871 <acc16= variable 2
+ 870 acc16= word variable 10
+ 871 <acc16= word variable 2
  872 acc16+ constant 2
  873 /acc16 unstack16
- 874 acc16Comp variable 10
+ 874 acc16Comp word variable 10
  875 brge 879
  876 acc8= constant 91
  877 writeLineAcc8
  878 ;testComparison.j(118)     if (four <= twelve/(one+2)) println(92);
- 879 acc16= variable 10
- 880 <acc16= variable 2
+ 879 acc16= word variable 10
+ 880 <acc16= word variable 2
  881 acc16+ constant 2
  882 /acc16 unstack16
- 883 acc16Comp variable 6
+ 883 acc16Comp word variable 6
  884 brlt 888
  885 acc8= constant 92
  886 writeLineAcc8
  887 ;testComparison.j(119)     if (three <= twelve/(one+2)) println(93);
- 888 acc16= variable 10
- 889 <acc16= variable 2
+ 888 acc16= word variable 10
+ 889 <acc16= word variable 2
  890 acc16+ constant 2
  891 /acc16 unstack16
- 892 acc16Comp variable 4
+ 892 acc16Comp word variable 4
  893 brlt 897
  894 acc8= constant 93
  895 writeLineAcc8
  896 ;testComparison.j(120)     if (four >= twelve/(one+2)) println(94);
- 897 acc16= variable 10
- 898 <acc16= variable 2
+ 897 acc16= word variable 10
+ 898 <acc16= word variable 2
  899 acc16+ constant 2
  900 /acc16 unstack16
- 901 acc16Comp variable 6
+ 901 acc16Comp word variable 6
  902 brgt 906
  903 acc8= constant 94
  904 writeLineAcc8
  905 ;testComparison.j(121)     if (twelve >= twelve/(one+2)) println(95);
- 906 acc16= variable 10
- 907 <acc16= variable 2
+ 906 acc16= word variable 10
+ 907 <acc16= word variable 2
  908 acc16+ constant 2
  909 /acc16 unstack16
- 910 acc16Comp variable 10
+ 910 acc16Comp word variable 10
  911 brgt 915
  912 acc8= constant 95
  913 writeLineAcc8
@@ -1012,8 +1012,8 @@
 1011 acc8= constant 1
 1012 acc8+ constant 3
 1013 <acc8
-1014 acc16= variable 10
-1015 <acc16= variable 2
+1014 acc16= word variable 10
+1015 <acc16= word variable 2
 1016 acc16+ constant 2
 1017 /acc16 unstack16
 1018 acc8<
@@ -1025,8 +1025,8 @@
 1024 acc8= constant 1
 1025 acc8+ constant 2
 1026 <acc8
-1027 acc16= variable 10
-1028 <acc16= variable 2
+1027 acc16= word variable 10
+1028 <acc16= word variable 2
 1029 acc16+ constant 2
 1030 /acc16 unstack16
 1031 acc8<
@@ -1038,8 +1038,8 @@
 1037 acc8= constant 1
 1038 acc8+ constant 2
 1039 <acc8
-1040 acc16= variable 10
-1041 <acc16= variable 2
+1040 acc16= word variable 10
+1041 <acc16= word variable 2
 1042 acc16+ constant 2
 1043 /acc16 unstack16
 1044 acc8<
@@ -1051,8 +1051,8 @@
 1050 acc8= constant 1
 1051 acc8+ constant 4
 1052 <acc8
-1053 acc16= variable 10
-1054 <acc16= variable 2
+1053 acc16= word variable 10
+1054 <acc16= word variable 2
 1055 acc16+ constant 2
 1056 /acc16 unstack16
 1057 acc8<
@@ -1064,8 +1064,8 @@
 1063 acc8= constant 1
 1064 acc8+ constant 2
 1065 <acc8
-1066 acc16= variable 10
-1067 <acc16= variable 2
+1066 acc16= word variable 10
+1067 <acc16= word variable 2
 1068 acc16+ constant 2
 1069 /acc16 unstack16
 1070 acc8<
@@ -1077,8 +1077,8 @@
 1076 acc8= constant 1
 1077 acc8+ constant 3
 1078 <acc8
-1079 acc16= variable 10
-1080 <acc16= variable 2
+1079 acc16= word variable 10
+1080 <acc16= word variable 2
 1081 acc16+ constant 2
 1082 /acc16 unstack16
 1083 acc8<
@@ -1090,8 +1090,8 @@
 1089 acc8= constant 1
 1090 acc8+ constant 3
 1091 <acc8
-1092 acc16= variable 10
-1093 <acc16= variable 2
+1092 acc16= word variable 10
+1093 <acc16= word variable 2
 1094 acc16+ constant 2
 1095 /acc16 unstack16
 1096 acc8<
@@ -1103,8 +1103,8 @@
 1102 acc8= constant 1
 1103 acc8+ constant 4
 1104 <acc8
-1105 acc16= variable 10
-1106 <acc16= variable 2
+1105 acc16= word variable 10
+1106 <acc16= word variable 2
 1107 acc16+ constant 2
 1108 /acc16 unstack16
 1109 acc8<
@@ -1185,8 +1185,8 @@
 1184 acc8= constant 119
 1185 writeLineAcc8
 1186 ;testComparison.j(146)     if (4 == twelve/(one+2)) println(120);
-1187 acc16= variable 10
-1188 <acc16= variable 2
+1187 acc16= word variable 10
+1188 <acc16= word variable 2
 1189 acc16+ constant 2
 1190 /acc16 unstack16
 1191 acc8= constant 4
@@ -1195,8 +1195,8 @@
 1194 acc8= constant 120
 1195 writeLineAcc8
 1196 ;testComparison.j(147)     if (3 != twelve/(one+2)) println(121);
-1197 acc16= variable 10
-1198 <acc16= variable 2
+1197 acc16= word variable 10
+1198 <acc16= word variable 2
 1199 acc16+ constant 2
 1200 /acc16 unstack16
 1201 acc8= constant 3
@@ -1205,8 +1205,8 @@
 1204 acc8= constant 121
 1205 writeLineAcc8
 1206 ;testComparison.j(148)     if (2 < twelve/(one+2)) println(122);
-1207 acc16= variable 10
-1208 <acc16= variable 2
+1207 acc16= word variable 10
+1208 <acc16= word variable 2
 1209 acc16+ constant 2
 1210 /acc16 unstack16
 1211 acc8= constant 2
@@ -1215,8 +1215,8 @@
 1214 acc8= constant 122
 1215 writeLineAcc8
 1216 ;testComparison.j(149)     if (5 > twelve/(one+2)) println(123);
-1217 acc16= variable 10
-1218 <acc16= variable 2
+1217 acc16= word variable 10
+1218 <acc16= word variable 2
 1219 acc16+ constant 2
 1220 /acc16 unstack16
 1221 acc8= constant 5
@@ -1225,8 +1225,8 @@
 1224 acc8= constant 123
 1225 writeLineAcc8
 1226 ;testComparison.j(150)     if (3 <= twelve/(one+2)) println(124);
-1227 acc16= variable 10
-1228 <acc16= variable 2
+1227 acc16= word variable 10
+1228 <acc16= word variable 2
 1229 acc16+ constant 2
 1230 /acc16 unstack16
 1231 acc8= constant 3
@@ -1235,8 +1235,8 @@
 1234 acc8= constant 124
 1235 writeLineAcc8
 1236 ;testComparison.j(151)     if (4 <= twelve/(one+2)) println(125);
-1237 acc16= variable 10
-1238 <acc16= variable 2
+1237 acc16= word variable 10
+1238 <acc16= word variable 2
 1239 acc16+ constant 2
 1240 /acc16 unstack16
 1241 acc8= constant 4
@@ -1245,8 +1245,8 @@
 1244 acc8= constant 125
 1245 writeLineAcc8
 1246 ;testComparison.j(152)     if (4 >= twelve/(one+2)) println(126);
-1247 acc16= variable 10
-1248 <acc16= variable 2
+1247 acc16= word variable 10
+1248 <acc16= word variable 2
 1249 acc16+ constant 2
 1250 /acc16 unstack16
 1251 acc8= constant 4
@@ -1255,8 +1255,8 @@
 1254 acc8= constant 126
 1255 writeLineAcc8
 1256 ;testComparison.j(153)     if (5 >= twelve/(one+2)) println(127);
-1257 acc16= variable 10
-1258 <acc16= variable 2
+1257 acc16= word variable 10
+1258 <acc16= word variable 2
 1259 acc16+ constant 2
 1260 /acc16 unstack16
 1261 acc8= constant 5
@@ -1271,7 +1271,7 @@
 1270 acc8+ constant 2
 1271 /acc8 unstack8
 1272 acc8+ unstack8
-1273 acc16= variable 6
+1273 acc16= word variable 6
 1274 acc16CompareAcc8
 1275 brne 1279
 1276 acc8= constant 128
@@ -1283,7 +1283,7 @@
 1282 acc8+ constant 2
 1283 /acc8 unstack8
 1284 acc8+ unstack8
-1285 acc16= variable 6
+1285 acc16= word variable 6
 1286 acc16CompareAcc8
 1287 brne 1291
 1288 acc8= constant 129
@@ -1291,11 +1291,11 @@
 1290 ;testComparison.j(156)     if (four == 0 + 12/(byteOne + 2)) println(130);
 1291 acc8= constant 0
 1292 <acc8= constant 12
-1293 <acc8= variable 12
+1293 <acc8= byte variable 12
 1294 acc8+ constant 2
 1295 /acc8 unstack8
 1296 acc8+ unstack8
-1297 acc16= variable 6
+1297 acc16= word variable 6
 1298 acc16CompareAcc8
 1299 brne 1303
 1300 acc8= constant 130
@@ -1303,17 +1303,17 @@
 1302 ;testComparison.j(157)     if (four == 0 + 12/(one + 2)) println(131);
 1303 acc8= constant 0
 1304 <acc8= constant 12
-1305 acc16= variable 2
+1305 acc16= word variable 2
 1306 acc16+ constant 2
 1307 /acc16 acc8
 1308 acc16+ unstack8
-1309 acc16Comp variable 6
+1309 acc16Comp word variable 6
 1310 brne 1314
 1311 acc8= constant 131
 1312 writeLineAcc8
 1313 ;testComparison.j(158)     if (4 == zero + twelve/(1+2)) println(132);
-1314 acc16= variable 0
-1315 <acc16= variable 10
+1314 acc16= word variable 0
+1315 <acc16= word variable 10
 1316 acc8= constant 1
 1317 acc8+ constant 2
 1318 acc16/ acc8
@@ -1328,22 +1328,22 @@
 1327 ;testComparison.j(161)     // global variable b used within if scope
 1328 ;testComparison.j(162)     b = 133;
 1329 acc8= constant 133
-1330 acc8=> variable 14
+1330 acc8=> byte variable 14
 1331 ;testComparison.j(163)     if (b>132) {
-1332 acc8= variable 14
+1332 acc8= byte variable 14
 1333 acc8Comp constant 132
 1334 brle 1351
 1335 ;testComparison.j(164)       word j = 1001;
 1336 acc16= constant 1001
 1337 acc16=> (basePointer + -2)
 1338 ;testComparison.j(165)       byte c = b;
-1339 acc8= variable 14
+1339 acc8= byte variable 14
 1340 acc8=> (basePointer + -3)
 1341 ;testComparison.j(166)       byte d = c;
 1342 acc8= (basePointer + -3)
 1343 acc8=> (basePointer + -4)
 1344 ;testComparison.j(167)       b--;
-1345 decr8 variable 14
+1345 decr8 byte variable 14
 1346 ;testComparison.j(168)       println (c);
 1347 acc8= (basePointer + -3)
 1348 writeLineAcc8

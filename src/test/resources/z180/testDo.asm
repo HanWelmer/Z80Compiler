@@ -24,13 +24,17 @@ L8:
 L9:
         LD    A,12
 L10:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L11:
         ;;testDo.j(4)   private static word p = 12;
 L12:
         LD    A,12
 L13:
-        LD    (05003H),A
+        LD    L,A
+        LD    H,0
+        LD    (05003H),HL
 L14:
         JP    L17
 L15:
@@ -70,7 +74,7 @@ L29:
 L30:
         ;;testDo.j(12)     b++;
 L31:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L32:
         ;;testDo.j(13)     do {
@@ -96,7 +100,7 @@ L41:
 L42:
         ;;testDo.j(17)       b++;
 L43:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L44:
         ;;testDo.j(18)       println (c);
@@ -135,7 +139,7 @@ L60:
 L61:
         CALL  writeLineA
 L62:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L63:
         LD    A,(05000H)
@@ -152,7 +156,7 @@ L68:
 L69:
         CALL  writeLineA
 L70:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L71:
         LD    A,(05000H)
@@ -169,7 +173,7 @@ L76:
 L77:
         CALL  writeLineA
 L78:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L79:
         LD    A,(05000H)
@@ -186,7 +190,7 @@ L84:
 L85:
         CALL  writeLineA
 L86:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L87:
         LD    A,(05000H)
@@ -202,7 +206,9 @@ L91:
 L92:
         LD    A,10
 L93:
-        LD    (05003H),A
+        LD    L,A
+        LD    H,0
+        LD    (05003H),HL
 L94:
         ;;testDo.j(33)     do { println (p); p++; b--; } while (108 <  b+100);
 L95:
@@ -214,7 +220,7 @@ L97:
         INC   HL
         LD    (05003H),HL
 L98:
-        LD    HL,(05000H)
+        LD    HL,05000H
         DEC   (HL)
 L99:
         LD    A,(05000H)
@@ -236,7 +242,7 @@ L106:
         INC   HL
         LD    (05003H),HL
 L107:
-        LD    HL,(05000H)
+        LD    HL,05000H
         DEC   (HL)
 L108:
         LD    A,(05000H)
@@ -257,7 +263,9 @@ L115:
 L116:
         LD    A,14
 L117:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L118:
         ;;testDo.j(39)     do { println (i); i++; } while (15 == i+0);
 L119:
@@ -360,7 +368,9 @@ L154:
 L155:
         LD    A,22
 L156:
-        LD    (05003H),A
+        LD    L,A
+        LD    H,0
+        LD    (05003H),HL
 L157:
         ;;testDo.j(44)     do { println (p); p++; i--; } while (20 <  i+0);
 L158:
@@ -601,7 +611,7 @@ L248:
 L249:
         CALL  writeLineA
 L250:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L251:
         LD    A,(05000H)
@@ -617,7 +627,9 @@ L255:
 L256:
         LD    A,39
 L257:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L258:
         ;;testDo.j(69)     do { println (i); i++; } while (40 >= i);
 L259:
@@ -664,7 +676,7 @@ L276:
 L277:
         CALL  writeLineA
 L278:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L279:
         LD    HL,(05001H)
@@ -803,7 +815,7 @@ L343:
 L344:
         CALL  writeLineA
 L345:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L346:
         LD    A,(05000H)
@@ -825,7 +837,9 @@ L353:
 L354:
         LD    A,53
 L355:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L356:
         ;;testDo.j(122)     do { println (i); i++; } while (i+0 <= 54);
 L357:
@@ -875,7 +889,7 @@ L374:
 L375:
         CALL  writeLineA
 L376:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L377:
         LD    HL,(05001H)
@@ -914,7 +928,7 @@ L390:
 L391:
         CALL  writeLineA
 L392:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L393:
         LD    A,(05000H)
@@ -938,7 +952,9 @@ L401:
 L402:
         LD    A,61
 L403:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L404:
         ;;testDo.j(136)     do { println (b); b++; i--; } while (60+0 <= i+0);
 L405:
@@ -946,7 +962,7 @@ L405:
 L406:
         CALL  writeLineA
 L407:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L408:
         LD    HL,(05001H)
@@ -980,7 +996,9 @@ L418:
 L419:
         LD    A,61
 L420:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L421:
         ;;testDo.j(139)     b=62;
 L422:
@@ -1040,7 +1058,7 @@ L444:
 L445:
         CALL  writeLineA
 L446:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L447:
         LD    HL,(05001H)
@@ -1083,7 +1101,9 @@ L462:
 L463:
         LD    A,65
 L464:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L465:
         ;;testDo.j(151)     do { println (i); i++; b--; } while (64+0 <= b);
 L466:
@@ -1095,7 +1115,7 @@ L468:
         INC   HL
         LD    (05001H),HL
 L469:
-        LD    HL,(05000H)
+        LD    HL,05000H
         DEC   (HL)
 L470:
         LD    A,64
@@ -1121,7 +1141,9 @@ L478:
 L479:
         LD    A,67
 L480:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L481:
         ;;testDo.j(155)     do { println (b); b++; i--; } while (66+0 <= i);
 L482:
@@ -1129,7 +1151,7 @@ L482:
 L483:
         CALL  writeLineA
 L484:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L485:
         LD    HL,(05001H)
@@ -1156,7 +1178,9 @@ L492:
 L493:
         LD    A,69
 L494:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L495:
         ;;testDo.j(158)     b=69;
 L496:
@@ -1174,7 +1198,7 @@ L501:
         INC   HL
         LD    (05001H),HL
 L502:
-        LD    HL,(05000H)
+        LD    HL,05000H
         DEC   (HL)
 L503:
         LD    HL,1000
@@ -1213,7 +1237,7 @@ L516:
 L517:
         CALL  writeLineA
 L518:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L519:
         LD    HL,(05001H)
@@ -1392,7 +1416,7 @@ L602:
 L603:
         CALL  writeLineA
 L604:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L605:
         LD    A,(05000H)
@@ -1424,7 +1448,9 @@ L617:
 L618:
         LD    A,92
 L619:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L620:
         ;;testDo.j(214)     do { println (i); i++; } while (i <= 93);
 L621:
@@ -1469,7 +1495,7 @@ L636:
 L637:
         CALL  writeLineA
 L638:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L639:
         LD    HL,(05001H)
@@ -1499,7 +1525,7 @@ L648:
 L649:
         CALL  writeLineA
 L650:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L651:
         LD    A,97
@@ -1520,7 +1546,9 @@ L657:
 L658:
         LD    A,99
 L659:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L660:
         ;;testDo.j(227)     do { println (b); b++; } while (b <= i+0);
 L661:
@@ -1528,7 +1556,7 @@ L661:
 L662:
         CALL  writeLineA
 L663:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L664:
         LD    HL,(05001H)
@@ -1552,7 +1580,9 @@ L670:
 L671:
         LD    A,100
 L672:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L673:
         ;;testDo.j(230)     do { println (i); i++; } while (i <= 101+0);
 L674:
@@ -1599,7 +1629,7 @@ L690:
 L691:
         CALL  writeLineA
 L692:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L693:
         LD    HL,(05001H)
@@ -1637,7 +1667,7 @@ L706:
 L707:
         CALL  writeLineA
 L708:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L709:
         LD    A,(05000H)
@@ -1653,7 +1683,9 @@ L713:
 L714:
         LD    A,107
 L715:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L716:
         ;;testDo.j(243)     do { println (b); b++; } while (b <= i);
 L717:
@@ -1661,7 +1693,7 @@ L717:
 L718:
         CALL  writeLineA
 L719:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L720:
         LD    A,(05000H)
@@ -1682,7 +1714,9 @@ L725:
 L726:
         LD    A,(05000H)
 L727:
-        LD    (05001H),A
+        LD    L,A
+        LD    H,0
+        LD    (05001H),HL
 L728:
         ;;testDo.j(246)     b=109;
 L729:

@@ -206,7 +206,9 @@ L95:
 L96:
         LD    A,10
 L97:
-        LD    (05002H),A
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
 L98:
         ;;testExpression.j(49)     println(i);         // 10
 L99:
@@ -257,14 +259,18 @@ L119:
 L120:
         LD    HL,(05002H)
 L121:
-        LD    DE,(05000H)
+        LD    B,A
+        LD    A,(05000H)
+        LD    E,A
+        LD    A,B
+        LD    D,0
         ADD   HL,DE
 L122:
         CALL  writeLineHL
 L123:
         ;;testExpression.j(60)     b++; //4
 L124:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L125:
         ;;testExpression.j(61)     println(b + i);     // 14
@@ -318,7 +324,9 @@ L146:
 L147:
         LD    A,7
 L148:
-        LD    (05004H),A
+        LD    L,A
+        LD    H,0
+        LD    (05004H),HL
 L149:
         ;;testExpression.j(68)     j = i + j;        // 17
 L150:
@@ -465,7 +473,9 @@ L215:
 L216:
         LD    A,40
 L217:
-        LD    (05002H),A
+        LD    L,A
+        LD    H,0
+        LD    (05002H),HL
 L218:
         ;;testExpression.j(92)     println(i - 14);    // 26
 L219:
@@ -500,7 +510,11 @@ L230:
 L231:
         LD    HL,(05002H)
 L232:
-        LD    DE,(05000H)
+        LD    B,A
+        LD    A,(05000H)
+        LD    E,A
+        LD    A,B
+        LD    D,0
         OR    A
         SBC   HL,DE
 L233:
@@ -566,7 +580,9 @@ L258:
 L259:
         LD    A,8
 L260:
-        LD    (05004H),A
+        LD    L,A
+        LD    H,0
+        LD    (05004H),HL
 L261:
         ;;testExpression.j(104)     j = i - j;
 L262:
@@ -942,7 +958,8 @@ L421:
 L422:
         LD    HL,507
 L423:
-        LD    (05000H),HL
+        LD    A,L
+        LD    (05000H),A
 L424:
         ;;testExpression.j(162)     println(b);         // 251
 L425:
@@ -960,7 +977,8 @@ L430:
 L431:
         LD    HL,(05002H)
 L432:
-        LD    (05000H),HL
+        LD    A,L
+        LD    (05000H),A
 L433:
         ;;testExpression.j(165)     println(b);         // 252
 L434:
@@ -987,7 +1005,8 @@ L443:
         OR    A
         SBC   HL,DE
 L444:
-        LD    (05000H),HL
+        LD    A,L
+        LD    (05000H),A
 L445:
         ;;testExpression.j(169)     println(b);         // 252 - 505 = -253
 L446:
@@ -1015,7 +1034,8 @@ L455:
         OR    A
         SBC   HL,DE
 L456:
-        LD    (05000H),HL
+        LD    A,L
+        LD    (05000H),A
 L457:
         ;;testExpression.j(172)     println(b);         // -233 - 11 = -254
 L458:
@@ -1240,14 +1260,18 @@ L561:
 L562:
         LD    HL,(05004H)
 L563:
-        LD    DE,(05000H)
+        LD    B,A
+        LD    A,(05000H)
+        LD    E,A
+        LD    A,B
+        LD    D,0
         ADD   HL,DE
 L564:
         CALL  writeLineHL
 L565:
         ;;testExpression.j(218)     b++;
 L566:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L567:
         ;;testExpression.j(219)     println(b + j);     // 1011
@@ -1346,7 +1370,11 @@ L609:
 L610:
         LD    HL,(05004H)
 L611:
-        LD    DE,(05000H)
+        LD    B,A
+        LD    A,(05000H)
+        LD    E,A
+        LD    A,B
+        LD    D,0
         ADD   HL,DE
 L612:
         LD    (05002H),HL
@@ -1359,7 +1387,7 @@ L615:
 L616:
         ;;testExpression.j(233)     b++;
 L617:
-        LD    HL,(05000H)
+        LD    HL,05000H
         INC   (HL)
 L618:
         ;;testExpression.j(234)     i = b + j;
@@ -1531,7 +1559,11 @@ L693:
 L694:
         LD    HL,(05004H)
 L695:
-        LD    DE,(05000H)
+        LD    B,A
+        LD    A,(05000H)
+        LD    E,A
+        LD    A,B
+        LD    D,0
         OR    A
         SBC   HL,DE
 L696:
@@ -1607,7 +1639,11 @@ L726:
 L727:
         LD    HL,(05004H)
 L728:
-        LD    DE,(05000H)
+        LD    B,A
+        LD    A,(05000H)
+        LD    E,A
+        LD    A,B
+        LD    D,0
         OR    A
         SBC   HL,DE
 L729:

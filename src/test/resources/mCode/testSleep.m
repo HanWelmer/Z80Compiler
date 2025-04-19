@@ -7,10 +7,10 @@
    6 ;testSleep.j(3)   private static final word BIG_VALUE = 10000;
    7 ;testSleep.j(4)   private static byte globalByte = 250;
    8 acc8= constant 250
-   9 acc8=> variable 3
+   9 acc8=> byte variable 3
   10 ;testSleep.j(5)   private static word globalWord = 10000;
   11 acc16= constant 10000
-  12 acc16=> variable 4
+  12 acc16=> word variable 4
   13 br 70
   14 ;testSleep.j(6) 
   15 ;testSleep.j(7)   /**
@@ -119,7 +119,7 @@
  118 acc16= stringconstant 135
  119 writeLineString
  120 ;testSleep.j(52)     sleep(globalWord);
- 121 acc16= variable 4
+ 121 acc16= word variable 4
  122 <acc16
  123 call 49
  124 stackPointer+ constant -2
