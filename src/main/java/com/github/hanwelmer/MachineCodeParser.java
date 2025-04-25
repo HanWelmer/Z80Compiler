@@ -354,8 +354,18 @@ public class MachineCodeParser {
       } else {
         throw new RuntimeException("Internal error; unexpected syntax after <word>: " + line.substring(pos));
       }
+    } else if ("String".equals(keyword)) {
+      skipSpaces(line);
+      keyword = parseKeyword(line);
+      if ("variable".equals(keyword)) {
+        skipSpaces(line);
+        int address = parseNumber(line);
+        result = new Operand(OperandType.GLOBAL_VAR, DataType.string, address);
+      } else {
+        throw new RuntimeException("Internal error; unexpected syntax after <word>: " + line.substring(pos));
+      }
     } else {
-      throw new RuntimeException("Internal error; not supported operand " + line.substring(pos));
+      throw new RuntimeException("Internal error; not supported operand: " + line.substring(pos));
     }
 
     return result;

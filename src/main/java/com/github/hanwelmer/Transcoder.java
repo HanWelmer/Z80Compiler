@@ -1374,8 +1374,8 @@ public class Transcoder {
     AssemblyInstruction asm = null;
     switch (instruction.operand.opType) {
       case GLOBAL_VAR:
-        if (instruction.operand.dataType != DataType.word) {
-          throw new RuntimeException(String.format("unsupported data type %s for loading into DE", instruction.operand.dataType));
+        if (!(instruction.operand.dataType == DataType.word || instruction.operand.dataType == DataType.string)) {
+          throw new RuntimeException(String.format("unsupported data type %s for loading into HL", instruction.operand.dataType));
         }
         int memAddress = MEM_START + instruction.operand.intValue;
         asmCode = String.format(INDENT + "LD    HL,(0%04XH)", memAddress);
