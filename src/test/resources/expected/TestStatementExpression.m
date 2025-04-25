@@ -26,7 +26,7 @@
   25 ;TestStatementExpression.j(9)     // assignment: Name AssignmentOperator Expression
   26 ;TestStatementExpression.j(10)     b = 1;
   27 acc8= constant 1
-  28 acc8=> variable 0
+  28 acc8=> byte variable 0
   29 ;TestStatementExpression.j(11)     // ImportedClass.b = 2;
   30 ;TestStatementExpression.j(12)     // packageName.ImportedClass.b = 3;
   31 ;TestStatementExpression.j(13)     /*
@@ -44,16 +44,16 @@
   43 ;TestStatementExpression.j(25)     */
   44 ;TestStatementExpression.j(26)     // preincrementExpression
   45 ;TestStatementExpression.j(27)     ++b;
-  46 incr8 variable 0
+  46 incr8 byte variable 0
   47 ;TestStatementExpression.j(28)     // predecrementExpression
   48 ;TestStatementExpression.j(29)     --b;
-  49 decr8 variable 0
+  49 decr8 byte variable 0
   50 ;TestStatementExpression.j(30)     // postincrementExpression
   51 ;TestStatementExpression.j(31)     b++;
-  52 incr8 variable 0
+  52 incr8 byte variable 0
   53 ;TestStatementExpression.j(32)     // postdecrementExpression
   54 ;TestStatementExpression.j(33)     b--;
-  55 decr8 variable 0
+  55 decr8 byte variable 0
   56 ;TestStatementExpression.j(34)     // methodInvocation
   57 ;TestStatementExpression.j(35)     doIt();
   58 call 8

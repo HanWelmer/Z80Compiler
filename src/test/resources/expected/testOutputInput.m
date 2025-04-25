@@ -37,9 +37,9 @@
   36 writeLineString
   37 ;testOutputInput.j(23)     value = input(4);
   38 input port 0x04
-  39 acc8=> variable 0
+  39 acc8=> byte variable 0
   40 ;testOutputInput.j(24)     println(value);
-  41 acc8= variable 0
+  41 acc8= byte variable 0
   42 writeLineAcc8
   43 ;testOutputInput.j(25)     println(6);
   44 acc8= constant 6
@@ -77,7 +77,7 @@
   76 ;testOutputInput.j(40)     //constant + byte variable
   77 ;testOutputInput.j(41)     value = 17;
   78 acc8= constant 17
-  79 acc8=> variable 0
+  79 acc8=> byte variable 0
   80 ;testOutputInput.j(42)     output(0x12, value);
   81 output port 0x12, value variable 0
   82 ;testOutputInput.j(43)     println(19);

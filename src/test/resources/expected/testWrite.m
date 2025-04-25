@@ -8,10 +8,10 @@
    7 class TestWrite []
    8 ;testWrite.j(5)   private static word zero = 0;
    9 acc8= constant 0
-  10 acc8=> variable 0
+  10 acc8=> word variable 0
   11 ;testWrite.j(6)   private static byte one = 1;
   12 acc8= constant 1
-  13 acc8=> variable 2
+  13 acc8=> byte variable 2
   14 br 17
   15 ;testWrite.j(7) 
   16 ;testWrite.j(8)   public static void main() {
@@ -20,10 +20,10 @@
   19 basePointer= stackPointer
   20 stackPointer+ constant 2
   21 ;testWrite.j(9)     println(zero);
-  22 acc16= variable 0
+  22 acc16= word variable 0
   23 writeLineAcc16
   24 ;testWrite.j(10)     println(one);
-  25 acc8= variable 2
+  25 acc8= byte variable 2
   26 writeLineAcc8
   27 ;testWrite.j(11)     println(2);
   28 acc8= constant 2
