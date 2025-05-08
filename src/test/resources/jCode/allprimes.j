@@ -1,25 +1,29 @@
-{Print prime numbers less than 100}
-VAR T, {test result; 1 if prime, 0 if not}
-    P, {prime to be tested}
-    D, {divisor}
-    M; {max prime to be tested}
-BEGIN
-  M := (9+1)*(9+1); {max = 100}
-  WRITE(1);
-  WRITE(2);
-  P := 3;
-  WHILE P<M DO
-  BEGIN
-    D := 2;
-    T := 1;
-    WHILE D + D <= P DO
-    BEGIN
-      IF P / D * D = P
-      THEN T := 0;
-      D := D + 1;
-    END;
-    IF T = 1
-    THEN WRITE(P);
-    P := P + 1;
-  END
-END.
+// Print prime numbers less than 100.
+class AllPrimes {
+  private static byte T; // test result; 1 if prime, 0 if not.
+  private static byte P; // prime to be tested.
+  private static byte D; // divisor.
+  private static byte M; // max prime to be tested.
+  
+  public static void main() {
+    M = 100;
+
+    println(1);
+    println(2);
+    P = 3;
+    while (P < M) {
+      D = 2;
+      T = 1;
+      while (D + D <= P) {
+        if (P / D * D == P) {
+          T = 0;
+        }
+        D = D + 1;
+      }
+      if (T == 1) {
+          println(P);
+      }
+      P = P + 1;
+    }
+  }
+}
