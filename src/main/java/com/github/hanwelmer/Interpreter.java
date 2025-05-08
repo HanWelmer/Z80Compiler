@@ -275,7 +275,7 @@ public class Interpreter {
         break;
       case revAcc16Compare: // reverse compare
         debug(" acc16=" + acc16 + ", operand=");
-        if (getOpType() == OperandType.STACK16 || getOpType() == OperandType.STACK8) {
+        if (instr.operand.opType == OperandType.STACK16 || instr.operand.opType == OperandType.STACK8) {
           debug("" + peek() + "\n");
         } else {
           debug("" + getOp(instr.operand) + "\n");
@@ -444,7 +444,7 @@ public class Interpreter {
         break;
       case revAcc8Compare: // reverse compare
         debug(" acc8=" + acc8 + ", operand=");
-        if (getOpType() == OperandType.STACK16 || getOpType() == OperandType.STACK8) {
+        if (instr.operand.opType == OperandType.STACK16 || instr.operand.opType == OperandType.STACK8) {
           debug("" + peek() + "\n");
         } else {
           debug("" + getOp(instr.operand) + "\n");
@@ -665,10 +665,6 @@ public class Interpreter {
       runError("stack underflow");
     }
     return machineStack.get(machineStack.size() - 1);
-  }
-
-  private OperandType getOpType() {
-    return instructions.get(pc).operand.opType;
   }
 
   private int getOp(Operand operand) {
