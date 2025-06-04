@@ -28,6 +28,9 @@ public class Identifiers {
   private Scope classVariables = new Scope();
   // Stack of scopes with local variables for semantic analysis.
   private Stack<Scope> localVariables = new Stack<>();
+  // maxScopeSize is the maximum size for local variables to be reserved on the
+  // stack.
+  private int maxScopeSize = 0;
 
   /**
    * Initialize the table with identifiers. Method is used during semantic
@@ -36,6 +39,11 @@ public class Identifiers {
   public void init() {
     classVariables.setAddress(0);
     localVariables.clear();
+    maxScopeSize = 0;
+  }
+
+  public int getMaxScopeSize() {
+    return maxScopeSize;
   }
 
   // Start a new declaration scope.
@@ -51,21 +59,18 @@ public class Identifiers {
 
   // Close the top level scope.
   public void closeScope() {
-    // update maximum size of sub-scopes of parent of current scope.
-    if (localVariables.size() > 1) {
-      int currentScopeSize = getScopeSize();
-      localVariables.get(localVariables.size() - 2).updateMaxSubScopeSize(currentScopeSize);
+    // update maximum size for local variables.
+    int scopeSize = localVariables.peek().getAddress();
+    if (scopeSize > maxScopeSize) {
+      maxScopeSize = scopeSize;
     }
     // remove current scope.
     localVariables.pop();
+    // reset max scope size if there are no more local variables.
+    if (localVariables.size() == 0) {
+      maxScopeSize = 0;
+    }
   } // closeScope
-
-  public int getScopeSize() {
-    // calculate size of current scope plus maximum of it's sub-scopes
-    int currentScopeSize = localVariables.peek().getAddress() < 0 ? 0 : localVariables.peek().getAddress();
-    currentScopeSize += localVariables.peek().getMaxSubScopeSize();
-    return currentScopeSize;
-  }
 
   /**
    * Get a variable by its name. Method is used during semantic analysis phase.

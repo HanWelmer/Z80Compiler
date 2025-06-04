@@ -1111,7 +1111,7 @@ public class pCompiler {
     block(cuc, stopSet);
 
     // code generation
-    setScopeSize(claimStackSpaceAddress, identifiers.getScopeSize());
+    setScopeSize(claimStackSpaceAddress, identifiers.getMaxScopeSize());
     generateReturnStatement(cuc.lexemeReader);
 
     // semantic analysis: close the method level declaration scope.
