@@ -38,13 +38,13 @@ public class TestMethodInvocation extends AbstactRegressionTest {
   }
 
   @Test
-  public void TestNoParameters() {
+  public void testNoParameters() {
     assertTrue(singleTest("TestNoParameters.j"));
   }
 
   @Test
-  public void TestOneParameterIsoOne() {
-    String testOutput = testWithRedirectedSystemOut("TestOneParameterIsoOne.j");
+  public void testOneParameterIsoNone() {
+    String testOutput = testWithRedirectedSystemOut("TestOneParameterIsoNone.j");
     System.out.println(testOutput);
     String[] lines = testOutput.split("\n");
     assertTrue(lines.length == 4);
@@ -54,12 +54,17 @@ public class TestMethodInvocation extends AbstactRegressionTest {
   }
 
   @Test
-  public void TestWordParameter() {
+  public void testByteParameter() {
+    assertTrue(singleTest("TestByteParameter.j"));
+  }
+
+  @Test
+  public void testWordParameter() {
     assertTrue(singleTest("TestWordParameter.j"));
   }
 
   @Test
-  public void TestImportLocalClass() {
+  public void testImportLocalClass() {
     assertTrue(singleTest("TestImportLocalClass.j"));
   }
 

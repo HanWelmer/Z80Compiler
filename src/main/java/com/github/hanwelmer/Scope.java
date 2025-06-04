@@ -27,13 +27,26 @@ public class Scope {
   // identified by their fully qualified name.
   private Map<String, Variable> variables = new HashMap<String, Variable>();
   private int nextAddress = 0;
+  // maxSubScopeSize is the maximum scope size of all scopes within the current
+  // scope. It doesn't include the size of the current scope.
+  private int maxSubScopeSize = 0;
 
   public int getAddress() {
     return nextAddress;
   }
 
   public void setAddress(int address) {
-    this.nextAddress = address;
+    nextAddress = address;
+  }
+
+  public int getMaxSubScopeSize() {
+    return maxSubScopeSize;
+  }
+
+  public void updateMaxSubScopeSize(int subScopeSize) {
+    if (subScopeSize > maxSubScopeSize) {
+      maxSubScopeSize = subScopeSize;
+    }
   }
 
   public Variable getVariable(String fullyQualifiedName) {

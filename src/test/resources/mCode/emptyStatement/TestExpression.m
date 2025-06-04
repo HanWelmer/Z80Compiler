@@ -14,7 +14,7 @@
   13 writeLineAcc8
   14 ;TestExpression.j(5)     byte b = 1;
   15 acc8= constant 1
-  16 acc8=> (basePointer + -1)
+  16 acc8=> (basePointer + 1)
   17 ;TestExpression.j(6)     ;
   18 ;TestExpression.j(7)     println(2);
   19 acc8= constant 2

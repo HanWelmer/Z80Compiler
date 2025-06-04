@@ -10,7 +10,7 @@
    9 method main [public, static] void ()
   10 ;FinalVolatileModifier.j(6)     final volatile byte b = 1;
   11 acc8= constant 1
-  12 acc8=> variable 0
+  12 acc8=> (basePointer + 0)
   13 return
   14 ;FinalVolatileModifier.j(7)   }
   15 ;FinalVolatileModifier.j(8) }

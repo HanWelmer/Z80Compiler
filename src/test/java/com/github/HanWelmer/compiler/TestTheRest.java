@@ -102,6 +102,7 @@ public class TestTheRest extends AbstactRegressionTest {
 
   @Test
   public void testSleep() {
+    // FIXME support byte variable in sleep function.
     assertTrue(singleTest("testSleep.j"));
   }
 

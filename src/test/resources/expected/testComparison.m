@@ -1335,17 +1335,17 @@
 1334 brle 1351
 1335 ;testComparison.j(164)       word j = 1001;
 1336 acc16= constant 1001
-1337 acc16=> (basePointer + -2)
+1337 acc16=> (basePointer + 2)
 1338 ;testComparison.j(165)       byte c = b;
 1339 acc8= byte variable 14
-1340 acc8=> (basePointer + -3)
+1340 acc8=> (basePointer + 3)
 1341 ;testComparison.j(166)       byte d = c;
-1342 acc8= (basePointer + -3)
-1343 acc8=> (basePointer + -4)
+1342 acc8= (basePointer + 3)
+1343 acc8=> (basePointer + 4)
 1344 ;testComparison.j(167)       b--;
 1345 decr8 byte variable 14
 1346 ;testComparison.j(168)       println (c);
-1347 acc8= (basePointer + -3)
+1347 acc8= (basePointer + 3)
 1348 writeLineAcc8
 1349 ;testComparison.j(169)     } else {
 1350 br 1358

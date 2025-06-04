@@ -1081,7 +1081,6 @@ public class pCompiler {
 
     // semantic analysis: start a new method level declaration scope.
     identifiers.newScope();
-    identifiers.resetScopeSize();
 
     // lexical analysis
     Variable method = identifiers.getId(fullyQualifiedMethodName);
@@ -1105,14 +1104,14 @@ public class pCompiler {
     plant(cuc.lexemeReader, new Instruction(FunctionType.stackBasePointer));
     // allocate space on stack for local variables.
     plant(cuc.lexemeReader, new Instruction(FunctionType.basePointerLoad, new Operand(OperandType.STACK_POINTER)));
-    int moveStackPointerAddress = saveLabel();
+    int claimStackSpaceAddress = saveLabel();
     plant(cuc.lexemeReader, new Instruction(FunctionType.stackPointerPlus, new Operand(OperandType.CONSTANT, DataType.word, 0)));
 
     // lexical analysis
     block(cuc, stopSet);
 
     // code generation
-    setScopeSize(moveStackPointerAddress, identifiers.getScopeSize());
+    setScopeSize(claimStackSpaceAddress, identifiers.getScopeSize());
     generateReturnStatement(cuc.lexemeReader);
 
     // semantic analysis: close the method level declaration scope.
@@ -1143,21 +1142,6 @@ public class pCompiler {
       lexeme = lexemeReader.getLexeme(sourceCode);
     }
 
-    // code generation: assign address to formal parameters aka identifiers.
-    // Address is positive index relative to the base pointer:
-    // BP + 0,1 is saved value for the old base pointer.
-    // BP + 2,3 is the return address.
-    // BP + 4,5 is the first word; BP + 4 is the first byte.
-    int nextIndex = 4;
-    for (FormalParameter formalParameter : method.getFormalParameters()) {
-      // assign index to formal parameter
-      formalParameter.setBasePointerOffset(nextIndex);
-      // assign index to identifier
-      identifiers.getId(formalParameter.getName()).setAddress(nextIndex);
-      // increment index
-      nextIndex += formalParameter.getDataType().getSize();
-    }
-
     debug("\nformalParameters: end");
   } // formalParameters()
 
@@ -1175,8 +1159,9 @@ public class pCompiler {
 
       // semantic analysis
       if (identifiers.declareId(identifier, IdentifierType.FORMAL_PARAMETER, type.getType(), modifiers)) {
+        Variable var = identifiers.getId(identifier);
         debug(String.format("\n%s declaration: $s %s %s", identifier, modifiers, type.getType(), identifier));
-        FormalParameter parameter = new FormalParameter(identifier, modifiers, type.getDataType());
+        FormalParameter parameter = new FormalParameter(identifier, modifiers, type.getDataType(), var.getAddress());
         method.addFormalParameter(parameter);
       } else {
         error(lexemeReader);
@@ -3293,8 +3278,8 @@ public class pCompiler {
     }
   } // plantStringConstants
 
-  private void setScopeSize(int methodAddress, int scopeSize) {
-    Instruction instruction = instructions.get(methodAddress);
+  private void setScopeSize(int claimStackSpaceAddress, int scopeSize) {
+    Instruction instruction = instructions.get(claimStackSpaceAddress);
     instruction.operand.intValue = scopeSize;
   } // setScopeSize
 

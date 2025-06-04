@@ -28,7 +28,6 @@ public class Identifiers {
   private Scope classVariables = new Scope();
   // Stack of scopes with local variables for semantic analysis.
   private Stack<Scope> localVariables = new Stack<>();
-  private int maxScopeSize = 0;
 
   /**
    * Initialize the table with identifiers. Method is used during semantic
@@ -37,7 +36,6 @@ public class Identifiers {
   public void init() {
     classVariables.setAddress(0);
     localVariables.clear();
-    maxScopeSize = 0;
   }
 
   // Start a new declaration scope.
@@ -53,21 +51,20 @@ public class Identifiers {
 
   // Close the top level scope.
   public void closeScope() {
-    // update maximum scope size.
-    // Note that local variable indices are negative but maxScopeSie is
-    // positive.
-    if (maxScopeSize < -localVariables.peek().getAddress()) {
-      maxScopeSize = -localVariables.peek().getAddress();
+    // update maximum size of sub-scopes of parent of current scope.
+    if (localVariables.size() > 1) {
+      int currentScopeSize = getScopeSize();
+      localVariables.get(localVariables.size() - 2).updateMaxSubScopeSize(currentScopeSize);
     }
+    // remove current scope.
     localVariables.pop();
   } // closeScope
 
-  public void resetScopeSize() {
-    maxScopeSize = 0;
-  }
-
   public int getScopeSize() {
-    return maxScopeSize;
+    // calculate size of current scope plus maximum of it's sub-scopes
+    int currentScopeSize = localVariables.peek().getAddress() < 0 ? 0 : localVariables.peek().getAddress();
+    currentScopeSize += localVariables.peek().getMaxSubScopeSize();
+    return currentScopeSize;
   }
 
   /**
@@ -176,33 +173,52 @@ public class Identifiers {
       var.setAddress(address);
       classVariables.setAddress(address + var.getDataType().getSize());
     } else if (identifierType == IdentifierType.LOCAL_VARIABLE) {
-      // Allocate a local variable on the stack, with a negative index relative
+      // Allocate a local variable on the stack, with a positive index relative
       // to the base pointer:
-      // BP - 1,2 for first word.
-      // BP - 1 for first byte.
+      // BP - 2,3 hold the return address.
+      // BP - 0,1 hold saved value for the old base pointer.
+      // BP + 1 for first byte local variable.
+      // BP + 1 (high byte), BP + 2 (low byte) for first word local variable.
       // This scheme assumes that memory allocation can only occur in the
       // current top level scope.
-      // This scheme assumes that the stack grows downwards (from high to low
-      // memory addresses) and that the current value is just above the first
-      // available address.
+      // This scheme assumes that the stack grows upwards (zero based index).
+      // This scheme assumes that BP points to saved old BP (just below first
+      // memory address on the stack to be allocated to local variables).
       int address = localVariables.peek().getAddress();
-      address = address - var.getDataType().getSize();
+      // override last allocated address if this is the first local variable
+      // within current scope.
+      if (address < 0) {
+        address = 0;
+      }
+      // allocate space for current local variable.
+      address = address + var.getDataType().getSize();
+      // assign next address to current formal parameter.
       var.setAddress(address);
+      // update last allocated address for local variables within current scope.
       localVariables.peek().setAddress(address);
     } else if (identifierType == IdentifierType.FORMAL_PARAMETER) {
-      // Allocate a formal parameter on the stack, with a positive index
+      // Allocate a formal parameter on the stack, with a negative index
       // relative to the base pointer:
-      // BP + 0,1 is saved value for the old base pointer.
-      // BP + 2,3 is the return address.
-      // BP + 4,5 is the first word; BP + 4 is the first byte.
+      // BP - 0,1 hold saved value for the old base pointer.
+      // BP - 2,3 hold the return address.
+      // BP - 4 is for the first byte parameter.
+      // BP - 4,5 is for the first word parameter.
       // This scheme assumes that memory allocation can only occur in the
       // current top level scope.
-      // This scheme assumes that the stack grows downwards (from high to low
-      // memory addresses) and that the current value is just above the first
-      // available address.
-      int address = 4;
-      // FIXME calculate address when there are more than 1 formal parameters.
+      // This scheme assumes that the stack grows upwards (zero based index).
+      // This scheme assumes that BP points to saved old BP (just below first
+      // memory address on the stack to be allocated to local variables).
+      int address = localVariables.peek().getAddress();
+      // override default next address if this is the first formal parameter
+      // within current scope.
+      if (address == 0) {
+        address = -4;
+      }
+      // assign next address to current formal parameter.
       var.setAddress(address);
+      // allocate space for current formal parameter.
+      address = address - var.getDataType().getSize();
+      // update next address for next formal parameter within current scope.
       localVariables.peek().setAddress(address);
     } else if (identifierType == IdentifierType.CLAZZ || identifierType == IdentifierType.METHOD) {
       ; // no address assigned.

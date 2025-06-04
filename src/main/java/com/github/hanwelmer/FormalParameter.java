@@ -9,11 +9,12 @@ public class FormalParameter {
   private DataType dataType;
   private int basePointerOffset;
 
-  public FormalParameter(String name, EnumSet<LexemeType> modifiers, DataType dataType) {
+  public FormalParameter(String name, EnumSet<LexemeType> modifiers, DataType dataType, int offset) {
     super();
     this.name = name;
     this.modifiers = modifiers;
     this.dataType = dataType;
+    this.basePointerOffset = offset;
   }
 
   public void setBasePointerOffset(int basePointerOffset) {
@@ -43,7 +44,11 @@ public class FormalParameter {
     // }
     result += dataType + " ";
     result += name;
-    result += " {bp+" + basePointerOffset + "}";
+    if (basePointerOffset < 0) {
+      result += " {bp-" + (-basePointerOffset) + "}";
+    } else {
+      result += " {bp+" + basePointerOffset + "}";
+    }
     return result;
   }
 

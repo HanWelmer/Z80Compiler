@@ -40,33 +40,42 @@ public class Interpreter {
   private Stack<Integer> machineStack;
   private int basePointer;
 
-  // Stack structure is as follows:
-  // Please note that indexes relative to base pointer are reversed to what one
-  // would expect.
+  // In this Java based interpreter the stack grows up (index increases). This
+  // is reverse to a usual stack, which grows down (stack pointer decreases).
+  //
+  // The following figures tries to explain the stack structure in the JAVA
+  // based interpreter, assuming a call to a function with an int return value,
+  // a byte parameter and a word parameter and a byte local variable and a word
+  // local variable: public int f(byte b, word w) { byte bb; word ww;}
+  //
+  // Logically BP points to the saved value of the previous BP.
+  // But because the JAVA stack uses a zero based index, BP points to the first
+  // byte reserved for local variables.
+  // ............... index
   // +----------+
-  // | ........ | index 0
   // | ........ |
+  // | ........ | <- 0
   // +----------+
-  // |byte par. | <-BASE_POINTER - 7 (optional)
+  // |byte par. | <- BP - 9
   // +----------+
-  // |word par H|
-  // |word par L| <-BASE_POINTER - 6 (optional)
+  // |word par H| <- BP - 8
+  // |word par L| <- BP - 7
   // +----------+
-  // |ret val H |
-  // |ret val L | <-BASE_POINTER - 4 (optional)
+  // |ret val H | <- BP - 6
+  // |ret val L | <- BP - 5
   // +----------+
-  // |ret addr H|
-  // |ret addr L| <-BASE_POINTER - 2
+  // |ret addr H| <- BP - 4
+  // |ret addr L| <- BP - 3
   // +----------+
-  // |prev BP H |
-  // |prev BP L | <-BASE_POINTER
+  // |prev BP H | <- BP - 2
+  // |prev BP L | <- BP - 1
   // +----------+
-  // |byte var. | <-BASE_POINTER + 1 (optional)
+  // |byte var. | <- BP
   // +----------+
-  // |word var H|
-  // |word var L| <-BASE_POINTER + 3 (optional)
+  // |word var H| <- BP + 1
+  // |word var L| <- BP + 2
   // +----------+
-  // | stack... | index (machineStack.size() - 1)
+  // | ........ | <- machineStack.size()
   // +----------+
 
   /* global variables */
@@ -183,20 +192,19 @@ public class Interpreter {
             }
             break;
           case LOCAL_VAR:
-            stackIndex = basePointer - instr.operand.intValue;
-            if (stackIndex < 0) {
-              runError(String.format("stack error: basePointer=%d, index=%d", basePointer, instr.operand.intValue));
-            }
+            stackIndex = basePointer + instr.operand.intValue;
+            // compensate for zero-based index.
+            stackIndex--;
             if (instr.operand.dataType == DataType.word || instr.operand.dataType == DataType.string) {
-              machineStack.set(stackIndex - 1, acc16);
+              pokeWord(stackIndex, acc16);
             } else if (instr.operand.dataType == DataType.byt) {
-              machineStack.set(stackIndex - 1, acc16 % 256);
+              pokeByte(stackIndex, acc16 % 256);
             } else {
               runError("incompatible dataType between assignment variable and expression");
             }
             break;
           case STACK16:
-            push(acc16);
+            pushWord(acc16);
             break;
           default:
             runError("unknown operand type");
@@ -226,13 +234,12 @@ public class Interpreter {
             }
             break;
           case LOCAL_VAR:
-            stackIndex = basePointer - instr.operand.intValue;
-            if (stackIndex < 0) {
-              runError(String.format("stack error: basePointer=%d, index=%d", basePointer, instr.operand.intValue));
-            }
-            machineStack.set(stackIndex - 1, machineStack.get(stackIndex - 1) - 1);
-            if (machineStack.get(stackIndex - 1) < -32768) {
-              machineStack.set(stackIndex - 1, 32767);
+            stackIndex = basePointer + instr.operand.intValue;
+            // compensate for zero-based index.
+            stackIndex--;
+            pokeWord(stackIndex, peekWord(stackIndex) - 1);
+            if (peekWord(stackIndex) < -32768) {
+              pokeWord(stackIndex, 32767);
             }
             break;
           default:
@@ -257,13 +264,12 @@ public class Interpreter {
             }
             break;
           case LOCAL_VAR:
-            stackIndex = basePointer - instr.operand.intValue;
-            if (stackIndex < 0) {
-              runError(String.format("stack error: basePointer=%d, index=%d", basePointer, instr.operand.intValue));
-            }
-            machineStack.set(stackIndex - 1, machineStack.get(stackIndex - 1) + 1);
-            if (machineStack.get(stackIndex - 1) > 32767) {
-              machineStack.set(stackIndex - 1, -32768);
+            stackIndex = basePointer + instr.operand.intValue;
+            // compensate for zero-based index.
+            stackIndex--;
+            pokeWord(stackIndex, peekWord(stackIndex) + 1);
+            if (peekWord(stackIndex) > 32767) {
+              pokeWord(stackIndex, -32768);
             }
             break;
           default:
@@ -275,50 +281,52 @@ public class Interpreter {
         break;
       case revAcc16Compare: // reverse compare
         debug(" acc16=" + acc16 + ", operand=");
-        if (instr.operand.opType == OperandType.STACK16 || instr.operand.opType == OperandType.STACK8) {
-          debug("" + peek() + "\n");
+        if (instr.operand.opType == OperandType.STACK8) {
+          debug("" + peekByte(machineStack.size() - 1) + "\n");
+        } else if (instr.operand.opType == OperandType.STACK16) {
+          debug("" + peekWord(machineStack.size() - 1) + "\n");
         } else {
           debug("" + getOp(instr.operand) + "\n");
         }
         branchSet = compare(acc16, getOp(instr.operand));
         break;
       case stackAcc16:
-        push(acc16);
+        pushWord(acc16);
         break;
       case stackAcc16Load:
-        push(acc16);
+        pushWord(acc16);
         acc16 = getOp(instr.operand);
         break;
       case stackAcc16ToAcc8:
-        push(acc8);
+        pushByte(acc8);
         acc8 = acc16 % 256;
         break;
       case stackBasePointer:
-        push(basePointer);
+        pushWord(basePointer);
         break;
       case stackPointerLoad:
         newValue = getOp(instr.operand);
         while (newValue > machineStack.size()) {
-          push(0);
+          pushByte(0);
         }
         while (newValue < machineStack.size()) {
-          pop();
+          popByte();
         }
         break;
       case stackPointerPlus:
         newValue = machineStack.size() + getOp(instr.operand);
         while (newValue > machineStack.size()) {
-          push(0);
+          pushByte(0);
         }
         while (newValue < machineStack.size()) {
-          pop();
+          popByte();
         }
         break;
       case unstackAcc16:
-        acc16 = pop();
+        acc16 = popWord();
         break;
       case unstackBasePointer:
-        basePointer = pop();
+        basePointer = popWord();
         break;
       /***********************
        * 8-bit arithmetic:
@@ -361,14 +369,13 @@ public class Interpreter {
             vars[instr.operand.intValue] = acc8;
             break;
           case LOCAL_VAR:
-            stackIndex = basePointer - instr.operand.intValue;
-            if (stackIndex < 0) {
-              runError(String.format("stack error: basePointer=%d, index=%d", basePointer, instr.operand.intValue));
-            }
-            machineStack.set(stackIndex - 1, acc8);
+            stackIndex = basePointer + instr.operand.intValue;
+            // compensate for zero-based index.
+            stackIndex--;
+            pokeByte(stackIndex, acc8);
             break;
           case STACK8:
-            push(acc8);
+            pushByte(acc8);
             break;
           default:
             runError("unknown operand type");
@@ -395,13 +402,12 @@ public class Interpreter {
             }
             break;
           case LOCAL_VAR:
-            stackIndex = basePointer - instr.operand.intValue;
-            if (stackIndex < 0) {
-              runError(String.format("stack error: basePointer=%d, index=%d", basePointer, instr.operand.intValue));
-            }
-            machineStack.set(stackIndex - 1, machineStack.get(stackIndex - 1) - 1);
-            if (machineStack.get(stackIndex - 1) < 0) {
-              machineStack.set(stackIndex - 1, 255);
+            stackIndex = basePointer + instr.operand.intValue;
+            // compensate for zero-based index.
+            stackIndex--;
+            pokeByte(stackIndex, peekByte(stackIndex) - 1);
+            if (peekByte(stackIndex) < 0) {
+              pokeByte(stackIndex, 255);
             }
             break;
           default:
@@ -426,13 +432,12 @@ public class Interpreter {
             }
             break;
           case LOCAL_VAR:
-            stackIndex = basePointer - instr.operand.intValue;
-            if (stackIndex < 0) {
-              runError(String.format("stack error: basePointer=%d, index=%d", basePointer, instr.operand.intValue));
-            }
-            machineStack.set(stackIndex - 1, machineStack.get(stackIndex - 1) + 1);
-            if (machineStack.get(stackIndex - 1) > 255) {
-              machineStack.set(stackIndex - 1, 0);
+            stackIndex = basePointer + instr.operand.intValue;
+            // compensate for zero-based index.
+            stackIndex--;
+            pokeByte(stackIndex, peekByte(stackIndex) + 1);
+            if (peekByte(stackIndex) > 255) {
+              pokeByte(stackIndex, 0);
             }
             break;
           default:
@@ -444,26 +449,28 @@ public class Interpreter {
         break;
       case revAcc8Compare: // reverse compare
         debug(" acc8=" + acc8 + ", operand=");
-        if (instr.operand.opType == OperandType.STACK16 || instr.operand.opType == OperandType.STACK8) {
-          debug("" + peek() + "\n");
+        if (instr.operand.opType == OperandType.STACK8) {
+          debug("" + peekByte(machineStack.size() - 1) + "\n");
+        } else if (instr.operand.opType == OperandType.STACK16) {
+          debug("" + peekWord(machineStack.size() - 1) + "\n");
         } else {
           debug("" + getOp(instr.operand) + "\n");
         }
         branchSet = compare(acc8, getOp(instr.operand));
         break;
       case stackAcc8:
-        push(acc8);
+        pushByte(acc8);
         break;
       case stackAcc8Load:
-        push(acc8);
+        pushByte(acc8);
         acc8 = getOp(instr.operand);
         break;
       case stackAcc8ToAcc16:
-        push(acc16);
+        pushWord(acc16);
         acc16 = acc8;
         break;
       case unstackAcc8:
-        acc8 = pop();
+        acc8 = popByte();
         break;
       /***********************
        * branch instructions:
@@ -489,7 +496,7 @@ public class Interpreter {
         if (instr.operand.intValue == 0) {
           runError("runtime error: call to address 0 at " + pc);
         }
-        push(pc);
+        pushWord(pc);
         pc = instr.operand.intValue;
         break;
       // Input and output instructions:
@@ -544,7 +551,7 @@ public class Interpreter {
         }
         break;
       case returnFunction:
-        pc = pop();
+        pc = popWord();
         break;
       case stop:
         pc = instructions.size();
@@ -612,13 +619,13 @@ public class Interpreter {
     debug(String.format(" sp=%4d bp= %4d acc16=%5d acc8=%3d stack=%s\n", machineStack.size(), basePointer, acc16, acc8,
         machineStack));
     return pc;
-  } // interpret()
+  } // step()
 
   private void debug(String message) {
     if (debugMode) {
       System.out.print(message);
     }
-  }
+  } // debug()
 
   private void runError(String message) {
     System.out.println();
@@ -644,27 +651,63 @@ public class Interpreter {
     System.out.println();
 
     System.exit(1);
-  }
+  } // runError()
 
-  private void push(int data) {
+  private void pushByte(int data) {
     if (machineStack.size() == MAX_STACK) {
       runError("stack overflow");
     }
-    machineStack.push(data);
+    machineStack.push(data % 256);
   }
 
-  private int pop() {
+  private void pushWord(int data) {
+    // high byte
+    pushByte(data / 256);
+    // low byte
+    pushByte(data);
+  }
+
+  private int popByte() {
     if (machineStack.size() == 0) {
       runError("stack underflow");
     }
     return machineStack.pop();
   }
 
-  private int peek() {
-    if (machineStack.size() == 0) {
+  private int popWord() {
+    int lowByte = popByte();
+    int highByte = popByte();
+    return highByte * 256 + lowByte;
+  }
+
+  private int peekByte(int index) {
+    if (index < 0) {
       runError("stack underflow");
     }
-    return machineStack.get(machineStack.size() - 1);
+    if (index >= machineStack.size()) {
+      runError("stack overflow");
+    }
+    return machineStack.get(index);
+  }
+
+  private int peekWord(int index) {
+    int lowByte = peekByte(index);
+    int highByte = peekByte(index - 1);
+    return highByte * 256 + lowByte;
+  }
+
+  private void pokeByte(int index, int value) {
+    if (index >= machineStack.size()) {
+      runError("stack underflow");
+    }
+    machineStack.set(index, value % 256);
+  }
+
+  private void pokeWord(int index, int value) {
+    // low byte
+    pokeByte(index, value);
+    // high byte
+    pokeByte(index - 1, value / 256);
   }
 
   private int getOp(Operand operand) {
@@ -696,29 +739,33 @@ public class Interpreter {
         }
         break;
       case LOCAL_VAR:
-        stackIndex = basePointer - operand.intValue;
-        if (stackIndex < 0) {
-          runError(String.format("stack error: basePointer=%d, index=%d", basePointer, operand.intValue));
-        }
+        stackIndex = basePointer + operand.intValue;
+        // compensate for zero-based index.
+        stackIndex--;
         if (operand.isFinal) {
           debug("pc=" + pc + " final var " + operand.strValue + " = " + operand.intValue + "\n");
           result = operand.intValue;
-        } else if (stackIndex >= 0) {
+        } else {
+          if (operand.dataType == DataType.byt) {
+            result = peekByte(stackIndex);
+          } else {
+            result = peekWord(stackIndex);
+          }
+
           debug("pc=" + pc + " stack[" + basePointer);
           if (operand.intValue >= 0) {
             debug(" - " + operand.intValue);
           } else {
             debug(" + " + (-operand.intValue));
           }
-          debug("] = " + machineStack.get(stackIndex - 1) + "\n");
-          result = machineStack.get(stackIndex - 1);
-        } else {
-          runError("undefined variable");
+          debug("] = " + result + "\n");
         }
         break;
-      case STACK8:
       case STACK16:
-        result = pop();
+        result = popWord();
+        break;
+      case STACK8:
+        result = popByte();
         break;
       case STACK_POINTER:
         result = machineStack.size();
@@ -727,7 +774,7 @@ public class Interpreter {
         runError("unknown operand type: " + operand.opType);
     }
     return result;
-  }
+  } // getOp()
 
   private EnumSet<FunctionType> compare(int accu, int operand) {
     EnumSet<FunctionType> result = EnumSet.noneOf(FunctionType.class);
@@ -749,6 +796,6 @@ public class Interpreter {
       result.add(FunctionType.brGt);
     }
     return result;
-  }
+  } // compare()
 
 }

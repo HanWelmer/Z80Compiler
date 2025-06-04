@@ -450,7 +450,7 @@ public class MachineCodeParser {
       // skip base pointer index and closing } .
       skipUntil(line, '}');
       pos++;
-      result.add(new FormalParameter(name, modifiers, dataType));
+      result.add(new FormalParameter(name, modifiers, dataType, 0));
     }
     // skip closing (.
     pos++;

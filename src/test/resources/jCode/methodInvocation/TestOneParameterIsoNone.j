@@ -1,4 +1,4 @@
-public class TestStatementExpression {
+public class TestOneParameterIsoNone {
   
   private static void doIt() {
     println("doIt");

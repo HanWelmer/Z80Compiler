@@ -24,7 +24,7 @@ public class TestBitwiseOperators extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 6830);
+    assertTrue(code.size() == 6702);
 
     assertTrue(code.get(85).getCode().equals("L40:"));
     assertTrue(code.get(86).getCode().equals("        AND   A,28"));
@@ -45,22 +45,22 @@ public class TestBitwiseOperators extends AbstractTranscoderTest {
     assertTrue(code.get(126).getBytes().get(1) == (byte) 0x1c);
 
     // L425: 0x1234 & b1
-    assertTrue(code.get(1115).getCode().equals("L425:"));
-    assertTrue(code.get(1116).getCode().equals("        LD    E,A"));
-    assertTrue(code.get(1117).getCode().equals("        LD    A,(05000H)"));
-    assertTrue(code.get(1118).getCode().equals("        AND   A,L"));
-    assertTrue(code.get(1119).getCode().equals("        LD    L,A"));
-    assertTrue(code.get(1120).getCode().equals("        LD    A,E"));
-    assertTrue(code.get(1121).getCode().equals("        LD    H,0"));
+    assertTrue(code.get(1093).getCode().equals("L425:"));
+    assertTrue(code.get(1094).getCode().equals("        LD    E,A"));
+    assertTrue(code.get(1095).getCode().equals("        LD    A,(05000H)"));
+    assertTrue(code.get(1096).getCode().equals("        AND   A,L"));
+    assertTrue(code.get(1097).getCode().equals("        LD    L,A"));
+    assertTrue(code.get(1098).getCode().equals("        LD    A,E"));
+    assertTrue(code.get(1099).getCode().equals("        LD    H,0"));
 
     // 1286 acc16And constant 28
-    assertTrue(code.get(3444).getCode().equals("L1286:"));
-    assertTrue(code.get(3445).getCode().equals("        LD    E,A"));
-    assertTrue(code.get(3446).getCode().equals("        LD    A,28"));
-    assertTrue(code.get(3447).getCode().equals("        AND   A,L"));
-    assertTrue(code.get(3448).getCode().equals("        LD    L,A"));
-    assertTrue(code.get(3449).getCode().equals("        LD    A,E"));
-    assertTrue(code.get(3450).getCode().equals("        LD    H,0"));
+    assertTrue(code.get(3372).getCode().equals("L1286:"));
+    assertTrue(code.get(3373).getCode().equals("        LD    E,A"));
+    assertTrue(code.get(3374).getCode().equals("        LD    A,28"));
+    assertTrue(code.get(3375).getCode().equals("        AND   A,L"));
+    assertTrue(code.get(3376).getCode().equals("        LD    L,A"));
+    assertTrue(code.get(3377).getCode().equals("        LD    A,E"));
+    assertTrue(code.get(3378).getCode().equals("        LD    H,0"));
 
   }
 

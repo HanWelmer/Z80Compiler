@@ -35,21 +35,22 @@ class TestSleep {
     byte localByte = 250;
     word localWord = 10000;
 
-    //println("sleeping 0.25 second:");
+    // TODO support byte variable in sleep function.
+    //println("sleeping 0.25 second (byte constant):");
     //sleep(250);
-    println("sleeping 10 second:");
+    println("sleeping 10 second (word constant):");
     sleep(10000);
-    //println("sleeping 0.25 second:");
+    //println("sleeping 0.25 second (static final byte) :");
     //sleep(VALUE);
-    println("sleeping 10 second:");
+    println("sleeping 10 second (static final word):");
     sleep(BIG_VALUE);
-    //println("sleeping 0.25 second:");
+    //println("sleeping 0.25 second (local byte variable):");
     //sleep(localByte);
-    println("sleeping 10 second:");
+    println("sleeping 10 second (local word variable):");
     sleep(localWord);
-    //println("sleeping 0.25 second:");
+    //println("sleeping 0.25 second (static byte):");
     //sleep(globalByte);
-    println("sleeping 10 second:");
+    println("sleeping 10 second (static word):");
     sleep(globalWord);
   
     println("Klaar");

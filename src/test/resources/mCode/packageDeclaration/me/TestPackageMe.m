@@ -32,9 +32,9 @@
   31 writeLineString
   32 ;me\TestPackageMe.j(13)     String str = "3 Hello too.";
   33 acc16= stringconstant 50
-  34 acc16=> (basePointer + -2)
+  34 acc16=> (basePointer + 2)
   35 ;me\TestPackageMe.j(14)     println(str);
-  36 acc16= (basePointer + -2)
+  36 acc16= (basePointer + 2)
   37 writeLineString
   38 ;me\TestPackageMe.j(15)     println(4);
   39 acc8= constant 4

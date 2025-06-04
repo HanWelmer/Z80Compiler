@@ -18,7 +18,7 @@
   17 method TestDo.main [public, static] void ()
   18 <basePointer
   19 basePointer= stackPointer
-  20 stackPointer+ constant 4
+  20 stackPointer+ constant 7
   21 ;testDo.j(7)     println(0);
   22 acc8= constant 0
   23 writeLineAcc8
@@ -33,17 +33,17 @@
   32 ;testDo.j(13)     do {
   33 ;testDo.j(14)       word j = 1001;
   34 acc16= constant 1001
-  35 acc16=> (basePointer + -2)
+  35 acc16=> (basePointer + 2)
   36 ;testDo.j(15)       byte c = b;
   37 acc8= byte variable 0
-  38 acc8=> (basePointer + -3)
+  38 acc8=> (basePointer + 3)
   39 ;testDo.j(16)       byte d = c;
-  40 acc8= (basePointer + -3)
-  41 acc8=> (basePointer + -4)
+  40 acc8= (basePointer + 3)
+  41 acc8=> (basePointer + 4)
   42 ;testDo.j(17)       b++;
   43 incr8 byte variable 0
   44 ;testDo.j(18)       println (c);
-  45 acc8= (basePointer + -3)
+  45 acc8= (basePointer + 3)
   46 writeLineAcc8
   47 ;testDo.j(19)     } while (b<2);
   48 acc8= byte variable 0
@@ -702,13 +702,13 @@
  701 ;testDo.j(238)     // byte - byte
  702 ;testDo.j(239)     byte b2 = 105;
  703 acc8= constant 105
- 704 acc8=> (basePointer + -1)
+ 704 acc8=> (basePointer + 1)
  705 ;testDo.j(240)     do { println (b); b++; } while (b <= b2);
  706 acc8= byte variable 0
  707 writeLineAcc8
  708 incr8 byte variable 0
  709 acc8= byte variable 0
- 710 acc8Comp (basePointer + -1)
+ 710 acc8Comp (basePointer + 1)
  711 brle 706
  712 ;testDo.j(241)     // byte - integer
  713 ;testDo.j(242)     i=107;
@@ -740,13 +740,13 @@
  739 ;testDo.j(248)     // integer - integer
  740 ;testDo.j(249)     word i2 = 111;
  741 acc8= constant 111
- 742 acc8=> (basePointer + -3)
+ 742 acc8=> (basePointer + 3)
  743 ;testDo.j(250)     do { println (i); i++; } while (i <= i2);
  744 acc16= word variable 1
  745 writeLineAcc16
  746 incr16 word variable 1
  747 acc16= word variable 1
- 748 acc16Comp (basePointer + -3)
+ 748 acc16Comp (basePointer + 3)
  749 brle 744
  750 ;testDo.j(251)   
  751 ;testDo.j(252)     /************************/

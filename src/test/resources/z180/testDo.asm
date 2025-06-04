@@ -251,7 +251,8 @@ L109:
 L110:
         SUB   A,107
 L111:
-        JP    NC,L104
+        JP    C,L104
+        JP    Z,L104
 L112:
         ;;testDo.j(35)   
 L113:
@@ -362,7 +363,8 @@ L152:
         OR    A
         SBC   HL,DE
 L153:
-        JP    NC,L146
+        JP    C,L146
+        JP    Z,L146
 L154:
         ;;testDo.j(43)     p=22;
 L155:
@@ -589,7 +591,8 @@ L238:
         OR    A
         SBC   HL,DE
 L239:
-        JP    NC,L232
+        JP    C,L232
+        JP    Z,L232
 L240:
         ;;testDo.j(61)   
 L241:
@@ -650,7 +653,8 @@ L264:
         OR    A
         SBC   HL,DE
 L265:
-        JP    NC,L259
+        JP    C,L259
+        JP    Z,L259
 L266:
         ;;testDo.j(70)     // integer - byte
 L267:
@@ -689,7 +693,8 @@ L281:
         OR    A
         SBC   HL,DE
 L282:
-        JP    NC,L276
+        JP    C,L276
+        JP    Z,L276
 L283:
         ;;testDo.j(76)   
 L284:
@@ -944,7 +949,8 @@ L398:
         POP   BC
         SUB   A,B
 L399:
-        JP    NC,L390
+        JP    C,L390
+        JP    Z,L390
 L400:
         ;;testDo.j(134)     // byte - integer
 L401:
@@ -1081,7 +1087,8 @@ L453:
         OR    A
         SBC   HL,DE
 L454:
-        JP    NC,L444
+        JP    C,L444
+        JP    Z,L444
 L455:
         ;;testDo.j(145)   
 L456:
@@ -1536,7 +1543,8 @@ L653:
         LD    A,(05000H)
         SUB   A,B
 L654:
-        JP    NC,L648
+        JP    C,L648
+        JP    Z,L648
 L655:
         ;;testDo.j(224)     // byte - integer
 L656:
@@ -1645,7 +1653,8 @@ L696:
         OR    A
         SBC   HL,DE
 L697:
-        JP    NC,L690
+        JP    C,L690
+        JP    Z,L690
 L698:
         ;;testDo.j(235)   
 L699:

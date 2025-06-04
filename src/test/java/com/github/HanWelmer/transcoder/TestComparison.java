@@ -18,22 +18,22 @@ public class TestComparison extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 4113);
+    assertTrue(code.size() == 4129);
 
     // case brGe:
     // 84 brge 88
     assertTrue(code.get(200).getCode().equals("L84:"));
-    assertTrue(code.get(201).getCode().equals("        JP    NC,L88"));
-    assertTrue(code.get(201).getBytes().size() == 3);
-    assertTrue(code.get(201).getBytes().get(0) == (byte) 0xd2);
+    assertTrue(code.get(201).getCode().equals("        JP    C,L88"));
+    assertTrue(code.get(202).getCode().equals("        JP    Z,L88"));
 
     // case brGt:
     // 114 brgt 118
-    assertTrue(code.get(267).getCode().equals("L114:"));
-    assertTrue(code.get(268).getCode().equals("        JR    Z,$+3"));
-    assertTrue(code.get(268).getBytes().size() == 2);
-    assertTrue(code.get(268).getBytes().get(0) == (byte) 0x28);
-    assertTrue(code.get(268).getBytes().get(1) == (byte) 0x03);
+    assertTrue(code.get(269).getCode().equals("L114:"));
+    assertTrue(code.get(270).getCode().equals("        JR    Z,$+3"));
+    assertTrue(code.get(270).getBytes().size() == 2);
+    assertTrue(code.get(270).getBytes().get(0) == (byte) 0x28);
+    assertTrue(code.get(270).getBytes().get(1) == (byte) 0x03);
+    assertTrue(code.get(271).getCode().equals("        JP    NC,L118"));
 
     // case brLe:
     // 78 brle 82
@@ -47,26 +47,26 @@ public class TestComparison extends AbstractTranscoderTest {
 
     // case brLt:
     // 108 brlt 112
-    assertTrue(code.get(255).getCode().equals("L108:"));
-    assertTrue(code.get(256).getCode().equals("        JP    C,L112"));
-    assertTrue(code.get(256).getBytes().size() == 3);
-    assertTrue(code.get(256).getBytes().get(0) == (byte) 0xda);
+    assertTrue(code.get(257).getCode().equals("L108:"));
+    assertTrue(code.get(258).getCode().equals("        JP    C,L112"));
+    assertTrue(code.get(258).getBytes().size() == 3);
+    assertTrue(code.get(258).getBytes().get(0) == (byte) 0xda);
 
     // case acc16Div:
     // 168 acc16/ acc8
-    assertTrue(code.get(388).getCode().equals("L168:"));
-    assertTrue(code.get(389).getCode().equals("        CALL  div16_8"));
+    assertTrue(code.get(390).getCode().equals("L168:"));
+    assertTrue(code.get(391).getCode().equals("        CALL  div16_8"));
 
     // case divAcc16:
     // 673 /acc16 unstack16
-    assertTrue(code.get(1654).getCode().equals("L673:"));
-    assertTrue(code.get(1655).getCode().equals("        POP   DE"));
-    assertTrue(code.get(1655).getBytes().size() == 1);
-    assertTrue(code.get(1655).getBytes().get(0) == (byte) 0xd1);
-    assertTrue(code.get(1656).getCode().equals("        EX    DE,HL"));
-    assertTrue(code.get(1656).getBytes().size() == 1);
-    assertTrue(code.get(1656).getBytes().get(0) == (byte) 0xeb);
-    assertTrue(code.get(1657).getCode().equals("        CALL  div16"));
+    assertTrue(code.get(1663).getCode().equals("L673:"));
+    assertTrue(code.get(1664).getCode().equals("        POP   DE"));
+    assertTrue(code.get(1664).getBytes().size() == 1);
+    assertTrue(code.get(1664).getBytes().get(0) == (byte) 0xd1);
+    assertTrue(code.get(1665).getCode().equals("        EX    DE,HL"));
+    assertTrue(code.get(1665).getBytes().size() == 1);
+    assertTrue(code.get(1665).getBytes().get(0) == (byte) 0xeb);
+    assertTrue(code.get(1666).getCode().equals("        CALL  div16"));
 
     // case divAcc8:
     // 42 ;testComparison.j(18) if (4 == 12/(1+2)) println(0);
@@ -91,27 +91,27 @@ public class TestComparison extends AbstractTranscoderTest {
 
     // case revAcc16Compare:
     // 674 revAcc16Comp unstack16
-    assertTrue(code.get(1658).getCode().equals("L674:"));
-    assertTrue(code.get(1659).getCode().equals("        POP   DE"));
-    assertTrue(code.get(1659).getBytes().size() == 1);
-    assertTrue(code.get(1659).getBytes().get(0) == (byte) 0xd1);
-    assertTrue(code.get(1660).getCode().equals("        OR    A"));
-    assertTrue(code.get(1660).getBytes().size() == 1);
-    assertTrue(code.get(1660).getBytes().get(0) == (byte) 0xb7);
-    assertTrue(code.get(1661).getCode().equals("        SBC   HL,DE"));
-    assertTrue(code.get(1661).getBytes().size() == 2);
-    assertTrue(code.get(1661).getBytes().get(0) == (byte) 0xed);
-    assertTrue(code.get(1661).getBytes().get(1) == (byte) 0x52);
+    assertTrue(code.get(1667).getCode().equals("L674:"));
+    assertTrue(code.get(1668).getCode().equals("        POP   DE"));
+    assertTrue(code.get(1668).getBytes().size() == 1);
+    assertTrue(code.get(1668).getBytes().get(0) == (byte) 0xd1);
+    assertTrue(code.get(1669).getCode().equals("        OR    A"));
+    assertTrue(code.get(1669).getBytes().size() == 1);
+    assertTrue(code.get(1669).getBytes().get(0) == (byte) 0xb7);
+    assertTrue(code.get(1670).getCode().equals("        SBC   HL,DE"));
+    assertTrue(code.get(1670).getBytes().size() == 2);
+    assertTrue(code.get(1670).getBytes().get(0) == (byte) 0xed);
+    assertTrue(code.get(1670).getBytes().get(1) == (byte) 0x52);
 
     // case revAcc8Compare:
     // 922 revAcc8Comp unstack8
-    assertTrue(code.get(2321).getCode().equals("L922:"));
-    assertTrue(code.get(2322).getCode().equals("        POP   BC"));
-    assertTrue(code.get(2322).getBytes().size() == 1);
-    assertTrue(code.get(2322).getBytes().get(0) == (byte) 0xc1);
-    assertTrue(code.get(2323).getCode().equals("        SUB   A,B"));
-    assertTrue(code.get(2323).getBytes().size() == 1);
-    assertTrue(code.get(2323).getBytes().get(0) == (byte) 0x90);
+    assertTrue(code.get(2333).getCode().equals("L922:"));
+    assertTrue(code.get(2334).getCode().equals("        POP   BC"));
+    assertTrue(code.get(2334).getBytes().size() == 1);
+    assertTrue(code.get(2334).getBytes().get(0) == (byte) 0xc1);
+    assertTrue(code.get(2335).getCode().equals("        SUB   A,B"));
+    assertTrue(code.get(2335).getBytes().size() == 1);
+    assertTrue(code.get(2335).getBytes().get(0) == (byte) 0x90);
 
   }
 }
