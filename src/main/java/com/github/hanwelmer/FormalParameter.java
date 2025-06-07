@@ -42,7 +42,7 @@ public class FormalParameter {
     // for (LexemeType modifier : modifiers) {
     // result += modifier + " ";
     // }
-    result += dataType + " ";
+    result += dataType.getValue() + " ";
     result += name;
     if (basePointerOffset < 0) {
       result += " {bp-" + (-basePointerOffset) + "}";
