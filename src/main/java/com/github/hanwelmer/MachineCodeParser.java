@@ -338,7 +338,7 @@ public class MachineCodeParser {
         pos++;
         skipSpaces(line);
         int value = parseNumber(line);
-        result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
+        result = new Operand(IdentifierType.LOCAL_VARIABLE, DataType.byt, value);
       } else {
         throw new RuntimeException("Internal error; unexpected syntax after <byte>: " + line.substring(pos));
       }
@@ -354,7 +354,7 @@ public class MachineCodeParser {
         pos++;
         skipSpaces(line);
         int value = parseNumber(line);
-        result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
+        result = new Operand(IdentifierType.LOCAL_VARIABLE, DataType.word, value);
       } else {
         throw new RuntimeException("Internal error; unexpected syntax after <word>: " + line.substring(pos));
       }
@@ -370,7 +370,7 @@ public class MachineCodeParser {
         pos++;
         skipSpaces(line);
         int value = parseNumber(line);
-        result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
+        result = new Operand(IdentifierType.LOCAL_VARIABLE, DataType.string, value);
       } else {
         throw new RuntimeException("Internal error; unexpected syntax after <word>: " + line.substring(pos));
       }

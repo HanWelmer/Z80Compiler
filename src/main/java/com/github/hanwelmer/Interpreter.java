@@ -113,12 +113,6 @@ public class Interpreter {
     // log pc and instruction to be executed.
     debug(String.format("pc= %4d %-80s", pc, instr.toString().substring(0, Math.min(instr.toString().length(), 80))));
 
-    if (pc == 744) {
-      // breakpoint
-      pc++;
-      pc--;
-    }
-
     // by default move PC to next instruction.
     pc++;
 
@@ -204,6 +198,7 @@ public class Interpreter {
             if (instr.operand.dataType == DataType.word || instr.operand.dataType == DataType.string) {
               pokeWord(stackIndex, acc16);
             } else if (instr.operand.dataType == DataType.byt) {
+              // auto truncate to byte
               pokeByte(stackIndex, acc16 % 256);
             } else {
               runError("incompatible dataType between assignment variable and expression");
@@ -378,7 +373,14 @@ public class Interpreter {
             stackIndex = basePointer + instr.operand.intValue;
             // compensate for zero-based index.
             stackIndex--;
-            pokeByte(stackIndex, acc8);
+            if (instr.operand.dataType == DataType.word) {
+              // auto expand to word
+              pokeWord(stackIndex, acc8);
+            } else if (instr.operand.dataType == DataType.byt) {
+              pokeByte(stackIndex, acc8);
+            } else {
+              runError("incompatible dataType between assignment variable and expression");
+            }
             break;
           case STACK8:
             pushByte(acc8);
