@@ -468,7 +468,7 @@ public class Instruction {
             result += " " + operand.dataType.getValue() + " variable " + operand.intValue;
             break;
           case LOCAL_VAR:
-            result += String.format(" (basePointer + %d)", operand.intValue);
+            result += " " + operand.dataType.getValue() + " basePointer + " + operand.intValue;
             break;
           case STACK16:
           case STACK8:
@@ -513,7 +513,7 @@ public class Instruction {
             result += " " + operand.dataType.getValue() + " variable " + operand.intValue;
             break;
           case LOCAL_VAR:
-            result += String.format(" (basePointer + %d)", operand.intValue);
+            result += " " + operand.dataType.getValue() + " basePointer + " + operand.intValue;
             break;
           case CONSTANT:
             if (operand.dataType == DataType.string) {
@@ -561,7 +561,7 @@ public class Instruction {
             result += " " + operand.dataType.getValue() + " variable " + operand.intValue;
             break;
           case LOCAL_VAR:
-            result += String.format(" (basePointer + %d)", operand.intValue);
+            result += " " + operand.dataType.getValue() + " basePointer + " + operand.intValue;
             break;
           default:
             throw new RuntimeException(result + " instruction with non-var operandType");
@@ -631,7 +631,7 @@ public class Instruction {
             result += ", value variable " + operand2.intValue;
             break;
           case LOCAL_VAR:
-            result += String.format(" (basePointer + %d)", operand.intValue);
+            result += " " + operand.dataType.getValue() + " basePointer + " + operand.intValue;
             break;
           case STACK8:
             result += ", value " + operand2.opType;

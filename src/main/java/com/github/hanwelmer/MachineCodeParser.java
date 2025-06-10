@@ -298,14 +298,6 @@ public class MachineCodeParser {
       result = new Operand(OperandType.ACC, DataType.byt);
     } else if ("basePointer".equals(keyword)) {
       result = new Operand(OperandType.BASE_POINTER);
-    } else if ("(basePointer".equals(keyword)) {
-      skipUntil(line, '+');
-      pos++;
-      skipSpaces(line);
-      int value = parseNumber(line);
-      skipUntil(line, ')');
-      pos++;
-      result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
     } else if ("constant".equals(keyword)) {
       skipSpaces(line);
       int value = parseNumber(line);
@@ -341,6 +333,12 @@ public class MachineCodeParser {
         skipSpaces(line);
         int address = parseNumber(line);
         result = new Operand(OperandType.GLOBAL_VAR, DataType.byt, address);
+      } else if ("basePointer".equals(keyword)) {
+        skipUntil(line, '+');
+        pos++;
+        skipSpaces(line);
+        int value = parseNumber(line);
+        result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
       } else {
         throw new RuntimeException("Internal error; unexpected syntax after <byte>: " + line.substring(pos));
       }
@@ -351,6 +349,12 @@ public class MachineCodeParser {
         skipSpaces(line);
         int address = parseNumber(line);
         result = new Operand(OperandType.GLOBAL_VAR, DataType.word, address);
+      } else if ("basePointer".equals(keyword)) {
+        skipUntil(line, '+');
+        pos++;
+        skipSpaces(line);
+        int value = parseNumber(line);
+        result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
       } else {
         throw new RuntimeException("Internal error; unexpected syntax after <word>: " + line.substring(pos));
       }
@@ -361,6 +365,12 @@ public class MachineCodeParser {
         skipSpaces(line);
         int address = parseNumber(line);
         result = new Operand(OperandType.GLOBAL_VAR, DataType.string, address);
+      } else if ("basePointer".equals(keyword)) {
+        skipUntil(line, '+');
+        pos++;
+        skipSpaces(line);
+        int value = parseNumber(line);
+        result = new Operand(IdentifierType.LOCAL_VARIABLE, datatype, value);
       } else {
         throw new RuntimeException("Internal error; unexpected syntax after <word>: " + line.substring(pos));
       }

@@ -113,6 +113,12 @@ public class Interpreter {
     // log pc and instruction to be executed.
     debug(String.format("pc= %4d %-80s", pc, instr.toString().substring(0, Math.min(instr.toString().length(), 80))));
 
+    if (pc == 744) {
+      // breakpoint
+      pc++;
+      pc--;
+    }
+
     // by default move PC to next instruction.
     pc++;
 
