@@ -12,12 +12,12 @@
   11 ;TestExpression.j(4)     println(1);
   12 acc8= constant 1
   13 writeLineAcc8
-  14 ;TestExpression.j(5)     byte b = 1;
-  15 acc8= constant 1
-  16 acc8=> (basePointer + 1)
+  14 ;TestExpression.j(5)     byte b = 2;
+  15 acc8= constant 2
+  16 acc8=> byte basePointer + 1
   17 ;TestExpression.j(6)     ;
-  18 ;TestExpression.j(7)     println(2);
-  19 acc8= constant 2
+  18 ;TestExpression.j(7)     println(b);
+  19 acc8= byte basePointer + 1
   20 writeLineAcc8
   21 ;TestExpression.j(8)     println("Klaar.");
   22 acc16= stringconstant 29

@@ -30,12 +30,12 @@
   29 stackPointer+ constant 1
   30 ;testSleep.j(18)     for (byte b = 255; b!=0; b--) ;
   31 acc8= constant 255
-  32 acc8=> (basePointer + 1)
-  33 acc8= (basePointer + 1)
+  32 acc8=> byte basePointer + 1
+  33 acc8= byte basePointer + 1
   34 acc8Comp constant 0
   35 breq 41
   36 br 39
-  37 decr8 (basePointer + 1)
+  37 decr8 byte basePointer + 1
   38 br 33
   39 br 37
   40 ;testSleep.j(19)   }
@@ -52,14 +52,14 @@
   51 basePointer= stackPointer
   52 stackPointer+ constant 0
   53 ;testSleep.j(25)     while (n != 0) {
-  54 acc16= (basePointer + -4)
+  54 acc16= word basePointer + -4
   55 acc8= constant 0
   56 acc16CompareAcc8
   57 breq 65
   58 ;testSleep.j(26)       sleepOneMillisecond();
   59 call 26
   60 ;testSleep.j(27)       n--;
-  61 decr16 (basePointer + -4)
+  61 decr16 word basePointer + -4
   62 ;testSleep.j(28)     }
   63 br 54
   64 ;testSleep.j(29)   }
@@ -78,10 +78,10 @@
   77 ;testSleep.j(33)   
   78 ;testSleep.j(34)     byte localByte = 250;
   79 acc8= constant 250
-  80 acc8=> (basePointer + 1)
+  80 acc8=> byte basePointer + 1
   81 ;testSleep.j(35)     word localWord = 10000;
   82 acc16= constant 10000
-  83 acc16=> (basePointer + 3)
+  83 acc16=> word basePointer + 3
   84 ;testSleep.j(36) 
   85 ;testSleep.j(37)     // TODO support byte variable in sleep function.
   86 ;testSleep.j(38)     //println("sleeping 0.25 second (byte constant):");
@@ -110,7 +110,7 @@
  109 acc16= stringconstant 138
  110 writeLineString
  111 ;testSleep.j(49)     sleep(localWord);
- 112 acc16= (basePointer + 3)
+ 112 acc16= word basePointer + 3
  113 <acc16
  114 call 49
  115 stackPointer+ constant -2

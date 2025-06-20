@@ -1763,6 +1763,8 @@ L741:
         LD    A,111
 L742:
         LD    (IX - 3),A
+        XOR   A
+        LD    (IX - 2),A
 L743:
         ;;testDo.j(250)     do { println (i); i++; } while (i <= i2);
 L744:

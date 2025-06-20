@@ -4,18 +4,18 @@
    3 class TestByteParameter [public]
    4 ;TestByteParameter.j(1)   
    5 ;TestByteParameter.j(2)   private static void doIt(byte b) {
-   6 method TestByteParameter.doIt [private, static] void (byt b {bp-4})
+   6 method TestByteParameter.doIt [private, static] void (byte b {bp-4})
    7 <basePointer
    8 basePointer= stackPointer
    9 stackPointer+ constant 1
   10 ;TestByteParameter.j(3)     println(b);
-  11 acc8= (basePointer + -4)
+  11 acc8= byte basePointer + -4
   12 writeLineAcc8
   13 ;TestByteParameter.j(4)     byte bv = 2;
   14 acc8= constant 2
-  15 acc8=> (basePointer + 1)
+  15 acc8=> byte basePointer + 1
   16 ;TestByteParameter.j(5)     println(bv);
-  17 acc8= (basePointer + 1)
+  17 acc8= byte basePointer + 1
   18 writeLineAcc8
   19 ;TestByteParameter.j(6)   }
   20 stackPointer= basePointer

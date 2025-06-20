@@ -166,12 +166,12 @@
  165 stackPointer+ constant 1
  166 ;ledtst.j(134)     for (byte b = 255; b!=0; b--) ;
  167 acc8= constant 255
- 168 acc8=> (basePointer + -1)
- 169 acc8= (basePointer + -1)
+ 168 acc8=> byte basePointer + 1
+ 169 acc8= byte basePointer + 1
  170 acc8Comp constant 0
  171 breq 177
  172 br 175
- 173 decr8 (basePointer + -1)
+ 173 decr8 byte basePointer + 1
  174 br 169
  175 br 173
  176 ;ledtst.j(135)   }
@@ -183,19 +183,19 @@
  182 ;ledtst.j(138)    * sleep for n miliseconds.
  183 ;ledtst.j(139)    */
  184 ;ledtst.j(140)   public static void sleep(word n) {
- 185 method LEDTest.sleep [public, static] void (word n {bp+4})
+ 185 method LEDTest.sleep [public, static] void (word n {bp-4})
  186 <basePointer
  187 basePointer= stackPointer
  188 stackPointer+ constant 0
  189 ;ledtst.j(141)     while (n != 0) {
- 190 acc16= (basePointer + 4)
+ 190 acc16= word basePointer + -4
  191 acc8= constant 0
  192 acc16CompareAcc8
  193 breq 201
  194 ;ledtst.j(142)       sleepOneMillisecond();
  195 call 162
  196 ;ledtst.j(143)       n--;
- 197 decr16 (basePointer + 4)
+ 197 decr16 word basePointer + -4
  198 ;ledtst.j(144)     }
  199 br 190
  200 ;ledtst.j(145)   }

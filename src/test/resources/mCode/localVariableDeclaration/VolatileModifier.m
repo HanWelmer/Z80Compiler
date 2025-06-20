@@ -13,7 +13,7 @@
   12 stackPointer+ constant 1
   13 ;VolatileModifier.j(6)     volatile byte b = 1;
   14 acc8= constant 1
-  15 acc8=> (basePointer + 1)
+  15 acc8=> byte basePointer + 1
   16 ;VolatileModifier.j(7)   }
   17 stackPointer= basePointer
   18 basePointer<

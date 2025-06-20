@@ -166,12 +166,12 @@
  165 stackPointer+ constant 1
  166 ;ledtst.j(134)     for (byte n = 255; n!=0; n--) ;
  167 acc8= constant 255
- 168 acc8=> (basePointer + -1)
- 169 acc8= (basePointer + -1)
+ 168 acc8=> byte basePointer + 1
+ 169 acc8= byte basePointer + 1
  170 acc8Comp constant 0
  171 breq 177
  172 br 175
- 173 decr8 (basePointer + -1)
+ 173 decr8 byte basePointer + 1
  174 br 169
  175 br 173
  176 ;ledtst.j(135)   }
@@ -189,13 +189,13 @@
  188 stackPointer+ constant 2
  189 ;ledtst.j(141)     for (word w = 500; w>0; w--) {
  190 acc16= constant 500
- 191 acc16=> (basePointer + -2)
- 192 acc16= (basePointer + -2)
+ 191 acc16=> word basePointer + 2
+ 192 acc16= word basePointer + 2
  193 acc8= constant 0
  194 acc16CompareAcc8
  195 brle 204
  196 br 199
- 197 decr16 (basePointer + -2)
+ 197 decr16 word basePointer + 2
  198 br 192
  199 ;ledtst.j(142)       sleepOneMillisecond();
  200 call 162

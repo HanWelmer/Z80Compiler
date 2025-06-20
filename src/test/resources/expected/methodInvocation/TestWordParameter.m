@@ -9,13 +9,13 @@
    8 basePointer= stackPointer
    9 stackPointer+ constant 2
   10 ;TestWordParameter.j(3)     println(w);
-  11 acc16= (basePointer + -4)
+  11 acc16= word basePointer + -4
   12 writeLineAcc16
   13 ;TestWordParameter.j(4)     word wv = 1002;
   14 acc16= constant 1002
-  15 acc16=> (basePointer + 2)
+  15 acc16=> word basePointer + 2
   16 ;TestWordParameter.j(5)     println(wv);
-  17 acc16= (basePointer + 2)
+  17 acc16= word basePointer + 2
   18 writeLineAcc16
   19 ;TestWordParameter.j(6)   }
   20 stackPointer= basePointer

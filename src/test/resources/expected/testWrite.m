@@ -66,9 +66,9 @@
   65 writeLineString
   66 ;testWrite.j(24)     String str = "13 Hallo wereld.";
   67 acc16= stringconstant 144
-  68 acc16=> (basePointer + -2)
+  68 acc16=> String basePointer + 2
   69 ;testWrite.j(25)     println(str);
-  70 acc16= (basePointer + -2)
+  70 acc16= String basePointer + 2
   71 writeLineString
   72 ;testWrite.j(26)     println(7 * 2);
   73 acc8= constant 7

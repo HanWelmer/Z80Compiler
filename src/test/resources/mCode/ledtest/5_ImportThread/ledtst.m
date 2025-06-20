@@ -33,12 +33,12 @@
   32 stackPointer+ constant 1
   33 ;Thread.j(21)     for (byte b = 255; b!=0; b--) ;
   34 acc8= constant 255
-  35 acc8=> (basePointer + 1)
-  36 acc8= (basePointer + 1)
+  35 acc8=> byte basePointer + 1
+  36 acc8= byte basePointer + 1
   37 acc8Comp constant 0
   38 breq 44
   39 br 42
-  40 decr8 (basePointer + 1)
+  40 decr8 byte basePointer + 1
   41 br 36
   42 br 40
   43 ;Thread.j(22)   }
@@ -55,14 +55,14 @@
   54 basePointer= stackPointer
   55 stackPointer+ constant 0
   56 ;Thread.j(28)     while (n != 0) {
-  57 acc16= (basePointer + -4)
+  57 acc16= word basePointer + -4
   58 acc8= constant 0
   59 acc16CompareAcc8
   60 breq 68
   61 ;Thread.j(29)       sleepOneMillisecond();
   62 call 29
   63 ;Thread.j(30)       n--;
-  64 decr16 (basePointer + -4)
+  64 decr16 word basePointer + -4
   65 ;Thread.j(31)     }
   66 br 57
   67 ;Thread.j(32)   }

@@ -53,15 +53,15 @@
   52 incr8 byte variable 0
   53 ;testWhile.j(26)       word j = 1001;
   54 acc16= constant 1001
-  55 acc16=> (basePointer + -2)
+  55 acc16=> word basePointer + 2
   56 ;testWhile.j(27)       byte c = b;
   57 acc8= byte variable 0
-  58 acc8=> (basePointer + -3)
+  58 acc8=> byte basePointer + 3
   59 ;testWhile.j(28)       byte d = c;
-  60 acc8= (basePointer + -3)
-  61 acc8=> (basePointer + -4)
+  60 acc8= byte basePointer + 3
+  61 acc8=> byte basePointer + 4
   62 ;testWhile.j(29)       println (c);
-  63 acc8= (basePointer + -3)
+  63 acc8= byte basePointer + 3
   64 writeLineAcc8
   65 ;testWhile.j(30)     }
   66 br 48

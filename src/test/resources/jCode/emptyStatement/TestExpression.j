@@ -3,9 +3,9 @@ class TestExpression {
 
   public static void main() {
     println(1);
-    byte b = 1;
+    byte b = 2;
     ;
-    println(2);
+    println(b);
     println("Klaar.");
   }
 }

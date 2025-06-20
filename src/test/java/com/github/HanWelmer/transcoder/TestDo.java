@@ -18,7 +18,7 @@ public class TestDo extends AbstractTranscoderTest {
 
     ArrayList<AssemblyInstruction> code = singleTest(path, fileName, inputString.split(" "));
 
-    assertTrue(code.size() == 2548);
+    assertTrue(code.size() == 2550);
 
     // 66 breq 60
     assertTrue(code.get(149).getCode().equals("L66:"));
