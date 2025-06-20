@@ -34,8 +34,9 @@ import java.util.TreeMap;
  *
  * The memory address of a GLOBAL_VARariable is an absolute address.
  * 
- * The memory address of a LOCAL_VARariable is the base pointer plus index
- * (negative value for local variables, positive value for formal parameters).
+ * The memory address of a LOCAL_VARariable is the base pointer plus
+ * displacement (negative value for local variables, positive value for formal
+ * parameters).
  *
  * The memory model is as follows:
  */
@@ -43,7 +44,8 @@ import java.util.TreeMap;
 // The Z80 stack grows down (SP points to last byte pushed onto the stack and is
 // decreased before pushing next byte onto the stack). Which is opposite to the
 // M-code stack (SP holds size of stack and is increased before pushing next
-// byte onto the stack). Therefore the transcoder has to invert the BP index.
+// byte onto the stack). Therefore the transcoder has to invert the BP
+// displacement.
 //
 // The following figures tries to explain the stack structure, assuming a call
 // to a function with an integer return value, a byte parameter and a word
@@ -410,9 +412,13 @@ public class Transcoder {
 
     int word = 0;
     int byt = 0;
+    int displacement = 0;
     if (instruction != null && instruction.operand != null && instruction.operand.intValue != null) {
-      word = instruction.operand.intValue;
+      word = instruction.operand.intValue % 65536;
       byt = instruction.operand.intValue % 256;
+      // Displacement for basepointer relative addressing (IX + d).
+      // Change increasing BP in M-code to decreasing BP in Z80.
+      displacement = -instruction.operand.intValue;
     }
     if (word < 0) {
       word = 65536 + word;
@@ -420,6 +426,7 @@ public class Transcoder {
     if (byt < 0) {
       byt = 256 + byt;
     }
+
     int memAddress = MEM_START + word;
     AssemblyInstruction asm = null;
 
@@ -502,19 +509,14 @@ public class Transcoder {
           byteAddress++;
         } else {
           if (instruction.operand.opType == OperandType.LOCAL_VAR) {
-            // |word var D| <-BASE_POINTER - 2
-            // |word var E| <-BASE_POINTER - 3
-            // offset = -3
-            // byt = 256 + offset = 253
-
-            asmCode = String.format(INDENT + "LD    E,(%s)", basePointerPlusIndex(byt));
-            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x5E, instruction.operand.intValue);
+            asmCode = String.format(INDENT + "LD    E,(%s)", basePointerPlusIndex(displacement));
+            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x5E, displacementToByte(displacement));
             result.add(asm);
             byteAddress += asm.getBytes().size();
 
-            byt++;
-            asmCode = String.format(INDENT + "LD    D,(%s)", basePointerPlusIndex(byt));
-            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x56, instruction.operand.intValue);
+            displacement++;
+            asmCode = String.format(INDENT + "LD    D,(%s)", basePointerPlusIndex(displacement));
+            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x56, displacementToByte(displacement));
             result.add(asm);
             byteAddress += asm.getBytes().size();
           } else {
@@ -669,16 +671,15 @@ public class Transcoder {
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x32, memAddress % 256, memAddress / 256);
         } else if ((instruction.operand.opType == OperandType.LOCAL_VAR)
             && (instruction.operand.dataType == DataType.word || instruction.operand.dataType == DataType.string)) {
-          // change increasing BP in M-code to decreasing BP in Z80.
-          int index = -byt;
-          asmCode = String.format(INDENT + "LD    (%s),L", basePointerPlusIndex(index));
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x75, index >= 0 ? index : (index + 256));
+          // store low byte
+          asmCode = String.format(INDENT + "LD    (%s),L", basePointerPlusIndex(displacement));
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x75, displacementToByte(displacement));
           result.add(asm);
           byteAddress += asm.getBytes().size();
-          // point to high byte
-          index++;
-          asmCode = String.format(INDENT + "LD    (%s),H", basePointerPlusIndex(index));
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x74, index >= 0 ? index : (index + 256));
+          // store high byte
+          displacement++;
+          asmCode = String.format(INDENT + "LD    (%s),H", basePointerPlusIndex(displacement));
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x74, displacementToByte(displacement));
         } else {
           throw new RuntimeException("illegal M-code instruction: " + instruction + " " + instruction.operand);
         }
@@ -799,8 +800,8 @@ public class Transcoder {
             asm = new AssemblyInstruction(byteAddress, asmCode, 0x90);
             break;
           case LOCAL_VAR:
-            asmCode = String.format(INDENT + "SUB   A,(%s)", basePointerPlusIndex(byt));
-            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x96, byt);
+            asmCode = String.format(INDENT + "SUB   A,(%s)", basePointerPlusIndex(displacement));
+            asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x96, displacementToByte(displacement));
             break;
           case CONSTANT:
             asmCode = INDENT + "SUB   A," + byt;
@@ -917,10 +918,23 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
         } else if ((instruction.operand.opType == OperandType.LOCAL_VAR) && (instruction.operand.dataType == DataType.byt)) {
-          // change increasing BP in M-code to decreasing BP in Z80.
-          int index = -byt;
-          asmCode = String.format(INDENT + "LD    (%s),A", basePointerPlusIndex(index));
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x77, index >= 0 ? index : (index + 256));
+          // store byte;
+          asmCode = String.format(INDENT + "LD    (%s),A", basePointerPlusIndex(displacement));
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x77, displacementToByte(displacement));
+        } else if ((instruction.operand.opType == OperandType.LOCAL_VAR)
+            && (instruction.operand.dataType == DataType.word || instruction.operand.dataType == DataType.string)) {
+          // store low byte
+          asmCode = String.format(INDENT + "LD    (%s),A", basePointerPlusIndex(displacement));
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x77, displacementToByte(displacement));
+          result.add(asm);
+          byteAddress += asm.getBytes().size();
+          // store high byte
+          displacement++;
+          asmCode = String.format(INDENT + "XOR   A");
+          asm = new AssemblyInstruction(byteAddress++, asmCode, 0xaf);
+          result.add(asm);
+          asmCode = String.format(INDENT + "LD    (%s),A", basePointerPlusIndex(displacement));
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x77, displacementToByte(displacement));
         } else {
           throw new RuntimeException("illegal M-code instruction: " + instruction);
         }
@@ -1045,20 +1059,23 @@ public class Transcoder {
           asmCode = String.format(INDENT + "LD    (0%04XH),HL", memAddress);
           asm = new AssemblyInstruction(byteAddress, asmCode, 0x22, memAddress % 256, memAddress / 256);
         } else if (instruction.operand.opType == OperandType.LOCAL_VAR) {
-          asmCode = String.format(INDENT + "LD    L,(%s)", basePointerPlusIndex(byt));
-          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x6E, byt));
+          asmCode = String.format(INDENT + "LD    L,(%s)", basePointerPlusIndex(displacement));
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x6E, displacementToByte(displacement)));
           byteAddress += 3;
-          asmCode = String.format(INDENT + "LD    H,(%s)", basePointerPlusIndex(byt + 1));
-          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x66, byt + 1));
+          displacement++;
+          asmCode = String.format(INDENT + "LD    H,(%s)", basePointerPlusIndex(displacement));
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x66, displacementToByte(displacement)));
           byteAddress += 3;
           asmCode = String.format(INDENT + "DEC   HL");
           result.add(new AssemblyInstruction(byteAddress, asmCode, 0x2B));
           byteAddress++;
-          asmCode = String.format(INDENT + "LD    (%s),L", basePointerPlusIndex(byt));
-          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x75, byt));
+          displacement--;
+          asmCode = String.format(INDENT + "LD    (%s),L", basePointerPlusIndex(displacement));
+          result.add(new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x75, displacementToByte(displacement)));
           byteAddress += 3;
-          asmCode = String.format(INDENT + "LD    (%s),H", basePointerPlusIndex(byt + 1));
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x74, byt + 1);
+          displacement++;
+          asmCode = String.format(INDENT + "LD    (%s),H", basePointerPlusIndex(displacement));
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x74, displacementToByte(displacement));
         } else {
           throw new RuntimeException("decrement16 with unsupported operandType");
         }
@@ -1073,8 +1090,8 @@ public class Transcoder {
           // decrement global variable.
           asm = new AssemblyInstruction(byteAddress, INDENT + "DEC   (HL)", 0x35);
         } else if (instruction.operand.opType == OperandType.LOCAL_VAR) {
-          asmCode = String.format(INDENT + "DEC   (%s)", basePointerPlusIndex(byt));
-          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x35, byt);
+          asmCode = String.format(INDENT + "DEC   (%s)", basePointerPlusIndex(displacement));
+          asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x35, displacementToByte(displacement));
         } else {
           throw new RuntimeException("decrement8 with unsupported operandType");
         }
@@ -1285,20 +1302,20 @@ public class Transcoder {
   } // transcode
 
   /**
-   * Prepare the assembler string for a base pointer plus index.
+   * Prepare the assembler string for a base pointer plus displacement.
    * 
-   * @param index
-   *          value: 0..128 value: 129..255
-   * @return "IX - index" "IX + index"
+   * @param displacement
+   *          -128..127
+   * @return "IX - displacement" or "IX + displacement"
    */
-  private String basePointerPlusIndex(int index) {
+  private String basePointerPlusIndex(int displacement) {
     String result = "IX ";
-    if (index >= -128 && index < 0) {
-      result += String.format("- %d", 0 - index);
-    } else if (index >= 0 && index <= 127) {
-      result += String.format("+ %d", index);
+    if (displacement >= -128 && displacement < 0) {
+      result += String.format("- %d", 0 - displacement);
+    } else if (displacement >= 0 && displacement <= 127) {
+      result += String.format("+ %d", displacement);
     } else {
-      throw new RuntimeException(String.format("invalid base pointer relative index: ", index));
+      throw new RuntimeException(String.format("invalid base pointer plus displacement: ", displacement));
     }
     return result;
   }
@@ -1328,9 +1345,9 @@ public class Transcoder {
         break;
       case LOCAL_VAR:
         // change increasing BP in M-code to decreasing BP in Z80.
-        int index = -operand.intValue;
-        asmCode = String.format(INDENT + "LD    A,(%s)", basePointerPlusIndex(index));
-        asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x7E, index >= 0 ? index : (index + 256));
+        int displacement = -operand.intValue;
+        asmCode = String.format(INDENT + "LD    A,(%s)", basePointerPlusIndex(displacement));
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xDD, 0x7E, displacementToByte(displacement));
         break;
       case CONSTANT:
         // TODO replace LD A,0 by XOR A
@@ -1362,15 +1379,15 @@ public class Transcoder {
         break;
       case LOCAL_VAR:
         // change increasing BP in M-code to decreasing BP in Z80.
-        int index = -instruction.operand.intValue;
-        asmCode = String.format(INDENT + "LD    L,(%s)", basePointerPlusIndex(index));
-        asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x6E, index >= 0 ? index : (index + 256));
+        int displacement = -instruction.operand.intValue;
+        asmCode = String.format(INDENT + "LD    L,(%s)", basePointerPlusIndex(displacement));
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x6E, displacementToByte(displacement));
         result.add(asm);
         byteAddress += asm.getBytes().size();
         // point to high byte
-        index++;
-        asmCode = String.format(INDENT + "LD    H,(%s)", basePointerPlusIndex(index));
-        asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x66, index >= 0 ? index : (index + 256));
+        displacement++;
+        asmCode = String.format(INDENT + "LD    H,(%s)", basePointerPlusIndex(displacement));
+        asm = new AssemblyInstruction(byteAddress, asmCode, 0xdd, 0x66, displacementToByte(displacement));
         break;
       case CONSTANT:
         if (instruction.operand.dataType == DataType.string) {
@@ -1392,6 +1409,14 @@ public class Transcoder {
     byteAddress += asm.getBytes().size();
     return result;
 
+  }
+
+  /**
+   * @param displacement
+   * @return
+   */
+  private int displacementToByte(int displacement) {
+    return displacement >= 0 ? displacement : (displacement + 256);
   }
 
   private AssemblyInstruction operandToDE(Instruction instruction) {
