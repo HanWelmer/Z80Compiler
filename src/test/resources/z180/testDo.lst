@@ -230,7 +230,7 @@
 20D4 D6 6C               SUB   A,108
 20D6             L102:
 20D6 28 03               JR    Z,$+3
-20D8 DA BE 20            JP    NC,L95
+20D8 D2 BE 20            JP    NC,L95
 20DB             L103:
 20DB                     ;;testDo.j(34)     do { println (p); p++; b--; } while (107 <= b+100);
 20DB             L104:
@@ -251,7 +251,7 @@
 20F1             L110:
 20F1 D6 6B               SUB   A,107
 20F3             L111:
-20F3 DA DB 20            JP    C,L104
+20F3 D2 DB 20            JP    NC,L104
 20F6 CA DB 20            JP    Z,L104
 20F9             L112:
 20F9                     ;;testDo.j(35)   
@@ -339,7 +339,7 @@
 2159 ED 52               SBC   HL,DE
 215B             L144:
 215B 28 03               JR    Z,$+3
-215D DA 3F 21            JP    NC,L137
+215D D2 3F 21            JP    NC,L137
 2160             L145:
 2160                     ;;testDo.j(42)     do { println (i); i++; } while (21 >= i+0);
 2160             L146:
@@ -363,7 +363,7 @@
 2179 B7                  OR    A
 217A ED 52               SBC   HL,DE
 217C             L153:
-217C DA 60 21            JP    C,L146
+217C D2 60 21            JP    NC,L146
 217F CA 60 21            JP    Z,L146
 2182             L154:
 2182                     ;;testDo.j(43)     p=22;
@@ -566,7 +566,7 @@
 227B ED 52               SBC   HL,DE
 227D             L230:
 227D 28 03               JR    Z,$+3
-227F DA 5C 22            JP    NC,L223
+227F D2 5C 22            JP    NC,L223
 2282             L231:
 2282                     ;;testDo.j(60)     do { println (p); p++; i--; } while (1030 <= i+1000);
 2282             L232:
@@ -591,7 +591,7 @@
 22A0 B7                  OR    A
 22A1 ED 52               SBC   HL,DE
 22A3             L239:
-22A3 DA 82 22            JP    C,L232
+22A3 D2 82 22            JP    NC,L232
 22A6 CA 82 22            JP    Z,L232
 22A9             L240:
 22A9                     ;;testDo.j(61)   
@@ -653,7 +653,7 @@
 22E0 B7                  OR    A
 22E1 ED 52               SBC   HL,DE
 22E3             L265:
-22E3 DA CB 22            JP    C,L259
+22E3 D2 CB 22            JP    NC,L259
 22E6 CA CB 22            JP    Z,L259
 22E9             L266:
 22E9                     ;;testDo.j(70)     // integer - byte
@@ -693,7 +693,7 @@
 230B B7                  OR    A
 230C ED 52               SBC   HL,DE
 230E             L282:
-230E DA F4 22            JP    C,L276
+230E D2 F4 22            JP    NC,L276
 2311 CA F4 22            JP    Z,L276
 2314             L283:
 2314                     ;;testDo.j(76)   
@@ -949,7 +949,7 @@
 23CB C1                  POP   BC
 23CC 90                  SUB   A,B
 23CD             L399:
-23CD DA B7 23            JP    C,L390
+23CD D2 B7 23            JP    NC,L390
 23D0 CA B7 23            JP    Z,L390
 23D3             L400:
 23D3                     ;;testDo.j(134)     // byte - integer
@@ -1087,7 +1087,7 @@
 2466 B7                  OR    A
 2467 ED 52               SBC   HL,DE
 2469             L454:
-2469 DA 45 24            JP    C,L444
+2469 D2 45 24            JP    NC,L444
 246C CA 45 24            JP    Z,L444
 246F             L455:
 246F                     ;;testDo.j(145)   
@@ -1543,7 +1543,7 @@
 2607 3A 00 50            LD    A,(05000H)
 260A 90                  SUB   A,B
 260B             L654:
-260B DA F8 25            JP    C,L648
+260B D2 F8 25            JP    NC,L648
 260E CA F8 25            JP    Z,L648
 2611             L655:
 2611                     ;;testDo.j(224)     // byte - integer
@@ -1653,7 +1653,7 @@
 2689 B7                  OR    A
 268A ED 52               SBC   HL,DE
 268C             L697:
-268C DA 6D 26            JP    C,L690
+268C D2 6D 26            JP    NC,L690
 268F CA 6D 26            JP    Z,L690
 2692             L698:
 2692                     ;;testDo.j(235)   

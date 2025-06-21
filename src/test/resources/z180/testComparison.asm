@@ -199,7 +199,7 @@ L82:
 L83:
         SUB   A,4
 L84:
-        JP    C,L88
+        JP    NC,L88
         JP    Z,L88
 L85:
         LD    A,5
@@ -221,7 +221,7 @@ L91:
 L92:
         SUB   A,5
 L93:
-        JP    C,L97
+        JP    NC,L97
         JP    Z,L97
 L94:
         LD    A,6
@@ -478,7 +478,7 @@ L204:
         OR    A
         SBC   HL,DE
 L205:
-        JP    C,L209
+        JP    NC,L209
         JP    Z,L209
 L206:
         LD    A,20
@@ -496,7 +496,7 @@ L211:
         OR    A
         SBC   HL,DE
 L212:
-        JP    C,L216
+        JP    NC,L216
         JP    Z,L216
 L213:
         LD    A,21
@@ -824,7 +824,7 @@ L342:
         OR    A
         SBC   HL,DE
 L343:
-        JP    C,L347
+        JP    NC,L347
         JP    Z,L347
 L344:
         LD    A,36
@@ -843,7 +843,7 @@ L349:
         OR    A
         SBC   HL,DE
 L350:
-        JP    C,L354
+        JP    NC,L354
         JP    Z,L354
 L351:
         LD    A,37
@@ -1182,7 +1182,7 @@ L481:
         OR    A
         SBC   HL,DE
 L482:
-        JP    C,L486
+        JP    NC,L486
         JP    Z,L486
 L483:
         LD    A,53
@@ -1203,7 +1203,7 @@ L490:
         OR    A
         SBC   HL,DE
 L491:
-        JP    C,L495
+        JP    NC,L495
         JP    Z,L495
 L492:
         LD    A,54
@@ -1465,7 +1465,7 @@ L597:
         OR    A
         SBC   HL,DE
 L598:
-        JP    C,L602
+        JP    NC,L602
         JP    Z,L602
 L599:
         LD    A,66
@@ -1764,7 +1764,7 @@ L710:
         OR    A
         SBC   HL,DE
 L711:
-        JP    C,L715
+        JP    NC,L715
         JP    Z,L715
 L712:
         LD    A,75
@@ -1972,7 +1972,7 @@ L788:
         OR    A
         SBC   HL,DE
 L789:
-        JP    C,L793
+        JP    NC,L793
         JP    Z,L793
 L790:
         LD    A,82
@@ -2208,7 +2208,7 @@ L874:
         OR    A
         SBC   HL,DE
 L875:
-        JP    C,L879
+        JP    NC,L879
         JP    Z,L879
 L876:
         LD    A,91
@@ -2420,7 +2420,7 @@ L958:
         POP   BC
         SUB   A,B
 L959:
-        JP    C,L963
+        JP    NC,L963
         JP    Z,L963
 L960:
         LD    A,99
@@ -2634,7 +2634,7 @@ L1045:
         OR    A
         SBC   HL,DE
 L1046:
-        JP    C,L1050
+        JP    NC,L1050
         JP    Z,L1050
 L1047:
         LD    A,106
@@ -2888,7 +2888,7 @@ L1145:
 L1146:
         SUB   A,5
 L1147:
-        JP    C,L1151
+        JP    NC,L1151
         JP    Z,L1151
 L1148:
         LD    A,115
@@ -3056,7 +3056,7 @@ L1212:
         OR    A
         SBC   HL,DE
 L1213:
-        JP    C,L1217
+        JP    NC,L1217
         JP    Z,L1217
 L1214:
         LD    A,122

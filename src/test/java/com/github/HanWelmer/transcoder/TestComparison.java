@@ -23,7 +23,7 @@ public class TestComparison extends AbstractTranscoderTest {
     // case brGe:
     // 84 brge 88
     assertTrue(code.get(200).getCode().equals("L84:"));
-    assertTrue(code.get(201).getCode().equals("        JP    C,L88"));
+    assertTrue(code.get(201).getCode().equals("        JP    NC,L88"));
     assertTrue(code.get(202).getCode().equals("        JP    Z,L88"));
 
     // case brGt:

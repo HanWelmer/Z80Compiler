@@ -199,7 +199,7 @@
 20B3             L83:
 20B3 D6 04               SUB   A,4
 20B5             L84:
-20B5 DA C0 20            JP    C,L88
+20B5 D2 C0 20            JP    NC,L88
 20B8 CA C0 20            JP    Z,L88
 20BB             L85:
 20BB 3E 05               LD    A,5
@@ -221,7 +221,7 @@
 20CC             L92:
 20CC D6 05               SUB   A,5
 20CE             L93:
-20CE DA D9 20            JP    C,L97
+20CE D2 D9 20            JP    NC,L97
 20D1 CA D9 20            JP    Z,L97
 20D4             L94:
 20D4 3E 06               LD    A,6
@@ -269,7 +269,7 @@
 2100 D6 04               SUB   A,4
 2102             L114:
 2102 28 03               JR    Z,$+3
-2104 DA 0C 21            JP    NC,L118
+2104 D2 0C 21            JP    NC,L118
 2107             L115:
 2107 3E 09               LD    A,9
 2109             L116:
@@ -303,7 +303,7 @@
 2124 D6 04               SUB   A,4
 2126             L129:
 2126 28 03               JR    Z,$+3
-2128 DA 30 21            JP    NC,L133
+2128 D2 30 21            JP    NC,L133
 212B             L130:
 212B 3E 0B               LD    A,11
 212D             L131:
@@ -325,7 +325,7 @@
 213C D6 05               SUB   A,5
 213E             L138:
 213E 28 03               JR    Z,$+3
-2140 DA 48 21            JP    NC,L142
+2140 D2 48 21            JP    NC,L142
 2143             L139:
 2143 3E 0C               LD    A,12
 2145             L140:
@@ -359,7 +359,7 @@
 2160 D6 04               SUB   A,4
 2162             L153:
 2162 28 03               JR    Z,$+3
-2164 DA 6C 21            JP    NC,L157
+2164 D2 6C 21            JP    NC,L157
 2167             L154:
 2167 3E 0E               LD    A,14
 2169             L155:
@@ -478,7 +478,7 @@
 21E1 B7                  OR    A
 21E2 ED 52               SBC   HL,DE
 21E4             L205:
-21E4 DA EF 21            JP    C,L209
+21E4 D2 EF 21            JP    NC,L209
 21E7 CA EF 21            JP    Z,L209
 21EA             L206:
 21EA 3E 14               LD    A,20
@@ -496,7 +496,7 @@
 21F7 B7                  OR    A
 21F8 ED 52               SBC   HL,DE
 21FA             L212:
-21FA DA 05 22            JP    C,L216
+21FA D2 05 22            JP    NC,L216
 21FD CA 05 22            JP    Z,L216
 2200             L213:
 2200 3E 15               LD    A,21
@@ -563,7 +563,7 @@
 2248 ED 52               SBC   HL,DE
 224A             L239:
 224A 28 03               JR    Z,$+3
-224C DA 54 22            JP    NC,L243
+224C D2 54 22            JP    NC,L243
 224F             L240:
 224F 3E 18               LD    A,24
 2251             L241:
@@ -581,7 +581,7 @@
 225D ED 52               SBC   HL,DE
 225F             L246:
 225F 28 03               JR    Z,$+3
-2261 DA 69 22            JP    NC,L250
+2261 D2 69 22            JP    NC,L250
 2264             L247:
 2264 3E 19               LD    A,25
 2266             L248:
@@ -605,7 +605,7 @@
 2279 ED 52               SBC   HL,DE
 227B             L256:
 227B 28 03               JR    Z,$+3
-227D DA 85 22            JP    NC,L260
+227D D2 85 22            JP    NC,L260
 2280             L257:
 2280 3E 1A               LD    A,26
 2282             L258:
@@ -623,7 +623,7 @@
 228E ED 52               SBC   HL,DE
 2290             L263:
 2290 28 03               JR    Z,$+3
-2292 DA 9A 22            JP    NC,L267
+2292 D2 9A 22            JP    NC,L267
 2295             L264:
 2295 3E 1B               LD    A,27
 2297             L265:
@@ -824,7 +824,7 @@
 236B B7                  OR    A
 236C ED 52               SBC   HL,DE
 236E             L343:
-236E DA 79 23            JP    C,L347
+236E D2 79 23            JP    NC,L347
 2371 CA 79 23            JP    Z,L347
 2374             L344:
 2374 3E 24               LD    A,36
@@ -843,7 +843,7 @@
 2382 B7                  OR    A
 2383 ED 52               SBC   HL,DE
 2385             L350:
-2385 DA 90 23            JP    C,L354
+2385 D2 90 23            JP    NC,L354
 2388 CA 90 23            JP    Z,L354
 238B             L351:
 238B 3E 25               LD    A,37
@@ -919,7 +919,7 @@
 23DC ED 52               SBC   HL,DE
 23DE             L377:
 23DE 28 03               JR    Z,$+3
-23E0 DA E8 23            JP    NC,L381
+23E0 D2 E8 23            JP    NC,L381
 23E3             L378:
 23E3 3E 28               LD    A,40
 23E5             L379:
@@ -938,7 +938,7 @@
 23F2 ED 52               SBC   HL,DE
 23F4             L384:
 23F4 28 03               JR    Z,$+3
-23F6 DA FE 23            JP    NC,L388
+23F6 D2 FE 23            JP    NC,L388
 23F9             L385:
 23F9 3E 29               LD    A,41
 23FB             L386:
@@ -966,7 +966,7 @@
 2412 ED 52               SBC   HL,DE
 2414             L394:
 2414 28 03               JR    Z,$+3
-2416 DA 1E 24            JP    NC,L398
+2416 D2 1E 24            JP    NC,L398
 2419             L395:
 2419 3E 2A               LD    A,42
 241B             L396:
@@ -985,7 +985,7 @@
 2428 ED 52               SBC   HL,DE
 242A             L401:
 242A 28 03               JR    Z,$+3
-242C DA 34 24            JP    NC,L405
+242C D2 34 24            JP    NC,L405
 242F             L402:
 242F 3E 2B               LD    A,43
 2431             L403:
@@ -1182,7 +1182,7 @@
 250B B7                  OR    A
 250C ED 52               SBC   HL,DE
 250E             L482:
-250E DA 19 25            JP    C,L486
+250E D2 19 25            JP    NC,L486
 2511 CA 19 25            JP    Z,L486
 2514             L483:
 2514 3E 35               LD    A,53
@@ -1203,7 +1203,7 @@
 2526 B7                  OR    A
 2527 ED 52               SBC   HL,DE
 2529             L491:
-2529 DA 34 25            JP    C,L495
+2529 D2 34 25            JP    NC,L495
 252C CA 34 25            JP    Z,L495
 252F             L492:
 252F 3E 36               LD    A,54
@@ -1254,7 +1254,7 @@
 2567 ED 52               SBC   HL,DE
 2569             L512:
 2569 28 03               JR    Z,$+3
-256B DA 73 25            JP    NC,L516
+256B D2 73 25            JP    NC,L516
 256E             L513:
 256E 3E 39               LD    A,57
 2570             L514:
@@ -1289,7 +1289,7 @@
 2592 ED 52               SBC   HL,DE
 2594             L527:
 2594 28 03               JR    Z,$+3
-2596 DA 9E 25            JP    NC,L531
+2596 D2 9E 25            JP    NC,L531
 2599             L528:
 2599 3E 3B               LD    A,59
 259B             L529:
@@ -1310,7 +1310,7 @@
 25AC ED 52               SBC   HL,DE
 25AE             L536:
 25AE 28 03               JR    Z,$+3
-25B0 DA B8 25            JP    NC,L540
+25B0 D2 B8 25            JP    NC,L540
 25B3             L537:
 25B3 3E 3C               LD    A,60
 25B5             L538:
@@ -1345,7 +1345,7 @@
 25D7 ED 52               SBC   HL,DE
 25D9             L551:
 25D9 28 03               JR    Z,$+3
-25DB DA E3 25            JP    NC,L555
+25DB D2 E3 25            JP    NC,L555
 25DE             L552:
 25DE 3E 3E               LD    A,62
 25E0             L553:
@@ -1465,7 +1465,7 @@
 2658 B7                  OR    A
 2659 ED 52               SBC   HL,DE
 265B             L598:
-265B DA 66 26            JP    C,L602
+265B D2 66 26            JP    NC,L602
 265E CA 66 26            JP    Z,L602
 2661             L599:
 2661 3E 42               LD    A,66
@@ -1536,7 +1536,7 @@
 26A9 ED 52               SBC   HL,DE
 26AB             L624:
 26AB 28 03               JR    Z,$+3
-26AD DA B5 26            JP    NC,L628
+26AD D2 B5 26            JP    NC,L628
 26B0             L625:
 26B0 3E 44               LD    A,68
 26B2             L626:
@@ -1571,7 +1571,7 @@
 26D0 ED 52               SBC   HL,DE
 26D2             L637:
 26D2 28 03               JR    Z,$+3
-26D4 DA DC 26            JP    NC,L641
+26D4 D2 DC 26            JP    NC,L641
 26D7             L638:
 26D7 3E 45               LD    A,69
 26D9             L639:
@@ -1764,7 +1764,7 @@
 27B2 B7                  OR    A
 27B3 ED 52               SBC   HL,DE
 27B5             L711:
-27B5 DA C0 27            JP    C,L715
+27B5 D2 C0 27            JP    NC,L715
 27B8 CA C0 27            JP    Z,L715
 27BB             L712:
 27BB 3E 4B               LD    A,75
@@ -1859,7 +1859,7 @@
 2825 ED 52               SBC   HL,DE
 2827             L747:
 2827 28 03               JR    Z,$+3
-2829 DA 31 28            JP    NC,L751
+2829 D2 31 28            JP    NC,L751
 282C             L748:
 282C 3E 4E               LD    A,78
 282E             L749:
@@ -1891,7 +1891,7 @@
 284C ED 52               SBC   HL,DE
 284E             L759:
 284E 28 03               JR    Z,$+3
-2850 DA 58 28            JP    NC,L763
+2850 D2 58 28            JP    NC,L763
 2853             L760:
 2853 3E 4F               LD    A,79
 2855             L761:
@@ -1972,7 +1972,7 @@
 28A7 B7                  OR    A
 28A8 ED 52               SBC   HL,DE
 28AA             L789:
-28AA DA B5 28            JP    C,L793
+28AA D2 B5 28            JP    NC,L793
 28AD CA B5 28            JP    Z,L793
 28B0             L790:
 28B0 3E 52               LD    A,82
@@ -2029,7 +2029,7 @@
 28EA ED 52               SBC   HL,DE
 28EC             L809:
 28EC 28 03               JR    Z,$+3
-28EE DA F6 28            JP    NC,L813
+28EE D2 F6 28            JP    NC,L813
 28F1             L810:
 28F1 3E 54               LD    A,84
 28F3             L811:
@@ -2057,7 +2057,7 @@
 290A ED 52               SBC   HL,DE
 290C             L819:
 290C 28 03               JR    Z,$+3
-290E DA 16 29            JP    NC,L823
+290E D2 16 29            JP    NC,L823
 2911             L820:
 2911 3E 55               LD    A,85
 2913             L821:
@@ -2208,7 +2208,7 @@
 29C6 B7                  OR    A
 29C7 ED 52               SBC   HL,DE
 29C9             L875:
-29C9 DA D4 29            JP    C,L879
+29C9 D2 D4 29            JP    NC,L879
 29CC CA D4 29            JP    Z,L879
 29CF             L876:
 29CF 3E 5B               LD    A,91
@@ -2282,7 +2282,7 @@
 2A27 ED 52               SBC   HL,DE
 2A29             L902:
 2A29 28 03               JR    Z,$+3
-2A2B DA 33 2A            JP    NC,L906
+2A2B D2 33 2A            JP    NC,L906
 2A2E             L903:
 2A2E 3E 5E               LD    A,94
 2A30             L904:
@@ -2307,7 +2307,7 @@
 2A48 ED 52               SBC   HL,DE
 2A4A             L911:
 2A4A 28 03               JR    Z,$+3
-2A4C DA 54 2A            JP    NC,L915
+2A4C D2 54 2A            JP    NC,L915
 2A4F             L912:
 2A4F 3E 5F               LD    A,95
 2A51             L913:
@@ -2420,7 +2420,7 @@
 2AB9 C1                  POP   BC
 2ABA 90                  SUB   A,B
 2ABB             L959:
-2ABB DA C6 2A            JP    C,L963
+2ABB D2 C6 2A            JP    NC,L963
 2ABE CA C6 2A            JP    Z,L963
 2AC1             L960:
 2AC1 3E 63               LD    A,99
@@ -2506,7 +2506,7 @@
 2B0E 90                  SUB   A,B
 2B0F             L995:
 2B0F 28 03               JR    Z,$+3
-2B11 DA 19 2B            JP    NC,L999
+2B11 D2 19 2B            JP    NC,L999
 2B14             L996:
 2B14 3E 66               LD    A,102
 2B16             L997:
@@ -2535,7 +2535,7 @@
 2B2B 90                  SUB   A,B
 2B2C             L1007:
 2B2C 28 03               JR    Z,$+3
-2B2E DA 36 2B            JP    NC,L1011
+2B2E D2 36 2B            JP    NC,L1011
 2B31             L1008:
 2B31 3E 67               LD    A,103
 2B33             L1009:
@@ -2634,7 +2634,7 @@
 2B97 B7                  OR    A
 2B98 ED 52               SBC   HL,DE
 2B9A             L1046:
-2B9A DA A5 2B            JP    C,L1050
+2B9A D2 A5 2B            JP    NC,L1050
 2B9D CA A5 2B            JP    Z,L1050
 2BA0             L1047:
 2BA0 3E 6A               LD    A,106
@@ -2703,7 +2703,7 @@
 2BE6 ED 52               SBC   HL,DE
 2BE8             L1072:
 2BE8 28 03               JR    Z,$+3
-2BEA DA F2 2B            JP    NC,L1076
+2BEA D2 F2 2B            JP    NC,L1076
 2BED             L1073:
 2BED 3E 6C               LD    A,108
 2BEF             L1074:
@@ -2737,7 +2737,7 @@
 2C0C ED 52               SBC   HL,DE
 2C0E             L1085:
 2C0E 28 03               JR    Z,$+3
-2C10 DA 18 2C            JP    NC,L1089
+2C10 D2 18 2C            JP    NC,L1089
 2C13             L1086:
 2C13 3E 6D               LD    A,109
 2C15             L1087:
@@ -2888,7 +2888,7 @@
 2CB1             L1146:
 2CB1 D6 05               SUB   A,5
 2CB3             L1147:
-2CB3 DA BE 2C            JP    C,L1151
+2CB3 D2 BE 2C            JP    NC,L1151
 2CB6 CA BE 2C            JP    Z,L1151
 2CB9             L1148:
 2CB9 3E 73               LD    A,115
@@ -2953,7 +2953,7 @@
 2CF6 D6 04               SUB   A,4
 2CF8             L1174:
 2CF8 28 03               JR    Z,$+3
-2CFA DA 02 2D            JP    NC,L1178
+2CFA D2 02 2D            JP    NC,L1178
 2CFD             L1175:
 2CFD 3E 76               LD    A,118
 2CFF             L1176:
@@ -2975,7 +2975,7 @@
 2D0E D6 05               SUB   A,5
 2D10             L1183:
 2D10 28 03               JR    Z,$+3
-2D12 DA 1A 2D            JP    NC,L1187
+2D12 D2 1A 2D            JP    NC,L1187
 2D15             L1184:
 2D15 3E 77               LD    A,119
 2D17             L1185:
@@ -3056,7 +3056,7 @@
 2D6F B7                  OR    A
 2D70 ED 52               SBC   HL,DE
 2D72             L1213:
-2D72 DA 7D 2D            JP    C,L1217
+2D72 D2 7D 2D            JP    NC,L1217
 2D75 CA 7D 2D            JP    Z,L1217
 2D78             L1214:
 2D78 3E 7A               LD    A,122
@@ -3113,7 +3113,7 @@
 2DB6 ED 52               SBC   HL,DE
 2DB8             L1233:
 2DB8 28 03               JR    Z,$+3
-2DBA DA C2 2D            JP    NC,L1237
+2DBA D2 C2 2D            JP    NC,L1237
 2DBD             L1234:
 2DBD 3E 7C               LD    A,124
 2DBF             L1235:
@@ -3141,7 +3141,7 @@
 2DD8 ED 52               SBC   HL,DE
 2DDA             L1243:
 2DDA 28 03               JR    Z,$+3
-2DDC DA E4 2D            JP    NC,L1247
+2DDC D2 E4 2D            JP    NC,L1247
 2DDF             L1244:
 2DDF 3E 7D               LD    A,125
 2DE1             L1245:

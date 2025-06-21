@@ -1019,7 +1019,7 @@ public class Transcoder {
         break;
       case brGe:
         putLabelReference(word, byteAddress);
-        asm = new AssemblyInstruction(byteAddress, INDENT + "JP    C,L" + word, 0xDA, word % 256, word / 256);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "JP    NC,L" + word, 0xD2, word % 256, word / 256);
         result.add(asm);
         byteAddress += asm.getBytes().size();
         putLabelReference(word, byteAddress);
@@ -1030,7 +1030,7 @@ public class Transcoder {
         result.add(asm);
         byteAddress += asm.getBytes().size();
         putLabelReference(word, byteAddress);
-        asm = new AssemblyInstruction(byteAddress, INDENT + "JP    NC,L" + word, 0xDA, word % 256, word / 256);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "JP    NC,L" + word, 0xD2, word % 256, word / 256);
         break;
       case brLe:
         putLabelReference(word, byteAddress);
