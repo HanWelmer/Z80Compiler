@@ -385,7 +385,7 @@
  384 ;testIf.j(76)     if (1 > 0+0) println(40); else println(999);
  385 acc8= constant 0
  386 acc8+ constant 0
- 387 acc8Comp constant 1
+ 387 revAcc8Comp constant 1
  388 brge 392
  389 acc8= constant 40
  390 writeLineAcc8
@@ -395,7 +395,7 @@
  394 ;testIf.j(77)     if (1 < 2+0) println(41); else println(999);
  395 acc8= constant 2
  396 acc8+ constant 0
- 397 acc8Comp constant 1
+ 397 revAcc8Comp constant 1
  398 brle 402
  399 acc8= constant 41
  400 writeLineAcc8
@@ -455,7 +455,7 @@
  454 ;testIf.j(88)     if (2000 > 1000+0) println(46); else println(999);
  455 acc16= constant 1000
  456 acc16+ constant 0
- 457 acc16Comp constant 2000
+ 457 revAcc16Comp constant 2000
  458 brge 462
  459 acc8= constant 46
  460 writeLineAcc8
@@ -465,7 +465,7 @@
  464 ;testIf.j(89)     if (1000 < 2000+0) println(47); else println(999);
  465 acc16= constant 2000
  466 acc16+ constant 0
- 467 acc16Comp constant 1000
+ 467 revAcc16Comp constant 1000
  468 brle 472
  469 acc8= constant 47
  470 writeLineAcc8
@@ -484,7 +484,7 @@
  483 ;testIf.j(95)     // byte - byte
  484 ;testIf.j(96)     if (30 > b) println(50); else println(999);
  485 acc8= byte variable 6
- 486 acc8Comp constant 30
+ 486 revAcc8Comp constant 30
  487 brge 491
  488 acc8= constant 50
  489 writeLineAcc8
@@ -493,7 +493,7 @@
  492 writeLineAcc16
  493 ;testIf.j(97)     if (10 < b) println(51); else println(999);
  494 acc8= byte variable 6
- 495 acc8Comp constant 10
+ 495 revAcc8Comp constant 10
  496 brle 500
  497 acc8= constant 51
  498 writeLineAcc8
@@ -548,7 +548,7 @@
  547 ;testIf.j(107)     // integer - integer
  548 ;testIf.j(108)     if (3000 > i) println(56); else println(999);
  549 acc16= word variable 0
- 550 acc16Comp constant 3000
+ 550 revAcc16Comp constant 3000
  551 brge 555
  552 acc8= constant 56
  553 writeLineAcc8
@@ -557,7 +557,7 @@
  556 writeLineAcc16
  557 ;testIf.j(109)     if (1000 < i) println(57); else println(999);
  558 acc16= word variable 0
- 559 acc16Comp constant 1000
+ 559 revAcc16Comp constant 1000
  560 brle 564
  561 acc8= constant 57
  562 writeLineAcc8
@@ -1151,7 +1151,7 @@
 1150 ;testIf.j(276)     if (b > 10+0) println(140); else println(999);
 1151 acc8= constant 10
 1152 acc8+ constant 0
-1153 acc8Comp byte variable 6
+1153 revAcc8Comp byte variable 6
 1154 brge 1158
 1155 acc8= constant 140
 1156 writeLineAcc8
@@ -1161,7 +1161,7 @@
 1160 ;testIf.j(277)     if (b < 30+0) println(141); else println(999);
 1161 acc8= constant 30
 1162 acc8+ constant 0
-1163 acc8Comp byte variable 6
+1163 revAcc8Comp byte variable 6
 1164 brle 1168
 1165 acc8= constant 141
 1166 writeLineAcc8
@@ -1197,7 +1197,7 @@
 1196 ;testIf.j(284)     if (i > 1000+0) println(144); else println(999);
 1197 acc16= constant 1000
 1198 acc16+ constant 0
-1199 acc16Comp word variable 0
+1199 revAcc16Comp word variable 0
 1200 brge 1204
 1201 acc8= constant 144
 1202 writeLineAcc8
@@ -1207,7 +1207,7 @@
 1206 ;testIf.j(285)     if (i < 3000+0) println(145); else println(999);
 1207 acc16= constant 3000
 1208 acc16+ constant 0
-1209 acc16Comp word variable 0
+1209 revAcc16Comp word variable 0
 1210 brle 1214
 1211 acc8= constant 145
 1212 writeLineAcc8
@@ -1219,7 +1219,7 @@
 1218 ;testIf.j(288)     if (i > 1000+0) println(146); else println(999);
 1219 acc16= constant 1000
 1220 acc16+ constant 0
-1221 acc16Comp word variable 0
+1221 revAcc16Comp word variable 0
 1222 brge 1226
 1223 acc8= constant 146
 1224 writeLineAcc8
@@ -1229,7 +1229,7 @@
 1228 ;testIf.j(289)     if (i < 3000+0) println(147); else println(999);
 1229 acc16= constant 3000
 1230 acc16+ constant 0
-1231 acc16Comp word variable 0
+1231 revAcc16Comp word variable 0
 1232 brle 1236
 1233 acc8= constant 147
 1234 writeLineAcc8

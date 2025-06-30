@@ -131,13 +131,77 @@ public class pCompiler {
   private Accumulator acc8 = new Accumulator();
   private Stack<DataType> stackedDatatypes = new Stack<DataType>();
 
-  private Map<OperatorType, FunctionType> forwardOperation16 = new HashMap<OperatorType, FunctionType>();
-  private Map<OperatorType, FunctionType> reverseOperation16 = new HashMap<OperatorType, FunctionType>();
-  private Map<OperatorType, FunctionType> forwardOperation8 = new HashMap<OperatorType, FunctionType>();
-  private Map<OperatorType, FunctionType> reverseOperation8 = new HashMap<OperatorType, FunctionType>();
+  @SuppressWarnings("serial")
+  private static final Map<OperatorType, FunctionType> FORWARD_OPERATION_16 = new HashMap<OperatorType, FunctionType>() {
+    {
+      put(OperatorType.bitwiseOr, FunctionType.acc16Or);
+      put(OperatorType.bitwiseXor, FunctionType.acc16Xor);
+      put(OperatorType.bitwiseAnd, FunctionType.acc16And);
+      put(OperatorType.add, FunctionType.acc16Plus);
+      put(OperatorType.sub, FunctionType.acc16Minus);
+      put(OperatorType.mul, FunctionType.acc16Times);
+      put(OperatorType.div, FunctionType.acc16Div);
+    }
+  };
+  @SuppressWarnings("serial")
+  private static final Map<OperatorType, FunctionType> REVERSE_OPERATION_16 = new HashMap<OperatorType, FunctionType>() {
+    {
+      put(OperatorType.bitwiseOr, FunctionType.acc16Or);
+      put(OperatorType.bitwiseXor, FunctionType.acc16Xor);
+      put(OperatorType.bitwiseAnd, FunctionType.acc16And);
+      put(OperatorType.add, FunctionType.acc16Plus);
+      put(OperatorType.sub, FunctionType.minusAcc16);
+      put(OperatorType.mul, FunctionType.acc16Times);
+      put(OperatorType.div, FunctionType.divAcc16);
+    }
+  };
+  @SuppressWarnings("serial")
+  private static final Map<OperatorType, FunctionType> FORWARD_OPERATION_8 = new HashMap<OperatorType, FunctionType>() {
+    {
+      put(OperatorType.bitwiseOr, FunctionType.acc8Or);
+      put(OperatorType.bitwiseXor, FunctionType.acc8Xor);
+      put(OperatorType.bitwiseAnd, FunctionType.acc8And);
+      put(OperatorType.add, FunctionType.acc8Plus);
+      put(OperatorType.sub, FunctionType.acc8Minus);
+      put(OperatorType.mul, FunctionType.acc8Times);
+      put(OperatorType.div, FunctionType.acc8Div);
+    }
+  };
+  @SuppressWarnings("serial")
+  private static final Map<OperatorType, FunctionType> REVERSE_OPERATION_8 = new HashMap<OperatorType, FunctionType>() {
+    {
+      put(OperatorType.bitwiseOr, FunctionType.acc8Or);
+      put(OperatorType.bitwiseXor, FunctionType.acc8Xor);
+      put(OperatorType.bitwiseAnd, FunctionType.acc8And);
+      put(OperatorType.add, FunctionType.acc8Plus);
+      put(OperatorType.sub, FunctionType.minusAcc8);
+      put(OperatorType.mul, FunctionType.acc8Times);
+      put(OperatorType.div, FunctionType.divAcc8);
+    }
+  };
 
-  private Map<OperatorType, FunctionType> normalSkip = new HashMap<OperatorType, FunctionType>();
-  private Map<OperatorType, FunctionType> reverseSkip = new HashMap<OperatorType, FunctionType>();
+  @SuppressWarnings("serial")
+  private static final Map<OperatorType, FunctionType> NORMAL_SKIP = new HashMap<OperatorType, FunctionType>() {
+    {
+      put(OperatorType.eq, FunctionType.brNe);
+      put(OperatorType.ne, FunctionType.brEq);
+      put(OperatorType.gt, FunctionType.brLe);
+      put(OperatorType.lt, FunctionType.brGe);
+      put(OperatorType.ge, FunctionType.brLt);
+      put(OperatorType.le, FunctionType.brGt);
+    }
+  };
+  @SuppressWarnings("serial")
+  private static final Map<OperatorType, FunctionType> REVERSE_SKIP = new HashMap<OperatorType, FunctionType>() {
+    {
+      put(OperatorType.eq, FunctionType.brNe);
+      put(OperatorType.ne, FunctionType.brEq);
+      put(OperatorType.gt, FunctionType.brGe);
+      put(OperatorType.lt, FunctionType.brLe);
+      put(OperatorType.ge, FunctionType.brGt);
+      put(OperatorType.le, FunctionType.brLt);
+    }
+  };
 
   // Class methods for all phases.
   private void init() {
@@ -147,8 +211,6 @@ public class pCompiler {
     errors = 0;
     lexeme = new Lexeme(LexemeType.unknown);
 
-    // initialisation of lexical analysis variables.
-
     // initialisation of semantic analysis variables.
     identifiers.init();
     stringConstants.init();
@@ -156,61 +218,7 @@ public class pCompiler {
     // initialisation of code generation variables.
     clearRegisters();
     stackedDatatypes.clear();
-
-    forwardOperation16.clear();
-    reverseOperation16.clear();
-
-    forwardOperation8.clear();
-    reverseOperation8.clear();
-
-    normalSkip.clear();
-    reverseSkip.clear();
     instructions.clear();
-
-    forwardOperation16.put(OperatorType.bitwiseOr, FunctionType.acc16Or);
-    forwardOperation16.put(OperatorType.bitwiseXor, FunctionType.acc16Xor);
-    forwardOperation16.put(OperatorType.bitwiseAnd, FunctionType.acc16And);
-    forwardOperation16.put(OperatorType.add, FunctionType.acc16Plus);
-    forwardOperation16.put(OperatorType.sub, FunctionType.acc16Minus);
-    forwardOperation16.put(OperatorType.mul, FunctionType.acc16Times);
-    forwardOperation16.put(OperatorType.div, FunctionType.acc16Div);
-
-    reverseOperation16.put(OperatorType.bitwiseOr, FunctionType.acc16Or);
-    reverseOperation16.put(OperatorType.bitwiseXor, FunctionType.acc16Xor);
-    reverseOperation16.put(OperatorType.bitwiseAnd, FunctionType.acc16And);
-    reverseOperation16.put(OperatorType.add, FunctionType.acc16Plus);
-    reverseOperation16.put(OperatorType.sub, FunctionType.minusAcc16);
-    reverseOperation16.put(OperatorType.mul, FunctionType.acc16Times);
-    reverseOperation16.put(OperatorType.div, FunctionType.divAcc16);
-
-    forwardOperation8.put(OperatorType.bitwiseOr, FunctionType.acc8Or);
-    forwardOperation8.put(OperatorType.bitwiseXor, FunctionType.acc8Xor);
-    forwardOperation8.put(OperatorType.bitwiseAnd, FunctionType.acc8And);
-    forwardOperation8.put(OperatorType.add, FunctionType.acc8Plus);
-    forwardOperation8.put(OperatorType.sub, FunctionType.acc8Minus);
-    forwardOperation8.put(OperatorType.mul, FunctionType.acc8Times);
-    forwardOperation8.put(OperatorType.div, FunctionType.acc8Div);
-
-    reverseOperation8.put(OperatorType.bitwiseOr, FunctionType.acc8Or);
-    reverseOperation8.put(OperatorType.bitwiseXor, FunctionType.acc8Xor);
-    reverseOperation8.put(OperatorType.bitwiseAnd, FunctionType.acc8And);
-    reverseOperation8.put(OperatorType.add, FunctionType.acc8Plus);
-    reverseOperation8.put(OperatorType.sub, FunctionType.minusAcc8);
-    reverseOperation8.put(OperatorType.mul, FunctionType.acc8Times);
-    reverseOperation8.put(OperatorType.div, FunctionType.divAcc8);
-
-    normalSkip.put(OperatorType.eq, FunctionType.brNe);
-    normalSkip.put(OperatorType.ne, FunctionType.brEq);
-    normalSkip.put(OperatorType.gt, FunctionType.brLe);
-    normalSkip.put(OperatorType.lt, FunctionType.brGe);
-    normalSkip.put(OperatorType.ge, FunctionType.brLt);
-    normalSkip.put(OperatorType.le, FunctionType.brGt);
-    reverseSkip.put(OperatorType.eq, FunctionType.brNe);
-    reverseSkip.put(OperatorType.ne, FunctionType.brEq);
-    reverseSkip.put(OperatorType.gt, FunctionType.brGe);
-    reverseSkip.put(OperatorType.lt, FunctionType.brLe);
-    reverseSkip.put(OperatorType.ge, FunctionType.brGt);
-    reverseSkip.put(OperatorType.le, FunctionType.brLt);
   }
 
   /**
@@ -2479,26 +2487,26 @@ public class pCompiler {
       // TODO bitwiseAnd with byte operand (either side) gives a byte result.
       if ((leftOperand.opType == OperandType.ACC) && (rOperand.opType == OperandType.CONSTANT)) {
         if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.word) {
-          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.byt) {
-          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.byt) {
-          plant(cuc.lexemeReader, new Instruction(forwardOperation8.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_8.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.word) {
           plant(cuc.lexemeReader, new Instruction(FunctionType.acc8ToAcc16));
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
-          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_16.get(operator), rOperand));
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.ACC) && (rOperand.opType == OperandType.ACC)) {
         if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.byt) {
-          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_16.get(operator), rOperand));
           acc8.clear();
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.word) {
-          plant(cuc.lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(REVERSE_OPERATION_16.get(operator), leftOperand));
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
@@ -2508,23 +2516,23 @@ public class pCompiler {
       } else if ((leftOperand.opType == OperandType.ACC)
           && (rOperand.opType == OperandType.GLOBAL_VAR || rOperand.opType == OperandType.LOCAL_VAR)) {
         if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.word) {
-          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.word && rOperand.dataType == DataType.byt) {
-          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_16.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.byt) {
-          plant(cuc.lexemeReader, new Instruction(forwardOperation8.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_8.get(operator), rOperand));
         } else if (leftOperand.dataType == DataType.byt && rOperand.dataType == DataType.word) {
           plant(cuc.lexemeReader, new Instruction(FunctionType.acc8ToAcc16));
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
           acc8.clear();
-          plant(cuc.lexemeReader, new Instruction(forwardOperation16.get(operator), rOperand));
+          plant(cuc.lexemeReader, new Instruction(FORWARD_OPERATION_16.get(operator), rOperand));
         } else {
           throw new RuntimeException("Internal compiler error: abort.");
         }
       } else if ((leftOperand.opType == OperandType.STACK16) && (rOperand.opType == OperandType.ACC)) {
         if (rOperand.dataType == DataType.word) {
-          plant(cuc.lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(REVERSE_OPERATION_16.get(operator), leftOperand));
           leftOperand.opType = OperandType.ACC;
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
@@ -2533,11 +2541,11 @@ public class pCompiler {
         }
       } else if ((leftOperand.opType == OperandType.STACK8) && (rOperand.opType == OperandType.ACC)) {
         if (rOperand.dataType == DataType.byt) {
-          plant(cuc.lexemeReader, new Instruction(reverseOperation8.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(REVERSE_OPERATION_8.get(operator), leftOperand));
           leftOperand.opType = OperandType.ACC;
           acc8.setOperand(leftOperand);
         } else if (rOperand.dataType == DataType.word) {
-          plant(cuc.lexemeReader, new Instruction(reverseOperation16.get(operator), leftOperand));
+          plant(cuc.lexemeReader, new Instruction(REVERSE_OPERATION_16.get(operator), leftOperand));
           leftOperand.opType = OperandType.ACC;
           leftOperand.dataType = DataType.word;
           acc16.setOperand(leftOperand);
@@ -2604,9 +2612,9 @@ public class pCompiler {
     Operand labelOperand = new Operand(OperandType.LABEL, DataType.word, 0);
     if (reverseCompare) {
       debug(", reverseCompare");
-      plant(cuc.lexemeReader, new Instruction(reverseSkip.get(compareOp), labelOperand));
+      plant(cuc.lexemeReader, new Instruction(REVERSE_SKIP.get(compareOp), labelOperand));
     } else {
-      plant(cuc.lexemeReader, new Instruction(normalSkip.get(compareOp), labelOperand));
+      plant(cuc.lexemeReader, new Instruction(NORMAL_SKIP.get(compareOp), labelOperand));
     }
 
     debug("\ncomparison: end");
@@ -3017,7 +3025,7 @@ public class pCompiler {
     } else if ((leftOperand.opType == OperandType.CONSTANT) && (rightOperand.opType == OperandType.ACC)) {
       if (leftOperand.dataType == DataType.word && rightOperand.dataType == DataType.word) {
         reverseCompare = true;
-        plant(lexemeReader, new Instruction(FunctionType.acc16Compare, leftOperand));
+        plant(lexemeReader, new Instruction(FunctionType.revAcc16Compare, leftOperand));
       } else if (leftOperand.dataType == DataType.word && rightOperand.dataType == DataType.byt) {
         plantAccLoad(lexemeReader, leftOperand);
         plant(lexemeReader, new Instruction(FunctionType.acc16CompareAcc8));
@@ -3026,7 +3034,7 @@ public class pCompiler {
         plant(lexemeReader, new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.dataType == DataType.byt && rightOperand.dataType == DataType.byt) {
         reverseCompare = true;
-        plant(lexemeReader, new Instruction(FunctionType.acc8Compare, leftOperand));
+        plant(lexemeReader, new Instruction(FunctionType.revAcc8Compare, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
@@ -3035,7 +3043,7 @@ public class pCompiler {
       plantAccLoad(lexemeReader, rightOperand);
       if (leftOperand.dataType == DataType.word && rightOperand.dataType == DataType.word) {
         reverseCompare = true;
-        plant(lexemeReader, new Instruction(FunctionType.acc16Compare, leftOperand));
+        plant(lexemeReader, new Instruction(FunctionType.revAcc16Compare, leftOperand));
       } else if (leftOperand.dataType == DataType.word && rightOperand.dataType == DataType.byt) {
         plantAccLoad(lexemeReader, leftOperand);
         plant(lexemeReader, new Instruction(FunctionType.acc16CompareAcc8));
@@ -3044,7 +3052,7 @@ public class pCompiler {
         plant(lexemeReader, new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.dataType == DataType.byt && rightOperand.dataType == DataType.byt) {
         reverseCompare = true;
-        plant(lexemeReader, new Instruction(FunctionType.acc8Compare, leftOperand));
+        plant(lexemeReader, new Instruction(FunctionType.revAcc8Compare, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
@@ -3075,7 +3083,7 @@ public class pCompiler {
         && (rightOperand.opType == OperandType.ACC)) {
       if (leftOperand.dataType == DataType.word && rightOperand.dataType == DataType.word) {
         reverseCompare = true;
-        plant(lexemeReader, new Instruction(FunctionType.acc16Compare, leftOperand));
+        plant(lexemeReader, new Instruction(FunctionType.revAcc16Compare, leftOperand));
       } else if (leftOperand.dataType == DataType.word && rightOperand.dataType == DataType.byt) {
         plantAccLoad(lexemeReader, leftOperand);
         plant(lexemeReader, new Instruction(FunctionType.acc16CompareAcc8));
@@ -3084,7 +3092,7 @@ public class pCompiler {
         plant(lexemeReader, new Instruction(FunctionType.acc8CompareAcc16));
       } else if (leftOperand.dataType == DataType.byt && rightOperand.dataType == DataType.byt) {
         reverseCompare = true;
-        plant(lexemeReader, new Instruction(FunctionType.acc8Compare, leftOperand));
+        plant(lexemeReader, new Instruction(FunctionType.revAcc8Compare, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }
@@ -3117,8 +3125,8 @@ public class pCompiler {
       }
     } else if ((leftOperand.opType == OperandType.STACK16) && (rightOperand.opType == OperandType.ACC)) {
       if (rightOperand.dataType == DataType.word) {
-        plant(lexemeReader, new Instruction(FunctionType.revAcc16Compare, leftOperand));
         reverseCompare = true;
+        plant(lexemeReader, new Instruction(FunctionType.revAcc16Compare, leftOperand));
       } else if (rightOperand.dataType == DataType.byt) {
         plant(lexemeReader, new Instruction(FunctionType.unstackAcc16));
         plant(lexemeReader, new Instruction(FunctionType.acc16CompareAcc8));
@@ -3153,8 +3161,8 @@ public class pCompiler {
         plant(lexemeReader, new Instruction(FunctionType.unstackAcc8));
         plant(lexemeReader, new Instruction(FunctionType.acc8CompareAcc16));
       } else if (rightOperand.dataType == DataType.byt) {
-        plant(lexemeReader, new Instruction(FunctionType.revAcc8Compare, leftOperand));
         reverseCompare = true;
+        plant(lexemeReader, new Instruction(FunctionType.revAcc8Compare, leftOperand));
       } else {
         throw new RuntimeException("Internal compiler error: abort.");
       }

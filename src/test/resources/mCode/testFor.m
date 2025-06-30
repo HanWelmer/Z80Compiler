@@ -60,7 +60,7 @@
   59 acc8=> byte basePointer + 1
   60 acc8= byte basePointer + 1
   61 acc8+ constant 100
-  62 acc8Comp constant 103
+  62 revAcc8Comp constant 103
   63 brne 71
   64 br 67
   65 incr8 byte basePointer + 1
@@ -73,7 +73,7 @@
   72 acc8=> byte basePointer + 1
   73 acc8= byte basePointer + 1
   74 acc8+ constant 100
-  75 acc8Comp constant 105
+  75 revAcc8Comp constant 105
   76 breq 84
   77 br 80
   78 incr8 byte basePointer + 1
@@ -89,7 +89,7 @@
   88 acc8=> byte basePointer + 1
   89 acc8= byte basePointer + 1
   90 acc8+ constant 100
-  91 acc8Comp constant 134
+  91 revAcc8Comp constant 134
   92 brge 101
   93 br 96
   94 incr8 byte basePointer + 1
@@ -103,7 +103,7 @@
  102 acc8=> byte basePointer + 1
  103 acc8= byte basePointer + 1
  104 acc8+ constant 100
- 105 acc8Comp constant 135
+ 105 revAcc8Comp constant 135
  106 brgt 115
  107 br 110
  108 incr8 byte basePointer + 1
@@ -117,7 +117,7 @@
  116 acc8=> byte basePointer + 1
  117 acc8= byte basePointer + 1
  118 acc8+ constant 100
- 119 acc8Comp constant 126
+ 119 revAcc8Comp constant 126
  120 brle 129
  121 br 124
  122 decr8 byte basePointer + 1
@@ -131,7 +131,7 @@
  130 acc8=> byte basePointer + 1
  131 acc8= byte basePointer + 1
  132 acc8+ constant 100
- 133 acc8Comp constant 125
+ 133 revAcc8Comp constant 125
  134 brlt 144
  135 br 138
  136 decr8 byte basePointer + 1
@@ -239,7 +239,7 @@
  238 acc8=> word basePointer + 2
  239 acc16= word basePointer + 2
  240 acc16+ constant 1000
- 241 acc16Comp constant 1012
+ 241 revAcc16Comp constant 1012
  242 brne 251
  243 br 246
  244 decr16 word basePointer + 2
@@ -253,7 +253,7 @@
  252 acc8=> word basePointer + 2
  253 acc16= word basePointer + 2
  254 acc16+ constant 1000
- 255 acc16Comp constant 1008
+ 255 revAcc16Comp constant 1008
  256 breq 265
  257 br 260
  258 decr16 word basePointer + 2
@@ -267,7 +267,7 @@
  266 acc8=> word basePointer + 2
  267 acc16= word basePointer + 2
  268 acc16+ constant 1000
- 269 acc16Comp constant 1010
+ 269 revAcc16Comp constant 1010
  270 brge 279
  271 br 274
  272 incr16 word basePointer + 2
@@ -281,7 +281,7 @@
  280 acc8=> word basePointer + 2
  281 acc16= word basePointer + 2
  282 acc16+ constant 1000
- 283 acc16Comp constant 1011
+ 283 revAcc16Comp constant 1011
  284 brgt 293
  285 br 288
  286 incr16 word basePointer + 2
@@ -295,7 +295,7 @@
  294 acc8=> word basePointer + 2
  295 acc16= word basePointer + 2
  296 acc16+ constant 1000
- 297 acc16Comp constant 1002
+ 297 revAcc16Comp constant 1002
  298 brle 307
  299 br 302
  300 decr16 word basePointer + 2
@@ -309,7 +309,7 @@
  308 acc8=> word basePointer + 2
  309 acc16= word basePointer + 2
  310 acc16+ constant 1000
- 311 acc16Comp constant 1001
+ 311 revAcc16Comp constant 1001
  312 brlt 325
  313 br 316
  314 decr16 word basePointer + 2
@@ -326,7 +326,7 @@
  325 acc8= constant 42
  326 acc8=> byte basePointer + 1
  327 acc8= byte basePointer + 1
- 328 acc8Comp constant 41
+ 328 revAcc8Comp constant 41
  329 brlt 339
  330 br 333
  331 decr8 byte basePointer + 1
@@ -357,7 +357,7 @@
  356 acc16= constant 1038
  357 acc16=> word basePointer + 2
  358 acc16= word basePointer + 2
- 359 acc16Comp constant 1037
+ 359 revAcc16Comp constant 1037
  360 brlt 374
  361 br 364
  362 decr16 word basePointer + 2
@@ -774,7 +774,7 @@
  773 acc8=> byte basePointer + 1
  774 acc8= constant 105
  775 acc8+ constant 0
- 776 acc8Comp byte basePointer + 1
+ 776 revAcc8Comp byte basePointer + 1
  777 brlt 787
  778 br 781
  779 incr8 byte basePointer + 1
@@ -824,7 +824,7 @@
  823 acc16=> word basePointer + 2
  824 acc16= constant 1099
  825 acc16+ constant 0
- 826 acc16Comp word basePointer + 2
+ 826 revAcc16Comp word basePointer + 2
  827 brlt 840
  828 br 831
  829 incr16 word basePointer + 2

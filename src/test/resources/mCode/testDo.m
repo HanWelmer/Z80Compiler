@@ -63,7 +63,7 @@
   62 incr8 byte variable 0
   63 acc8= byte variable 0
   64 acc8+ constant 100
-  65 acc8Comp constant 103
+  65 revAcc8Comp constant 103
   66 breq 60
   67 ;testDo.j(29)     do { println (b); b++; } while (106 != b+100);
   68 acc8= byte variable 0
@@ -71,7 +71,7 @@
   70 incr8 byte variable 0
   71 acc8= byte variable 0
   72 acc8+ constant 100
-  73 acc8Comp constant 106
+  73 revAcc8Comp constant 106
   74 brne 68
   75 ;testDo.j(30)     do { println (b); b++; } while (108 >  b+100);
   76 acc8= byte variable 0
@@ -79,7 +79,7 @@
   78 incr8 byte variable 0
   79 acc8= byte variable 0
   80 acc8+ constant 100
-  81 acc8Comp constant 108
+  81 revAcc8Comp constant 108
   82 brlt 76
   83 ;testDo.j(31)     do { println (b); b++; } while (109 >= b+100);
   84 acc8= byte variable 0
@@ -87,7 +87,7 @@
   86 incr8 byte variable 0
   87 acc8= byte variable 0
   88 acc8+ constant 100
-  89 acc8Comp constant 109
+  89 revAcc8Comp constant 109
   90 brle 84
   91 ;testDo.j(32)     p=10;
   92 acc8= constant 10
@@ -99,7 +99,7 @@
   98 decr8 byte variable 0
   99 acc8= byte variable 0
  100 acc8+ constant 100
- 101 acc8Comp constant 108
+ 101 revAcc8Comp constant 108
  102 brgt 95
  103 ;testDo.j(34)     do { println (p); p++; b--; } while (107 <= b+100);
  104 acc16= word variable 3
@@ -108,7 +108,7 @@
  107 decr8 byte variable 0
  108 acc8= byte variable 0
  109 acc8+ constant 100
- 110 acc8Comp constant 107
+ 110 revAcc8Comp constant 107
  111 brge 104
  112 ;testDo.j(35)   
  113 ;testDo.j(36)     // constant - acc
@@ -191,7 +191,7 @@
  190 incr16 word variable 1
  191 acc16= word variable 1
  192 acc16+ constant 1000
- 193 acc16Comp constant 1027
+ 193 revAcc16Comp constant 1027
  194 breq 188
  195 ;testDo.j(55)     do { println (i); i++; } while (1029 != i+1000);
  196 acc16= word variable 1
@@ -199,7 +199,7 @@
  198 incr16 word variable 1
  199 acc16= word variable 1
  200 acc16+ constant 1000
- 201 acc16Comp constant 1029
+ 201 revAcc16Comp constant 1029
  202 brne 196
  203 ;testDo.j(56)     do { println (i); i++; } while (1031 >  i+1000);
  204 acc16= word variable 1
@@ -207,7 +207,7 @@
  206 incr16 word variable 1
  207 acc16= word variable 1
  208 acc16+ constant 1000
- 209 acc16Comp constant 1031
+ 209 revAcc16Comp constant 1031
  210 brlt 204
  211 ;testDo.j(57)     do { println (i); i++; } while (1032 >= i+1000);
  212 acc16= word variable 1
@@ -215,7 +215,7 @@
  214 incr16 word variable 1
  215 acc16= word variable 1
  216 acc16+ constant 1000
- 217 acc16Comp constant 1032
+ 217 revAcc16Comp constant 1032
  218 brle 212
  219 ;testDo.j(58)     p=i;
  220 acc16= word variable 1
@@ -227,7 +227,7 @@
  226 decr16 word variable 1
  227 acc16= word variable 1
  228 acc16+ constant 1000
- 229 acc16Comp constant 1031
+ 229 revAcc16Comp constant 1031
  230 brgt 223
  231 ;testDo.j(60)     do { println (p); p++; i--; } while (1030 <= i+1000);
  232 acc16= word variable 3
@@ -236,7 +236,7 @@
  235 decr16 word variable 1
  236 acc16= word variable 1
  237 acc16+ constant 1000
- 238 acc16Comp constant 1030
+ 238 revAcc16Comp constant 1030
  239 brge 232
  240 ;testDo.j(61)   
  241 ;testDo.j(62)     /************************/
@@ -250,7 +250,7 @@
  249 writeLineAcc8
  250 incr8 byte variable 0
  251 acc8= byte variable 0
- 252 acc8Comp constant 38
+ 252 revAcc8Comp constant 38
  253 brle 248
  254 ;testDo.j(67)     // byte - integer
  255 ;testDo.j(68)     i=39;
@@ -279,7 +279,7 @@
  278 incr8 byte variable 0
  279 decr16 word variable 1
  280 acc16= word variable 1
- 281 acc16Comp constant 1037
+ 281 revAcc16Comp constant 1037
  282 brge 276
  283 ;testDo.j(76)   
  284 ;testDo.j(77)     /************************/
@@ -651,7 +651,7 @@
  650 incr8 byte variable 0
  651 acc8= constant 97
  652 acc8+ constant 0
- 653 acc8Comp byte variable 0
+ 653 revAcc8Comp byte variable 0
  654 brge 648
  655 ;testDo.j(224)     // byte - integer
  656 ;testDo.j(225)     //not relevant
@@ -694,7 +694,7 @@
  693 incr16 word variable 1
  694 acc16= constant 1103
  695 acc16+ constant 0
- 696 acc16Comp word variable 1
+ 696 revAcc16Comp word variable 1
  697 brge 690
  698 ;testDo.j(235)   
  699 ;testDo.j(236)     /************************/

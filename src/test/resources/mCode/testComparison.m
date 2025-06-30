@@ -45,7 +45,7 @@
   44 <acc8= constant 1
   45 acc8+ constant 2
   46 /acc8 unstack8
-  47 acc8Comp constant 4
+  47 revAcc8Comp constant 4
   48 brne 52
   49 acc8= constant 0
   50 writeLineAcc8
@@ -60,7 +60,7 @@
   59 <acc8= constant 1
   60 acc8+ constant 2
   61 /acc8 unstack8
-  62 acc8Comp constant 3
+  62 revAcc8Comp constant 3
   63 breq 67
   64 acc8= constant 2
   65 writeLineAcc8
@@ -75,7 +75,7 @@
   74 <acc8= constant 1
   75 acc8+ constant 2
   76 /acc8 unstack8
-  77 acc8Comp constant 3
+  77 revAcc8Comp constant 3
   78 brle 82
   79 acc8= constant 4
   80 writeLineAcc8
@@ -90,7 +90,7 @@
   89 <acc8= constant 1
   90 acc8+ constant 2
   91 /acc8 unstack8
-  92 acc8Comp constant 5
+  92 revAcc8Comp constant 5
   93 brge 97
   94 acc8= constant 6
   95 writeLineAcc8
@@ -105,7 +105,7 @@
  104 <acc8= constant 1
  105 acc8+ constant 2
  106 /acc8 unstack8
- 107 acc8Comp constant 3
+ 107 revAcc8Comp constant 3
  108 brlt 112
  109 acc8= constant 8
  110 writeLineAcc8
@@ -120,7 +120,7 @@
  119 <acc8= constant 1
  120 acc8+ constant 2
  121 /acc8 unstack8
- 122 acc8Comp constant 4
+ 122 revAcc8Comp constant 4
  123 brlt 127
  124 acc8= constant 10
  125 writeLineAcc8
@@ -135,7 +135,7 @@
  134 <acc8= constant 1
  135 acc8+ constant 2
  136 /acc8 unstack8
- 137 acc8Comp constant 5
+ 137 revAcc8Comp constant 5
  138 brgt 142
  139 acc8= constant 12
  140 writeLineAcc8
@@ -150,7 +150,7 @@
  149 <acc8= constant 1
  150 acc8+ constant 2
  151 /acc8 unstack8
- 152 acc8Comp constant 4
+ 152 revAcc8Comp constant 4
  153 brgt 157
  154 acc8= constant 14
  155 writeLineAcc8
@@ -443,7 +443,7 @@
  442 acc8= constant 1
  443 acc8+ constant 2
  444 acc16/ acc8
- 445 acc16Comp constant 400
+ 445 revAcc16Comp constant 400
  446 brne 450
  447 acc8= constant 48
  448 writeLineAcc8
@@ -458,7 +458,7 @@
  457 acc8= constant 1
  458 acc8+ constant 2
  459 acc16/ acc8
- 460 acc16Comp constant 300
+ 460 revAcc16Comp constant 300
  461 breq 465
  462 acc8= constant 50
  463 writeLineAcc8
@@ -473,7 +473,7 @@
  472 acc8= constant 1
  473 acc8+ constant 2
  474 acc16/ acc8
- 475 acc16Comp constant 300
+ 475 revAcc16Comp constant 300
  476 brle 480
  477 acc8= constant 52
  478 writeLineAcc8
@@ -488,7 +488,7 @@
  487 acc8= constant 1
  488 acc8+ constant 2
  489 acc16/ acc8
- 490 acc16Comp constant 500
+ 490 revAcc16Comp constant 500
  491 brge 495
  492 acc8= constant 54
  493 writeLineAcc8
@@ -503,7 +503,7 @@
  502 acc8= constant 1
  503 acc8+ constant 2
  504 acc16/ acc8
- 505 acc16Comp constant 300
+ 505 revAcc16Comp constant 300
  506 brlt 510
  507 acc8= constant 56
  508 writeLineAcc8
@@ -518,7 +518,7 @@
  517 acc8= constant 1
  518 acc8+ constant 2
  519 acc16/ acc8
- 520 acc16Comp constant 400
+ 520 revAcc16Comp constant 400
  521 brlt 525
  522 acc8= constant 58
  523 writeLineAcc8
@@ -533,7 +533,7 @@
  532 acc8= constant 1
  533 acc8+ constant 2
  534 acc16/ acc8
- 535 acc16Comp constant 500
+ 535 revAcc16Comp constant 500
  536 brgt 540
  537 acc8= constant 60
  538 writeLineAcc8
@@ -548,7 +548,7 @@
  547 acc8= constant 1
  548 acc8+ constant 2
  549 acc16/ acc8
- 550 acc16Comp constant 400
+ 550 revAcc16Comp constant 400
  551 brgt 555
  552 acc8= constant 62
  553 writeLineAcc8
@@ -845,7 +845,7 @@
  844 <acc16= word variable 2
  845 acc16+ constant 2
  846 /acc16 unstack16
- 847 acc16Comp word variable 6
+ 847 revAcc16Comp word variable 6
  848 brne 852
  849 acc8= constant 88
  850 writeLineAcc8
@@ -854,7 +854,7 @@
  853 <acc16= word variable 2
  854 acc16+ constant 2
  855 /acc16 unstack16
- 856 acc16Comp word variable 4
+ 856 revAcc16Comp word variable 4
  857 breq 861
  858 acc8= constant 89
  859 writeLineAcc8
@@ -863,7 +863,7 @@
  862 <acc16= word variable 2
  863 acc16+ constant 2
  864 /acc16 unstack16
- 865 acc16Comp word variable 4
+ 865 revAcc16Comp word variable 4
  866 brle 870
  867 acc8= constant 90
  868 writeLineAcc8
@@ -872,7 +872,7 @@
  871 <acc16= word variable 2
  872 acc16+ constant 2
  873 /acc16 unstack16
- 874 acc16Comp word variable 10
+ 874 revAcc16Comp word variable 10
  875 brge 879
  876 acc8= constant 91
  877 writeLineAcc8
@@ -881,7 +881,7 @@
  880 <acc16= word variable 2
  881 acc16+ constant 2
  882 /acc16 unstack16
- 883 acc16Comp word variable 6
+ 883 revAcc16Comp word variable 6
  884 brlt 888
  885 acc8= constant 92
  886 writeLineAcc8
@@ -890,7 +890,7 @@
  889 <acc16= word variable 2
  890 acc16+ constant 2
  891 /acc16 unstack16
- 892 acc16Comp word variable 4
+ 892 revAcc16Comp word variable 4
  893 brlt 897
  894 acc8= constant 93
  895 writeLineAcc8
@@ -899,7 +899,7 @@
  898 <acc16= word variable 2
  899 acc16+ constant 2
  900 /acc16 unstack16
- 901 acc16Comp word variable 6
+ 901 revAcc16Comp word variable 6
  902 brgt 906
  903 acc8= constant 94
  904 writeLineAcc8
@@ -908,7 +908,7 @@
  907 <acc16= word variable 2
  908 acc16+ constant 2
  909 /acc16 unstack16
- 910 acc16Comp word variable 10
+ 910 revAcc16Comp word variable 10
  911 brgt 915
  912 acc8= constant 95
  913 writeLineAcc8
@@ -1117,7 +1117,7 @@
 1116 <acc8= constant 1
 1117 acc8+ constant 2
 1118 /acc8 unstack8
-1119 acc8Comp constant 4
+1119 revAcc8Comp constant 4
 1120 brne 1124
 1121 acc8= constant 112
 1122 writeLineAcc8
@@ -1126,7 +1126,7 @@
 1125 <acc8= constant 1
 1126 acc8+ constant 2
 1127 /acc8 unstack8
-1128 acc8Comp constant 3
+1128 revAcc8Comp constant 3
 1129 breq 1133
 1130 acc8= constant 113
 1131 writeLineAcc8
@@ -1135,7 +1135,7 @@
 1134 <acc8= constant 1
 1135 acc8+ constant 2
 1136 /acc8 unstack8
-1137 acc8Comp constant 3
+1137 revAcc8Comp constant 3
 1138 brle 1142
 1139 acc8= constant 114
 1140 writeLineAcc8
@@ -1144,7 +1144,7 @@
 1143 <acc8= constant 1
 1144 acc8+ constant 2
 1145 /acc8 unstack8
-1146 acc8Comp constant 5
+1146 revAcc8Comp constant 5
 1147 brge 1151
 1148 acc8= constant 115
 1149 writeLineAcc8
@@ -1153,7 +1153,7 @@
 1152 <acc8= constant 1
 1153 acc8+ constant 2
 1154 /acc8 unstack8
-1155 acc8Comp constant 3
+1155 revAcc8Comp constant 3
 1156 brlt 1160
 1157 acc8= constant 116
 1158 writeLineAcc8
@@ -1162,7 +1162,7 @@
 1161 <acc8= constant 1
 1162 acc8+ constant 2
 1163 /acc8 unstack8
-1164 acc8Comp constant 4
+1164 revAcc8Comp constant 4
 1165 brlt 1169
 1166 acc8= constant 117
 1167 writeLineAcc8
@@ -1171,7 +1171,7 @@
 1170 <acc8= constant 1
 1171 acc8+ constant 2
 1172 /acc8 unstack8
-1173 acc8Comp constant 4
+1173 revAcc8Comp constant 4
 1174 brgt 1178
 1175 acc8= constant 118
 1176 writeLineAcc8
@@ -1180,7 +1180,7 @@
 1179 <acc8= constant 1
 1180 acc8+ constant 2
 1181 /acc8 unstack8
-1182 acc8Comp constant 5
+1182 revAcc8Comp constant 5
 1183 brgt 1187
 1184 acc8= constant 119
 1185 writeLineAcc8
@@ -1307,7 +1307,7 @@
 1306 acc16+ constant 2
 1307 /acc16 acc8
 1308 acc16+ unstack8
-1309 acc16Comp word variable 6
+1309 revAcc16Comp word variable 6
 1310 brne 1314
 1311 acc8= constant 131
 1312 writeLineAcc8

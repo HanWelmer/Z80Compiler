@@ -79,7 +79,7 @@
   78 ;testWhile.j(40)     while (3 == b+0) { println (b); b++; }
   79 acc8= byte variable 0
   80 acc8+ constant 0
-  81 acc8Comp constant 3
+  81 revAcc8Comp constant 3
   82 brne 88
   83 acc8= byte variable 0
   84 writeLineAcc8
@@ -88,7 +88,7 @@
   87 ;testWhile.j(41)     while (4 != b+0) { println (b); b++; }
   88 acc8= byte variable 0
   89 acc8+ constant 0
-  90 acc8Comp constant 4
+  90 revAcc8Comp constant 4
   91 breq 97
   92 acc8= byte variable 0
   93 writeLineAcc8
@@ -97,7 +97,7 @@
   96 ;testWhile.j(42)     while (6 > b+0) { println (b); b++; }
   97 acc8= byte variable 0
   98 acc8+ constant 0
-  99 acc8Comp constant 6
+  99 revAcc8Comp constant 6
  100 brge 106
  101 acc8= byte variable 0
  102 writeLineAcc8
@@ -106,7 +106,7 @@
  105 ;testWhile.j(43)     while (7 >= b+0) { println (b); b++; }
  106 acc8= byte variable 0
  107 acc8+ constant 0
- 108 acc8Comp constant 7
+ 108 revAcc8Comp constant 7
  109 brgt 115
  110 acc8= byte variable 0
  111 writeLineAcc8
@@ -118,7 +118,7 @@
  117 ;testWhile.j(45)     while (6 <  b+0) { println (p); p++; b--; }
  118 acc8= byte variable 0
  119 acc8+ constant 0
- 120 acc8Comp constant 6
+ 120 revAcc8Comp constant 6
  121 brle 128
  122 acc16= word variable 6
  123 writeLineAcc16
@@ -128,7 +128,7 @@
  127 ;testWhile.j(46)     while (5 <= b+0) { println (p); p++; b--; }
  128 acc8= byte variable 0
  129 acc8+ constant 0
- 130 acc8Comp constant 5
+ 130 revAcc8Comp constant 5
  131 brlt 141
  132 acc16= word variable 6
  133 writeLineAcc16
@@ -290,7 +290,7 @@
  289 acc8=> byte variable 0
  290 ;testWhile.j(78)     while (33 <= b) { println (p); p++; b--; }
  291 acc8= byte variable 0
- 292 acc8Comp constant 33
+ 292 revAcc8Comp constant 33
  293 brlt 302
  294 acc16= word variable 6
  295 writeLineAcc16
@@ -433,7 +433,7 @@
  432 ;testWhile.j(144)     while (b <= 50+0) { println (b); b++; }
  433 acc8= constant 50
  434 acc8+ constant 0
- 435 acc8Comp byte variable 0
+ 435 revAcc8Comp byte variable 0
  436 brlt 443
  437 acc8= byte variable 0
  438 writeLineAcc8
@@ -477,7 +477,7 @@
  476 ;testWhile.j(154)     while (i <= 1099+0) { println (b); b++; i++; }
  477 acc16= constant 1099
  478 acc16+ constant 0
- 479 acc16Comp word variable 2
+ 479 revAcc16Comp word variable 2
  480 brlt 491
  481 acc8= byte variable 0
  482 writeLineAcc8
