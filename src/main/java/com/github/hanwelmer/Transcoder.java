@@ -832,7 +832,7 @@ public class Transcoder {
       case acc8Div:
         switch (instruction.operand.opType) {
           case GLOBAL_VAR:
-            result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x4F));
+            result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    B,A", 0x47));
 
             memAddress = MEM_START + instruction.operand.intValue;
             asmCode = String.format(INDENT + "LD    A,(0%04XH)", memAddress);

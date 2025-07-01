@@ -816,7 +816,7 @@
 22CF             L360:
 22CF 3E 81               LD    A,129
 22D1             L361:
-22D1 4F                  LD    B,A
+22D1 47                  LD    B,A
 22D2 3A 00 50            LD    A,(05000H)
 22D5 4F                  LD    C,A
 22D6 78                  LD    A,B
@@ -840,7 +840,7 @@
 22E7             L370:
 22E7 3A 00 50            LD    A,(05000H)
 22EA             L371:
-22EA 4F                  LD    B,A
+22EA 47                  LD    B,A
 22EB 3A 01 50            LD    A,(05001H)
 22EE 4F                  LD    C,A
 22EF 78                  LD    A,B
@@ -896,7 +896,7 @@
 2321             L395:
 2321 3E 8D               LD    A,141
 2323             L396:
-2323 4F                  LD    B,A
+2323 47                  LD    B,A
 2324 3A 00 50            LD    A,(05000H)
 2327 4F                  LD    C,A
 2328 78                  LD    A,B
@@ -926,7 +926,7 @@
 233F             L408:
 233F 3A 00 50            LD    A,(05000H)
 2342             L409:
-2342 4F                  LD    B,A
+2342 47                  LD    B,A
 2343 3A 01 50            LD    A,(05001H)
 2346 4F                  LD    C,A
 2347 78                  LD    A,B

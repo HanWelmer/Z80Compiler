@@ -125,7 +125,6 @@ L58:
 L59:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L60:
