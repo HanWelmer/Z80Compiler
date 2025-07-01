@@ -287,6 +287,7 @@ L124:
 L125:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L126:
@@ -311,6 +312,7 @@ L133:
 L134:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L135:
@@ -335,6 +337,7 @@ L142:
 L143:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L144:
@@ -360,6 +363,7 @@ L151:
 L152:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L153:
@@ -397,6 +401,7 @@ L164:
 L165:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L166:
@@ -425,6 +430,7 @@ L174:
 L175:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L176:
@@ -650,6 +656,7 @@ L263:
 L264:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L265:
@@ -865,7 +872,6 @@ L362:
 L363:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L364:
@@ -990,6 +996,7 @@ L414:
 L415:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L416:
@@ -1037,7 +1044,6 @@ L433:
 L434:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L435:
@@ -1173,6 +1179,7 @@ L488:
 L489:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L490:
@@ -1217,7 +1224,6 @@ L505:
 L506:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L507:
@@ -1475,7 +1481,6 @@ L625:
 L626:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L627:
@@ -1576,6 +1581,7 @@ L666:
 L667:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L668:
@@ -1610,7 +1616,6 @@ L679:
 L680:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L681:
@@ -1711,6 +1716,7 @@ L721:
 L722:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L723:
@@ -1749,7 +1755,6 @@ L736:
 L737:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L738:

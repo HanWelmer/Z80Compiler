@@ -395,6 +395,7 @@ L169:
 L170:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L171:
@@ -412,6 +413,7 @@ L176:
 L177:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L178:
@@ -435,6 +437,7 @@ L186:
 L187:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L188:
@@ -452,6 +455,7 @@ L193:
 L194:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L195:
@@ -475,6 +479,7 @@ L203:
 L204:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L205:
@@ -493,6 +498,7 @@ L210:
 L211:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L212:
@@ -517,6 +523,7 @@ L220:
 L221:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L222:
@@ -535,6 +542,7 @@ L227:
 L228:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L229:
@@ -559,6 +567,7 @@ L237:
 L238:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L239:
@@ -577,6 +586,7 @@ L244:
 L245:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L246:
@@ -601,6 +611,7 @@ L254:
 L255:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L256:
@@ -619,6 +630,7 @@ L261:
 L262:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L263:
@@ -643,6 +655,7 @@ L271:
 L272:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L273:
@@ -660,6 +673,7 @@ L278:
 L279:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L280:
@@ -683,6 +697,7 @@ L288:
 L289:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L290:
@@ -700,6 +715,7 @@ L295:
 L296:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L297:
@@ -730,7 +746,6 @@ L307:
 L308:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L309:
@@ -748,7 +763,6 @@ L314:
 L315:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L316:
@@ -775,7 +789,6 @@ L324:
 L325:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L326:
@@ -793,7 +806,6 @@ L331:
 L332:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L333:
@@ -820,7 +832,6 @@ L341:
 L342:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L343:
@@ -839,7 +850,6 @@ L348:
 L349:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L350:
@@ -867,7 +877,6 @@ L358:
 L359:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L360:
@@ -886,7 +895,6 @@ L365:
 L366:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L367:
@@ -914,7 +922,6 @@ L375:
 L376:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L377:
@@ -933,7 +940,6 @@ L382:
 L383:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L384:
@@ -961,7 +967,6 @@ L392:
 L393:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L394:
@@ -980,7 +985,6 @@ L399:
 L400:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L401:
@@ -1008,7 +1012,6 @@ L409:
 L410:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L411:
@@ -1026,7 +1029,6 @@ L416:
 L417:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L418:
@@ -1053,7 +1055,6 @@ L426:
 L427:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L428:
@@ -1071,7 +1072,6 @@ L433:
 L434:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L435:
@@ -1393,7 +1393,6 @@ L570:
 L571:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L572:
@@ -1427,7 +1426,6 @@ L583:
 L584:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L585:
@@ -1461,7 +1459,6 @@ L596:
 L597:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L598:
@@ -1496,7 +1493,6 @@ L609:
 L610:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L611:
@@ -1531,7 +1527,6 @@ L622:
 L623:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L624:
@@ -1566,7 +1561,6 @@ L635:
 L636:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L637:
@@ -1601,7 +1595,6 @@ L648:
 L649:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L650:
@@ -1635,7 +1628,6 @@ L661:
 L662:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L663:
@@ -1914,7 +1906,6 @@ L767:
 L768:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L769:
@@ -1941,7 +1932,6 @@ L777:
 L778:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L779:
@@ -1968,7 +1958,6 @@ L787:
 L788:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L789:
@@ -1996,7 +1985,6 @@ L797:
 L798:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L799:
@@ -2024,7 +2012,6 @@ L807:
 L808:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L809:
@@ -2052,7 +2039,6 @@ L817:
 L818:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L819:
@@ -2080,7 +2066,6 @@ L827:
 L828:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L829:
@@ -2107,7 +2092,6 @@ L837:
 L838:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L839:
@@ -2565,6 +2549,7 @@ L1018:
 L1019:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1020:
@@ -2598,6 +2583,7 @@ L1031:
 L1032:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1033:
@@ -2631,6 +2617,7 @@ L1044:
 L1045:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1046:
@@ -2665,6 +2652,7 @@ L1057:
 L1058:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1059:
@@ -2699,6 +2687,7 @@ L1070:
 L1071:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1072:
@@ -2733,6 +2722,7 @@ L1083:
 L1084:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1085:
@@ -2767,6 +2757,7 @@ L1096:
 L1097:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1098:
@@ -2800,6 +2791,7 @@ L1109:
 L1110:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1111:
@@ -2999,6 +2991,7 @@ L1191:
 L1192:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1193:
@@ -3026,6 +3019,7 @@ L1201:
 L1202:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1203:
@@ -3053,6 +3047,7 @@ L1211:
 L1212:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1213:
@@ -3081,6 +3076,7 @@ L1221:
 L1222:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1223:
@@ -3109,6 +3105,7 @@ L1231:
 L1232:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1233:
@@ -3137,6 +3134,7 @@ L1241:
 L1242:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1243:
@@ -3165,6 +3163,7 @@ L1251:
 L1252:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1253:
@@ -3192,6 +3191,7 @@ L1261:
 L1262:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1263:
@@ -3224,7 +3224,6 @@ L1273:
 L1274:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1275:
@@ -3257,7 +3256,6 @@ L1285:
 L1286:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1287:
@@ -3290,7 +3288,6 @@ L1297:
 L1298:
         LD    E,A
         LD    D,0
-        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1299:
@@ -3312,10 +3309,12 @@ L1306:
         LD    DE,2
         ADD   HL,DE
 L1307:
-        EX    DE,HL
         CALL  div8_16
+        LD    L,A
+        LD    H,0
 L1308:
         POP   DE
+        LD    E,D
         LD    D,0
         ADD   HL,DE
 L1309:
@@ -3349,6 +3348,7 @@ L1320:
 L1321:
         LD    E,A
         LD    D,0
+        EX    DE,HL
         OR    A
         SBC   HL,DE
 L1322:

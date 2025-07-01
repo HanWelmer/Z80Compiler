@@ -494,6 +494,7 @@ public class Transcoder {
           byteAddress++;
         } else if (instruction.operand.opType == OperandType.STACK8) {
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,D", 0x5A));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
           byteAddress++;
         } else if (instruction.operand.opType == OperandType.GLOBAL_VAR && instruction.operand.dataType == DataType.byt) {
@@ -526,7 +527,7 @@ public class Transcoder {
           }
         }
 
-        if ((function == FunctionType.acc16CompareAcc8) || (function == FunctionType.minusAcc16)) {
+        if ((function == FunctionType.acc8CompareAcc16) || (function == FunctionType.minusAcc16)) {
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
         }
 
@@ -537,9 +538,15 @@ public class Transcoder {
       case divAcc16:
         if (instruction.operand.opType == OperandType.ACC && instruction.operand.dataType == DataType.byt) {
           if (function == FunctionType.divAcc16) {
-            result.add(new AssemblyInstruction(byteAddress++, INDENT + "EX    DE,HL", 0xEB));
+            // divide A by HL.
             putLabelReference("div8_16", byteAddress);
             asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div8_16", 0xCD, 0x00, 0x00);
+            result.add(asm);
+            byteAddress += asm.getBytes().size();
+
+            // move quotient from A to HL.
+            result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    L,A", 0x6F));
+            asm = new AssemblyInstruction(byteAddress, INDENT + "LD    H,0", 0x26, 0);
           } else {
             putLabelReference("div16_8", byteAddress);
             asm = new AssemblyInstruction(byteAddress, INDENT + "CALL  div16_8", 0xCD, 0x00, 0x00);
@@ -638,6 +645,7 @@ public class Transcoder {
           byteAddress++;
         } else if (instruction.operand.opType == OperandType.STACK8) {
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "POP   DE", 0xD1));
+          result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    E,D", 0x5A));
           result.add(new AssemblyInstruction(byteAddress++, INDENT + "LD    D,0", 0x16, 0x00));
           byteAddress++;
         } else if (instruction.operand.opType == OperandType.GLOBAL_VAR && instruction.operand.dataType == DataType.byt) {
@@ -1190,7 +1198,7 @@ public class Transcoder {
         asm = new AssemblyInstruction(byteAddress, INDENT + "LD    A,L", 0x7D);
         break;
       case stackAcc8:
-        asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH AF", 0xF6);
+        asm = new AssemblyInstruction(byteAddress, INDENT + "PUSH AF", 0xF5);
         break;
       case stackAcc8Load:
         result.add(new AssemblyInstruction(byteAddress++, INDENT + "PUSH  AF", 0xF5));
