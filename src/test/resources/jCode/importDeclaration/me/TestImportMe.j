@@ -5,7 +5,11 @@
 package me;
 
 class TestImportMe {
+  private static void doIt() {
+    println("TestImportMe");
+  }
+  
   public static void main() {
-    println("TestImportMe Klaar");
+    doIt();
   }
 }

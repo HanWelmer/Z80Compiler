@@ -6,6 +6,7 @@ import me.*;
 
 class TestImportMeAll {
   public static void main() {
+    me.TestImportMe.doIt();
     println("Klaar");
   }
 }

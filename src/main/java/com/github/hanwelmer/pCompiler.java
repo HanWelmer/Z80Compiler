@@ -19,6 +19,13 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 package com.github.hanwelmer;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -363,6 +370,9 @@ public class pCompiler {
       case 42:
         System.out.print("could not find imported file ");
         break;
+      case 43:
+        System.out.print("no importable files found in package ");
+        break;
     }
   } // error
 
@@ -604,28 +614,19 @@ public class pCompiler {
     // recognize name.
     String importPackageName = name(cuc.lexemeReader, stopSet);
     if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
-      // semantic analysis: packageName identifiers are lowerCamelCase and
-      // importType is either * or UpperCamelCase.
+      // package names are lowerCamelCase and importType is either * or
+      // UpperCamelCase.
       if (!validImport(importPackageName)) {
         error(cuc.lexemeReader, 21);
       }
 
-      // code generation
-      plant(cuc.lexemeReader, new Instruction(FunctionType.importFunction, importPackageName, null, null));
-
-      // semantic analysis: import single class.
-      // TODO import all classes in a package (import packageName.*).
-      String fullName = importPackageName.replace(".", File.separator) + ".j";
-      LexemeReader localLexemeReader = new LexemeReader();
-      if (localLexemeReader.init(debugMode, cuc.lexemeReader.getPath(), fullName)) {
-        CompilationUnitContext localCuc = new CompilationUnitContext(localLexemeReader);
-        localCuc.jumpFrom = cuc.jumpFrom;
-        localCuc.doingMemberInitializer = cuc.doingMemberInitializer;
-        compilationUnit(localCuc);
-        cuc.jumpFrom = localCuc.jumpFrom;
-        cuc.doingMemberInitializer = localCuc.doingMemberInitializer;
+      if (importPackageName.endsWith(".*")) {
+        // import all classes in a folder.
+        importFolder(cuc, importPackageName.substring(0, importPackageName.length() - 2));
       } else {
-        error(cuc.lexemeReader, 42, fullName);
+        // import single class.
+        String fullName = importPackageName.replace(".", File.separator) + ".j";
+        importFile(cuc, importPackageName, fullName);
       }
 
       // skip ";"
@@ -633,6 +634,43 @@ public class pCompiler {
     }
     debug("\nimportDeclaration: end; importPackageName=" + importPackageName);
   } // importDeclaration
+
+  private void importFile(CompilationUnitContext cuc, String packageName, String fullName) throws FatalError {
+    // String fullName = importPackageName.replace(".", File.separator) + ".j";
+    LexemeReader localLexemeReader = new LexemeReader();
+    if (localLexemeReader.init(debugMode, cuc.lexemeReader.getPath(), fullName)) {
+      // code generation
+      plant(cuc.lexemeReader, new Instruction(FunctionType.importFunction, packageName, null, null));
+
+      CompilationUnitContext localCuc = new CompilationUnitContext(localLexemeReader);
+      localCuc.jumpFrom = cuc.jumpFrom;
+      localCuc.doingMemberInitializer = cuc.doingMemberInitializer;
+      compilationUnit(localCuc);
+      cuc.jumpFrom = localCuc.jumpFrom;
+      cuc.doingMemberInitializer = localCuc.doingMemberInitializer;
+    } else {
+      error(cuc.lexemeReader, 42, fullName);
+    }
+  } // importFile().
+
+  // import all classes in the folder.
+  private void importFolder(CompilationUnitContext cuc, String packageName) throws FatalError {
+    String folderName = cuc.lexemeReader.getPath() + packageName.replace(".", File.separator);
+    Path dir = Paths.get(folderName);
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.j")) {
+      for (Path entry : stream) {
+        String fileName = entry.getFileName().toString();
+        String importName = packageName + "." + fileName.substring(0, fileName.length() - 2);
+        // String fullName = folderName + File.separator + fileName;
+        String fullName = importName.replace(".", File.separator) + ".j";
+        importFile(cuc, importName, fullName);
+      }
+    } catch (NoSuchFileException e) {
+      error(cuc.lexemeReader, 42, e.getMessage());
+    } catch (IOException | DirectoryIteratorException e) {
+      error(cuc.lexemeReader, 43, folderName);
+    }
+  }// importFolder
 
   // typeDeclaration ::= ";" | ( modifiers ( classDecl | enumDecl ) ).
   //
