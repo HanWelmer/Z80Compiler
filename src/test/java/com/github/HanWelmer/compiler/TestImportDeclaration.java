@@ -67,8 +67,7 @@ public class TestImportDeclaration extends AbstactRegressionTest {
     assertTrue(singleTest("TestImportMe.j"));
   }
 
-  // FIXME enable test case
-  // @Test
+  @Test
   public void TestImportMeTo() {
     assertTrue(singleTest("TestImportMeTo.j"));
   }

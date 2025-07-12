@@ -597,7 +597,7 @@ public class pCompiler {
 
   // importDeclaration ::= "import" "static"? name [ "." "*" ] ";".
   //
-  // TODO implement "static"? in importDeclaration.
+  // FIXME implement "static"? in importDeclaration.
   // In other words, change implementation from:
   // ....importDeclaration ::= "import" name "." importType ";".
   // to:
