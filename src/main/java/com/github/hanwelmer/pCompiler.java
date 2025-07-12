@@ -595,14 +595,7 @@ public class pCompiler {
     debug("\npackageDeclaration: end; package name=" + cuc.packageName);
   } // packageDeclaration
 
-  // importDeclaration ::= "import" "static"? name [ "." "*" ] ";".
-  //
-  // FIXME implement "static"? in importDeclaration.
-  // In other words, change implementation from:
-  // ....importDeclaration ::= "import" name "." importType ";".
-  // to:
-  // ... "import" "static"? name [ "." "*" ] ";".
-  //
+  // importDeclaration ::= "import" name [ "." "*" ] ";".
   // Note: identifiers in the package name are lowerCamelCase.
   // Note: identifier as import type (class name) is UpperCamelCase.
   private void importDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {

@@ -14,6 +14,7 @@ The syntax is defined in extended BNF.
 Compared to an [original but not official Java syntax](see https://javacc.github.io/javacc/documentation/bnf.html),
 the syntax of miniJava has the following limitations:
 - CompilationUnit       single TypeDeclaration
+- ImportDeclaration     no static import
 - typeDeclaration:      no interface declaration or ";".
 - classDeclaration:     no super?, interfaces?, extends?, TypeParameters? or implements?.
 - modifiers:            no "abstract", "protected", "strictfp" or Annotation.
@@ -61,7 +62,7 @@ TODO:
 ### Declarations
 `packageDeclaration   ::= "package" name ";".`
 
-`importDeclaration    ::= "import" "static"? name ["." "*"] ";".`
+`importDeclaration    ::= "import" name ["." "*"] ";".`
 
 `typeDeclaration      ::= ";" | modifiers ( classDeclaration | enumDeclaration ).`
 
