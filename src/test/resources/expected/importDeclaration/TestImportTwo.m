@@ -1,4 +1,4 @@
-   0 call 70
+   0 call 83
    1 stop
    2 ;TestImportTwo.j(0) /*
    3 ;TestImportTwo.j(1)  * A small program in the miniJava language.
@@ -21,7 +21,7 @@
   20 basePointer= stackPointer
   21 stackPointer+ constant 0
   22 ;me\TestImportMe.j(8)     println("TestImportMe");
-  23 acc16= stringconstant 82
+  23 acc16= stringconstant 95
   24 writeLineString
   25 ;me\TestImportMe.j(9)   }
   26 stackPointer= basePointer
@@ -51,35 +51,49 @@
   50 ;me\to\ImportedClass.j(5) 
   51 ;me\to\ImportedClass.j(6) class ImportedClass {
   52 class me.to.ImportedClass []
-  53 ;me\to\ImportedClass.j(7)   public static void importedFunction() {
-  54 method me.to.ImportedClass.importedFunction [public, static] void ()
+  53 ;me\to\ImportedClass.j(7)   public static void importedFunction1() {
+  54 method me.to.ImportedClass.importedFunction1 [public, static] void ()
   55 <basePointer
   56 basePointer= stackPointer
   57 stackPointer+ constant 0
-  58 ;me\to\ImportedClass.j(8)     println("me.to.ImportedClass.importedFunction() Klaar");
-  59 acc16= stringconstant 83
+  58 ;me\to\ImportedClass.j(8)     println("me.to.ImportedClass.importedFunction() function 1");
+  59 acc16= stringconstant 96
   60 writeLineString
   61 ;me\to\ImportedClass.j(9)   }
   62 stackPointer= basePointer
   63 basePointer<
   64 return
-  65 ;me\to\ImportedClass.j(10) }
-  66 ;TestImportTwo.j(6) 
-  67 ;TestImportTwo.j(7) class TestImportTwo {
-  68 class TestImportTwo []
-  69 ;TestImportTwo.j(8)   public static void main() {
-  70 method TestImportTwo.main [public, static] void ()
-  71 <basePointer
-  72 basePointer= stackPointer
-  73 stackPointer+ constant 0
-  74 ;TestImportTwo.j(9)     println("TestImportTwo Klaar");
-  75 acc16= stringconstant 84
-  76 writeLineString
-  77 ;TestImportTwo.j(10)   }
-  78 stackPointer= basePointer
-  79 basePointer<
-  80 return
-  81 ;TestImportTwo.j(11) }
-  82 stringConstant 0 = "TestImportMe"
-  83 stringConstant 1 = "me.to.ImportedClass.importedFunction() Klaar"
-  84 stringConstant 2 = "TestImportTwo Klaar"
+  65 ;me\to\ImportedClass.j(10) 
+  66 ;me\to\ImportedClass.j(11)   public static void importedFunction2() {
+  67 method me.to.ImportedClass.importedFunction2 [public, static] void ()
+  68 <basePointer
+  69 basePointer= stackPointer
+  70 stackPointer+ constant 0
+  71 ;me\to\ImportedClass.j(12)     println("me.to.ImportedClass.importedFunction() function 2");
+  72 acc16= stringconstant 97
+  73 writeLineString
+  74 ;me\to\ImportedClass.j(13)   }
+  75 stackPointer= basePointer
+  76 basePointer<
+  77 return
+  78 ;me\to\ImportedClass.j(14) }
+  79 ;TestImportTwo.j(6) 
+  80 ;TestImportTwo.j(7) class TestImportTwo {
+  81 class TestImportTwo []
+  82 ;TestImportTwo.j(8)   public static void main() {
+  83 method TestImportTwo.main [public, static] void ()
+  84 <basePointer
+  85 basePointer= stackPointer
+  86 stackPointer+ constant 0
+  87 ;TestImportTwo.j(9)     println("TestImportTwo Klaar");
+  88 acc16= stringconstant 98
+  89 writeLineString
+  90 ;TestImportTwo.j(10)   }
+  91 stackPointer= basePointer
+  92 basePointer<
+  93 return
+  94 ;TestImportTwo.j(11) }
+  95 stringConstant 0 = "TestImportMe"
+  96 stringConstant 1 = "me.to.ImportedClass.importedFunction() function 1"
+  97 stringConstant 2 = "me.to.ImportedClass.importedFunction() function 2"
+  98 stringConstant 3 = "TestImportTwo Klaar"
