@@ -392,7 +392,8 @@ public class Transcoder {
     debug("\ntranscoding to Z80: " + instruction.toString());
 
     FunctionType function = instruction.function;
-    if (function == FunctionType.classFunction || function == FunctionType.method || function == FunctionType.comment) {
+    if (function == FunctionType.packageFunction || function == FunctionType.classFunction || function == FunctionType.method
+        || function == FunctionType.comment) {
       // nothing to do. Just at the M-code instruction as comment.
       result.add(new AssemblyInstruction(byteAddress, INDENT + ';' + instruction));
       return result;
