@@ -102,9 +102,9 @@ public class Identifiers {
    * package name is found; the variable or method if one with that name has
    * been declared.
    * 
-   * @throws SyntaxException
+   * @throws SyntaxError
    */
-  public Variable getId(String packageName, String className, String name) throws SyntaxException {
+  public Variable getId(String packageName, String className, String name) throws SyntaxError {
     // Check if the name identifies a class variable or method.
     // Ditto, where name is a fully qualified name referring to an imported
     // class variable or method.
@@ -147,7 +147,7 @@ public class Identifiers {
     }
 
     if (variable == null) {
-      throw new SyntaxException("variable or method not declared: " + name);
+      throw new SyntaxError("variable or method not declared: " + name);
     }
 
     return variable;

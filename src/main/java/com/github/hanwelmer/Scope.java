@@ -48,9 +48,9 @@ public class Scope {
    * @param name
    *          partially qualified name of a method or variable.
    * @return fully qualified name of the method or variable.
-   * @throws SyntaxException
+   * @throws SyntaxError
    */
-  public Variable getVariableByPartiallyQualifiedName(String name) throws SyntaxException {
+  public Variable getVariableByPartiallyQualifiedName(String name) throws SyntaxError {
     Variable variable = null;
     // look up possible matches
     ArrayList<String> fullyQualifiedNamesFound = new ArrayList<String>();
@@ -61,9 +61,9 @@ public class Scope {
     }
     // check for exactly one match
     if (fullyQualifiedNamesFound.size() == 0) {
-      throw new SyntaxException("no class variable or method found that matches partially qualified name: " + name);
+      throw new SyntaxError("no class variable or method found that matches partially qualified name: " + name);
     } else if (fullyQualifiedNamesFound.size() > 1) {
-      throw new SyntaxException("ambiguous partially qualified name: " + name);
+      throw new SyntaxError("ambiguous partially qualified name: " + name);
     }
     // lookup variable
     variable = variables.get(fullyQualifiedNamesFound.get(0));
