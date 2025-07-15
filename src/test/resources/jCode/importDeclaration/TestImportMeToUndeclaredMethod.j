@@ -4,11 +4,12 @@
  */
 import me.to.ImportedClass;
 
-class TestImportMeTo {
+class TestImportMeToUndeclaredMethod {
   public static void main() {
-    println("TestImportMeTo importing 2 functions from ImportedClass");
+    println("TestImportMeToUndeclaredMethod calling undeclared importedFunction3");
     me.to.ImportedClass.importedFunction1();
     ImportedClass.importedFunction2();
-    println("TestImportMeTo Klaar");
+    ImportedClass.importedFunction3();
+    println("TestImportMeToUndeclaredMethod Klaar");
   }
 }

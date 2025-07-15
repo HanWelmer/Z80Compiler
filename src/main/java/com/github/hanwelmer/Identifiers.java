@@ -91,22 +91,28 @@ public class Identifiers {
   } // getId
 
   /**
-   * Get a variable by its name and optionally its class name and optionally its
-   * package name. Method is used during semantic analysis phase.
+   * Get a variable or method by its name and optionally its class name and
+   * optionally its package name. Method is used during semantic analysis phase.
    * 
    * Param packageName : name of the package in which the class is declared.
    * Param className : name of the class in which the variable is declared.
-   * Param name : name of the variable.
+   * Param name : name of the variable or method.
    * 
-   * Returns null if no variable with that name, class name and package name is
-   * found; the variable if a variable with that name has been declared.
+   * Returns null if no variable or method with that name, class name and
+   * package name is found; the variable or method if one with that name has
+   * been declared.
+   * 
+   * @throws SyntaxException
    */
-  public Variable getId(String packageName, String className, String name) {
-    // check if the name identifies a class variable or method.
+  public Variable getId(String packageName, String className, String name) throws SyntaxException {
+    // Check if the name identifies a class variable or method.
+    // Ditto, where name is a fully qualified name.
     Variable variable = classVariables.getVariable(name);
+    // Ditto, where name is a local name to be qualified by its class name.
     if (variable == null) {
       variable = classVariables.getVariable(className + "." + name);
     }
+    // Ditto, qualified by its package name and class name.
     if (variable == null && packageName != null && !packageName.isEmpty()) {
       variable = classVariables.getVariable(packageName + "." + className + "." + name);
     }
@@ -131,6 +137,17 @@ public class Identifiers {
         variable = scope.getVariable(packageName + "." + className + "." + name);
       }
     }
+
+    // Check if the name is a partially qualified name for a class variable or
+    // method (absent or partial package name and/or class name).
+    if (variable == null) {
+      variable = classVariables.getVariableByPartiallyQualifiedName(name);
+    }
+
+    if (variable == null) {
+      throw new SyntaxException("variable or method not declared: " + name);
+    }
+
     return variable;
   } // getId
 

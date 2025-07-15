@@ -73,6 +73,18 @@ public class TestImportDeclaration extends AbstactRegressionTest {
   }
 
   @Test
+  public void TestImportMeToUndeclaredMethod() {
+    String testOutput = testWithRedirectedSystemOut("TestImportMeToUndeclaredMethod.j");
+    System.out.println(testOutput);
+    String[] lines = testOutput.split("\n");
+    assertTrue(lines.length >= 3);
+    assertTrue(
+        "                                   ^no class variable or method found that matches partially qualified name: ImportedClass.importedFunction3\r"
+            .equals(lines[2]));
+    System.out.println("As expected.\n");
+  }
+
+  @Test
   public void TestMeImportMe() {
     assertTrue(singleTest("me" + File.separator + "TestImportMe.j"));
   }

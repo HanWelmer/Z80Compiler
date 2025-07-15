@@ -54,7 +54,7 @@
   53 writeLineString
   54 ;TestImportMeTo.j(9)     me.to.ImportedClass.importedFunction1();
   55 call 18
-  56 ;TestImportMeTo.j(10)     me.to.ImportedClass.importedFunction2();
+  56 ;TestImportMeTo.j(10)     ImportedClass.importedFunction2();
   57 call 31
   58 ;TestImportMeTo.j(11)     println("TestImportMeTo Klaar");
   59 acc16= stringconstant 69

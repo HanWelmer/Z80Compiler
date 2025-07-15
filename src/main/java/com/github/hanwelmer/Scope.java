@@ -18,6 +18,7 @@ Z80Compiler. If not, see <https://www.gnu.org/licenses/>.
 
 package com.github.hanwelmer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,16 +41,32 @@ public class Scope {
     return variables.get(fullyQualifiedName);
   }
 
-  public Variable getVariable(String packageName, String className, String name) {
-    Variable variable = variables.get(name);
-    if (variable == null) {
-      name = className + "." + name;
-      variable = variables.get(name);
+  /**
+   * Extend the name to a fully qualified name by looking up the name in the
+   * list of imported methods and variables.
+   * 
+   * @param name
+   *          partially qualified name of a method or variable.
+   * @return fully qualified name of the method or variable.
+   * @throws SyntaxException
+   */
+  public Variable getVariableByPartiallyQualifiedName(String name) throws SyntaxException {
+    Variable variable = null;
+    // look up possible matches
+    ArrayList<String> fullyQualifiedNamesFound = new ArrayList<String>();
+    for (String key : variables.keySet()) {
+      if (key.endsWith(name)) {
+        fullyQualifiedNamesFound.add(key);
+      }
     }
-    if (variable == null && packageName != null && packageName.isEmpty()) {
-      name = packageName + "." + name;
-      variable = variables.get(name);
+    // check for exactly one match
+    if (fullyQualifiedNamesFound.size() == 0) {
+      throw new SyntaxException("no class variable or method found that matches partially qualified name: " + name);
+    } else if (fullyQualifiedNamesFound.size() > 1) {
+      throw new SyntaxException("ambiguous partially qualified name: " + name);
     }
+    // lookup variable
+    variable = variables.get(fullyQualifiedNamesFound.get(0));
     return variable;
   }
 
