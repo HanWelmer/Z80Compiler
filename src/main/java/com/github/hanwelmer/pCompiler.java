@@ -241,6 +241,11 @@ public class pCompiler {
     lexemeReader.error();
   }
 
+  private void error(LexemeReader lexemeReader, String message) {
+    error(lexemeReader);
+    System.out.println(message);
+  }
+
   private void error(LexemeReader lexemeReader, int n, String message) {
     error(lexemeReader, n);
     System.out.println(message);
@@ -499,14 +504,13 @@ public class pCompiler {
       updateReferencesToStringConstants(instructions.size());
       plantStringConstants();
     } catch (FatalError e) {
-      error(lexemeReader, e.getErrorNumber());
+      error(lexemeReader, e.getMessage());
       System.out.println("compilation aborted.");
       System.exit(1);
     } catch (SyntaxError e) {
       // FIXME replace syntax errors by exceptions and catch them as local as
       // possible
-      error(lexemeReader);
-      System.out.println(e.getMessage());
+      error(lexemeReader, e.getMessage());
       // skip until stop set.
       // if (checkOrSkip(cuc.lexemeReader, EnumSet.of(lexeme.type), stopSet)) {
       // lexeme = cuc.lexemeReader.getLexeme(sourceCode);
@@ -712,8 +716,7 @@ public class pCompiler {
   } // typeDeclaration
 
   // classDecl ::= "class" javaIdentifier classBody.
-  private void classDecl(CompilationUnitContext cuc, boolean isPublic, EnumSet<LexemeType> stopSet)
-      throws FatalError, SyntaxError {
+  private void classDecl(CompilationUnitContext cuc, boolean isPublic, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
     debug("\nclassDecl: " + (isPublic ? "public" : ""));
     EnumSet<LexemeType> modifiers = EnumSet.noneOf(LexemeType.class);
     if (isPublic) {
@@ -736,8 +739,7 @@ public class pCompiler {
         if (identifiers.declareId(fullyQualifiedClassName, IdentifierType.CLAZZ, LexemeType.classLexeme, modifiers)) {
           debug("\nclassDecl: " + (isPublic ? "public " : "") + "class declared: " + fullyQualifiedClassName);
         } else {
-          error(cuc.lexemeReader);
-          System.out.println("Class identifier " + fullyQualifiedClassName + " already declared.");
+          error(cuc.lexemeReader, "Class identifier " + fullyQualifiedClassName + " already declared.");
         }
 
         // code generation
@@ -1000,8 +1002,7 @@ public class pCompiler {
     if (identifiers.declareId(fullyQualifiedName, identifierType, type.getType(), modifiers)) {
       debug(String.format("\n%s declaration: $s %s %s", identifierType, modifiers, type.getType(), fullyQualifiedName));
     } else {
-      error(cuc.lexemeReader);
-      System.out.println("variable " + fullyQualifiedName + " already declared.");
+      error(cuc.lexemeReader, "variable " + fullyQualifiedName + " already declared.");
     }
 
     // semicolon indicates single primitive declarator without initializer.
@@ -1126,8 +1127,7 @@ public class pCompiler {
     if (identifiers.declareId(fullyQualifiedMethodName, IdentifierType.METHOD, resultType.getType(), modifiers)) {
       debug("\nmethodDeclaration: " + modifiers + " " + fullyQualifiedMethodName + "(...)");
     } else {
-      error(cuc.lexemeReader);
-      System.out.println("identifier " + fullyQualifiedMethodName + " already declared.");
+      error(cuc.lexemeReader, "identifier " + fullyQualifiedMethodName + " already declared.");
     }
     // skip left bracket
     lexeme = cuc.lexemeReader.getLexeme(sourceCode);
@@ -1217,8 +1217,7 @@ public class pCompiler {
         FormalParameter parameter = new FormalParameter(identifier, modifiers, type.getDataType(), var.getAddress());
         method.addFormalParameter(parameter);
       } else {
-        error(lexemeReader);
-        System.out.println("formal parameter " + identifier + " already declared.");
+        error(lexemeReader, "formal parameter " + identifier + " already declared.");
       }
     } else {
       // extend error reporting, using lexeme types in localSet as a guidance.
@@ -1387,8 +1386,7 @@ public class pCompiler {
   // with semantic constraints:
   // - Variable modifiers ::= "final"? "volatile"?.
   // - Variable resultType ::= type.
-  private void localVariableDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet)
-      throws FatalError, SyntaxError {
+  private void localVariableDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
     EnumSet<LexemeType> modifiers = localVariableModifiers(cuc.lexemeReader);
     ResultType type = type(cuc.lexemeReader, stopSet);
 
@@ -1711,8 +1709,7 @@ public class pCompiler {
     stopInitializationSet.add(LexemeType.semicolon);
     String variable = assignment(cuc, stopInitializationSet);
     if (variable == null) {
-      error(cuc.lexemeReader);
-      System.out.println("Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
+      error(cuc.lexemeReader, "Loop variable must be declared in for statement; for (word variable; .. ; ..) {..} expected.");
     }
     if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
@@ -1791,8 +1788,7 @@ public class pCompiler {
       plantSource();
       generateReturnStatement(lexemeReader);
     } else {
-      error(lexemeReader);
-      System.out.println(" Return statement with return value not supported.");
+      error(lexemeReader, " Return statement with return value not supported.");
     }
 
     debug("\nreturnStatement: end");
@@ -2015,8 +2011,7 @@ public class pCompiler {
         throw new SyntaxError("unexpected symbol; " + lexeme.makeString(null));
       }
     } catch (SyntaxError e) {
-      error(cuc.lexemeReader);
-      System.out.println(e.getMessage());
+      error(cuc.lexemeReader, e.getMessage());
       // skip until stop set.
       if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
         lexeme = cuc.lexemeReader.getLexeme(sourceCode);
@@ -2045,7 +2040,7 @@ public class pCompiler {
         } else if (var.getDataType() == DataType.byt) {
           plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
         } else {
-          error(cuc.lexemeReader, 12);
+          throw new FatalError("internal compiler error during code generation.");
         }
 
         // lexical analysis.
@@ -2073,7 +2068,7 @@ public class pCompiler {
         } else if (var.getDataType() == DataType.byt) {
           plant(cuc.lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
         } else {
-          error(cuc.lexemeReader, 12);
+          throw new FatalError("internal compiler error during code generation.");
         }
 
         // lexical analysis.
@@ -2107,7 +2102,7 @@ public class pCompiler {
         } else if (var.getDataType() == DataType.byt) {
           plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
         } else {
-          error(cuc.lexemeReader, 12);
+          throw new FatalError("internal compiler error during code generation.");
         }
       }
     }
@@ -2138,7 +2133,7 @@ public class pCompiler {
         } else if (var.getDataType() == DataType.byt) {
           plant(cuc.lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
         } else {
-          error(cuc.lexemeReader, 12);
+          throw new FatalError("internal compiler error during code generation.");
         }
       }
     }
@@ -2225,8 +2220,7 @@ public class pCompiler {
    * @throws FatalError
    * @throws SyntaxError
    */
-  private int arguments(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet)
-      throws FatalError, SyntaxError {
+  private int arguments(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
     debug("\narguments: start with stopSet = " + stopSet);
     int stackSize = 0;
 
@@ -2415,7 +2409,7 @@ public class pCompiler {
         // semantic analysis.
         Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
         if (var == null) {
-          throw new FatalError(9); // variable not declared.
+          throw new FatalError("variable not declared.");
         } else {
           operand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
           // treat final var as a constant
@@ -2477,7 +2471,7 @@ public class pCompiler {
     // consistency check.
     debug("\nfactor: end: " + operand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
     if (operand.opType == OperandType.UNKNOWN) {
-      throw new FatalError(12);
+      throw new FatalError("internal compiler error during code generation.");
     }
 
     return operand;
@@ -2797,8 +2791,7 @@ public class pCompiler {
           debug("\nstatementExpression: " + modifiers + lexeme.makeString(identifiers.getId(lexeme.idVal)));
           variable = lexeme.idVal;
         } else {
-          error(cuc.lexemeReader);
-          System.out.println("variable " + lexeme.idVal + " already declared.");
+          error(cuc.lexemeReader, "variable " + lexeme.idVal + " already declared.");
         }
       }
     } else {
@@ -2841,7 +2834,7 @@ public class pCompiler {
       } else if (var.getDataType() == DataType.byt) {
         plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
       } else {
-        error(cuc.lexemeReader, 12);
+        throw new FatalError("internal compiler error during code generation.");
       }
     } else if (lexeme.type == LexemeType.decrement) {
       // identifier--
@@ -2853,7 +2846,7 @@ public class pCompiler {
       } else if (var.getDataType() == DataType.byt) {
         plant(cuc.lexemeReader, new Instruction(FunctionType.decrement8, leftOperand));
       } else {
-        error(cuc.lexemeReader, 12);
+        throw new FatalError("internal compiler error during code generation.");
       }
     } else if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.assign), stopAssignmentSet)) {
       // identifier "=" expression
@@ -2909,8 +2902,9 @@ public class pCompiler {
    * 
    * @param leftOperand
    * @param rightOperand
+   * @throws FatalError
    */
-  private void generateAssignment(LexemeReader lexemeReader, Operand leftOperand, Operand rightOperand) {
+  private void generateAssignment(LexemeReader lexemeReader, Operand leftOperand, Operand rightOperand) throws FatalError {
     // code generation.
     debug("\ngenerateAssignment: leftOperand = " + leftOperand + ", operand = " + rightOperand);
     // operand to accu.
@@ -2923,7 +2917,7 @@ public class pCompiler {
     } else if (rightOperand.dataType == DataType.byt) {
       plant(lexemeReader, new Instruction(FunctionType.acc8Store, leftOperand));
     } else {
-      error(lexemeReader, 12);
+      throw new FatalError("internal compiler error during code generation.");
     }
   } // generateAssignment
 
@@ -2931,9 +2925,10 @@ public class pCompiler {
    * Generate M-code for a stack based argument in a method invocation.
    * 
    * @param argument
+   * @throws FatalError
    * @returns number of bytes needed on the stack for the argument.
    */
-  private int generateArgument(LexemeReader lexemeReader, Operand argument) {
+  private int generateArgument(LexemeReader lexemeReader, Operand argument) throws FatalError {
     // code generation.
     debug("\ngenerateArgument: argument = " + argument);
     int stackSize = 0;
@@ -2951,7 +2946,7 @@ public class pCompiler {
       plant(lexemeReader, new Instruction(FunctionType.stackAcc8));
       stackSize = 1;
     } else {
-      error(lexemeReader, 12);
+      throw new FatalError("internal compiler error during code generation.");
     }
     return stackSize;
   } // generateArgument

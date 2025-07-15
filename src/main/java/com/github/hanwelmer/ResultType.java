@@ -20,8 +20,7 @@ public class ResultType {
         result = DataType.string;
         break;
       default:
-        throw new FatalError(32); // unexpected type in field, formal parameter
-                                  // or local variable declaration.
+        throw new FatalError("unexpected type.");
     }
     return result;
   }

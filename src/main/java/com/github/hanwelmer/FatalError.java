@@ -25,14 +25,9 @@ package com.github.hanwelmer;
  */
 public class FatalError extends Exception {
   private static final long serialVersionUID = -7608810549340442114L;
-  private int errorNumber;
 
-  public FatalError(int error) {
-    super();
-    errorNumber = error;
+  public FatalError(String message) {
+    super(message);
   }
 
-  public int getErrorNumber() {
-    return errorNumber;
-  }
 };

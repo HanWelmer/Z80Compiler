@@ -91,7 +91,7 @@ public class LexemeReader {
       System.out.println(e.getMessage());
       System.out.println();
       e.printStackTrace();
-      throw new FatalError(4); // unknown character
+      throw new FatalError("unknown character");
     }
     return line;
   }
@@ -114,7 +114,7 @@ public class LexemeReader {
 
       lineSize = line.length();
       if (lineSize > MAX_LINE_WIDTH) {
-        throw new FatalError(2); // line too long
+        throw new FatalError("line too long");
       }
       line += "\n";
       lineSize++;
