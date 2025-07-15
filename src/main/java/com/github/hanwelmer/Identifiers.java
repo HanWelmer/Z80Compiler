@@ -106,18 +106,20 @@ public class Identifiers {
    */
   public Variable getId(String packageName, String className, String name) throws SyntaxException {
     // Check if the name identifies a class variable or method.
-    // Ditto, where name is a fully qualified name.
+    // Ditto, where name is a fully qualified name referring to an imported
+    // class variable or method.
     Variable variable = classVariables.getVariable(name);
-    // Ditto, where name is a local name to be qualified by its class name.
+    // Ditto, where name is a local name qualified by its class name.
     if (variable == null) {
       variable = classVariables.getVariable(className + "." + name);
     }
-    // Ditto, qualified by its package name and class name.
+    // Ditto, where name is a local name qualified by package name and class
+    // name.
     if (variable == null && packageName != null && !packageName.isEmpty()) {
       variable = classVariables.getVariable(packageName + "." + className + "." + name);
     }
 
-    // check if the name identifies a local variable defined within a method.
+    // Check if the name identifies a local variable defined within a method.
     Iterator<Scope> iterator = localVariables.iterator();
     while ((variable == null) && iterator.hasNext()) {
       Scope scope = iterator.next();
