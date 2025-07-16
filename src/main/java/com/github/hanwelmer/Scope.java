@@ -61,9 +61,9 @@ public class Scope {
     }
     // check for exactly one match
     if (fullyQualifiedNamesFound.size() == 0) {
-      throw new SyntaxError("no class variable or method found that matches partially qualified name: " + name);
+      throw new SyntaxError("no class variable or method found that matches partially qualified name.");
     } else if (fullyQualifiedNamesFound.size() > 1) {
-      throw new SyntaxError("ambiguous partially qualified name: " + name);
+      throw new SyntaxError("ambiguous partially qualified name.");
     }
     // lookup variable
     variable = variables.get(fullyQualifiedNamesFound.get(0));
