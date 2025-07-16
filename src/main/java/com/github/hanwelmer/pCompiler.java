@@ -1031,7 +1031,7 @@ public class pCompiler {
           // localSet.add(LexemeType.semicolon);
           EnumSet<LexemeType> localSet = EnumSet.of(LexemeType.semicolon);
 
-          Variable var = identifiers.getId(cuc.packageName, cuc.className, firstIdentifier);
+          Variable var = identifiers.getId(fullyQualifiedName);
           Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
           leftOperand.isFinal = var.isFinal();
           debug("\nFieldDeclaration: leftOperand = " + leftOperand);
