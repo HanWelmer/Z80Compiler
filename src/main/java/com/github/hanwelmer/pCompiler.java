@@ -388,8 +388,8 @@ public class pCompiler {
    ************************/
 
   /**
-   * plant(lexemeReader, e if current lexeme is in okSet, otherwise skip until
-   * current lexeme is in stopSet and return false.
+   * return true if current lexeme is in okSet, otherwise skip until current
+   * lexeme is in stopSet and return false.
    */
   private boolean checkOrSkip(LexemeReader lexemeReader, EnumSet<LexemeType> okSet, EnumSet<LexemeType> stopSet) throws FatalError {
     boolean result = false;
@@ -397,12 +397,20 @@ public class pCompiler {
       result = true;
     } else {
       error(lexemeReader, 3, "found " + lexeme.type + ", expected " + okSet);
-      stopSet.add(LexemeType.eof);
-      while (!stopSet.contains(lexeme.type)) {
-        lexeme = lexemeReader.skipAfterError(sourceCode);
-      }
+      skipUntilStopSet(lexemeReader, stopSet);
     }
     return result;
+  }
+
+  /**
+   * skip until current lexeme is in stopSet.
+   */
+  private void skipUntilStopSet(LexemeReader lexemeReader, EnumSet<LexemeType> stopSet) throws FatalError {
+    EnumSet<LexemeType> localStopSet = stopSet.clone();
+    localStopSet.add(LexemeType.eof);
+    while (!localStopSet.contains(lexeme.type)) {
+      lexeme = lexemeReader.skipAfterError(sourceCode);
+    }
   }
 
   // return true if all identifiers in the packageName are lowerCamelCase.
@@ -2012,10 +2020,7 @@ public class pCompiler {
       }
     } catch (SyntaxError e) {
       error(cuc.lexemeReader, e.getMessage());
-      // skip until stop set.
-      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), stopSet)) {
-        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-      }
+      skipUntilStopSet(cuc.lexemeReader, stopSet);
     }
 
     debug("\nstatementExpression: end");
