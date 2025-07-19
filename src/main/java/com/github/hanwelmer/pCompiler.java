@@ -2173,14 +2173,12 @@ public class pCompiler {
   } // methodInvocation
 
   // TODO refactor assignment.
-  private void assignment(CompilationUnitContext cuc, String name, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void assignment(CompilationUnitContext cuc, String name, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nassignment: start with stopSet = " + stopSet + "; variable e=" + name);
 
-    // semantic analysis.
-    Variable var = identifiers.getId(cuc.packageName, cuc.className, name);
-    if (var == null) {
-      error(cuc.lexemeReader, 9); // variable not declared.
-    } else {
+    try {
+      // semantic analysis.
+      Variable var = identifiers.getId(cuc.packageName, cuc.className, name);
       debug("\nassignment: variable = " + var);
       Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
       leftOperand.isFinal = var.isFinal();
@@ -2204,6 +2202,9 @@ public class pCompiler {
           generateAssignment(cuc.lexemeReader, leftOperand, rightOperand);
         }
       }
+    } catch (SyntaxError e) {
+      error(cuc.lexemeReader, e.getMessage());
+      skipUntilStopSet(cuc.lexemeReader, stopSet);
     }
 
     debug("\nassignment: end");
