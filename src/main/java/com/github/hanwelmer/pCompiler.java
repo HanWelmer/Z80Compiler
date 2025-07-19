@@ -2114,13 +2114,10 @@ public class pCompiler {
   } // postincrementExpression
 
   // postdecrementExpression ::= name "--".
-  private void postdecrementExpression(CompilationUnitContext cuc, String name, EnumSet<LexemeType> stopSet)
-      throws FatalError, SyntaxError {
-    // semantic analysis.
-    Variable var = identifiers.getId(cuc.packageName, cuc.className, name);
-    if (var == null) {
-      error(cuc.lexemeReader, 9); // variable not declared.
-    } else {
+  private void postdecrementExpression(CompilationUnitContext cuc, String name, EnumSet<LexemeType> stopSet) throws FatalError {
+    try {
+      // semantic analysis.
+      Variable var = identifiers.getId(cuc.packageName, cuc.className, name);
       debug("\nassignment: variable = " + var);
 
       // lexical analysis.
@@ -2141,6 +2138,9 @@ public class pCompiler {
           throw new FatalError("internal compiler error during code generation.");
         }
       }
+    } catch (SyntaxError e) {
+      error(cuc.lexemeReader, e.getMessage());
+      skipUntilStopSet(cuc.lexemeReader, stopSet);
     }
   } // postdecrementExpression
 
