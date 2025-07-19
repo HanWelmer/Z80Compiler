@@ -2332,7 +2332,7 @@ public class pCompiler {
   // test13.j.
   // TODO Generate constant in Z80 code in hex notation if the constant was
   // written in hex notation in J-code. See ledtest.j.
-  private Operand constantExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private Operand constantExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nconstantExpression: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -2357,7 +2357,7 @@ public class pCompiler {
   // inputFactor = "input" "(" constantExpression ")".
   // TODO Add support for input data (see Z80Compiler.class; call to
   // Interpreter).
-  private Operand inputFactor(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private Operand inputFactor(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ninputFactor: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -2406,16 +2406,14 @@ public class pCompiler {
   // TODO Introduce built in function malloc() (see test1, test5, test10,
   // test11).
   // TODO Refactor StringConstants.
-  private Operand factor(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private Operand factor(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     Operand operand = new Operand(OperandType.UNKNOWN);
     debug("\nfactor 1: acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
-    if (checkOrSkip(cuc.lexemeReader, START_EXPRESSION, stopSet)) {
-      if (lexeme.type == LexemeType.identifier) {
-        // semantic analysis.
-        Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
-        if (var == null) {
-          throw new FatalError("variable not declared.");
-        } else {
+    try {
+      if (checkOrSkip(cuc.lexemeReader, START_EXPRESSION, stopSet)) {
+        if (lexeme.type == LexemeType.identifier) {
+          // semantic analysis.
+          Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
           operand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
           // treat final var as a constant
           if (var.isFinal()) {
@@ -2424,53 +2422,57 @@ public class pCompiler {
           }
           operand.isFinal = var.isFinal();
           operand.strValue = lexeme.idVal;
-        }
-        // lexical analysis.
-        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-      } else if (lexeme.type == LexemeType.constant) {
-        // code generation.
-        operand.opType = OperandType.CONSTANT;
-        operand.dataType = lexeme.dataType;
-        operand.intValue = lexeme.constVal;
-        // lexical analysis.
-        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-      } else if (lexeme.type == LexemeType.stringConstant) {
-        debug("\nlexeme = " + lexeme.makeString(null));
-        // semantic analysis.
-        int constantId = stringConstants.add(lexeme.stringVal, instructions.size() + 1);
-        debug("\nfactor: string constant " + constantId + " = \"" + lexeme.stringVal + "\"");
-        // code generation.
-        operand.opType = OperandType.CONSTANT;
-        operand.dataType = DataType.string;
-        operand.strValue = lexeme.stringVal;
-        operand.intValue = constantId;
-        // lexical analysis.
-        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-        debug("\nlexeme = " + lexeme.makeString(null));
-      } else if (lexeme.type == LexemeType.readLexeme) {
-        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-        // code generation.
-        // The read() function always returns a word value.
-        if (acc16.inUse()) {
-          plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc16));
-        }
-        plant(cuc.lexemeReader, new Instruction(FunctionType.read));
-        operand.opType = OperandType.ACC;
-        operand.dataType = DataType.word;
-        acc16.setOperand(operand);
-      } else if (lexeme.type == LexemeType.inputLexeme) {
-        operand = inputFactor(cuc, stopSet);
-      } else if (lexeme.type == LexemeType.LPAREN) {
-        // skip left bracket.
-        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-        EnumSet<LexemeType> stopSetCopy = stopSet.clone();
-        stopSetCopy.add(LexemeType.RPAREN);
-        operand = expression(cuc, stopSetCopy);
-        // skip right bracket.
-        if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), stopSet)) {
+
+          // lexical analysis.
           lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+        } else if (lexeme.type == LexemeType.constant) {
+          // code generation.
+          operand.opType = OperandType.CONSTANT;
+          operand.dataType = lexeme.dataType;
+          operand.intValue = lexeme.constVal;
+          // lexical analysis.
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+        } else if (lexeme.type == LexemeType.stringConstant) {
+          debug("\nlexeme = " + lexeme.makeString(null));
+          // semantic analysis.
+          int constantId = stringConstants.add(lexeme.stringVal, instructions.size() + 1);
+          debug("\nfactor: string constant " + constantId + " = \"" + lexeme.stringVal + "\"");
+          // code generation.
+          operand.opType = OperandType.CONSTANT;
+          operand.dataType = DataType.string;
+          operand.strValue = lexeme.stringVal;
+          operand.intValue = constantId;
+          // lexical analysis.
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+          debug("\nlexeme = " + lexeme.makeString(null));
+        } else if (lexeme.type == LexemeType.readLexeme) {
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+          // code generation.
+          // The read() function always returns a word value.
+          if (acc16.inUse()) {
+            plant(cuc.lexemeReader, new Instruction(FunctionType.stackAcc16));
+          }
+          plant(cuc.lexemeReader, new Instruction(FunctionType.read));
+          operand.opType = OperandType.ACC;
+          operand.dataType = DataType.word;
+          acc16.setOperand(operand);
+        } else if (lexeme.type == LexemeType.inputLexeme) {
+          operand = inputFactor(cuc, stopSet);
+        } else if (lexeme.type == LexemeType.LPAREN) {
+          // skip left bracket.
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+          EnumSet<LexemeType> stopSetCopy = stopSet.clone();
+          stopSetCopy.add(LexemeType.RPAREN);
+          operand = expression(cuc, stopSetCopy);
+          // skip right bracket.
+          if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.RPAREN), stopSet)) {
+            lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+          }
         }
       }
+    } catch (SyntaxError e) {
+      error(cuc.lexemeReader, e.getMessage());
+      skipUntilStopSet(cuc.lexemeReader, stopSet);
     }
 
     // consistency check.
