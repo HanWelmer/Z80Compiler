@@ -2027,30 +2027,36 @@ public class pCompiler {
   } // statementExpression
 
   // preincrementExpression ::= "++" name.
-  private void preincrementExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
-    if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.increment), stopSet)) {
-      lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-
-      // TODO support fully qualified name instead of just an identifier.
-      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.identifier), stopSet)) {
-        // semantic analysis.
-        Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
-        Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
-        leftOperand.isFinal = var.isFinal();
-        debug("\nupdate: leftOperand = " + leftOperand);
-
-        // code generation.
-        if (var.getDataType() == DataType.word) {
-          plant(cuc.lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
-        } else if (var.getDataType() == DataType.byt) {
-          plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
-        } else {
-          throw new FatalError("internal compiler error during code generation.");
-        }
-
-        // lexical analysis.
+  private void preincrementExpression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
+    try {
+      // lexical analysis.
+      if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.increment), stopSet)) {
         lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+
+        // TODO support fully qualified name instead of just an identifier.
+        if (checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.identifier), stopSet)) {
+          // semantic analysis.
+          Variable var = identifiers.getId(cuc.packageName, cuc.className, lexeme.idVal);
+          Operand leftOperand = new Operand(var.getIdentifierType(), var.getDataType(), var.getAddress());
+          leftOperand.isFinal = var.isFinal();
+          debug("\nupdate: leftOperand = " + leftOperand);
+
+          // code generation.
+          if (var.getDataType() == DataType.word) {
+            plant(cuc.lexemeReader, new Instruction(FunctionType.increment16, leftOperand));
+          } else if (var.getDataType() == DataType.byt) {
+            plant(cuc.lexemeReader, new Instruction(FunctionType.increment8, leftOperand));
+          } else {
+            throw new FatalError("internal compiler error during code generation.");
+          }
+
+          // lexical analysis.
+          lexeme = cuc.lexemeReader.getLexeme(sourceCode);
+        }
       }
+    } catch (SyntaxError e) {
+      error(cuc.lexemeReader, e.getMessage());
+      skipUntilStopSet(cuc.lexemeReader, stopSet);
     }
   } // preincrementExpression
 
