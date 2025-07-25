@@ -515,14 +515,6 @@ public class pCompiler {
       error(lexemeReader, e.getMessage());
       System.out.println("compilation aborted.");
       System.exit(1);
-    } catch (SyntaxError e) {
-      // FIXME replace syntax errors by exceptions and catch them as local as
-      // possible
-      error(lexemeReader, e.getMessage());
-      // skip until stop set.
-      // if (checkOrSkip(cuc.lexemeReader, EnumSet.of(lexeme.type), stopSet)) {
-      // lexeme = cuc.lexemeReader.getLexeme(sourceCode);
-      // }
     }
 
     if (errors != 0) {
@@ -544,11 +536,11 @@ public class pCompiler {
    * 
    * ### CompilationUnit
    * 
-   * @throws SyntaxError
+   * @throws FatalError
    * 
    *************************/
   // compilationUnit ::= packageDeclaration? importDeclaration* typeDeclaration.
-  private void compilationUnit(CompilationUnitContext cuc) throws FatalError, SyntaxError {
+  private void compilationUnit(CompilationUnitContext cuc) throws FatalError {
     debug("\ncompilationUnit: start");
 
     // recognize an optional package declaration.
@@ -621,7 +613,7 @@ public class pCompiler {
   // importDeclaration ::= "import" name [ "." "*" ] ";".
   // Note: identifiers in the package name are lowerCamelCase.
   // Note: identifier as import type (class name) is UpperCamelCase.
-  private void importDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void importDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nimportDeclaration: start");
 
     // skip "import"
@@ -651,7 +643,7 @@ public class pCompiler {
     debug("\nimportDeclaration: end; importPackageName=" + importName);
   } // importDeclaration
 
-  private void importFile(CompilationUnitContext cuc, String importName, String fileName) throws FatalError, SyntaxError {
+  private void importFile(CompilationUnitContext cuc, String importName, String fileName) throws FatalError {
     LexemeReader localLexemeReader = new LexemeReader();
     if (localLexemeReader.init(debugMode, cuc.lexemeReader.getPath(), fileName)) {
       // code generation
@@ -669,7 +661,7 @@ public class pCompiler {
   } // importFile().
 
   // import all classes in the folder.
-  private void importFolder(CompilationUnitContext cuc, String packageName) throws FatalError, SyntaxError {
+  private void importFolder(CompilationUnitContext cuc, String packageName) throws FatalError {
     String folderName = cuc.lexemeReader.getPath() + packageName.replace(".", File.separator);
     Path dir = Paths.get(folderName);
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.j")) {
@@ -689,7 +681,7 @@ public class pCompiler {
   // typeDeclaration ::= ";" | ( modifiers ( classDecl | enumDecl ) ).
   //
   // TODO implement enumDecl in typeDeclaration.
-  private void typeDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void typeDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ntypeDeclaration: start");
 
     if (lexeme.type == LexemeType.semicolon) {
@@ -724,7 +716,7 @@ public class pCompiler {
   } // typeDeclaration
 
   // classDecl ::= "class" javaIdentifier classBody.
-  private void classDecl(CompilationUnitContext cuc, boolean isPublic, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void classDecl(CompilationUnitContext cuc, boolean isPublic, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nclassDecl: " + (isPublic ? "public" : ""));
     EnumSet<LexemeType> modifiers = EnumSet.noneOf(LexemeType.class);
     if (isPublic) {
@@ -836,12 +828,12 @@ public class pCompiler {
    * 
    * ### ClassBody
    * 
-   * @throws SyntaxError
+   * @throws FatalError
    * 
    *************************/
 
   // classBody ::= "{" classBodyDeclaration* "}".
-  private void classBody(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void classBody(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nclassBody: start");
 
     lexeme = cuc.lexemeReader.getLexeme(sourceCode);
@@ -887,7 +879,7 @@ public class pCompiler {
   // - Field modifiers ::= "public"? "private"? "static" "final"? "volatile"?.
   // - Method resultType ::= "void" | type.
   // - Field resultType ::= type.
-  private void classBodyDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void classBodyDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nclassBodyDeclaration: start");
 
     // Semantic analysis
@@ -987,7 +979,6 @@ public class pCompiler {
    *          variables (variables).
    * @param stopSet
    * @throws FatalError
-   * @throws SyntaxError
    */
   // variableDeclarator ::= variableDeclaratorId [ "=" variableInitializer ].
   // variableDeclaratorId ::= javaIdentifier { "[" "]" }.
@@ -1002,7 +993,7 @@ public class pCompiler {
   // TODO Add arrayInitializer to restOfVariableDeclarator.
   // TODO implement stopSet in restOfVariableDeclarator.
   private void restOfVariableDeclarator(CompilationUnitContext cuc, EnumSet<LexemeType> modifiers, ResultType type,
-      String firstIdentifier, IdentifierType identifierType, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+      String firstIdentifier, IdentifierType identifierType, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nfieldDeclaration: start " + firstIdentifier);
 
     // semantic analysis
@@ -1101,7 +1092,6 @@ public class pCompiler {
    * @param identifier
    * @param stopSet
    * @throws FatalError
-   * @throws SyntaxError
    */
   // restOfMethodDeclarator ::= ( formalParameters* )? ")" block.
   //
@@ -1110,7 +1100,7 @@ public class pCompiler {
   // TODO implement stopSet in methodDeclaration.
   // TODO implement code generation for less than trivial return statement.
   private void restOfMethodDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> modifiers, ResultType resultType,
-      String methodName, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+      String methodName, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nmethodDeclaration: start " + methodName);
 
     // semantic analysis of modifiers:
@@ -1317,7 +1307,7 @@ public class pCompiler {
    * 
    * ### Statements
    * 
-   * @throws SyntaxError
+   * @throws FatalError
    * 
    *************************/
 
@@ -1325,7 +1315,7 @@ public class pCompiler {
   //
   // parse a block of statements, and return the address of the first object
   // code in the block of statements.
-  private int block(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private int block(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nblock: start with stopSet = " + stopSet);
 
     // semantic analysis: address of next object code instruction.
@@ -1359,7 +1349,7 @@ public class pCompiler {
   } // block
 
   // blockStatement ::= localVariableStatement | statement.
-  private void blockStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void blockStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nblockStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -1373,7 +1363,7 @@ public class pCompiler {
   }// blockStatement
 
   // localVariableStatement ::= localVariableDeclaration ";".
-  private void localVariableStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void localVariableStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     EnumSet<LexemeType> localStopSet = stopSet.clone();
     localStopSet.add(LexemeType.semicolon);
     localVariableDeclaration(cuc, localStopSet);
@@ -1394,7 +1384,7 @@ public class pCompiler {
   // with semantic constraints:
   // - Variable modifiers ::= "final"? "volatile"?.
   // - Variable resultType ::= type.
-  private void localVariableDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void localVariableDeclaration(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     EnumSet<LexemeType> modifiers = localVariableModifiers(cuc.lexemeReader);
     ResultType type = type(cuc.lexemeReader, stopSet);
 
@@ -1452,7 +1442,7 @@ public class pCompiler {
   }
 
   // statement ::= ifStatement | statementExceptIf.
-  private int statement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private int statement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatement: start with stopSet = " + stopSet);
     int firstAddress = saveLabel();
 
@@ -1479,7 +1469,7 @@ public class pCompiler {
   // 1328 brle 1345
   // received: 1328 brle 1345
   // expected: 1328 brle 1346
-  private void ifStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void ifStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nifStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -1543,7 +1533,7 @@ public class pCompiler {
   // statementExceptIf ::= block | emptyStatement | whileStatement | doStatement
   // | forStatement | returnStatement | printlnStatement |
   // outputStatement | expressionStatement.
-  private int statementExceptIf(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private int statementExceptIf(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExceptIf: start with stopSet = " + stopSet);
 
     // code generation.
@@ -1599,7 +1589,7 @@ public class pCompiler {
   //
   // TODO refactor whileStatement.
   // whileStatement = "while" "(" comparison ")" block.
-  private void whileStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void whileStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nwhileStatement: start with stopSet = " + stopSet);
     lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
@@ -1640,7 +1630,7 @@ public class pCompiler {
   //
   // TODO refactor doStatement
   // doStatement = "do" block "while" "(" comparison ")" ";".
-  private void doStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void doStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ndoStatement: start with stopSet = " + stopSet);
     lexeme = cuc.lexemeReader.getLexeme(sourceCode);
 
@@ -1697,7 +1687,7 @@ public class pCompiler {
   // TODO refactor forStatement
   // forStatement = "for" "(" initialization ";" comparison ";" update ")"
   // block.
-  private void forStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void forStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nforStatement: start with stopSet = " + stopSet);
 
     // semantic analysis: start a new declaration scope for the for
@@ -1815,7 +1805,7 @@ public class pCompiler {
   // parenthesis, may be string expressions or algorithmic expressions.
   // Operands in a string expression, including results of subexpressions, are
   // converted to string and then printed.
-  private void printlnStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void printlnStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nprintlnStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -1897,7 +1887,7 @@ public class pCompiler {
   // TODO Add non-constant port value to output/input (IN0 A,(C); OUT0 (C),A).
   // TODO Test various expressions for output(byte port, byte value). See
   // ledtest.j.
-  private void outputStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void outputStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\noutputStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -2157,8 +2147,7 @@ public class pCompiler {
   } // postdecrementExpression
 
   // methodInvocation ::= name arguments.
-  private void methodInvocation(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet)
-      throws FatalError, SyntaxError {
+  private void methodInvocation(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     // FIXME support method call before method declaration.
     // get the method signature from the list of identifiers.
     debug("\nmethod invocation: " + method);
@@ -2236,9 +2225,8 @@ public class pCompiler {
    *          error.
    * @returns number of bytes needed on the stack for the arguments.
    * @throws FatalError
-   * @throws SyntaxError
    */
-  private int arguments(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private int arguments(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\narguments: start with stopSet = " + stopSet);
     int stackSize = 0;
 
@@ -2285,10 +2273,8 @@ public class pCompiler {
    *          error.
    * @returns number of bytes needed on the stack for the arguments.
    * @throws FatalError
-   * @throws SyntaxError
    */
-  private int argumentList(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet)
-      throws FatalError, SyntaxError {
+  private int argumentList(CompilationUnitContext cuc, Variable method, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nargumentList: start with stopSet = " + stopSet);
     int stackSize = 0;
 
@@ -2333,7 +2319,7 @@ public class pCompiler {
    * 
    * Old lexical parsing methods to be refactored.
    * 
-   * @throws SyntaxError
+   * @throws FatalError
    * 
    *********************************************/
 
@@ -2502,13 +2488,13 @@ public class pCompiler {
   // andTerm = addTerm {bitwiseAndOp addTerm}.
   // addTerm = term {addop term}.
   // term = factor {mulop factor}.
-  private Operand expression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private Operand expression(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     // start with lexeme type of lowest precedence.
     return term(cuc, 0, stopSet);
   }
 
   // Parse a term, as part of an expression, at a given precendence level.
-  private Operand term(CompilationUnitContext cuc, int level, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private Operand term(CompilationUnitContext cuc, int level, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nterm start: level = " + level + ", stopSet = " + stopSet);
 
     // lexical analysis.
@@ -2524,7 +2510,7 @@ public class pCompiler {
   // Parse a term, as part of an expression, at a given precendence level, given
   // an already parsed left operand.
   private Operand termWithOperand(CompilationUnitContext cuc, int level, Operand leftOperand, EnumSet<LexemeType> followSet)
-      throws FatalError, SyntaxError {
+      throws FatalError {
     debug("\ntermWithOperand start: level = " + level + ", lexeme = " + lexeme + ", followSet = " + followSet);
     debug("\ntermWithOperand: " + leftOperand + ", acc16InUse = " + acc16.inUse() + ", acc8InUse = " + acc8.inUse());
 
@@ -2642,7 +2628,7 @@ public class pCompiler {
   // filled with the label at the end of the control statement block.
   // comparison = expression relop expression
   // TODO Merge comparison with expression.
-  private int comparison(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private int comparison(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\ncomparison: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -2700,8 +2686,7 @@ public class pCompiler {
 
   // parse a comparison, jump back to the label if the comparison yields true.
   // comparison = expression relop expression
-  private void comparisonInDoStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet, int doLabel)
-      throws FatalError, SyntaxError {
+  private void comparisonInDoStatement(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet, int doLabel) throws FatalError {
     debug("\ncomparisonInDoStatement: start with stopSet = " + stopSet);
 
     // lexical analysis.
@@ -2784,7 +2769,7 @@ public class pCompiler {
   // dataType = "byte" | "word" | "String".
   //
   // TODO implement isPublic
-  private String assignment(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private String assignment(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nstatementExpression: start with stopSet = " + stopSet + "; lexeme.type=" + lexeme.type);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
@@ -2829,7 +2814,7 @@ public class pCompiler {
   } // statementExpression()
 
   // update = identifier++ | identifier-- | identifier "=" expression
-  private void update(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError, SyntaxError {
+  private void update(CompilationUnitContext cuc, EnumSet<LexemeType> stopSet) throws FatalError {
     debug("\nupdate: start with stopSet = " + stopSet);
 
     EnumSet<LexemeType> stopAssignmentSet = stopSet.clone();
