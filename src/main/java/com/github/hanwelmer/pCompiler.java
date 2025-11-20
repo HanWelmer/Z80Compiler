@@ -137,8 +137,6 @@ public class pCompiler {
   private Accumulator acc16 = new Accumulator();
   private Accumulator acc8 = new Accumulator();
   private Stack<DataType> stackedDatatypes = new Stack<DataType>();
-
-  @SuppressWarnings("serial")
   private static final Map<OperatorType, FunctionType> FORWARD_OPERATION_16 = new HashMap<OperatorType, FunctionType>() {
     {
       put(OperatorType.bitwiseOr, FunctionType.acc16Or);
@@ -150,7 +148,6 @@ public class pCompiler {
       put(OperatorType.div, FunctionType.acc16Div);
     }
   };
-  @SuppressWarnings("serial")
   private static final Map<OperatorType, FunctionType> REVERSE_OPERATION_16 = new HashMap<OperatorType, FunctionType>() {
     {
       put(OperatorType.bitwiseOr, FunctionType.acc16Or);
@@ -162,7 +159,6 @@ public class pCompiler {
       put(OperatorType.div, FunctionType.divAcc16);
     }
   };
-  @SuppressWarnings("serial")
   private static final Map<OperatorType, FunctionType> FORWARD_OPERATION_8 = new HashMap<OperatorType, FunctionType>() {
     {
       put(OperatorType.bitwiseOr, FunctionType.acc8Or);
@@ -174,7 +170,6 @@ public class pCompiler {
       put(OperatorType.div, FunctionType.acc8Div);
     }
   };
-  @SuppressWarnings("serial")
   private static final Map<OperatorType, FunctionType> REVERSE_OPERATION_8 = new HashMap<OperatorType, FunctionType>() {
     {
       put(OperatorType.bitwiseOr, FunctionType.acc8Or);
@@ -186,8 +181,6 @@ public class pCompiler {
       put(OperatorType.div, FunctionType.divAcc8);
     }
   };
-
-  @SuppressWarnings("serial")
   private static final Map<OperatorType, FunctionType> NORMAL_SKIP = new HashMap<OperatorType, FunctionType>() {
     {
       put(OperatorType.eq, FunctionType.brNe);
@@ -198,7 +191,6 @@ public class pCompiler {
       put(OperatorType.le, FunctionType.brGt);
     }
   };
-  @SuppressWarnings("serial")
   private static final Map<OperatorType, FunctionType> REVERSE_SKIP = new HashMap<OperatorType, FunctionType>() {
     {
       put(OperatorType.eq, FunctionType.brNe);

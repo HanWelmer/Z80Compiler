@@ -101,7 +101,6 @@ public class Transcoder {
   private static final int MEM_START = MAX_ASM_CODE;
 
   private static final String INDENT = "        ";
-  @SuppressWarnings("serial")
   private static final Set<Byte> ABSOLUTE_ADDRESS_INSTRUCTIONS = new HashSet<Byte>(18) {
     {
       add((byte) 0xC3); // JP
@@ -131,7 +130,6 @@ public class Transcoder {
       add((byte) 0x21); // LD HL,Lnnnn
     }
   };
-  @SuppressWarnings("serial")
   private static final Set<Byte> RELATIVE_ADDRESS_INSTRUCTIONS = new HashSet<Byte>(6) {
     {
       add((byte) 0x10); // DJNZ
