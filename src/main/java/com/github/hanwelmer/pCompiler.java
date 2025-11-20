@@ -862,8 +862,7 @@ public class pCompiler {
       }
 
       // skip end lexeme
-      localStopSet = stopSet.clone();
-      checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.endLexeme), localStopSet);
+      checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.endLexeme), stopSet);
       lexeme = cuc.lexemeReader.getLexeme(sourceCode);
     } catch (SyntaxError e) {
       error(cuc.lexemeReader, e.getMessage());
@@ -946,6 +945,7 @@ public class pCompiler {
 
         // skip semicolon
         checkOrSkip(cuc.lexemeReader, EnumSet.of(LexemeType.semicolon), localStopSet);
+        lexeme = cuc.lexemeReader.getLexeme(sourceCode);
       }
     } catch (SyntaxError e) {
       error(cuc.lexemeReader, e.getMessage());
