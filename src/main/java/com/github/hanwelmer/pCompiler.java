@@ -390,7 +390,7 @@ public class pCompiler {
     if (okSet.contains(lexeme.type)) {
       result = true;
     } else {
-      throw new SyntaxError("unexpected symbol, found " + lexeme.type + ", expected " + okSet);
+      throw new SyntaxError("unexpected symbol; found " + lexeme.type + ", expected " + okSet);
     }
     return result;
   }

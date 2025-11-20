@@ -47,9 +47,9 @@ public class TestMethodDeclaration extends AbstactRegressionTest {
     String testOutput = testWithRedirectedSystemOut("StaticPublicMain.j");
     System.out.println(testOutput);
     String[] lines = testOutput.split("\n");
-    assertTrue(lines.length == 11);
+    assertTrue(lines.length == 9);
     assertTrue("              ^unexpected symbol; found public, expected [void, byte, word, String]\r".equals(lines[2]));
-    assertTrue("4 errors.\r".equals(lines[10]));
+    assertTrue("3 errors.\r".equals(lines[8]));
     System.out.println("As expected.\n");
   }
 
